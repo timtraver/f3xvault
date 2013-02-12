@@ -1,0 +1,657 @@
+<?php
+############################################################################
+#	location.php
+#
+#	Tim Traver
+#	8/31/12
+#	This is the script to handle the location records
+#
+############################################################################
+
+if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
+	$function=$_REQUEST['function'];
+}else{
+	$function="location_list";
+}
+
+if(check_user_function($function)){
+	eval("\$actionoutput=$function();");
+}else{
+	 $actionoutput= show_no_permission();
+}
+
+function location_list() {
+	global $smarty;
+	global $export;
+
+	$country_id=0;
+	$state_id=0;
+	if(isset($_REQUEST['country_id'])){
+		$country_id=intval($_REQUEST['country_id']);
+		$GLOBALS['fsession']['country_id']=$country_id;
+	}elseif(isset($GLOBALS['fsession']['country_id'])){
+		$country_id=$GLOBALS['fsession']['country_id'];
+	}
+	if(isset($_REQUEST['state_id'])){
+		$state_id=intval($_REQUEST['state_id']);
+		$GLOBALS['fsession']['state_id']=$state_id;
+	}elseif(isset($GLOBALS['fsession']['state_id'])){
+		$state_id=$GLOBALS['fsession']['state_id'];
+	}
+
+	$search='';
+	if(isset($_REQUEST['search']) ){
+		$search=$_REQUEST['search'];
+		$search_operator=$_REQUEST['search_operator'];
+		$GLOBALS['fsession']['search']=$_REQUEST['search'];
+		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
+	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
+		$search=$GLOBALS['fsession']['search'];
+		$search_operator=$GLOBALS['fsession']['search_operator'];
+	}
+	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
+		$search_field_entry=$_REQUEST['search_field'];
+	}elseif(isset($GLOBALS['fsession']['search_field'])){
+		$search_field_entry=$GLOBALS['fsession']['search_field'];
+	}
+	switch($search_field_entry){
+		case 'location_name':
+			$search_field='location_name';
+			break;
+		case 'location_city':
+			$search_field='location_city';
+			break;
+		default:
+			$search_field='location_name';
+			break;
+	}
+	if($search=='' || $search=='%%'){
+		$search_field='location_name';
+	}
+	$GLOBALS['fsession']['search_field']=$search_field;
+	
+	switch($search_operator){
+		case 'contains':
+			$operator='LIKE';
+			$search="%$search%";
+			break;
+		case 'exactly':
+			$operator="=";
+			break;
+		default:
+			$operator="LIKE";
+	}
+
+	$addcountry='';
+	if($country_id!=0){
+		$addcountry.=" AND l.country_id=$country_id ";
+	}
+	$addstate='';
+	if($state_id!=0){
+		$addstate.=" AND l.state_id=$state_id ";
+	}
+#print "addcountry=$addcountry<br>\n";
+#print "addstate=$addstate<br>\n";
+#print "search=$search<br>\n";
+#print "search_field=$search_field<br>\n";
+#print "search_operator=$search_operator<br>\n";
+#print "operator=$operator<br>\n";
+
+	$locations=array();
+	if($search!='%%' && $search!=''){
+		$stmt=db_prep("
+			SELECT *
+			FROM location l
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON l.country_id=c.country_id
+			WHERE l.$search_field $operator :search
+				$addcountry
+				$addstate
+			ORDER BY l.country_id,l.state_id,l.location_name
+		");
+		$locations=db_exec($stmt,array("search"=>$search));
+	}else{
+		# Get all locations for search
+		$stmt=db_prep("
+			SELECT *
+			FROM location l
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON l.country_id=c.country_id
+			WHERE 1
+				$addcountry
+				$addstate
+			ORDER BY l.country_id,l.state_id,l.location_name
+		");
+		$locations=db_exec($stmt,array());
+	}
+	
+#print_r($locations);
+	
+	# Get only countries that we have locations for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT country_id FROM location) l
+		LEFT JOIN country c ON c.country_id=l.country_id
+		WHERE c.country_id!=0
+	");
+	$countries=db_exec($stmt,array());
+	# Get only states that we have locations for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT state_id FROM location) l
+		LEFT JOIN state s ON s.state_id=l.state_id
+		WHERE s.state_id!=0
+	");
+	$states=db_exec($stmt,array());
+	
+	$locations=show_pages($locations,25);
+	
+	$smarty->assign("locations",$locations);
+	$smarty->assign("countries",$countries);
+	$smarty->assign("states",$states);
+
+	$smarty->assign("search",$GLOBALS['fsession']['search']);
+	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
+	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
+	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
+	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
+
+	$maintpl=find_template("location_list.tpl");
+	return $smarty->fetch($maintpl);
+}
+function location_edit() {
+	global $smarty;
+
+	if(isset($_REQUEST['location_id'])){
+		$location_id=$_REQUEST['location_id'];
+	}
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$location=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location l
+		LEFT JOIN country c ON l.country_id=c.country_id
+		LEFT JOIN state s ON l.state_id=s.state_id
+		WHERE location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id));
+	if($result){
+		$location=$result[0];
+	}
+	
+	# Get all of the base location attributes
+	$location_attributes=array();
+	$stmt=db_prep("
+		SELECT *,la.location_att_id
+		FROM location_att la
+		LEFT JOIN location_att_cat lc ON lc.location_att_cat_id=la.location_att_cat_id
+		WHERE la.location_att_status=1
+		ORDER BY lc.location_att_cat_order,la.location_att_order
+	");
+	$location_attributes=db_exec($stmt,array());
+
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att_value
+		WHERE location_id=:location_id
+			AND location_att_value_status=1
+	");
+	$values=db_exec($stmt,array("location_id"=>$location_id));
+
+	# Step through each of the values and put those entries into the location_attributes array
+	foreach ($location_attributes as $key=>$att){
+		$id=$att['location_att_id'];
+		foreach($values as $value){
+			if($value['location_att_id']==$id){
+				$location_attributes[$key]['location_att_value_value']=$value['location_att_value_value'];
+				$location_attributes[$key]['location_att_value_status']=$value['location_att_value_status'];
+			}
+		}
+	}
+
+	# Get location media records
+	$media=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location_media lm
+		WHERE lm.location_id=:location_id
+		AND lm.location_media_status=1
+	");
+	$media=db_exec($stmt,array("location_id"=>$location_id));
+
+	$smarty->assign("location",$location);
+	$smarty->assign("location_attributes",$location_attributes);
+	$smarty->assign("media",$media);
+	$smarty->assign("countries",get_countries());
+	$smarty->assign("states",get_states());
+
+	$maintpl=find_template("location_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function location_view() {
+	global $smarty;
+
+	if(isset($_REQUEST['location_id'])){
+		$location_id=$_REQUEST['location_id'];
+	}
+
+	$location=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location l
+		LEFT JOIN country c ON l.country_id=c.country_id
+		LEFT JOIN state s ON l.state_id=s.state_id
+		WHERE location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id));
+	if($result){
+		$location=$result[0];
+	}
+	
+	# Get all of the base location attributes as well as the ones for this location
+	$location_attributes=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att_value lav
+		LEFT JOIN location_att la ON lav.location_att_id=la.location_att_id
+		LEFT JOIN location_att_cat lc ON lc.location_att_cat_id=la.location_att_cat_id
+		WHERE lav.location_id=:location_id
+			AND lav.location_att_value_status=1
+	");
+	$location_attributes=db_exec($stmt,array("location_id"=>$location_id));
+
+	# Get location media records
+	$media=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location_media lm
+		WHERE lm.location_id=:location_id
+		AND lm.location_media_status=1
+	");
+	$media=db_exec($stmt,array("location_id"=>$location_id));
+	# Step thriough the media to get the user info for it
+	foreach ($media as $key=>$m){
+		if($m['wp_user_id']!=0){
+			$stmt=db_prep("
+				SELECT *
+				FROM pilot p
+				WHERE p.pilot_wp_user_id=:wp_user_id
+			");
+			$result2=db_exec($stmt,array("wp_user_id"=>$m['wp_user_id']));
+			if($result2[0]){
+				# Add the user info to the array
+				$media[$key]=array_merge($m,$result2[0]);
+			}
+		}
+	}
+	
+	# Lets get a random picture to show on the front page of the location view
+	if(count($media)>1){
+		$count=0;
+		do {
+			$rand=array_rand($media);
+			$count++;
+		}while($media[$rand]['location_media_type']!='picture' || $count>10);
+	}else{
+		$rand=0;
+	}
+	
+	# Get the location comments
+	$comments=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM location_comment
+		WHERE location_id=:location_id
+		ORDER BY location_comment_date
+	");
+	$comments=db_exec($stmt,array("location_id"=>$location_id));
+	# Step through the comments and get the avatar of the poster
+	foreach($comments as $key=>$value){
+		$tempuser=get_userdata($value['user_id']);
+		$comments[$key]['user_first_name']=$tempuser->first_name;
+		$comments[$key]['user_last_name']=$tempuser->last_name;
+		$comments[$key]['avatar']=get_avatar($value['user_id'],40);
+	}
+
+	$smarty->assign("location",$location);
+	$smarty->assign("location_attributes",$location_attributes);
+	$smarty->assign("rand",$rand);
+	$smarty->assign("media",$media);
+	$smarty->assign("comments",$comments);
+	$smarty->assign("comments_num",count($comments));
+
+	$maintpl=find_template("location_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+function location_save() {
+	global $smarty;
+	global $dbh;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$location=array();
+	if(isset($_REQUEST['location_id'])){
+		$location['location_id']=intval($_REQUEST['location_id']);
+	}else{
+		$location['location_id']=0;
+	}
+	if(isset($_REQUEST['location_name'])){
+		$location['location_name']=$_REQUEST['location_name'];
+	}
+	if(isset($_REQUEST['location_city'])){
+		$location['location_city']=$_REQUEST['location_city'];
+	}else{
+		$location['location_city']='';
+	}
+	if(isset($_REQUEST['country_id'])){
+		$location['country_id']=$_REQUEST['country_id'];
+	}else{
+		$location['country_id']=0;
+	}
+	if(isset($_REQUEST['state_id'])){
+		$location['state_id']=$_REQUEST['state_id'];
+	}else{
+		$location['state_id']=0;
+	}
+	if(isset($_REQUEST['location_coordinates'])){
+		$location['location_coordinates']=$_REQUEST['location_coordinates'];
+	}else{
+		$location['location_coordinates']='';
+	}
+	if(isset($_REQUEST['location_club'])){
+		$location['location_club']=$_REQUEST['location_club'];
+	}else{
+		$location['location_club']='';
+	}
+	if(isset($_REQUEST['location_club_url'])){
+		$location['location_club_url']=$_REQUEST['location_club_url'];
+	}else{
+		$location['location_club_url']='';
+	}
+	if(isset($_REQUEST['location_description'])){
+		$location['location_description']=$_REQUEST['location_description'];
+	}else{
+		$location['location_description']='';
+	}
+	if(isset($_REQUEST['location_directions'])){
+		$location['location_directions']=$_REQUEST['location_directions'];
+	}else{
+		$location['location_directions']='';
+	}
+
+	if($location['location_name']=='' || !preg_match("/\S/",$location['location_name'])){
+		user_message("You must enter a location name in the Location Name field.",1);
+		return location_edit();
+	}
+
+	if($location['location_id']==0){
+		# Create a new location record
+		unset($location['location_id']);
+		$stmt=db_prep("
+			INSERT INTO location
+			SET location_name=:location_name,
+				location_city=:location_city,
+				location_coordinates=:location_coordinates,
+				location_club=:location_club,
+				location_club_url=:location_club_url,
+				location_description=:location_description,
+				location_directions=:location_directions,
+				country_id=:country_id,
+				state_id=:state_id
+		");
+		$result=db_exec($stmt,$location);
+		# Set the old location_id back for the rest of the routine
+		$location['location_id']=$dbh->lastInsertId();
+	}else{
+		# Update the existing record
+		$stmt=db_prep("
+			UPDATE location
+			SET location_name=:location_name,
+				location_city=:location_city,
+				location_coordinates=:location_coordinates,
+				location_club=:location_club,
+				location_club_url=:location_club_url,
+				location_description=:location_description,
+				location_directions=:location_directions,
+				country_id=:country_id,
+				state_id=:state_id
+			WHERE location_id=:location_id
+		");
+		$result=db_exec($stmt,$location);
+	}
+
+	# Now save the attributes that this location has
+
+	# Lets clear out all of the attribute values that this location has
+	$stmt=db_prep("
+		UPDATE location_att_value
+		SET location_att_value_status=0
+		WHERE location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location['location_id']));
+	
+	# Now lets step through the attributes and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^location_att_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM location_att_value lav
+			WHERE location_id=:location_id
+				AND location_att_id=:location_att_id
+		");
+		$result=db_exec($stmt,array("location_att_id"=>$id,"location_id"=>$location['location_id']));
+		if($result){
+			# There is already a record, so lets update it
+			$location_att_value_id=$result[0]['location_att_value_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE location_att_value
+					SET location_att_value_value=:value,
+						location_att_value_status=1
+					WHERE location_att_value_id=:location_att_value_id
+				");
+				$result2=db_exec($stmt,array("value"=>$value,"location_att_value_id"=>$location_att_value_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO location_att_value
+					SET location_id=:location_id,
+						location_att_id=:location_att_id,
+						location_att_value_value=:value,
+						location_att_value_status=1
+				");
+				$result2=db_exec($stmt,array("location_id"=>$location['location_id'],"location_att_id"=>$id,"value"=>$value));
+			}
+		}
+	}	
+	user_message("Location Information Saved");
+	return location_list();
+}
+function location_media_edit() {
+	global $smarty;
+	global $user;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+		
+	$location_id=$_REQUEST['location_id'];
+	
+	$stmt=db_prep("
+		SELECT *
+		FROM location l
+		WHERE l.location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id));
+	$location=$result[0];
+	
+	$smarty->assign("location",$location);
+	$smarty->assign("location_id",$location_id);
+	$maintpl=find_template("location_edit_media.tpl");
+	return $smarty->fetch($maintpl);
+}
+function location_media_add() {
+	global $smarty;
+	global $user;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+		
+	$location_id=$_REQUEST['location_id'];
+	$location_media_type=$_REQUEST['location_media_type'];
+	$location_media_caption=$_REQUEST['location_media_caption'];
+	
+	if($location_media_type=='picture'){
+		# Lets upload the file and put it in place
+		$tempname=$_FILES['uploaded_file']['tmp_name'];
+		$name=basename(preg_replace("/\s/","\_",$_FILES['uploaded_file']['name']));
+		# Lets make the directory for this location_id if it doesn't exist
+		if(!is_dir("{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id")){
+			# Create the directory
+			mkdir("{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id",0770);
+		}
+		# Now copy the file into place
+		if(file_exists("{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id/$name")){
+			user_message("A media file with that name already exists, please choose another and try again!");
+			return location_edit();
+		}
+		if(move_uploaded_file($tempname, "{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id/$name")) {
+			user_message("File $name uploaded.");
+		}else{
+			user_message("There was an error uploading the file, please try again!");
+			return location_edit();
+		}
+		$location_media_url="{$GLOBALS['base_url']}{$GLOBALS['base_location_media']}/$location_id/$name";
+	}else{
+		$location_media_url=$_REQUEST['location_media_url'];
+	}
+
+	# Insert the database record for this media
+	$media=array();
+	$stmt=db_prep("
+		INSERT INTO location_media
+		SET location_id=:location_id,
+			location_media_type=:location_media_type,
+			location_media_caption=:location_media_caption,
+			location_media_url=:location_media_url,
+			wp_user_id=:wp_user_id,
+			location_media_status=1
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id,"location_media_type"=>$location_media_type,"location_media_url"=>$location_media_url,"location_media_caption"=>$location_media_caption,"wp_user_id"=>$GLOBALS['user']['user_id']));
+
+	user_message("Added your $location_media_type media!");
+	return location_edit();
+}
+function location_media_del() {
+	global $user;
+
+	$location_id=$_REQUEST['location_id'];
+	$location_media_id=$_REQUEST['location_media_id'];
+
+	# Check to see if they are the owner if this media so they cannot delete someone else's media
+	$stmt=db_prep("
+		SELECT *
+		FROM location_media
+		WHERE location_media_id=:location_media_id
+	");
+	$result=db_exec($stmt,array("location_media_id"=>$location_media_id));
+	if($result[0]['wp_user_id']!=$GLOBALS['user']['user_id']){
+		user_message("You are not allowed to remove media that you did not upload.",1);
+		return location_edit();
+	}
+	# del this media entry
+	$stmt=db_prep("
+		UPDATE location_media
+		SET location_media_status=0
+		WHERE location_media_id=:location_media_id
+	");
+	$result=db_exec($stmt,array("location_media_id"=>$location_media_id));
+	user_message("Removed location media.");
+	return location_edit();
+}
+function location_comment_add() {
+	global $smarty;
+	global $user;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+		
+	$location_id=$_REQUEST['location_id'];
+	
+	$stmt=db_prep("
+		SELECT *
+		FROM location l
+		WHERE l.location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id));
+	$location=$result[0];
+	
+	$smarty->assign("location",$location);
+	$smarty->assign("location_id",$location_id);
+	$maintpl=find_template("location_comment.tpl");
+	return $smarty->fetch($maintpl);
+}
+function location_comment_save() {
+	global $smarty;
+	global $user;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+		
+	$location_id=$_REQUEST['location_id'];
+	$location_comment_string=$_REQUEST['location_comment_string'];
+	
+	# Insert the database record for this comment
+	$stmt=db_prep("
+		INSERT INTO location_comment
+		SET location_id=:location_id,
+			user_id=:user_id,
+			location_comment_date=now(),
+			location_comment_string=:location_comment_string
+	");
+	$result=db_exec($stmt,array("location_id"=>$location_id,"user_id"=>$GLOBALS['user_id'],"location_comment_string"=>$location_comment_string));
+
+	user_message("Added your location comment!");
+	return location_view();
+}
+
+?>

@@ -1,0 +1,53 @@
+﻿<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>My Custom Dialog</title>
+<script>
+function insertLink(url,title,target) {
+    parent.oUtil.obj.insertLink(url, title, target);
+}
+function insertObject(HTML) {
+    parent.oUtil.obj.insertHTML(HTML);
+}
+function insertImage(src) {
+    parent.oUtil.obj.insertHTML('<img src="' + src + '" alt="sample image" />');
+}
+</script>
+<style>
+body {font-family:Verdana, Arial, Helvetica;font-size: 12px;margin:20px;background-color:#ffffff;}
+</style>
+</head>
+<body>
+<h2>My Custom Dialog</h2>
+
+<ul>
+<li>Page1.htm <span onclick="insertLink('Page1.htm','title 1 here')" style="text-decoration:underline;cursor:pointer;color:blue;">Insert Link</span>
+<pre>
+Using: parent.oUtil.obj.insertLink("Page1.htm","title 1 here");
+</pre><br />
+</li>
+<li>Page2.htm <span onclick="insertLink('Page2.htm','title 2 here','_blank')" style="text-decoration:underline;cursor:pointer;color:blue;">Insert Link</span>
+<pre>
+Using: parent.oUtil.obj.insertLink("Page2.htm","title 2 here","_blank");
+</pre><br />
+</li>
+<li onclick="insertObject(document.getElementById('divCompanyName').innerHTML)" style="cursor:pointer"><u>Insert Company Name</u>
+<pre>
+Using: parent.oUtil.obj.insertHTML(HTML);
+</pre><br />
+</li>
+<li onclick="insertImage('styles/image-sunset.png')" style="cursor:pointer"><u>Insert Image</u>
+<pre>
+Using: parent.oUtil.obj.insertHTML(HTML);
+</pre><br />
+</li>
+</ul>
+
+<div id="divCompanyName" style="display:none">
+  <h2>InnovaStudio</h2>
+  <a href="http://www.innovastudio.com">www.innovastudio.com</a><br>
+</div>
+
+</body>
+</html>
