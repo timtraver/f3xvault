@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 05:52:20
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-12 08:48:30
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_edit.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:13754509358592223f0-41222946%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8dcd6e50940577ff5eda1d61dfa9b0bc15b7fa28' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_edit.tpl',
-      1 => 1351835504,
+      1 => 1360658905,
       2 => 'file',
     ),
   ),
@@ -40,7 +40,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 		<h1 class="post-title entry-title">RC Event Edit</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Edit Event</h1>
+<h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
 <form name="getlocations" method="POST">
 <input type="hidden" name="action" value="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['action']->value, ENT_QUOTES, 'UTF-8', true);?>
 ">
@@ -140,8 +140,8 @@ $_smarty_tpl->tpl_vars['t']->_loop = true;
 </tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Cancel Changes " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save Changes To This Event " class="block-button">
+		<input type="button" value=" Cancel " onClick="goback.submit();" class="block-button">
+		<input type="submit" value=" Save This Event " class="block-button">
 	</th>
 </tr>
 </table>
@@ -149,7 +149,13 @@ $_smarty_tpl->tpl_vars['t']->_loop = true;
 
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
+<?php if ($_smarty_tpl->tpl_vars['event']->value['event_id']==0){?>
 <input type="hidden" name="function" value="event_list">
+<?php }else{ ?>
+<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+">
+<?php }?>
 </form>
 
 </div>

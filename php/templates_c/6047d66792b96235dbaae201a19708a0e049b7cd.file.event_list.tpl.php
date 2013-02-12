@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-13 04:34:27
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-12 08:36:50
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:21831504d6eae1e9fb7-71443845%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1347510857,
+      1 => 1360658204,
       2 => 'file',
     ),
   ),
@@ -164,7 +164,7 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 	<td align="center"><?php if ($_smarty_tpl->tpl_vars['event']->value['location_coordinates']!=''){?><a class="fancybox-map" href="https://maps.google.com/maps?q=<?php echo rawurlencode($_smarty_tpl->tpl_vars['event']->value['location_coordinates']);?>
 +(<?php echo $_smarty_tpl->tpl_vars['event']->value['location_name'];?>
 )&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a><?php }?></td>
-	<td><a href="?action=event&function=event_edit&event_id=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_id'], ENT_QUOTES, 'UTF-8', true);?>
+	<td><a href="?action=event&function=event_view&event_id=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_id'], ENT_QUOTES, 'UTF-8', true);?>
 " title="Edit This Event"><img src="images/icon_edit_small.gif" width="20"></a>
 	</td>
 </tr>
@@ -194,7 +194,8 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 
 <form name="newevent" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_new">
+<input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="0">
 </form>
 
 

@@ -3,7 +3,7 @@
 		<h1 class="post-title entry-title">RC Event Edit</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Edit Event</h1>
+<h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
 <form name="getlocations" method="POST">
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="event_edit">
@@ -72,8 +72,8 @@
 </tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Cancel Changes " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save Changes To This Event " class="block-button">
+		<input type="button" value=" Cancel " onClick="goback.submit();" class="block-button">
+		<input type="submit" value=" Save This Event " class="block-button">
 	</th>
 </tr>
 </table>
@@ -81,7 +81,12 @@
 
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
+{if $event.event_id==0}
 <input type="hidden" name="function" value="event_list">
+{else}
+<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+{/if}
 </form>
 
 </div>

@@ -89,7 +89,7 @@
 	<td>{$event.state_name|escape}</td>
 	<td>{$event.country_name|escape}</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
-	<td><a href="?action=event&function=event_edit&event_id={$event.event_id|escape}" title="Edit This Event"><img src="images/icon_edit_small.gif" width="20"></a>
+	<td><a href="?action=event&function=event_view&event_id={$event.event_id|escape}" title="Edit This Event"><img src="images/icon_edit_small.gif" width="20"></a>
 	</td>
 </tr>
 {/foreach}
@@ -115,7 +115,8 @@
 
 <form name="newevent" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_new">
+<input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="0">
 </form>
 
 

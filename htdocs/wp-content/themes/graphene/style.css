@@ -976,7 +976,7 @@ a:hover {
 	float: right;
 	font: bold 12px arial;
 	margin: 0 5px 5px;
-	padding: 5px 15px 6px;
+	padding: 0px 5px 0px;
 	position: relative;
 	text-decoration: none;
 	text-shadow: 0 -1px 0 #16497E;
@@ -1357,7 +1357,7 @@ table th {
 	background: -moz-linear-gradient(#f6f6f6,#eee);
 	background: -o-linear-gradient(#f6f6f6,#eee);
 	background: linear-gradient(#f6f6f6,#eee);
-	padding: 10px 5px;
+	padding: 6px 3px;
 }
 table tr {
 	background: #fbfbfb;

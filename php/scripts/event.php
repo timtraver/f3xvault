@@ -166,107 +166,6 @@ function event_list() {
 	$maintpl=find_template("event_list.tpl");
 	return $smarty->fetch($maintpl);
 }
-function event_new() {
-	global $smarty;
-
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-
-	$country_id=0;
-	$addcountry='';
-	if(isset($_REQUEST['country_id']) && $_REQUEST['country_id']!=0){
-		$country_id=$_REQUEST['country_id'];
-		$addcountry="AND c.country_id=:country_id";
-	}
-	$state_id=0;
-	$addstate='';
-	if(isset($_REQUEST['state_id']) && $_REQUEST['state_id']!=0){
-		$state_id=$_REQUEST['state_id'];
-		$addstate="AND s.state_id=:state_id";
-	}
-	$locations=array();
-	if($country_id!=0){
-		# Get locations in that country and state
-		$stmt=db_prep("
-			SELECT *
-			FROM location l
-			LEFT JOIN country c ON l.country_id=c.country_id
-			LEFT JOIN state s ON l.state_id=s.state_id
-			WHERE c.country_id=:country_id
-			$addstate
-			ORDER BY l.location_name
-		");
-		if($state_id != 0){
-			$locations=db_exec($stmt,array("country_id"=>$country_id,"state_id"=>$state_id));
-		}else{
-			$locations=db_exec($stmt,array("country_id"=>$country_id));
-		}
-	}
-
-	# Get event types
-	$stmt=db_prep("
-		SELECT *
-		FROM event_type
-	");
-	$event_types=db_exec($stmt,array());
-	
-	$smarty->assign("locations",$locations);
-	$smarty->assign("countries",get_countries());
-	$smarty->assign("states",get_states());
-	$smarty->assign("country_id",$country_id);
-	$smarty->assign("state_id",$state_id);
-	$smarty->assign("event_types",$event_types);
-
-	$maintpl=find_template("event_new.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_save_new() {
-	global $smarty;
-	global $user;
-
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
-	$country_id=$_REQUEST['country_id'];
-	$state_id=$_REQUEST['state_id'];
-	$location_id=$_REQUEST['location_id'];
-	$event_name=$_REQUEST['event_name'];
-	# Get the dates
-	$event_start_date=$_REQUEST['event_start_dateYear']."-".$_REQUEST['event_start_dateMonth']."-".$_REQUEST['event_start_dateDay'];
-	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
-	$event_type_id=$_REQUEST['event_type_id'];
-	
-	# Insert the database record for this comment
-	$stmt=db_prep("
-		INSERT INTO event
-		SET user_id=:user_id,
-			event_name=:event_name,
-			location_id=:location_id,
-			event_start_date=:event_start_date,
-			event_end_date=:event_end_date,
-			event_type_id=:event_type_id,
-			event_status=1
-	");
-	$result=db_exec($stmt,array(
-		"user_id"=>$GLOBALS['user_id'],
-		"event_name"=>$event_name,
-		"location_id"=>$location_id,
-		"event_start_date"=>$event_start_date,
-		"event_end_date"=>$event_end_date,
-		"event_type_id"=>$event_type_id
-	));
-
-	user_message("Added your New Event!");
-	return event_list();
-}
 function event_edit() {
 	global $smarty;
 
@@ -278,22 +177,20 @@ function event_edit() {
 	}
 	
 	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to edit.");
-		return event_list();
-	}
-	
-	# Get event info
 	$event=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event e
-		LEFT JOIN location l ON e.location_id=l.location_id
-		LEFT JOIN country c ON c.country_id=l.country_id
-		WHERE e.event_id=:event_id
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	$event=$result[0];
+	if($event_id!=0){
+		# Get event info
+		$event=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event e
+			LEFT JOIN location l ON e.location_id=l.location_id
+			LEFT JOIN country c ON c.country_id=l.country_id
+			WHERE e.event_id=:event_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		$event=$result[0];
+	}
 	
 	$country_id=0;
 	$addcountry='';
@@ -332,13 +229,6 @@ function event_edit() {
 			$locations=db_exec($stmt,array("country_id"=>$country_id));
 		}
 	}
-
-	# Get event types
-	$stmt=db_prep("
-		SELECT *
-		FROM event_type
-	");
-	$event_types=db_exec($stmt,array());
 	
 	# Get only the countries that we have events for
 	$countries=get_countries()
@@ -384,30 +274,53 @@ function event_save() {
 	$event_start_date=$_REQUEST['event_start_dateYear']."-".$_REQUEST['event_start_dateMonth']."-".$_REQUEST['event_start_dateDay'];
 	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
 	$event_type_id=$_REQUEST['event_type_id'];
-	
-	# Save the database record for this event
-	$stmt=db_prep("
-		UPDATE event
-		SET event_name=:event_name,
-			location_id=:location_id,
-			event_start_date=:event_start_date,
-			event_end_date=:event_end_date,
-			event_type_id=:event_type_id
-		WHERE event_id=:event_id
-	");
-	$result=db_exec($stmt,array(
-		"event_name"=>$event_name,
-		"location_id"=>$location_id,
-		"event_start_date"=>$event_start_date,
-		"event_end_date"=>$event_end_date,
-		"event_type_id"=>$event_type_id,
-		"event_id"=>$event_id
-	));
 
-	user_message("Updated Base Event Info!");
-	return event_list();
+	if($event_id==0){
+		$stmt=db_prep("
+			INSERT INTO event
+			SET user_id=:user_id,
+				event_name=:event_name,
+				location_id=:location_id,
+				event_start_date=:event_start_date,
+				event_end_date=:event_end_date,
+				event_type_id=:event_type_id,
+				event_status=1
+		");
+		$result=db_exec($stmt,array(
+			"user_id"=>$GLOBALS['user_id'],
+			"event_name"=>$event_name,
+			"location_id"=>$location_id,
+			"event_start_date"=>$event_start_date,
+			"event_end_date"=>$event_end_date,
+			"event_type_id"=>$event_type_id
+		));
+
+		user_message("Added your New Event!");
+		$_REQUEST['event_id']=$GLOBALS['last_insert_id'];
+	}else{
+		# Save the database record for this event
+		$stmt=db_prep("
+			UPDATE event
+			SET event_name=:event_name,
+				location_id=:location_id,
+				event_start_date=:event_start_date,
+				event_end_date=:event_end_date,
+				event_type_id=:event_type_id
+			WHERE event_id=:event_id
+		");
+		$result=db_exec($stmt,array(
+			"event_name"=>$event_name,
+			"location_id"=>$location_id,
+			"event_start_date"=>$event_start_date,
+			"event_end_date"=>$event_end_date,
+			"event_type_id"=>$event_type_id,
+			"event_id"=>$event_id
+		));
+		user_message("Updated Base Event Info!");
+	}
+	return event_view();
 }
-function event_settings() {
+function event_view() {
 	global $smarty;
 
 	if($GLOBALS['user_id']==0){
@@ -429,17 +342,28 @@ function event_settings() {
 		SELECT *
 		FROM event e
 		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN state s ON l.state_id=s.state_id
 		LEFT JOIN country c ON c.country_id=l.country_id
 		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 		WHERE e.event_id=:event_id
 	");
 	$result=db_exec($stmt,array("event_id"=>$event_id));
 	$event=$result[0];
-		
-
 	$smarty->assign("event",$event);
+	
+	# Now lets get the pilots assigned to this event
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_id=:event_id
+			AND ep.event_pilot_status=1
+	");
+	$pilots=db_exec($stmt,array("event_id"=>$event_id));
+	$smarty->assign("pilots",$pilots);
+	$smarty->assign("total_pilots",count($pilots));
 
-	$maintpl=find_template("event_settings.tpl");
+	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 
