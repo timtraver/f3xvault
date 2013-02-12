@@ -1349,7 +1349,7 @@ table th,
 table tr {
 	border: 1px solid #e6e6e6;
 	font-family: arial;
-	padding: 2px 5px;
+	padding: 1px 3px;
 }
 table th {
 	background: #eee;
@@ -1357,7 +1357,7 @@ table th {
 	background: -moz-linear-gradient(#f6f6f6,#eee);
 	background: -o-linear-gradient(#f6f6f6,#eee);
 	background: linear-gradient(#f6f6f6,#eee);
-	padding: 6px 3px;
+	padding: 3px 3px;
 }
 table tr {
 	background: #fbfbfb;
