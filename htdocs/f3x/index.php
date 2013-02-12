@@ -16,7 +16,11 @@ global $messages;
 global $message_graphic;
 
 require_once("../wp-blog-header.php");
-require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
+if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
+	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
+}else{
+	require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
+}
 
 include_library('security_functions.inc');
 include_library('functions.inc');
