@@ -87,13 +87,22 @@ function db_prep ($querystring) {
         global $admin_pass;
         global $dbh;
 
-        $login="admin";
+		# Let's determine if we are local or not
+		if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
+        	$login="admin";
+        	$host="localhost";
+        	$dbname="f3x_timing";
+		}else{
+			$login="9774_rcvault";
+        	$host="mysql1.simplenet.com";
+        	$dbname="9774_rcvault";
+		}
         if($admin_pass==''){
                 $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
         }
 
         try {
-                $dbh=new PDO('mysql:host=localhost;dbname=f3x_timing',$login,$admin_pass,array(PDO::ATTR_PERSISTENT=>true));
+                $dbh=new PDO("mysql:host=$host;dbname=$dbname",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=>true));
                 $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $stmt = $dbh->prepare($querystring);
