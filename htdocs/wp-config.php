@@ -16,6 +16,7 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
+if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 define('DB_NAME', 'wordpress');
 
 /** MySQL database username */
@@ -26,7 +27,18 @@ define('DB_PASSWORD', 'ColdSun1');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
+}else{
+define('DB_NAME', '9774_rcvault');
 
+/** MySQL database username */
+define('DB_USER', '9774_rcvault');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'h5^#nK;(r2');
+
+/** MySQL hostname */
+define('DB_HOST', 'mysql1.simplenet.com');
+}
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
 
