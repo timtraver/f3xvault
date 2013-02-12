@@ -27,6 +27,7 @@ if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 }else{
 	$base = '/shared/links/r/c/v/a/rcvault.com/site';
 }
+
 $base_webroot = "$base/htdocs/f3x";
 $base_plane_media = "/images/pilot_plane_images";
 $base_location_media = "/images/location_images";
