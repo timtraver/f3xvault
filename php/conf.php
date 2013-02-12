@@ -22,7 +22,7 @@ global $user_id;
 global $session_expiration;
 global $logsessions;
 
-if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
+if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	$base = 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2';
 }else{
 	$base = '/shared/links/r/c/v/a/rcvault.com/site';

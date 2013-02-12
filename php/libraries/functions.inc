@@ -88,7 +88,7 @@ function db_prep ($querystring) {
         global $dbh;
 
 		# Let's determine if we are local or not
-		if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
+		if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
         	$login="admin";
         	$host="localhost";
         	$dbname="f3x_timing";

@@ -16,7 +16,7 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-if(isfile('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
+if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 define('DB_NAME', 'wordpress');
 
 /** MySQL database username */
