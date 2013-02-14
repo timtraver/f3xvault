@@ -25,7 +25,7 @@ function lookup_pilot() {
 
 	$q = urldecode(strtolower($_GET["term"]));
 	
-	# Check to see if this user already exists
+	# Do search
 	$stmt=db_prep("
 		SELECT *
 		FROM pilot p
@@ -46,6 +46,33 @@ function lookup_pilot() {
 	}
 
 	print json_encode($pilots);
+	exit;
+
+}
+function lookup_plane() {
+	global $user;
+	global $smarty;
+
+	$q = urldecode(strtolower($_GET["term"]));
+	
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM plane p
+		LEFT JOIN plane_type pt ON p.plane_type_id=pt.plane_type_id
+		WHERE LOWER(p.plane_name) LIKE '%$q%'
+	");
+	$result=db_exec($stmt,array());
+	
+	foreach($result as $r){
+		$planes[]=array(
+			"id"=>$r['plane_id'],
+			"label"=>"{$r['plane_type_short_name']} {$r['plane_name']}",
+			"value"=>"{$r['plane_type_short_name']} {$r['plane_name']}"
+		);
+	}
+
+	print json_encode($planes);
 	exit;
 
 }
