@@ -1,0 +1,48 @@
+<html>
+<head>
+<script src="includes/jquery-1.9.1.min.js"></script>
+<script src="includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/jquery-ui/css/smoothness/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="includes/jquery-ui/css/smoothness/jquery.ui.theme.css">
+<script>
+$(function() {
+	function log( message ) {
+		$( "<div/>" ).text( message ).prependTo( "#log" );
+		$( "#log" ).scrollTop( 0 );
+	}
+
+	$("#pilot_name").autocomplete({
+		source: "/f3x/?action=lookup",
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+                messages: {
+                        noResults: "Pilot Not Found. Use Add Button to Create.",
+                        results: function( amount ) {
+                                return amount + ( amount > 1 ? " results are" : " result is" ) +
+                                        " available, use up and down arrow keys to navigate.";
+                        }
+                },
+   		select: function( event, ui ) {
+			log( ui.item ?
+			"Selected: " + ui.item.value + " aka " + ui.item.id + " " + ui.item.label + " query:" + ui.item.query:
+			"Nothing selected, input was " + this.value );
+		}
+	});
+});
+</script>
+</head>
+<body>
+
+Pilot Name : <input type="text" id="pilot_name" name="pilot_name" size="40">
+
+
+</body>
+</html>
+

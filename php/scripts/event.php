@@ -356,6 +356,7 @@ function event_view() {
 		SELECT *
 		FROM event_pilot ep
 		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		LEFT JOIN class c ON ep.class_id=c.class_id
 		WHERE ep.event_id=:event_id
 			AND ep.event_pilot_status=1
 	");
@@ -365,6 +366,172 @@ function event_view() {
 
 	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
+}
+function add_pilot() {
+	global $smarty;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to add a pilot to.");
+		return event_list();
+	}
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	
+	# If pilot_id is zero, then send them to the quick add pilot screen
+	if($pilot_id==0){
+		return add_pilot_quick();
+	}else{
+		
+		# Check to see if the pilot already exists in this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			WHERE ep.event_id=:event_id
+				AND ep.pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		if(isset($result[0])){
+			# The record already exists, so lets see if it has its status to 1 or not
+			if($result[0]['event_pilot_status']==1){
+				# This record already exists!
+				user_message("The Pilot you have chosen to add is already in this event.",1);
+				return event_view();
+			}else{
+				# Lets turn this record back on
+				$stmt=db_prep("
+					UPDATE event_pilot
+					SET event_pilot_status=1
+					WHERE event_pilot_id=:event_pilot_id
+				");
+				$result2=db_exec($stmt,array("event_pilot_id"=>$result[0]['event_pilot_id']));
+			}
+		}else{
+			# This record doesn't exist, so lets add it
+				$stmt=db_prep("
+					INSERT INTO event_pilot
+					SET event_id=:event_id,
+						pilot_id=:pilot_id,
+						event_pilot_position=0,
+						event_pilot_status=1
+				");
+				$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		}
+		user_message("Pilot Added to event.");
+		return event_view();
+	}
+}
+function add_pilot_quick() {
+	global $smarty;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$pilot_name=$_REQUEST['pilot_name'];
+
+	$event=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event e
+		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN state s ON l.state_id=s.state_id
+		LEFT JOIN country c ON c.country_id=l.country_id
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		WHERE e.event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	$event=$result[0];
+	$smarty->assign("event",$event);
+	
+	#Lets split apart the first and last names
+	$name=preg_split("/\s/",$pilot_name,2);
+	$smarty->assign("pilot_first_name",$name[0]);
+	$smarty->assign("pilot_last_name",$name[1]);
+
+	# Lets get the classes
+	$stmt=db_prep("
+		SELECT *
+		FROM class
+		WHERE 1
+		ORDER BY class_view_order
+	");
+	$classes=db_exec($stmt,array());
+	$smarty->assign("classes",$classes);
+
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+
+	$maintpl=find_template("pilot_quick_add.tpl");
+	return $smarty->fetch($maintpl);
+}
+function save_pilot_quick_add() {
+	global $smarty;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=$_REQUEST['state_id'];
+	$country_id=$_REQUEST['country_id'];
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fia=$_REQUEST['pilot_fia'];
+	$pilot_email=$_REQUEST['pilot_email'];
+	$class_id=$_REQUEST['class_id'];
+
+	# Lets add the pilot to the pilot table
+	$stmt=db_prep("
+		INSERT INTO pilot
+		SET pilot_wp_user_id=0,
+			pilot_first_name=:pilot_first_name,
+			pilot_last_name=:pilot_last_name,
+			pilot_email=:pilot_email,
+			pilot_ama=:pilot_ama,
+			pilot_fia=:pilot_fia,
+			pilot_city=:pilot_city,
+			state_id=:state_id,
+			country_id=:country_id
+	");
+	$result=db_exec($stmt,array(
+		"pilot_first_name"=>$pilot_first_name,
+		"pilot_last_name"=>$pilot_last_name,
+		"pilot_email"=>$pilot_email,
+		"pilot_ama"=>$pilot_ama,
+		"pilot_fia"=>$pilot_fia,
+		"pilot_city"=>$pilot_city,
+		"state_id"=>$state_id,
+		"country_id"=>$country_id,
+	));
+	$pilot_id=$GLOBALS['last_insert_id'];
+	
+	# Now lets add him to the current event
+	$stmt=db_prep("
+		INSERT INTO event_pilot
+		SET event_id=:event_id,
+			pilot_id=:pilot_id,
+			class_id=:class_id,
+			event_pilot_status=1
+	");
+	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id));
+	user_message("New pilot created and added to event.");
+	return event_view();
 }
 
 ?>

@@ -1,3 +1,39 @@
+<script src="/f3x/includes/jquery.min.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script>
+{literal}
+$(function() {
+	$("#pilot_name").autocomplete({
+		source: "/f3x/?action=lookup",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+        messages: {
+	        noResults: "Pilot Not Found. Use Add Button to Create.",
+	        results: function( amount ) {
+		        return amount + ( amount > 1 ? " results are" : " result is" ) +
+		        " available, use up and down arrow keys to navigate.";
+		    }
+		},
+   		select: function( event, ui ) {
+			document.add_pilot.pilot_id.value = ui.item.id;
+		},
+   		response: function( event, ui ) {
+   			var mes=document.getElementById('search_message');
+			mes.innerHTML = 'Found Results. Use Arrow keys to select';
+		}
+	});
+});
+</script>
+{/literal}
+
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event Settings - {$event.event_name} <input type="button" value=" Edit " onClick="edit_event.submit();" class="block-button">
@@ -33,18 +69,27 @@
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $pilots}({$total_pilots}){/if}</h1>
+		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
+		<input type="text" id="pilot_name" name="pilot_name" size="40">
+		    <span id="search_message">Search</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th>Pilot #</th>
-			<th>Pilot Name</th>
-			<th>Pilot Team</th>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="center">AMA#</th>
+			<th  align="left">Pilot Name</th>
+			<th  align="left">Pilot Class</th>
+			<th  align="left">Event Team</th>
 		</tr>
+		{assign var=num value=1}
 		{foreach $pilots as $p}
 		<tr>
-			<td></td>
+			<td>{$num}</td>
+			<td align="center">{$p.pilot_ama}</td>
 			<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-			<td></td>
+			<td>{$p.class_description}</td>
+			<td>{$p.event_team}</td>
 		</tr>
+		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
 
@@ -52,3 +97,18 @@
 </div>
 </div>
 
+<div id="log" style="height: 200px; width: 600px; overflow: auto;"></div>
+
+
+<form name="edit_event" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="edit_event">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+</form>
+<form name="add_pilot" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="add_pilot">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="pilot_id" value="">
+<input type="hidden" name="pilot_name" value="">
+</form>

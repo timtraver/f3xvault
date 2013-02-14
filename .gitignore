@@ -1,1 +1,4 @@
 templates_c
+.DS_Store
+/php/libraries/query_errors.log
+query_errors.log
