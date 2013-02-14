@@ -489,12 +489,12 @@ function save_pilot_quick_add() {
 	$pilot_first_name=$_REQUEST['pilot_first_name'];
 	$pilot_last_name=$_REQUEST['pilot_last_name'];
 	$pilot_city=$_REQUEST['pilot_city'];
-	$state_id=$_REQUEST['state_id'];
-	$country_id=$_REQUEST['country_id'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
 	$pilot_ama=$_REQUEST['pilot_ama'];
 	$pilot_fia=$_REQUEST['pilot_fia'];
 	$pilot_email=$_REQUEST['pilot_email'];
-	$class_id=$_REQUEST['class_id'];
+	$class_id=intval($_REQUEST['class_id']);
 
 	# Lets add the pilot to the pilot table
 	$stmt=db_prep("

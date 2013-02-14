@@ -27,7 +27,11 @@ $(function() {
 		},
    		response: function( event, ui ) {
    			var mes=document.getElementById('search_message');
-			mes.innerHTML = 'Found Results. Use Arrow keys to select';
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
 		}
 	});
 });
@@ -71,7 +75,7 @@ $(function() {
 		<h1 class="post-title entry-title">Event Pilots {if $pilots}({$total_pilots}){/if}</h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
-		    <span id="search_message">Search</span>
+		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
