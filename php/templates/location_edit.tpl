@@ -75,11 +75,11 @@
 			{/if}
 			{if $la.location_att_type == 'boolean'}
 				<td style="border-style: none;" nowrap>
-					<input type="checkbox" name="location_att_{$la.location_att_id}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> {$la.location_att_name}
+					<input type="checkbox" name="location_att_{$la.location_att_id}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> <span title="{$la.location_att_description}">{$la.location_att_name}</span>
 				</td>
 			{else}
 				<td style="border-style: none;" nowrap>
-					{$la.location_att_name} <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value}{/if}"> 
+					<span title="{$la.location_att_description}">{$la.location_att_name}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value}{/if}"> 
 				</td>
 			{/if}
 			{if $col > 2}

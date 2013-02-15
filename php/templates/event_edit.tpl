@@ -15,18 +15,31 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
-        messages: {
-	        noResults: "Location Not Found. Use Add Button to Create.",
-	        results: function( amount ) {
-		        return amount + ( amount > 1 ? " results are" : " result is" ) +
-		        " available, use up and down arrow keys to navigate.";
-		    }
-		},
    		select: function( event, ui ) {
 			document.main.location_id.value = ui.item.id;
 		},
    		response: function( event, ui ) {
    			var mes=document.getElementById('search_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
+		}
+	});
+	$("#event_cd_name").autocomplete({
+		source: "/f3x/?action=lookup&function=lookup_pilot",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		select: function( event, ui ) {
+			document.main.event_cd.value = ui.item.id;
+		},
+   		response: function( event, ui ) {
+   			var mes=document.getElementById('cd_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
@@ -49,9 +62,10 @@ $(function() {
 <input type="hidden" name="function" value="event_save">
 <input type="hidden" name="event_id" value="{$event.event_id}">
 <input type="hidden" name="location_id" value="{$event.location_id}">
+<input type="hidden" name="event_cd" value="{$event.event_cd}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Event Location</th>
+	<th>Location</th>
 	<td>
 		<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name}">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
@@ -59,26 +73,33 @@ $(function() {
 	</td>
 </tr>
 <tr>
-	<th>Event Name</th>
+	<th>Name</th>
 	<td>
 		<input type="text" size="60" name="event_name" value="{$event.event_name}">
 	</td>
 </tr>
 <tr>
-	<th>Event Dates</th>
+	<th>Dates</th>
 	<td>
 	{html_select_date prefix="event_start_date" start_year="-1" end_year="+1" day_format="%02d" time=$event.event_start_date} to 
 	{html_select_date prefix="event_end_date" start_year="-1" end_year="+1" day_format="%02d" time=$event.event_end_date}
 	</td>
 </tr>
 <tr>
-	<th>Event Type</th>
+	<th>Type</th>
 	<td>
 	<select name="event_type_id">
 	{foreach $event_types as $t}
 		<option value="{$t.event_type_id}" {if $event.event_type_id==$t.event_type_id}SELECTED{/if}>{$t.event_type_name}</option>
 	{/foreach}
 	</select>
+	</td>
+</tr>
+<tr>
+	<th>Contest Director</th>
+	<td>
+		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event.pilot_first_name!=''}{$event.pilot_first_name} {$event.pilot_last_name}{/if}">
+		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
 </tr>
 <tr>

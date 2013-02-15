@@ -186,6 +186,7 @@ function event_edit() {
 			FROM event e
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN country c ON c.country_id=l.country_id
+			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
 			WHERE e.event_id=:event_id
 		");
 		$result=db_exec($stmt,array("event_id"=>$event_id));
@@ -211,30 +212,6 @@ function event_edit() {
 		$state_id=$event['state_id'];
 		$addstate="AND s.state_id=:state_id";
 	}
-	$locations=array();
-	if($country_id!=0){
-		# Get locations in that country and state
-		$stmt=db_prep("
-			SELECT *
-			FROM location l
-			LEFT JOIN country c ON l.country_id=c.country_id
-			LEFT JOIN state s ON l.state_id=s.state_id
-			WHERE c.country_id=:country_id
-			$addstate
-			ORDER BY l.location_name
-		");
-		if($state_id != 0){
-			$locations=db_exec($stmt,array("country_id"=>$country_id,"state_id"=>$state_id));
-		}else{
-			$locations=db_exec($stmt,array("country_id"=>$country_id));
-		}
-	}
-	
-	# Get only the countries that we have events for
-	$countries=get_countries()
-	;
-	# Get only the states that we have events for
-	$states=get_states();
 	
 	# Get event types
 	$stmt=db_prep("
@@ -274,6 +251,7 @@ function event_save() {
 	$event_start_date=$_REQUEST['event_start_dateYear']."-".$_REQUEST['event_start_dateMonth']."-".$_REQUEST['event_start_dateDay'];
 	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
 	$event_type_id=$_REQUEST['event_type_id'];
+	$event_cd=$_REQUEST['event_cd'];
 
 	if($event_id==0){
 		$stmt=db_prep("
@@ -284,6 +262,7 @@ function event_save() {
 				event_start_date=:event_start_date,
 				event_end_date=:event_end_date,
 				event_type_id=:event_type_id,
+				event_cd=:event_cd,
 				event_status=1
 		");
 		$result=db_exec($stmt,array(
@@ -292,7 +271,8 @@ function event_save() {
 			"location_id"=>$location_id,
 			"event_start_date"=>$event_start_date,
 			"event_end_date"=>$event_end_date,
-			"event_type_id"=>$event_type_id
+			"event_type_id"=>$event_type_id,
+			"event_cd"=>$event_cd
 		));
 
 		user_message("Added your New Event!");
@@ -305,7 +285,8 @@ function event_save() {
 				location_id=:location_id,
 				event_start_date=:event_start_date,
 				event_end_date=:event_end_date,
-				event_type_id=:event_type_id
+				event_type_id=:event_type_id,
+				event_cd=:event_cd
 			WHERE event_id=:event_id
 		");
 		$result=db_exec($stmt,array(
@@ -314,6 +295,7 @@ function event_save() {
 			"event_start_date"=>$event_start_date,
 			"event_end_date"=>$event_end_date,
 			"event_type_id"=>$event_type_id,
+			"event_cd"=>$event_cd,
 			"event_id"=>$event_id
 		));
 		user_message("Updated Base Event Info!");
@@ -345,6 +327,7 @@ function event_view() {
 		LEFT JOIN state s ON l.state_id=s.state_id
 		LEFT JOIN country c ON c.country_id=l.country_id
 		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		LEFT JOIN pilot p ON e.event_cd=p.pilot_id
 		WHERE e.event_id=:event_id
 	");
 	$result=db_exec($stmt,array("event_id"=>$event_id));
@@ -485,6 +468,9 @@ function add_pilot_quick() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 
+	$teams=get_event_teams($event_id);
+	$smarty->assign("teams",$teams);
+
 	$maintpl=find_template("pilot_quick_add.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -508,6 +494,7 @@ function save_pilot_quick_add() {
 	$pilot_fia=$_REQUEST['pilot_fia'];
 	$pilot_email=$_REQUEST['pilot_email'];
 	$class_id=intval($_REQUEST['class_id']);
+	$event_pilot_team=$_REQUEST['event_pilot_team'];
 
 	# Lets add the pilot to the pilot table
 	$stmt=db_prep("
@@ -540,9 +527,10 @@ function save_pilot_quick_add() {
 		SET event_id=:event_id,
 			pilot_id=:pilot_id,
 			class_id=:class_id,
+			event_pilot_team=:event_pilot_team,
 			event_pilot_status=1
 	");
-	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id));
+	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id,"event_pilot_team"=>$event_pilot_team));
 	user_message("New pilot created and added to event.");
 	return event_view();
 }
@@ -568,5 +556,110 @@ function event_pilot_remove() {
 	user_message("Pilot removed from event.");
 	return event_view();
 }
+function event_pilot_edit() {
+	global $smarty;
 
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=$_REQUEST['event_pilot_id'];
+
+	$pilot=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	$pilot=$result[0];
+	$smarty->assign("pilot",$pilot);
+	
+	# Lets get the classes
+	$stmt=db_prep("
+		SELECT *
+		FROM class
+		WHERE 1
+		ORDER BY class_view_order
+	");
+	$classes=db_exec($stmt,array());
+	$smarty->assign("classes",$classes);
+
+	$teams=get_event_teams($event_id);
+	$smarty->assign("teams",$teams);
+
+	$maintpl=find_template("event_pilot_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_pilot_save() {
+	global $smarty;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=$_REQUEST['event_pilot_id'];
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fia=$_REQUEST['pilot_fia'];
+	$class_id=intval($_REQUEST['class_id']);
+	$event_pilot_team=$_REQUEST['event_pilot_team'];
+	
+	# Save the entry
+	$stmt=db_prep("
+		UPDATE event_pilot
+		SET class_id=:class_id,
+			event_pilot_team=:event_pilot_team
+		WHERE event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("class_id"=>$class_id,"event_pilot_team"=>$event_pilot_team,"event_pilot_id"=>$event_pilot_id));
+
+	# Lets see if we need to update the pilot's ama or fia number
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	$pilot=$result[0];
+	if($pilot_ama!=$pilot['pilot_ama'] || $pilot_fia!=$pilot['pilot_fia']){
+		# lets update the pilot record
+		$stmt=db_prep("
+			UPDATE pilot
+			SET pilot_ama=:pilot_ama,
+				pilot_fia=:pilot_fia
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fia"=>$pilot_fia,"pilot_id"=>$pilot['pilot_id']));
+	}
+
+	user_message("Updated event pilot info.");
+	return event_view();
+}
+function get_event_teams($event_id){
+	# Function to get the unique teams in an event
+	$stmt=db_prep("
+		SELECT DISTINCT(ep.event_pilot_team)
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_pilot_team !=''
+			AND e.event_id=:event_id
+			AND ep.event_pilot_status=1
+	");
+	$names=db_exec($stmt,array("event_id"=>$event_id));
+	
+	return $names;
+}
 ?>

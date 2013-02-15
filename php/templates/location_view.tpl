@@ -82,9 +82,9 @@
 				{assign var='row' value='1'}
 			{/if}
 			{if $la.location_att_type == 'boolean'}
-				{$la.location_att_name}
+				<span title="{$la.location_att_description}">{$la.location_att_name}</span>
 			{else}
-				{$la.location_att_name} <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{$la.location_att_value_value}">
+				<span title="{$la.location_att_description}">{$la.location_att_name}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{$la.location_att_value_value}">
 			{/if}
 			{assign var='cat' value=$la.location_att_cat_name}
 			{assign var='nextit' value=$smarty.foreach.las.index + 1}
