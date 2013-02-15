@@ -1,3 +1,42 @@
+<script src="/f3x/includes/jquery.min.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script>
+{literal}
+$(function() {
+	$("#plane_name").autocomplete({
+		source: "/f3x/?action=lookup&function=lookup_plane",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+        messages: {
+	        noResults: "Plane Not Found. Use Add Button to Create.",
+	        results: function( amount ) {
+		        return amount + ( amount > 1 ? " results are" : " result is" ) +
+		        " available, use up and down arrow keys to navigate.";
+		    }
+		},
+   		select: function( event, ui ) {
+			document.main.plane_id.value = ui.item.id;
+		},
+   		response: function( event, ui ) {
+   			var mes=document.getElementById('search_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
+		}
+	});
+});
+</script>
+{/literal}
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">My Pilot Profile</h1>
@@ -7,18 +46,16 @@
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="my_plane_save">
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
+<input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
 
 <h1 class="post-title entry-title">My Plane</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Plane</th>
+	<th width="20%">Plane</th>
 	<td>
-	<select name="plane_id">
-	{foreach $planes as $p}
-		<option value="{$p.plane_id}" {if $p.plane_id==$pilot_plane.plane_id}SELECTED{/if}>{$p.plane_type_short_name} - {$p.plane_name}</option>
-	{/foreach}
-	</select>
-		<input type="button" value=" I Dont See Mine " class="block-button" onClick="create_new_plane.submit();">
+		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name}">
+		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
+			<input type="button" value=" Create New Plane " class="block-button" onClick="create_new_plane.submit();">
 	</td>
 </tr>
 <tr>

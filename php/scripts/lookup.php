@@ -76,5 +76,33 @@ function lookup_plane() {
 	exit;
 
 }
+function lookup_location() {
+	global $user;
+	global $smarty;
+
+	$q = urldecode(strtolower($_GET["term"]));
+	
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM location l
+		LEFT JOIN state s ON l.state_id=s.state_id
+		LEFT JOIN country c ON l.country_id=c.country_id
+		WHERE LOWER(l.location_name) LIKE '%$q%'
+	");
+	$result=db_exec($stmt,array());
+	
+	foreach($result as $r){
+		$locations[]=array(
+			"id"=>$r['location_id'],
+			"label"=>"{$r['location_name']} - {$r['location_city']},{$r['state_code']} - {$r['country_code']}",
+			"value"=>"{$r['location_name']} - {$r['location_city']},{$r['state_code']} - {$r['country_code']}"
+		);
+	}
+
+	print json_encode($locations);
+	exit;
+
+}
 
 ?>

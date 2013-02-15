@@ -377,6 +377,18 @@ function add_pilot() {
 		return $smarty->fetch($maintpl);
 	}
 	
+	# Get list of pilot classes so I can choose a default one
+	$classes=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM class c
+	");
+	$result=db_exec($stmt,array());
+	foreach($result as $r){
+		$name=$r['class_name'];
+		$classes[$name]=$r;
+	}
+	
 	$event_id=intval($_REQUEST['event_id']);
 	if($event_id==0){
 		user_message("That is not a proper event id to add a pilot to.");
@@ -388,7 +400,6 @@ function add_pilot() {
 	if($pilot_id==0){
 		return add_pilot_quick();
 	}else{
-		
 		# Check to see if the pilot already exists in this event
 		$stmt=db_prep("
 			SELECT *
@@ -413,15 +424,17 @@ function add_pilot() {
 				$result2=db_exec($stmt,array("event_pilot_id"=>$result[0]['event_pilot_id']));
 			}
 		}else{
+			$default_class_id=$classes['open']['class_id'];
 			# This record doesn't exist, so lets add it
 				$stmt=db_prep("
 					INSERT INTO event_pilot
 					SET event_id=:event_id,
 						pilot_id=:pilot_id,
 						event_pilot_position=0,
+						class_id=:class_id,
 						event_pilot_status=1
 				");
-				$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+				$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$default_class_id));
 		}
 		user_message("Pilot Added to event.");
 		return event_view();
@@ -531,6 +544,28 @@ function save_pilot_quick_add() {
 	");
 	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id));
 	user_message("New pilot created and added to event.");
+	return event_view();
+}
+function event_pilot_remove() {
+	global $smarty;
+
+	if($GLOBALS['user_id']==0){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=$_REQUEST['event_pilot_id'];
+
+	$stmt=db_prep("
+		UPDATE event_pilot
+		SET event_pilot_status=0
+		WHERE event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	user_message("Pilot removed from event.");
 	return event_view();
 }
 

@@ -1,50 +1,61 @@
+<script src="/f3x/includes/jquery.min.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script>
+{literal}
+$(function() {
+	$("#location_name").autocomplete({
+		source: "/f3x/?action=lookup&function=lookup_location",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+        messages: {
+	        noResults: "Location Not Found. Use Add Button to Create.",
+	        results: function( amount ) {
+		        return amount + ( amount > 1 ? " results are" : " result is" ) +
+		        " available, use up and down arrow keys to navigate.";
+		    }
+		},
+   		select: function( event, ui ) {
+			document.main.location_id.value = ui.item.id;
+		},
+   		response: function( event, ui ) {
+   			var mes=document.getElementById('search_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
+		}
+	});
+});
+</script>
+{/literal}
+
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">RC Event Edit</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
-<form name="getlocations" method="POST">
-<input type="hidden" name="action" value="{$action|escape}">
-<input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event.event_id}">
-
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-<tr>
-	<th>Event Country</th>
-	<td>
-	<select name="country_id" onChange="document.getlocations.state_id.value=0;getlocations.submit();">
-	<option value="0">Choose Country to Narrow Search</option>
-	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-<tr>
-	<th>Event State</th>
-	<td>
-	<select name="state_id" onChange="getlocations.submit();">
-	<option value="0">Choose State to Narrow Search</option>
-	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-</form>
 <form name="main" method="POST">
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="event_save">
 <input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="location_id" value="{$event.location_id}">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th>Event Location</th>
 	<td>
-	<select name="location_id">
-	{foreach $locations as $l}
-		<option value="{$l.location_id}" {if $event.location_id==$l.location_id}SELECTED{/if}>{$l.location_name}</option>
-	{/foreach}
-	</select>
+		<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name}">
+		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
+		<input type="button" value=" + New Location " class="block-button" onClick="create_new_location.submit();">
 	</td>
 </tr>
 <tr>
@@ -87,6 +98,11 @@
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event.event_id}">
 {/if}
+</form>
+<form name="create_new_location" method="POST">
+<input type="hidden" name="action" value="location">
+<input type="hidden" name="function" value="location_edit">
+<input type="hidden" name="location_id" value="0">
 </form>
 
 </div>
