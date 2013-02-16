@@ -17,8 +17,37 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function="event_list";
 }
 
+$need_login=array(
+	"event_edit",
+	"event_save",
+	"add_pilot",
+	"add_pilot_quick",
+	"save_pilot_quick_add",
+	"event_pilot_remove",
+	"event_pilot_edit",
+	"event_pilot_save"
+);
 if(check_user_function($function)){
-	eval("\$actionoutput=$function();");
+	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		$maintpl=find_template("feature_requires_login.tpl");
+		$actionoutput=$smarty->fetch($maintpl);
+	}else{
+		# Now check to see if they have permission to edit this event
+		if(isset($_REQUEST['event_id']) && $_REQUEST['event_id']!=0){
+			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_event_permission($_REQUEST['event_id']))){
+				# They are allowed
+				eval("\$actionoutput=$function();");
+			}else{
+				# They aren't allowed
+				user_message("I'm sorry, but you do not have permission to edit this event. Please contact the event creator for access.",1);
+				$actionoutput=event_view();
+			}
+		}else{
+			eval("\$actionoutput=$function();");
+		}
+	}
 }else{
 	 $actionoutput= show_no_permission();
 }
@@ -169,13 +198,6 @@ function event_list() {
 function event_edit() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$event=array();
 	if($event_id!=0){
@@ -219,6 +241,19 @@ function event_edit() {
 		FROM event_type
 	");
 	$event_types=db_exec($stmt,array());
+
+	# Now lets get the users that have additional access
+	$stmt=db_prep("
+		SELECT *
+		FROM event_user eu
+		LEFT JOIN pilot p ON eu.pilot_id=p.pilot_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
+		WHERE eu.event_id=:event_id
+			AND eu.event_user_status=1
+	");
+	$event_users=db_exec($stmt,array("event_id"=>$event_id));
+	$smarty->assign("event_users",$event_users);
 	
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
@@ -235,13 +270,6 @@ function event_save() {
 	global $smarty;
 	global $user;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
 	$country_id=$_REQUEST['country_id'];
 	$state_id=$_REQUEST['state_id'];
 	$location_id=$_REQUEST['location_id'];
@@ -305,13 +333,6 @@ function event_save() {
 function event_view() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	if($event_id==0){
 		user_message("That is not a proper event id to edit.");
@@ -353,13 +374,6 @@ function event_view() {
 function add_pilot() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	# Get list of pilot classes so I can choose a default one
 	$classes=array();
 	$stmt=db_prep("
@@ -426,13 +440,6 @@ function add_pilot() {
 function add_pilot_quick() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$pilot_name=$_REQUEST['pilot_name'];
 
@@ -477,13 +484,6 @@ function add_pilot_quick() {
 function save_pilot_quick_add() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$pilot_first_name=$_REQUEST['pilot_first_name'];
 	$pilot_last_name=$_REQUEST['pilot_last_name'];
@@ -537,13 +537,6 @@ function save_pilot_quick_add() {
 function event_pilot_remove() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$event_pilot_id=$_REQUEST['event_pilot_id'];
 
@@ -559,13 +552,6 @@ function event_pilot_remove() {
 function event_pilot_edit() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$event_pilot_id=$_REQUEST['event_pilot_id'];
 
@@ -600,13 +586,6 @@ function event_pilot_edit() {
 function event_pilot_save() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
 	$event_pilot_id=$_REQUEST['event_pilot_id'];
 	$pilot_ama=$_REQUEST['pilot_ama'];
@@ -661,5 +640,133 @@ function get_event_teams($event_id){
 	$names=db_exec($stmt,array("event_id"=>$event_id));
 	
 	return $names;
+}
+function check_event_permission($event_id){
+	global $user;
+	# Function to check to see if this user can edit this event
+	# Get event info
+	$stmt=db_prep("
+		SELECT *
+		FROM event
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	$event=$result[0];
+
+	if($event['pilot_id']==$user['pilot_id']){
+		# This is the owner of the event, so of course he has access
+		return 1;
+	}
+	$allowed=0;
+	# Now lets get the other permissions
+	$stmt=db_prep("
+		SELECT *
+		FROM event_user
+		WHERE event_id=:event_id
+			AND event_user_status=1
+	");
+	$users=db_exec($stmt,array("event_id"=>$event_id));
+	foreach($users as $u){
+		if($user['pilot_id']==$u['pilot_id']){
+			$allowed=1;
+		}
+	}
+	return $allowed;
+}
+function event_user_save() {
+	global $smarty;
+	global $user;
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$pilot_id=intval($_REQUEST['pilot_id']);
+
+	# Get the current user pilot id to make sure they don't add themselves
+	$stmt=db_prep("
+		SELECT *
+		FROM event e
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	if(isset($result[0])){
+		$event=$result[0];
+	}
+	if($event['pilot_id']==$pilot_id){
+		user_message("You do not need to give access to yourself, as you will always have access as the owner of this event.");
+		return event_edit();
+	}
+	
+	# Now lets check to see if this is the event owner, because only they can add an event user
+	if($event['pilot_id']!=$user['pilot_id']){
+		user_message("You do not have access to give anyone else access. Only the event owner can do that.",1);
+		return event_edit();
+	}
+	
+	# Lets first see if this one is already added
+	$stmt=db_prep("
+		SELECT *
+		FROM event_user
+		WHERE event_id=:event_id
+			AND pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+	
+	if(isset($result[0])){
+		# This record already exists, so lets just turn it on
+		$stmt=db_prep("
+			UPDATE event_user
+			SET event_user_status=1
+			WHERE event_user_id=:event_user_id
+		");
+		$result=db_exec($stmt,array("event_user_id"=>$result[0]['event_user_id']));
+	}else{
+		# Lets create a new record
+		$stmt=db_prep("
+			INSERT INTO event_user
+			SET event_id=:event_id,
+				pilot_id=:pilot_id,
+				event_user_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_id"=>$event_id,
+			"pilot_id"=>$pilot_id
+		));
+	}
+	user_message("New user given access to edit this event.");
+	return event_edit();
+}
+function event_user_delete() {
+	global $smarty;
+	global $user;
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_user_id=intval($_REQUEST['event_user_id']);
+
+	# Lets see if they are allowed to do this
+	$stmt=db_prep("
+		SELECT *
+		FROM event e
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	if(isset($result[0])){
+		$event=$result[0];
+	}
+	
+	# Now lets check to see if this is the event owner, because only they can delete a user
+	if($event['pilot_id']!=$user['pilot_id']){
+		user_message("You do not have access to remove access to this event. Only the event owner can do that.",1);
+		return event_edit();
+	}
+
+	# Lets turn off this record
+	$stmt=db_prep("
+		UPDATE event_user
+		SET event_user_status=0
+		WHERE event_user_id=:event_user_id
+	");
+	$result=db_exec($stmt,array("event_user_id"=>$event_user_id));
+	
+	user_message("Removed user access to edit this event.");
+	return event_edit();
 }
 ?>

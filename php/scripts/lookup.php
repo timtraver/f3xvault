@@ -104,5 +104,4 @@ function lookup_location() {
 	exit;
 
 }
-
 ?>

@@ -47,6 +47,26 @@ $(function() {
 			}
 		}
 	});
+	$("#event_user_name").autocomplete({
+		source: "/f3x/?action=lookup&function=lookup_pilot",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		select: function( event, ui ) {
+			document.event_user_add.pilot_id.value = ui.item.id;
+		},
+   		response: function( event, ui ) {
+   			var mes=document.getElementById('user_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
+		}
+	});
 });
 </script>
 {/literal}
@@ -108,6 +128,35 @@ $(function() {
 		<input type="submit" value=" Save This Event " class="block-button">
 	</th>
 </tr>
+</table>
+</form>
+
+<h1 class="post-title entry-title">Edit Event Access</h1>
+<form name="event_user_add" method="POST">
+<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="function" value="event_user_save">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="pilot_id" value="">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th colspan="2" align="left">The Following Users Have Access To Edit This Event</th>
+</tr>
+{foreach $event_users as $u}
+<tr>
+	<td>{$u.pilot_first_name} {$u.pilot_last_name} - {$u.pilot_city}, {$u.state_code} {$u.country_code}</td>
+	<td width="2%">
+		<a href="?action=event&function=event_user_delete&event_id={$event.event_id}&event_user_id={$u.event_user_id}"><img src="/f3x/images/del.gif"></a></td>
+</tr>
+{/foreach}
+<tr>
+	<th colspan="2">
+		Add New User 
+		<input type="text" id="event_user_name" name="event_user_name" size="40">
+		<span id="user_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
+		<input type="submit" value=" Add This User " class="block-button">
+	</th>
+</tr>
+
 </table>
 </form>
 

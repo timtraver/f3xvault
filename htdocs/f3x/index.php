@@ -48,6 +48,16 @@ if($user_id){
 	$user['display_name']=$wpuser->display_name;
 	$user['user_first_name']=$wpuser->first_name;
 	$user['user_last_name']=$wpuser->last_name;
+	# Get the pilot ID of the current user
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot
+		WHERE pilot_wp_user_id=:user_id
+	");
+	$result=db_exec($stmt,array("user_id"=>$user['user_id']));
+	if(isset($result[0])){
+		$user=array_merge($user,$result[0]);
+	}
 }else{
 	$user=array();
 }

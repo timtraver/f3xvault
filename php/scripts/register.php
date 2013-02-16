@@ -101,7 +101,11 @@ function save_registration(){
 			FROM pilot p
 			WHERE p.pilot_email=LOWER(:user_email) OR p.pilot_first_name=LOWER(:user_first_name) OR p.pilot_last_name=LOWER(:user_last_name)
 		");
-		$result=db_exec($stmt,array("user_email"=>strtolower($user['user_email']),"user_first_name"=>strtolower($user['user_first_name']),"user_last_name"=>strtolower($user['user_last_name'])));
+		$result=db_exec($stmt,array(
+			"user_email"=>strtolower($user['user_email']),
+			"user_first_name"=>strtolower($user['user_first_name']),
+			"user_last_name"=>strtolower($user['user_last_name'])
+		));
 		if(isset($result[0])){
 			# Step though and find the last events they were in
 			$pilotlist=array();
@@ -154,7 +158,14 @@ function save_registration(){
 			pilot_id=:pilot_id,
 			user_status=1
 	");
-	$result=db_exec($stmt,array("user_name"=>$user_email,"user_first_name"=>$user_first_name,"user_last_name"=>$user_last_name,"user_email"=>$user_email,"user_pass"=>encrypt($user_pass),"pilot_id"=>$pilot_id));
+	$result=db_exec($stmt,array(
+		"user_name"=>$user_email,
+		"user_first_name"=>$user_first_name,
+		"user_last_name"=>$user_last_name,
+		"user_email"=>$user_email,
+		"user_pass"=>encrypt($user_pass),
+		"pilot_id"=>$pilot_id
+	));
 	$user=get_user_info($user_email);
 	$path="/f3x";
 	$host=$_SERVER['HTTP_HOST'];
