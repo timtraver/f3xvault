@@ -6,8 +6,6 @@
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
-
-<h1 class="post-title entry-title">Browse Events</h1>
 <table>
 <tr>
 	<th>Filter By Country</th>
@@ -108,6 +106,7 @@
 </tr>
 <tr>
 	<td colspan="7" align="center">
+		<br>
 		<input type="button" value=" Create New Event " onclick="newevent.submit();" class="block-button">
 	</td>
 </tr>

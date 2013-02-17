@@ -99,13 +99,27 @@ function my_user_show() {
 		$stmt=db_prep("
 			SELECT *
 			FROM pilot_location pl
-			LEFT JOIN location l ON l.location_id=pl.location_id
-			LEFT JOIN state s on s.state_id=l.state_id
-			LEFT JOIN country c on c.country_id=l.country_id
+			LEFT JOIN location l ON pl.location_id=l.location_id
+			LEFT JOIN state s on l.state_id=s.state_id
+			LEFT JOIN country c on l.country_id=c.country_id
 			WHERE pl.pilot_id=:pilot_id
 				AND pl.pilot_location_status=1
 		");
 		$pilot_locations=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		
+		# Get the pilots events
+		$pilot_events=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN location l ON e.location_id=l.location_id
+			LEFT JOIN state s on s.state_id=l.state_id
+			LEFT JOIN country c on c.country_id=l.country_id
+			WHERE ep.pilot_id=:pilot_id
+				AND ep.event_pilot_status=1
+		");
+		$pilot_events=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
 	}
 	
 	$smarty->assign("pilot",$pilot);
@@ -113,6 +127,7 @@ function my_user_show() {
 	$smarty->assign("is_pilotlist",$is_pilotlist);
 	$smarty->assign("pilot_planes",$pilot_planes);
 	$smarty->assign("pilot_locations",$pilot_locations);
+	$smarty->assign("pilot_events",$pilot_events);
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 	$maintpl=find_template("my.tpl");
@@ -280,6 +295,7 @@ function my_plane_save() {
 			"pilot_plane_color"=>$pilot_plane_color		
 		));
 		user_message("Added New Plane to your quiver!");
+		$_REQUEST['pilot_plane_id']=$GLOBALS['last_insert_id'];
 	}else{
 		$stmt=db_prep("
 			UPDATE pilot_plane
@@ -290,7 +306,7 @@ function my_plane_save() {
 		$result=db_exec($stmt,array("plane_id"=>$plane_id,"pilot_plane_color"=>$pilot_plane_color,"pilot_plane_id"=>$pilot_plane_id));
 		user_message("Updated Your Plane Info");
 	}
-	return my_user_show();
+	return my_plane_edit();
 }
 
 function my_plane_del() {

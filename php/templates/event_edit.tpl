@@ -15,10 +15,21 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_location');
+			loading.style.display = "inline";
+		},
    		select: function( event, ui ) {
 			document.main.location_id.value = ui.item.id;
 		},
+   		change: function( event, ui ) {
+   			if(document.main.location_name.value==''){
+				document.main.location_id.value = 0;
+			}
+		},
    		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_location');
+			loading.style.display = "none";
    			var mes=document.getElementById('search_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
@@ -35,10 +46,21 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_cd');
+			loading.style.display = "inline";
+		},
    		select: function( event, ui ) {
 			document.main.event_cd.value = ui.item.id;
 		},
+   		change: function( event, ui ) {
+   			if(document.main.event_cd_name.value==''){
+				document.main.event_cd.value = 0;
+			}
+		},
    		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_cd');
+			loading.style.display = "none";
    			var mes=document.getElementById('cd_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
@@ -55,10 +77,21 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_pilot');
+			loading.style.display = "inline";
+		},
    		select: function( event, ui ) {
 			document.event_user_add.pilot_id.value = ui.item.id;
 		},
+   		change: function( event, ui ) {
+   			if(document.event_user_add.event_user_name.value==''){
+				document.event_user_add.pilot.value = 0;
+			}
+		},
    		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_pilot');
+			loading.style.display = "none";
    			var mes=document.getElementById('user_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
@@ -88,6 +121,7 @@ $(function() {
 	<th>Location</th>
 	<td>
 		<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name}">
+		<img id="loading_location" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
 		<input type="button" value=" + New Location " class="block-button" onClick="create_new_location.submit();">
 	</td>
@@ -119,15 +153,47 @@ $(function() {
 	<th>Contest Director</th>
 	<td>
 		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event.pilot_first_name!=''}{$event.pilot_first_name} {$event.pilot_last_name}{/if}">
+		<img id="loading_cd" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
 </tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Cancel " onClick="goback.submit();" class="block-button">
+		<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
 		<input type="submit" value=" Save This Event " class="block-button">
 	</th>
 </tr>
+</table>
+</form>
+
+{if $event.event_id!=0}
+<h1 class="post-title entry-title">Edit Advanced Event Parameters</h1>
+<form name="event_options" method="POST">
+<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="function" value="event_param_save">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th colspan="2" align="left">The Following Specific Parameters Are for this {$event.event_type_name}</th>
+</tr>
+{foreach $options as $o}
+<tr>
+	<th width="15%">{$o.event_type_option_name} (<a href="#" title="{$o.event_type_option_description}">?</a>)</th>
+	<td>
+		{if $o.event_type_option_type == 'boolean'}
+				<input type="checkbox" name="option_{$o.event_type_option_id}" {if $o.event_option_status==1 && $o.event_option_value ==1}CHECKED{/if}>
+		{else}
+				<input type="text" name="option_{$o.event_type_option_id}" size="{$o.event_type_option_size}" value="{if $o.event_option_status==1}{$o.event_option_value}{/if}"> 
+		{/if}
+	</td>
+</tr>
+{/foreach}
+<tr>
+	<th colspan="2">
+		<input type="submit" value=" Save These Event Parameters " class="block-button">
+	</th>
+</tr>
+
 </table>
 </form>
 
@@ -152,6 +218,7 @@ $(function() {
 	<th colspan="2">
 		Add New User 
 		<input type="text" id="event_user_name" name="event_user_name" size="40">
+		<img id="loading_pilot" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="user_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 		<input type="submit" value=" Add This User " class="block-button">
 	</th>
@@ -159,7 +226,7 @@ $(function() {
 
 </table>
 </form>
-
+{/if}
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
 {if $event.event_id==0}

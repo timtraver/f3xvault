@@ -15,22 +15,26 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
-        messages: {
-	        noResults: "Plane Not Found. Use Add Button to Create.",
-	        results: function( amount ) {
-		        return amount + ( amount > 1 ? " results are" : " result is" ) +
-		        " available, use up and down arrow keys to navigate.";
-		    }
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "inline";
 		},
    		select: function( event, ui ) {
 			document.main.plane_id.value = ui.item.id;
 		},
+   		change: function( event, ui ) {
+   			if(document.main.plane_name.value==''){
+				document.main.plane_id.value = 0;
+			}
+		},
    		response: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "none";
    			var mes=document.getElementById('search_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+				mes.innerHTML = ' No Results Found. Use Create button to add new plane.';
 			}
 		}
 	});
@@ -48,14 +52,16 @@ $(function() {
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
 <input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
 
-<h1 class="post-title entry-title">My Plane</h1>
+<h1 class="post-title entry-title">My Plane
+<input type="button" value=" Create New Plane " class="block-button" onClick="create_new_plane.submit();">
+</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th width="20%">Plane</th>
 	<td>
 		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name}">
+		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
-			<input type="button" value=" Create New Plane " class="block-button" onClick="create_new_plane.submit();">
 	</td>
 </tr>
 <tr>
@@ -74,6 +80,7 @@ $(function() {
 </center>
 </form>
 
+{if $pilot_plane.pilot_plane_id!=0}
 <div id="media">
 <h1 class="post-title entry-title">Plane Media</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
@@ -112,6 +119,8 @@ $(function() {
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
 <input type="hidden" name="pilot_plane_media_id" value="0">
 </form>
+{/if}
+
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="my">
 </form>

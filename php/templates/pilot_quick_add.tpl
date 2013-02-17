@@ -21,6 +21,37 @@ $(function() {ldelim}
         scroll: true,
         scrollHeight: 300
 	});
+	$("#event_plane").autocomplete({
+		source: "/f3x/?action=lookup&function=lookup_plane",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.plane_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.event_plane.value==''){
+				document.main.plane_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "none";
+   			var mes=document.getElementById('plane_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found.';
+			}
+		}
+	});
 });
 </script>
 {/literal}
@@ -29,11 +60,12 @@ $(function() {ldelim}
 		<h1 class="post-title entry-title">Event Pilot Quick Add</h1>
 		<div class="entry-content clearfix">
 
-<form method="POST">
+<form name="main" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="save_pilot_quick_add">
 <input type="hidden" name="event_id" value="{$event.event_id}">
-<table width="50%" cellpadding="2" cellspacing="2" class="tableborder">
+<input type="hidden" name="plane_id" value="">
+<table width="100%" cellpadding="2" cellspacing="2" class="tableborder">
 <tr>
 	<th colspan="3">Pilot Information</th>
 </tr>
@@ -66,7 +98,7 @@ $(function() {ldelim}
 	</td>
 </tr>
 <tr>
-	<td nowrap>Pilot Country</td>
+	<th nowrap>Pilot Country</th>
 	<td colspan="2">
 		<select name="country_id">
 		{foreach $countries as $country}
@@ -104,9 +136,23 @@ $(function() {ldelim}
 	</td>
 </tr>
 <tr>
+	<th nowrap>Pilot Radio Frequency</th>
+	<td colspan="2">
+		<input type="text" name="event_pilot_freq" size="15" value="">
+	</td>
+</tr>
+<tr>
 	<th nowrap>Event Team</th>
 	<td colspan="2">
 		<input type="text" id="event_pilot_team" name="event_pilot_team" size="40" value="">
+	</td>
+</tr>
+<tr>
+	<th nowrap>Event Plane</th>
+	<td colspan="2">
+		<input type="text" id="event_plane" name="event_plane" size="40" value="{$pilot.plane_name}">
+		<img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="plane_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
 	</td>
 </tr>
 <tr>

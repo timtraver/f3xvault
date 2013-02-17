@@ -91,10 +91,9 @@
 	<td><input type="text" size="10" name="pilot_fia" value="{$pilot.pilot_fia|escape}"></td>
 </tr>
 </table>
-<center>
 <br>
 <input type="submit" value=" Save My User Values " class="block-button">
-</center>
+
 {if $pilot.pilot_id!=0}
 <h1 class="post-title entry-title">My Aircraft</h1>
 	<table width="100%" cellpadding="2" cellspacing="1">
@@ -121,11 +120,10 @@
 		</tr>
 	{/if}
 	</table>
-	<center>
 	<br>
 	<input type="button" value="Add A New Plane to my Quiver" onClick="add_plane.submit()" class="block-button">
-	</center>
 </form>
+
 <h1 class="post-title entry-title">My RC Flying Locations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
@@ -149,10 +147,8 @@
 	</tr>
 {/if}
 </table>
-<center>
 <br>
 <input type="button" value="Add A New Location Where I fly" onClick="add_location.submit()" class="block-button">
-</center>
 </form>
 
 <form name="add_plane" method="POST">
@@ -165,6 +161,35 @@
 <input type="hidden" name="function" value="my_location_edit">
 <input type="hidden" name="pilot_location_id" value="0">
 </form>
+
+<h1 class="post-title entry-title">My RC Events</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Event Date</th>
+	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Event Location</th>
+	<th style="text-align: left;">State/Country</th>
+</tr>
+{if $pilot_events}
+	{foreach $pilot_events as $pe}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td>{$pe.event_start_date|date_format:"Y-m-d"}</td>
+		<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name}</a></td>
+		<td><a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name}</a></td>
+		<td>{$pe.state_name}, {$pe.country_code}</td>
+	</tr>
+	{/foreach}
+{else}
+	<tr>
+		<td colspan="4">You currently have no events.</td>
+	</tr>
+{/if}
+</table>
+<center>
+<br>
+</center>
+</form>
+
 {/if}
 {/if}
 </div>

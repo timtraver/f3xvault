@@ -22,7 +22,6 @@ if(check_user_function($function)){
 
 function location_list() {
 	global $smarty;
-	global $export;
 
 	$country_id=0;
 	$state_id=0;

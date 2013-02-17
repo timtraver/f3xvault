@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-02-14 08:38:44
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-17 07:39:10
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1360658204,
+      1 => 1361086746,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_511ca2948cf284_23831098',
   'variables' => 
   array (
     'countries' => 0,
@@ -36,8 +38,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'event' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_511ca2948cf284_23831098',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
 if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
@@ -49,8 +49,6 @@ if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
-
-<h1 class="post-title entry-title">Browse Events</h1>
 <table>
 <tr>
 	<th>Filter By Country</th>
@@ -187,6 +185,7 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 </tr>
 <tr>
 	<td colspan="7" align="center">
+		<br>
 		<input type="button" value=" Create New Event " onclick="newevent.submit();" class="block-button">
 	</td>
 </tr>

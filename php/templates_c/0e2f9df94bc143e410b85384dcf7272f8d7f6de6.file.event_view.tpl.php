@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-02-15 08:25:38
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-17 08:34:57
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1360916733,
+      1 => 1361090081,
       2 => 'file',
     ),
   ),
@@ -45,10 +45,25 @@ $(function() {
         autoFocus: true,
         scroll: true,
         scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "inline";
+		},
    		select: function( event, ui ) {
 			document.add_pilot.pilot_id.value = ui.item.id;
+			var name=document.getElementById('pilot_name');
+			document.add_pilot.pilot_name.value=name.value;
+			add_pilot.submit();
+		},
+   		change: function( event, ui ) {
+   			var id=document.getElementById('pilot_name');
+   			if(id.value==''){
+				document.add_pilot.pilot_id.value = 0;
+			}
 		},
    		response: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "none";
    			var mes=document.getElementById('search_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
@@ -64,7 +79,7 @@ $(function() {
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event Settings - <?php echo $_smarty_tpl->tpl_vars['event']->value['event_name'];?>
- <input type="button" value=" Edit " onClick="document.edit_event.submit();" class="block-button">
+ <input type="button" value=" Edit Event Parameters " onClick="document.edit_event.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -110,13 +125,16 @@ $(function() {
 )<?php }?></h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
-		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
+		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
 			<th width="10%" align="center">AMA#</th>
 			<th align="left">Pilot Name</th>
 			<th align="left">Pilot Class</th>
+			<th align="left">Pilot Plane</th>
+			<th align="left">Pilot Freq</th>
 			<th align="left">Event Team</th>
 			<th align="left" width="4%"></th>
 		</tr>
@@ -136,6 +154,10 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 </td>
 			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['class_description'];?>
 </td>
+			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['plane_name'];?>
+</td>
+			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_freq'];?>
+</td>
 			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_team'];?>
 </td>
 			<td nowrap>
@@ -152,10 +174,18 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<?php } ?>
 		</table>
 
+<br>
+
+
+<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
 
 </div>
 </div>
 
+<form name="goback" method="GET">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_list">
+</form>
 <form name="edit_event" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">

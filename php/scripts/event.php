@@ -209,30 +209,11 @@ function event_edit() {
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN country c ON c.country_id=l.country_id
 			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 			WHERE e.event_id=:event_id
 		");
 		$result=db_exec($stmt,array("event_id"=>$event_id));
 		$event=$result[0];
-	}
-	
-	$country_id=0;
-	$addcountry='';
-	if(isset($_REQUEST['country_id'])){
-		$country_id=$_REQUEST['country_id'];
-		$addcountry="AND c.country_id=:country_id";
-	}else{
-		$country_id=$event['country_id'];
-		$addcountry="AND c.country_id=:country_id";
-	}
-	
-	$state_id=0;
-	$addstate='';
-	if(isset($_REQUEST['state_id']) && $_REQUEST['state_id']!=0){
-		$state_id=$_REQUEST['state_id'];
-		$addstate="AND s.state_id=:state_id";
-	}else{
-		$state_id=$event['state_id'];
-		$addstate="AND s.state_id=:state_id";
 	}
 	
 	# Get event types
@@ -241,6 +222,36 @@ function event_edit() {
 		FROM event_type
 	");
 	$event_types=db_exec($stmt,array());
+
+	# Now lets get the specific event options for this type
+	# Get all of the base options
+	$options=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_type_option eto
+		WHERE eto.event_type_id=:event_type_id
+		ORDER BY eto.event_type_option_order
+	");
+	$options=db_exec($stmt,array("event_type_id"=>$event['event_type_id']));
+
+	$stmt=db_prep("
+		SELECT *
+		FROM event_option
+		WHERE event_id=:event_id
+			AND event_option_status=1
+	");
+	$values=db_exec($stmt,array("event_id"=>$event_id));
+
+	# Step through each of the values and put those entries into the options array
+	foreach ($options as $key=>$o){
+		$id=$o['event_type_option_id'];
+		foreach($values as $value){
+			if($value['event_type_option_id']==$id){
+				$options[$key]['event_option_value']=$value['event_option_value'];
+				$options[$key]['event_option_status']=$value['event_option_status'];
+			}
+		}
+	}
 
 	# Now lets get the users that have additional access
 	$stmt=db_prep("
@@ -262,6 +273,7 @@ function event_edit() {
 	$smarty->assign("state_id",$state_id);
 	$smarty->assign("event_types",$event_types);
 	$smarty->assign("event",$event);
+	$smarty->assign("options",$options);
 
 	$maintpl=find_template("event_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -270,21 +282,21 @@ function event_save() {
 	global $smarty;
 	global $user;
 
-	$country_id=$_REQUEST['country_id'];
-	$state_id=$_REQUEST['state_id'];
-	$location_id=$_REQUEST['location_id'];
+	$country_id=intval($_REQUEST['country_id']);
+	$state_id=intval($_REQUEST['state_id']);
+	$location_id=intval($_REQUEST['location_id']);
 	$event_name=$_REQUEST['event_name'];
-	$event_id=$_REQUEST['event_id'];
+	$event_id=intval($_REQUEST['event_id']);
 	# Get the dates
 	$event_start_date=$_REQUEST['event_start_dateYear']."-".$_REQUEST['event_start_dateMonth']."-".$_REQUEST['event_start_dateDay'];
 	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
-	$event_type_id=$_REQUEST['event_type_id'];
-	$event_cd=$_REQUEST['event_cd'];
+	$event_type_id=intval($_REQUEST['event_type_id']);
+	$event_cd=intval($_REQUEST['event_cd']);
 
 	if($event_id==0){
 		$stmt=db_prep("
 			INSERT INTO event
-			SET user_id=:user_id,
+			SET pilot_id=:pilot_id,
 				event_name=:event_name,
 				location_id=:location_id,
 				event_start_date=:event_start_date,
@@ -294,7 +306,7 @@ function event_save() {
 				event_status=1
 		");
 		$result=db_exec($stmt,array(
-			"user_id"=>$GLOBALS['user_id'],
+			"pilot_id"=>$user['pilot_id'],
 			"event_name"=>$event_name,
 			"location_id"=>$location_id,
 			"event_start_date"=>$event_start_date,
@@ -328,7 +340,7 @@ function event_save() {
 		));
 		user_message("Updated Base Event Info!");
 	}
-	return event_view();
+	return event_edit();
 }
 function event_view() {
 	global $smarty;
@@ -354,13 +366,14 @@ function event_view() {
 	$result=db_exec($stmt,array("event_id"=>$event_id));
 	$event=$result[0];
 	$smarty->assign("event",$event);
-	
+
 	# Now lets get the pilots assigned to this event
 	$stmt=db_prep("
 		SELECT *
 		FROM event_pilot ep
 		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 		LEFT JOIN class c ON ep.class_id=c.class_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		WHERE ep.event_id=:event_id
 			AND ep.event_pilot_status=1
 	");
@@ -419,22 +432,24 @@ function add_pilot() {
 					WHERE event_pilot_id=:event_pilot_id
 				");
 				$result2=db_exec($stmt,array("event_pilot_id"=>$result[0]['event_pilot_id']));
+				$_REQUEST['event_pilot_id']=$result[0]['event_pilot_id'];
 			}
 		}else{
 			$default_class_id=$classes['open']['class_id'];
 			# This record doesn't exist, so lets add it
-				$stmt=db_prep("
-					INSERT INTO event_pilot
-					SET event_id=:event_id,
-						pilot_id=:pilot_id,
-						event_pilot_position=0,
-						class_id=:class_id,
-						event_pilot_status=1
-				");
-				$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$default_class_id));
+			$stmt=db_prep("
+				INSERT INTO event_pilot
+				SET event_id=:event_id,
+					pilot_id=:pilot_id,
+					event_pilot_position=0,
+					class_id=:class_id,
+					event_pilot_status=1
+			");
+			$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$default_class_id));
+			$_REQUEST['event_pilot_id']=$GLOBALS['last_insert_id'];
 		}
 		user_message("Pilot Added to event.");
-		return event_view();
+		return event_pilot_edit();
 	}
 }
 function add_pilot_quick() {
@@ -494,7 +509,9 @@ function save_pilot_quick_add() {
 	$pilot_fia=$_REQUEST['pilot_fia'];
 	$pilot_email=$_REQUEST['pilot_email'];
 	$class_id=intval($_REQUEST['class_id']);
+	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
+	$plane_id=intval($_REQUEST['plane_id']);
 
 	# Lets add the pilot to the pilot table
 	$stmt=db_prep("
@@ -527,10 +544,12 @@ function save_pilot_quick_add() {
 		SET event_id=:event_id,
 			pilot_id=:pilot_id,
 			class_id=:class_id,
+			event_pilot_freq=:event_pilot_freq,
 			event_pilot_team=:event_pilot_team,
+			plane_id=:plane_id,
 			event_pilot_status=1
 	");
-	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id,"event_pilot_team"=>$event_pilot_team));
+	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id,"event_pilot_freq"=>$event_pilot_freq,"event_pilot_team"=>$event_pilot_team,"plane_id"=>$plane_id));
 	user_message("New pilot created and added to event.");
 	return event_view();
 }
@@ -561,6 +580,7 @@ function event_pilot_edit() {
 		FROM event_pilot ep
 		LEFT JOIN event e ON ep.event_id=e.event_id
 		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		WHERE ep.event_pilot_id=:event_pilot_id
 	");
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
@@ -591,16 +611,20 @@ function event_pilot_save() {
 	$pilot_ama=$_REQUEST['pilot_ama'];
 	$pilot_fia=$_REQUEST['pilot_fia'];
 	$class_id=intval($_REQUEST['class_id']);
+	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
+	$plane_id=intval($_REQUEST['plane_id']);
 	
 	# Save the entry
 	$stmt=db_prep("
 		UPDATE event_pilot
 		SET class_id=:class_id,
-			event_pilot_team=:event_pilot_team
+			event_pilot_freq=:event_pilot_freq,
+			event_pilot_team=:event_pilot_team,
+			plane_id=:plane_id
 		WHERE event_pilot_id=:event_pilot_id
 	");
-	$result=db_exec($stmt,array("class_id"=>$class_id,"event_pilot_team"=>$event_pilot_team,"event_pilot_id"=>$event_pilot_id));
+	$result=db_exec($stmt,array("class_id"=>$class_id,"event_pilot_freq"=>$event_pilot_freq,"event_pilot_team"=>$event_pilot_team,"event_pilot_id"=>$event_pilot_id,"plane_id"=>$plane_id));
 
 	# Lets see if we need to update the pilot's ama or fia number
 	$stmt=db_prep("
@@ -680,6 +704,10 @@ function event_user_save() {
 	$event_id=intval($_REQUEST['event_id']);
 	$pilot_id=intval($_REQUEST['pilot_id']);
 
+	if($pilot_id==0){
+		user_message("Cannot add a blank user for access.",1);
+		return event_edit();
+	}
 	# Get the current user pilot id to make sure they don't add themselves
 	$stmt=db_prep("
 		SELECT *
@@ -767,6 +795,69 @@ function event_user_delete() {
 	$result=db_exec($stmt,array("event_user_id"=>$event_user_id));
 	
 	user_message("Removed user access to edit this event.");
+	return event_edit();
+}
+function event_param_save() {
+	global $smarty;
+	global $user;
+	
+	$event_id=intval($_REQUEST['event_id']);
+	
+	# Lets clear out all of the option values that this event has
+	$stmt=db_prep("
+		UPDATE event_option
+		SET event_option_status=0
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	
+	# Now lets step through the options and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^option_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM event_option
+			WHERE event_id=:event_id
+				AND event_type_option_id=:event_type_option_id
+		");
+		$result=db_exec($stmt,array("event_type_option_id"=>$id,"event_id"=>$event_id));
+		if($result){
+			# There is already a record, so lets update it
+			$event_option_id=$result[0]['event_option_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE event_option
+					SET event_option_value=:value,
+						event_option_status=1
+					WHERE event_option_id=:event_option_id
+				");
+				$result2=db_exec($stmt,array("value"=>$value,"event_option_id"=>$event_option_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO event_option
+					SET event_id=:event_id,
+						event_type_option_id=:event_type_option_id,
+						event_option_value=:value,
+						event_option_status=1
+				");
+				$result2=db_exec($stmt,array("event_id"=>$event_id,"event_type_option_id"=>$id,"value"=>$value));
+			}
+		}
+	}	
+	user_message("Event Parameters Saved.");
 	return event_edit();
 }
 ?>
