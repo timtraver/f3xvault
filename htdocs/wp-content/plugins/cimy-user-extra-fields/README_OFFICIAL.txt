@@ -626,6 +626,11 @@ A lot of times I cannot reproduce the problem and I need more details, so if you
 
 
 CHANGELOG:
+v2.4.2 - 18/02/2013
+- Fixed missing 'cimy_update_ExtraFields' PHP warning (introduced in v2.4.1) (thanks to Ashton Clark and vtxyzzy)
+- Fixed WordPress MS per-blog installation was not working for non main sites since WordPress MS 3.5 (thanks to Denis Lam)
+- Fixed WordPress MS per-blog installation was not deleting cimy tables when blog is deleted
+
 v2.4.1 - 11/02/2013
 - Added support for welcome email, extra fields title and fieldset titles under the WordPress Multilingual plug-in (thanks to Piet for testing it)
 - Added Arabic translation (Mamoun Elkheir)

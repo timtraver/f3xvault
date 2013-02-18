@@ -46,7 +46,6 @@ function cimy_uef_admin_init() {
 	global $cuef_js_webpath, $cuef_plugin_dir;
 	require_once($cuef_plugin_dir.'/cimy_uef_admin.php');
 	require_once($cuef_plugin_dir.'/cimy_uef_options.php');
-	require_once($cuef_plugin_dir.'/cimy_uef_profile.php');
 	// add code to handle new value from ajax code in A&U Extended
 	add_action('wp_ajax_save-extra-field-new-value', 'cimy_uef_admin_ajax_save_ef_new_value');
 

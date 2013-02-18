@@ -459,13 +459,18 @@ function cimy_switch_to_blog($meta=array()) {
 			$mu_blog_id = intval($_GET["blog_id"]);
 		else if (isset($_POST["blog_id"]))
 			$mu_blog_id = intval($_POST["blog_id"]);
+		// needed because WordPress 3.5+ MS doesn't like to redirect to wp-signup.php using 'blog_id' parameter
+		if (isset($meta["from_blog_id"]))
+			$mu_blog_id = intval($meta["from_blog_id"]);
+		else if (isset($_GET["from_blog_id"]))
+			$mu_blog_id = intval($_GET["from_blog_id"]);
+		else if (isset($_POST["from_blog_id"]))
+			$mu_blog_id = intval($_POST["from_blog_id"]);
 		else
 			$mu_blog_id = 1;
 
 		if (cimy_uef_mu_blog_exists($mu_blog_id)) {
-			if (switch_to_blog($mu_blog_id))
-				cimy_uef_set_tables();
-			else
+			if (!switch_to_blog($mu_blog_id))
 				$mu_blog_id = 1;
 		}
 		else
@@ -473,14 +478,30 @@ function cimy_switch_to_blog($meta=array()) {
 	}
 }
 
+function cimy_uef_blog_switched($new_blog_id, $prev_blog_id) {
+	cimy_uef_set_tables();
+}
+
+function cimy_is_at_least_wordpress35() {
+	return version_compare(get_bloginfo('version'), '3.5') >= 0;
+}
+
 function cimy_switch_current_blog($hidden_field=false) {
 	global $switched, $blog_id;
 
 	if (isset($switched)) {
-		if ($hidden_field)
-			echo "\t<input type=\"hidden\" name=\"blog_id\" value=\"".$blog_id."\" />\n";
+		if ($hidden_field) {
+			if (cimy_is_at_least_wordpress35()) {
+				echo "\t<input type=\"hidden\" name=\"from_blog_id\" value=\"".$blog_id."\" />\n";
+			}
+			else {
+				echo "\t<input type=\"hidden\" name=\"blog_id\" value=\"".$blog_id."\" />\n";
+			}
+			
+		}
 
-		//restore_current_blog();
+		if (cimy_is_at_least_wordpress35())
+			restore_current_blog();
 	}
 }
 

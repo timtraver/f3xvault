@@ -13,7 +13,7 @@ function cimy_register_user_extra_hidden_fields_stage2() {
 			if (is_array($value))
 				$value = implode(',', $value);
 			echo "\t\t<input type=\"hidden\" name=\"".$name."\" value=\"".esc_attr($value)."\" />\n";
-		} else if ($name == "blog_id") {
+		} else if ($name == "blog_id" || $name == "from_blog_id") {
 			echo "\t\t<input type=\"hidden\" name=\"".$name."\" value=\"".esc_attr($value)."\" />\n";
 		}
 	}
@@ -29,7 +29,7 @@ function cimy_register_user_extra_fields_signup_meta($meta) {
 			if (is_array($value))
 				$value = implode(',', $value);
 			$meta[$name] = $value;
-		} else if ($name == "blog_id") {
+		} else if ($name == "blog_id" || $name == "from_blog_id") {
 			$meta[$name] = $value;
 		}
 	}
@@ -81,7 +81,7 @@ function cimy_register_overwrite_password($password) {
 function cimy_register_user_extra_fields($user_id, $password="", $meta=array()) {
 	global $wpdb_data_table, $wpdb, $max_length_value, $fields_name_prefix, $wp_fields_name_prefix, $wp_hidden_fields, $cimy_uef_file_types, $user_level, $cimy_uef_file_images_types;
 
-	if (isset($meta["blog_id"]))
+	if (isset($meta["blog_id"]) || isset($meta["from_blog_id"]))
 		cimy_switch_to_blog($meta);
 
 	// avoid to save stuff if user created from wp_create_user function
@@ -317,7 +317,8 @@ function cimy_profile_check_wrapper($errors, $update, $user) {
 function cimy_registration_check($user_login, $user_email, $errors) {
 	global $wpdb, $rule_canbeempty, $rule_email, $rule_maxlen, $fields_name_prefix, $wp_fields_name_prefix, $rule_equalto_case_sensitive, $apply_equalto_rule, $cimy_uef_domain, $cimy_uef_file_types, $rule_equalto_regex, $user_level, $cimy_uef_file_images_types;
 
-// 	cimy_switch_to_blog();
+	if (cimy_is_at_least_wordpress35())
+		cimy_switch_to_blog();
 	$options = cimy_get_options();
 
 	// code for confirmation email check
@@ -641,7 +642,8 @@ function cimy_registration_captcha_check($user_login, $user_email, $errors) {
 function cimy_registration_form($errors=null, $show_type=0) {
 	global $wpdb, $start_cimy_uef_comment, $end_cimy_uef_comment, $rule_maxlen_needed, $fields_name_prefix, $wp_fields_name_prefix, $cuef_plugin_dir, $cimy_uef_file_types, $cimy_uef_textarea_types, $user_level, $cimy_uef_domain, $cimy_uef_file_images_types;
 
-// 	cimy_switch_to_blog();
+	if (cimy_is_at_least_wordpress35())
+		cimy_switch_to_blog();
 
 	$my_user_level = $user_level;
 
@@ -1025,7 +1027,7 @@ function cimy_registration_form($errors=null, $show_type=0) {
 			$obj_id = ' id="'.$unique_id.'"';
 
 			// tabindex not used in MU, WordPress 3.5+ and Theme My Login  dropping...
-			if (is_multisite() || version_compare(get_bloginfo('version'), '3.5') >= 0 || (!empty($GLOBALS['theme_my_login']) && $GLOBALS['theme_my_login']->is_login_page()))
+			if (is_multisite() || cimy_is_at_least_wordpress35() || (!empty($GLOBALS['theme_my_login']) && $GLOBALS['theme_my_login']->is_login_page()))
 				$obj_tabindex = "";
 			else {
 				$obj_tabindex = ' tabindex="'.strval($tabindex).'"';
@@ -1285,14 +1287,13 @@ function cimy_uef_redirect() {
 }
 
 function cimy_change_signup_location($url) {
-	global $blog_id, $current_site, $cimy_uef_plugins_dir;
+	global $current_site, $cimy_uef_plugins_dir;
 
 	if ($cimy_uef_plugins_dir == "plugins")
-		$attribute = "?blog_id=".$blog_id;
+		$attribute = "?from_blog_id=".get_current_blog_id();
 	else
 		$attribute = "";
-
-	return "http://" . $current_site->domain . $current_site->path . "wp-signup.php".$attribute;
+	return network_site_url('wp-signup.php'.$attribute);
 }
 
 function cimy_change_login_registration_logo() {
