@@ -20,21 +20,21 @@
 	</td>
 </tr>
 <tr>
-	<th>Location Country</th>
-	<td>
-		<select name="country_id">
-		{foreach $countries as $country}
-			<option value="{$country.country_id}" {if $country.country_id==$location.country_id}SELECTED{/if}>{$country.country_name}</option>
-		{/foreach}
-		</select>
-	</td>
-</tr>
-<tr>
 	<th>Location State</th>
 	<td>
 		<select name="state_id">
 		{foreach $states as $state}
 			<option value="{$state.state_id}" {if $state.state_id==$location.state_id}SELECTED{/if}>{$state.state_name}</option>
+		{/foreach}
+		</select>
+	</td>
+</tr>
+<tr>
+	<th>Location Country</th>
+	<td>
+		<select name="country_id">
+		{foreach $countries as $country}
+			<option value="{$country.country_id}" {if $country.country_id==$location.country_id}SELECTED{/if}>{$country.country_name}</option>
 		{/foreach}
 		</select>
 	</td>

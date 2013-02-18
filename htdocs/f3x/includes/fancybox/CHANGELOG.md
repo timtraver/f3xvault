@@ -1,6 +1,38 @@
 fancyBox - Changelog
 =========
 
+### Version 2.1.4 - January 10, 2013
+* Update to be compatible with jQuery v1.9
+* Small changes that should fix usability issues for certain users
+
+### Version 2.1.3 - October 23, 2012
+
+* Fixed #426 - Broken IE7
+* Fixed #423 - Background flickering on iOS
+* Fixed #418 - Automatically Grow/Shrink and Center
+* Updated the script to work with jQuery 1.6
+* Media helper supports YouTube video series
+
+### Version 2.1.2 - October 15, 2012
+
+* Fixed #414 - Don't allow nextClick if there is only one item
+* Fixed #397 - Button helper 'Menu' not visible in IE7
+* Overlay can be opened/closed manually:
+*     $.fancybox.helpers.overlay.open();
+*     $.fancybox.helpers.overlay.open({closeClick : false});
+*     $.fancybox.helpers.overlay.close();
+* Optimized for Internet Explorer 10 (Windows 8)
+
+### Version 2.1.1 - October 01, 2012
+
+* Fixed #357 - Converting values like 'auto' in getScalar()
+* Fixed #358 - Updated overlay background image
+* New "fancybox-href" and "fancybox-title" HTML5 data-attributes (#317)
+* Improved helpers:
+*     - now they can have a property 'defaults' that contains default settings
+*     - updated vimeo and youtube parsers for media helper
+* Content locking now can be turned off
+
 ### Version 2.1.0 - August 20, 2012
 
 * Fixed #103 - DOM element re-injection after closing

@@ -10,7 +10,7 @@ if ( ! function_exists( 'graphene_scrollable' ) ) :
 		$interval = ( $graphene_settings['slider_speed'] ) ? $graphene_settings['slider_speed'] : 7000;
         $speed = $graphene_settings['slider_trans_speed'];
 		?>
-            <!-- Scrollable -->
+            <!-- Slider script -->
             <script type="text/javascript">
 				//<![CDATA[
                 jQuery(document).ready(function($){
@@ -63,11 +63,22 @@ if ( ! function_exists( 'graphene_scrollable' ) ) :
 					$.graphene_slider = $(".slider_nav").data("tabs");
 				<?php endif; ?>
 				
+				<?php if ( $graphene_settings['slider_display_style'] == 'bgimage-excerpt' ) : ?>
+					/* Preload slider background images */
+					$('.slider_items .slider_post').each(function(){
+						var src = $(this).css('background-image').replace('url(', '').replace(')','');
+						if ( src.indexOf('http') == 0 ){
+							(new Image()).src = this;
+						}
+						src = null;
+					});
+				<?php endif; ?>
+				
 				<?php do_action( 'graphene_scrollable_script' ); ?>
                 });
 				//]]>
             </script>
-            <!-- #Scrollable -->
+            <!-- #Slider script -->
 		<?php 
 	}
 endif;

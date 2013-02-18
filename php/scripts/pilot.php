@@ -135,6 +135,7 @@ function pilot_list() {
 		FROM ( SELECT DISTINCT country_id FROM pilot) p
 		LEFT JOIN country c ON c.country_id=p.country_id
 		WHERE c.country_id!=0
+		ORDER BY c.country_order
 	");
 	$countries=db_exec($stmt,array());
 	# Get only states that we have locations for
@@ -143,6 +144,7 @@ function pilot_list() {
 		FROM ( SELECT DISTINCT state_id FROM pilot) p
 		LEFT JOIN state s ON s.state_id=p.state_id
 		WHERE s.state_id!=0
+		ORDER BY s.state_order
 	");
 	$states=db_exec($stmt,array());
 	
@@ -195,6 +197,19 @@ function pilot_view() {
 		");
 		$pilot_planes=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
 		
+		# Get the pilots clubs
+		$pilot_clubs=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM club_pilot cp
+			LEFT JOIN club cl ON cp.club_id=cl.club_id
+			LEFT JOIN state s on s.state_id=cl.state_id
+			LEFT JOIN country c on cl.country_id=c.country_id
+			WHERE cp.pilot_id=:pilot_id
+				AND cp.club_pilot_status=1
+		");
+		$pilot_clubs=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+
 		# Get the pilots favorite locations
 		$pilot_locations=array();
 		$stmt=db_prep("
@@ -227,6 +242,7 @@ function pilot_view() {
 	$smarty->assign("pilot_planes",$pilot_planes);
 	$smarty->assign("pilot_locations",$pilot_locations);
 	$smarty->assign("pilot_events",$pilot_events);
+	$smarty->assign("pilot_clubs",$pilot_clubs);
 	$maintpl=find_template("pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }

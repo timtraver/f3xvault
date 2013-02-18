@@ -107,6 +107,19 @@ function my_user_show() {
 		");
 		$pilot_locations=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
 		
+		# Get the pilots clubs
+		$pilot_clubs=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM club_pilot cp
+			LEFT JOIN club cl ON cp.club_id=cl.club_id
+			LEFT JOIN state s on s.state_id=cl.state_id
+			LEFT JOIN country c on cl.country_id=c.country_id
+			WHERE cp.pilot_id=:pilot_id
+				AND cp.club_pilot_status=1
+		");
+		$pilot_clubs=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+
 		# Get the pilots events
 		$pilot_events=array();
 		$stmt=db_prep("
@@ -128,6 +141,7 @@ function my_user_show() {
 	$smarty->assign("pilot_planes",$pilot_planes);
 	$smarty->assign("pilot_locations",$pilot_locations);
 	$smarty->assign("pilot_events",$pilot_events);
+	$smarty->assign("pilot_clubs",$pilot_clubs);
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 	$maintpl=find_template("my.tpl");

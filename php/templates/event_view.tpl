@@ -80,7 +80,7 @@ $(function() {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $pilots}({$total_pilots}){/if}</h1>
+		<h1 class="post-title entry-title">Event Pilots {if $event.pilots}({$total_pilots}){/if}</h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
@@ -97,7 +97,7 @@ $(function() {
 			<th align="left" width="4%"></th>
 		</tr>
 		{assign var=num value=1}
-		{foreach $pilots as $p}
+		{foreach $event.pilots as $p}
 		<tr>
 			<td>{$num}</td>
 			<td align="center">{$p.pilot_ama}</td>
@@ -114,12 +114,48 @@ $(function() {
 		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
+		
+		<br>
+		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}){/if}</h1>
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap></th>
+			<th colspan="{$event.rounds|count}" align="center" nowrap>Completed Rounds</th>
+			<th></th>
+			<th width="5%" nowrap>Total Score</th>
+		</tr>
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap>Pilot Name</th>
+			{foreach $event.rounds as $r}
+				<th width="5%" align="left" nowrap>Round {$r.event_round_number}</th>
+			{/foreach}
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+		</tr>
+		{assign var=num value=1}
+		{foreach $event.pilots as $ep}
+		<tr>
+			<td>{$num}</td>
+			<td align="right" nowrap>{$ep.pilot_first_name} {$ep.pilot_last_name}</td>
+			{foreach $event.rounds as $r}
+				<td align="right">
+				{foreach $r.flights as $f}
+					{if $f.event_pilot_id==$ep.event_pilot_id}
+					{$f.event_round_flight_score}
+					{/if}
+				{/foreach}
+				</td>
+			{/foreach}
+			<td></td>
+		</tr>
+		{assign var=num value=$num+1}
+		{/foreach}
+		</table>
 
 <br>
-
-
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
-
 </div>
 </div>
 

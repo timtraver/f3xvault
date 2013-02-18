@@ -121,7 +121,7 @@ function graphene_options(){
             <div class="panel-wrap inside">
                 <ul>
                 	<li><a href="http://docs.graphene-theme.com/"><?php _e( 'Documentation Wiki', 'graphene' ); ?></a></li>
-                    <li><a href="http://forum.khairul-syahir.com/"><?php _e( 'Support Forum', 'graphene' ); ?></a></li>
+                    <li><a href="http://forum.graphene-theme.com/"><?php _e( 'Support Forum', 'graphene' ); ?></a></li>
                 </ul>
                 <p><?php printf( __( 'Also, find out how you can %s.', 'graphene' ), '<a href="http://docs.graphene-theme.com/Ways_to_contribute">' . __( 'support the Graphene theme', 'graphene' ) . '</a>' ); ?></p>
             </div>
@@ -135,10 +135,10 @@ function graphene_options(){
             <div class="panel-wrap inside">
                 <p><?php _e( 'Developing this awesome theme took a lot of effort and time, months and months of continuous voluntary unpaid work. If you like this theme or if you are using it for commercial websites, please consider a donation to the developer to help support future updates and development.', 'graphene' ); ?></p>
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="text-align:center;">
-                    <input type="hidden" name="cmd" value="_s-xclick" />
-                    <input type="hidden" name="hosted_button_id" value="SJRVDSEJF6VPU" />
-                    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="CBWQL2T6B797J">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
                 </form>
             </div>
         </div>

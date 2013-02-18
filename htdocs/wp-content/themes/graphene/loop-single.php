@@ -36,9 +36,7 @@ if ( function_exists( 'get_post_format' ) ) {
 	<div class="entry clearfix">
     	
         <?php /* Post date */ ?>
-		<?php if ( ( strpos( $graphene_settings['post_date_display'], 'icon_' ) === 0 ) && graphene_should_show_date() ) : ?>
-            <?php graphene_post_date( 'icon' ); ?>
-        <?php endif; ?>
+        <?php if ( stristr( graphene_post_date_setting( get_the_ID() ), 'icon' ) ) graphene_post_date(); ?>
 		
         <?php /* Show the post author's gravatar if enabled */
 		if ( $graphene_settings['show_post_avatar'] ) {
@@ -81,9 +79,7 @@ if ( function_exists( 'get_post_format' ) ) {
 			<?php endif; ?>
 			
 			<?php /* Inline post date */ ?>
-			<?php if ( $graphene_settings['post_date_display'] == 'text' && graphene_should_show_date() ) : ?>
-				<?php graphene_post_date( 'inline' ); ?>
-			<?php endif; ?>
+			<?php if ( graphene_post_date_setting( get_the_ID() ) == 'text' ) graphene_post_date(); ?>
 			
 			<?php /* Post author, not shown if admin decides to hide it */ ?>
 			<?php if ( $graphene_settings['hide_post_author'] != true ) : ?>

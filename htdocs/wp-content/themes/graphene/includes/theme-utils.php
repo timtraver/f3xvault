@@ -168,7 +168,7 @@ function disect_it( $var = NULL, $exit = true, $comment = false ){
 	if ( $var !== NULL ){
 		if ( $comment ) {echo '<!--';}
 		echo '<pre>';
-		print_r( $var );
+		var_dump( $var );
 		echo '</pre>';
 		if ( $comment ) {echo '-->';}
 		if ( $exit ) {exit();}

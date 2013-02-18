@@ -1,9 +1,8 @@
 Todo list for rcvault project
 
-
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
   ditto with the location of the event
-
+  
 X event config parameters for each event type
 
   event round adding and entering
@@ -12,9 +11,16 @@ X event config parameters for each event type
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
-  Ability to see other pilot profiles with their basic info and search (don't show email) under my pilot profile
-  Change My Pilot Profile to Pilot Profiles with My as the first selection, and others as the second
+X  Ability to see other pilot profiles with their basic info and search (don't show email) under my pilot profile
+X  Change My Pilot Profile to Pilot Profiles with My as the first selection, and others as the second
+X  Add my club associations to my list
+X  Add club associations to pilot profile
+   
+X  Add My events list to my profile
   
-  Add My events list to my profile
+X  Add RC Clubs section!
   
+X fix fancybox view on club locations
+  make it so that when you add a location from somewhere else, that it takes you back to that screen
   
+  make the ajax lookup not go through the main script, but be lean and faster

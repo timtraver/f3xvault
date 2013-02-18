@@ -113,7 +113,6 @@ function event_list() {
 		default:
 			$operator="LIKE";
 	}
-
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND l.country_id=$country_id ";
@@ -122,12 +121,6 @@ function event_list() {
 	if($state_id!=0){
 		$addstate.=" AND l.state_id=$state_id ";
 	}
-#print "addcountry=$addcountry<br>\n";
-#print "addstate=$addstate<br>\n";
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
 
 	$events=array();
 	if($search!='%%' && $search!=''){
@@ -137,6 +130,7 @@ function event_list() {
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 			WHERE e.$search_field $operator :search
 				$addcountry
 				$addstate
@@ -151,6 +145,7 @@ function event_list() {
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 			WHERE 1
 				$addcountry
 				$addstate
@@ -158,9 +153,7 @@ function event_list() {
 		");
 		$events=db_exec($stmt,array());
 	}
-	
-#print_r($events);
-	
+		
 	# Get only countries that we have events for
 	$stmt=db_prep("
 		SELECT DISTINCT c.*
@@ -193,6 +186,24 @@ function event_list() {
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
 	$maintpl=find_template("event_list.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_view() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to edit.");
+		return event_list();
+	}
+	
+	# Get event info
+	$event=get_all_event_info($event_id);
+	$smarty->assign("event",$event);
+
+	$smarty->assign("total_pilots",count($event['pilots']));
+
+	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_edit() {
@@ -341,48 +352,6 @@ function event_save() {
 		user_message("Updated Base Event Info!");
 	}
 	return event_edit();
-}
-function event_view() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to edit.");
-		return event_list();
-	}
-	
-	# Get event info
-	$event=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event e
-		LEFT JOIN location l ON e.location_id=l.location_id
-		LEFT JOIN state s ON l.state_id=s.state_id
-		LEFT JOIN country c ON c.country_id=l.country_id
-		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-		LEFT JOIN pilot p ON e.event_cd=p.pilot_id
-		WHERE e.event_id=:event_id
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	$event=$result[0];
-	$smarty->assign("event",$event);
-
-	# Now lets get the pilots assigned to this event
-	$stmt=db_prep("
-		SELECT *
-		FROM event_pilot ep
-		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-		LEFT JOIN class c ON ep.class_id=c.class_id
-		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
-		WHERE ep.event_id=:event_id
-			AND ep.event_pilot_status=1
-	");
-	$pilots=db_exec($stmt,array("event_id"=>$event_id));
-	$smarty->assign("pilots",$pilots);
-	$smarty->assign("total_pilots",count($pilots));
-
-	$maintpl=find_template("event_view.tpl");
-	return $smarty->fetch($maintpl);
 }
 function add_pilot() {
 	global $smarty;
@@ -859,5 +828,61 @@ function event_param_save() {
 	}	
 	user_message("Event Parameters Saved.");
 	return event_edit();
+}
+function get_all_event_info($event_id){
+	# Function to return array of ALL current event info
+	$event=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event e
+		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN state s ON l.state_id=s.state_id
+		LEFT JOIN country c ON c.country_id=l.country_id
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		LEFT JOIN pilot p ON e.event_cd=p.pilot_id
+		WHERE e.event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	$event=$result[0];
+
+	# Now lets get the pilots assigned to this event
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		LEFT JOIN class c ON ep.class_id=c.class_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+		WHERE ep.event_id=:event_id
+			AND ep.event_pilot_status=1
+	");
+	$pilots=db_exec($stmt,array("event_id"=>$event_id));
+	$event['pilots']=$pilots;
+	
+	# Now lets get the rounds for this event
+	$stmt=db_prep("
+		SELECT *
+		FROM event_round er
+		WHERE er.event_id=:event_id
+			AND er.event_round_status=1
+		ORDER BY er.event_round_number
+	");
+	$rounds=db_exec($stmt,array("event_id"=>$event_id));
+	# Step through and get each pilot flight
+	foreach($rounds as $key=>$round){
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round_flight erf
+			LEFT JOIN event_pilot ep ON erf.event_pilot_id=ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN round_type rt ON erf.round_type_id=rt.round_type_id
+			WHERE erf.event_round_id=:event_round_id
+				AND erf.event_round_flight_status=1
+		");
+		$flights=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+		$rounds[$key]['flights']=$flights;
+	}
+	$event['rounds']=$rounds;
+
+	return $event;	
 }
 ?>

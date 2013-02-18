@@ -71,11 +71,10 @@
 <tr>
 	<th style="text-align: left;">Event Date</th>
 	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
-	<th style="text-align: left;">State</th>
-	<th style="text-align: left;">Country</th>
-	<th style="text-align: center;">Map Location</th>
-	<th style="text-align: left;">Action</th>
+	<th style="text-align: center;">Map</th>
+	<th style="text-align: left;"></th>
 </tr>
 {foreach $events as $event}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -83,9 +82,8 @@
 	<td>
 		<a href="?action=event&function=event_view&event_id={$event.event_id|escape}">{$event.event_name|escape}</a>
 	</td>
-	<td>{$event.location_name|escape}</td>
-	<td>{$event.state_name|escape}</td>
-	<td>{$event.country_name|escape}</td>
+	<td>{$event.event_type_name|escape}</td>
+	<td>{$event.location_name|escape}, {$event.state_code|escape} - {$event.country_code|escape}</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
 	<td><a href="?action=event&function=event_view&event_id={$event.event_id|escape}" title="Edit This Event"><img src="images/icon_edit_small.gif" width="20"></a>
 	</td>

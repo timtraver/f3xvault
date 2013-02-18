@@ -47,7 +47,29 @@
 	{/if}
 	</table>
 	<br>
-</form>
+
+<h1 class="post-title entry-title">Pilot RC Club Affiliations</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Club Name</th>
+	<th style="text-align: left;">Club City</th>
+	<th style="text-align: left;">State/Country</th>
+</tr>
+{if $pilot_clubs}
+	{foreach $pilot_clubs as $pc}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club">{$pc.club_name}</a></td>
+		<td>{$pc.club_city}</td>
+		<td>{$pc.state_name}, {$pc.country_code}</td>
+	</tr>
+	{/foreach}
+{else}
+	<tr>
+		<td colspan="4">This pilot currently has no club affiliations.</td>
+	</tr>
+{/if}
+</table>
+<br>
 
 <h1 class="post-title entry-title">Pilot RC Flying Locations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
@@ -55,6 +77,7 @@
 	<th style="text-align: left;">Location Name</th>
 	<th style="text-align: left;">Location City</th>
 	<th style="text-align: left;">State/Country</th>
+	<th style="text-align: center;">Map</th>
 </tr>
 {if $pilot_locations}
 	{foreach $pilot_locations as $pl}
@@ -62,6 +85,7 @@
 		<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name}</a></td>
 		<td>{$pl.location_city}</td>
 		<td>{$pl.state_name}, {$pl.country_code}</td>
+		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
 	</tr>
 	{/foreach}
 {else}
@@ -71,7 +95,6 @@
 {/if}
 </table>
 <br>
-</form>
 
 
 <h1 class="post-title entry-title">Pilot RC Events</h1>

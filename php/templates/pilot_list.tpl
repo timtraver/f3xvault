@@ -76,8 +76,6 @@
 	<th style="text-align: left;">City</th>
 	<th style="text-align: left;">State</th>
 	<th style="text-align: left;">Country</th>
-	<th style="text-align: center;">Map Location</th>
-	<th style="text-align: left;">Action</th>
 </tr>
 {foreach $pilots as $p}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -87,9 +85,6 @@
 	<td>{$p.pilot_city|escape}</td>
 	<td>{$p.state_name|escape}</td>
 	<td>{$p.country_name|escape}</td>
-	<td align="center">{if $p.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
-	<td><a href="?action=pilot&function=pilot_view&pilot_id={$p.pilot_id|escape}" title="Edit This Location"><img src="images/icon_edit_small.gif" width="20"></a>
-	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">

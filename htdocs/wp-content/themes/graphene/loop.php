@@ -38,9 +38,7 @@ if ( function_exists( 'get_post_format' ) && $post_type->name != 'page' ) {
 	<div class="entry clearfix">
     
     	<?php /* Post date is not shown if this is a Page post */ ?>
-		<?php if ( ( strpos( $graphene_settings['post_date_display'], 'icon_' ) === 0 ) && graphene_should_show_date() ) : ?>
-            <?php graphene_post_date(); ?>
-        <?php endif; ?>
+		<?php if ( stristr( graphene_post_date_setting( get_the_ID() ), 'icon' ) ) graphene_post_date(); ?>
 		
         <?php /* Show the post author's gravatar if enabled */
 		if ( $graphene_settings['show_post_avatar'] ) {
@@ -87,11 +85,7 @@ if ( function_exists( 'get_post_format' ) && $post_type->name != 'page' ) {
 			<?php endif; ?>
 			
 			<?php /* Inline post date */ ?>
-			<?php if ( $graphene_settings['post_date_display'] == 'text' && graphene_should_show_date() ) : ?>
-			<p class="post-date-inline updated">
-				<abbr class="published" title="<?php the_date( 'c' ); ?>"><?php the_time( get_option( 'date_format' ) ); ?></abbr>
-			</p>
-			<?php endif; ?>
+			<?php if ( graphene_post_date_setting( get_the_ID() ) == 'text' ) graphene_post_date(); ?>
 			
 			<?php /* Post author, not shown if this is a Page post or if admin decides to hide it */ ?>
 			<?php if ( $post_type->name != 'page' && $graphene_settings['hide_post_author'] != true ) : ?>
