@@ -25,50 +25,124 @@
 		
 	</div>
 		<br>
+		<form name="main" method="POST">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_round_save">
+		<input type="hidden" name="event_id" value="{$event.event_id}">
+		<input type="hidden" name="event_round_id" value="{$round.event_round_id}">
+		
 		<h1 class="post-title entry-title">Event Round Edit</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" nowrap>Event Round Number</th>
 			<td>
 				{$round_number}
+				<input type="hidden" name="event_round_number" value="{$round_number}">
 			</td>
 		</tr>
 		<tr>
 			<th>Event Round Type</th>
 			<td>
-				{$event.round_type_name}
+				{if $event.event_type_flight_choice==1}
+					<select name="flight_type_id">
+					{foreach $flight_types as $ft}
+					<option value="{$ft.flight_type_id}" {if $ft.flight_type_id==$round.flight_type_id}SELECTED{/if}>{$ft.flight_type_name}</option>
+					{/foreach}
+					</select>
+				{else}
+					{foreach $flight_types as $ft}
+						{$ft.flight_type_name}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
+					{/foreach}
+					<input type="hidden" name="flight_type_id" value="0">
+				{/if}
+				&nbsp;&nbsp;
+				{if $event.event_type_time_choice==1}
+					Max Flight Time : <input type="text" size="5" name="event_round_time_choice" value="{$round.event_round_time_choice}"> Minutes
+				{else}
+					<input type="hidden" name="event_round_time_choice" value="0">
+				{/if}
 			</td>
-		</tr>
+		</tr>		
 		</table>
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
+			<th colspan="2">&nbsp;</th>
+			{foreach $flight_types as $ft}
+				{if $event.event_type_flight_choice==1 AND $ft.flight_type_id!=$round.flight_type_id}
+					{continue}
+				{/if}
+				<th colspan="{if $ft.flight_type_landing}6{else}5{/if}">{$ft.flight_type_name}</th>
+			{/foreach}
+		</tr>
+		<tr>
 			<th width="2%" align="left"></th>
 			<th align="left">Pilot Name</th>
-			<th align="left">Raw Score</th>
-			<th align="left">Normalized Score</th>
-			<th align="left">Round Position</th>
-			<th align="left" width="4%"></th>
+			{foreach $flight_types as $ft}
+				{if $event.event_type_flight_choice==1 AND $ft.flight_type_id!=$round.flight_type_id}
+					{continue}
+				{/if}
+				{if $ft.flight_type_group}
+					<th align="center">Gr</th>
+				{/if}
+				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
+					<th align="center">Time</th>
+				{/if}
+				{if $ft.flight_type_landing}
+					<th align="center">Land</th>
+				{/if}
+				{if $ft.flight_type_laps}
+					<th align="center">Laps</th>
+				{/if}
+				<th align="center">Raw</th>
+				<th align="center">Score</th>
+				<th align="center">Pen</th>
+			{/foreach}
 		</tr>
 		{assign var=num value=1}
 		{foreach $event.pilots as $p}
 		<tr>
 			<td>{$num}</td>
 			<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-			<td><input type="text" size="5" name="pilot_raw_{$p.event_pilot_id}" value=""></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td nowrap>
-			</td>
+			{assign var=bg value='white'}
+			{foreach $flight_types as $ft}
+				{if $event.event_type_flight_choice==1 AND $ft.flight_type_id!=$round.flight_type_id}
+					{continue}
+				{/if}
+				{if $bg=='white'}
+					{assign var=bg value='lightgrey'}
+				{else}
+					{assign var=bg value='white'}
+				{/if}
+				{if $ft.flight_type_group}
+					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>					
+				{/if}
+				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
+					<td bgcolor="{$bg}" align="center" nowrap>
+						{if $ft.flight_type_minutes}<input type="text" size="2" style="width:15px;" name="pilot_min_{$p.event_pilot_id}_{$ft.flight_type_id}" value="">m{/if}
+						{if $ft.flight_type_seconds}<input type="text" size="6" style="width:40px;" name="pilot_sec_{$p.event_pilot_id}_{$ft.flight_type_id}" value="">s{/if}
+					</td>
+				{/if}
+				{if $ft.flight_type_landing}
+					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="2" style="width:20px;" name="pilot_land_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>
+				{/if}
+				{if $ft.flight_type_laps}
+					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>
+				{/if}
+				<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="6" style="width:40px;" name="pilot_raw_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>
+				<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="6" style="width:40px;" name="pilot_score_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>
+				<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="4" style="width:20px;" name="pilot_pen_{$p.event_pilot_id}_{$ft.flight_type_id}" value=""></td>
+			{/foreach}
 		</tr>
 		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
 		
+		</form>
 <br>
-<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
+<input type="button" value=" Save and Calculate Event Round " onClick="main.submit();" class="block-button">
+<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
 </div>
 </div>
 

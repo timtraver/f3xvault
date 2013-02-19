@@ -515,6 +515,10 @@ function club_location_remove() {
 function check_club_permission($club_id){
 	global $user;
 	# Function to check to see if this user can edit this club
+	# First check if its an administrator
+	if($user['administrator']){
+		return 1;
+	}
 	# Get club info
 	$stmt=db_prep("
 		SELECT *

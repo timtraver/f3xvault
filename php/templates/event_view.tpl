@@ -131,7 +131,7 @@ $(function() {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event.rounds as $r}
-				<th width="5%" align="left" nowrap>Round {$r.event_round_number}</th>
+				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
 			{/foreach}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>

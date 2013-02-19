@@ -58,6 +58,13 @@ if($user_id){
 	if(isset($result[0])){
 		$user=array_merge($user,$result[0]);
 	}
+	$administrator=0;
+	foreach($wpuser->roles as $role){
+		if($role=='administrator'){
+			$administrator=1;
+		}
+	}
+	$user['administrator']=$administrator;
 }else{
 	$user=array();
 }

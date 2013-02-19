@@ -6,7 +6,7 @@ Todo list for rcvault project
 X event config parameters for each event type
 
   event round adding and entering
-  make event subroutine to get all info about an event get_event_info
+X make event subroutine to get all info about an event get_event_info
   
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
@@ -24,3 +24,5 @@ X fix fancybox view on club locations
   make it so that when you add a location from somewhere else, that it takes you back to that screen
   
   make the ajax lookup not go through the main script, but be lean and faster
+  
+  reflights for groups

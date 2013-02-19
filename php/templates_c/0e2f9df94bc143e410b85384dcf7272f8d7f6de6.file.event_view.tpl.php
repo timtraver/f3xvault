@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-02-18 09:20:28
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-19 03:39:14
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1361179221,
+      1 => 1361245149,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'variables' => 
   array (
     'event' => 0,
-    'total_pilots' => 0,
     'num' => 0,
     'p' => 0,
     'r' => 0,
@@ -123,7 +122,7 @@ $(function() {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value['pilots']){?>(<?php echo $_smarty_tpl->tpl_vars['total_pilots']->value;?>
+		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value['pilots']){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value['pilots']);?>
 )<?php }?></h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
@@ -178,7 +177,9 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		
 		<br>
 		<h1 class="post-title entry-title">Event Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value['rounds']){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value['rounds']);?>
-)<?php }?></h1>
+) <?php }?> Overall Standings
+			<input type="button" value=" Add Round " onClick="document.add_round.submit();" class="block-button">
+		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
@@ -196,8 +197,10 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
 $_smarty_tpl->tpl_vars['r']->_loop = true;
 ?>
-				<th width="5%" align="left" nowrap>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-</th>
+				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+&event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
+" title="Edit Round">Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+</a></th>
 			<?php } ?>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -233,6 +236,7 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 				</td>
 			<?php } ?>
 			<td></td>
+			<td width="5%" nowrap></td>
 		</tr>
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable($_smarty_tpl->tpl_vars['num']->value+1, null, 0);?>
 		<?php } ?>
@@ -260,5 +264,12 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 ">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
+</form>
+<form name="add_round" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_round_edit">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+">
+<input type="hidden" name="event_round_id" value="0">
 </form>
 <?php }} ?>
