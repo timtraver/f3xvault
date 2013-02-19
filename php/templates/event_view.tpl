@@ -80,7 +80,7 @@ $(function() {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event.pilots}({$total_pilots}){/if}</h1>
+		<h1 class="post-title entry-title">Event Pilots {if $event.pilots}({$event.pilots|count}){/if}</h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
@@ -116,7 +116,9 @@ $(function() {
 		</table>
 		
 		<br>
-		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}){/if}</h1>
+		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}) {/if} Overall Standings
+			<input type="button" value=" Add Round " onClick="document.add_round.submit();" class="block-button">
+		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
@@ -149,6 +151,7 @@ $(function() {
 				</td>
 			{/foreach}
 			<td></td>
+			<td width="5%" nowrap></td>
 		</tr>
 		{assign var=num value=$num+1}
 		{/foreach}
@@ -174,4 +177,10 @@ $(function() {
 <input type="hidden" name="event_id" value="{$event.event_id}">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
+</form>
+<form name="add_round" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_round_edit">
+<input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="event_round_id" value="0">
 </form>

@@ -201,8 +201,6 @@ function event_view() {
 	$event=get_all_event_info($event_id);
 	$smarty->assign("event",$event);
 
-	$smarty->assign("total_pilots",count($event['pilots']));
-
 	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -854,6 +852,7 @@ function get_all_event_info($event_id){
 		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		WHERE ep.event_id=:event_id
 			AND ep.event_pilot_status=1
+		ORDER BY ep.event_pilot_position
 	");
 	$pilots=db_exec($stmt,array("event_id"=>$event_id));
 	$event['pilots']=$pilots;
@@ -874,9 +873,10 @@ function get_all_event_info($event_id){
 			FROM event_round_flight erf
 			LEFT JOIN event_pilot ep ON erf.event_pilot_id=ep.event_pilot_id
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			LEFT JOIN round_type rt ON erf.round_type_id=rt.round_type_id
+			LEFT JOIN flight_type ft ON erf.flight_type_id=ft.flight_type_id
 			WHERE erf.event_round_id=:event_round_id
 				AND erf.event_round_flight_status=1
+			ORDER BY erf.event_round_flight_order
 		");
 		$flights=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
 		$rounds[$key]['flights']=$flights;
@@ -885,4 +885,52 @@ function get_all_event_info($event_id){
 
 	return $event;	
 }
+function event_round_edit() {
+	global $smarty;
+	# Function to add or edit a round to an event
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_round_id=intval($_REQUEST['event_round_id']);
+	$event=get_all_event_info($event_id);
+
+	# Now lets look at the rounds to see which is the next round # to add
+	$round=array();
+	if($event_round_id==0){
+		$round_number=count($event['rounds'])+1;
+		# Lets fill out the round info with default stuff from what type of event this is
+
+		switch($event['event_type_code']){
+			case 'f3b':
+				# Get all of the round flight types
+			
+			case 'f3b_speed':
+			case 'f3f':
+			case 'f3j':
+			case 'f3k':
+			case 'td':
+		}
+		
+		
+		
+		
+	}else{
+		# Lets get the round info
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round
+			WHERE event_round_id=:event_round_id
+		");
+		$result=db_exec($stmt,array("event_round_id"=>$event_round_id));
+		$round=$result[0];
+		$round_number=$round['event_round_number'];
+	}
+	$smarty->assign("round",$round);
+	$smarty->assign("round_number",$round_number);
+
+	$smarty->assign("event",$event);
+	
+	$maintpl=find_template("event_round_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+
 ?>
