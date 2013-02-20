@@ -871,9 +871,11 @@ function get_all_event_info($event_id){
 			AND er.event_round_status=1
 		ORDER BY er.event_round_number
 	");
-	$rounds=db_exec($stmt,array("event_id"=>$event_id));
+	$results=db_exec($stmt,array("event_id"=>$event_id));
 	# Step through and get each pilot flight
-	foreach($rounds as $key=>$round){
+	$rounds=array();
+	foreach($results as $key=>$round){
+		$event_round_number=$round['event_round_number'];
 		$stmt=db_prep("
 			SELECT *
 			FROM event_round_flight erf
@@ -885,7 +887,9 @@ function get_all_event_info($event_id){
 			ORDER BY erf.event_round_flight_order
 		");
 		$flights=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
-		$rounds[$key]['flights']=$flights;
+		
+		$rounds[$event_round_number]=$round;
+		$rounds[$event_round_number]['flights']=$flights;
 	}
 	$event['rounds']=$rounds;
 
@@ -912,7 +916,7 @@ function event_round_edit() {
 			$flight_types[]=$r;
 		}
 	}
-	# Now lets look at the rounds to see which is the next round # to add
+	# Now lets look at the rounds to see which is the next round # to add if its a new one
 	$round=array();
 	if($event_round_id==0){
 		$round_number=count($event['rounds'])+1;
@@ -930,9 +934,24 @@ function event_round_edit() {
 		$round_number=$round['event_round_number'];
 	}
 	
-	# Now lets populate the round array with the current pilot values
-	
-	
+	# Now lets populate the round array with the current pilot values in a tidy array for ease in the template
+	# Lets step through the pilots to begin with
+	foreach($event['pilots'] as $p){
+		$event_pilot_id=$p['event_pilot_id'];
+		# Lets get this pilots round flights
+		foreach($flight_types as $ft){
+			$flight_type_id=$ft['flight_type_id'];
+			# Step through each flight type that is supposed to be run in this round, because there may not be data yet
+			foreach($event['rounds'][$round_number]['flights'] as $f){
+				if($ft['flight_type_id']==$f['flight_type_id'] && $p['event_pilot_id']==$f['event_pilot_id']){
+					# This is a flight for this pilot
+					$ft=array_merge($f,$ft);
+				}
+			}
+			$p['flight'][$flight_type_id]=$ft;
+		}		
+		$round['pilot'][$event_pilot_id]=$p;
+	}
 	
 	$smarty->assign("round",$round);
 	$smarty->assign("round_number",$round_number);
