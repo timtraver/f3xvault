@@ -929,6 +929,11 @@ function event_round_edit() {
 		$round=$result[0];
 		$round_number=$round['event_round_number'];
 	}
+	
+	# Now lets populate the round array with the current pilot values
+	
+	
+	
 	$smarty->assign("round",$round);
 	$smarty->assign("round_number",$round_number);
 
@@ -965,6 +970,8 @@ function event_round_save() {
 			"flight_type_id"=>$flight_type_id,
 			"event_round_time_choice"=>$event_round_time_choice
 		));
+		$event_round_id=$GLOBALS['last_insert_id'];
+		$_REQUEST['event_round_id']=$event_round_id;
 	}else{
 		# Lets save it
 		$stmt=db_prep("
