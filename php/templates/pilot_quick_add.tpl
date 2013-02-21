@@ -138,7 +138,7 @@ $(function() {ldelim}
 <tr>
 	<th nowrap>Pilot Radio Frequency</th>
 	<td colspan="2">
-		<input type="text" name="event_pilot_freq" size="15" value="">
+		<input type="text" name="event_pilot_freq" size="15" value="{$pilot_freq}">
 	</td>
 </tr>
 <tr>

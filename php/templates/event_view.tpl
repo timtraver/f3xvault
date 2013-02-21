@@ -107,8 +107,8 @@ $(function() {
 			<td>{$p.event_pilot_freq}</td>
 			<td>{$p.event_pilot_team}</td>
 			<td nowrap>
-				<a href="/f3x/?action=event&function=event_pilot_edit&event_id={$event.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="18" src="/f3x/images/icon_edit_small.gif"></a>
-				<a href="/f3x/?action=event&function=event_pilot_remove&event_id={$event.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the event?');"><img src="/f3x/images/del.gif"></a>
+				<a href="/f3x/?action=event&function=event_pilot_edit&event_id={$event.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/f3x/images/icon_edit_small.gif"></a>
+				<a href="/f3x/?action=event&function=event_pilot_remove&event_id={$event.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the event?');"><img width="14px" src="/f3x/images/del.gif"></a>
 			</td>
 		</tr>
 		{assign var=num value=$num+1}
@@ -116,7 +116,7 @@ $(function() {
 		</table>
 		
 		<br>
-		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}) {/if} Overall Standings
+		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}) {/if} Overall Classification
 			<input type="button" value=" Add Round " onClick="document.add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -125,6 +125,8 @@ $(function() {
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{$event.rounds|count}" align="center" nowrap>Completed Rounds</th>
 			<th></th>
+			<th width="5%" nowrap>SubTotal</th>
+			<th width="5%" nowrap>Penalties</th>
 			<th width="5%" nowrap>Total Score</th>
 		</tr>
 		<tr>
@@ -135,25 +137,23 @@ $(function() {
 			{/foreach}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
 		</tr>
-		{assign var=num value=1}
-		{foreach $event.pilots as $ep}
-		<tr>
-			<td>{$num}</td>
-			<td align="right" nowrap>{$ep.pilot_first_name} {$ep.pilot_last_name}</td>
-			{foreach $event.rounds as $r}
+		{foreach $event.totals as $e}
+		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+			<td>{$e.overall_rank}</td>
+			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			{foreach $e.rounds as $r}
 				<td align="right">
-				{foreach $r.flights as $f}
-					{if $f.event_pilot_id==$ep.event_pilot_id}
-					{$f.event_round_flight_score}
-					{/if}
-				{/foreach}
+					{$r}
 				</td>
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap></td>
+			<td width="5%" nowrap>{$e.subtotal}</td>
+			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
+			<td width="5%" nowrap>{$e.total}</td>
 		</tr>
-		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
 

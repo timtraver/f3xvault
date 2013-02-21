@@ -123,7 +123,7 @@
 						{if $f.flight_type_minutes}<input type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_minutes}">m{/if}
 						{if $f.flight_type_seconds}
 							{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
-							<input type="text" size="6" style="width:40px;text-align: right;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_seconds}">s
+							<input type="text" size="6" style="width:40px;text-align: right;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{if $f.event_round_flight_seconds!=0}{$f.event_round_flight_seconds}{/if}">s
 							{else}
 							<input type="text" size="6" style="width:20px;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_seconds|string_format:"%02.0f"}">s
 							{/if}
