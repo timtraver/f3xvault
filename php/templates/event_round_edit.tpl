@@ -1,6 +1,7 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event.event_name}</h1>
+		<h1 class="post-title entry-title">Event Settings - {$event.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
+		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -8,8 +9,6 @@
 			<td>
 			{$event.event_start_date|date_format:"%Y-%m-%d"} to {$event.event_end_date|date_format:"%Y-%m-%d"}
 			</td>
-		</tr>
-		<tr>
 			<th align="right">Location</th>
 			<td>
 			{$event.location_name} - {$event.location_city},{$event.state_code} {$event.country_code}
@@ -19,6 +18,10 @@
 			<th align="right">Event Type</th>
 			<td>
 			{$event.event_type_name}
+			</td>
+			<th align="right">Event Contest Director</th>
+			<td>
+			{$event.pilot_first_name} {$event.pilot_last_name} - {$event.pilot_city}
 			</td>
 		</tr>
 		</table>
@@ -107,6 +110,7 @@
 			<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
 			{assign var=bg value='white'}
 			{foreach $p.flight as $f}
+				{assign var=tab value=1}
 				{if $event.event_type_flight_choice==1 AND $f.flight_type_id!=$round.flight_type_id}
 					{continue}
 				{/if}
@@ -116,25 +120,25 @@
 					{assign var=bg value='lightgrey'}
 				{/if}
 				{if $f.flight_type_group}
-					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_group}"></td>					
+					<td bgcolor="{$bg}" align="center" nowrap><input tabindex="" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_group}"></td>					
 				{/if}
 				{if $f.flight_type_minutes || $f.flight_type_seconds}
 					<td bgcolor="{$bg}" align="center" nowrap>
-						{if $f.flight_type_minutes}<input type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_minutes}">m{/if}
+						{if $f.flight_type_minutes}<input tabindex="{$num+$tab}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_minutes}">m{/if}
 						{if $f.flight_type_seconds}
 							{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
-							<input type="text" size="6" style="width:40px;text-align: right;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{if $f.event_round_flight_seconds!=0}{$f.event_round_flight_seconds}{/if}">s
+							<input tabindex="{$num+$tab}" autocomplete="off" type="text" size="6" style="width:40px;text-align: right;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{if $f.event_round_flight_seconds!=0}{$f.event_round_flight_seconds}{/if}">s
 							{else}
-							<input type="text" size="6" style="width:20px;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_seconds|string_format:"%02.0f"}">s
+							<input tabindex="{$num+$tab}" autocomplete="off" type="text" size="6" style="width:20px;" name="pilot_sec_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_seconds|string_format:"%02.0f"}">s
 							{/if}
 						{/if}
 					</td>
 				{/if}
 				{if $f.flight_type_landing}
-					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_landing}"></td>
+					<td bgcolor="{$bg}" align="center" nowrap><input tabindex="{$num+$tab}" autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_landing}"></td>
 				{/if}
 				{if $f.flight_type_laps}
-					<td bgcolor="{$bg}" align="center" nowrap><input type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_laps}"></td>
+					<td bgcolor="{$bg}" align="center" nowrap><input tabindex="{$num+$tab}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_id}_{$f.flight_type_id}" value="{$f.event_round_flight_laps}"></td>
 				{/if}
 				<td bgcolor="{$bg}" align="right" nowrap>
 					{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
@@ -147,8 +151,9 @@
 				{$f.event_round_flight_score}
 				</td>
 				<td bgcolor="{$bg}" align="center" nowrap>
-					<input type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_id}_{$f.flight_type_id}" value="{if $f.event_round_flight_penalty!=0}{$f.event_round_flight_penalty}{/if}">
+					<input tabindex="{$num+$tab}" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_id}_{$f.flight_type_id}" value="{if $f.event_round_flight_penalty!=0}{$f.event_round_flight_penalty}{/if}">
 				</td>
+				{assign var=tab value=$tab+1000}
 			{/foreach}
 		</tr>
 		{assign var=num value=$num+1}

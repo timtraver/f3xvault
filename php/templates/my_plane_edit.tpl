@@ -53,7 +53,7 @@ $(function() {
 <input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
 
 <h1 class="post-title entry-title">My Plane
-<input type="button" value=" Create New Plane " class="block-button" onClick="create_new_plane.submit();">
+<input type="button" value=" + Create New Plane " class="block-button" onClick="create_new_plane.submit();">
 </h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>

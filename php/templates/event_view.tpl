@@ -20,15 +20,15 @@ $(function() {
 			loading.style.display = "inline";
 		},
    		select: function( event, ui ) {
-			document.add_pilot.pilot_id.value = ui.item.id;
+			document.event_pilot_add.pilot_id.value = ui.item.id;
 			var name=document.getElementById('pilot_name');
-			document.add_pilot.pilot_name.value=name.value;
-			add_pilot.submit();
+			document.event_pilot_add.pilot_name.value=name.value;
+			event_pilot_add.submit();
 		},
    		change: function( event, ui ) {
    			var id=document.getElementById('pilot_name');
    			if(id.value==''){
-				document.add_pilot.pilot_id.value = 0;
+				document.event_pilot_add.pilot_id.value = 0;
 			}
 		},
    		response: function( event, ui ) {
@@ -48,7 +48,7 @@ $(function() {
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.edit_event.submit();" class="block-button">
+		<h1 class="post-title entry-title">Event Settings - {$event.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -57,8 +57,6 @@ $(function() {
 			<td>
 			{$event.event_start_date|date_format:"%Y-%m-%d"} to {$event.event_end_date|date_format:"%Y-%m-%d"}
 			</td>
-		</tr>
-		<tr>
 			<th align="right">Location</th>
 			<td>
 			{$event.location_name} - {$event.location_city},{$event.state_code} {$event.country_code}
@@ -69,8 +67,6 @@ $(function() {
 			<td>
 			{$event.event_type_name}
 			</td>
-		</tr>
-		<tr>
 			<th align="right">Event Contest Director</th>
 			<td>
 			{$event.pilot_first_name} {$event.pilot_last_name} - {$event.pilot_city}
@@ -81,7 +77,7 @@ $(function() {
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $event.pilots}({$event.pilots|count}){/if}</h1>
-		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
+		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
@@ -117,7 +113,7 @@ $(function() {
 		
 		<br>
 		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}) {/if} Overall Classification
-			<input type="button" value=" Add Round " onClick="document.add_round.submit();" class="block-button">
+			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -166,19 +162,20 @@ $(function() {
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
 </form>
-<form name="edit_event" method="POST">
+<form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event.event_id}">
 </form>
-<form name="add_pilot" method="POST">
+<form name="event_pilot_add" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="add_pilot">
+<input type="hidden" name="function" value="event_pilot_edit">
 <input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="event_pilot_id" value="0">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
 </form>
-<form name="add_round" method="POST">
+<form name="event_add_round" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_round_edit">
 <input type="hidden" name="event_id" value="{$event.event_id}">

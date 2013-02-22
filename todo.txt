@@ -23,6 +23,7 @@ X  Add RC Clubs section!
 X fix fancybox view on club locations
 
   make it so that when you add a location from somewhere else, that it takes you back to that screen
+  ditto for plane
   
   make the ajax lookup not go through the main script, but be lean and faster
   
@@ -37,11 +38,11 @@ X fix fancybox view on club locations
   
   Figure out drops
   
-  As they are entering pilots, set the flight order
+X As they are entering pilots, set the default entry order
   
   Put collapses on the sections of the event so you can easily see the different areas.
   
-  set autocomplete off for inputs of times...
+X  set autocomplete off for inputs of times...
   
   set tab order on entry fields with tabindex
   

@@ -20,7 +20,7 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 $need_login=array(
 	"event_edit",
 	"event_save",
-	"add_pilot",
+	"event_pilot_add",
 	"add_pilot_quick",
 	"save_pilot_quick_add",
 	"event_pilot_remove",
@@ -352,78 +352,12 @@ function event_save() {
 	}
 	return event_edit();
 }
-function add_pilot() {
+function event_pilot_edit() {
 	global $smarty;
 
-	# Get list of pilot classes so I can choose a default one
-	$classes=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM class c
-	");
-	$result=db_exec($stmt,array());
-	foreach($result as $r){
-		$name=$r['class_name'];
-		$classes[$name]=$r;
-	}
-	
 	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to add a pilot to.");
-		return event_list();
-	}
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
 	$pilot_id=intval($_REQUEST['pilot_id']);
-	
-	# If pilot_id is zero, then send them to the quick add pilot screen
-	if($pilot_id==0){
-		return add_pilot_quick();
-	}else{
-		# Check to see if the pilot already exists in this event
-		$stmt=db_prep("
-			SELECT *
-			FROM event_pilot ep
-			WHERE ep.event_id=:event_id
-				AND ep.pilot_id=:pilot_id
-		");
-		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
-		if(isset($result[0])){
-			# The record already exists, so lets see if it has its status to 1 or not
-			if($result[0]['event_pilot_status']==1){
-				# This record already exists!
-				user_message("The Pilot you have chosen to add is already in this event.",1);
-				return event_view();
-			}else{
-				# Lets turn this record back on
-				$stmt=db_prep("
-					UPDATE event_pilot
-					SET event_pilot_status=1
-					WHERE event_pilot_id=:event_pilot_id
-				");
-				$result2=db_exec($stmt,array("event_pilot_id"=>$result[0]['event_pilot_id']));
-				$_REQUEST['event_pilot_id']=$result[0]['event_pilot_id'];
-			}
-		}else{
-			$default_class_id=$classes['open']['class_id'];
-			# This record doesn't exist, so lets add it
-			$stmt=db_prep("
-				INSERT INTO event_pilot
-				SET event_id=:event_id,
-					pilot_id=:pilot_id,
-					event_pilot_position=0,
-					class_id=:class_id,
-					event_pilot_status=1
-			");
-			$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$default_class_id));
-			$_REQUEST['event_pilot_id']=$GLOBALS['last_insert_id'];
-		}
-		user_message("Pilot Added to event.");
-		return event_pilot_edit();
-	}
-}
-function add_pilot_quick() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
 	$pilot_name=$_REQUEST['pilot_name'];
 
 	$event=array();
@@ -439,124 +373,57 @@ function add_pilot_quick() {
 	$result=db_exec($stmt,array("event_id"=>$event_id));
 	$event=$result[0];
 	$smarty->assign("event",$event);
-	
-	#Lets split apart the first and last names
-	$name=preg_split("/\s/",$pilot_name,2);
-	$smarty->assign("pilot_first_name",$name[0]);
-	$smarty->assign("pilot_last_name",$name[1]);
-	# Lets default the radio to 2.4
-	$smarty->assign("pilot_freq",'2.4 GHz');
 
-	# Lets get the classes
-	$stmt=db_prep("
-		SELECT *
-		FROM class
-		WHERE 1
-		ORDER BY class_view_order
-	");
-	$classes=db_exec($stmt,array());
-	$smarty->assign("classes",$classes);
-
-	$smarty->assign("states",get_states());
-	$smarty->assign("countries",get_countries());
-
-	$teams=get_event_teams($event_id);
-	$smarty->assign("teams",$teams);
-
-	$maintpl=find_template("pilot_quick_add.tpl");
-	return $smarty->fetch($maintpl);
-}
-function save_pilot_quick_add() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	$pilot_first_name=$_REQUEST['pilot_first_name'];
-	$pilot_last_name=$_REQUEST['pilot_last_name'];
-	$pilot_city=$_REQUEST['pilot_city'];
-	$state_id=intval($_REQUEST['state_id']);
-	$country_id=intval($_REQUEST['country_id']);
-	$pilot_ama=$_REQUEST['pilot_ama'];
-	$pilot_fia=$_REQUEST['pilot_fia'];
-	$pilot_email=$_REQUEST['pilot_email'];
-	$class_id=intval($_REQUEST['class_id']);
-	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
-	$event_pilot_team=$_REQUEST['event_pilot_team'];
-	$plane_id=intval($_REQUEST['plane_id']);
-
-	# Lets add the pilot to the pilot table
-	$stmt=db_prep("
-		INSERT INTO pilot
-		SET pilot_wp_user_id=0,
-			pilot_first_name=:pilot_first_name,
-			pilot_last_name=:pilot_last_name,
-			pilot_email=:pilot_email,
-			pilot_ama=:pilot_ama,
-			pilot_fia=:pilot_fia,
-			pilot_city=:pilot_city,
-			state_id=:state_id,
-			country_id=:country_id
-	");
-	$result=db_exec($stmt,array(
-		"pilot_first_name"=>$pilot_first_name,
-		"pilot_last_name"=>$pilot_last_name,
-		"pilot_email"=>$pilot_email,
-		"pilot_ama"=>$pilot_ama,
-		"pilot_fia"=>$pilot_fia,
-		"pilot_city"=>$pilot_city,
-		"state_id"=>$state_id,
-		"country_id"=>$country_id,
-	));
-	$pilot_id=$GLOBALS['last_insert_id'];
-	
-	# Now lets add him to the current event
-	$stmt=db_prep("
-		INSERT INTO event_pilot
-		SET event_id=:event_id,
-			pilot_id=:pilot_id,
-			class_id=:class_id,
-			event_pilot_freq=:event_pilot_freq,
-			event_pilot_team=:event_pilot_team,
-			plane_id=:plane_id,
-			event_pilot_status=1
-	");
-	$result2=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id,"class_id"=>$class_id,"event_pilot_freq"=>$event_pilot_freq,"event_pilot_team"=>$event_pilot_team,"plane_id"=>$plane_id));
-	user_message("New pilot created and added to event.");
-	return event_view();
-}
-function event_pilot_remove() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	$event_pilot_id=$_REQUEST['event_pilot_id'];
-
-	$stmt=db_prep("
-		UPDATE event_pilot
-		SET event_pilot_status=0
-		WHERE event_pilot_id=:event_pilot_id
-	");
-	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
-	user_message("Pilot removed from event.");
-	return event_view();
-}
-function event_pilot_edit() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	$event_pilot_id=$_REQUEST['event_pilot_id'];
-
-	$pilot=array();
+	# Check to see if the pilot already exists in this event
 	$stmt=db_prep("
 		SELECT *
 		FROM event_pilot ep
-		LEFT JOIN event e ON ep.event_id=e.event_id
-		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
-		WHERE ep.event_pilot_id=:event_pilot_id
+		WHERE ep.event_id=:event_id
+			AND ep.pilot_id=:pilot_id
+			AND ep.event_pilot_status=1
 	");
-	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
-	$pilot=$result[0];
+	$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+	if(isset($result[0])){
+		# The record already exists, so lets see if it has its status to 1 or not
+		user_message("The Pilot you have chosen to add is already in this event.",1);
+		return event_view();
+	}
+
+	$pilot=array();
+
+	# If the event_pilot_id is zero and the pilot_id is zero, then we are making a new pilot
+	if($event_pilot_id!=0){
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN state s ON p.state_id=s.state_id
+			LEFT JOIN country c ON p.country_id=c.country_id
+			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+			WHERE ep.event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+		$pilot=$result[0];
+	}elseif($pilot_id!=0){
+		# They have chosen a pilot from the drop down list, so lets get that info
+		$stmt=db_prep("
+			SELECT *
+			FROM pilot p
+			LEFT JOIN state s ON p.state_id=s.state_id
+			LEFT JOIN country c ON p.country_id=c.country_id
+			WHERE p.pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		$pilot=$result[0];
+	}else{
+		# This will be a new pilot too, so set the name
+		$name=preg_split("/\s/",$pilot_name,2);
+		$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
+		$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+	}
 	
-	# Lets set a default
+	# Lets set a default for the Channel
 	if(!isset($pilot['event_pilot_freq']) || $pilot['event_pilot_freq']==''){
 		$pilot['event_pilot_freq']='2.4 GHz';
 	}
@@ -572,8 +439,12 @@ function event_pilot_edit() {
 	$classes=db_exec($stmt,array());
 	$smarty->assign("classes",$classes);
 
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+
 	$teams=get_event_teams($event_id);
 	$smarty->assign("teams",$teams);
+	$smarty->assign("event_id",$event_id);
 
 	$maintpl=find_template("event_pilot_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -582,25 +453,220 @@ function event_pilot_save() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
-	$event_pilot_id=$_REQUEST['event_pilot_id'];
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
 	$pilot_ama=$_REQUEST['pilot_ama'];
 	$pilot_fia=$_REQUEST['pilot_fia'];
+	$pilot_email=$_REQUEST['pilot_email'];
 	$class_id=intval($_REQUEST['class_id']);
 	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
 	$plane_id=intval($_REQUEST['plane_id']);
+	$from_confirm=intval($_REQUEST['from_confirm']);
 	
-	# Save the entry
-	$stmt=db_prep("
-		UPDATE event_pilot
-		SET class_id=:class_id,
-			event_pilot_freq=:event_pilot_freq,
-			event_pilot_team=:event_pilot_team,
-			plane_id=:plane_id
-		WHERE event_pilot_id=:event_pilot_id
-	");
-	$result=db_exec($stmt,array("class_id"=>$class_id,"event_pilot_freq"=>$event_pilot_freq,"event_pilot_team"=>$event_pilot_team,"event_pilot_id"=>$event_pilot_id,"plane_id"=>$plane_id));
+	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
+	if($pilot_id==0){
+		# This means that we need to add a new pilot
+		
+		if($from_confirm==0){
+			# First, lets maybe see if a pilot with that name already exists in that city and country
+			$pilots=array();
+			$stmt=db_prep("
+				SELECT *
+				FROM pilot p
+				LEFT JOIN state s ON p.state_id=s.state_id
+				LEFT JOIN country c ON p.country_id=c.country_id
+				WHERE p.pilot_first_name=LOWER(:pilot_first_name)
+					AND p.pilot_last_name=LOWER(:pilot_last_name)
+			");
+			$pilots=db_exec($stmt,array(
+				"pilot_first_name"=>strtolower($pilot_first_name),
+				"pilot_last_name"=>strtolower($pilot_last_name)
+			));
+			if($pilots[0]){
+				# This means there are records with this first and last name
+				# So we want to give them a choice of selecting an existing one instead of creating a new one
+				$smarty->assign("pilots",$pilots);
+				$smarty->assign("event_id",$event_id);
+				$smarty->assign("pilot_first_name",$pilot_first_name);
+				$smarty->assign("pilot_last_name",$pilot_last_name);
+				$smarty->assign("pilot_city",$pilot_city);
+				$smarty->assign("state_id",$state_id);
+				$smarty->assign("country_id",$country_id);
+				$smarty->assign("pilot_ama",$pilot_ama);
+				$smarty->assign("pilot_fia",$pilot_fia);
+				$smarty->assign("pilot_email",$pilot_email);
+				$smarty->assign("class_id",$class_id);
+				$smarty->assign("event_pilot_freq",$event_pilot_freq);
+				$smarty->assign("event_pilot_team",$event_pilot_team);
+				$smarty->assign("plane_id",$plane_id);
+				
+				# Lets add the state name and country name for good presentation
+				$states=get_states();
+				$countries=get_countries();
+				foreach($states as $s){
+					if($s['state_id']==$state_id){
+						$smarty->assign("state",$s);
+					}
+				}
+				foreach($countries as $c){
+					if($c['country_id']==$country_id){
+						$smarty->assign("country",$c);
+					}
+				}
+				
+				$maintpl=find_template("event_pilot_show_possible.tpl");
+				return $smarty->fetch($maintpl);
+			}
+		}
+		
+		$stmt=db_prep("
+			INSERT INTO pilot
+			SET pilot_wp_user_id=0,
+				pilot_first_name=:pilot_first_name,
+				pilot_last_name=:pilot_last_name,
+				pilot_email=:pilot_email,
+				pilot_ama=:pilot_ama,
+				pilot_fia=:pilot_fia,
+				pilot_city=:pilot_city,
+				state_id=:state_id,
+				country_id=:country_id
+		");
+		$result=db_exec($stmt,array(
+			"pilot_first_name"=>$pilot_first_name,
+			"pilot_last_name"=>$pilot_last_name,
+			"pilot_email"=>$pilot_email,
+			"pilot_ama"=>$pilot_ama,
+			"pilot_fia"=>$pilot_fia,
+			"pilot_city"=>$pilot_city,
+			"state_id"=>$state_id,
+			"country_id"=>$country_id,
+		));
+		$pilot_id=$GLOBALS['last_insert_id'];
+		user_message("Created new pilot $pilot_first_name $pilot_last_name.");
+	}
 
+	
+	if($event_pilot_id!=0){
+		# Lets save this existing event pilot
+		$stmt=db_prep("
+			UPDATE event_pilot
+			SET class_id=:class_id,
+				event_pilot_freq=:event_pilot_freq,
+				event_pilot_team=:event_pilot_team,
+				plane_id=:plane_id
+				WHERE event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array(
+			"class_id"=>$class_id,
+			"event_pilot_freq"=>$event_pilot_freq,
+			"event_pilot_team"=>$event_pilot_team,
+			"event_pilot_id"=>$event_pilot_id,
+			"plane_id"=>$plane_id
+		));
+	}else{
+		# Lets see what the next increment in the order is
+		$stmt=db_prep("
+			SELECT MAX(event_pilot_entry_order) as max
+			FROM event_pilot
+			WHERE event_id=:event_id
+			AND event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		if($result[0]['max']=='NULL' || $result[0]['max']==0){
+			$event_pilot_entry_order=1;
+		}else{
+			$event_pilot_entry_order=$result[0]['max']+1;
+		}
+
+		# We need to create a new event pilot id
+		# Lets first see if there already is one to just turn on
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			WHERE event_id=:event_id
+				AND pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		if(isset($result[0])){
+			# This event_pilot already exists, so lets just update it
+			$stmt=db_prep("
+				UPDATE event_pilot
+				SET class_id=:class_id,
+					event_pilot_entry_order=:event_pilot_entry_order,
+					event_pilot_freq=:event_pilot_freq,
+					event_pilot_team=:event_pilot_team,
+					plane_id=:plane_id,
+					event_pilot_status=1
+				WHERE event_pilot_id=:event_pilot_id
+			");
+			$result2=db_exec($stmt,array(
+				"class_id"=>$class_id,
+				"event_pilot_entry_order"=>$event_pilot_entry_order,
+				"event_pilot_freq"=>$event_pilot_freq,
+				"event_pilot_team"=>$event_pilot_team,
+				"plane_id"=>$plane_id,
+				"event_pilot_id"=>$result[0]['event_pilot_id']
+			));
+			$event_pilot_id=$result[0]['event_pilot_id'];
+		}else{
+			# We need to create a new event pilot		
+			$stmt=db_prep("
+				INSERT INTO event_pilot
+				SET event_id=:event_id,
+					pilot_id=:pilot_id,
+					event_pilot_entry_order=:event_pilot_entry_order,
+					class_id=:class_id,
+					event_pilot_freq=:event_pilot_freq,
+					event_pilot_team=:event_pilot_team,
+					plane_id=:plane_id,
+					event_pilot_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"pilot_id"=>$pilot_id,
+				"class_id"=>$class_id,
+				"event_pilot_entry_order"=>$event_pilot_entry_order,
+				"event_pilot_freq"=>$event_pilot_freq,
+				"event_pilot_team"=>$event_pilot_team,
+				"plane_id"=>$plane_id
+			));
+			$event_pilot_id=$GLOBALS['last_insert_id'];
+		}
+		
+		
+		# Lets create a single round entry to make sure they show up if there are any rounds already
+		$stmt=db_prep("
+			SELECT *,erf.flight_type_id
+			FROM event_round_flight erf
+			LEFT JOIN event_round er ON erf.event_round_id=er.event_round_id
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		if(isset($result[0])){
+			$round=$result[0];
+
+			# There is at least one round, so lets create a flight on the first round
+			$stmt=db_prep("
+				INSERT INTO event_round_flight
+				SET event_round_id=:event_round_id,
+					flight_type_id=:flight_type_id,
+					event_pilot_id=:event_pilot_id,
+					event_round_flight_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_round_id"=>$round['event_round_id'],
+				"flight_type_id"=>$round['flight_type_id'],
+				"event_pilot_id"=>$event_pilot_id
+			));
+		}
+	}
 	# Lets see if we need to update the pilot's ama or fia number
 	$stmt=db_prep("
 		SELECT *
@@ -617,12 +683,27 @@ function event_pilot_save() {
 			UPDATE pilot
 			SET pilot_ama=:pilot_ama,
 				pilot_fia=:pilot_fia
-			WHERE pilot_id=:pilot_id
+				WHERE pilot_id=:pilot_id
 		");
 		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fia"=>$pilot_fia,"pilot_id"=>$pilot['pilot_id']));
 	}
 
 	user_message("Updated event pilot info.");
+	return event_view();
+}
+function event_pilot_remove() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=$_REQUEST['event_pilot_id'];
+
+	$stmt=db_prep("
+		UPDATE event_pilot
+		SET event_pilot_status=0
+		WHERE event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	user_message("Pilot removed from event.");
 	return event_view();
 }
 function get_event_teams($event_id){
@@ -865,7 +946,7 @@ function get_all_event_info($event_id){
 		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		WHERE ep.event_id=:event_id
 			AND ep.event_pilot_status=1
-		ORDER BY ep.event_pilot_position
+		ORDER BY ep.event_pilot_entry_order
 	");
 	$pilots=db_exec($stmt,array("event_id"=>$event_id));
 	$event['pilots']=$pilots;

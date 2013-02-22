@@ -68,7 +68,7 @@ function lookup_plane() {
 		$planes[]=array(
 			"id"=>$r['plane_id'],
 			"label"=>"{$r['plane_type_short_name']} {$r['plane_name']}",
-			"value"=>"{$r['plane_type_short_name']} {$r['plane_name']}"
+			"value"=>"{$r['plane_name']}"
 		);
 	}
 
