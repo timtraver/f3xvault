@@ -33,8 +33,9 @@ X fix fancybox view on club locations
   
   printable reports for rounds, and overall standings
   
-  Change orientation of round flights with mutiple flights to vertical instead of horizontal and show better field descriptors and Round Ranks
-  	and sort by groups or flight order for ease of entering! Maybe even show team names...
+X Change orientation of round flights with mutiple flights to vertical instead of horizontal and show better field descriptors and Round Ranks
+X	Show Round Rank
+X 	and sort by groups or flight order for ease of entering! Maybe even show team names...
   
   Figure out drops
   
@@ -44,11 +45,15 @@ X As they are entering pilots, set the default entry order
   
 X  set autocomplete off for inputs of times...
   
-  set tab order on entry fields with tabindex
+X - not happening -- set tab order on entry fields with tabindex
   
   add DNS and DNF options to entry
   
   Outline round winners somehow
   
   On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
-  also make it so that it tabs down to the next blank entry
+  also make it so that it tabs down to the next BLANK entry if you use the save immediately feature...
+  
+  Flyoff capability
+  
+  

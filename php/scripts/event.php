@@ -1042,11 +1042,44 @@ function event_round_edit() {
 		$round['pilot'][$event_pilot_id]=$p;
 	}
 	
+	# Lets try it another way to create a flights array that we can sort easier
+	$flights=array();
+	foreach($event['pilots'] as $p){
+		$event_pilot_id=$p['event_pilot_id'];
+		# Lets get this pilots round flights
+		# Step through each flight type that is supposed to be run in this round, because there may not be data yet
+		foreach($flight_types as $ft){
+			$flight_type_id=$ft['flight_type_id'];
+			foreach($event['rounds'][$round_number]['flights'] as $f){
+				if($ft['flight_type_id']==$f['flight_type_id'] && $p['event_pilot_id']==$f['event_pilot_id']){
+					# This is a flight for this pilot
+					$ft=array_merge($f,$ft);
+				}
+			}
+			$ft=array_merge($p,$ft);
+			$flights[$flight_type_id]['pilots'][$event_pilot_id]=$ft;
+		}		
+	}
+	# OK, now that we've got the flights, lets see how we can sort them
+	foreach($flights as $flight_type_id=>$f){
+		$temp=$f['pilots'];
+		# Lets sort this array on a key
+		$round['flights'][$flight_type_id]=array_msort($temp,array(
+			"event_round_flight_group"=>SORT_ASC,
+			"event_round_flight_rank"=>SORT_ASC,
+			"event_pilot_entry_order"=>SORT_ASC
+		));
+	}
+	
+	
+	
+	
 	$smarty->assign("round",$round);
 	$smarty->assign("round_number",$round_number);
 
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("event",$event);
+	$smarty->assign("total_pilots",count($event['pilots']));
 	
 	$maintpl=find_template("event_round_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -1295,15 +1328,18 @@ function calculate_round($event_round_id){
 	foreach($flight as $flight_type_id=>$p){
 		foreach($p as $event_pilot_id=>$v){
 			# Create an array of all of the scores
-			$scores[$flight_type_id][$event_pilot_id]=$v['event_round_flight_score'];
+			$group=$v['event_round_flight_group'];
+			$scores[$flight_type_id][$group][$event_pilot_id]=$v['event_round_flight_score'];
 		}
 	}
 	foreach($scores as $flight_type_id=>$f){
-		arsort($f);
-		$count=1;
-		foreach($f as $event_pilot_id=>$value){
-			$flight[$flight_type_id][$event_pilot_id]['event_round_flight_rank']=$count;
-			$count++;
+		foreach($f as $group=>$g){
+			arsort($g);
+			$count=1;
+			foreach($g as $event_pilot_id=>$value){
+				$flight[$flight_type_id][$event_pilot_id]['event_round_flight_rank']=$count;
+				$count++;
+			}
 		}
 	}
 	
