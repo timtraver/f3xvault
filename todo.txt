@@ -41,11 +41,17 @@ X 	and sort by groups or flight order for ease of entering! Maybe even show team
   
 X As they are entering pilots, set the default entry order
   
-  Put collapses on the sections of the event so you can easily see the different areas.
+  Wrap round list if more than 10 rounds.
+  
+  Put sort by controls  on round edit maybe????
   
 X  set autocomplete off for inputs of times...
   
 X - not happening -- set tab order on entry fields with tabindex
+  
+  Show flight dropped in summary screen and round screen
+  
+  Created event_pilot_round table to keep track of totals per round and ranks...
   
   add DNS and DNF options to entry
   
@@ -56,4 +62,12 @@ X - not happening -- set tab order on entry fields with tabindex
   
   Flyoff capability
   
+  Fix showing of 0 seconds as blank when there are minutes...
   
+  Calculate the duration time based on the minutes entered for TD
+  
+  Rewrite round showing and saving...:(
+  
+ Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
+ 
+ 

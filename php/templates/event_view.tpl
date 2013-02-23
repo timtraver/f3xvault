@@ -110,7 +110,8 @@ $(function() {
 		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
-		
+
+
 		<br>
 		<h1 class="post-title entry-title">Event Rounds {if $event.rounds}({$event.rounds|count}) {/if} Overall Classification
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
@@ -152,6 +153,10 @@ $(function() {
 		</tr>
 		{/foreach}
 		</table>
+
+
+
+
 
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
