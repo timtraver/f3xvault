@@ -34,17 +34,10 @@
 		<input type="hidden" name="event_id" value="{$event.event_id}">
 		<input type="hidden" name="event_round_id" value="{$round.event_round_id}">
 		
-		<h1 class="post-title entry-title">Event Round Edit</h1>
+		<h1 class="post-title entry-title">Event Round {$round_number}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="20%" nowrap>Event Round Number</th>
-			<td>
-				{$round_number}
-				<input type="hidden" name="event_round_number" value="{$round_number}">
-			</td>
-		</tr>
-		<tr>
-			<th>Event Round Type</th>
+			<th width="20%" nowrap>Event Round Type</th>
 			<td>
 				{if $event.event_type_flight_choice==1}
 					<select name="flight_type_id">

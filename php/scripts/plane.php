@@ -182,6 +182,14 @@ function plane_edit() {
 
 	if(isset($_REQUEST['plane_id'])){
 		$plane_id=$_REQUEST['plane_id'];
+	}else{
+		$plane_id=0;
+	}
+	if(isset($_REQUEST['plane_name'])){
+		$plane_name=$_REQUEST['plane_name'];
+	}
+	if(isset($_REQUEST['from_edit_page'])){
+		$from_edit_page=$_REQUEST['from_edit_page'];
 	}
 
 	if($GLOBALS['user_id']==0){

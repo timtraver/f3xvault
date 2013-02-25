@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-02-22 09:06:15
+<?php /* Smarty version Smarty-3.1.11, created on 2013-02-23 07:37:32
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1361523970,
+      1 => 1361602660,
       2 => 'file',
     ),
   ),
@@ -170,7 +170,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable($_smarty_tpl->tpl_vars['num']->value+1, null, 0);?>
 		<?php } ?>
 		</table>
-		
+
+
 		<br>
 		<h1 class="post-title entry-title">Event Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value['rounds']){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value['rounds']);?>
 ) <?php }?> Overall Classification
@@ -237,6 +238,10 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 		</tr>
 		<?php } ?>
 		</table>
+
+
+
+
 
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">

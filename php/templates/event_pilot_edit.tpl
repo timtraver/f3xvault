@@ -48,7 +48,7 @@ $(function() {ldelim}
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+				mes.innerHTML = ' No Results Found. Use Add button to add new plane.';
 			}
 		}
 	});
@@ -184,6 +184,7 @@ $(function() {ldelim}
 		<input type="text" id="event_plane" name="event_plane" size="40" value="{$pilot.plane_name}">
 		<img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="plane_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
+		<input type="button" value=" + New Plane " class="button" onClick="document.add_plane.value=document.main.event_plane.value; add_plane.submit();">
 	</td>
 </tr>
 <tr>
@@ -199,6 +200,13 @@ $(function() {ldelim}
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event_id}">
+</form>
+<form name="add_plane" method="POST">
+<input type="hidden" name="action" value="plane">
+<input type="hidden" name="function" value="plane_edit">
+<input type="hidden" name="plane_id" value="0">
+<input type="hidden" name="plane_name" value="">
+<input type="hidden" name="from_event_pilot_edit" value="1">
 </form>
 
 </div>

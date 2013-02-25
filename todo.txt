@@ -70,4 +70,15 @@ X - not happening -- set tab order on entry fields with tabindex
   
  Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
  
+ Add a class podiums section at bottom of event page
+ 
+ Default Dates to today plus or minus a few years
+ 
+ Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
+ 
+ Full flight time entries for all the flights in F3K
+ 
+ 
+ 
+ 
  
