@@ -1,0 +1,413 @@
+<?php
+############################################################################
+#       event.php
+#
+#       Tim Traver
+#       8/11/12
+#       This is the event Class
+#
+############################################################################
+
+class Event {
+	# Global class to handle event data and manipulation
+	var $event_id;
+	var $info=array();
+	var $pilots=array();
+	var $rounds=array();
+	var $teams=array();
+	var $totals=array();
+	var $flight_types=array();
+	
+	function Event($event_id){
+		# Initialization of the class
+		$this->event_id=$event_id;
+		$stmt=db_prep("
+			SELECT *
+			FROM event e
+			LEFT JOIN location l ON e.location_id=l.location_id
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON c.country_id=l.country_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
+			WHERE e.event_id=:event_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		$this->info=$result[0];
+		
+		$this->get_pilots();
+		$this->get_flight_types();
+	}
+	function get_pilots(){
+		# Now lets get the pilots assigned to this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN class c ON ep.class_id=c.class_id
+			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+			WHERE ep.event_id=:event_id
+				AND ep.event_pilot_status=1
+			ORDER BY ep.event_pilot_entry_order
+		");
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($results as $pilot){
+			$event_pilot_id=$pilot['event_pilot_id'];
+			$this->pilots[$event_pilot_id]=$pilot;
+		}
+	}
+	function get_rounds(){
+		# Now lets get the rounds for this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round er
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+			ORDER BY er.event_round_number
+		");
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		$rounds=array();
+		# Step through each round and get pilot flights
+		foreach($results as $key=>$round){
+			$event_round_number=$round['event_round_number'];
+			$rounds[$event_round_number]=$round;
+		}
+		$this->rounds=$rounds;
+
+		foreach($this->rounds as $key=>$round){
+			$event_round_number=$round['event_round_number'];
+			$rounds[$event_round_number]=$round;
+
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+				# Lets get the pilots for this particular flight
+				$stmt=db_prep("
+					SELECT *
+					FROM event_pilot_round_flight erf
+					LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
+					WHERE epr.event_round_id=:event_round_id
+						AND erf.flight_type_id=:flight_type_id
+						AND erf.event_pilot_round_flight_status=1
+					ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank
+				");
+				$results=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$flight_type_id));
+				foreach($results as $flight){
+					$event_pilot_id=$flight['event_pilot_id'];
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
+				}
+				# Now add any pilots that dont have a flight
+				foreach($this->pilots as $event_pilot_id=>$p){
+					if(!isset($this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
+						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=array("event_pilot_round_flight_id"=>0);
+					}
+				}
+			}
+		}
+		$this->calculate_event_totals();	
+	}
+	function get_new_round($event_round_number){
+		# Now lets make a new round in the rounds array so that the round edit screen shows properly
+		foreach($this->pilots as $event_pilot_id=>$p){
+			$pilots[$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+		}
+		foreach($this->flight_types as $flight_type_id=>$ft){
+			$this->rounds[$event_round_number]['event_round_id']=0;
+			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots;
+		}
+	}
+	function get_teams(){
+		# Function to get the unique teams in an event
+		$names=array();
+		$stmt=db_prep("
+			SELECT DISTINCT(ep.event_pilot_team)
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			WHERE ep.event_pilot_team !=''
+				AND e.event_id=:event_id
+				AND ep.event_pilot_status=1
+		");
+		$names=db_exec($stmt,array("event_id"=>$this->event_id));
+		$this->teams=$names;
+	}
+	function get_flight_types(){
+		# Function to get the flight types in this event
+		# Lets figure out the round type base on the event type
+		$this->flight_types=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM flight_type
+		");
+		$result=db_exec($stmt,array());
+		$type=$this->info['event_type_code'];
+		foreach($result as $r){
+			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
+				$id=$r['flight_type_id'];
+				$this->flight_types[$id]=$r;
+			}
+		}
+		return;
+	}
+	function calculate_round($event_round_number){
+		# Function to calculate the values in a round given the event round id
+		if(!isset($this->rounds[$event_round_number])){
+			$this->get_rounds();
+		}
+		$flight=array();
+		# Lets get the round types so we know how to calculate the scores
+		# Now lets step through the flight data and set some of the basics
+		foreach($this->rounds[$event_round_number]['flights'] as $flight_type_id=>$f){
+			foreach($f['pilots'] as $event_pilot_id=>$v){
+				$raw=0;
+				if($f['flight_type_minutes']==1){
+					$raw+=60*intval($v['event_pilot_round_flight_minutes']);
+				}
+				if($f['flight_type_seconds']==1){
+					$raw+=floatval($v['event_pilot_round_flight_seconds']);
+				}
+				# Ok, now we have to subtract the absolute value of the max time (on just the time)
+				switch($f['flight_type_code']){
+					case 'f3b_duration':
+					case 'f3j_duration':
+						if($raw>600){
+							$raw=600-abs(600-$raw);
+						}
+						break;
+					case 'td_duration':
+						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60;
+						print "round_max_seconds=$round_max_seconds\n";
+						if($raw>$round_max_seconds){
+							$raw=$round_max_seconds-abs($round_max_seconds-$raw);
+						}
+					
+				}
+				if($f['flight_type_laps']==1){
+					$raw+=$v['event_pilot_round_flight_laps'];
+				}
+				if($f['flight_type_landing']==1){
+					$raw+=$v['event_pilot_round_flight_landing'];
+				}
+				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']=$raw;
+				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=$v['event_pilot_round_flight_id'];
+				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$v['event_pilot_round_flight_group'];
+	
+				# ok, now lets find the max score in each group
+				$group=$v['event_pilot_round_flight_group'];
+				if($group==''){
+					$group='none';
+				}
+				switch($f['flight_type_code']){
+					case 'f3b_speed':
+					case 'f3f_speed':
+						if(($raw<$max[$flight_type_id][$group]['raw'] || $max[$flight_type_id][$group]['raw']==0) && $raw!=0){
+							
+							$max[$flight_type_id][$group]['raw']=$raw;
+						}
+						break;
+					default:
+						if($raw>$max[$flight_type_id][$group]['raw']){
+							$max[$flight_type_id][$group]['raw']=$raw;
+						}
+				}
+			}
+		}
+		
+		# Now step through and do the normalization scores
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $event_pilot_id=>$v){
+				$group=$v['event_pilot_round_flight_group'];
+				if($group==''){
+					$group='none';
+				}
+				switch($this->flight_types[$flight_type_id]['flight_type_code']){
+					case 'f3b_speed':
+					case 'f3f_speed':
+						$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=round(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'])*1000,3);
+						break;
+					default:
+						$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=round(($flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']/$max[$flight_type_id][$group]['raw'])*1000,3);
+				}
+			}
+		}
+	
+		# Now determine the rank
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $event_pilot_id=>$v){
+				# Create an array of all of the scores
+				$group=$v['event_pilot_round_flight_group'];
+				$scores[$flight_type_id][$group][$event_pilot_id]=$v['event_pilot_round_flight_score'];
+				
+				$round_total_score[$event_pilot_id]+=$v['event_pilot_round_flight_score'];
+				$round_totals[$event_pilot_id]['raw']+=$v['event_pilot_round_flight_score'];
+				if($v['event_pilot_round_flight_dropped']==1){
+					$round_totals[$event_pilot_id]['dropped']+=$v['event_pilot_round_flight_score'];
+				}
+			}
+		}
+		foreach($scores as $flight_type_id=>$f){
+			foreach($f as $group=>$g){
+				arsort($g);
+				$count=1;
+				foreach($g as $event_pilot_id=>$value){
+					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_rank']=$count;
+					$count++;
+				}
+			}
+		}
+		
+		
+		foreach($round_total_score as $event_pilot_id=>$p){
+			arsort($round_total_score);
+			$count=1;
+			foreach($round_total_score as $event_pilot_id=>$value){
+				$round_totals[$event_pilot_id]['rank']=$count;
+				$count++;
+			}
+		}
+
+		# Now step through each one and save the flight record
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $event_pilot_id=>$v){
+				# There is already a record, so save this one
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET	event_pilot_round_flight_raw_score=:event_pilot_round_flight_raw_score,
+						event_pilot_round_flight_score=:event_pilot_round_flight_score,
+						event_pilot_round_flight_rank=:event_pilot_round_flight_rank,
+						event_pilot_round_flight_status=1
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result2=db_exec($stmt,array(
+					"event_pilot_round_flight_raw_score"=>$v['event_pilot_round_flight_raw_score'],
+					"event_pilot_round_flight_score"=>$v['event_pilot_round_flight_score'],
+					"event_pilot_round_flight_rank"=>$v['event_pilot_round_flight_rank'],
+					"event_pilot_round_flight_id"=>$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']
+				));
+			}
+		}
+		
+		# Now lets save the round totals in the event_pilot_round records
+		foreach($round_totals as $event_pilot_id=>$v){	
+			# Lets see if the event_pilot_round record exists
+			$stmt=db_prep("
+				SELECT *
+				FROM event_pilot_round
+				WHERE event_round_id=:event_round_id
+					AND event_pilot_id=:event_pilot_id
+			");
+			$result=db_exec($stmt,array("event_round_id"=>$this->rounds[$event_round_number]['event_round_id'],"event_pilot_id"=>$event_pilot_id));
+			if(isset($result[0])){
+				# It exists, so lets save it
+				$stmt=db_prep("
+					UPDATE event_pilot_round
+					SET event_pilot_round_raw_score=:raw,
+						event_pilot_round_drop_score=:drop,
+						event_pilot_round_rank=:rank,
+						event_pilot_round_total_score=:total
+					WHERE event_pilot_round_id=:event_pilot_round_id
+				");
+				$result2=db_exec($stmt,array(
+					"raw"=>$v['raw'],
+					"drop"=>$v['drop'],
+					"rank"=>$v['rank'],
+					"total"=>($v['raw']-$v['drop']),
+					"event_pilot_round_id"=>$result[0]['event_pilot_round_id']
+				));
+			}else{
+				# Doesn't exist, so lets create it
+				$stmt=db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id=:event_pilot_id,
+						event_round_id=:event_round_id,
+						event_pilot_round_raw_score=:raw,
+						event_pilot_round_drop_score=:drop,
+						event_pilot_round_rank=:rank
+				");
+				$result2=db_exec($stmt,array(
+					"event_pilot_id"=>$event_pilot_id,
+					"event_round_id"=>$event_round_id,
+					"raw"=>$v['raw'],
+					"drop"=>$v['drop'],
+					"total"=>($v['raw']-$v['drop']),
+					"rank"=>$v['rank']
+				));
+			}
+	
+		}
+		
+		return;
+	}
+	function calculate_event_totals(){
+		# Function to calculate the subtotals and totals per pilot for an event
+		$subtotals=array();
+		$totals=array();
+		foreach($this->rounds as $round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				foreach($f['pilots'] as $event_pilot_id=>$p){
+				
+					$subtotals[$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
+					$subtotals[$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+					$sub=$p['event_pilot_round_flight_score'];
+					$penalty=$p['event_pilot_round_flight_penalty'];
+					$subtotals[$event_pilot_id]['rounds'][$round_number]+=$sub;
+					$subtotals[$event_pilot_id]['subtotal']+=$sub;
+					$subtotals[$event_pilot_id]['penalties']+=$penalty;
+					$subtotals[$event_pilot_id]['total']+=$sub-$penalty;
+				}
+			}
+		}
+		# Step through each of the subtotals and make sure there are rounds that may not be completed
+		foreach($this->rounds as $round_number=>$r){
+			foreach($this->pilots as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				if(!isset($subtotals[$event_pilot_id]['rounds'][$round_number])){
+					$subtotals[$event_pilot_id]['rounds'][$round_number]=0;
+				}
+			}
+		}
+	
+		# Now determine the rank
+		foreach($subtotals as $event_pilot_id=>$t){
+			# Create an array of all of the scores
+			$scores[$event_pilot_id]=$t['total'];
+		}
+		arsort($scores);
+		$count=1;
+		foreach($scores as $event_pilot_id=>$f){
+			$subtotals[$event_pilot_id]['overall_rank']=$count;
+			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+			$totals[]=$subtotals[$event_pilot_id];
+			$count++;
+		}
+	
+		$this->totals= $totals;
+	}
+	function event_save_totals(){
+		# Function to save the total values for each of the rounds
+		foreach($this->rounds as $r){
+			foreach($r['pilots'] as $event_pilot_id=>$p){
+				$raw=0;
+				
+				foreach($t['rounds'] as $event_round_number=>$r){
+					$event_pilot_round_id=$event['rounds'][$event_round_number]['pilots'][$event_pilot_id]['event_pilot_round_id'];
+					
+					
+					# Save the subtotals for the round
+					$stmt=db_prep("
+						UPDATE event_pilot_round
+						SET event_pilot_round_raw_score=:raw,
+							event_pilot_round_rank=:rank,
+							event_pilot_round_drop_score=:drop,
+							event_pilot_round_total_score=:total
+						WHERE event_pilot_round_id=:event_pilot_round_id
+					");	
+					$result=db_exec($stmt,array(
+						"raw"=>$r
+					));
+				}
+			}
+		}
+	}
+}
+?>

@@ -51,7 +51,7 @@ X - not happening -- set tab order on entry fields with tabindex
   
   Show flight dropped in summary screen and round screen
   
-  Created event_pilot_round table to keep track of totals per round and ranks...
+/ Created event_pilot_round table to keep track of totals per round and ranks...
   
   add DNS and DNF options to entry
   
@@ -64,19 +64,19 @@ X - not happening -- set tab order on entry fields with tabindex
   
   Fix showing of 0 seconds as blank when there are minutes...
   
-  Calculate the duration time based on the minutes entered for TD
+X Calculate the duration time based on the minutes entered for TD
   
-  Rewrite round showing and saving...:(
+X Rewrite round showing and saving...:(
   
- Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
+  Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
  
- Add a class podiums section at bottom of event page
+  Add a class podiums section at bottom of event page
  
- Default Dates to today plus or minus a few years
+X Default Dates to today plus or minus a few years
  
- Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
+  Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
  
- Full flight time entries for all the flights in F3K
+  Full flight time entries for all the flights in F3K
  
  
  
