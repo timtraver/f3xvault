@@ -368,6 +368,7 @@ class Event {
 		}
 	
 		# Now determine the rank
+		$scores=array();
 		foreach($subtotals as $event_pilot_id=>$t){
 			# Create an array of all of the scores
 			$scores[$event_pilot_id]=$t['total'];
