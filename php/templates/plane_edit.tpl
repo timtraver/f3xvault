@@ -191,11 +191,13 @@ function calc_area(){ldelim}
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value="Cancel Edit" onClick="goback.submit();" class="block-button">
-		<input type="submit" value="Save Plane Values" class="block-button">
+		<input type="submit" value="Save Plane Values{if $from} and Return{/if}" class="block-button">
 	</th>
 </tr>
 </table>
-
+{foreach $from as $f}
+<input type="hidden" name="{$f.key}" value="{$f.value}">
+{/foreach}
 </form>
 
 <script type="text/javascript">

@@ -595,5 +595,24 @@ function get_country_code_value($country_id){
 	$result=db_exec($stmt,array("country_id"=>$country_id));
 	return $result[0]['country_code'];
 }
-
+function return_to_action($from){
+	# Function to return to a screen from whence they came
+	# Lets change the request array to the new values
+	$new=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/from_(\S+)/",$key,$match)){
+			$id=$match[1];
+			$new[$id]=$value;
+		}
+	}
+	# Now lets add the additional from values sent to the function
+	foreach($from as $key=>$value){
+			$new[$key]=$value;
+	}
+	$_REQUEST=$new;
+	$action=$new['action'];
+	# Now lets include the file
+	include("{$GLOBALS['scripts_dir']}/$action.php");
+	return $actionoutput;
+}
 ?>

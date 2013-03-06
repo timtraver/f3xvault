@@ -53,8 +53,24 @@ $(function() {ldelim}
 		}
 	});
 });
-</script>
 {/literal}
+function copy_plane_values(){ldelim}
+	document.add_plane.plane_name.value=document.main.event_plane.value;
+	{if $pilot.pilot_id==0}
+	document.add_plane.from_pilot_first_name.value=document.main.pilot_first_name.value;
+	document.add_plane.from_pilot_last_name.value=document.main.pilot_last_name.value;
+	document.add_plane.from_pilot_city.value=document.main.pilot_city.value;
+	document.add_plane.from_state_id.value=document.main.state_id.value;
+	document.add_plane.from_country_id.value=document.main.country_id.value;
+	document.add_plane.from_pilot_email.value=document.main.pilot_email.value;
+	{/if}
+	document.add_plane.from_pilot_ama.value=document.main.pilot_ama.value;
+	document.add_plane.from_pilot_fia.value=document.main.pilot_fia.value;
+	document.add_plane.from_class_id.value=document.main.class_id.value;
+	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
+	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;
+{rdelim}
+</script>
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event Pilot {if $pilot.event_pilot_id!=0}Edit{else}Add{/if}{if $pilot.pilot_id==0} (And Create New Pilot){/if}</h1>
@@ -101,7 +117,7 @@ $(function() {ldelim}
 <tr>
 	<th align="right" nowrap>Pilot City</th>
 	<td colspan="2">
-		<input type="text" name="pilot_city" size="40" value="">
+		<input type="text" name="pilot_city" size="40" value="{$pilot.pilot_city}">
 	</td>
 </tr>
 <tr>
@@ -109,7 +125,7 @@ $(function() {ldelim}
 	<td colspan="2">
 		<select name="state_id">
 		{foreach $states as $state}
-			<option value="{$state.state_id}">{$state.state_name}</option>
+			<option value="{$state.state_id}" {if $pilot.state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
 		{/foreach}
 		</select>
 	</td>
@@ -119,7 +135,7 @@ $(function() {ldelim}
 	<td colspan="2">
 		<select name="country_id">
 		{foreach $countries as $country}
-			<option value="{$country.country_id}">{$country.country_name}</option>
+			<option value="{$country.country_id}" {if $pilot.country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
 		{/foreach}
 		</select>
 	</td>
@@ -127,7 +143,7 @@ $(function() {ldelim}
 <tr>
 	<th align="right" nowrap>Pilot Email</th>
 	<td colspan="2">
-		<input type="text" name="pilot_email" size="40" value="">
+		<input type="text" name="pilot_email" size="40" value="{$pilot.pilot_email}">
 	</td>
 </tr>
 {else}
@@ -184,7 +200,7 @@ $(function() {ldelim}
 		<input type="text" id="event_plane" name="event_plane" size="40" value="{$pilot.plane_name}">
 		<img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="plane_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
-		<input type="button" value=" + New Plane " class="button" onClick="document.add_plane.value=document.main.event_plane.value; add_plane.submit();">
+		<input type="button" value=" + New Plane " class="button" onClick="copy_plane_values(); add_plane.submit();">
 	</td>
 </tr>
 <tr>
@@ -206,7 +222,22 @@ $(function() {ldelim}
 <input type="hidden" name="function" value="plane_edit">
 <input type="hidden" name="plane_id" value="0">
 <input type="hidden" name="plane_name" value="">
-<input type="hidden" name="from_event_pilot_edit" value="1">
+<input type="hidden" name="from_action" value="event">
+<input type="hidden" name="from_function" value="event_pilot_edit">
+<input type="hidden" name="from_event_id" value="{$event.event_id}">
+<input type="hidden" name="from_event_pilot_id" value="{$pilot.event_pilot_id}">
+<input type="hidden" name="from_pilot_id" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_pilot_first_name" value="">
+<input type="hidden" name="from_pilot_last_name" value="">
+<input type="hidden" name="from_pilot_city" value="">
+<input type="hidden" name="from_state_id" value="">
+<input type="hidden" name="from_country_id" value="">
+<input type="hidden" name="from_pilot_email" value="">
+<input type="hidden" name="from_pilot_ama" value="">
+<input type="hidden" name="from_pilot_fia" value="">
+<input type="hidden" name="from_class_id" value="">
+<input type="hidden" name="from_event_pilot_freq" value="">
+<input type="hidden" name="from_event_pilot_team" value="">
 </form>
 
 </div>

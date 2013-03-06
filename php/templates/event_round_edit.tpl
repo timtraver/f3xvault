@@ -154,6 +154,12 @@
 			{$num=$num+1}
 			{/foreach}
 			{/foreach}
+			{if $ft.flight_type_reflight==1}
+			<tr>
+			<th colspan="3">Reflights</th>
+			<th colspan="7"><input type="button" value=" Add Reflight " class="button"></th>
+			</tr>
+			{/if}
 		{/foreach}
 		</table>
 

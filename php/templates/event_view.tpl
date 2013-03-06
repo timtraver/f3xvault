@@ -43,6 +43,15 @@ $(function() {
 		}
 	});
 });
+function toggle(element,tog) {
+	 if (document.getElementById(element).style.display == 'none') {
+	 	document.getElementById(element).style.display = 'block';
+	 	tog.innerHTML = '(<u>hide</u>)';
+	 } else {
+		 document.getElementById(element).style.display = 'none';
+		 tog.innerHTML = '(<u>show</u>)';
+	 }
+}
 </script>
 {/literal}
 
@@ -76,7 +85,8 @@ $(function() {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if}</h1>
+		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>hide</u>)</span></h1>
+		<span id="pilots">
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
@@ -110,7 +120,7 @@ $(function() {
 		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
-
+		</span>
 
 		<br>
 		<h1 class="post-title entry-title">Event Rounds {if $event->rounds}({$event->rounds|count}) {/if} Overall Classification

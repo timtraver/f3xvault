@@ -3,55 +3,31 @@ Todo list for rcvault project
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
   ditto with the location of the event
   
-X event config parameters for each event type
-
-X event round adding and entering
-X make event subroutine to get all info about an event get_event_info
-  
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
-X  Ability to see other pilot profiles with their basic info and search (don't show email) under my pilot profile
-X  Change My Pilot Profile to Pilot Profiles with My as the first selection, and others as the second
-X  Add my club associations to my list
-X  Add club associations to pilot profile
-   
-X  Add My events list to my profile
-  
-X  Add RC Clubs section!
-  
-X fix fancybox view on club locations
-
   make it so that when you add a location from somewhere else, that it takes you back to that screen
-  ditto for plane
-  
-X make the ajax lookup not go through the main script, but be lean and faster
+X ditto for plane from event pilot add screen
+  make it for plane add from pilot profile
   
   reflights for groups
   
   team standings
   
+  Add Time digit accuracy for different flight types (i.e. how many decimals to show)
+  
   printable reports for rounds, and overall standings
   
-X Change orientation of round flights with mutiple flights to vertical instead of horizontal and show better field descriptors and Round Ranks
-X	Show Round Rank
-X 	and sort by groups or flight order for ease of entering! Maybe even show team names...
-  
   Figure out drops
-  
-X As they are entering pilots, set the default entry order
   
   Wrap round list if more than 10 rounds.
   
   Put sort by controls  on round edit maybe????
   
-X  set autocomplete off for inputs of times...
-  
-X - not happening -- set tab order on entry fields with tabindex
-  
   Show flight dropped in summary screen and round screen
   
 / Created event_pilot_round table to keep track of totals per round and ranks...
+  And save those values when calculated
   
   add DNS and DNF options to entry
   
@@ -64,21 +40,37 @@ X - not happening -- set tab order on entry fields with tabindex
   
   Fix showing of 0 seconds as blank when there are minutes...
   
-X Calculate the duration time based on the minutes entered for TD
-  
-X Rewrite round showing and saving...:(
-  
   Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
  
   Add a class podiums section at bottom of event page
- 
-X Default Dates to today plus or minus a few years
  
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
  
   Full flight time entries for all the flights in F3K
  
+  Fix club pilot quick add to make first character in name fields uppercase
  
+ 
+X fix fancybox view on club locations
+X  Add RC Clubs section!
+X  Add My events list to my profile
+X  Ability to see other pilot profiles with their basic info and search (don't show email) under my pilot profile
+X  Change My Pilot Profile to Pilot Profiles with My as the first selection, and others as the second
+X  Add my club associations to my list
+X  Add club associations to pilot profile
+X make the ajax lookup not go through the main script, but be lean and faster
+X Change orientation of round flights with mutiple flights to vertical instead of horizontal and show better field descriptors and Round Ranks
+X	Show Round Rank
+X 	and sort by groups or flight order for ease of entering! Maybe even show team names...
+X As they are entering pilots, set the default entry order
+X  set autocomplete off for inputs of times...
+X - not happening -- set tab order on entry fields with tabindex
+X Calculate the duration time based on the minutes entered for TD
+X Rewrite round showing and saving...:(
+X Default Dates to today plus or minus a few years
+X event config parameters for each event type
+X event round adding and entering
+X make event subroutine to get all info about an event get_event_info
  
  
  

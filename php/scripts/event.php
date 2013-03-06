@@ -415,6 +415,16 @@ function event_pilot_edit() {
 		");
 		$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
 		$pilot=$result[0];
+		if(isset($_REQUEST['from_action'])){
+			# They are returning from a plane add, so lets set things the way they were
+			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
+			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['class_id']=$_REQUEST['class_id'];
+			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
+			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
+			$pilot['plane_id']=$_REQUEST['plane_id'];
+			$pilot['plane_name']=$_REQUEST['plane_name'];
+		}
 	}elseif($pilot_id!=0){
 		# They have chosen a pilot from the drop down list, so lets get that info
 		$stmt=db_prep("
@@ -426,11 +436,42 @@ function event_pilot_edit() {
 		");
 		$result=db_exec($stmt,array("pilot_id"=>$pilot_id));
 		$pilot=$result[0];
+		if(isset($_REQUEST['from_action'])){
+			# They are returning from a plane add, so lets set things the way they were
+			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
+			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['class_id']=$_REQUEST['class_id'];
+			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
+			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
+			$pilot['plane_id']=$_REQUEST['plane_id'];
+			$pilot['plane_name']=$_REQUEST['plane_name'];
+		}
 	}else{
-		# This will be a new pilot too, so set the name
-		$name=preg_split("/\s/",$pilot_name,2);
-		$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
-		$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+		# This will be a new pilot
+		# lets see if they are returning
+		if(isset($_REQUEST['from_action'])){
+			# They are returning from a plane add, so lets set things the way they were
+			$pilot['pilot_first_name']=$_REQUEST['pilot_first_name'];
+			$pilot['pilot_last_name']=$_REQUEST['pilot_last_name'];
+			$pilot['pilot_city']=$_REQUEST['pilot_city'];
+			$pilot['state_id']=$_REQUEST['state_id'];
+			$pilot['country_id']=$_REQUEST['country_id'];
+			$pilot['pilot_email']=$_REQUEST['pilot_email'];
+			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
+			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['class_id']=$_REQUEST['class_id'];
+			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
+			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
+			$pilot['event_pilot_id']=$_REQUEST['event_pilot_id'];
+			$pilot['pilot_id']=$_REQUEST['pilot_id'];
+			$pilot['plane_id']=$_REQUEST['plane_id'];
+			$pilot['plane_name']=$_REQUEST['plane_name'];
+		}else{
+			# Lets set the name that was sent
+			$name=preg_split("/\s/",$pilot_name,2);
+			$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
+			$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+		}
 	}
 	
 	# Lets set a default for the Channel

@@ -188,8 +188,15 @@ function plane_edit() {
 	if(isset($_REQUEST['plane_name'])){
 		$plane_name=$_REQUEST['plane_name'];
 	}
-	if(isset($_REQUEST['from_edit_page'])){
-		$from_edit_page=$_REQUEST['from_edit_page'];
+	if(isset($_REQUEST['from_action'])){
+		# Lets make an array of all of the return values
+		foreach($_REQUEST as $key=>$value){
+			if(preg_match("/from_(\S+)/",$key,$match)){
+				$from[]=array("key"=>$key,"value"=>$value);
+			}
+		}
+		# Now lets add that array to the template
+		$smarty->assign("from",$from);
 	}
 
 	if($GLOBALS['user_id']==0){
@@ -210,6 +217,8 @@ function plane_edit() {
 	$result=db_exec($stmt,array("plane_id"=>$plane_id));
 	if($result){
 		$plane=$result[0];
+	}else{
+		$plane['plane_name']=ucwords($plane_name);
 	}
 	
 	# Get all of the base plane attributes as well as the ones for this plane
@@ -584,7 +593,17 @@ function plane_save() {
 		}
 	}	
 	user_message("Plane Information Saved");
-	return plane_list();
+	# Lets see if they came from somewhere else to add this plane
+	if(isset($_REQUEST['from_action'])){
+		# This came from somewhere else, so go back to that screen
+		# But lets add the new plane id to the list
+		$from['plane_id']=$plane['plane_id'];
+		$from['plane_name']=$plane['plane_name'];
+		$from['from_action']='plane';
+		return return_to_action($from);
+	}else{
+		return plane_list();
+	}
 }
 
 function plane_media_edit() {

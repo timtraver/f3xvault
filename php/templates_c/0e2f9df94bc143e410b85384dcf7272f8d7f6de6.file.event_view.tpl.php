@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-02-23 07:37:32
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-06 07:56:48
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1361602660,
+      1 => 1362556598,
       2 => 'file',
     ),
   ),
@@ -39,7 +39,7 @@ if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apa
 
 $(function() {
 	$("#pilot_name").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_pilot",
+		source: "/f3x/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -74,12 +74,21 @@ $(function() {
 		}
 	});
 });
+function toggle(element,tog) {
+	 if (document.getElementById(element).style.display == 'none') {
+	 	document.getElementById(element).style.display = 'block';
+	 	tog.innerHTML = '(<u>hide</u>)';
+	 } else {
+		 document.getElementById(element).style.display = 'none';
+		 tog.innerHTML = '(<u>show</u>)';
+	 }
+}
 </script>
 
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - <?php echo $_smarty_tpl->tpl_vars['event']->value['event_name'];?>
+		<h1 class="post-title entry-title">Event Settings - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_name'];?>
  <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
@@ -87,30 +96,30 @@ $(function() {
 		<tr>
 			<th width="20%" align="right">Event Dates</th>
 			<td>
-			<?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_start_date'],"%Y-%m-%d");?>
- to <?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_end_date'],"%Y-%m-%d");?>
+			<?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value->info['event_start_date'],"%Y-%m-%d");?>
+ to <?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value->info['event_end_date'],"%Y-%m-%d");?>
 
 			</td>
 			<th align="right">Location</th>
 			<td>
-			<?php echo $_smarty_tpl->tpl_vars['event']->value['location_name'];?>
- - <?php echo $_smarty_tpl->tpl_vars['event']->value['location_city'];?>
-,<?php echo $_smarty_tpl->tpl_vars['event']->value['state_code'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value['country_code'];?>
+			<?php echo $_smarty_tpl->tpl_vars['event']->value->info['location_name'];?>
+ - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['location_city'];?>
+,<?php echo $_smarty_tpl->tpl_vars['event']->value->info['state_code'];?>
+ <?php echo $_smarty_tpl->tpl_vars['event']->value->info['country_code'];?>
 
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			<?php echo $_smarty_tpl->tpl_vars['event']->value['event_type_name'];?>
+			<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_type_name'];?>
 
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			<?php echo $_smarty_tpl->tpl_vars['event']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value['pilot_last_name'];?>
- - <?php echo $_smarty_tpl->tpl_vars['event']->value['pilot_city'];?>
+			<?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_first_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_last_name'];?>
+ - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_city'];?>
 
 			</td>
 		</tr>
@@ -118,8 +127,9 @@ $(function() {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value['pilots']){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value['pilots']);?>
-)<?php }?></h1>
+		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value->pilots){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->pilots);?>
+)<?php }?> <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>hide</u>)</span></h1>
+		<span id="pilots">
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
@@ -137,7 +147,7 @@ $(function() {
 		</tr>
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable(1, null, 0);?>
 		<?php  $_smarty_tpl->tpl_vars['p'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['p']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value['pilots']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['event']->value->pilots; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['p']->key => $_smarty_tpl->tpl_vars['p']->value){
 $_smarty_tpl->tpl_vars['p']->_loop = true;
 ?>
@@ -158,10 +168,10 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_team'];?>
 </td>
 			<td nowrap>
-				<a href="/f3x/?action=event&function=event_pilot_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+				<a href="/f3x/?action=event&function=event_pilot_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_id'];?>
 " title="Edit Event Pilot"><img width="16" src="/f3x/images/icon_edit_small.gif"></a>
-				<a href="/f3x/?action=event&function=event_pilot_remove&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+				<a href="/f3x/?action=event&function=event_pilot_remove&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_id'];?>
 " title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
  from the event?');"><img width="14px" src="/f3x/images/del.gif"></a>
@@ -170,10 +180,10 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable($_smarty_tpl->tpl_vars['num']->value+1, null, 0);?>
 		<?php } ?>
 		</table>
-
+		</span>
 
 		<br>
-		<h1 class="post-title entry-title">Event Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value['rounds']){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value['rounds']);?>
+		<h1 class="post-title entry-title">Event Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds);?>
 ) <?php }?> Overall Classification
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
@@ -181,7 +191,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<tr>
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="<?php echo count($_smarty_tpl->tpl_vars['event']->value['rounds']);?>
+			<th colspan="<?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds);?>
 " align="center" nowrap>Completed Rounds</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
@@ -192,11 +202,11 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value['rounds']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
 $_smarty_tpl->tpl_vars['r']->_loop = true;
 ?>
-				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
 " title="Edit Round">Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
 </a></th>
@@ -207,7 +217,7 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 			<th>&nbsp;</th>
 		</tr>
 		<?php  $_smarty_tpl->tpl_vars['e'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['e']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value['totals']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['event']->value->totals; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['e']->key => $_smarty_tpl->tpl_vars['e']->value){
 $_smarty_tpl->tpl_vars['e']->_loop = true;
 ?>
@@ -240,9 +250,6 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 		</table>
 
 
-
-
-
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
 </div>
@@ -255,13 +262,13 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 </form>
 <form name="event_pilot_add" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_pilot_edit">
-<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 <input type="hidden" name="event_pilot_id" value="0">
 <input type="hidden" name="pilot_id" value="">
@@ -270,7 +277,7 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 <form name="event_add_round" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_round_edit">
-<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 <input type="hidden" name="event_round_id" value="0">
 </form>
