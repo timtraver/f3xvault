@@ -8,7 +8,7 @@
 {literal}
 $(function() {
 	$("#pilot_name").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_pilot",
+		source: "/f3x/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,

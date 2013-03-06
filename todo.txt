@@ -25,7 +25,7 @@ X fix fancybox view on club locations
   make it so that when you add a location from somewhere else, that it takes you back to that screen
   ditto for plane
   
-  make the ajax lookup not go through the main script, but be lean and faster
+X make the ajax lookup not go through the main script, but be lean and faster
   
   reflights for groups
   

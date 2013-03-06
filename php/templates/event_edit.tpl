@@ -8,7 +8,7 @@
 {literal}
 $(function() {
 	$("#location_name").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_location",
+		source: "/f3x/lookup.php?function=lookup_location",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -39,7 +39,7 @@ $(function() {
 		}
 	});
 	$("#event_cd_name").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_pilot",
+		source: "/f3x/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -70,7 +70,7 @@ $(function() {
 		}
 	});
 	$("#event_user_name").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_pilot",
+		source: "/f3x/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,

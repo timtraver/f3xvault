@@ -22,7 +22,7 @@ $(function() {ldelim}
         scrollHeight: 300
 	});
 	$("#event_plane").autocomplete({
-		source: "/f3x/?action=lookup&function=lookup_plane",
+		source: "/f3x/lookup.php?function=lookup_plane",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
