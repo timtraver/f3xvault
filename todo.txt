@@ -14,8 +14,6 @@ X ditto for plane from event pilot add screen
   
   team standings
   
-  Add Time digit accuracy for different flight types (i.e. how many decimals to show)
-  
   printable reports for rounds, and overall standings
   
   Figure out drops
@@ -50,7 +48,10 @@ X ditto for plane from event pilot add screen
  
   Fix club pilot quick add to make first character in name fields uppercase
  
+  When creating an event, create the options for it with the defaults
+  Maybe check what happens if you change an event to the options
  
+X Add Time digit accuracy for different flight types (i.e. how many decimals to show)
 X fix fancybox view on club locations
 X  Add RC Clubs section!
 X  Add My events list to my profile

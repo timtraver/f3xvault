@@ -16,6 +16,7 @@ class Event {
 	var $rounds=array();
 	var $teams=array();
 	var $totals=array();
+	var $options=array();
 	var $flight_types=array();
 	
 	function Event($event_id){
@@ -34,6 +35,7 @@ class Event {
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
 		$this->info=$result[0];
 		
+		$this->get_options();
 		$this->get_pilots();
 		$this->get_flight_types();
 	}
@@ -54,6 +56,46 @@ class Event {
 			$event_pilot_id=$pilot['event_pilot_id'];
 			$this->pilots[$event_pilot_id]=$pilot;
 		}
+		return;
+	}
+	function get_options(){
+		# Now lets get the event options
+		# Get all of the base options
+		$stmt=db_prep("
+			SELECT *
+			FROM event_type_option eto
+			WHERE eto.event_type_id=:event_type_id
+			ORDER BY eto.event_type_option_order
+		");
+		$options=db_exec($stmt,array("event_type_id"=>$this->info['event_type_id']));
+
+		$stmt=db_prep("
+			SELECT *
+			FROM event_option
+			WHERE event_id=:event_id
+				AND event_option_status=1
+		");
+		$values=db_exec($stmt,array("event_id"=>$this->event_id));
+
+		# Step through each of the values and put those entries into the options array
+		foreach ($options as $key=>$o){
+			$id=$o['event_type_option_id'];
+			foreach($values as $value){
+				if($value['event_type_option_id']==$id){
+					$options[$key]['event_option_value']=$value['event_option_value'];
+					$options[$key]['event_option_status']=$value['event_option_status'];
+				}
+			}
+		}
+		# Lets step through and set the defaults of the empty ones
+		foreach($options as $key=>$o){
+			$id=$o['event_type_option_id'];
+			if(!isset($options[$key]['event_option_value'])){
+				$options[$key]['event_option_value']=$options[$key]['event_type_option_default'];
+			}
+		}
+		$this->options=$options;
+		return;
 	}
 	function get_rounds(){
 		# Now lets get the rounds for this event
@@ -92,6 +134,8 @@ class Event {
 				$results=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$flight_type_id));
 				foreach($results as $flight){
 					$event_pilot_id=$flight['event_pilot_id'];
+					# Set the decimal accuracy for the flight seconds
+					$flight['event_pilot_round_flight_seconds']=sprintf('%02.'.$ft['accuracy'].'f',$flight['event_pilot_round_flight_seconds']);
 					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
 				}
 				# Now add any pilots that dont have a flight
@@ -103,6 +147,7 @@ class Event {
 			}
 		}
 		$this->calculate_event_totals();	
+		return;
 	}
 	function get_new_round($event_round_number){
 		# Now lets make a new round in the rounds array so that the round edit screen shows properly
@@ -115,6 +160,7 @@ class Event {
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots;
 		}
+		return;
 	}
 	function get_teams(){
 		# Function to get the unique teams in an event
@@ -130,6 +176,7 @@ class Event {
 		");
 		$names=db_exec($stmt,array("event_id"=>$this->event_id));
 		$this->teams=$names;
+		return;
 	}
 	function get_flight_types(){
 		# Function to get the flight types in this event
@@ -144,6 +191,13 @@ class Event {
 		foreach($result as $r){
 			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
 				$id=$r['flight_type_id'];
+				# Lets step through each of the options and set the accuracy for this slight type
+				$code=$r['flight_type_code'];
+				foreach($this->options as $o){
+					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+				}
 				$this->flight_types[$id]=$r;
 			}
 		}
@@ -335,7 +389,6 @@ class Event {
 			}
 	
 		}
-		
 		return;
 	}
 	function calculate_event_totals(){
@@ -381,8 +434,8 @@ class Event {
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
 		}
-	
 		$this->totals= $totals;
+		return;
 	}
 	function event_save_totals(){
 		# Function to save the total values for each of the rounds
@@ -409,6 +462,7 @@ class Event {
 				}
 			}
 		}
+		return;
 	}
 }
 ?>

@@ -216,62 +216,18 @@ function event_edit() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
-	$event=array();
-	if($event_id!=0){
-		# Get event info
-		$event=array();
-		$stmt=db_prep("
-			SELECT *
-			FROM event e
-			LEFT JOIN location l ON e.location_id=l.location_id
-			LEFT JOIN country c ON c.country_id=l.country_id
-			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
-			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.event_id=:event_id
-		");
-		$result=db_exec($stmt,array("event_id"=>$event_id));
-		$event=$result[0];
-	}else{
-		$event['event_start_date']=time();
-		$event['event_end_date']=time();
+	$e=new Event($event_id);
+	if($event_id==0){
+		$e->info['event_start_date']=time();
+		$e->info['event_end_date']=time();
 	}
-	
-	# Get event types
+
+	# Get all event types
 	$stmt=db_prep("
 		SELECT *
 		FROM event_type
 	");
 	$event_types=db_exec($stmt,array());
-
-	# Now lets get the specific event options for this type
-	# Get all of the base options
-	$options=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event_type_option eto
-		WHERE eto.event_type_id=:event_type_id
-		ORDER BY eto.event_type_option_order
-	");
-	$options=db_exec($stmt,array("event_type_id"=>$event['event_type_id']));
-
-	$stmt=db_prep("
-		SELECT *
-		FROM event_option
-		WHERE event_id=:event_id
-			AND event_option_status=1
-	");
-	$values=db_exec($stmt,array("event_id"=>$event_id));
-
-	# Step through each of the values and put those entries into the options array
-	foreach ($options as $key=>$o){
-		$id=$o['event_type_option_id'];
-		foreach($values as $value){
-			if($value['event_type_option_id']==$id){
-				$options[$key]['event_option_value']=$value['event_option_value'];
-				$options[$key]['event_option_status']=$value['event_option_status'];
-			}
-		}
-	}
 
 	# Now lets get the users that have additional access
 	$stmt=db_prep("
@@ -286,14 +242,8 @@ function event_edit() {
 	$event_users=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("event_users",$event_users);
 	
-	$smarty->assign("locations",$locations);
-	$smarty->assign("countries",$countries);
-	$smarty->assign("states",$states);
-	$smarty->assign("country_id",$country_id);
-	$smarty->assign("state_id",$state_id);
 	$smarty->assign("event_types",$event_types);
-	$smarty->assign("event",$event);
-	$smarty->assign("options",$options);
+	$smarty->assign("event",$e);
 
 	$maintpl=find_template("event_edit.tpl");
 	return $smarty->fetch($maintpl);
