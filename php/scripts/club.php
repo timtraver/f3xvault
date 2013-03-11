@@ -606,7 +606,7 @@ function club_pilot_quick_add() {
 	global $smarty;
 
 	$club_id=intval($_REQUEST['club_id']);
-	$pilot_name=$_REQUEST['pilot_name'];
+	$pilot_name=ucwords($_REQUEST['pilot_name']);
 
 	$club=array();
 	$stmt=db_prep("

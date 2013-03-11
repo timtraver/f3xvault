@@ -46,10 +46,10 @@ $(function() {
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
 	 	document.getElementById(element).style.display = 'block';
-	 	tog.innerHTML = '(<u>hide</u>)';
+	 	tog.innerHTML = '(<u>hide pilots</u>)';
 	 } else {
 		 document.getElementById(element).style.display = 'none';
-		 tog.innerHTML = '(<u>show</u>)';
+		 tog.innerHTML = '(<u>show pilots</u>)';
 	 }
 }
 </script>
@@ -85,7 +85,7 @@ function toggle(element,tog) {
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>hide</u>)</span></h1>
+		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>hide pilots</u>)</span></h1>
 		<span id="pilots">
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
@@ -130,7 +130,7 @@ function toggle(element,tog) {
 		<tr>
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{$event->rounds|count}" align="center" nowrap>Completed Rounds</th>
+			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Penalties</th>
@@ -140,7 +140,9 @@ function toggle(element,tog) {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
+				{if $r@iteration <=10}
 				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
+				{/if}
 			{/foreach}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -152,9 +154,11 @@ function toggle(element,tog) {
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
+				{if $r@iteration <=10}
 				<td align="right">
 					{$r}
 				</td>
+				{/if}
 			{/foreach}
 			<td></td>
 			<td width="5%" nowrap>{$e.subtotal}</td>
@@ -163,6 +167,52 @@ function toggle(element,tog) {
 		</tr>
 		{/foreach}
 		</table>
+
+		{if $event->rounds|count >10}
+		<br>
+		<h3 class="post-title entry-title">Event Rounds Continued</h3>
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap></th>
+			<th colspan="{$event->rounds|count - 10}" align="center" nowrap>Completed Rounds</th>
+			<th></th>
+			<th width="5%" nowrap>SubTotal</th>
+			<th width="5%" nowrap>Penalties</th>
+			<th width="5%" nowrap>Total Score</th>
+		</tr>
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap>Pilot Name</th>
+			{foreach $event->rounds as $r}
+				{if $r@iteration >10}
+				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
+				{/if}
+			{/foreach}
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+		</tr>
+		{foreach $event->totals as $e}
+		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+			<td>{$e.overall_rank}</td>
+			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			{foreach $e.rounds as $r}
+				{if $r@iteration >10}
+				<td align="right">
+					{$r}
+				</td>
+				{/if}
+			{/foreach}
+			<td></td>
+			<td width="5%" nowrap>{$e.subtotal}</td>
+			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
+			<td width="5%" nowrap>{$e.total}</td>
+		</tr>
+		{/foreach}
+		</table>
+		{/if}
 
 
 <br>
@@ -193,3 +243,9 @@ function toggle(element,tog) {
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_round_id" value="0">
 </form>
+{if $event->rounds}
+<script>
+	 document.getElementById('pilots').style.display = 'none';
+	 document.getElementById('viewtoggle').innerHTML = '(<u>show pilots</u>)';
+</script>
+{/if}

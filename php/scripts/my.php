@@ -259,15 +259,18 @@ function my_plane_edit() {
 		");
 		$result=db_exec($stmt,array("pilot_plane_id"=>$pilot_plane_id));
 		$pilot_plane=$result[0];
+	}else{
+		# Lets check if we have post variables coming back from an add
+		if(isset($_REQUEST['plane_name'])){
+			$pilot_plane['plane_name']=$_REQUEST['plane_name'];
+		}
+		if(isset($_REQUEST['plane_id'])){
+			$pilot_plane['plane_id']=$_REQUEST['plane_id'];
+		}
+		if(isset($_REQUEST['pilot_plane_color'])){
+			$pilot_plane['pilot_plane_color']=$_REQUEST['pilot_plane_color'];
+		}
 	}
-	# Get full list of planes
-	$stmt=db_prep("
-		SELECT *
-		FROM plane p
-		LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
-		ORDER BY pt.plane_type_short_name
-	");
-	$planes=db_exec($stmt,array());
 	
 	# Get plane media records
 	$media=array();
@@ -280,7 +283,6 @@ function my_plane_edit() {
 	$media=db_exec($stmt,array("pilot_plane_id"=>$pilot_plane_id));
 	
 	$smarty->assign("pilot_plane",$pilot_plane);
-	$smarty->assign("planes",$planes);
 	$smarty->assign("media",$media);
 	$maintpl=find_template("my_plane_edit.tpl");
 	return $smarty->fetch($maintpl);

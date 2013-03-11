@@ -218,8 +218,36 @@ function event_edit() {
 	$event_id=intval($_REQUEST['event_id']);
 	$e=new Event($event_id);
 	if($event_id==0){
-		$e->info['event_start_date']=time();
-		$e->info['event_end_date']=time();
+		if(isset($_REQUEST['location_name'])){
+			$e->info['location_name']=$_REQUEST['location_name'];
+		}
+		if(isset($_REQUEST['location_id'])){
+			$e->info['location_id']=$_REQUEST['location_id'];
+		}
+		if(isset($_REQUEST['event_name'])){
+			$e->info['event_name']=$_REQUEST['event_name'];
+		}
+		if(isset($_REQUEST['event_type_id'])){
+			$e->info['event_type_id']=$_REQUEST['event_type_id'];
+		}
+		if(isset($_REQUEST['event_cd'])){
+			$e->info['event_cd']=$_REQUEST['event_cd'];
+		}
+		if(isset($_REQUEST['event_cd_name'])){
+			$e->info['event_cd_name']=$_REQUEST['event_cd_name'];
+		}
+		if(isset($_REQUEST['event_start_dateMonth'])){
+			$starttime=strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']);
+		}else{
+			$starttime=time();
+		}
+		if(isset($_REQUEST['event_end_dateMonth'])){
+			$endtime=strtotime($_REQUEST['event_end_dateMonth'].'/'.$_REQUEST['event_end_dateDay'].'/'.$_REQUEST['event_end_dateYear']);
+		}else{
+			$endtime=time();
+		}
+		$e->info['event_start_date']=$starttime;
+		$e->info['event_end_date']=$endtime;
 	}
 
 	# Get all event types
@@ -287,6 +315,29 @@ function event_save() {
 
 		user_message("Added your New Event!");
 		$_REQUEST['event_id']=$GLOBALS['last_insert_id'];
+		# Now lets add the default event settings
+		# Lets get each event type option
+		$stmt=db_prep("
+			SELECT *
+			FROM event_type_option
+			WHERE event_type_id=:event_type_id
+		");
+		$options=db_exec($stmt,array("event_type_id"=>$event_type_id));
+		foreach($options as $o){
+			# Insert default value
+			$stmt=db_prep("
+				INSERT INTO event_option
+				SET event_id=:event_id,
+					event_type_option_id=:event_type_option_id,
+					event_option_value=:event_option_value,
+					event_option_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_id"=>$_REQUEST['event_id'],
+				"event_type_option_id"=>$o['event_type_option_id'],
+				"event_option_value"=>$o['event_type_option_default']
+			));
+		}
 	}else{
 		# Save the database record for this event
 		$stmt=db_prep("
@@ -704,6 +755,14 @@ function event_pilot_remove() {
 		WHERE event_pilot_id=:event_pilot_id
 	");
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	# Lets turn off their flights and rounds
+	$stmt=db_prep("
+		UPDATE event_pilot_round_flight
+		SET event_pilot_round_flight_status=0
+		WHERE event_pilot_round_id=(SELECT event_pilot_round_id from event_pilot_round WHERE event_pilot_id=:event_pilot_id)
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	
 	user_message("Pilot removed from event.");
 	return event_view();
 }

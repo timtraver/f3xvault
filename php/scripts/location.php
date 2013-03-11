@@ -171,18 +171,37 @@ function location_edit() {
 		$maintpl=find_template("feature_requires_login.tpl");
 		return $smarty->fetch($maintpl);
 	}
-	
+	if(isset($_REQUEST['location_name'])){
+		$location_name=ucwords($_REQUEST['location_name']);
+	}
+
+	if(isset($_REQUEST['from_action'])){
+		# Lets make an array of all of the return values
+		foreach($_REQUEST as $key=>$value){
+			if(preg_match("/from_(\S+)/",$key,$match)){
+				$from[]=array("key"=>$key,"value"=>$value);
+			}
+		}
+		# Now lets add that array to the template
+		$smarty->assign("from",$from);
+	}
+
 	$location=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM location l
-		LEFT JOIN country c ON l.country_id=c.country_id
-		LEFT JOIN state s ON l.state_id=s.state_id
-		WHERE location_id=:location_id
-	");
-	$result=db_exec($stmt,array("location_id"=>$location_id));
-	if($result){
-		$location=$result[0];
+	if($location_id!=0){
+		$stmt=db_prep("
+			SELECT *
+			FROM location l
+			LEFT JOIN country c ON l.country_id=c.country_id
+			LEFT JOIN state s ON l.state_id=s.state_id
+			WHERE location_id=:location_id
+		");
+		$result=db_exec($stmt,array("location_id"=>$location_id));
+		if($result){
+			$location=$result[0];
+		}
+	}else{
+		# Set the name
+		$location['location_name']=$location_name;
 	}
 	
 	# Get all of the base location attributes
@@ -331,7 +350,6 @@ function location_view() {
 }
 function location_save() {
 	global $smarty;
-	global $dbh;
 
 	if($GLOBALS['user_id']==0){
 		# The user is not logged in, so send the feature template
@@ -412,7 +430,7 @@ function location_save() {
 		");
 		$result=db_exec($stmt,$location);
 		# Set the old location_id back for the rest of the routine
-		$location['location_id']=$dbh->lastInsertId();
+		$location['location_id']=$GLOBALS['last_insert_id'];
 	}else{
 		# Update the existing record
 		$stmt=db_prep("
@@ -488,7 +506,16 @@ function location_save() {
 		}
 	}	
 	user_message("Location Information Saved");
-	return location_list();
+	if(isset($_REQUEST['from_action'])){
+		# This came from somewhere else, so go back to that screen
+		# But lets add the new location id to the list
+		$from['location_id']=$location['location_id'];
+		$from['location_name']=$location['location_name'];
+		$from['from_action']='location';
+		return return_to_action($from);
+	}else{
+		return location_list();
+	}
 }
 function location_media_edit() {
 	global $smarty;

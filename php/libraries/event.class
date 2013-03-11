@@ -230,7 +230,6 @@ class Event {
 						break;
 					case 'td_duration':
 						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60;
-						print "round_max_seconds=$round_max_seconds\n";
 						if($raw>$round_max_seconds){
 							$raw=$round_max_seconds-abs($round_max_seconds-$raw);
 						}
@@ -438,7 +437,7 @@ class Event {
 		return;
 	}
 	function event_save_totals(){
-		# Function to save the total values for each of the rounds
+		# Function to save the total values for the pilots
 		foreach($this->rounds as $r){
 			foreach($r['pilots'] as $event_pilot_id=>$p){
 				$raw=0;

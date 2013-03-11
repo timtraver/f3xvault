@@ -408,7 +408,6 @@ function plane_view() {
 }
 function plane_save() {
 	global $smarty;
-	global $dbh;
 
 	$plane=array();
 	if(isset($_REQUEST['plane_id'])){
@@ -512,7 +511,7 @@ function plane_save() {
 		");
 		$result=db_exec($stmt,$plane);
 		# Set the old plane_id back for the rest of the routine
-		$plane['plane_id']=$dbh->lastInsertId();
+		$plane['plane_id']=$GLOBALS['last_insert_id'];
 	}else{
 		# Update the existing record
 		$stmt=db_prep("
@@ -605,7 +604,6 @@ function plane_save() {
 		return plane_list();
 	}
 }
-
 function plane_media_edit() {
 	global $smarty;
 	global $user;

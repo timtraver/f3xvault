@@ -115,7 +115,9 @@ if($no_header_footer==1){
 }else{
 	$messagetpl=find_template("messages.tpl");
 	# Show wordpress header
-	get_header();
+	#get_header();
+	$menutpl=find_template("header.tpl");
+	$smarty->display($menutpl);
 	if($GLOBALS['messages']){
 		$smarty->display($messagetpl);
 	}
@@ -125,10 +127,12 @@ if($no_header_footer==1){
 	$smarty->display($menutpl);
 	# Get wordpress footer
 	if($noside==1){
-		get_footer("noside");
+#		get_footer("noside");
 	}else{
-		get_footer();
+#		get_footer();
 	}
+	$menutpl=find_template("footer.tpl");
+	$smarty->display($menutpl);
 	Smarty_Internal_Debug::display_debug($smarty);
 }
 

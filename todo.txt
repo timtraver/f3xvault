@@ -1,14 +1,16 @@
 Todo list for rcvault project
 
+  Change footer text on live site to just be copyright Tim Traver
+  
+  Show correct menu for non wordpress pages based on logged in status
+  
+  Allow for 0 round
+  
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
   ditto with the location of the event
   
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
-  
-  make it so that when you add a location from somewhere else, that it takes you back to that screen
-X ditto for plane from event pilot add screen
-  make it for plane add from pilot profile
   
   reflights for groups
   
@@ -18,17 +20,13 @@ X ditto for plane from event pilot add screen
   
   Figure out drops
   
-  Wrap round list if more than 10 rounds.
-  
-  Put sort by controls  on round edit maybe????
+  Put sort by controls on round edit maybe????
   
   Show flight dropped in summary screen and round screen
   
 / Created event_pilot_round table to keep track of totals per round and ranks...
   And save those values when calculated
-  
-  add DNS and DNF options to entry
-  
+    
   Outline round winners somehow
   
   On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
@@ -36,21 +34,27 @@ X ditto for plane from event pilot add screen
   
   Flyoff capability
   
-  Fix showing of 0 seconds as blank when there are minutes...
-  
   Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
  
   Add a class podiums section at bottom of event page
  
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
  
-  Full flight time entries for all the flights in F3K
+  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
  
-  Fix club pilot quick add to make first character in name fields uppercase
+  Make an event option be the number of points for each second of flight 
  
-  When creating an event, create the options for it with the defaults
-  Maybe check what happens if you change an event to the options
+  Assing club affiliation to event and show on event screen
  
+X when deleting a pilot from an event, turn their flights off
+X make it so that when you add a location from somewhere else, that it takes you back to that screen
+X ditto for plane from event pilot add screen
+X make it for plane add from pilot profile
+X Wrap round list if more than 10 rounds.
+X When creating an event, create the options for it with the defaults
+X Maybe check what happens if you change an event to the options
+X Fix club pilot quick add to make first character in name fields uppercase
+X Fix showing of 0 seconds as blank when there are minutes...
 X Add Time digit accuracy for different flight types (i.e. how many decimals to show)
 X fix fancybox view on club locations
 X  Add RC Clubs section!

@@ -34,7 +34,7 @@ $(function() {
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+				mes.innerHTML = ' No Results Found. Use Add button to add new location.';
 			}
 		}
 	});
@@ -101,6 +101,19 @@ $(function() {
 		}
 	});
 });
+function copy_location_values(){
+	document.create_new_location.location_name.value=document.main.location_name.value;
+	document.create_new_location.from_event_name.value=document.main.event_name.value;
+	document.create_new_location.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
+	document.create_new_location.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
+	document.create_new_location.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
+	document.create_new_location.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
+	document.create_new_location.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
+	document.create_new_location.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
+	document.create_new_location.from_event_type_id.value=document.main.event_type_id.value;
+	document.create_new_location.from_event_cd.value=document.main.event_cd.value;
+	document.create_new_location.from_event_cd_name.value=document.main.event_cd_name.value;
+}
 </script>
 {/literal}
 
@@ -111,7 +124,7 @@ $(function() {
 
 <h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
 <form name="main" method="POST">
-<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_save">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="location_id" value="{$event->info.location_id}">
@@ -123,7 +136,7 @@ $(function() {
 		<input type="text" id="location_name" name="location_name" size="40" value="{$event->info.location_name}">
 		<img id="loading_location" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
-		<input type="button" value=" + New Location " class="block-button" onClick="create_new_location.submit();">
+		<input type="button" value=" + New Location " class="block-button" onClick="copy_location_values(); create_new_location.submit();">
 	</td>
 </tr>
 <tr>
@@ -135,8 +148,8 @@ $(function() {
 <tr>
 	<th>Dates</th>
 	<td>
-	{html_select_date prefix="event_start_date" start_year="-1" end_year="+1" day_format="%02d" time=$event->info.event_start_date} to 
-	{html_select_date prefix="event_end_date" start_year="-1" end_year="+1" day_format="%02d" time=$event->info.event_end_date}
+	{html_select_date prefix="event_start_date" start_year="-2" end_year="+3" day_format="%02d" time=$event->info.event_start_date} to 
+	{html_select_date prefix="event_end_date" start_year="-2" end_year="+3" day_format="%02d" time=$event->info.event_end_date}
 	</td>
 </tr>
 <tr>
@@ -152,7 +165,7 @@ $(function() {
 <tr>
 	<th>Contest Director</th>
 	<td>
-		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name} {$event->info.pilot_last_name}{/if}">
+		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.event_cd_name!=''}{$event->info.event_cd_name}{else}{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name} {$event->info.pilot_last_name}{/if}{/if}">
 		<img id="loading_cd" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
@@ -160,7 +173,7 @@ $(function() {
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save This Event " class="block-button">
+		<input type="submit" value=" Save This Event " class="block-button" onClick="if(document.main.location_id.value==0){ldelim}alert('You must choose or add a valid location for this event before saving it.');return false;{rdelim}">
 	</th>
 </tr>
 </table>
@@ -169,7 +182,7 @@ $(function() {
 {if $event->info.event_id!=0}
 <h1 class="post-title entry-title">Edit Advanced Event Parameters</h1>
 <form name="event_options" method="POST">
-<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_param_save">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -199,7 +212,7 @@ $(function() {
 
 <h1 class="post-title entry-title">Edit Event Access</h1>
 <form name="event_user_add" method="POST">
-<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_user_save">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="pilot_id" value="">
@@ -240,6 +253,20 @@ $(function() {
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_edit">
 <input type="hidden" name="location_id" value="0">
+<input type="hidden" name="location_name" value="">
+<input type="hidden" name="from_action" value="event">
+<input type="hidden" name="from_function" value="event_edit">
+<input type="hidden" name="from_event_id" value="{$event->info.event_id}">
+<input type="hidden" name="from_event_name" value="">
+<input type="hidden" name="from_event_start_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_start_dateDay" value="">
+<input type="hidden" name="from_event_start_dateYear" value="">
+<input type="hidden" name="from_event_end_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_end_dateDay" value="">
+<input type="hidden" name="from_event_end_dateYear" value="">
+<input type="hidden" name="from_event_type_id" value="">
+<input type="hidden" name="from_event_cd" value="">
+<input type="hidden" name="from_event_cd_name" value="">
 </form>
 
 </div>

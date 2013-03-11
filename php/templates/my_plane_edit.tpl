@@ -39,6 +39,10 @@ $(function() {
 		}
 	});
 });
+function copy_plane_values(){
+	document.create_new_plane.plane_name.value=document.main.plane_name.value;
+	document.create_new_plane.from_pilot_plane_color.value=document.main.pilot_plane_color.value;
+}
 </script>
 {/literal}
 <div class="page type-page status-publish hentry clearfix post nodate">
@@ -47,13 +51,13 @@ $(function() {
 		<div class="entry-content clearfix">
 
 <form name="main" method="POST">
-<input type="hidden" name="action" value="{$action|escape}">
+<input type="hidden" name="action" value="my">
 <input type="hidden" name="function" value="my_plane_save">
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
 <input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
 
 <h1 class="post-title entry-title">My Plane
-<input type="button" value=" + Create New Plane " class="block-button" onClick="create_new_plane.submit();">
+<input type="button" value=" + Create New Plane " class="block-button" onClick="copy_plane_values(); create_new_plane.submit();">
 </h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
@@ -72,7 +76,7 @@ $(function() {
 <center>
 <br>
 {if $pilot_plane.pilot_plane_id==0}
-	<input type="submit" value=" Add This Plane To My Quiver " class="block-button">
+	<input type="submit" value=" Add This Plane To My Quiver " class="block-button" onClick="if(document.main.plane_id.value==0){ldelim}alert('You must choose or add a valid plane before saving this record.');return false;{rdelim}">
 {else}
 	<input type="submit" value=" Save This Plane Info " class="block-button">
 {/if}
@@ -129,6 +133,10 @@ $(function() {
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_edit">
 <input type="hidden" name="plane_id" value="0">
+<input type="hidden" name="plane_name" value="">
+<input type="hidden" name="from_action" value="my">
+<input type="hidden" name="from_function" value="my_plane_edit">
+<input type="hidden" name="from_pilot_plane_color" value="">
 </form>
 
 </div>
