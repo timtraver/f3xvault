@@ -276,7 +276,11 @@ class Event {
 				switch($this->flight_types[$flight_type_id]['flight_type_code']){
 					case 'f3b_speed':
 					case 'f3f_speed':
-						$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=round(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'])*1000,3);
+						if($flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']==0){
+							$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=0;
+						}else{
+							$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=round(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'])*1000,3);
+						}
 						break;
 					default:
 						$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_score']=round(($flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']/$max[$flight_type_id][$group]['raw'])*1000,3);
