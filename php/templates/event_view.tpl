@@ -42,6 +42,14 @@ $(function() {
 			}
 		}
 	});
+	$("#pilot_name").keyup(function(event) { 
+		if (event.keyCode == 13) { 
+			//For enter.
+			var name=document.getElementById('pilot_name');
+			document.event_pilot_add.pilot_name.value=name.value;
+			event_pilot_add.submit();
+        }
+    });
 });
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
@@ -122,8 +130,12 @@ function toggle(element,tog) {
 		</table>
 		</span>
 
+
+
+
 		<br>
 		<h1 class="post-title entry-title">Event Rounds {if $event->rounds}({$event->rounds|count}) {/if} Overall Classification
+			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -155,8 +167,8 @@ function toggle(element,tog) {
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
-				<td align="right">
-					{$r}
+				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+					{$r.event_pilot_round_total_score}
 				</td>
 				{/if}
 			{/foreach}
@@ -167,6 +179,9 @@ function toggle(element,tog) {
 		</tr>
 		{/foreach}
 		</table>
+
+
+
 
 		{if $event->rounds|count >10}
 		<br>
@@ -200,8 +215,8 @@ function toggle(element,tog) {
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration >10}
-				<td align="right">
-					{$r}
+				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+					{$r.event_pilot_round_total_score}
 				</td>
 				{/if}
 			{/foreach}
@@ -242,6 +257,7 @@ function toggle(element,tog) {
 <input type="hidden" name="function" value="event_round_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_round_id" value="0">
+<input type="hidden" name="zero_round" value="0">
 </form>
 {if $event->rounds}
 <script>

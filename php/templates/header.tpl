@@ -3,9 +3,9 @@
 <head>
 <title>F3X Timing</title>
 <!-- <link href="style.css" rel="stylesheet" type="text/css"> -->
-<link rel='stylesheet' id='admin-bar-css'  href='http://localhost/wp-includes/css/admin-bar.min.css?ver=3.5.1' type='text/css' media='all' />
-<link rel='stylesheet' id='theme-my-login-css'  href='http://localhost/wp-content/plugins/theme-my-login/theme-my-login.css?ver=6.2.2' type='text/css' media='all' /><link rel='stylesheet' id='graphene-stylesheet-css'  href='http://localhost/wp-content/themes/graphene/style.css?ver=3.5.1' type='text/css' media='screen' />
-<link rel='stylesheet' id='graphene-light-header-css'  href='http://localhost/wp-content/themes/graphene/style-light.css?ver=3.5.1' type='text/css' media='screen' /></head>
+<link rel='stylesheet' id='admin-bar-css'  href='/wp-includes/css/admin-bar.min.css?ver=3.5.1' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-my-login-css'  href='/wp-content/plugins/theme-my-login/theme-my-login.css?ver=6.2.2' type='text/css' media='all' /><link rel='stylesheet' id='graphene-stylesheet-css'  href='/wp-content/themes/graphene/style.css?ver=3.5.1' type='text/css' media='screen' />
+<link rel='stylesheet' id='graphene-light-header-css'  href='/wp-content/themes/graphene/style-light.css?ver=3.5.1' type='text/css' media='screen' /></head>
 <!-- Add jQuery library -->
 <script type="text/javascript" src="/f3x/includes/jquery.min.js"></script>
 <!-- Add mousewheel plugin (this is optional) -->
@@ -68,7 +68,7 @@ $(document).ready(function() {
 </style>
 	<!--[if lte IE 7]>
       <style type="text/css" media="screen">
-      	#footer, div.sidebar-wrap, .block-button, .featured_slider, #slider_root, #nav li ul, .pie{behavior: url(http://localhost/wp-content/themes/graphene/js/PIE.php);}
+      	#footer, div.sidebar-wrap, .block-button, .featured_slider, #slider_root, #nav li ul, .pie{behavior: url(/wp-content/themes/graphene/js/PIE.php);}
         .featured_slider{margin-top:0 !important;}
         #header-menu-wrap {z-index:5}
       </style>
@@ -79,7 +79,7 @@ $(document).ready(function() {
 	* html body { margin-top: 28px !important; }
 </style>
 <style type="text/css" id="custom-background-css">
-body.custom-background { background-image: url('http://localhost/wp-content/uploads/2012/08/GatorF3B2012Vampire1.jpg'); background-repeat: repeat; background-position: top left; background-attachment: fixed; }
+body.custom-background { background-image: url('/wp-content/uploads/2012/08/GatorF3B2012Vampire1.jpg'); background-repeat: repeat; background-position: top left; background-attachment: fixed; }
 </style>
 {/literal}
 
@@ -89,41 +89,41 @@ body.custom-background { background-image: url('http://localhost/wp-content/uplo
 
         <div id="header">
     	
-        <img src="http://localhost/wp-content/uploads/2012/08/GatorF3B2012Vampire.jpg" alt="" class="header-img" />        	       
+        <img src="/wp-content/uploads/2012/08/GatorF3B2012Vampire.jpg" alt="" class="header-img" />        	       
         		
         			<h1 class="header_title push_1 grid_15">									RC Vault							</h1>			
             <h2 class="header_desc push_1 grid_15">				RC Plane Databases and Timing of RC competitions			</h2>               
 		    </div>
     <div id="nav">
                 <div id="header-menu-wrap" class="clearfix">
-			<ul id="header-menu" class="menu clearfix"><li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home"><a href="http://localhost/"><strong>Home</strong></a></li>
-<li id="menu-item-19" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="http://localhost/?page_id=17"><strong>RC Locations</strong></a>
+			<ul id="header-menu" class="menu clearfix"><li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home"><a href="/"><strong>Home</strong></a></li>
+<li id="menu-item-19" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=17"><strong>RC Locations</strong></a>
 <ul class="sub-menu">
 	<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=location">Location Browse</a></li>
 </ul>
 </li>
-<li id="menu-item-33" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="http://localhost/?page_id=2"><strong>RC Plane Database</strong></a>
+<li id="menu-item-33" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=2"><strong>RC Plane Database</strong></a>
 <ul class="sub-menu">
 	<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=plane">Database Browse</a></li>
 </ul>
 </li>
-<li id="menu-item-34" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="http://localhost/?page_id=7"><strong>RC Events</strong></a>
+<li id="menu-item-34" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=7"><strong>RC Events</strong></a>
 <ul class="sub-menu">
 	<li id="menu-item-58" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=event">Event Browse</a></li>
 </ul>
 </li>
-<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="http://localhost/?page_id=79"><strong>Pilot Profiles</strong></a>
+<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=79"><strong>Pilot Profiles</strong></a>
 <ul class="sub-menu">
 	<li id="menu-item-77" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=my">My Pilot Profile</a></li>
 	<li id="menu-item-78" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=pilot">Browse Pilot Profiles</a></li>
 </ul>
 </li>
-<li id="menu-item-84" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="http://localhost/?page_id=82"><strong>RC Clubs</strong></a>
+<li id="menu-item-84" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=82"><strong>RC Clubs</strong></a>
 <ul class="sub-menu">
 	<li id="menu-item-85" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=club">RC Clubs Browse</a></li>
 </ul>
 </li>
-<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="http://localhost/?page_id=47&amp;action=logout&amp;_wpnonce=c3ef6d9b4e"><strong>Log Out</strong></a></li>
+<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?page_id=47&amp;action=logout&amp;_wpnonce=c3ef6d9b4e"><strong>Log Out</strong></a></li>
 </ul>            
             <div class="clear"></div>
             

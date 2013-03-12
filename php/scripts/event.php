@@ -203,7 +203,7 @@ function event_view() {
 	$e=new Event($event_id);
 	$e->get_rounds();
 	$smarty->assign("event",$e);
-
+	$e->event_save_totals();
 	
 	# Get event info
 #	$event=get_all_event_info_new($event_id);
@@ -1134,6 +1134,7 @@ function event_round_edit() {
 	
 	$event_id=intval($_REQUEST['event_id']);
 	$event_round_id=intval($_REQUEST['event_round_id']);
+	$zero_round=intval($_REQUEST['zero_round']);
 	$event=new Event($event_id);
 	$event->get_rounds();
 
@@ -1141,10 +1142,38 @@ function event_round_edit() {
 	# Now lets look at the rounds to see which is the next round # to add if its a new one
 	$round=array();
 	if($event_round_id==0){
-		$round_number=count($event->rounds)+1;
-		# Lets fill out the round info with default stuff from what type of event this is
+		# Lets see if this is a zero round
+		if($zero_round){
+			# Lets see if there is already a zero round and make it 00 or 000
+			$num_zeros=0;
+			foreach($event->rounds as $number=>$r){
+				if(preg_match("/^0*/",$number)){
+					$num_zeros++;
+				}
+			}
+			$round_number='';
+			for($i=0; $i<=$num_zeros; $i++){
+				$round_number.='0';
+			}
+		}else{
+			# Lets figure out the next round number
+			$max=0;
+			foreach($event->rounds as $number=>$r){
+				if($number>$max){
+					$max=$number;
+				}
+			}
+			$round_number=$max+1;
+		}
+		# Now Lets fill out the round info with default stuff from what type of event this is
 		# We actually need to fill in the default round data for an empty round
 		$event->get_new_round($round_number);
+		# Lets set the round to be scored or not depending on the zero choice
+		if($zero_round){
+			$event->rounds[$round_number]['event_round_score_status']=0;
+		}else{
+			$event->rounds[$round_number]['event_round_score_status']=1;
+		}
 	}else{
 		# Step through and get the round number from the event_round_id
 		foreach($event->rounds as $event_round_number=>$data){
@@ -1172,7 +1201,11 @@ function event_round_save() {
 	$event_round_id=intval($_REQUEST['event_round_id']);
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
 	$event_round_time_choice=$_REQUEST['event_round_time_choice'];
-	$event_round_number=intval($_REQUEST['event_round_number']);
+	$event_round_number=$_REQUEST['event_round_number'];
+	$event_round_score_status=0;
+	if(isset($_REQUEST['event_round_score_status']) && $_REQUEST['event_round_score_status']=='on'){
+		$event_round_score_status=1;
+	}
 	
 	# First, lets save the round info
 	if($event_round_id==0){
@@ -1183,13 +1216,15 @@ function event_round_save() {
 				event_round_number=:event_round_number,
 				flight_type_id=:flight_type_id,
 				event_round_time_choice=:event_round_time_choice,
+				event_round_score_status=:event_round_score_status,
 				event_round_status=1
 		");
 		$result=db_exec($stmt,array(
 			"event_id"=>$event_id,
 			"event_round_number"=>$event_round_number,
 			"flight_type_id"=>$flight_type_id,
-			"event_round_time_choice"=>$event_round_time_choice
+			"event_round_time_choice"=>$event_round_time_choice,
+			"event_round_score_status"=>$event_round_score_status
 		));
 		$event_round_id=$GLOBALS['last_insert_id'];
 		$_REQUEST['event_round_id']=$event_round_id;
@@ -1198,12 +1233,14 @@ function event_round_save() {
 		$stmt=db_prep("
 			UPDATE event_round
 			SET flight_type_id=:flight_type_id,
-				event_round_time_choice=:event_round_time_choice
+				event_round_time_choice=:event_round_time_choice,
+				event_round_score_status=:event_round_score_status
 			WHERE event_round_id=:event_round_id
 		");
 		$result=db_exec($stmt,array(
 			"flight_type_id"=>$flight_type_id,
 			"event_round_time_choice"=>$event_round_time_choice,
+			"event_round_score_status"=>$event_round_score_status,
 			"event_round_id"=>$event_round_id
 		));
 	}
@@ -1311,6 +1348,40 @@ function event_round_save() {
 	
 	user_message("Saved event round info.");
 	return event_round_edit();
+}
+function event_round_delete() {
+	global $smarty;
+	# Function to save the round
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_round_id=intval($_REQUEST['event_round_id']);
+
+	# First, lets save the round info
+	$stmt=db_prep("
+		UPDATE event_round
+		SET event_round_status=0
+		WHERE event_round_id=:event_round_id
+	");
+	$result=db_exec($stmt,array(
+		"event_round_id"=>$event_round_id
+	));
+
+	# Now lets turn off all the flights in this round
+	$stmt=db_prep("
+		UPDATE event_pilot_round_flight
+		SET event_pilot_round_flight_status=0
+		WHERE event_pilot_round_id=(SELECT event_pilot_round_id FROM event_pilot_round WHERE event_round_id=:event_round_id)
+	");
+	$result=db_exec($stmt,array(
+		"event_round_id"=>$event_round_id
+	));
+
+	# OK, now lets call the routine to do the re calculation for the event
+#	$event=new Event($event_id);
+#	$event->calculate_round($event_round_number);
+	
+	user_message("Deleted Event Round.");
+	return event_view();
 }
 function calculate_event($event){
 	# Function to calculate the subtotals and totals per pilot for an event

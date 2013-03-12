@@ -4,8 +4,6 @@ Todo list for rcvault project
   
   Show correct menu for non wordpress pages based on logged in status
   
-  Allow for 0 round
-  
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
   ditto with the location of the event
   
@@ -13,6 +11,8 @@ Todo list for rcvault project
   ability to create F3B distance orders before hand
   
   reflights for groups
+  
+  In F3F rounds, make it pop up the flight time on mouseover...;)
   
   team standings
   
@@ -46,6 +46,9 @@ Todo list for rcvault project
  
   Assing club affiliation to event and show on event screen
  
+X Allow for 0 round
+X Make scoring routines deal with zero round score
+X Ability to delete a round completely
 X when deleting a pilot from an event, turn their flights off
 X make it so that when you add a location from somewhere else, that it takes you back to that screen
 X ditto for plane from event pilot add screen

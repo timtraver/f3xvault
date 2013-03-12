@@ -74,7 +74,7 @@
 	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: center;">Map</th>
-	<th style="text-align: left;"></th>
+	<th style="text-align: center;"></th>
 </tr>
 {foreach $events as $event}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">

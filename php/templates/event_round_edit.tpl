@@ -38,7 +38,7 @@
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" nowrap>Event Round Type</th>
-			<td>
+			<td colspan="3">
 				{if $event->info.event_type_flight_choice==1}
 					<select name="flight_type_id">
 					{foreach $flight_types as $ft}
@@ -66,6 +66,10 @@
 				<option value="flight_order">Flight Order</option>
 				<option value="round_rank">Round Rank</option>
 				</select>
+			</td>
+			<th nowrap>Include This Round In Final Results</th>
+			<td>
+				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
 		</table>
@@ -170,6 +174,9 @@
 <br>
 <input type="button" value=" Save and Calculate Event Round " onClick="main.submit();" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
+{if $event_round_id !=0}
+<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
+{/if}
 </div>
 </div>
 
@@ -177,4 +184,12 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+
+<form name="delete_round" method="GET">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_round_delete">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_round_id" value="{$event_round_id}">
+<input type="hidden" name="event_round_number" value="{$round_number}">
 </form>

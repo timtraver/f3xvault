@@ -104,7 +104,7 @@ class Event {
 			FROM event_round er
 			WHERE er.event_id=:event_id
 				AND er.event_round_status=1
-			ORDER BY er.event_round_number
+			ORDER BY ABS(er.event_round_number)
 		");
 		$results=db_exec($stmt,array("event_id"=>$this->event_id));
 		$rounds=array();
@@ -400,12 +400,21 @@ class Event {
 				
 					$subtotals[$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
 					$subtotals[$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+					
 					$sub=$p['event_pilot_round_flight_score'];
 					$penalty=$p['event_pilot_round_flight_penalty'];
-					$subtotals[$event_pilot_id]['rounds'][$round_number]+=$sub;
-					$subtotals[$event_pilot_id]['subtotal']+=$sub;
-					$subtotals[$event_pilot_id]['penalties']+=$penalty;
-					$subtotals[$event_pilot_id]['total']+=$sub-$penalty;
+					$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
+					$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];
+					
+					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
+					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
+					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
+					
+					if($r['event_round_score_status']!=0){
+						$subtotals[$event_pilot_id]['subtotal']+=$sub;
+						$subtotals[$event_pilot_id]['penalties']+=$penalty;
+						$subtotals[$event_pilot_id]['total']+=$sub-$penalty;
+					}
 				}
 			}
 		}
@@ -438,26 +447,44 @@ class Event {
 	}
 	function event_save_totals(){
 		# Function to save the total values for the pilots
-		foreach($this->rounds as $r){
-			foreach($r['pilots'] as $event_pilot_id=>$p){
-				$raw=0;
+		if(count($this->totals)==0){
+			$this->calculate_event_totals();
+		}
+		
+		# Lets step through the totals now and figure out which need to be dropped and save the pilot totals for the event too
+		# Lets get the round drops
+		foreach($this->options as $o){
+			if(preg_match("/\_drop\d/",$o['event_type_option_code'])){
+				$drop_rounds[]=$o['event_option_value'];
+			}
+		}
+		# Now lets see how many drops based on those round numbers
+		$number_drops=0;
+		foreach($drop_rounds as $round_number){
+			if($this->rounds[$round_number]['event_round_score_status']==1){
+				$number_drops++;
+			}
+		}
+		
+		# Now lets step through the totals and determine which should be marked as drops
+		foreach($this->totals as $p){
+			foreach($p['rounds'] as $round_number=>$r){
+				foreach($r['flights'] as $flight_type_id=>$f){
 				
-				foreach($t['rounds'] as $event_round_number=>$r){
-					$event_pilot_round_id=$event['rounds'][$event_round_number]['pilots'][$event_pilot_id]['event_pilot_round_id'];
-					
-					
+				
+									
 					# Save the subtotals for the round
-					$stmt=db_prep("
-						UPDATE event_pilot_round
-						SET event_pilot_round_raw_score=:raw,
-							event_pilot_round_rank=:rank,
-							event_pilot_round_drop_score=:drop,
-							event_pilot_round_total_score=:total
-						WHERE event_pilot_round_id=:event_pilot_round_id
-					");	
-					$result=db_exec($stmt,array(
-						"raw"=>$r
-					));
+#					$stmt=db_prep("
+#						UPDATE event_pilot_round
+#						SET event_pilot_round_raw_score=:raw,
+#							event_pilot_round_rank=:rank,
+#							event_pilot_round_drop_score=:drop,
+#							event_pilot_round_total_score=:total
+#						WHERE event_pilot_round_id=:event_pilot_round_id
+#					");	
+#					$result=db_exec($stmt,array(
+#						"raw"=>$r
+#					));
 				}
 			}
 		}
