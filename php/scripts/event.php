@@ -1135,6 +1135,11 @@ function event_round_edit() {
 	$event_id=intval($_REQUEST['event_id']);
 	$event_round_id=intval($_REQUEST['event_round_id']);
 	$zero_round=intval($_REQUEST['zero_round']);
+	if(isset($_REQUEST['sort_by'])){
+		$sort_by=$_REQUEST['sort_by'];
+	}else{
+		$sort_by='round_rank';
+	}
 	$event=new Event($event_id);
 	$event->get_rounds();
 
@@ -1185,6 +1190,7 @@ function event_round_edit() {
 	
 	$smarty->assign("event_round_id",$event_round_id);
 	$smarty->assign("round_number",$round_number);
+	$smarty->assign("sort_by",$sort_by);
 
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("event",$event);

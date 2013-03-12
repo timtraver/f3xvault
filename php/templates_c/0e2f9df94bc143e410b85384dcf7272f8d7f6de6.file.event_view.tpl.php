@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-11 04:53:59
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-12 07:49:29
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1362977634,
+      1 => 1363074561,
       2 => 'file',
     ),
   ),
@@ -24,6 +24,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'p' => 0,
     'r' => 0,
     'e' => 0,
+    'f' => 0,
+    'dropval' => 0,
+    'dropped' => 0,
+    'drop' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
@@ -73,6 +77,14 @@ $(function() {
 			}
 		}
 	});
+	$("#pilot_name").keyup(function(event) { 
+		if (event.keyCode == 13) { 
+			//For enter.
+			var name=document.getElementById('pilot_name');
+			document.event_pilot_add.pilot_name.value=name.value;
+			event_pilot_add.submit();
+        }
+    });
 });
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
@@ -182,9 +194,13 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		</table>
 		</span>
 
+
+
+
 		<br>
 		<h1 class="post-title entry-title">Event Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds);?>
 ) <?php }?> Overall Classification
+			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -192,7 +208,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>10){?>10<?php }else{ ?><?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds);?>
-<?php }?>" align="center" nowrap>Completed Rounds</th>
+<?php }?>" align="center" nowrap>Completed Rounds (<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']==0){?>No<?php }else{ ?><?php echo $_smarty_tpl->tpl_vars['event']->value->totals['round_drops'];?>
+<?php }?> Drops In Effect)</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Penalties</th>
@@ -221,7 +238,7 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 			<th>&nbsp;</th>
 		</tr>
 		<?php  $_smarty_tpl->tpl_vars['e'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['e']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value->totals; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['event']->value->totals['pilots']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['e']->key => $_smarty_tpl->tpl_vars['e']->value){
 $_smarty_tpl->tpl_vars['e']->_loop = true;
 ?>
@@ -240,9 +257,25 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
  $_smarty_tpl->tpl_vars['r']->iteration++;
 ?>
 				<?php if ($_smarty_tpl->tpl_vars['r']->iteration<=10){?>
-				<td align="right">
-					<?php echo $_smarty_tpl->tpl_vars['r']->value;?>
+				<td align="right"<?php if ($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_rank']==1){?> style="border-width: 3px;border-color: green;color:green;font-weight:bold;"<?php }?>>
+					<?php $_smarty_tpl->tpl_vars['dropval'] = new Smarty_variable(0, null, 0);?>
+					<?php $_smarty_tpl->tpl_vars['dropped'] = new Smarty_variable(0, null, 0);?>
+					<?php  $_smarty_tpl->tpl_vars['f'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['f']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['r']->value['flights']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['f']->key => $_smarty_tpl->tpl_vars['f']->value){
+$_smarty_tpl->tpl_vars['f']->_loop = true;
+?>
+						<?php if ($_smarty_tpl->tpl_vars['f']->value['event_pilot_round_flight_dropped']){?>
+							<?php $_smarty_tpl->tpl_vars['dropval'] = new Smarty_variable($_smarty_tpl->tpl_vars['dropval']->value+$_smarty_tpl->tpl_vars['f']->value['event_pilot_round_total_score'], null, 0);?>
+							<?php $_smarty_tpl->tpl_vars['dropped'] = new Smarty_variable(1, null, 0);?>
+						<?php }?>
+					<?php } ?>
+					<?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(0, null, 0);?>
+					<?php if ($_smarty_tpl->tpl_vars['dropped']->value==1&&$_smarty_tpl->tpl_vars['dropval']->value==$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']){?><?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(1, null, 0);?><?php }?>
+					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?><del><font color="red"><?php }?>
+						<?php echo $_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score'];?>
 
+					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?></font></del><?php }?>
 				</td>
 				<?php }?>
 			<?php } ?>
@@ -256,6 +289,9 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 		</tr>
 		<?php } ?>
 		</table>
+
+
+
 
 		<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>10){?>
 		<br>
@@ -294,7 +330,7 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 			<th>&nbsp;</th>
 		</tr>
 		<?php  $_smarty_tpl->tpl_vars['e'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['e']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value->totals; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['event']->value->totals['pilots']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['e']->key => $_smarty_tpl->tpl_vars['e']->value){
 $_smarty_tpl->tpl_vars['e']->_loop = true;
 ?>
@@ -313,9 +349,25 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
  $_smarty_tpl->tpl_vars['r']->iteration++;
 ?>
 				<?php if ($_smarty_tpl->tpl_vars['r']->iteration>10){?>
-				<td align="right">
-					<?php echo $_smarty_tpl->tpl_vars['r']->value;?>
+				<td align="right"<?php if ($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_rank']==1){?> style="border-width: 3px;border-color: green;color:green;font-weight:bold;"<?php }?>>
+					<?php $_smarty_tpl->tpl_vars['dropval'] = new Smarty_variable(0, null, 0);?>
+					<?php $_smarty_tpl->tpl_vars['dropped'] = new Smarty_variable(0, null, 0);?>
+					<?php  $_smarty_tpl->tpl_vars['f'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['f']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['r']->value['flights']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['f']->key => $_smarty_tpl->tpl_vars['f']->value){
+$_smarty_tpl->tpl_vars['f']->_loop = true;
+?>
+						<?php if ($_smarty_tpl->tpl_vars['f']->value['event_pilot_round_flight_dropped']){?>
+							<?php $_smarty_tpl->tpl_vars['dropval'] = new Smarty_variable($_smarty_tpl->tpl_vars['dropval']->value+$_smarty_tpl->tpl_vars['f']->value['event_pilot_round_total_score'], null, 0);?>
+							<?php $_smarty_tpl->tpl_vars['dropped'] = new Smarty_variable(1, null, 0);?>
+						<?php }?>
+					<?php } ?>
+					<?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(0, null, 0);?>
+					<?php if ($_smarty_tpl->tpl_vars['dropped']->value==1&&$_smarty_tpl->tpl_vars['dropval']->value==$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']){?><?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(1, null, 0);?><?php }?>
+					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?><del><font color="red"><?php }?>
+						<?php echo $_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score'];?>
 
+					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?></font></del><?php }?>
 				</td>
 				<?php }?>
 			<?php } ?>
@@ -362,6 +414,7 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 <input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 <input type="hidden" name="event_round_id" value="0">
+<input type="hidden" name="zero_round" value="0">
 </form>
 <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>
 <script>

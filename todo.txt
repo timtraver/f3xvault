@@ -12,13 +12,16 @@ Todo list for rcvault project
   
   reflights for groups
   
+  Fix flight order view in rounds to match pilot entry view (maybe by pre-populating order when creating the rounds)
+  
   In F3F rounds, make it pop up the flight time on mouseover...;)
   
   team standings
   
   printable reports for rounds, and overall standings
   
-  Figure out drops
+X Figure out drops
+  Test drops in F3B and other disciplines
   
   Put sort by controls on round edit maybe????
   
@@ -27,7 +30,7 @@ Todo list for rcvault project
 / Created event_pilot_round table to keep track of totals per round and ranks...
   And save those values when calculated
     
-  Outline round winners somehow
+X Outline round winners somehow
   
   On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
   also make it so that it tabs down to the next BLANK entry if you use the save immediately feature...
@@ -44,7 +47,7 @@ Todo list for rcvault project
  
   Make an event option be the number of points for each second of flight 
  
-  Assing club affiliation to event and show on event screen
+  Assign club affiliation to event and show on event screen
  
 X Allow for 0 round
 X Make scoring routines deal with zero round score

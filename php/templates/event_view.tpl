@@ -142,7 +142,7 @@ function toggle(element,tog) {
 		<tr>
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds</th>
+			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Penalties</th>
@@ -161,14 +161,26 @@ function toggle(element,tog) {
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
-		{foreach $event->totals as $e}
+		{foreach $event->totals.pilots as $e}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
 				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
-					{$r.event_pilot_round_total_score}
+					{$dropval=0}
+					{$dropped=0}
+					{foreach $r.flights as $f}
+						{if $f.event_pilot_round_flight_dropped}
+							{$dropval=$dropval+$f.event_pilot_round_total_score}
+							{$dropped=1}
+						{/if}
+					{/foreach}
+					{$drop=0}
+					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
+					{if $drop==1}<del><font color="red">{/if}
+						{$r.event_pilot_round_total_score}
+					{if $drop==1}</font></del>{/if}
 				</td>
 				{/if}
 			{/foreach}
@@ -209,14 +221,26 @@ function toggle(element,tog) {
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
-		{foreach $event->totals as $e}
+		{foreach $event->totals.pilots as $e}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration >10}
 				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
-					{$r.event_pilot_round_total_score}
+					{$dropval=0}
+					{$dropped=0}
+					{foreach $r.flights as $f}
+						{if $f.event_pilot_round_flight_dropped}
+							{$dropval=$dropval+$f.event_pilot_round_total_score}
+							{$dropped=1}
+						{/if}
+					{/foreach}
+					{$drop=0}
+					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
+					{if $drop==1}<del><font color="red">{/if}
+						{$r.event_pilot_round_total_score}
+					{if $drop==1}</font></del>{/if}
 				</td>
 				{/if}
 			{/foreach}

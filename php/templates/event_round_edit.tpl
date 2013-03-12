@@ -62,9 +62,9 @@
 		<tr>
 			<th nowrap>Event Round Sort By</th>
 			<td>
-				<select name="flight_sort_by">
-				<option value="flight_order">Flight Order</option>
-				<option value="round_rank">Round Rank</option>
+				<select name="sort_by" onChange="document.sort_round.sort_by.value=document.main.sort_by.value; sort_round.submit();">
+				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
+				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Flight Order</option>
 				</select>
 			</td>
 			<th nowrap>Include This Round In Final Results</th>
@@ -146,7 +146,9 @@
 						{/if}
 					</td>
 					<td align="right" nowrap>
+					{if $p.event_pilot_round_flight_dropped}<del><font color="red">{/if}
 					{$p.event_pilot_round_flight_score}
+					{if $p.event_pilot_round_flight_dropped}</font></del>{/if}
 					</td>
 					<td align="center" nowrap>
 						<input autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}">
@@ -179,6 +181,14 @@
 {/if}
 </div>
 </div>
+
+<form name="sort_round" method="GET">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_round_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_round_id" value="{$event_round_id}">
+<input type="hidden" name="sort_by" value="">
+</form>
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
