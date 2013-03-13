@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-12 07:49:29
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-13 08:04:58
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1363074561,
+      1 => 1363160076,
       2 => 'file',
     ),
   ),
@@ -205,7 +205,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="2%" align="left"></th>
+			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>10){?>10<?php }else{ ?><?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds);?>
 <?php }?>" align="center" nowrap>Completed Rounds (<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']==0){?>No<?php }else{ ?><?php echo $_smarty_tpl->tpl_vars['event']->value->totals['round_drops'];?>
@@ -246,9 +246,11 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 ;">
 			<td><?php echo $_smarty_tpl->tpl_vars['e']->value['overall_rank'];?>
 </td>
-			<td align="right" nowrap><?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_first_name'];?>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['e']->value['event_pilot_id'];?>
+&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_first_name'];?>
  <?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_last_name'];?>
-</td>
+</a></td>
 			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['e']->value['rounds']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
  $_smarty_tpl->tpl_vars['r']->iteration=0;
@@ -273,18 +275,18 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 					<?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(0, null, 0);?>
 					<?php if ($_smarty_tpl->tpl_vars['dropped']->value==1&&$_smarty_tpl->tpl_vars['dropval']->value==$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']){?><?php $_smarty_tpl->tpl_vars['drop'] = new Smarty_variable(1, null, 0);?><?php }?>
 					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?><del><font color="red"><?php }?>
-						<?php echo $_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score'];?>
+						<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
 
 					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?></font></del><?php }?>
 				</td>
 				<?php }?>
 			<?php } ?>
 			<td></td>
-			<td width="5%" nowrap><?php echo $_smarty_tpl->tpl_vars['e']->value['subtotal'];?>
+			<td width="5%" nowrap><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
 </td>
 			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo $_smarty_tpl->tpl_vars['e']->value['penalties'];?>
 <?php }?></td>
-			<td width="5%" nowrap><?php echo $_smarty_tpl->tpl_vars['e']->value['total'];?>
+			<td width="5%" nowrap><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
 </td>
 		</tr>
 		<?php } ?>
@@ -298,7 +300,7 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 		<h3 class="post-title entry-title">Event Rounds Continued</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="2%" align="left"></th>
+			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="<?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds)-10;?>
 " align="center" nowrap>Completed Rounds</th>

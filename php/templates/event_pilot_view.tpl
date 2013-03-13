@@ -34,46 +34,105 @@
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left">Round</th>
-			<th colspan="{$event->flight_types|count}" align="center" nowrap>Round Types</th>
-			<th width="5%" nowrap></th>
-			<th width="5%" nowrap></th>
-			<th width="5%" nowrap></th>
+			{$cols=0}
+			{foreach $event->flight_types as $ft}
+				{$cols=$cols+4}
+				{if $ft.flight_type_group}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
+			{/foreach}
+			<th colspan="{$cols}" align="center" nowrap>Round Types</th>
+			<th width="5%" nowrap>Sub</th>
+			<th width="5%" nowrap>Pen</th>
+			<th width="5%" nowrap>Total</th>
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
 			{foreach $event->flight_types as $ft}
-			<th width="10%" align="center" nowrap>{$ft.flight_type_name}</th>
+				{$cols=4}
+				{if $ft.flight_type_group}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
+				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name}</th>
 			{/foreach}
-			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Penalties</th>
-			<th width="5%" nowrap>Total Score</th>
+			<th width="5%" nowrap></th>
+			<th width="5%" nowrap></th>
+			<th width="5%" nowrap></th>
 		</tr>
 		<tr>
 			<th width="2%" align="center"></th>
 			{foreach $event->flight_types as $ft}
-				<th width="10%" align="right" nowrap>{$ft.flight_type_name}</th>
+				{if $ft.flight_type_group}
+					<th align="center">Group</th>
+				{/if}
+				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
+					<th align="center">Time</th>
+				{/if}
+				{if $ft.flight_type_landing}
+					<th align="center">Landing</th>
+				{/if}
+				{if $ft.flight_type_laps}
+					<th align="center">Laps</th>
+				{/if}
+				<th align="center">Raw</th>
+				<th align="center">Score</th>
+				<th align="center">Penalty</th>
+				<th align="center">Rank</th>
 			{/foreach}
-			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Penalties</th>
-			<th width="5%" nowrap>Total Score</th>
+			<th width="5%" nowrap></th>
+			<th width="5%" nowrap></th>
+			<th width="5%" nowrap></th>
 		</tr>
 		{foreach $event->rounds as $r}
-			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+			{$round_pen=0}
+			{$round_total=0}
+			<tr>
 				{$round=$r@key}
-				<td>{$round}</td>
+				{$bgcolor='#9DCFF0'}
+				<td style="background-color: {$bgcolor};">{$round}</td>
 				{foreach $event->flight_types as $ft}
+					{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 					{$flight_type_id = $ft@key}
-					<td align="right" nowrap>
+					{if $ft.flight_type_group}
+						<td align="center" nowrap style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}</td>					
+					{/if}
+					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
+						<td align="center" nowrap style="background-color: {$bgcolor};">
+							{if $ft.flight_type_minutes}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_minutes}m{/if}
+							{if $ft.flight_type_seconds}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s{/if}
+						</td>
+					{/if}
+					{if $ft.flight_type_landing}<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_landing}</td>{/if}
+					{if $ft.flight_type_laps}<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_laps}</td>{/if}
+					<td align="right" nowrap style="background-color: {$bgcolor};">
+						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_raw_score}
+						{else}
+						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+						{/if}
+					</td>
+					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
 						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_score|string_format:"%06.3f"}
 						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_dropped==1}</font></del>{/if}
+						{$round_total=$round_total+$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_score}
+					</td>
+					<td align="center" nowrap style="background-color: {$bgcolor};">
+						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty!=0}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty}{/if}
+						{$round_pen=$round_pen+$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty}
+					</td>
+					<td align="center" nowrap style="background-color: {$bgcolor};">
+						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_rank}
 					</td>
 				{/foreach}
 				{foreach $event->totals.pilots as $p}
 					{if $p.event_pilot_id==$event_pilot_id}
-						<td width="5%" align="right" nowrap>{$p.rounds.$round.event_pilot_round_total_score|string_format:"%06.3f"}</td>
-						<td width="5%" align="center" nowrap></td>
-						<td width="5%" nowrap></td>
+						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
+						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$p.rounds.$round.event_pilot_round_total_score|string_format:"%06.3f"}</td>
+						<td width="5%" align="center" nowrap style="background-color: {$bgcolor};">{if $round_pen!=0}{$round_pen|string_format:"%03.0f"}{/if}</td>
+						<td width="5%" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
 					{/if}
 				{/foreach}
 			</tr>
@@ -82,13 +141,14 @@
 
 
 <br>
-<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
+<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
 </div>
 </div>
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_list">
+<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
