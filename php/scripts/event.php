@@ -759,7 +759,7 @@ function event_pilot_remove() {
 	$stmt=db_prep("
 		UPDATE event_pilot_round_flight
 		SET event_pilot_round_flight_status=0
-		WHERE event_pilot_round_id=(SELECT event_pilot_round_id from event_pilot_round WHERE event_pilot_id=:event_pilot_id)
+		WHERE event_pilot_round_id in (SELECT event_pilot_round_id from event_pilot_round WHERE event_pilot_id=:event_pilot_id)
 	");
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
 	
@@ -1389,6 +1389,24 @@ function event_round_delete() {
 	user_message("Deleted Event Round.");
 	return event_view();
 }
+function event_pilot_rounds() {
+	global $smarty;
+	# Function to view the rounds for a particular pilot
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+
+	$event=new Event($event_id);
+	$event->get_rounds();
+	
+	$smarty->assign("event_pilot_id",$event_pilot_id);
+	$smarty->assign("event",$event);
+	
+	$maintpl=find_template("event_pilot_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+
+
 function calculate_event($event){
 	# Function to calculate the subtotals and totals per pilot for an event
 	$subtotals=array();

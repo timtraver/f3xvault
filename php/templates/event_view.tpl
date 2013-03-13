@@ -140,7 +140,7 @@ function toggle(element,tog) {
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="2%" align="left"></th>
+			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
 			<th></th>
@@ -164,7 +164,7 @@ function toggle(element,tog) {
 		{foreach $event->totals.pilots as $e}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
 				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -179,15 +179,15 @@ function toggle(element,tog) {
 					{$drop=0}
 					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
 					{if $drop==1}<del><font color="red">{/if}
-						{$r.event_pilot_round_total_score}
+						{$r.event_pilot_round_total_score|string_format:"%06.3f"}
 					{if $drop==1}</font></del>{/if}
 				</td>
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap>{$e.subtotal}</td>
+			<td width="5%" nowrap>{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
-			<td width="5%" nowrap>{$e.total}</td>
+			<td width="5%" nowrap>{$e.total|string_format:"%06.3f"}</td>
 		</tr>
 		{/foreach}
 		</table>
@@ -200,7 +200,7 @@ function toggle(element,tog) {
 		<h3 class="post-title entry-title">Event Rounds Continued</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="2%" align="left"></th>
+			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{$event->rounds|count - 10}" align="center" nowrap>Completed Rounds</th>
 			<th></th>

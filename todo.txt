@@ -12,6 +12,8 @@ Todo list for rcvault project
   
   reflights for groups
   
+  Click on the pilot to see a view of their scores for the contest
+  
   Fix flight order view in rounds to match pilot entry view (maybe by pre-populating order when creating the rounds)
   
   In F3F rounds, make it pop up the flight time on mouseover...;)
@@ -19,6 +21,12 @@ Todo list for rcvault project
   team standings
   
   printable reports for rounds, and overall standings
+
+  Make admin area to easily change the locations and plane characteristics
+  
+  When first creating an event, save the default values for the event parameters
+  
+  Add Percentage Score at end of event rounds classification
   
 X Figure out drops
   Test drops in F3B and other disciplines
