@@ -69,26 +69,32 @@
 				</select>
 			</td>
 			<th nowrap>Include This Round In Final Results</th>
-			<td>
+			<td align="center">
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
 		</table>
-
+		<br>
+		
 		<h1 class="post-title entry-title">Round Flights</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		{foreach $flight_types as $ft}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=5}
+			{$cols=3}
 			{if $ft.flight_type_group}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			<tr>
 				<th colspan="3">Round {$round_number}</th>
-				<th colspan="{$cols}">{$ft.flight_type_name}</th>
+				<th colspan="{$cols}">
+					{$ft.flight_type_name}
+				</th>
+				<th>
+					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.event_round_flight_score==1} CHECKED{/if}>
+				</th>
 			</tr>
 			<tr>
 				<th width="2%" align="left"></th>

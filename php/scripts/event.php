@@ -1153,6 +1153,51 @@ function event_round_save() {
 		));
 	}
 
+	# Now lets save the round flight type scoring data
+	# First, lets turn off all of the round scoring data for this round and the flights
+	$stmt=db_prep("
+		UPDATE event_round_flight
+		SET event_round_flight_score=0
+		WHERE event_round_id=:event_round_id
+	");
+	$result=db_exec($stmt,array("event_round_id"=>$event_round_id));
+	# Now lets step through the ones that are "on" and update or create the record
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^event_round_flight_score_(\d+)$/",$key,$match)){
+			$ftype_id=$match[1];
+			if($value=='on'){
+				# lets save or create this record
+				# First lets see if it exists
+				$stmt=db_prep("
+					SELECT *
+					FROM event_round_flight
+					WHERE event_round_id=:event_round_id
+					AND flight_type_id=:ftype_id
+				");
+				$result=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+				if(isset($result[0])){
+					# This one already exists, so lets update it
+					$stmt=db_prep("
+						UPDATE event_round_flight
+						SET event_round_flight_score=1
+						WHERE event_round_flight_id=:event_round_flight_id
+					");
+					$result2=db_exec($stmt,array("event_round_flight_id"=>$result[0]['event_round_flight_id']));
+				}else{
+					# This record doesn't exist, so lets create a new one
+					$stmt=db_prep("
+						INSERT INTO event_round_flight
+						SET event_round_id=:event_round_id,
+							flight_type_id=:ftype_id,
+							event_round_flight_score=1
+					");
+					$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+				}
+			}
+		}
+	}
+
+
 	# Now lets save the pilot flight info
 	# Lets build the data grid
 	$data=array();

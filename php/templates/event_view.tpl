@@ -321,7 +321,7 @@ function toggle(element,tog) {
 			<tr>
 				<td></td>
 				<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-				<td>{$p.total|string_format:"%06.3f"}</td>
+				<td align="right">{$p.total|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
 			{/foreach}
@@ -336,7 +336,7 @@ function toggle(element,tog) {
 {if $lap_totals || $speed_averages || $top_landing}
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
 	{if $lap_totals}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Total Distance Laps</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -348,14 +348,14 @@ function toggle(element,tog) {
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_lap_rank}</td>
 				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-				<td>{$p.event_pilot_total_laps}</td>
+				<td align="center">{$p.event_pilot_total_laps}</td>
 			</tr>
 		{/foreach}
 		</table>
 	</div>
 	{/if}
 	{if $distance_laps}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Top 20 Distance Runs</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -369,7 +369,7 @@ function toggle(element,tog) {
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-				<td>{$p.event_pilot_round_flight_laps}</td>
+				<td align="center">{$p.event_pilot_round_flight_laps}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
@@ -379,7 +379,7 @@ function toggle(element,tog) {
 	{/if}
 	
 	{if $speed_averages}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Average Speeds</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -399,7 +399,7 @@ function toggle(element,tog) {
 		</table>
 	</div>
 	
-		<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Top 20 Speed Runs</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -424,7 +424,7 @@ function toggle(element,tog) {
 	</div>
 	{/if}
 	{if $top_landing}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Landing Averages</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>

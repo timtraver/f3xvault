@@ -493,10 +493,12 @@ class Event {
 		asort($speed);
 		$count=1;
 		foreach($speed as $event_pilot_id=>$p){
-			$subtotals[$event_pilot_id]['event_pilot_average_speed_rank']=$count;
-			$count++;
+			if(intval($subtotals[$event_pilot_id]['speed_average'])!=0){
+				$subtotals[$event_pilot_id]['event_pilot_average_speed_rank']=$count;
+				$count++;
+			}
 		}
-		
+
 		# Lets determine the distance lap rank
 		$laps=array();
 		foreach($subtotals as $event_pilot_id=>$t){
