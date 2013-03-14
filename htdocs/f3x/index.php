@@ -133,7 +133,7 @@ if($no_header_footer==1){
 	}
 	$menutpl=find_template("footer.tpl");
 	$smarty->display($menutpl);
-	Smarty_Internal_Debug::display_debug($smarty);
+#	Smarty_Internal_Debug::display_debug($smarty);
 }
 
 save_fsession();

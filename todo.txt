@@ -12,13 +12,13 @@ Todo list for rcvault project
   
   reflights for groups
   
-  Click on the pilot to see a view of their scores for the contest
-  
   Fix flight order view in rounds to match pilot entry view (maybe by pre-populating order when creating the rounds)
   
-  In F3F rounds, make it pop up the flight time on mouseover...;)
+  In F3F rounds, make it pop up the flight time on mouseover... ;)
   
-  team standings
+  
+  Show top 10 speed runs of the contest
+  Show top 10 distance runs of the contest
   
   printable reports for rounds, and overall standings
 
@@ -26,19 +26,8 @@ Todo list for rcvault project
   
   When first creating an event, save the default values for the event parameters
   
-  Add Percentage Score at end of event rounds classification
-  
 X Figure out drops
   Test drops in F3B and other disciplines
-  
-  Put sort by controls on round edit maybe????
-  
-  Show flight dropped in summary screen and round screen
-  
-/ Created event_pilot_round table to keep track of totals per round and ranks...
-  And save those values when calculated
-    
-X Outline round winners somehow
   
   On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
   also make it so that it tabs down to the next BLANK entry if you use the save immediately feature...
@@ -46,8 +35,6 @@ X Outline round winners somehow
   Flyoff capability
   
   Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
- 
-  Add a class podiums section at bottom of event page
  
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
  
@@ -57,6 +44,17 @@ X Outline round winners somehow
  
   Assign club affiliation to event and show on event screen
  
+X Class Rankings
+X Team Rankings
+X Add a class podiums section at bottom of event page
+X Created event_pilot_round table to keep track of totals per round and ranks...
+X And save those values when calculated
+X Outline round winners somehow
+X Show flight dropped in summary screen and round screen
+X Put sort by controls on round edit maybe????
+X Add Percentage Score at end of event rounds classification
+X Click on the pilot to see a view of their scores for the contest
+X Calculate total laps, and average speed for pilots and rank and save
 X Allow for 0 round
 X Make scoring routines deal with zero round score
 X Ability to delete a round completely

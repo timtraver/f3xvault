@@ -14,9 +14,9 @@ class Event {
 	var $info=array();
 	var $pilots=array();
 	var $rounds=array();
-	var $teams=array();
 	var $totals=array();
 	var $options=array();
+	var $classes=array();
 	var $flight_types=array();
 	
 	function Event($event_id){
@@ -55,6 +55,10 @@ class Event {
 		foreach($results as $pilot){
 			$event_pilot_id=$pilot['event_pilot_id'];
 			$this->pilots[$event_pilot_id]=$pilot;
+			$class_id=$pilot['class_id'];
+			if(!isset($this->classes[$class_id]['class_description'])){
+				$this->classes[$class_id]=array("class_id"=>$pilot['class_id'],"class_description"=>$pilot['class_description']);
+			}
 		}
 		return;
 	}
@@ -125,6 +129,7 @@ class Event {
 		}
 		$this->rounds=$rounds;
 
+		# Now lets get the flights for the round
 		foreach($this->rounds as $key=>$round){
 			$event_round_number=$round['event_round_number'];
 			$rounds[$event_round_number]=$round;
@@ -408,7 +413,9 @@ class Event {
 		# Function to calculate the subtotals and totals per pilot for an event
 		$subtotals=array();
 		$totals=array();
+		$total_rounds=0;		
 		foreach($this->rounds as $round_number=>$r){
+			$total_rounds++;
 			foreach($r['flights'] as $flight_type_id=>$f){
 				foreach($f['pilots'] as $event_pilot_id=>$p){
 				
@@ -420,7 +427,16 @@ class Event {
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];
-					
+
+					if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') && $p['event_pilot_round_flight_seconds']!=0){
+						# Lets add the speed rounds together and get an average for the pilot
+						$subtotals[$event_pilot_id]['speed_total_seconds']+=$p['event_pilot_round_flight_seconds'];
+						$subtotals[$event_pilot_id]['speed_total_runs']++;
+					}
+					if($f['flight_type_laps']){
+						# Lets add the laps done for this pilot
+						$subtotals[$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+					}
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
 					$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
@@ -450,18 +466,55 @@ class Event {
 				}
 			}
 		}
-	
+		# Calculate the average speed from the subtotals
+		foreach($subtotals as $event_pilot_id=>$p){
+			if($p['speed_total_runs']>0){
+				$subtotals[$event_pilot_id]['speed_average']=$p['speed_total_seconds']/$p['speed_total_runs'];
+			}
+		}
+		# Lets determine the average speed rank
+		$speed=array();
+		foreach($subtotals as $event_pilot_id=>$t){
+			# Create an array of all of the average speeds
+			$speed[$event_pilot_id]=$t['speed_average'];
+		}
+		asort($speed);
+		$count=1;
+		foreach($speed as $event_pilot_id=>$p){
+			$subtotals[$event_pilot_id]['event_pilot_average_speed_rank']=$count;
+			$count++;
+		}
+		
+		# Lets determine the distance lap rank
+		$laps=array();
+		foreach($subtotals as $event_pilot_id=>$t){
+			# Create an array of all of the scores
+			$laps[$event_pilot_id]=$t['total_laps'];
+		}
+		arsort($laps);
+		$count=1;
+		foreach($laps as $event_pilot_id=>$p){
+			$subtotals[$event_pilot_id]['event_pilot_lap_rank']=$count;
+			$count++;
+		}
+
 		# Now determine the rank
 		$scores=array();
+		$max_points=0;
 		foreach($subtotals as $event_pilot_id=>$t){
 			# Create an array of all of the scores
 			$scores[$event_pilot_id]=$t['total'];
+			if($t['total']>$max_points){
+				$max_points=$t['total'];
+			}
 		}
 		arsort($scores);
 		$count=1;
 		foreach($scores as $event_pilot_id=>$f){
 			$subtotals[$event_pilot_id]['overall_rank']=$count;
 			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+			# Lets calculate the percentage of points from the leader
+			$subtotals[$event_pilot_id]['event_pilot_total_percentage']=sprintf("%02.3f",($subtotals[$event_pilot_id]['total']/$max_points)*100);
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
 		}
@@ -480,6 +533,26 @@ class Event {
 			}
 		}
 		
+		# lets get the team totals now
+		foreach($totals as $p){
+			$event_pilot_id=$p['event_pilot_id'];
+			$team_name=$this->pilots[$event_pilot_id]['event_pilot_team'];
+			if($team_name!=''){
+				$teams[$team_name]+=$p['total'];
+			}
+		}
+		if(count($teams)>0){
+			arsort($teams);
+			# There are team totals, so lets sort them
+			$count=1;
+			foreach($teams as $team_name=>$total){
+				$this->totals['teams'][]=array("rank"=>$count,"team_name"=>$team_name,"total"=>$total);
+				$count++;
+			}
+		}
+		
+		
+		$this->totals['total_rounds']=$total_rounds;
 		$this->totals['round_drops']=$number_drops;
 		$this->totals['pilots']= $totals;
 		return;
@@ -533,6 +606,31 @@ class Event {
 					}
 				}
 			}
+		}
+
+		# Lets save the pilot totals to the event_pilot table
+		foreach($this->totals['pilots'] as $p){
+			$stmt=db_prep("
+				UPDATE event_pilot
+				SET event_pilot_position=:rank,
+					event_pilot_total_score=:score,
+					event_pilot_total_percentage=:percent,
+					event_pilot_total_laps=:laps,
+					event_pilot_lap_rank=:event_pilot_lap_rank,
+					event_pilot_average_speed=:speed_average,
+					event_pilot_average_speed_rank=:event_pilot_average_speed_rank
+				WHERE event_pilot_id=:event_pilot_id
+			");
+			$result=db_exec($stmt,array(
+				"rank"=>$p['overall_rank'],
+				"score"=>$p['total'],
+				"percent"=>$p['event_pilot_total_percentage'],
+				"laps"=>$p['total_laps'],
+				"event_pilot_lap_rank"=>$p['event_pilot_lap_rank'],
+				"speed_average"=>$p['speed_average'],
+				"event_pilot_average_speed_rank"=>$p['event_pilot_average_speed_rank'],
+				"event_pilot_id"=>$p['event_pilot_id']
+			));
 		}
 
 		return;

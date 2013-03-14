@@ -78,7 +78,7 @@
 				{/if}
 				<th align="center">Raw</th>
 				<th align="center">Score</th>
-				<th align="center">Penalty</th>
+				<th align="center">Pen</th>
 				<th align="center">Rank</th>
 			{/foreach}
 			<th width="5%" nowrap></th>
@@ -105,7 +105,9 @@
 						</td>
 					{/if}
 					{if $ft.flight_type_landing}<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_landing}</td>{/if}
-					{if $ft.flight_type_laps}<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_laps}</td>{/if}
+					{if $ft.flight_type_laps}
+						<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_laps}</td>
+					{/if}
 					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_raw_score}
@@ -132,14 +134,42 @@
 						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$p.rounds.$round.event_pilot_round_total_score|string_format:"%06.3f"}</td>
 						<td width="5%" align="center" nowrap style="background-color: {$bgcolor};">{if $round_pen!=0}{$round_pen|string_format:"%03.0f"}{/if}</td>
+						{$round_total=$round_total-$round_pen}
 						<td width="5%" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
 					{/if}
 				{/foreach}
 			</tr>
 		{/foreach}
 		</table>
-
-
+		
+		<br>
+		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Overall Rank</th>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_position']}</td>
+		</tr>
+		<tr>
+			<th>Total Points</th>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_score']}</td>
+		</tr>
+		<tr>
+			<th>Event Percentage</th>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_percentage']} %</td>
+		</tr>
+		{if $event->pilots[$event_pilot_id]['event_pilot_total_laps']>0}
+		<tr>
+			<th>Total Distance Laps</th>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_laps']} (rank {$event->pilots[$event_pilot_id]['event_pilot_lap_rank']})</td>
+		</tr>
+		{/if}
+		{if $event->pilots[$event_pilot_id]['event_pilot_average_speed']>0}
+		<tr>
+			<th>Pilot Average Speed</th>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_average_speed']} (rank {$event->pilots[$event_pilot_id]['event_pilot_average_speed_rank']})</td>
+		</tr>
+		{/if}
+		</table>
 <br>
 <input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
 </div>

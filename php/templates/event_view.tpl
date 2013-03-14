@@ -145,8 +145,9 @@ function toggle(element,tog) {
 			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Penalties</th>
+			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
+			<th width="5%" nowrap>Percent</th>
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
@@ -156,6 +157,7 @@ function toggle(element,tog) {
 				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
 				{/if}
 			{/foreach}
+			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -185,14 +187,13 @@ function toggle(element,tog) {
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap>{$e.subtotal|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
-			<td width="5%" nowrap>{$e.total|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
 		{/foreach}
 		</table>
-
-
 
 
 		{if $event->rounds|count >10}
@@ -205,8 +206,9 @@ function toggle(element,tog) {
 			<th colspan="{$event->rounds|count - 10}" align="center" nowrap>Completed Rounds</th>
 			<th></th>
 			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Penalties</th>
+			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
+			<th width="5%" nowrap>Percent</th>
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
@@ -216,6 +218,7 @@ function toggle(element,tog) {
 				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
 				{/if}
 			{/foreach}
+			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -245,9 +248,10 @@ function toggle(element,tog) {
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap>{$e.subtotal}</td>
+			<td width="5%" nowrap align="right">{$e.subtotal}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
-			<td width="5%" nowrap>{$e.total}</td>
+			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
 		{/foreach}
 		</table>
@@ -258,6 +262,68 @@ function toggle(element,tog) {
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
 </div>
 </div>
+
+<!-- Lets determine if there are more than one class ranking -->
+{if $event->classes|count > 1 || $event->totals.teams}
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
+
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Class Rankings</h1>
+		<table cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+		{foreach $event->classes as $c}
+		{$rank=1}
+			<td valign="top">
+				<table width="30%" cellpadding="2" cellspacing="1" class="tableborder">
+				<tr>
+					<th colspan="3" nowrap>{$c.class_description} Rankings</th>
+				</tr>
+				{foreach $event->totals.pilots as $p}
+				{$event_pilot_id=$p.event_pilot_id}
+				{if $event->pilots.$event_pilot_id.class_id==$c.class_id}
+				<tr style="background-color: {cycle values="#9DCFF0,white"};">
+					<td>{$rank}</td>
+					<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+					<td>{$p.total|string_format:"%06.3f"}</td>
+				</tr>
+				{$rank=$rank+1}
+				{/if}
+				{/foreach}
+				</table>
+			</td>
+		{/foreach}
+		</tr>
+		</table>
+	</div>
+{/if}
+{if $event->totals.teams}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Team Rankings</h1>
+		<table cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+		{foreach $event->totals.teams as $t}
+		<tr style="background-color:#9DCFF0;">
+			<td>{$t.rank}</td>
+			<td nowrap>{$t.team_name}</td>
+			<td>{$t.total|string_format:"%06.3f"}</td>
+		</tr>
+			{foreach $event->totals.pilots as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			{if $event->pilots.$event_pilot_id.event_pilot_team==$t.team_name}
+			<tr>
+				<td></td>
+				<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td>{$p.total|string_format:"%06.3f"}</td>
+			</tr>
+			{/if}
+			{/foreach}
+		{/foreach}
+		</table>
+	</div>
+{/if}
+</div>
+
+
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
