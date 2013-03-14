@@ -260,13 +260,12 @@ function toggle(element,tog) {
 
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
-</div>
+	</div>
 </div>
 
-<!-- Lets determine if there are more than one class ranking -->
 {if $event->classes|count > 1 || $event->totals.teams}
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-
+	{if $event->classes|count > 1}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
 		<h1 class="post-title">Class Rankings</h1>
 		<table cellpadding="2" cellspacing="1" class="tableborder">
@@ -277,6 +276,11 @@ function toggle(element,tog) {
 				<table width="30%" cellpadding="2" cellspacing="1" class="tableborder">
 				<tr>
 					<th colspan="3" nowrap>{$c.class_description} Rankings</th>
+				</tr>
+				<tr>
+					<th>Rank</th>
+					<th>Pilot</th>
+					<th>Total</th>
 				</tr>
 				{foreach $event->totals.pilots as $p}
 				{$event_pilot_id=$p.event_pilot_id}
@@ -295,12 +299,16 @@ function toggle(element,tog) {
 		</tr>
 		</table>
 	</div>
-{/if}
-{if $event->totals.teams}
+	{/if}
+	{if $event->totals.teams}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
 		<h1 class="post-title">Team Rankings</h1>
 		<table cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
+			<th>Rank</th>
+			<th>Team</th>
+			<th>Total</th>
+		</tr>
 		{foreach $event->totals.teams as $t}
 		<tr style="background-color:#9DCFF0;">
 			<td>{$t.rank}</td>
@@ -320,9 +328,127 @@ function toggle(element,tog) {
 		{/foreach}
 		</table>
 	</div>
-{/if}
+	{/if}
 </div>
+{/if}
 
+<!-- Lets figure out if there are reports for speed or laps -->
+{if $lap_totals || $speed_averages || $top_landing}
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
+	{if $lap_totals}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Total Distance Laps</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Laps</th>
+		</tr>
+		{foreach $lap_totals as $p}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$p.event_pilot_lap_rank}</td>
+				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td>{$p.event_pilot_total_laps}</td>
+			</tr>
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	{if $distance_laps}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Top 20 Distance Runs</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Laps</th>
+		</tr>
+		{$rank=1}
+		{foreach $distance_laps as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td>{$p.event_pilot_round_flight_laps}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	
+	{if $speed_averages}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Average Speeds</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg</th>
+		</tr>
+		{foreach $speed_averages as $p}
+			{if $p.event_pilot_average_speed_rank!=0}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$p.event_pilot_average_speed_rank}</td>
+				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
+			</tr>
+			{/if}
+		{/foreach}
+		</table>
+	</div>
+	
+		<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Top 20 Speed Runs</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Speed</th>
+			<th>Round</th>
+		</tr>
+		{$rank=1}
+		{foreach $speed_times as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_round_number}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	{if $top_landing}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Landing Averages</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg</th>
+		</tr>
+		{$rank=1}
+		{foreach $top_landing as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td>{$p.average_landing|string_format:"%02.2f"}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	
+</div>
+{/if}
 
 
 <form name="goback" method="GET">

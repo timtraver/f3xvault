@@ -107,6 +107,9 @@ class Event {
 			case 'flight_order':
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;
+			case 'alphabetical':
+				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				break;
 			case 'round_rank':
 			default:
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
@@ -138,9 +141,11 @@ class Event {
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 				# Lets get the pilots for this particular flight
 				$stmt=db_prep("
-					SELECT *
+					SELECT erf.*,epr.*
 					FROM event_pilot_round_flight erf
 					LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
+					LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+					LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 					WHERE epr.event_round_id=:event_round_id
 						AND erf.flight_type_id=:flight_type_id
 						AND erf.event_pilot_round_flight_status=1
@@ -206,10 +211,13 @@ class Event {
 		foreach($result as $r){
 			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
 				$id=$r['flight_type_id'];
-				# Lets step through each of the options and set the accuracy for this slight type
+				# Lets step through each of the options and set the accuracy for this flight type
 				$code=$r['flight_type_code'];
 				foreach($this->options as $o){
 					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy']=$o['event_option_value'];
 					}
 				}
@@ -470,13 +478,17 @@ class Event {
 		foreach($subtotals as $event_pilot_id=>$p){
 			if($p['speed_total_runs']>0){
 				$subtotals[$event_pilot_id]['speed_average']=$p['speed_total_seconds']/$p['speed_total_runs'];
+			}else{
+				$subtotals[$event_pilot_id]['speed_average']=0;
 			}
 		}
 		# Lets determine the average speed rank
 		$speed=array();
 		foreach($subtotals as $event_pilot_id=>$t){
 			# Create an array of all of the average speeds
-			$speed[$event_pilot_id]=$t['speed_average'];
+			if($t['speed_average']!=0){
+				$speed[$event_pilot_id]=$t['speed_average'];
+			}
 		}
 		asort($speed);
 		$count=1;
@@ -498,7 +510,7 @@ class Event {
 			$count++;
 		}
 
-		# Now determine the rank
+		# Now determine the overall contest rank
 		$scores=array();
 		$max_points=0;
 		foreach($subtotals as $event_pilot_id=>$t){
@@ -514,7 +526,11 @@ class Event {
 			$subtotals[$event_pilot_id]['overall_rank']=$count;
 			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
 			# Lets calculate the percentage of points from the leader
-			$subtotals[$event_pilot_id]['event_pilot_total_percentage']=sprintf("%02.3f",($subtotals[$event_pilot_id]['total']/$max_points)*100);
+			if($max_points==0){
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=0;
+			}else{
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=sprintf("%02.3f",($subtotals[$event_pilot_id]['total']/$max_points)*100);
+			}
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
 		}
@@ -549,8 +565,7 @@ class Event {
 				$this->totals['teams'][]=array("rank"=>$count,"team_name"=>$team_name,"total"=>$total);
 				$count++;
 			}
-		}
-		
+		}		
 		
 		$this->totals['total_rounds']=$total_rounds;
 		$this->totals['round_drops']=$number_drops;
@@ -634,6 +649,79 @@ class Event {
 		}
 
 		return;
+	}
+	function get_top_speeds(){
+		# Function to get the top speeds of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_speeds=array();
+		$speeds=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						if($p['event_pilot_round_flight_seconds']!=0){
+							$temp_speeds[]=array(
+								"event_pilot_id"=>$event_pilot_id,
+								"event_round_number"=>$event_round_number,
+								"event_pilot_round_flight_seconds"=>$p['event_pilot_round_flight_seconds']
+							);
+						}
+					}
+				}
+			}		
+		}
+		$speeds=array_msort($temp_speeds,array("event_pilot_round_flight_seconds"=>SORT_ASC));
+		return $speeds;
+	}
+	function get_top_distance(){
+		# Function to get the top distance laps of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_laps=array();
+		$laps=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if($f['flight_type_code']=='f3b_distance'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						$temp_laps[]=array(
+							"event_pilot_id"=>$event_pilot_id,
+							"event_round_number"=>$event_round_number,
+							"event_pilot_round_flight_laps"=>$p['event_pilot_round_flight_laps']
+						);
+					}
+				}
+			}		
+		}
+		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
+		return $laps;
+	}
+	function get_top_landing(){
+		# Function to get the top landing averages of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_landing=array();
+		$landing=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if($f['flight_type_landing']==1){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						$temp_landing[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+						$temp_landing[$event_pilot_id]['event_pilot_round_flight_landing']+=$p['event_pilot_round_flight_landing'];
+						$temp_landing[$event_pilot_id]['number_rounds']++;
+					}
+				}
+			}		
+		}
+		foreach($temp_landing as $event_pilot_id=>$t){
+			$temp_landing[$event_pilot_id]['average_landing']=$t['event_pilot_round_flight_landing']/$t['number_rounds'];
+		}
+		
+		$landing=array_msort($temp_landing,array("average_landing"=>SORT_DESC));
+		return $landing;
 	}
 }
 ?>

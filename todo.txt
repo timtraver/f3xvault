@@ -16,15 +16,9 @@ Todo list for rcvault project
   
   In F3F rounds, make it pop up the flight time on mouseover... ;)
   
-  
-  Show top 10 speed runs of the contest
-  Show top 10 distance runs of the contest
-  
   printable reports for rounds, and overall standings
 
   Make admin area to easily change the locations and plane characteristics
-  
-  When first creating an event, save the default values for the event parameters
   
 X Figure out drops
   Test drops in F3B and other disciplines
@@ -44,6 +38,10 @@ X Figure out drops
  
   Assign club affiliation to event and show on event screen
  
+X Show most accurate landing points report
+X Show top 20 speed runs of the contest
+X Show top 20 distance runs of the contest
+X When first creating an event, save the default values for the event parameters
 X Class Rankings
 X Team Rankings
 X Add a class podiums section at bottom of event page

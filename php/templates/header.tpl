@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
 <head>
-<title>F3X Timing</title>
+<title>RCVault</title>
 <!-- <link href="style.css" rel="stylesheet" type="text/css"> -->
 <link rel='stylesheet' id='admin-bar-css'  href='/wp-includes/css/admin-bar.min.css?ver=3.5.1' type='text/css' media='all' />
 <link rel='stylesheet' id='theme-my-login-css'  href='/wp-content/plugins/theme-my-login/theme-my-login.css?ver=6.2.2' type='text/css' media='all' /><link rel='stylesheet' id='graphene-stylesheet-css'  href='/wp-content/themes/graphene/style.css?ver=3.5.1' type='text/css' media='screen' />
@@ -82,13 +82,10 @@ $(document).ready(function() {
 body.custom-background { background-image: url('/wp-content/uploads/2012/08/GatorF3B2012Vampire1.jpg'); background-repeat: repeat; background-position: top left; background-attachment: fixed; }
 </style>
 {/literal}
-
 </head>
 <body class="home blog logged-in admin-bar no-customize-support custom-background two_col_left two-columns">
 <div id="container" class="container_16">
-
         <div id="header">
-    	
         <img src="/wp-content/uploads/2012/08/GatorF3B2012Vampire.jpg" alt="" class="header-img" />        	       
         		
         			<h1 class="header_title push_1 grid_15">									RC Vault							</h1>			

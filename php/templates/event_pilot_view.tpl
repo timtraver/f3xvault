@@ -151,11 +151,11 @@
 		</tr>
 		<tr>
 			<th>Total Points</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_score']}</td>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_score']|string_format:"%06.3f"}</td>
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_percentage']} %</td>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_percentage']|string_format:"%06.3f"} %</td>
 		</tr>
 		{if $event->pilots[$event_pilot_id]['event_pilot_total_laps']>0}
 		<tr>
@@ -166,7 +166,7 @@
 		{if $event->pilots[$event_pilot_id]['event_pilot_average_speed']>0}
 		<tr>
 			<th>Pilot Average Speed</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_average_speed']} (rank {$event->pilots[$event_pilot_id]['event_pilot_average_speed_rank']})</td>
+			<td>{$event->pilots[$event_pilot_id]['event_pilot_average_speed']|string_format:"%06.3f"} (rank {$event->pilots[$event_pilot_id]['event_pilot_average_speed_rank']})</td>
 		</tr>
 		{/if}
 		</table>

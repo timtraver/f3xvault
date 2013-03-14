@@ -202,6 +202,49 @@ function event_view() {
 	
 	$e=new Event($event_id);
 	$e->get_rounds();
+
+	# Lets determine if we need a laps report and an average speed report
+	$laps=0;
+	$speed=0;
+	$landing=0;
+	foreach($e->pilots as $p){
+		if($p['event_pilot_total_laps']!=0){
+			$laps=1;
+		}
+		if($p['event_pilot_average_speed']!=0){
+			$speed=1;
+		}
+	}
+	foreach($e->flight_types as $ft){
+		if($ft['flight_type_landing']==1){
+			$landing=1;
+		}
+	}
+	$lap_totals=array();
+	$speed_averages=array();
+	$speed_times=array();
+	if($laps){
+		# Lets sort the pilots by order of distance laps
+		$lap_totals=array_msort($e->pilots,array("event_pilot_lap_rank"=>SORT_ASC));
+		$smarty->assign("lap_totals",$lap_totals);
+		# Lets get the top distance list
+		$distance_laps=$e->get_top_distance();
+		$smarty->assign("distance_laps",$distance_laps);
+	}
+	if($speed){
+		# Lets sort the pilots by order of speed average
+		$speed_averages=array_msort($e->pilots,array("event_pilot_average_speed_rank"=>SORT_ASC));
+		$smarty->assign("speed_averages",$speed_averages);
+		# Lets get the top speed list
+		$speed_times=$e->get_top_speeds();
+		$smarty->assign("speed_times",$speed_times);
+	}
+	if($landing){
+		# Lets get the top landing accuracy list
+		$top_landing=$e->get_top_landing();
+		$smarty->assign("top_landing",$top_landing);
+	}
+	
 	$smarty->assign("event",$e);
 	
 	$maintpl=find_template("event_view.tpl");
@@ -311,7 +354,7 @@ function event_save() {
 		user_message("Added your New Event!");
 		$_REQUEST['event_id']=$GLOBALS['last_insert_id'];
 		# Now lets add the default event settings
-		# Lets get each event type option
+		# Lets get each event type option and insert default values
 		$stmt=db_prep("
 			SELECT *
 			FROM event_type_option

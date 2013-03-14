@@ -1,7 +1,6 @@
-	</div><!-- #content -->
 
-</div>
-
+	</div>
+	</div>
 	<div id="footer" class="clearfix">
     
         <div id="copyright">
