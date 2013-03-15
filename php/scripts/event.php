@@ -207,6 +207,7 @@ function event_view() {
 	$laps=0;
 	$speed=0;
 	$landing=0;
+	$duration=0;
 	foreach($e->pilots as $p){
 		if($p['event_pilot_total_laps']!=0){
 			$laps=1;
@@ -219,6 +220,9 @@ function event_view() {
 		if($ft['flight_type_landing']==1){
 			$landing=1;
 		}
+		if($ft['flight_type_code']=='f3b_duration'){
+			$duration=1;
+		}
 	}
 	$lap_totals=array();
 	$speed_averages=array();
@@ -230,8 +234,14 @@ function event_view() {
 		# Lets get the top distance list
 		$distance_laps=$e->get_top_distance();
 		$smarty->assign("distance_laps",$distance_laps);
+		# Lets get the distance ranking
+		$distance_rank=$e->get_distance_rank();
+		$smarty->assign("distance_rank",$distance_rank);
 	}
 	if($speed){
+		# Lets get the speed ranking
+		$speed_rank=$e->get_speed_rank();
+		$smarty->assign("speed_rank",$speed_rank);
 		# Lets sort the pilots by order of speed average
 		$speed_averages=array_msort($e->pilots,array("event_pilot_average_speed_rank"=>SORT_ASC));
 		$smarty->assign("speed_averages",$speed_averages);
@@ -243,6 +253,11 @@ function event_view() {
 		# Lets get the top landing accuracy list
 		$top_landing=$e->get_top_landing();
 		$smarty->assign("top_landing",$top_landing);
+	}
+	if($duration){
+		# Lets get the duration rank
+		$duration_rank=$e->get_duration_rank();
+		$smarty->assign("duration_rank",$duration_rank);
 	}
 	
 	$smarty->assign("event",$e);
@@ -1054,7 +1069,7 @@ function event_round_edit() {
 			# Lets see if there is already a zero round and make it 00 or 000
 			$num_zeros=0;
 			foreach($event->rounds as $number=>$r){
-				if(preg_match("/^0*/",$number)){
+				if(preg_match("/^0/",$number)){
 					$num_zeros++;
 				}
 			}
@@ -1299,6 +1314,8 @@ function event_round_save() {
 	$event=new Event($event_id);
 	$event->calculate_round($event_round_number);
 	# Now lets recalculate and save the event total info
+	# Refresh the round info
+	$event->get_rounds();
 	$event->event_save_totals();
 	
 	user_message("Saved event round info.");

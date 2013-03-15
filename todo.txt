@@ -9,24 +9,15 @@ Todo list for rcvault project
   
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
-  
-  partial scoring of rounds for F3B
-  Set default of scoring of the rounds to on if creating a new round
-  Only show the partial include on F3b maybe
-  
+   
   reflights for groups
-  
-  Fix flight order view in rounds to match pilot entry view (maybe by pre-populating order when creating the rounds)
-  
+    
   In F3F rounds, make it pop up the flight time on mouseover... ;)
+  In F3F rounds, add a fast time line at the bottom
   
   printable reports for rounds, and overall standings
 
   Make admin area to easily change the locations and plane characteristics
-  
-  Make sure calculation of round scores happens after changes are made and updated with the new round list...
-  
-  Speed Ranking, Distance Ranking and Duration Rankings for F3B
   
 X Figure out drops
   Test drops in F3B and other disciplines
@@ -46,6 +37,10 @@ X Figure out drops
  
   Assign club affiliation to event and show on event screen
  
+X Make sure calculation of round scores happens after changes are made and updated with the new round list...
+X partial scoring of rounds for F3B
+X Set default of scoring of the rounds to on if creating a new round
+X Speed Ranking, Distance Ranking and Duration Rankings for F3B
 X Show most accurate landing points report
 X Show top 20 speed runs of the contest
 X Show top 20 distance runs of the contest

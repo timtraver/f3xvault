@@ -142,8 +142,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->rounds|count > 10}10{else}{$event->rounds|count}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
-			<th></th>
+			<th colspan="{if $event->rounds|count > 10}11{else}{$event->rounds|count + 1}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
@@ -154,7 +153,9 @@ function toggle(element,tog) {
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
 				{if $r@iteration <=10}
-				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
+				<th width="5%" align="center" nowrap>
+					<a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+				</th>
 				{/if}
 			{/foreach}
 			<th>&nbsp;</th>
@@ -169,7 +170,8 @@ function toggle(element,tog) {
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
-				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+					<div style="position:relative;">
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -183,6 +185,8 @@ function toggle(element,tog) {
 					{if $drop==1}<del><font color="red">{/if}
 						{$r.event_pilot_round_total_score|string_format:"%06.3f"}
 					{if $drop==1}</font></del>{/if}
+					<span>score content</span>
+					</div>
 				</td>
 				{/if}
 			{/foreach}
@@ -193,6 +197,27 @@ function toggle(element,tog) {
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
 		{/foreach}
+		{if $event->info.event_type_code=='f3f'}
+		<tr>
+			<th colspan="2" align="right">Round Fast Time</th>
+			{foreach $event->rounds as $r}
+				{if $r@iteration <=10}
+					{$fast=1000}
+					{$fast_id=0}
+					{foreach $r.flights as $f}
+						{foreach $f.pilots as $p}
+						{if $p.event_pilot_round_flight_seconds<$fast && $p.event_pilot_round_flight_seconds!=0}
+							{$fast=$p.event_pilot_round_flight_seconds}
+							{$fast_id=$p.event_pilot_id}
+						{/if}
+						{/foreach}
+					{/foreach}
+					{if $fast==1000}{$fast=0}{/if}
+					<th align="center"><a href="" onClick="return false;" title="{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}">{$fast}s</a></th>
+				{/if}
+			{/foreach}
+		</tr>
+		{/if}
 		</table>
 
 
@@ -203,8 +228,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{$event->rounds|count - 10}" align="center" nowrap>Completed Rounds</th>
-			<th></th>
+			<th colspan="{$event->rounds|count - 9}" align="center" nowrap>Completed Rounds</th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
@@ -215,7 +239,9 @@ function toggle(element,tog) {
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
 				{if $r@iteration >10}
-				<th width="5%" align="center" nowrap><a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">Round {$r.event_round_number}</a></th>
+				<th width="5%" align="center" nowrap>
+					<a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+				</th>
 				{/if}
 			{/foreach}
 			<th>&nbsp;</th>
@@ -254,6 +280,27 @@ function toggle(element,tog) {
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
 		{/foreach}
+		{if $event->info.event_type_code=='f3f'}
+		<tr>
+			<th colspan="2" align="right">Round Fast Time</th>
+			{foreach $event->rounds as $r}
+				{if $r@iteration >10}
+					{$fast=1000}
+					{$fast_id=0}
+					{foreach $r.flights as $f}
+						{foreach $f.pilots as $p}
+						{if $p.event_pilot_round_flight_seconds<$fast && $p.event_pilot_round_flight_seconds!=0}
+							{$fast=$p.event_pilot_round_flight_seconds}
+							{$fast_id=$p.event_pilot_id}
+						{/if}
+						{/foreach}
+					{/foreach}
+					{if $fast==1000}{$fast=0}{/if}
+					<th align="center"><a href="" onClick="return false;" title="{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}">{$fast}s</a></th>
+				{/if}
+			{/foreach}
+		</tr>
+		{/if}
 		</table>
 		{/if}
 
@@ -263,39 +310,35 @@ function toggle(element,tog) {
 	</div>
 </div>
 
-{if $event->classes|count > 1 || $event->totals.teams}
+{if $event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank}
+<h1 class="post-title">Contest Ranking Reports</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
 	{if $event->classes|count > 1}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
 		<h1 class="post-title">Class Rankings</h1>
 		<table cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-		{foreach $event->classes as $c}
-		{$rank=1}
-			<td valign="top">
-				<table width="30%" cellpadding="2" cellspacing="1" class="tableborder">
-				<tr>
-					<th colspan="3" nowrap>{$c.class_description} Rankings</th>
-				</tr>
-				<tr>
-					<th>Rank</th>
-					<th>Pilot</th>
-					<th>Total</th>
-				</tr>
-				{foreach $event->totals.pilots as $p}
-				{$event_pilot_id=$p.event_pilot_id}
-				{if $event->pilots.$event_pilot_id.class_id==$c.class_id}
-				<tr style="background-color: {cycle values="#9DCFF0,white"};">
-					<td>{$rank}</td>
-					<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-					<td>{$p.total|string_format:"%06.3f"}</td>
-				</tr>
-				{$rank=$rank+1}
-				{/if}
-				{/foreach}
-				</table>
-			</td>
-		{/foreach}
+			{foreach $event->classes as $c}
+			{$rank=1}
+					<tr>
+						<th colspan="3" nowrap>{$c.class_description} Rankings</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>Pilot</th>
+						<th>Total</th>
+					</tr>
+					{foreach $event->totals.pilots as $p}
+					{$event_pilot_id=$p.event_pilot_id}
+					{if $event->pilots.$event_pilot_id.class_id==$c.class_id}
+					<tr style="background-color: {cycle values="#9DCFF0,white"};">
+						<td>{$rank}</td>
+						<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+						<td>{$p.total|string_format:"%06.3f"}</td>
+					</tr>
+					{$rank=$rank+1}
+					{/if}
+					{/foreach}
+			{/foreach}
 		</tr>
 		</table>
 	</div>
@@ -305,7 +348,7 @@ function toggle(element,tog) {
 		<h1 class="post-title">Team Rankings</h1>
 		<table cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th>Rank</th>
+			<th></th>
 			<th>Team</th>
 			<th>Total</th>
 		</tr>
@@ -329,11 +372,81 @@ function toggle(element,tog) {
 		</table>
 	</div>
 	{/if}
+	
+	{if $duration_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Duration Ranking</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Score</th>
+		</tr>
+		{$rank=1}
+		{foreach $duration_rank as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+			</tr>
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	{if $speed_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Speed Ranking</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Score</th>
+		</tr>
+		{$rank=1}
+		{foreach $speed_rank as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+			</tr>
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	{if $distance_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Distance Ranking</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Score</th>
+		</tr>
+		{$rank=1}
+		{foreach $distance_rank as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+			</tr>
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	
+	
 </div>
 {/if}
 
 <!-- Lets figure out if there are reports for speed or laps -->
 {if $lap_totals || $speed_averages || $top_landing}
+<h1 class="post-title">Statistics Reports</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
 	{if $lap_totals}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                

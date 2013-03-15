@@ -79,6 +79,7 @@
 		<h1 class="post-title entry-title">Round Flights</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		{foreach $flight_types as $ft}
+			{$flight_type_id=$ft.flight_type_id}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
@@ -93,7 +94,7 @@
 					{$ft.flight_type_name}
 				</th>
 				<th>
-					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.event_round_flight_score==1} CHECKED{/if}>
+					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0} CHECKED{/if}>
 				</th>
 			</tr>
 			<tr>
