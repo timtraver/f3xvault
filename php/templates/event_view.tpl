@@ -138,11 +138,13 @@ function toggle(element,tog) {
 			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->rounds|count > 10}11{else}{$event->rounds|count + 1}{/if}" align="center" nowrap>Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)</th>
+			<th colspan="{if $event->rounds|count > 10}11{else}{$event->rounds|count + 1}{/if}" align="center" nowrap>
+				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)
+			</th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
@@ -153,8 +155,18 @@ function toggle(element,tog) {
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
 				{if $r@iteration <=10}
-				<th width="5%" align="center" nowrap>
+				<th class="info" width="5%" align="center" nowrap>
+					<div style="position:relative;">
+					<span>
+						{$flight_type_id=$r.flight_type_id}
+						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+						{else}
+						View Details of Round {$r.event_round_number}
+						{/if}
+					</span>
 					<a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					</div>
 				</th>
 				{/if}
 			{/foreach}
@@ -165,12 +177,13 @@ function toggle(element,tog) {
 			<th>&nbsp;</th>
 		</tr>
 		{foreach $event->totals.pilots as $e}
+		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
-				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
 					{$dropped=0}
@@ -185,7 +198,24 @@ function toggle(element,tog) {
 					{if $drop==1}<del><font color="red">{/if}
 						{$r.event_pilot_round_total_score|string_format:"%06.3f"}
 					{if $drop==1}</font></del>{/if}
-					<span>score content</span>
+					{* lets determine the content to show on popup *}
+						<span>
+							{$event_round_number=$r@key}
+							{foreach $event->rounds.$event_round_number.flights as $f}
+								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
+									{if $f.flight_type_code=='f3b_duration'}A - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'distance'}
+									{if $f.flight_type_code=='f3b_distance'}B - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'speed'}
+									{if $f.flight_type_code=='f3b_speed'}C - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+								{/if}
+							{/foreach}
+						</span>
 					</div>
 				</td>
 				{/if}
@@ -213,7 +243,15 @@ function toggle(element,tog) {
 						{/foreach}
 					{/foreach}
 					{if $fast==1000}{$fast=0}{/if}
-					<th align="center"><a href="" onClick="return false;" title="{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}">{$fast}s</a></th>
+					<th class="info" align="center">
+						<div style="position:relative;">
+						<a href="" onClick="return false;">{$fast}s</a>
+						<span>
+							Fast Time : {$fast}s<br>
+							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+						</span>
+						</div>
+					</th>
 				{/if}
 			{/foreach}
 		</tr>
@@ -256,7 +294,7 @@ function toggle(element,tog) {
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration >10}
-				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 3px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -296,7 +334,15 @@ function toggle(element,tog) {
 						{/foreach}
 					{/foreach}
 					{if $fast==1000}{$fast=0}{/if}
-					<th align="center"><a href="" onClick="return false;" title="{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}">{$fast}s</a></th>
+					<th class="info" align="center">
+						<div style="position:relative;">
+						<a href="" onClick="return false;">{$fast}s</a>
+						<span>
+							Fast Time : {$fast}s<br>
+							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+						</span>
+						</div>
+					</th>
 				{/if}
 			{/foreach}
 		</tr>
@@ -306,7 +352,9 @@ function toggle(element,tog) {
 
 
 <br>
-<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button" style="float: none;margin-left: auto;margin-right: auto;">
+<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
+<input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
+<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
 	</div>
 </div>
 
@@ -587,6 +635,18 @@ function toggle(element,tog) {
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_round_id" value="0">
 <input type="hidden" name="zero_round" value="0">
+</form>
+<form name="print_overall" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_overall">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="print_stats" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_stats">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
 </form>
 {if $event->rounds}
 <script>

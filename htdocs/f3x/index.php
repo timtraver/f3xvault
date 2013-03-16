@@ -116,7 +116,11 @@ if($no_header_footer==1){
 	$messagetpl=find_template("messages.tpl");
 	# Show wordpress header
 	#get_header();
-	$menutpl=find_template("header.tpl");
+	if($_REQUEST['use_print_header']==1){
+		$menutpl=find_template("print_header.tpl");
+	}else{
+		$menutpl=find_template("header.tpl");
+	}
 	$smarty->display($menutpl);
 	if($GLOBALS['messages']){
 		$smarty->display($messagetpl);
@@ -131,7 +135,11 @@ if($no_header_footer==1){
 	}else{
 #		get_footer();
 	}
-	$menutpl=find_template("footer.tpl");
+	if($_REQUEST['use_print_header']==1){
+		$menutpl=find_template("print_footer.tpl");
+	}else{
+		$menutpl=find_template("footer.tpl");
+	}
 	$smarty->display($menutpl);
 #	Smarty_Internal_Debug::display_debug($smarty);
 }

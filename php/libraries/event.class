@@ -138,6 +138,11 @@ class Event {
 			$rounds[$event_round_number]=$round;
 
 			foreach($this->flight_types as $flight_type_id=>$ft){
+
+				# If its an f3k round, then only include the chosen flight type
+				if(preg_match("/f3k/",$ft['flight_type_code']) && $ft['flight_type_id']!=$round['flight_type_id']){
+					continue;
+				}
 				# Lets get the event round score status to include for this round
 				$stmt=db_prep("
 					SELECT *
@@ -440,7 +445,7 @@ class Event {
 			$total_rounds++;
 			foreach($r['flights'] as $flight_type_id=>$f){
 				foreach($f['pilots'] as $event_pilot_id=>$p){
-					if($f['event_round_flight_score']==0){
+					if($f['event_round_flight_score']==0 && preg_match("/f3b_/",$f['flight_type_code'])){
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']=0;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=0;
 						continue;

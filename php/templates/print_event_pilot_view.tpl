@@ -1,8 +1,7 @@
 
-<div class="page type-page status-publish hentry clearfix post nodate">
+<div class="page type-page status-publish hentry clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
-		</h1>
+		<h2 class="post-title entry-title">Event - {$event->info.event_name}</h2>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -26,7 +25,6 @@
 			</td>
 		</tr>
 		</table>
-		
 	</div>
 
 		<br>
@@ -204,25 +202,5 @@
 		{/if}
 		</table>
 <br>
-<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
-<input type="button" value=" Print Pilot Results " onClick="print_pilot.submit();" class="block-button">
 </div>
 </div>
-
-<form name="goback" method="GET">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_view">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
-<form name="event_edit" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
-<form name="print_pilot" action="?" method="GET" target="_blank">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_print_pilot">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="event_pilot_id" value="{$event_pilot_id}">
-<input type="hidden" name="use_print_header" value="1">
-</form>
