@@ -35,6 +35,9 @@
 			<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=main&function=login"><strong>Log In</strong></a></li>
 			<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=register"><strong>Register</strong></a></li>
 			{/if}
+			{if $user.user_admin==1}
+			<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=admin"><strong>Admin</strong></a></li>
+			{/if}
 		</ul>            
 	</div>
 	<div class="menu-bottom-shadow">&nbsp;</div>

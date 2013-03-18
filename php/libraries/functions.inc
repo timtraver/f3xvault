@@ -557,4 +557,67 @@ function return_to_action($from){
 	include("{$GLOBALS['scripts_dir']}/$action.php");
 	return $actionoutput;
 }
+function send_email($email_name,$email_to,$data){
+	# Send one of the emails in the system
+	global $template_dir;
+	global $compile_dir;
+	
+	include_library('smarty/libs/Smarty.class.php');
+	
+	$smarty1=new Smarty;
+	$smarty1->template_dir = $template_dir;
+	$smarty1->compile_dir = $compile_dir;
+	$smarty1->compile_check = false;
+	$smarty1->auto_literal = false;
+	$smarty1->debugging = false;
+
+	# Assign the given data
+	$smarty1->assign("data",$data);
+	
+	# Get signup email from the name
+	$stmt=db_prep("
+		SELECT *
+		FROM email
+		WHERE email_name=:email_name
+	");
+	$result=db_exec($stmt,array("email_name"=>$email_name));
+	$email=$result[0];
+
+	# Send the email
+	include_library('htmlMimeMail5/htmlMimeMail5.php');
+	$mail=new htmlMimeMail5();
+	
+	# Replace any tokens in the content
+	$email['email_html']=$smarty1->fetch('string:'.$email['email_html']);
+	$email['email_subject']=$smarty1->fetch('string:'.$email['email_subject']);
+        
+	$mail->setFrom("\"{$email['email_from_name']}\" <{$email['email_from_address']}>");
+	$mail->setSubject($email['email_subject']);
+	$mail->setHtml($email['email_html']);
+	
+	$mail->SetBcc("tt@mivamerchant.com");
+	
+	# Get any images associated with this email
+	$stmt=db_prep("
+		SELECT *
+		FROM email_image
+		WHERE email_id=:email_id
+		AND email_image_status=1
+	");
+	$emails=db_exec($stmt,array("email_id"=>$email['email_id']));
+	foreach($emails as $image){
+		$path="{$GLOBALS['include_paths']['images']}/{$email['email_id']}/{$image['email_image_name']}";
+		if(preg_match("/\.jpg$/",$path)){
+			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/jpg', new Base64Encoding()));
+		}
+		if(preg_match("/\.gif$/",$path)){
+			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/gif', new Base64Encoding()));
+		}
+		if(preg_match("/\.png$/",$path)){
+			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/png', new Base64Encoding()));
+		}
+	}
+	$mail->send($email_to,'smtp');
+	return;
+}
 ?>

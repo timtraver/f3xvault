@@ -35,10 +35,11 @@ $base_url = "http://{$_SERVER['HTTP_HOST']}/f3x";
 
 # Determine which paths to set for library includes
 $include_paths=array(
-        "libraries"=>"$base/php/libraries",
-        "templates"=>"$base/php/templates",
-        "templates_c"=>"$base/php/templates_c",
-        "scripts"=>"$base/php/scripts"
+	"libraries"=>"$base/php/libraries",
+	"templates"=>"$base/php/templates",
+	"templates_c"=>"$base/php/templates_c",
+	"scripts"=>"$base/php/scripts",
+	"images"=>"$base/images"
 );
 
 $template_dir=$include_paths['templates'];
