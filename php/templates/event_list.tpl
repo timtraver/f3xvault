@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Event List</h1>
+		<h1 class="post-title entry-title">Browse RC Event List</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
@@ -17,8 +17,6 @@
 	{/foreach}
 	</select>
 	</td>
-</tr>
-<tr>
 	<th>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
@@ -33,9 +31,10 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td valign="center">
+	<td valign="center" colspan="3">
 		<select name="search_field">
 		<option value="event_name" {if $search_field=="event_name"}SELECTED{/if}>Event Name</option>
+		<option value="event_type_name" {if $search_field=="event_type_name"}SELECTED{/if}>Event Type</option>
 		<option value="event_start_date" {if $search_field=="event_start_date"}SELECTED{/if}>Start Date</option>
 		</select>
 		<select name="search_operator">

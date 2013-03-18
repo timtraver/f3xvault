@@ -459,64 +459,6 @@ function destroy_fsession(){
         ");
         $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
 }
-function check_login () {
-        global $fsession;
-        global $user;
-
-        # Function to check login against user in the database
-        $error=0;
-        $errorstring="";
-        $encpass='';
-
-        if($_REQUEST['login']=='') {
-                $error=1;
-                $errorstring="You must enter a login.";
-                return array($error,"$errorstring");
-        }
-        if($_REQUEST['password']=='') {
-                $error=1;
-                $errorstring="You must enter a password.";
-                return array($error,"$errorstring");
-        }
-        $login=$_REQUEST['login'];
-        $password=$_REQUEST['password'];
-
-        # Let's get the user info to check the pass
-        $stmt=db_prep("
-                SELECT *
-                FROM user u
-                WHERE u.user_name=:login
-        ");
-        $result=db_exec($stmt,array("login"=>$login));
-        if(isset($result[0])) {
-                $user=$result[0];
-                if($user['user_status']==0){
-                        $error=2;
-                        $errorstring="User does not currently have access to this site.";
-                        return array($error,"$errorstring");
-                }
-                if($password!=decrypt($user['user_pass'])){
-                	$error=2;
-                	$errorstring="User password is not correct. Please try again or use the forgot password link.".decrypt($user['user_pass']);
-					return array($error,"$errorstring");
-                }
-        }else{
-				$error=2;
-				$errorstring="User does not currently have a login. Please register with us!";
-				return array($error,"$errorstring");
-        }
-
-        $path="/f3x";
-        $host=$_SERVER['HTTP_HOST'];
-        # New session stuff
-        create_fsession($path,$host);
-        $fsession['auth']=TRUE;
-        $fsession['user_id']=$user['user_id'];
-        $fsession['user_name']=$user['user_name'];
-
-        save_fsession();
-        return array($error,"$errorstring");
-}
 function array_msort($array, $cols) {
         # Array to sort an associative array by multiple keys
         # $cols is an array of 'col_name'=>SORT_ASC (or SORT_DESC)

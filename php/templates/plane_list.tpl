@@ -1,9 +1,8 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Plane Database</h1>
+		<h1 class="post-title entry-title">Browse RC Plane Database</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Browse Database</h1>
 <table>
 <tr>
 	<th>

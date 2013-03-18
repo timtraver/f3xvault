@@ -45,6 +45,12 @@ function save_registration(){
 		$pilot_id=0;
 	}
 	$user=array();
+	if(isset($_REQUEST['user_name']) && $_REQUEST['user_name']!=''){
+		$user_name=$_REQUEST['user_name'];
+		$user['user_name']=$user_name;
+	}else{
+		user_message("You must enter a user name",1);
+	}
 	if(isset($_REQUEST['user_first_name']) && $_REQUEST['user_first_name']!=''){
 		$user_first_name=$_REQUEST['user_first_name'];
 		$user['user_first_name']=$user_first_name;
@@ -79,19 +85,19 @@ function save_registration(){
 		user_message("The passwords you entered are not the same. Please try again",1);
 	}
 	if($GLOBALS['messages']){
+		$smarty->assign("user",$user);
 		return view_registration();
 	}
 	# Check to see if this user already exists
 	$stmt=db_prep("
 		SELECT *
 		FROM user
-		WHERE user_email=:user_email
+		WHERE user_name=:user_name
 		AND user_status=1
 	");
-	$result=db_exec($stmt,array("user_email"=>$user_email));
-	
+	$result=db_exec($stmt,array("user_name"=>$user_name));
 	if($result){
-		user_message("A user with this email address already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
+		user_message("A user with this name already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
 		return view_registration();
 	}
 	if($from_show_pilots==0){
@@ -99,7 +105,9 @@ function save_registration(){
 		$stmt=db_prep("
 			SELECT *
 			FROM pilot p
-			WHERE p.pilot_email=LOWER(:user_email) OR p.pilot_first_name=LOWER(:user_first_name) OR p.pilot_last_name=LOWER(:user_last_name)
+			WHERE p.pilot_email=LOWER(:user_email)
+			OR p.pilot_first_name=LOWER(:user_first_name)
+			OR p.pilot_last_name=LOWER(:user_last_name)
 		");
 		$result=db_exec($stmt,array(
 			"user_email"=>strtolower($user['user_email']),
@@ -163,7 +171,7 @@ function save_registration(){
 		"user_first_name"=>$user_first_name,
 		"user_last_name"=>$user_last_name,
 		"user_email"=>$user_email,
-		"user_pass"=>encrypt($user_pass),
+		"user_pass"=>sha1($user_pass),
 		"pilot_id"=>$pilot_id
 	));
 	$user=get_user_info($user_email);
@@ -176,11 +184,11 @@ function save_registration(){
 	$GLOBALS['fsession']['user_name']=$user['user_name'];
 
 	save_fsession();
-	$action='my';
-	$_REQUEST['action']='my';
+	$action='main';
+	$_REQUEST['action']='main';
 	$_REQUEST['function']='';
 	
-	user_message("Welcome ".urlencode($user_first_name).", you are now registered and logged in!");
+	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process!");
 	include("{$GLOBALS['scripts_dir']}/$action.php");
 	return $actionoutput;	
 }

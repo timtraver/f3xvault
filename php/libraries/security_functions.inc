@@ -24,6 +24,71 @@ function show_no_permission(){
         $tpl=find_template("no_permission.tpl");
         return $smarty->fetch($tpl);
 }
+function check_login () {
+        global $fsession;
+        global $user;
+
+        # Function to check login against user in the database
+        $error=0;
+        $errorstring="";
+        $encpass='';
+
+        if($_REQUEST['login']=='') {
+                $error=1;
+                $errorstring="You must enter a login.";
+                return array($error,"$errorstring");
+        }
+        if($_REQUEST['password']=='') {
+                $error=1;
+                $errorstring="You must enter a password.";
+                return array($error,"$errorstring");
+        }
+        $login=$_REQUEST['login'];
+        $password=$_REQUEST['password'];
+
+		$sha1_pass=sha1($password);
+
+        # Let's get the user info to check the pass
+        $stmt=db_prep("
+                SELECT *
+                FROM user u
+                WHERE u.user_name=:login
+        ");
+        $result=db_exec($stmt,array("login"=>$login));
+        if(isset($result[0])) {
+                $user=$result[0];
+                if($user['user_status']==0){
+                        $error=2;
+                        $errorstring="User does not currently have access to this site.";
+                        return array($error,"$errorstring");
+                }
+                if($sha1_pass!=$user['user_pass']){
+                	$error=2;
+                	$errorstring="User password is not correct. Please try again or use the forgot password link.";
+					return array($error,"$errorstring");
+                }
+                if($user['user_activated']==0){
+                        $error=2;
+                        $errorstring="You have not yet activated your user. Please look for the activation email to complete activation.";
+                        return array($error,"$errorstring");
+                }
+        }else{
+				$error=2;
+				$errorstring="User does not currently have a login. Please register with us!";
+				return array($error,"$errorstring");
+        }
+
+        $path="/f3x";
+        $host=$_SERVER['HTTP_HOST'];
+        # New session stuff
+        create_fsession($path,$host);
+        $fsession['auth']=TRUE;
+        $fsession['user_id']=$user['user_id'];
+        $fsession['user_name']=$user['user_name'];
+
+        save_fsession();
+        return array($error,"$errorstring");
+}
 function get_user_info($user_parameter){
         # $user_parameter cna be either user_id (int) or user_name (string)
         # Function to get all of the user info, including permissions
@@ -39,15 +104,17 @@ function get_user_info($user_parameter){
         if($user_id!=0){
                 $stmt=db_prep("
                         SELECT *
-                        FROM user
-                        WHERE user_id=:user_id
+                        FROM user u
+                        LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+                        WHERE u.user_id=:user_id
                 ");
                 $result=db_exec($stmt,array("user_id"=>$user_id));
         }else{
                 $stmt=db_prep("
                         SELECT *
-                        FROM user
-                        WHERE user_name=:user_name
+                        FROM user u
+                        LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+                        WHERE u.user_name=:user_name
                 ");
                 $result=db_exec($stmt,array("user_name"=>$user_parameter));
         }

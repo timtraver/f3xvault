@@ -30,6 +30,8 @@ class Event {
 			LEFT JOIN country c ON c.country_id=l.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
+			LEFT JOIN series se ON e.series_id=se.series_id
+			LEFT JOIN club cl ON e.club_id=cl.club_id
 			WHERE e.event_id=:event_id
 		");
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
@@ -252,36 +254,50 @@ class Event {
 		}
 		$flight=array();
 		# Lets get the round types so we know how to calculate the scores
+		# Lets set the point value for seconds
+		$second_value=1;
+		$event_type=$this->info['event_type_code'];
+		foreach($this->options as $o){
+			if($o['event_type_option_code']=="{$event_type}_second_value"){
+				$second_value=$o['event_option_value'];
+			}
+		}
 		# Now lets step through the flight data and set some of the basics
 		foreach($this->rounds[$event_round_number]['flights'] as $flight_type_id=>$f){
 			foreach($f['pilots'] as $event_pilot_id=>$v){
 				$raw=0;
 				if($f['flight_type_minutes']==1){
-					$raw+=60*intval($v['event_pilot_round_flight_minutes']);
+					$raw+=60*intval($v['event_pilot_round_flight_minutes'])*$second_value;
 				}
 				if($f['flight_type_seconds']==1){
-					$raw+=floatval($v['event_pilot_round_flight_seconds']);
+					$raw+=floatval($v['event_pilot_round_flight_seconds'])*$second_value;
 				}
 				# Ok, now we have to subtract the absolute value of the max time (on just the time)
 				switch($f['flight_type_code']){
 					case 'f3b_duration':
-					case 'f3j_duration':
-						if($raw>600){
-							$raw=600-abs(600-$raw);
+						if($raw>(600*$second_value)){
+							$raw=(600*$second_value)-abs((600*$second_value)-$raw);
 						}
 						break;
 					case 'td_duration':
-						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60;
+						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60*$second_value;
 						if($raw>$round_max_seconds){
 							$raw=$round_max_seconds-abs($round_max_seconds-$raw);
 						}
-					
 				}
 				if($f['flight_type_laps']==1){
 					$raw+=$v['event_pilot_round_flight_laps'];
 				}
 				if($f['flight_type_landing']==1){
 					$raw+=$v['event_pilot_round_flight_landing'];
+				}
+				# Lets add the f3j scoring penalty if they went over
+				if($f['flight_type_code']=='f3j_duration'){
+					if($v['event_pilot_round_flight_over']==1){
+						# Subtract 30 seconds from the time, and negate the landing points
+						$raw-=30;
+						$raw-=$v['event_pilot_round_flight_landing'];
+					}
 				}
 				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']=$raw;
 				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=$v['event_pilot_round_flight_id'];
@@ -354,7 +370,6 @@ class Event {
 				}
 			}
 		}
-		
 		
 		foreach($round_total_score as $event_pilot_id=>$p){
 			arsort($round_total_score);

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-12 05:39:50
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-18 05:32:24
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1363066412,
+      1 => 1363584583,
       2 => 'file',
     ),
   ),
@@ -43,7 +43,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
 ?><div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Event List</h1>
+		<h1 class="post-title entry-title">Browse RC Event List</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
@@ -66,8 +66,6 @@ $_smarty_tpl->tpl_vars['country']->_loop = true;
 	<?php } ?>
 	</select>
 	</td>
-</tr>
-<tr>
 	<th>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
@@ -88,9 +86,10 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td valign="center">
+	<td valign="center" colspan="3">
 		<select name="search_field">
 		<option value="event_name" <?php if ($_smarty_tpl->tpl_vars['search_field']->value=="event_name"){?>SELECTED<?php }?>>Event Name</option>
+		<option value="event_type_name" <?php if ($_smarty_tpl->tpl_vars['search_field']->value=="event_type_name"){?>SELECTED<?php }?>>Event Type</option>
 		<option value="event_start_date" <?php if ($_smarty_tpl->tpl_vars['search_field']->value=="event_start_date"){?>SELECTED<?php }?>>Start Date</option>
 		</select>
 		<select name="search_operator">

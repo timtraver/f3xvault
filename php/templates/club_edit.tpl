@@ -99,10 +99,13 @@ $(function() {
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value=" Back To Club View " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save This Club " class="block-button">
+		<input type="submit" value=" Save This Club{if $from} and Return{/if} " class="block-button">
 	</th>
 </tr>
 </table>
+{foreach $from as $f}
+<input type="hidden" name="{$f.key}" value="{$f.value}">
+{/foreach}
 </form>
 
 {if $club.club_id!=0}

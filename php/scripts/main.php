@@ -11,29 +11,89 @@
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
         $function=$_REQUEST['function'];
 }else{
-        $function="view";
+        $function="view_home";
 }
 
 if(check_user_function($function)){
         eval("\$actionoutput=$function();");
 }
 
-function view() {
+function view_home() {
 	global $smarty;
 	global $user;
 
-	# Get my event entries
-	$stmt=db_prep("
-		SELECT *
-		FROM event
-		WHERE user_id=:user_id
-		AND event_status=1
-		ORDER BY event_end_date desc
-	");
-	$results=db_exec($stmt,array($user['user_id']));
+	$maintpl=find_template("home.tpl");
+	return $smarty->fetch($maintpl);
+}
+function view_locations() {
+	global $smarty;
+	global $user;
 
-	$smarty->assign("events",$results);
-	$maintpl=find_template("main.tpl");
+	$maintpl=find_template("locations.tpl");
+	return $smarty->fetch($maintpl);
+}
+function view_planes() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("planes.tpl");
+	return $smarty->fetch($maintpl);
+}
+function view_events() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("events.tpl");
+	return $smarty->fetch($maintpl);
+}
+function view_pilots() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("pilots.tpl");
+	return $smarty->fetch($maintpl);
+}
+function view_clubs() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("clubs.tpl");
+	return $smarty->fetch($maintpl);
+}
+function login() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("login.tpl");
+	return $smarty->fetch($maintpl);
+}
+function user_login() {
+	global $smarty;
+	global $user;
+
+	# ok, lets log the user in
+	$check=check_login();
+	if($check[0]==0){
+		save_fsession();
+		# The user is successfully logged in, so lets redirect to refresh the page
+		$user=get_user_info($_REQUEST['login']);
+		return view_home();
+	}
+	# Unsuccessful login
+	$user=array();
+	user_message($check[1],1);
+	$maintpl=find_template("login.tpl");
+	return $smarty->fetch($maintpl);
+}
+function logout() {
+	global $smarty;
+	global $user;
+
+	# ok, lets log them out
+	destroy_fsession();
+	$user=array();
+	user_message("You have been logged out.");
+	$maintpl=find_template("login.tpl");
 	return $smarty->fetch($maintpl);
 }
 

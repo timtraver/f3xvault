@@ -248,6 +248,21 @@ function club_edit() {
 	global $smarty;
 
 	$club_id=intval($_REQUEST['club_id']);
+	if(isset($_REQUEST['club_name'])){
+		$club_name=ucwords($_REQUEST['club_name']);
+	}
+	
+	if(isset($_REQUEST['from_action'])){
+		# Lets make an array of all of the return values
+		foreach($_REQUEST as $key=>$value){
+			if(preg_match("/from_(\S+)/",$key,$match)){
+				$from[]=array("key"=>$key,"value"=>$value);
+			}
+		}
+		# Now lets add that array to the template
+		$smarty->assign("from",$from);
+	}
+
 	$club=array();
 	if($club_id!=0){
 		# Get club info
@@ -260,6 +275,9 @@ function club_edit() {
 		");
 		$result=db_exec($stmt,array("club_id"=>$club_id));
 		$club=$result[0];
+	}else{
+		# Set the name
+		$club['club_name']=$club_name;
 	}
 	
 	# Now lets get the users that have additional access
@@ -318,6 +336,7 @@ function club_save() {
 
 		user_message("Added your New Club!");
 		$_REQUEST['club_id']=$GLOBALS['last_insert_id'];
+		$club_id=$GLOBALS['last_insert_id'];
 	}else{
 		# Save the database record for this club
 		$stmt=db_prep("
@@ -341,7 +360,16 @@ function club_save() {
 		));
 		user_message("Updated Base Club Info!");
 	}
-	return club_edit();
+	if(isset($_REQUEST['from_action'])){
+		# This came from somewhere else, so go back to that screen
+		# But lets add the new location id to the list
+		$from['club_id']=$club_id;
+		$from['club_name']=$club_name;
+		$from['from_action']='club';
+		return return_to_action($from);
+	}else{
+		return club_edit();
+	}
 }
 function club_user_save() {
 	global $smarty;

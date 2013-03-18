@@ -11,9 +11,20 @@
 				<li>Add and edit RC flying locations to the database</li>
 				<li>Add and edit RC planes to the database</li>
 				<li>Use the event scoring system</li>
+				<li>Edit club and series info</li>
 			</p>
 		</div>
-		<center><h3><a href="/?page_id=47">Log In</a> or <a href="/?page_id=47&action=register">Register Here</a></h3></center>
+		<center>
+			<input type="button" value=" Log Me In " class="button" style="display:inline;float:none;" onClick="document.login.submit();"> or 
+			<input type="button" value=" Register Me " class="button" style="display:inline;float:none;" onClick="document.register.submit();">
+		</center>
 		<br>
 	</div>
 </div>
+<form name="login" method="GET">
+<input type="hidden" name="action" value="main">
+<input type="hidden" name="function" value="login">
+</form>
+<form name="register" method="GET">
+<input type="hidden" name="action" value="register">
+</form>

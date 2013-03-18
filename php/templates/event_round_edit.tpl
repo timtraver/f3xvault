@@ -107,7 +107,7 @@
 					<th align="center">Group</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center">Time</th>
+					<th align="center">Time/Over</th>
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center">Landing</th>
@@ -140,6 +140,9 @@
 							{if $f.flight_type_seconds}
 								<input autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}">s
 							{/if}
+							{if $f.flight_type_over_penalty}
+								<input type="checkbox" name="pilot_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if}>
+							{/if}
 						</td>
 					{/if}
 					{if $f.flight_type_landing}
@@ -152,7 +155,7 @@
 						{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score}
 						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+						{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
 						{/if}
 					</td>
 					<td align="right" nowrap>

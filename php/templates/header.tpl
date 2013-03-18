@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
 <head>
-<title>RCVault</title>
+<title>RC Vault</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <link rel='stylesheet' id='admin-bar-css'  href='/wp-includes/css/admin-bar.min.css?ver=3.5.1' type='text/css' media='all' />
 <link rel='stylesheet' id='theme-my-login-css'  href='/wp-content/plugins/theme-my-login/theme-my-login.css?ver=6.2.2' type='text/css' media='all' /><link rel='stylesheet' id='graphene-stylesheet-css'  href='/wp-content/themes/graphene/style.css?ver=3.5.1' type='text/css' media='screen' />
@@ -79,60 +79,20 @@ $(document).ready(function() {
 	* html body { margin-top: 28px !important; }
 </style>
 <style type="text/css" id="custom-background-css">
-body.custom-background { background-image: url('/wp-content/uploads/2012/08/GatorF3B2012Vampire1.jpg'); background-repeat: repeat; background-position: top left; background-attachment: fixed; }
+body.custom-background { background-image: url('/f3x/images/vampire_launch.jpg'); background-repeat: repeat; background-position: top left; background-attachment: fixed; }
 </style>
 {/literal}
 </head>
 <body class="home blog logged-in admin-bar no-customize-support custom-background two_col_left two-columns">
 <div id="container" class="container_16">
-        <div id="header">
-        <img src="/wp-content/uploads/2012/08/GatorF3B2012Vampire.jpg" alt="" class="header-img" />        	       
-        		
-        			<h1 class="header_title push_1 grid_15">									RC Vault							</h1>			
-            <h2 class="header_desc push_1 grid_15">				RC Plane Databases and Timing of RC competitions			</h2>               
-		    </div>
-    <div id="nav">
-                <div id="header-menu-wrap" class="clearfix">
-			<ul id="header-menu" class="menu clearfix"><li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home"><a href="/"><strong>Home</strong></a></li>
-<li id="menu-item-19" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=17"><strong>RC Locations</strong></a>
-<ul class="sub-menu">
-	<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=location">Location Browse</a></li>
-</ul>
-</li>
-<li id="menu-item-33" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=2"><strong>RC Plane Database</strong></a>
-<ul class="sub-menu">
-	<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=plane">Database Browse</a></li>
-</ul>
-</li>
-<li id="menu-item-34" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=7"><strong>RC Events</strong></a>
-<ul class="sub-menu">
-	<li id="menu-item-58" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=event">Event Browse</a></li>
-</ul>
-</li>
-<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=79"><strong>Pilot Profiles</strong></a>
-<ul class="sub-menu">
-	<li id="menu-item-77" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=my">My Pilot Profile</a></li>
-	<li id="menu-item-78" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=pilot">Browse Pilot Profiles</a></li>
-</ul>
-</li>
-<li id="menu-item-84" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-ancestor"><a href="/?page_id=82"><strong>RC Clubs</strong></a>
-<ul class="sub-menu">
-	<li id="menu-item-85" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/f3x/?action=club">RC Clubs Browse</a></li>
-</ul>
-</li>
-<li id="menu-item-50" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?page_id=47&amp;action=logout&amp;_wpnonce=c3ef6d9b4e"><strong>Log Out</strong></a></li>
-</ul>            
-            <div class="clear"></div>
-            
-			            
-                    
-        </div>
-                
-        <div class="menu-bottom-shadow">&nbsp;</div>
-
-        
-    </div>
-    
+	<div id="header">
+		<img src="/f3x/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>        	       
+		<h1 class="header_title push_1 grid_15">RC Vault</h1>
+		<h2 class="header_desc push_1 grid_15">RC Plane Databases and Timing of RC competitions</h2>
+		{if $user.user_id!=0}
+		<span style="color:white;z-index:1;float: right;font-size: 18px;position: relative;padding-top:15px;padding-right:80px;">Welcome {$user.user_first_name}</span>
+		{/if}
+	</div>
+    {include file="menu.tpl"}
     <div id="content" class="clearfix hfeed">
-    
 		<div id="content-main" class="clearfix grid_11" style="width:1000px;">

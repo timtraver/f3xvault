@@ -76,7 +76,7 @@ function toggle(element,tog) {
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}</a>
 			</td>
 		</tr>
 		<tr>
@@ -89,6 +89,18 @@ function toggle(element,tog) {
 			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
 			</td>
 		</tr>
+		{if $event->info.series_name || $event->info.club_name}
+		<tr>
+			<th align="right">Part Of Series</th>
+			<td>
+			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name}</a>
+			</td>
+			<th align="right">Club</th>
+			<td>
+			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name}</a>
+			</td>
+		</tr>
+		{/if}
 		</table>
 		
 	</div>

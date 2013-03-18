@@ -34,18 +34,18 @@ function lookup_pilot() {
 	global $smarty;
 
 	$q = urldecode(strtolower($_GET["term"]));
-	
+	$q = '%'.$q.'%';
 	# Do search
 	$stmt=db_prep("
 		SELECT *
 		FROM pilot p
 		LEFT JOIN state s ON p.state_id=s.state_id
 		LEFT JOIN country c ON p.country_id=c.country_id
-		WHERE LOWER(p.pilot_first_name) LIKE '%$q%'
-			OR LOWER(p.pilot_last_name) LIKE '%$q%'
-			OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE '%$q%'
+		WHERE LOWER(p.pilot_first_name) LIKE :term1
+			OR LOWER(p.pilot_last_name) LIKE :term2
+			OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
 	");
-	$result=db_exec($stmt,array());
+	$result=db_exec($stmt,array("term1"=>$q,"term2"=>$q,"term3"=>$q));
 	
 	foreach($result as $r){
 		$pilots[]=array(
@@ -62,15 +62,16 @@ function lookup_plane() {
 	global $smarty;
 
 	$q = urldecode(strtolower($_GET["term"]));
+	$q = '%'.$q.'%';
 	
 	# Do search
 	$stmt=db_prep("
 		SELECT *
 		FROM plane p
 		LEFT JOIN plane_type pt ON p.plane_type_id=pt.plane_type_id
-		WHERE LOWER(p.plane_name) LIKE '%$q%'
+		WHERE LOWER(p.plane_name) LIKE :q
 	");
-	$result=db_exec($stmt,array());
+	$result=db_exec($stmt,array("q"=>$q));
 	
 	foreach($result as $r){
 		$planes[]=array(
@@ -87,6 +88,7 @@ function lookup_location() {
 	global $smarty;
 
 	$q = urldecode(strtolower($_GET["term"]));
+	$q = '%'.$q.'%';
 	
 	# Do search
 	$stmt=db_prep("
@@ -94,9 +96,9 @@ function lookup_location() {
 		FROM location l
 		LEFT JOIN state s ON l.state_id=s.state_id
 		LEFT JOIN country c ON l.country_id=c.country_id
-		WHERE LOWER(l.location_name) LIKE '%$q%'
+		WHERE LOWER(l.location_name) LIKE :q
 	");
-	$result=db_exec($stmt,array());
+	$result=db_exec($stmt,array("q"=>$q));
 	
 	foreach($result as $r){
 		$locations[]=array(
@@ -107,6 +109,60 @@ function lookup_location() {
 	}
 
 	print json_encode($locations);
+}
+function lookup_club() {
+	global $user;
+	global $smarty;
+
+	$q = urldecode(strtolower($_GET["term"]));
+	$q = '%'.$q.'%';
+	
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM club cl
+		LEFT JOIN state s ON cl.state_id=s.state_id
+		LEFT JOIN country c ON cl.country_id=c.country_id
+		WHERE LOWER(cl.club_name) LIKE :q
+	");
+	$result=db_exec($stmt,array("q"=>$q));
+	
+	foreach($result as $r){
+		$clubs[]=array(
+			"id"=>$r['club_id'],
+			"label"=>"{$r['club_name']} - {$r['club_city']},{$r['state_code']} - {$r['country_code']}",
+			"value"=>"{$r['club_name']} - {$r['club_city']},{$r['state_code']} - {$r['country_code']}"
+		);
+	}
+
+	print json_encode($clubs);
+}
+function lookup_series() {
+	global $user;
+	global $smarty;
+
+	$q = urldecode(strtolower($_GET["term"]));
+	$q = '%'.$q.'%';
+	
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM series se
+		LEFT JOIN state s ON se.state_id=s.state_id
+		LEFT JOIN country c ON se.country_id=c.country_id
+		WHERE LOWER(se.series_name) LIKE :q
+	");
+	$result=db_exec($stmt,array("q"=>$q));
+	
+	foreach($result as $r){
+		$series[]=array(
+			"id"=>$r['series_id'],
+			"label"=>"{$r['series_name']} - {$r['state_code']} - {$r['country_code']}",
+			"value"=>"{$r['series_name']} - {$r['state_code']} - {$r['country_code']}"
+		);
+	}
+
+	print json_encode($series);
 }
 ?>
 

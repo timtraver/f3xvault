@@ -1,11 +1,24 @@
 Todo list for rcvault project
 
-  Change footer text on live site to just be copyright Tim Traver
-  
-  Show correct menu for non wordpress pages based on logged in status
+GENERAL
+
+  Set menu highlights for particular pages
   
   Combine the css files into one
   
+  Secure all of the shown variables to prevent XSS
+  
+  Make admin area to easily change the locations and plane characteristics
+
+
+  Add pilot privacy stuff to prevent anyone looking at any of their info
+  
+  Create forget password stuff
+  
+  Complete registration emails and reg system
+  
+EVENT STUFF
+
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
   ditto with the location of the event
   
@@ -13,26 +26,50 @@ Todo list for rcvault project
   ability to create F3B distance orders before hand
    
   reflights for groups
-    
-/ printable reports for rounds, and overall standings
-
-  Make admin area to easily change the locations and plane characteristics
   
+/ printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
+
   On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
   also make it so that it tabs down to the next BLANK entry if you use the save immediately feature...
-  
+
   Flyoff capability
-  
-  Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
- 
+
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
- 
+
   Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
+
+  When event is completed, blast the link to the event to the event participants
+  
+  Add Pilot Number for contests that might have bibs
+  
+SERIES STUFF
+
+  League system to string together events
+  	Add series edit access
+X 	show series event list
+  	show series pilot standings
+  	edit series best of X events to use for scoring
+
+OTHER STUFF
+
+  Add Events and Series to club view screen
  
-  Make an event option be the number of points for each second of flight 
+  Mobile score entry by end user
+  
+  Check settings to allow non users to view almost everything, but not change
+
+COMPLETED
  
-  Assign club affiliation to event and show on event screen
- 
+X Change footer text on live site to just be copyright Tim Traver
+X Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
+X Encrypt passwords (SHA1 is fine)
+X Finish login and logout stuff to bounce to refresh the whole page
+X Make an event option be the number of points for each second of flight and change calc routines to use it
+X Assign club affiliation to event and show on event screen
+X Add club assignment to series
+X Add series assignment to events
+X Add club assignment to events
+X Put F3J scoring stuff in place for over time to subtract 30 seconds and negate landing points
 X In F3F rounds, make it pop up the flight time on mouseover... ;)
 X In F3F rounds, add a fast time line at the bottom
 X Figure out drops

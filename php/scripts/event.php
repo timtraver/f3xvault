@@ -89,12 +89,14 @@ function event_list() {
 	}elseif(isset($GLOBALS['fsession']['search_field'])){
 		$search_field_entry=$GLOBALS['fsession']['search_field'];
 	}
+	$search_prefix='e.';
 	switch($search_field_entry){
 		case 'event_name':
 			$search_field='event_name';
 			break;
-		case 'location_city':
-			$search_field='location_city';
+		case 'event_type_name':
+			$search_field='event_type_name';
+			$search_prefix='et.';
 			break;
 		default:
 			$search_field='event_name';
@@ -134,7 +136,7 @@ function event_list() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.$search_field $operator :search
+			WHERE $search_prefix$search_field $operator :search
 				$addcountry
 				$addstate
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
@@ -289,6 +291,18 @@ function event_edit() {
 		if(isset($_REQUEST['event_cd_name'])){
 			$e->info['event_cd_name']=$_REQUEST['event_cd_name'];
 		}
+		if(isset($_REQUEST['series_id'])){
+			$e->info['series_id']=$_REQUEST['series_id'];
+		}
+		if(isset($_REQUEST['series_name'])){
+			$e->info['series_name']=$_REQUEST['series_name'];
+		}
+		if(isset($_REQUEST['club_id'])){
+			$e->info['club_id']=$_REQUEST['club_id'];
+		}
+		if(isset($_REQUEST['club_name'])){
+			$e->info['club_name']=$_REQUEST['club_name'];
+		}
 		if(isset($_REQUEST['event_start_dateMonth'])){
 			$starttime=strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']);
 		}else{
@@ -301,6 +315,26 @@ function event_edit() {
 		}
 		$e->info['event_start_date']=$starttime;
 		$e->info['event_end_date']=$endtime;
+	}else{
+		# Lets only replace the id's of the things that could have been added new
+		if(isset($_REQUEST['location_name'])){
+			$e->info['location_name']=$_REQUEST['location_name'];
+		}
+		if(isset($_REQUEST['location_id'])){
+			$e->info['location_id']=$_REQUEST['location_id'];
+		}
+		if(isset($_REQUEST['series_id'])){
+			$e->info['series_id']=$_REQUEST['series_id'];
+		}
+		if(isset($_REQUEST['series_name'])){
+			$e->info['series_name']=$_REQUEST['series_name'];
+		}
+		if(isset($_REQUEST['club_id'])){
+			$e->info['club_id']=$_REQUEST['club_id'];
+		}
+		if(isset($_REQUEST['club_name'])){
+			$e->info['club_name']=$_REQUEST['club_name'];
+		}
 	}
 
 	# Get all event types
@@ -343,6 +377,8 @@ function event_save() {
 	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
 	$event_type_id=intval($_REQUEST['event_type_id']);
 	$event_cd=intval($_REQUEST['event_cd']);
+	$series_id=intval($_REQUEST['series_id']);
+	$club_id=intval($_REQUEST['club_id']);
 
 	if($event_id==0){
 		$stmt=db_prep("
@@ -354,6 +390,8 @@ function event_save() {
 				event_end_date=:event_end_date,
 				event_type_id=:event_type_id,
 				event_cd=:event_cd,
+				series_id=:series_id,
+				club_id=:club_id,
 				event_status=1
 		");
 		$result=db_exec($stmt,array(
@@ -363,7 +401,9 @@ function event_save() {
 			"event_start_date"=>$event_start_date,
 			"event_end_date"=>$event_end_date,
 			"event_type_id"=>$event_type_id,
-			"event_cd"=>$event_cd
+			"event_cd"=>$event_cd,
+			"series_id"=>$series_id,
+			"club_id"=>$club_id
 		));
 
 		user_message("Added your New Event!");
@@ -400,7 +440,9 @@ function event_save() {
 				event_start_date=:event_start_date,
 				event_end_date=:event_end_date,
 				event_type_id=:event_type_id,
-				event_cd=:event_cd
+				event_cd=:event_cd,
+				series_id=:series_id,
+				club_id=:club_id
 			WHERE event_id=:event_id
 		");
 		$result=db_exec($stmt,array(
@@ -410,6 +452,8 @@ function event_save() {
 			"event_end_date"=>$event_end_date,
 			"event_type_id"=>$event_type_id,
 			"event_cd"=>$event_cd,
+			"series_id"=>$series_id,
+			"club_id"=>$club_id,
 			"event_id"=>$event_id
 		));
 		user_message("Updated Base Event Info!");
@@ -1222,6 +1266,9 @@ function event_round_save() {
 			$event_pilot_round_flight_id=$match[2];
 			$event_pilot_id=$match[3];
 			$flight_type_id=$match[4];
+			if($value=='on'){
+				$value=1;
+			}
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
@@ -1246,6 +1293,7 @@ function event_round_save() {
 						SET event_pilot_round_flight_group=:event_pilot_round_flight_group,
 							event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
 							event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
+							event_pilot_round_flight_over=:event_pilot_round_flight_over,
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
@@ -1257,6 +1305,7 @@ function event_round_save() {
 						"event_pilot_round_flight_group"=>$v['group'],
 						"event_pilot_round_flight_minutes"=>$v['min'],
 						"event_pilot_round_flight_seconds"=>$v['sec'],
+						"event_pilot_round_flight_over"=>$v['over'],
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
 						"event_pilot_round_flight_penalty"=>$v['pen']
@@ -1290,6 +1339,7 @@ function event_round_save() {
 							event_pilot_round_flight_group=:event_pilot_round_flight_group,
 							event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
 							event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
+							event_pilot_round_flight_over=:event_pilot_round_flight_over,
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
@@ -1301,6 +1351,7 @@ function event_round_save() {
 						"event_pilot_round_flight_group"=>$v['group'],
 						"event_pilot_round_flight_minutes"=>$v['min'],
 						"event_pilot_round_flight_seconds"=>$v['sec'],
+						"event_pilot_round_flight_over"=>$v['over'],
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
 						"event_pilot_round_flight_penalty"=>$v['pen']

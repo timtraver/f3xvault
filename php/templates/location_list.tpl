@@ -1,13 +1,11 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Location Database</h1>
+		<h1 class="post-title entry-title">Browse RC Location Database</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_list">
-
-<h1 class="post-title entry-title">Browse Locations</h1>
 <table>
 <tr>
 	<th>Filter By Country</th>
@@ -19,8 +17,6 @@
 	{/foreach}
 	</select>
 	</td>
-</tr>
-<tr>
 	<th>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
@@ -35,7 +31,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td valign="center">
+	<td valign="center" colspan="3">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>

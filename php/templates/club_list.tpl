@@ -1,13 +1,12 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Clubs</h1>
+		<h1 class="post-title entry-title">Browse RC Clubs</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="club">
 <input type="hidden" name="function" value="club_list">
 
-<h1 class="post-title entry-title">Browse Clubs</h1>
 <table>
 <tr>
 	<th>Filter By Country</th>
@@ -19,8 +18,6 @@
 	{/foreach}
 	</select>
 	</td>
-</tr>
-<tr>
 	<th>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
@@ -35,7 +32,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td valign="center">
+	<td valign="center" colspan="3">
 		<select name="search_field">
 		<option value="club_name" {if $search_field=="club_name"}SELECTED{/if}>Club Name</option>
 		<option value="club_city" {if $search_field=="club_city"}SELECTED{/if}>Club City</option>

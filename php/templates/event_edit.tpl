@@ -69,6 +69,68 @@ $(function() {
 			}
 		}
 	});
+	$("#series_name").autocomplete({
+		source: "/f3x/lookup.php?function=lookup_series",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_series');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.series_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.series_name.value==''){
+				document.main.series_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_series');
+			loading.style.display = "none";
+   			var mes=document.getElementById('series_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new series.';
+			}
+		}
+	});
+	$("#club_name").autocomplete({
+		source: "/f3x/lookup.php?function=lookup_club",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_club');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.club_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.club_name.value==''){
+				document.main.club_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_club');
+			loading.style.display = "none";
+   			var mes=document.getElementById('club_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new club.';
+			}
+		}
+	});
 	$("#event_user_name").autocomplete({
 		source: "/f3x/lookup.php?function=lookup_pilot",
 		minLength: 2, 
@@ -113,6 +175,59 @@ function copy_location_values(){
 	document.create_new_location.from_event_type_id.value=document.main.event_type_id.value;
 	document.create_new_location.from_event_cd.value=document.main.event_cd.value;
 	document.create_new_location.from_event_cd_name.value=document.main.event_cd_name.value;
+	document.create_new_location.from_series_id.value=document.main.series_id.value;
+	document.create_new_location.from_series_name.value=document.main.series_name.value;
+	document.create_new_location.from_club_id.value=document.main.club_id.value;
+	document.create_new_location.from_club_name.value=document.main.club_name.value;
+}
+function copy_series_values(){
+	document.create_new_series.series_name.value=document.main.series_name.value;
+	document.create_new_series.from_location_name.value=document.main.location_name.value;
+	document.create_new_series.from_location_id.value=document.main.location_id.value;
+	document.create_new_series.from_event_name.value=document.main.event_name.value;
+	document.create_new_series.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
+	document.create_new_series.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
+	document.create_new_series.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
+	document.create_new_series.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
+	document.create_new_series.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
+	document.create_new_series.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
+	document.create_new_series.from_event_type_id.value=document.main.event_type_id.value;
+	document.create_new_series.from_event_cd.value=document.main.event_cd.value;
+	document.create_new_series.from_event_cd_name.value=document.main.event_cd_name.value;
+	document.create_new_series.from_club_id.value=document.main.club_id.value;
+	document.create_new_series.from_club_name.value=document.main.club_name.value;
+}
+function copy_club_values(){
+	document.create_new_club.club_name.value=document.main.club_name.value;
+	document.create_new_club.from_location_name.value=document.main.location_name.value;
+	document.create_new_club.from_location_id.value=document.main.location_id.value;
+	document.create_new_club.from_event_name.value=document.main.event_name.value;
+	document.create_new_club.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
+	document.create_new_club.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
+	document.create_new_club.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
+	document.create_new_club.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
+	document.create_new_club.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
+	document.create_new_club.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
+	document.create_new_club.from_event_type_id.value=document.main.event_type_id.value;
+	document.create_new_club.from_event_cd.value=document.main.event_cd.value;
+	document.create_new_club.from_event_cd_name.value=document.main.event_cd_name.value;
+	document.create_new_club.from_series_id.value=document.main.series_id.value;
+	document.create_new_club.from_series_name.value=document.main.series_name.value;
+}
+function check_event(){
+	if(document.main.location_id.value==0 || document.main.location_id.value==''){
+		alert('You must choose or add a valid location for this event before saving it.');
+		return false;
+	}
+	if((document.main.series_id.value==0 || document.main.series_id.value=='') && document.main.series_name.value!=''){
+		alert('The series that you typed in does not exist. Please add a new series using the New Series button, or leave this field blank.');
+		return false;
+	}
+	if((document.main.club_id.value==0 ||document.main.club_id.value=='') && document.main.club_name.value!=''){
+		alert('The club that you typed in does not exist. Please add a new club using the New Club button, or leave this field blank.');
+		return false;
+	}
+	return true;
 }
 </script>
 {/literal}
@@ -129,6 +244,8 @@ function copy_location_values(){
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="location_id" value="{$event->info.location_id}">
 <input type="hidden" name="event_cd" value="{$event->info.event_cd}">
+<input type="hidden" name="series_id" value="{$event->info.series_id}">
+<input type="hidden" name="club_id" value="{$event->info.club_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th>Location</th>
@@ -171,9 +288,27 @@ function copy_location_values(){
 	</td>
 </tr>
 <tr>
+	<th>Part of Series</th>
+	<td>
+		<input type="text" id="series_name" name="series_name" size="50" value="{$event->info.series_name}">
+		<img id="loading_series" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="series_message" style="font-style: italic;color: grey;">Start typing to search series</span>
+		<input type="button" value=" + New Series " class="block-button" onClick="copy_series_values(); create_new_series.submit();">
+	</td>
+</tr>
+<tr>
+	<th>Club Association</th>
+	<td>
+		<input type="text" id="club_name" name="club_name" size="50" value="{$event->info.club_name}">
+		<img id="loading_club" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="club_message" style="font-style: italic;color: grey;">Start typing to search clubs</span>
+		<input type="button" value=" + New Club " class="block-button" onClick="copy_club_values(); create_new_club.submit();">
+	</td>
+</tr>
+<tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save This Event " class="block-button" onClick="if(document.main.location_id.value==0){ldelim}alert('You must choose or add a valid location for this event before saving it.');return false;{rdelim}">
+		<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
+		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
 	</th>
 </tr>
 </table>
@@ -267,6 +402,56 @@ function copy_location_values(){
 <input type="hidden" name="from_event_type_id" value="">
 <input type="hidden" name="from_event_cd" value="">
 <input type="hidden" name="from_event_cd_name" value="">
+<input type="hidden" name="from_series_id" value="">
+<input type="hidden" name="from_series_name" value="">
+<input type="hidden" name="from_club_id" value="">
+<input type="hidden" name="from_club_name" value="">
+</form>
+<form name="create_new_series" method="POST">
+<input type="hidden" name="action" value="series">
+<input type="hidden" name="function" value="series_edit">
+<input type="hidden" name="series_id" value="0">
+<input type="hidden" name="series_name" value="">
+<input type="hidden" name="from_action" value="event">
+<input type="hidden" name="from_function" value="event_edit">
+<input type="hidden" name="from_event_id" value="{$event->info.event_id}">
+<input type="hidden" name="from_event_name" value="">
+<input type="hidden" name="from_event_start_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_start_dateDay" value="">
+<input type="hidden" name="from_event_start_dateYear" value="">
+<input type="hidden" name="from_event_end_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_end_dateDay" value="">
+<input type="hidden" name="from_event_end_dateYear" value="">
+<input type="hidden" name="from_event_type_id" value="">
+<input type="hidden" name="from_event_cd" value="">
+<input type="hidden" name="from_event_cd_name" value="">
+<input type="hidden" name="from_location_id" value="">
+<input type="hidden" name="from_location_name" value="">
+<input type="hidden" name="from_club_id" value="">
+<input type="hidden" name="from_club_name" value="">
+</form>
+<form name="create_new_club" method="POST">
+<input type="hidden" name="action" value="club">
+<input type="hidden" name="function" value="club_edit">
+<input type="hidden" name="club_id" value="0">
+<input type="hidden" name="club_name" value="">
+<input type="hidden" name="from_action" value="event">
+<input type="hidden" name="from_function" value="event_edit">
+<input type="hidden" name="from_event_id" value="{$event->info.event_id}">
+<input type="hidden" name="from_event_name" value="">
+<input type="hidden" name="from_event_start_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_start_dateDay" value="">
+<input type="hidden" name="from_event_start_dateYear" value="">
+<input type="hidden" name="from_event_end_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_end_dateDay" value="">
+<input type="hidden" name="from_event_end_dateYear" value="">
+<input type="hidden" name="from_event_type_id" value="">
+<input type="hidden" name="from_event_cd" value="">
+<input type="hidden" name="from_event_cd_name" value="">
+<input type="hidden" name="from_location_id" value="">
+<input type="hidden" name="from_location_name" value="">
+<input type="hidden" name="from_series_id" value="">
+<input type="hidden" name="from_series_name" value="">
 </form>
 
 </div>
