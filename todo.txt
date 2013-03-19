@@ -8,14 +8,13 @@ GENERAL
   
   Secure all of the shown variables to prevent XSS
   
-  Make admin area to easily change the locations and plane characteristics
-
-
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
   Create forget password stuff
   
   Complete registration emails and reg system
+  
+  Add comments and suggestions form for users to comment
   
 EVENT STUFF
 
@@ -60,6 +59,7 @@ OTHER STUFF
 
 COMPLETED
  
+X Make admin area to easily change the locations and plane characteristics
 X Change footer text on live site to just be copyright Tim Traver
 X Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...
 X Encrypt passwords (SHA1 is fine)

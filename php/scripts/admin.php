@@ -11,7 +11,7 @@
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
         $function=$_REQUEST['function'];
 }else{
-        $function="view_admin";
+        $function="admin_view";
 }
 
 if($user['user_admin']!=1){
@@ -25,7 +25,7 @@ if($user['user_admin']!=1){
     }
 }
 
-function view_admin() {
+function admin_view() {
 	global $smarty;
 	global $user;
 
@@ -209,5 +209,428 @@ function admin_email_del_image() {
 	user_message("Deleted attached image.");
 	return admin_email_edit();
 }
+
+function admin_location() {
+	global $smarty;
+	global $user;
+
+	# Lets get the list of location attributes
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att l
+		LEFT JOIN location_att_cat lc ON l.location_att_cat_id=lc.location_att_cat_id
+		WHERE l.location_att_status=1
+		ORDER BY lc.location_att_cat_order,l.location_att_order
+	");
+	$attributes=db_exec($stmt,array());
+
+	# Get the categories
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att_cat
+		WHERE 1
+		ORDER BY location_att_cat_order
+	");
+	$categories=db_exec($stmt,array());
+	$smarty->assign("categories",$categories);
+
+	$smarty->assign("attributes",$attributes);
+
+	$maintpl=find_template("admin_location.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_location_att_edit() {
+	global $smarty;
+	global $user;
+
+	$location_att_id=$_REQUEST['location_att_id'];
+	
+	# Lets get record
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att
+		WHERE location_att_id=:location_att_id
+	");
+	$result=db_exec($stmt,array("location_att_id"=>$location_att_id));
+	$attribute=$result[0];
+	
+	# Get the categories
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att_cat
+		WHERE 1
+		ORDER BY location_att_cat_order
+	");
+	$categories=db_exec($stmt,array());
+
+	$smarty->assign("attribute",$attribute);
+	$smarty->assign("categories",$categories);
+
+	$maintpl=find_template("admin_location_att_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_location_att_save() {
+	global $smarty;
+	global $user;
+
+	$location_att_id=$_REQUEST['location_att_id'];
+	$location_att_name=$_REQUEST['location_att_name'];
+	$location_att_description=$_REQUEST['location_att_description'];
+	$location_att_type=$_REQUEST['location_att_type'];
+	$location_att_size=$_REQUEST['location_att_size'];
+	$location_att_order=$_REQUEST['location_att_order'];
+	$location_att_cat_id=$_REQUEST['location_att_cat_id'];
+	
+	if($location_att_id==0){
+		# This is a new record, so lets create it
+		$stmt=db_prep("
+			INSERT INTO location_att
+			SET location_att_name=:location_att_name,
+				location_att_description=:location_att_description,
+				location_att_type=:location_att_type,
+				location_att_size=:location_att_size,
+				location_att_order=:location_att_order,
+				location_att_cat_id=:location_att_cat_id,
+				location_att_status=1				
+		");
+		$result=db_exec($stmt,array(
+			"location_att_name"=>$location_att_name,
+			"location_att_description"=>$location_att_description,
+			"location_att_type"=>$location_att_type,
+			"location_att_size"=>$location_att_size,
+			"location_att_order"=>$location_att_order,
+			"location_att_cat_id"=>$location_att_cat_id
+		));
+	}else{
+		# Lets save the existing one
+		$stmt=db_prep("
+			UPDATE location_att
+			SET location_att_name=:location_att_name,
+				location_att_description=:location_att_description,
+				location_att_type=:location_att_type,
+				location_att_size=:location_att_size,
+				location_att_order=:location_att_order,
+				location_att_cat_id=:location_att_cat_id,
+				location_att_status=1
+			WHERE location_att_id=:location_att_id				
+		");
+		$result=db_exec($stmt,array(
+			"location_att_name"=>$location_att_name,
+			"location_att_description"=>$location_att_description,
+			"location_att_type"=>$location_att_type,
+			"location_att_size"=>$location_att_size,
+			"location_att_order"=>$location_att_order,
+			"location_att_cat_id"=>$location_att_cat_id,
+			"location_att_id"=>$location_att_id
+		));
+	}
+	user_message("Saved location attribute.");
+	return admin_location();
+}
+function admin_location_att_del() {
+	global $smarty;
+	global $user;
+
+	$location_att_id=$_REQUEST['location_att_id'];
+	
+	# Lets save the record
+	$stmt=db_prep("
+		UPDATE location_att
+		SET location_att_status=0
+		WHERE location_att_id=:location_att_id				
+	");
+	$result=db_exec($stmt,array(
+		"location_att_id"=>$location_att_id
+	));
+
+	user_message("Removed location attribute.");
+	return admin_location();
+}
+function admin_location_cat_edit() {
+	global $smarty;
+	global $user;
+
+	$location_att_cat_id=$_REQUEST['location_att_cat_id'];
+	
+	# Lets get record
+	$stmt=db_prep("
+		SELECT *
+		FROM location_att_cat
+		WHERE location_att_cat_id=:location_att_cat_id
+	");
+	$result=db_exec($stmt,array("location_att_cat_id"=>$location_att_cat_id));
+	$category=$result[0];
+	
+	$smarty->assign("category",$category);
+
+	$maintpl=find_template("admin_location_cat_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_location_cat_save() {
+	global $smarty;
+	global $user;
+
+	$location_att_cat_id=$_REQUEST['location_att_cat_id'];
+	$location_att_cat_name=$_REQUEST['location_att_cat_name'];
+	$location_att_cat_order=$_REQUEST['location_att_cat_order'];
+	
+	if($location_att_cat_id==0){
+		# This is a new record, so lets create it
+		$stmt=db_prep("
+			INSERT INTO location_att_cat
+			SET location_att_cat_name=:location_att_cat_name,
+				location_att_cat_order=:location_att_cat_order
+		");
+		$result=db_exec($stmt,array(
+			"location_att_cat_name"=>$location_att_cat_name,
+			"location_att_cat_order"=>$location_att_cat_order
+		));
+	}else{
+		# Lets save the existing one
+		$stmt=db_prep("
+			UPDATE location_att_cat
+			SET location_att_cat_name=:location_att_cat_name,
+				location_att_cat_order=:location_att_cat_order
+			WHERE location_att_cat_id=:location_att_cat_id				
+		");
+		$result=db_exec($stmt,array(
+			"location_att_cat_name"=>$location_att_cat_name,
+			"location_att_cat_order"=>$location_att_cat_order,
+			"location_att_cat_id"=>$location_att_cat_id
+		));
+	}
+	user_message("Saved location category.");
+	return admin_location();
+}
+function admin_location_cat_del() {
+	global $smarty;
+	global $user;
+
+	$location_att_cat_id=$_REQUEST['location_att_cat_id'];
+	
+	# Lets remove the record
+	$stmt=db_prep("
+		DELETE FROM location_att_cat
+		WHERE location_att_cat_id=:location_att_cat_id				
+	");
+	$result=db_exec($stmt,array(
+		"location_att_cat_id"=>$location_att_cat_id
+	));
+
+	user_message("Removed location category.");
+	return admin_location();
+}
+
+function admin_plane() {
+	global $smarty;
+	global $user;
+
+	# Lets get the list of plane attributes
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att p
+		LEFT JOIN plane_att_cat pc ON p.plane_att_cat_id=pc.plane_att_cat_id
+		WHERE p.plane_att_status=1
+		ORDER BY pc.plane_att_cat_order,p.plane_att_order
+	");
+	$attributes=db_exec($stmt,array());
+
+	# Get the categories
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att_cat
+		WHERE 1
+		ORDER BY plane_att_cat_order
+	");
+	$categories=db_exec($stmt,array());
+	$smarty->assign("categories",$categories);
+
+	$smarty->assign("attributes",$attributes);
+
+	$maintpl=find_template("admin_plane.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_att_edit() {
+	global $smarty;
+	global $user;
+
+	$plane_att_id=$_REQUEST['plane_att_id'];
+	
+	# Lets get record
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att
+		WHERE plane_att_id=:plane_att_id
+	");
+	$result=db_exec($stmt,array("plane_att_id"=>$plane_att_id));
+	$attribute=$result[0];
+	
+	# Get the categories
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att_cat
+		WHERE 1
+		ORDER BY plane_att_cat_order
+	");
+	$categories=db_exec($stmt,array());
+
+	$smarty->assign("attribute",$attribute);
+	$smarty->assign("categories",$categories);
+
+	$maintpl=find_template("admin_plane_att_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_att_save() {
+	global $smarty;
+	global $user;
+
+	$plane_att_id=$_REQUEST['plane_att_id'];
+	$plane_att_name=$_REQUEST['plane_att_name'];
+	$plane_att_description=$_REQUEST['plane_att_description'];
+	$plane_att_type=$_REQUEST['plane_att_type'];
+	$plane_att_size=$_REQUEST['plane_att_size'];
+	$plane_att_order=$_REQUEST['plane_att_order'];
+	$plane_att_cat_id=$_REQUEST['plane_att_cat_id'];
+	
+	if($plane_att_id==0){
+		# This is a new record, so lets create it
+		$stmt=db_prep("
+			INSERT INTO plane_att
+			SET plane_att_name=:plane_att_name,
+				plane_att_description=:plane_att_description,
+				plane_att_type=:plane_att_type,
+				plane_att_size=:plane_att_size,
+				plane_att_order=:plane_att_order,
+				plane_att_cat_id=:plane_att_cat_id,
+				plane_att_status=1				
+		");
+		$result=db_exec($stmt,array(
+			"plane_att_name"=>$plane_att_name,
+			"plane_att_description"=>$plane_att_description,
+			"plane_att_type"=>$plane_att_type,
+			"plane_att_size"=>$plane_att_size,
+			"plane_att_order"=>$plane_att_order,
+			"plane_att_cat_id"=>$plane_att_cat_id
+		));
+	}else{
+		# Lets save the existing one
+		$stmt=db_prep("
+			UPDATE plane_att
+			SET plane_att_name=:plane_att_name,
+				plane_att_description=:plane_att_description,
+				plane_att_type=:plane_att_type,
+				plane_att_size=:plane_att_size,
+				plane_att_order=:plane_att_order,
+				plane_att_cat_id=:plane_att_cat_id,
+				plane_att_status=1
+			WHERE plane_att_id=:plane_att_id				
+		");
+		$result=db_exec($stmt,array(
+			"plane_att_name"=>$plane_att_name,
+			"plane_att_description"=>$plane_att_description,
+			"plane_att_type"=>$plane_att_type,
+			"plane_att_size"=>$plane_att_size,
+			"plane_att_order"=>$plane_att_order,
+			"plane_att_cat_id"=>$plane_att_cat_id,
+			"plane_att_id"=>$plane_att_id
+		));
+	}
+	user_message("Saved plane attribute.");
+	return admin_plane();
+}
+function admin_plane_att_del() {
+	global $smarty;
+	global $user;
+
+	$plane_att_id=$_REQUEST['plane_att_id'];
+	
+	# Lets save the record
+	$stmt=db_prep("
+		UPDATE plane_att
+		SET plane_att_status=0
+		WHERE plane_att_id=:plane_att_id				
+	");
+	$result=db_exec($stmt,array(
+		"plane_att_id"=>$plane_att_id
+	));
+
+	user_message("Removed plane attribute.");
+	return admin_plane();
+}
+function admin_plane_cat_edit() {
+	global $smarty;
+	global $user;
+
+	$plane_att_cat_id=$_REQUEST['plane_att_cat_id'];
+	
+	# Lets get record
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att_cat
+		WHERE plane_att_cat_id=:plane_att_cat_id
+	");
+	$result=db_exec($stmt,array("plane_att_cat_id"=>$plane_att_cat_id));
+	$category=$result[0];
+	
+	$smarty->assign("category",$category);
+
+	$maintpl=find_template("admin_plane_cat_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_cat_save() {
+	global $smarty;
+	global $user;
+
+	$plane_att_cat_id=$_REQUEST['plane_att_cat_id'];
+	$plane_att_cat_name=$_REQUEST['plane_att_cat_name'];
+	$plane_att_cat_order=$_REQUEST['plane_att_cat_order'];
+	
+	if($plane_att_cat_id==0){
+		# This is a new record, so lets create it
+		$stmt=db_prep("
+			INSERT INTO plane_att_cat
+			SET plane_att_cat_name=:plane_att_cat_name,
+				plane_att_cat_order=:plane_att_cat_order
+		");
+		$result=db_exec($stmt,array(
+			"plane_att_cat_name"=>$plane_att_cat_name,
+			"plane_att_cat_order"=>$plane_att_cat_order
+		));
+	}else{
+		# Lets save the existing one
+		$stmt=db_prep("
+			UPDATE plane_att_cat
+			SET plane_att_cat_name=:plane_att_cat_name,
+				plane_att_cat_order=:plane_att_cat_order
+			WHERE plane_att_cat_id=:plane_att_cat_id				
+		");
+		$result=db_exec($stmt,array(
+			"plane_att_cat_name"=>$plane_att_cat_name,
+			"plane_att_cat_order"=>$plane_att_cat_order,
+			"plane_att_cat_id"=>$plane_att_cat_id
+		));
+	}
+	user_message("Saved plane category.");
+	return admin_plane();
+}
+function admin_plane_cat_del() {
+	global $smarty;
+	global $user;
+
+	$plane_att_cat_id=$_REQUEST['plane_att_cat_id'];
+	
+	# Lets remove the record
+	$stmt=db_prep("
+		DELETE FROM plane_att_cat
+		WHERE plane_att_cat_id=:plane_att_cat_id				
+	");
+	$result=db_exec($stmt,array(
+		"plane_att_cat_id"=>$plane_att_cat_id
+	));
+
+	user_message("Removed plane category.");
+	return admin_plane();
+}
+
 
 ?>
