@@ -599,7 +599,7 @@ function send_email($email_name,$email_to,$data){
 	$mail->setSubject($email['email_subject']);
 	$mail->setHtml($email['email_html']);
 	
-	$mail->SetBcc("tt@mivamerchant.com");
+	$mail->SetBcc("timtraver@gmail.com");
 	
 	# Get any images associated with this email
 	$stmt=db_prep("

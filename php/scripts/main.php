@@ -123,7 +123,7 @@ function main_feedback_save() {
 	$data=$user;
 	$data['feedback_string']=$feedback_string;
 	
-	send_email('feedback',$data);
+	send_email('feedback',array('timtraver@gmail.com'),$data);
 	user_message("Thank You for your comments and suggestions!");
 	return main_home();
 }
