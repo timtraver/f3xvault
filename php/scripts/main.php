@@ -21,6 +21,7 @@ if(check_user_function($function)){
 function view_home() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='home';
 
 	$maintpl=find_template("home.tpl");
 	return $smarty->fetch($maintpl);
@@ -28,6 +29,7 @@ function view_home() {
 function view_locations() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='locations';
 
 	$maintpl=find_template("locations.tpl");
 	return $smarty->fetch($maintpl);
@@ -35,6 +37,7 @@ function view_locations() {
 function view_planes() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='planes';
 
 	$maintpl=find_template("planes.tpl");
 	return $smarty->fetch($maintpl);
@@ -42,6 +45,7 @@ function view_planes() {
 function view_events() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='events';
 
 	$maintpl=find_template("events.tpl");
 	return $smarty->fetch($maintpl);
@@ -49,6 +53,7 @@ function view_events() {
 function view_pilots() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='pilots';
 
 	$maintpl=find_template("pilots.tpl");
 	return $smarty->fetch($maintpl);
@@ -56,6 +61,7 @@ function view_pilots() {
 function view_clubs() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='clubs';
 
 	$maintpl=find_template("clubs.tpl");
 	return $smarty->fetch($maintpl);
@@ -63,6 +69,7 @@ function view_clubs() {
 function login() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='login';
 
 	$maintpl=find_template("login.tpl");
 	return $smarty->fetch($maintpl);
@@ -70,6 +77,7 @@ function login() {
 function user_login() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='login';
 
 	# ok, lets log the user in
 	$check=check_login();
@@ -89,6 +97,7 @@ function user_login() {
 function logout() {
 	global $smarty;
 	global $user;
+	$GLOBALS['current_menu']='login';
 
 	# ok, lets log them out
 	destroy_fsession();

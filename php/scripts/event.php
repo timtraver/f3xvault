@@ -7,6 +7,7 @@
 #       This is the script to show the main screen
 #
 ############################################################################
+$GLOBALS['current_menu']='events';
 
 include_library("event.class");
 

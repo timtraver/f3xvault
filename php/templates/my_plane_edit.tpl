@@ -1,14 +1,14 @@
-<script src="/f3x/includes/jquery.min.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery.min.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#plane_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_plane",
+		source: "/lookup.php?function=lookup_plane",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -64,7 +64,7 @@ function copy_plane_values(){
 	<th width="20%">Plane</th>
 	<td>
 		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name}">
-		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
 	</td>
 </tr>

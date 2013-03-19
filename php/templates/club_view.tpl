@@ -1,13 +1,13 @@
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#pilot_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -41,7 +41,7 @@ $(function() {
 		}
 	});
 	$("#location_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_location",
+		source: "/lookup.php?function=lookup_location",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -109,7 +109,7 @@ $(function() {
 		<h1 class="post-title entry-title">Club Sanctioned Locations</h1>
 		<input type="button" value=" Add Location " onclick="add_location.submit();">
 		<input type="text" id="location_name" name="location_name" size="40">
-		    <img id="loading_location" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="location_message" style="font-style: italic;color: grey;"> Start typing to search locations</span>
 		<input type="button" value=" + New Location " class="block-button" onClick="create_new_location.submit();">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -129,7 +129,7 @@ $(function() {
 			<td>{$cl.country_name}</td>
 			<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
 			<td nowrap>
-				<a href="/f3x/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"><img src="/f3x/images/del.gif"></a>
+				<a href="/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"><img src="/images/del.gif"></a>
 			</td>
 		</tr>
 		{/foreach}
@@ -139,7 +139,7 @@ $(function() {
 		<h1 class="post-title entry-title">Club Members {if $pilots}({$total_pilots}){/if}</h1>
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.add_pilot.pilot_name.value=name.value;add_pilot.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
-		    <img id="loading_pilot" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <img id="loading_pilot" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="pilot_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -161,7 +161,7 @@ $(function() {
 			<td>{$p.state_name}</td>
 			<td>{$p.country_name}</td>
 			<td nowrap>
-				<a href="/f3x/?action=club&function=club_pilot_remove&club_id={$club.club_id}&club_pilot_id={$p.club_pilot_id}" title="Remove Club Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the club?');"><img src="/f3x/images/del.gif"></a>
+				<a href="/?action=club&function=club_pilot_remove&club_id={$club.club_id}&club_pilot_id={$p.club_pilot_id}" title="Remove Club Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the club?');"><img src="/images/del.gif"></a>
 			</td>
 		</tr>
 		{assign var=num value=$num+1}

@@ -348,7 +348,7 @@ function user_message($message,$error=0){
                 }
         }
         if($found==1){
-                $GLOBALS['message_graphic']='<img src="/f3x/images/errortriangle.gif">';
+                $GLOBALS['message_graphic']='<img src="/images/errortriangle.gif">';
         }
 }
 function start_fsession(){

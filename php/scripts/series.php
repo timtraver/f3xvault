@@ -7,6 +7,7 @@
 #	This is the script to handle the series of events for pilot totals
 #
 ############################################################################
+$GLOBALS['current_menu']='events';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];

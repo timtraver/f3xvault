@@ -1,9 +1,3 @@
-<script src="/f3x/includes/jquery.min.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                

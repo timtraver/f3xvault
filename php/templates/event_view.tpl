@@ -1,14 +1,14 @@
-<script src="/f3x/includes/jquery.min.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery.min.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#pilot_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -109,7 +109,7 @@ function toggle(element,tog) {
 		<span id="pilots">
 		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
-		    <img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -133,8 +133,8 @@ function toggle(element,tog) {
 			<td>{$p.event_pilot_freq}</td>
 			<td>{$p.event_pilot_team}</td>
 			<td nowrap>
-				<a href="/f3x/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/f3x/images/icon_edit_small.gif"></a>
-				<a href="/f3x/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the event?');"><img width="14px" src="/f3x/images/del.gif"></a>
+				<a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
+				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the event?');"><img width="14px" src="/images/del.gif"></a>
 			</td>
 		</tr>
 		{assign var=num value=$num+1}
@@ -177,7 +177,7 @@ function toggle(element,tog) {
 						View Details of Round {$r.event_round_number}
 						{/if}
 					</span>
-					<a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 					</div>
 				</th>
 				{/if}
@@ -290,7 +290,7 @@ function toggle(element,tog) {
 			{foreach $event->rounds as $r}
 				{if $r@iteration >10}
 				<th width="5%" align="center" nowrap>
-					<a href="/f3x/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 				</th>
 				{/if}
 			{/foreach}

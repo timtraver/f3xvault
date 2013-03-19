@@ -7,7 +7,7 @@
 #       This is the script to show the main screen
 #
 ############################################################################
-
+$GLOBALS['current_menu']='admin';
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
         $function=$_REQUEST['function'];
 }else{

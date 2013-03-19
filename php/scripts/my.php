@@ -7,6 +7,7 @@
 #       This is the script to show individual user and pilot profiles
 #
 ############################################################################
+$GLOBALS['current_menu']='pilots';
 
 # This whole section requires the user to be logged in
 if($GLOBALS['user_id']==0){

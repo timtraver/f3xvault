@@ -1,13 +1,13 @@
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#pilot_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,

@@ -7,6 +7,7 @@
 #	This is the script to handle the pilots
 #
 ############################################################################
+$GLOBALS['current_menu']='clubs';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];

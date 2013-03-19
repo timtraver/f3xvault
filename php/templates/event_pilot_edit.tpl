@@ -1,9 +1,9 @@
-<script src="/f3x/includes/jquery.min.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery.min.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 $(function() {ldelim}
 	var teams = [
@@ -22,7 +22,7 @@ $(function() {ldelim}
         scrollHeight: 300
 	});
 	$("#event_plane").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_plane",
+		source: "/lookup.php?function=lookup_plane",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -198,7 +198,7 @@ function copy_plane_values(){ldelim}
 	<th align="right" nowrap>Event Plane</th>
 	<td colspan="2">
 		<input type="text" id="event_plane" name="event_plane" size="40" value="{$pilot.plane_name}">
-		<img id="loading" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="plane_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
 		<input type="button" value=" + New Plane " class="button" onClick="copy_plane_values(); add_plane.submit();">
 	</td>

@@ -1,13 +1,13 @@
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#series_user_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -118,14 +118,14 @@ $(function() {
 <tr>
 	<td>{$u.pilot_first_name} {$u.pilot_last_name} - {$u.pilot_city}, {$u.state_code} {$u.country_code}</td>
 	<td width="2%">
-		<a href="?action=series&function=series_user_delete&series_id={$series.series_id}&series_user_id={$u.series_user_id}"><img src="/f3x/images/del.gif"></a></td>
+		<a href="?action=series&function=series_user_delete&series_id={$series.series_id}&series_user_id={$u.series_user_id}"><img src="/images/del.gif"></a></td>
 </tr>
 {/foreach}
 <tr>
 	<th colspan="2">
 		Add New User 
 		<input type="text" id="series_user_name" name="series_user_name" size="40">
-		<img id="loading_user" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_user" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="user_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 		<input type="submit" value=" Add This User " class="block-button">
 	</th>

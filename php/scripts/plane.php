@@ -7,6 +7,7 @@
 #	This is the script to handle the plane records
 #
 ############################################################################
+$GLOBALS['current_menu']='planes';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];

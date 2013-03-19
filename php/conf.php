@@ -28,10 +28,10 @@ if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/loca
 	$base = '/shared/links/r/c/v/a/rcvault.com/site';
 }
 
-$base_webroot = "$base/htdocs/f3x";
+$base_webroot = "$base/htdocs";
 $base_plane_media = "/images/pilot_plane_images";
 $base_location_media = "/images/location_images";
-$base_url = "http://{$_SERVER['HTTP_HOST']}/f3x";
+$base_url = "http://{$_SERVER['HTTP_HOST']}/";
 
 # Determine which paths to set for library includes
 $include_paths=array(

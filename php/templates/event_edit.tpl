@@ -1,14 +1,14 @@
-<script src="/f3x/includes/jquery.min.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/f3x/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/jquery.min.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
 $(function() {
 	$("#location_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_location",
+		source: "/lookup.php?function=lookup_location",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -39,7 +39,7 @@ $(function() {
 		}
 	});
 	$("#event_cd_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -70,7 +70,7 @@ $(function() {
 		}
 	});
 	$("#series_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_series",
+		source: "/lookup.php?function=lookup_series",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -101,7 +101,7 @@ $(function() {
 		}
 	});
 	$("#club_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_club",
+		source: "/lookup.php?function=lookup_club",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -132,7 +132,7 @@ $(function() {
 		}
 	});
 	$("#event_user_name").autocomplete({
-		source: "/f3x/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_pilot",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -251,7 +251,7 @@ function check_event(){
 	<th>Location</th>
 	<td>
 		<input type="text" id="location_name" name="location_name" size="40" value="{$event->info.location_name}">
-		<img id="loading_location" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
 		<input type="button" value=" + New Location " class="block-button" onClick="copy_location_values(); create_new_location.submit();">
 	</td>
@@ -283,7 +283,7 @@ function check_event(){
 	<th>Contest Director</th>
 	<td>
 		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.event_cd_name!=''}{$event->info.event_cd_name}{else}{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name} {$event->info.pilot_last_name}{/if}{/if}">
-		<img id="loading_cd" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_cd" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
 </tr>
@@ -291,7 +291,7 @@ function check_event(){
 	<th>Part of Series</th>
 	<td>
 		<input type="text" id="series_name" name="series_name" size="50" value="{$event->info.series_name}">
-		<img id="loading_series" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_series" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="series_message" style="font-style: italic;color: grey;">Start typing to search series</span>
 		<input type="button" value=" + New Series " class="block-button" onClick="copy_series_values(); create_new_series.submit();">
 	</td>
@@ -300,7 +300,7 @@ function check_event(){
 	<th>Club Association</th>
 	<td>
 		<input type="text" id="club_name" name="club_name" size="50" value="{$event->info.club_name}">
-		<img id="loading_club" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_club" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="club_message" style="font-style: italic;color: grey;">Start typing to search clubs</span>
 		<input type="button" value=" + New Club " class="block-button" onClick="copy_club_values(); create_new_club.submit();">
 	</td>
@@ -359,14 +359,14 @@ function check_event(){
 <tr>
 	<td>{$u.pilot_first_name} {$u.pilot_last_name} - {$u.pilot_city}, {$u.state_code} {$u.country_code}</td>
 	<td width="2%">
-		<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}"><img src="/f3x/images/del.gif"></a></td>
+		<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}"><img src="/images/del.gif"></a></td>
 </tr>
 {/foreach}
 <tr>
 	<th colspan="2">
 		Add New User 
 		<input type="text" id="event_user_name" name="event_user_name" size="40">
-		<img id="loading_pilot" src="/f3x/images/loading.gif" style="vertical-align: middle;display: none;">
+		<img id="loading_pilot" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="user_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 		<input type="submit" value=" Add This User " class="block-button">
 	</th>

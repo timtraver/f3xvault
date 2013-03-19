@@ -78,7 +78,7 @@ function check_login () {
 				return array($error,"$errorstring");
         }
 
-        $path="/f3x";
+        $path="/";
         $host=$_SERVER['HTTP_HOST'];
         # New session stuff
         create_fsession($path,$host);

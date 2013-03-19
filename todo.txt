@@ -2,10 +2,6 @@ Todo list for rcvault project
 
 GENERAL
 
-  Set menu highlights for particular pages
-  
-  Combine the css files into one
-  
   Secure all of the shown variables to prevent XSS
   
   Add pilot privacy stuff to prevent anyone looking at any of their info
@@ -13,7 +9,8 @@ GENERAL
   Create forget password stuff
   
   Complete registration emails and reg system
-  
+  Fix email administration saving of quotes in body
+
   Add comments and suggestions form for users to comment
   
 EVENT STUFF
@@ -59,6 +56,8 @@ OTHER STUFF
 
 COMPLETED
  
+X Combine the css files into one
+X Set menu highlights for particular pages
 X Make admin area to easily change the locations and plane characteristics
 X Change footer text on live site to just be copyright Tim Traver
 X Possibly write a new user management system? instead of using wordpress???? Might be better off in the long run...

@@ -7,6 +7,7 @@
 #	This is the script to handle the location records
 #
 ############################################################################
+$GLOBALS['current_menu']='locations';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];

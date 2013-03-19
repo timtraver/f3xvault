@@ -8,6 +8,7 @@
 #       This is the script to show the registration form
 #
 ############################################################################
+$GLOBALS['current_menu']='register';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
         $function=$_REQUEST['function'];
@@ -175,7 +176,7 @@ function save_registration(){
 		"pilot_id"=>$pilot_id
 	));
 	$user=get_user_info($user_email);
-	$path="/f3x";
+	$path="/";
 	$host=$_SERVER['HTTP_HOST'];
 	# New session stuff
 	create_fsession($path,$host);
