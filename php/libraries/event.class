@@ -646,7 +646,7 @@ class Event {
 				$stmt=db_prep("
 					UPDATE event_pilot_round_flight
 					SET event_pilot_round_flight_dropped=0
-					WHERE event_pilot_round_id in (SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
+					WHERE event_pilot_round_id IN (SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
 					AND flight_type_id=:flight_type_id
 				");
 				$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_id"=>$event_pilot_id));
