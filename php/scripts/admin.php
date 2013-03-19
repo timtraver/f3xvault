@@ -62,7 +62,7 @@ function admin_email_edit() {
 		WHERE email_id=:email_id
 	");
 	$result=db_exec($stmt,array("email_id"=>$email_id));
-	
+	$result[0]['email_html']=htmlentities($result[0]['email_html']);
 	$smarty->assign("email",$result[0]);
 	
 	# Get images
