@@ -125,7 +125,7 @@ function main_feedback_save() {
 	
 	send_email('feedback',array('timtraver@gmail.com'),$data);
 	user_message("Thank You for your comments and suggestions!");
-	return main_home();
+	return view_home();
 }
 
 ?>
