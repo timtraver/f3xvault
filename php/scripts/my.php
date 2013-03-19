@@ -241,6 +241,7 @@ function my_user_save(){
 		));
 		user_message("User Info Saved.");
 	}
+	log_action($pilot_id);
 	return my_user_show();	
 }
 function my_plane_edit() {
@@ -323,9 +324,9 @@ function my_plane_save() {
 		$result=db_exec($stmt,array("plane_id"=>$plane_id,"pilot_plane_color"=>$pilot_plane_color,"pilot_plane_id"=>$pilot_plane_id));
 		user_message("Updated Your Plane Info");
 	}
+	log_action($pilot_id);
 	return my_plane_edit();
 }
-
 function my_plane_del() {
 	global $user;
 
@@ -338,6 +339,7 @@ function my_plane_del() {
 		WHERE pilot_plane_id=:pilot_plane_id
 	");
 	$result=db_exec($stmt,array("pilot_plane_id"=>$pilot_plane_id));
+	log_action($pilot_plane_id);
 	user_message("Removed plane from your pilot info.");
 	return my_user_show();
 }
@@ -376,7 +378,6 @@ function my_plane_media_edit() {
 	$maintpl=find_template("my_plane_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
-
 function my_plane_media_add() {
 	global $smarty;
 	global $user;
@@ -422,6 +423,7 @@ function my_plane_media_add() {
 	");
 	$result=db_exec($stmt,array("pilot_plane_id"=>$pilot_plane_id,"pilot_plane_media_type"=>$pilot_plane_media_type,"pilot_plane_media_url"=>$pilot_plane_media_url,"pilot_plane_media_caption"=>$pilot_plane_media_caption));
 
+	log_action($pilot_plane_id);
 	user_message("Added your $pilot_plane_media_type media!");
 	return my_plane_edit();
 }
@@ -438,6 +440,7 @@ function my_plane_media_del() {
 		WHERE pilot_plane_media_id=:pilot_plane_media_id
 	");
 	$result=db_exec($stmt,array("pilot_plane_media_id"=>$pilot_plane_media_id));
+	log_action($pilot_plane_id);
 	user_message("Removed plane media from this plane.");
 	return my_plane_edit();
 }
@@ -616,6 +619,7 @@ function my_location_add() {
 			}
 		}
 	}
+	log_action($pilot_id);
 	user_message("Added New locations!");
 	return my_user_show();
 }
@@ -631,13 +635,9 @@ function my_location_del() {
 		WHERE pilot_location_id=:pilot_location_id
 	");
 	$result=db_exec($stmt,array("pilot_location_id"=>$pilot_location_id));
+	log_action($pilot_location_id);
 	user_message("Removed location from your pilot info.");
 	return my_user_show();
 }
-
-
-
-
-
 
 ?>

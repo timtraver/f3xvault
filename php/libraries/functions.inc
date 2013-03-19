@@ -70,7 +70,11 @@ function start_smarty () {
         $smarty->compile_dir = $compile_dir;
         $smarty->compile_check = true;
         $smarty->auto_literal = false;
-        $smarty->debugging = true;
+        if($GLOBALS['debug']==1){
+	        $smarty->debugging = true;
+        }else{
+	        $smarty->debugging = false;
+        }
 }
 function find_template ($input) {
         # Function to find the reseller template or return the default
@@ -618,6 +622,24 @@ function send_email($email_name,$email_to,$data){
 		}
 	}
 	$mail->send($email_to,'smtp');
+	return;
+}
+function log_action($id){
+	# This is a function to log the activity of the pilots as they cruise around
+	$stmt=db_prep("
+		INSERT INTO site_log
+		SET site_log_date=now(),
+			user_id=:user_id,
+			site_log_action=:action,
+			site_log_function=:function,
+			site_log_action_id=:action_id
+	");
+	$result=db_exec($stmt,array(
+		"user_id"=>$GLOBALS['user']['user_id'],
+		"action"=>$_REQUEST['action'],
+		"function"=>$_REQUEST['function'],
+		"action_id"=>$id
+	));
 	return;
 }
 ?>

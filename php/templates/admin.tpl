@@ -12,6 +12,8 @@
 					<br>
 					<a href="?action=admin&function=admin_user">User Admin</a><br>
 					<br>
+					<a href="?action=admin&function=admin_activity">Site Activity</a><br>
+					<br>
 				</div>
 	</div>
 </div>

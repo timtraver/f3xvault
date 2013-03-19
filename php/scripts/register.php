@@ -189,6 +189,7 @@ function save_registration(){
 	$_REQUEST['action']='main';
 	$_REQUEST['function']='';
 	
+	log_action($user['user_id']);
 	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process!");
 	include("{$GLOBALS['scripts_dir']}/$action.php");
 	return $actionoutput;	

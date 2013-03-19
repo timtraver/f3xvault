@@ -24,12 +24,20 @@ $need_login=array(
 	"event_edit",
 	"event_save",
 	"event_pilot_add",
+	"event_pilot_edit",
+	"event_pilot_save",
+	"event_pilot_remove",
+	"event_user_save",
+	"event_user_delete",
+	"event_param_save",
 	"add_pilot_quick",
 	"save_pilot_quick_add",
 	"event_pilot_remove",
 	"event_pilot_edit",
 	"event_pilot_save",
-	"event_round_edit"
+	"event_round_edit",
+	"event_round_save",
+	"event_round_delete"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
@@ -409,6 +417,7 @@ function event_save() {
 
 		user_message("Added your New Event!");
 		$_REQUEST['event_id']=$GLOBALS['last_insert_id'];
+		$event_id=$GLOBALS['last_insert_id'];
 		# Now lets add the default event settings
 		# Lets get each event type option and insert default values
 		$stmt=db_prep("
@@ -462,6 +471,7 @@ function event_save() {
 		$e=new Event($event_id);
 		$e->event_save_totals();
 	}
+	log_action($event_id);
 	return event_edit();
 }
 function event_pilot_edit() {
@@ -840,7 +850,8 @@ function event_pilot_save() {
 		");
 		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fia"=>$pilot_fia,"pilot_id"=>$pilot['pilot_id']));
 	}
-
+	
+	log_action($event_pilot_id);
 	user_message("Updated event pilot info.");
 	return event_view();
 }
@@ -868,6 +879,7 @@ function event_pilot_remove() {
 	$e=new Event($event_id);
 	$e->event_save_totals();
 
+	log_action($event_pilot_id);
 	user_message("Pilot removed from event.");
 	return event_view();
 }
@@ -985,6 +997,7 @@ function event_user_save() {
 			"pilot_id"=>$pilot_id
 		));
 	}
+	log_action($pilot_id);
 	user_message("New user given access to edit this event.");
 	return event_edit();
 }
@@ -1020,6 +1033,7 @@ function event_user_delete() {
 	");
 	$result=db_exec($stmt,array("event_user_id"=>$event_user_id));
 	
+	log_action($event_user_id);
 	user_message("Removed user access to edit this event.");
 	return event_edit();
 }
@@ -1087,6 +1101,7 @@ function event_param_save() {
 	$e=new Event($event_id);
 	$e->event_save_totals();
 	
+	log_action($event_id);
 	user_message("Event Parameters Saved.");
 	return event_edit();
 }
@@ -1370,6 +1385,7 @@ function event_round_save() {
 	$event->get_rounds();
 	$event->event_save_totals();
 	
+	log_action($event_round_id);
 	user_message("Saved event round info.");
 	return event_round_edit();
 }
@@ -1404,6 +1420,7 @@ function event_round_delete() {
 	$event=new Event($event_id);
 	$event->event_save_totals();
 	
+	log_action($event_round_id);
 	user_message("Deleted Event Round.");
 	return event_view();
 }

@@ -361,6 +361,7 @@ function club_save() {
 		));
 		user_message("Updated Base Club Info!");
 	}
+	log_action($club_id);
 	if(isset($_REQUEST['from_action'])){
 		# This came from somewhere else, so go back to that screen
 		# But lets add the new location id to the list
@@ -434,6 +435,7 @@ function club_user_save() {
 			"pilot_id"=>$pilot_id
 		));
 	}
+	log_action($club_id);
 	user_message("New user given access to edit this club.");
 	return club_edit();
 }
@@ -469,6 +471,7 @@ function club_user_delete() {
 	");
 	$result=db_exec($stmt,array("club_user_id"=>$club_user_id));
 	
+	log_action($club_id);
 	user_message("Removed user access to edit this club.");
 	return club_edit();
 }
@@ -486,45 +489,45 @@ function club_location_add() {
 	if($location_id==0){
 		user_message("Must select a location from the searched list or create a new one.",1);
 		return club_view();
-	}else{
-		# Check to see if the location already exists in this club
-		$stmt=db_prep("
-			SELECT *
-			FROM club_location cl
-			WHERE cl.club_id=:club_id
-				AND cl.location_id=:location_id
-		");
-		$result=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
-		if(isset($result[0])){
-			# The record already exists, so lets see if it has its status to 1 or not
-			if($result[0]['club_location_status']==1){
-				# This record already exists!
-				user_message("The Location you have chosen to add is already in this club.",1);
-				return club_view();
-			}else{
-				# Lets turn this record back on
-				$stmt=db_prep("
-					UPDATE club_location
-					SET club_location_status=1
-					WHERE club_location_id=:club_location_id
-				");
-				$result2=db_exec($stmt,array("club_location_id"=>$result[0]['club_location_id']));
-				$_REQUEST['club_location_id']=$result[0]['club_location_id'];
-			}
-		}else{
-			# This record doesn't exist, so lets add it
-			$stmt=db_prep("
-				INSERT INTO club_location
-				SET club_id=:club_id,
-					location_id=:location_id,
-					club_location_status=1
-			");
-			$result2=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
-			$_REQUEST['club_location_id']=$GLOBALS['last_insert_id'];
-		}
-		user_message("Location Added to club.");
-		return club_view();
 	}
+	# Check to see if the location already exists in this club
+	$stmt=db_prep("
+		SELECT *
+		FROM club_location cl
+		WHERE cl.club_id=:club_id
+			AND cl.location_id=:location_id
+	");
+	$result=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
+	if(isset($result[0])){
+		# The record already exists, so lets see if it has its status to 1 or not
+		if($result[0]['club_location_status']==1){
+			# This record already exists!
+			user_message("The Location you have chosen to add is already in this club.",1);
+			return club_view();
+		}else{
+			# Lets turn this record back on
+			$stmt=db_prep("
+				UPDATE club_location
+				SET club_location_status=1
+				WHERE club_location_id=:club_location_id
+			");
+			$result2=db_exec($stmt,array("club_location_id"=>$result[0]['club_location_id']));
+			$_REQUEST['club_location_id']=$result[0]['club_location_id'];
+		}
+	}else{
+		# This record doesn't exist, so lets add it
+		$stmt=db_prep("
+			INSERT INTO club_location
+			SET club_id=:club_id,
+				location_id=:location_id,
+				club_location_status=1
+		");
+		$result2=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
+		$_REQUEST['club_location_id']=$GLOBALS['last_insert_id'];
+	}
+	log_action($club_id);
+	user_message("Location Added to club.");
+	return club_view();
 }
 function club_location_remove() {
 	global $smarty;
@@ -538,6 +541,7 @@ function club_location_remove() {
 		WHERE club_location_id=:club_location_id
 	");
 	$result=db_exec($stmt,array("club_location_id"=>$club_location_id));
+	log_action($club_id);
 	user_message("Location removed from club.");
 	return club_view();
 }
@@ -590,46 +594,46 @@ function club_add_pilot() {
 	# If pilot_id is zero, then send them to the quick add pilot screen
 	if($pilot_id==0){
 		return club_pilot_quick_add();
-	}else{
-		# Check to see if the pilot already exists in this club
-		$stmt=db_prep("
-			SELECT *
-			FROM club_pilot cp
-			WHERE cp.club_id=:club_id
-				AND cp.pilot_id=:pilot_id
-		");
-		$result=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
-		if(isset($result[0])){
-			# The record already exists, so lets see if it has its status to 1 or not
-			if($result[0]['club_pilot_status']==1){
-				# This record already exists!
-				user_message("The Pilot you have chosen to add is already in this club.",1);
-				return club_view();
-			}else{
-				# Lets turn this record back on
-				$stmt=db_prep("
-					UPDATE club_pilot
-					SET club_pilot_status=1
-					WHERE club_pilot_id=:club_pilot_id
-				");
-				$result2=db_exec($stmt,array("club_pilot_id"=>$result[0]['club_pilot_id']));
-				$_REQUEST['club_pilot_id']=$result[0]['club_pilot_id'];
-				
-			}
-		}else{
-			# This record doesn't exist, so lets add it
-			$stmt=db_prep("
-				INSERT INTO club_pilot
-				SET club_id=:club_id,
-					pilot_id=:pilot_id,
-					club_pilot_status=1
-			");
-			$result2=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
-			$_REQUEST['club_pilot_id']=$GLOBALS['last_insert_id'];
-		}
-		user_message("Pilot Added to club.");
-		return club_view();
 	}
+	# Check to see if the pilot already exists in this club
+	$stmt=db_prep("
+		SELECT *
+		FROM club_pilot cp
+		WHERE cp.club_id=:club_id
+			AND cp.pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
+	if(isset($result[0])){
+		# The record already exists, so lets see if it has its status to 1 or not
+		if($result[0]['club_pilot_status']==1){
+			# This record already exists!
+			user_message("The Pilot you have chosen to add is already in this club.",1);
+			return club_view();
+		}else{
+			# Lets turn this record back on
+			$stmt=db_prep("
+				UPDATE club_pilot
+				SET club_pilot_status=1
+				WHERE club_pilot_id=:club_pilot_id
+			");
+			$result2=db_exec($stmt,array("club_pilot_id"=>$result[0]['club_pilot_id']));
+			$_REQUEST['club_pilot_id']=$result[0]['club_pilot_id'];
+			
+		}
+	}else{
+		# This record doesn't exist, so lets add it
+		$stmt=db_prep("
+			INSERT INTO club_pilot
+			SET club_id=:club_id,
+				pilot_id=:pilot_id,
+				club_pilot_status=1
+		");
+		$result2=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
+		$_REQUEST['club_pilot_id']=$GLOBALS['last_insert_id'];
+	}
+	log_action($club_id);
+	user_message("Pilot Added to club.");
+	return club_view();
 }
 function club_pilot_quick_add() {
 	global $smarty;
@@ -706,6 +710,7 @@ function club_save_pilot_quick_add() {
 			club_pilot_status=1
 	");
 	$result2=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
+	log_action($club_id);
 	user_message("New pilot created and added to club.");
 	return club_view();
 }
@@ -721,6 +726,7 @@ function club_pilot_remove() {
 		WHERE club_pilot_id=:club_pilot_id
 	");
 	$result=db_exec($stmt,array("club_pilot_id"=>$club_pilot_id));
+	log_action($club_id);
 	user_message("Pilot removed from club.");
 	return club_view();
 }

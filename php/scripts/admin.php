@@ -632,5 +632,25 @@ function admin_plane_cat_del() {
 	return admin_plane();
 }
 
+function admin_activity() {
+	global $smarty;
+	global $user;
+
+	# Lets get the site activity from logs
+	$stmt=db_prep("
+		SELECT *
+		FROM site_log s
+		LEFT JOIN user u ON s.user_id=u.user_id
+		ORDER BY site_log_date DESC
+	");
+	$entries=db_exec($stmt,array());
+
+	$entries=show_pages($entries,25);
+
+	$smarty->assign("entries",$entries);
+
+	$maintpl=find_template("admin_activity.tpl");
+	return $smarty->fetch($maintpl);
+}
 
 ?>

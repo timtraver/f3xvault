@@ -93,7 +93,7 @@
 	<td>{$location.location_city|escape}</td>
 	<td>{$location.state_name|escape}</td>
 	<td>{$location.country_name|escape}</td>
-	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
+	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">

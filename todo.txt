@@ -13,6 +13,9 @@ GENERAL
 
   Add comments and suggestions form for users to comment
   
+  
+  Check bug in event round drop save query
+  
 EVENT STUFF
 
   when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
@@ -50,12 +53,19 @@ OTHER STUFF
 
   Add Events and Series to club view screen
  
-  Mobile score entry by end user
   
   Check settings to allow non users to view almost everything, but not change
 
+MOBILE STUFF
+
+  Create a mobile version of the site to be able to view locations, planes, and events
+  
+  Mobile score entry by end user
+
 COMPLETED
  
+X Make a turn on and off debug by existance of a debug file
+X Add a log of the actions of the pilots and put the viewing in the admin to see what pilots are doing
 X Combine the css files into one
 X Set menu highlights for particular pages
 X Make admin area to easily change the locations and plane characteristics

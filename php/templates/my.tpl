@@ -162,7 +162,7 @@
 		<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name}</a></td>
 		<td>{$pl.location_city}</td>
 		<td>{$pl.state_name} {$pl.country_code}</td>
-		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
+		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 		<td> <a href="?action=my&function=my_location_del&pilot_location_id={$pl.pilot_location_id}" title="Remove Location" onClick="confirm('Are you sure you wish to remove this location?')"><img src="images/del.gif"></a></td>
 	</tr>
 	{/foreach}

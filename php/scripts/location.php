@@ -506,6 +506,7 @@ function location_save() {
 			}
 		}
 	}	
+	log_action($location_id);
 	user_message("Location Information Saved");
 	if(isset($_REQUEST['from_action'])){
 		# This came from somewhere else, so go back to that screen
@@ -597,6 +598,7 @@ function location_media_add() {
 	");
 	$result=db_exec($stmt,array("location_id"=>$location_id,"location_media_type"=>$location_media_type,"location_media_url"=>$location_media_url,"location_media_caption"=>$location_media_caption,"wp_user_id"=>$GLOBALS['user']['user_id']));
 
+	log_action($location_id);
 	user_message("Added your $location_media_type media!");
 	return location_edit();
 }
@@ -624,6 +626,7 @@ function location_media_del() {
 		WHERE location_media_id=:location_media_id
 	");
 	$result=db_exec($stmt,array("location_media_id"=>$location_media_id));
+	log_action($location_id);
 	user_message("Removed location media.");
 	return location_edit();
 }

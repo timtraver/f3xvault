@@ -35,6 +35,7 @@ $base_url = "http://{$_SERVER['HTTP_HOST']}/";
 
 # Determine which paths to set for library includes
 $include_paths=array(
+	"base"=>"$base",
 	"libraries"=>"$base/php/libraries",
 	"templates"=>"$base/php/templates",
 	"templates_c"=>"$base/php/templates_c",

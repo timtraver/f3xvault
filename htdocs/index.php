@@ -14,6 +14,7 @@ global $fsession;
 global $current_menu;
 global $messages;
 global $message_graphic;
+global $debug;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
@@ -52,6 +53,13 @@ if(isset($_REQUEST['action'])) {
 }else{
         $action='main';
 }
+
+# Lets check if there is a debug file in place, or the user sends a debug parameter
+$debug=0;
+if(isset($_REQUEST['debug']) || file_exists("{$GLOBALS['include_paths']['base']}/debug")){
+	$debug=1;
+}
+
 # export main template
 start_smarty();
 $smarty->assign("action",$action);

@@ -127,7 +127,7 @@ $(function() {
 			<td>{$cl.location_city}</td>
 			<td>{$cl.state_name}</td>
 			<td>{$cl.country_name}</td>
-			<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/icons/world.png"></a>{/if}</td>
+			<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 			<td nowrap>
 				<a href="/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"><img src="/images/del.gif"></a>
 			</td>

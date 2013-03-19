@@ -86,6 +86,7 @@ function user_login() {
 		# The user is successfully logged in, so lets redirect to refresh the page
 		$user=get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
+		log_action($user['user_id']);
 		return view_home();
 	}
 	# Unsuccessful login

@@ -342,6 +342,7 @@ function series_save() {
 		));
 		user_message("Updated Base Series Info!");
 	}
+	log_action($series_id);
 	if(isset($_REQUEST['from_action'])){
 		# This came from somewhere else, so go back to that screen
 		# But lets add the new location id to the list
@@ -353,6 +354,9 @@ function series_save() {
 		return series_edit();
 	}
 }
+
+
+
 function club_user_save() {
 	global $smarty;
 	global $user;

@@ -591,7 +591,8 @@ function plane_save() {
 				$result2=db_exec($stmt,array("plane_id"=>$plane['plane_id'],"plane_att_id"=>$id,"value"=>$value));
 			}
 		}
-	}	
+	}
+	log_action($plane_id);
 	user_message("Plane Information Saved");
 	# Lets see if they came from somewhere else to add this plane
 	if(isset($_REQUEST['from_action'])){
@@ -631,7 +632,6 @@ function plane_media_edit() {
 	$maintpl=find_template("plane_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
-
 function plane_media_add() {
 	global $smarty;
 	global $user;
@@ -685,6 +685,7 @@ function plane_media_add() {
 	");
 	$result=db_exec($stmt,array("plane_id"=>$plane_id,"plane_media_type"=>$plane_media_type,"plane_media_url"=>$plane_media_url,"plane_media_caption"=>$plane_media_caption,"wp_user_id"=>$GLOBALS['user']['user_id']));
 
+	log_action($plane_id);
 	user_message("Added your $plane_media_type media!");
 	return plane_edit();
 }
@@ -712,6 +713,7 @@ function plane_media_del() {
 		WHERE plane_media_id=:plane_media_id
 	");
 	$result=db_exec($stmt,array("plane_media_id"=>$plane_media_id));
+	log_action($plane_id);
 	user_message("Removed plane media.");
 	return plane_edit();
 }
@@ -768,6 +770,4 @@ function plane_comment_save() {
 	user_message("Added your plane comment!");
 	return plane_view();
 }
-
-
 ?>
