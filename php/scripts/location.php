@@ -326,18 +326,13 @@ function location_view() {
 	$comments=array();
 	$stmt=db_prep("
 		SELECT *
-		FROM location_comment
-		WHERE location_id=:location_id
-		ORDER BY location_comment_date
+		FROM location_comment l
+		LEFT JOIN user u ON l.user_id=u.user_id
+		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		WHERE l.location_id=:location_id
+		ORDER BY l.location_comment_date DESC
 	");
 	$comments=db_exec($stmt,array("location_id"=>$location_id));
-	# Step through the comments and get the avatar of the poster
-	foreach($comments as $key=>$value){
-		$tempuser=get_userdata($value['user_id']);
-		$comments[$key]['user_first_name']=$tempuser->first_name;
-		$comments[$key]['user_last_name']=$tempuser->last_name;
-		$comments[$key]['avatar']=get_avatar($value['user_id'],40);
-	}
 
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);

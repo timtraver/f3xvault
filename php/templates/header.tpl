@@ -71,7 +71,7 @@
 		<h1 class="header_title push_1">RC Vault</h1>
 		<h2 class="header_desc push_1">RC Databases and Scoring of RC Gliding Competitions</h2>
 		{if $user.user_id!=0}
-		<span style="color:white;z-index:1;float: right;font-size: 18px;position: relative;padding-top:15px;padding-right:80px;">Welcome {$user.user_first_name}</span>
+		<input type="button" value="Welcome {$user.user_first_name}" class="button">
 		{/if}
 	</div>
     {include file="menu.tpl"}

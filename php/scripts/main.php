@@ -107,5 +107,25 @@ function logout() {
 	$maintpl=find_template("login.tpl");
 	return $smarty->fetch($maintpl);
 }
+function main_feedback() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("feedback.tpl");
+	return $smarty->fetch($maintpl);
+}
+function main_feedback_save() {
+	global $smarty;
+	global $user;
+	
+	$feedback_string=$_REQUEST['feedback_string'];
+	
+	$data=$user;
+	$data['feedback_string']=$feedback_string;
+	
+	send_email('feedback',$data);
+	user_message("Thank You for your comments and suggestions!");
+	return main_home();
+}
 
 ?>

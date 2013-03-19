@@ -384,18 +384,13 @@ function plane_view() {
 	$comments=array();
 	$stmt=db_prep("
 		SELECT *
-		FROM plane_comment
-		WHERE plane_id=:plane_id
-		ORDER BY plane_comment_date
+		FROM plane_comment pc
+		LEFT JOIN user u ON pc.user_id=u.user_id
+		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		WHERE pc.plane_id=:plane_id
+		ORDER BY pc.plane_comment_date DESC
 	");
 	$comments=db_exec($stmt,array("plane_id"=>$plane_id));
-	# Step through the comments and get the avatar of the poster
-	foreach($comments as $key=>$value){
-		$tempuser=get_userdata($value['user_id']);
-		$comments[$key]['user_first_name']=$tempuser->first_name;
-		$comments[$key]['user_last_name']=$tempuser->last_name;
-		$comments[$key]['avatar']=get_avatar($value['user_id'],40);
-	}
 	
 	$smarty->assign("plane",$plane);
 	$smarty->assign("media",$media);

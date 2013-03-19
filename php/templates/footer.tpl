@@ -5,6 +5,13 @@
     	    <div id="copyright">
     	     	Copyright &copy; Tim Traver 2013
    		    </div>
+   		    
+   		    <input type="button" value="Give Some Site Feedback" class="button" onClick="feedback.submit();">
+
+   		    <form name="feedback" method="POST">
+   		    <input type="hidden" name="action" value="main">
+   		    <input type="hidden" name="function" value="main_feedback">
+   		    </form>
  	   </div>
 	</div><!-- #container -->
 </div>

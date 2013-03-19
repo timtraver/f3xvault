@@ -13,7 +13,6 @@ GENERAL
 
   Add comments and suggestions form for users to comment
   
-  
   Check bug in event round drop save query
   
 EVENT STUFF
