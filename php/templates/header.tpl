@@ -71,7 +71,7 @@
 		<h1 class="header_title push_1">RC Vault</h1>
 		<h2 class="header_desc push_1">RC Databases and Scoring of RC Gliding Competitions</h2>
 		{if $user.user_id!=0}
-		<input type="button" value="Welcome {$user.user_first_name}" class="button">
+		<a href="?action=message"><input type="button" value="Welcome {$user.user_first_name}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
 		{/if}
 	</div>
     {include file="menu.tpl"}

@@ -44,6 +44,8 @@ if($user && $user['user_status']==0){
 
 # Main control
 
+$unread=check_unread_messages();
+
 # Set default current menu item
 $current_menu='home';
 
@@ -68,12 +70,15 @@ $smarty->assign("_SERVER",$_SERVER);
 $smarty->assign("include_paths",$GLOBALS['include_paths']);
 $smarty->assign("template_dir",$GLOBALS['template_dir']);
 $smarty->assign("compile_dir",$GLOBALS['compile_dir']);
+$smarty->assign("unread_messages",$unread);
+$smarty->assign("user",$user);
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
         include("{$GLOBALS['scripts_dir']}/$action.php");
 }else{
         include("{$GLOBALS['scripts_dir']}/notyet.php");
 }
+# Add the user var again just in case it was changed by loging or logout status
 $smarty->assign("user",$user);
 $smarty->assign("current_menu",$current_menu);
 $smarty->assign("fsession",$fsession);

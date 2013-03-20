@@ -642,4 +642,16 @@ function log_action($id){
 	));
 	return;
 }
+function check_unread_messages(){
+	# This is a function to return a quick number of unread messages for this user
+	$stmt=db_prep("
+		SELECT count(user_message_id) as count
+		FROM user_message
+		WHERE user_id=:user_id
+		AND user_message_status=1
+		AND user_message_read_status=0
+	");
+	$result=db_exec($stmt,array("user_id"=>$GLOBALS['user']['user_id']));
+	return $result['0']['count'];
+}
 ?>

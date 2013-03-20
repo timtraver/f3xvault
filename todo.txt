@@ -11,9 +11,10 @@ GENERAL
   Complete registration emails and reg system
   Fix email administration saving of quotes in body
 
-  Add comments and suggestions form for users to comment
-  
   Check bug in event round drop save query
+  
+  Message system so that I can respond to comments and pilots can send each other messages
+  
   
 EVENT STUFF
 
@@ -63,6 +64,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Add comments and suggestions form for users to comment
 X Make a turn on and off debug by existance of a debug file
 X Add a log of the actions of the pilots and put the viewing in the admin to see what pilots are doing
 X Combine the css files into one
