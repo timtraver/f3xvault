@@ -226,7 +226,7 @@ function validate_registration(){
 	$hash=$_REQUEST['hash'];
 	
 	$user_info=get_user_info($user_id);
-	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);)
+	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
 	if($hash==$compare){
 		# They have successfully activated!
 		user_message("Congratulations! You account is now activated and you have been automatically logged in. Enjoy!");
