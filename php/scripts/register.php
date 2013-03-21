@@ -175,8 +175,20 @@ function save_registration(){
 		"user_pass"=>sha1($user_pass),
 		"pilot_id"=>$pilot_id
 	));
+	$user_id=$GLOBALS['last_insert_id'];
 	
-	$user=get_user_info($GLOBALS['last_insert_id']);
+	# Now lets set the user id in the pilot record too
+	$stmt=db_prep("
+		UPDATE pilot
+		SET user_id=:user_id,
+		WHERE pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"user_id"=>$user_id,
+		"pilot_id"=>$pilot_id
+	));
+	
+	$user=get_user_info($user_id);
 	
 	# Send them back to the home page
 	$action='main';
