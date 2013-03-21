@@ -122,6 +122,8 @@ function message_save() {
 	$user_message_subject=$_REQUEST['user_message_subject'];
 	$user_message_text=$_REQUEST['user_message_text'];
 	
+	print_r($_REQUEST);
+	
 	if(!isset($_REQUEST['to_pilot_id']) || $_REQUEST['to_pilot_id']==0){
 		user_message("You must select a correct recipient for your message.");
 		return message_edit();
@@ -140,7 +142,8 @@ function message_save() {
 		user_message("You must select a correct recipient for your message.");
 		return message_edit();
 	}
-
+	print_r($to);
+	
 	# Lets save it as a message in the system
 	$stmt=db_prep("
 		INSERT INTO user_message
