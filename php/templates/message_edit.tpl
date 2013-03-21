@@ -19,6 +19,11 @@ $(function() {
    			var loading=document.getElementById('loading');
 			loading.style.display = "inline";
 		},
+   		select: function( event, ui ) {
+			document.main.to_pilot_id.value = ui.item.id;
+			var name=document.getElementById('pilot_name');
+			document.main.pilot_name.value=name.value;
+		},
    		change: function( event, ui ) {
    			var id=document.getElementById('pilot_name');
    			if(id.value==''){

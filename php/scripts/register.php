@@ -106,9 +106,8 @@ function save_registration(){
 		$stmt=db_prep("
 			SELECT *
 			FROM pilot p
-			WHERE p.pilot_email=LOWER(:user_email)
-			OR p.pilot_first_name=LOWER(:user_first_name)
-			OR p.pilot_last_name=LOWER(:user_last_name)
+			WHERE p.user_id=0
+			AND (p.pilot_email=LOWER(:user_email) OR p.pilot_first_name=LOWER(:user_first_name) OR p.pilot_last_name=LOWER(:user_last_name))
 		");
 		$result=db_exec($stmt,array(
 			"user_email"=>strtolower($user['user_email']),
@@ -227,6 +226,13 @@ function validate_registration(){
 	$hash=$_REQUEST['hash'];
 	
 	$user_info=get_user_info($user_id);
+	if($user_info['user_activated']==1){
+		user_message("Your account is already activated. Please log in using your user name and password.");
+		$_REQUEST['action']='main';
+		$_REQUEST['function']='login';
+		include("{$GLOBALS['scripts_dir']}/main.php");
+		return $actionoutput;	
+	}
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
 	if($hash==$compare){
 		# They have successfully activated!
@@ -239,7 +245,7 @@ function validate_registration(){
 		$result=db_exec($stmt,array(
 			"user_id"=>$user_id
 		));
-		user_message("Congratulations! You account is now activated and you have been automatically logged in. Enjoy!");
+		user_message("Congratulations! Your account is now activated and you have been automatically logged in. Enjoy!");
 		
 		destroy_fsession();
         $path="/";
