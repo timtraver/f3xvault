@@ -132,7 +132,7 @@ function message_save() {
 	$stmt=db_exec("
 		SELECT *
 		FROM pilot p
-		LEFT JOIN user u ON p.pilot_id=u.pilot_id
+		LEFT JOIN user u ON p.user_id=u.user_id
 		WHERE p.pilot_id=:to_pilot_id
 	");
 	$result=db_exec($stmt,array("to_pilot_id"=>$to_pilot_id));
