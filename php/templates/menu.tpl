@@ -5,6 +5,7 @@
 			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='locations'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_locations"><strong>RC Locations</strong></a>
 				<ul class="sub-menu">
 					<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=location">Location Browse</a></li>
+					<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=location&function=location_map">Location Map</a></li>
 				</ul>
 			</li>
 			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='planes'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_planes"><strong>RC Plane Database</strong></a>

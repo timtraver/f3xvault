@@ -29,6 +29,7 @@ function message_list() {
 	global $user;
 	global $smarty;
 	
+	$messages=array();
 	# Get the message for the current user
 	$stmt=db_prep("
 		SELECT *
@@ -36,10 +37,13 @@ function message_list() {
 		LEFT JOIN user u ON um.from_user_id=u.user_id
 		WHERE um.user_id=:user_id
 		AND um.user_message_status=1
+		ORDER BY user_message_date DESC
 	");
-	$messages=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
+	$user_messages=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
 	
-	$smarty->assign("messages",$messages);
+	$user_messages=show_pages($user_messages,25);
+	
+	$smarty->assign("user_messages",$user_messages);
 	$maintpl=find_template("message_list.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -48,7 +52,10 @@ function message_edit() {
 	global $user;
 
 	$user_message_id=$_REQUEST['user_message_id'];
-
+	$reply=0;
+	if(isset($_REQUEST['reply'])){
+		$reply=intval($_REQUEST['reply']);
+	}
 	# Get the message info
 	$user_message=array();
 	if($user_message_id!=0){
@@ -69,11 +76,87 @@ function message_edit() {
 			");
 			$result=db_exec($stmt,array("user_message_id"=>$user_message['user_message_id']));
 		}
+		if($reply==1){
+			# Swap the to and from
+			$from=$user['user_id'];
+			$to=$user_message['from_user_id'];
+			$stmt=db_prep("
+				SELECT *
+				FROM user u
+				LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+				WHERE u.user_id=:user_id
+			");
+			$result=db_exec($stmt,array("user_id"=>$to));
+			$user_to=$result[0];
+			
+			# Now lets set the default values for the new message
+			$user_message['user_message_id']=0;
+			$user_message['user_id']=$user_to['user_id'];
+			$user_message['to_pilot_id']=$user_to['user_id'];
+			$user_message['to_pilot_name']=$user_to['pilot_first_name'].' '.$user_to['pilot_last_name'];
+			$user_message['user_message_subject']='RE: '.$user_message['user_message_subject'];
+			$user_message['user_message_text']="\n\n\n>".preg_replace("/\n/","\n>",$user_message['user_message_text']);
+			
+			$smarty->assign("reply",$reply);
+		}
+	}else{
+		if(isset($_REQUEST['to_pilot_id'])){
+			$user_message['to_pilot_id']=$_REQUEST['to_pilot_id'];
+			$user_message['to_pilot_name']=$_REQUEST['to_pilot_name'];
+		}
+		if(isset($_REQUEST['user_message_subject'])){
+			$user_message['user_message_subject']=$_REQUEST['user_message_subject'];
+		}
 	}
 		
 	$smarty->assign("user_message",$user_message);
 	$maintpl=find_template("message_edit.tpl");
 	return $smarty->fetch($maintpl);
+}
+function message_save() {
+	global $smarty;
+	global $user;
+	
+	$user_message_id=intval($_REQUEST['user_message_id']);
+	$to_pilot_id=intval($_REQUEST['to_pilot_id']);
+	$user_message_subject=$_REQUEST['user_message_subject'];
+	$user_message_text=$_REQUEST['user_message_text'];
+	
+	# Lets save it as a message in the system
+	$stmt=db_prep("
+		INSERT INTO user_message
+		SET user_message_date=now(),
+			user_id=:to_pilot_id,
+			from_user_id=:user_id,
+			user_message_subject=:user_message_subject,
+			user_message_text=:user_message_text,
+			user_message_read_status=0,
+			user_message_status=1
+	");
+	$result=db_exec($stmt,array(
+		"to_pilot_id"=>$to_pilot_id,
+		"user_id"=>$user['user_id'],
+		"user_message_subject"=>$user_message_subject,
+		"user_message_text"=>$user_message_text
+	));
+	
+	$data['from_name']=$user['pilot_first_name'].' '.$user['pilot_last_name'];
+	$data['user_message_subject']=$user_message_subject;
+	$data['user_message_text']=$user_message_text;
+	
+	# Lets get the to email address
+	$stmt=db_exec("
+		SELECT *
+		FROM user u
+		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		WHERE p.pilot_id=:to_pilot_id
+	");
+	$result=db_exec($stmt,array("to_pilot_id"=>$to_pilot_id));
+	$to=$result[0];
+	
+	send_email('message_notification',array($to['pilot_email']),$data);
+	user_message("Message has been sent!");
+	return message_list();
 }
 
 ?>

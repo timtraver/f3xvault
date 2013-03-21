@@ -4,13 +4,13 @@
 				<div class="entry-content clearfix">
 				<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 				<tr class="table-row-heading-left">
-					<td colspan="5">System Emails</td>
+					<th colspan="5">System Emails</th>
 				</tr>
 				<tr>
-					<td width="10%" class="table-data-heading-left">Email Name</td>
-					<td width="30%" class="table-data-heading-left">Email From</td>
-					<td class="table-data-heading-left">Email Subject</td>
-					<td class="table-data-heading-left">Email Send Test</td>
+					<th width="10%">Email Name</th>
+					<th width="30%">Email From</th>
+					<th>Email Subject</th>
+					<th>Email Send Test</th>
 				</tr>
 				{foreach $emails as $e}
 				<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -32,7 +32,6 @@
 	</div>
 </div>
 
- 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_view">

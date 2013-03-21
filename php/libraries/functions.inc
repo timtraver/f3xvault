@@ -585,7 +585,11 @@ function send_email($email_name,$email_to,$data){
 		WHERE email_name=:email_name
 	");
 	$result=db_exec($stmt,array("email_name"=>$email_name));
-	$email=$result[0];
+	if(isset($result[0])){
+		$email=$result[0];
+	}else{
+		return;
+	}
 
 	# Send the email
 	include_library('htmlMimeMail5/htmlMimeMail5.php');

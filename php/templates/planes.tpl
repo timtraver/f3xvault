@@ -4,8 +4,6 @@
 
 				<div class="entry-content clearfix">
 					<p>
-						This is the RC Planes area of the site.<br>
-						<br>
 						<center>
 						<img src="images/pike.jpg" width="400"><br>
 						Pike Precision F3B

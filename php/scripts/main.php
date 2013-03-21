@@ -119,6 +119,32 @@ function main_feedback_save() {
 	global $user;
 	
 	$feedback_string=$_REQUEST['feedback_string'];
+	# Get admin user id
+	$stmt=db_prep("
+		SELECT *
+		FROM user u
+		WHERE user_admin=1
+	");
+	$result=db_exec($stmt,array());
+	$admin_user_id=$result[0]['user_id'];
+	
+	# Lets save it as a message in the system
+	$stmt=db_prep("
+		INSERT INTO user_message
+		SET user_message_date=now(),
+			user_id=:admin_user_id,
+			from_user_id=:user_id,
+			user_message_subject=:user_message_subject,
+			user_message_text=:user_message_text,
+			user_message_read_status=0,
+			user_message_status=1
+	");
+	$result=db_exec($stmt,array(
+		"admin_user_id"=>$admin_user_id,
+		"user_id"=>$user['user_id'],
+		"user_message_subject"=>'Feeback Form Submission',
+		"user_message_text"=>$feedback_string
+	));
 	
 	$data=$user;
 	$data['feedback_string']=$feedback_string;

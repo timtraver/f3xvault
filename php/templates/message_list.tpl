@@ -2,6 +2,9 @@
 	<div class="entry clearfix">
 		<h2 class="post-title entry-title">RC Vault Messaging Center</h2>
 		<div class="entry-content clearfix">
+<form name="main" method="POST">
+<input type="hidden" name="action" value="message">
+<input type="hidden" name="function" value="message_delete">
 
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
@@ -27,13 +30,13 @@
 	<th style="text-align: left;">Subject</th>
 	<th style="text-align: center;">Status</th>
 </tr>
-{foreach $messages as $m}
-<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
+{foreach $user_messages as $m}
+<tr {if $m.user_message_read_status==0}style="background-color:#87CEFA;"{else}style="background-color:{cycle values="#FFFFFF,#E8E8E8"};"{/if}>
 	<td><input type="checkbox" name="message_{$m.user_message_id}"></td>
 	<td><a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_date}</a></td>
-	<td>{$m.user_first_name|escape} {$m.user_last_name|escape}</td>
-	<td>{$m.user_message_subject|escape}</td>
-	<td>{if $m.user_message_read_status==0}Unread{else}Read{/if}</td>
+	<td><a href="?action=pilot&function=pilot_view&pilot_id={$m.pilot_id|escape}">{$m.user_first_name|escape} {$m.user_last_name|escape}</a></td>
+	<td><a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_subject|escape}</a></td>
+	<td align="center">{if $m.user_message_read_status==0}<b>Unread</b>{else}Read{/if}</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
@@ -53,15 +56,20 @@
 	<td colspan="6" align="left">
 	<br>
 		<input type="button" value=" Back " onClick="document.goback.submit();" class="button">
-		<input type="button" value=" Send A Message " onClick="document.goback.submit();" class="button">
-		<input type="button" value=" Delete Selected Messages " onClick="document.goback.submit();" class="button">
+		<input type="button" value=" Send A Message " onClick="document.new_message.submit();" class="button">
+		<input type="button" value=" Delete Selected Messages " onClick="document.main.submit();" class="button">
 	</td>
 </tr>
 </table>
-
+</form>
 <form name="goback" method="POST">
-<input type="hidden" name="action" value="admin">
-<input type="hidden" name="function" value="admin_view">
+<input type="hidden" name="action" value="main">
+<input type="hidden" name="function" value="view_home">
+</form>
+<form name="new_message" method="POST">
+<input type="hidden" name="action" value="message">
+<input type="hidden" name="function" value="message_edit">
+<input type="hidden" name="user_message_id" value="0">
 </form>
 
 

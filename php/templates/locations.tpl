@@ -4,15 +4,13 @@
 
 				<div class="entry-content clearfix">
 					<p>
-						This is the RC Locations area of the site.<br>
-						<br>
 						<center>
 						<img src="images/torrey3.jpg"><br>
 						Torrey Pines, CA
 						</center>
 						<br>
 						
-						I noticed that every time an event was being held, there was always the need to give more information about the flying site like precide directions,
+						I noticed that every time an event was being held, there was always the need to give more information about the flying site like providing directions,
 						permission issues, rules, etc.<br>
 						<br>
 						This portion of the RC Vault is dedicated to all of the information available on particular flying sites. Please contribute your information about the

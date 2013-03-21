@@ -15,6 +15,7 @@ GENERAL
   
   Message system so that I can respond to comments and pilots can send each other messages
   
+  Make a cool map of the locations in the database in a separate locations map screen
   
 EVENT STUFF
 
@@ -53,7 +54,6 @@ OTHER STUFF
 
   Add Events and Series to club view screen
  
-  
   Check settings to allow non users to view almost everything, but not change
 
 MOBILE STUFF

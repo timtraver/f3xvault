@@ -4,18 +4,16 @@
 
 				<div class="entry-content clearfix">
 					<p>
-						This is the RC Pilots area of the site.<br>
-						<br>
 						<center>
 						<img src="images/jet.png" width="400"><br>
 						Jet Flying his Radian at Dave's Beach in Carlsbad, CA USA
 						</center>
 						<br>
 						There are RC pilots all over the world, and in creating the competition database, storing basic pilot info for ease of entry was crucial. In this area you may be able to find pilots
-						in your area that share your passion, or see what kind of planes are being flown by the top pilots.<br>
+						in your area that share your passion, send them a message, or see what kind of planes are being flown by the top pilots.<br>
 						<br>
 						I do not store any personal information that may get sold to outside sources, and as a pilot, you even have the ability to lock your information so that nobody can even see where you like to
-						fly...
+						fly...but we really aren't that anti-social of a group, right?<br>
 						<br>
 
 						<center>

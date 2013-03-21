@@ -175,24 +175,38 @@ function save_registration(){
 		"user_pass"=>sha1($user_pass),
 		"pilot_id"=>$pilot_id
 	));
-	$user=get_user_info($user_email);
-	$path="/";
-	$host=$_SERVER['HTTP_HOST'];
-	# New session stuff
-	create_fsession($path,$host);
-	$GLOBALS['fsession']['auth']=TRUE;
-	$GLOBALS['fsession']['user_id']=$user['user_id'];
-	$GLOBALS['fsession']['user_name']=$user['user_name'];
-
-	save_fsession();
+	
+	$user=get_user_info($GLOBALS['last_insert_id']);
+	
+	# Send them back to the home page
 	$action='main';
 	$_REQUEST['action']='main';
 	$_REQUEST['function']='';
 	
 	log_action($user['user_id']);
 	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process!");
+	
+	send_registration_email($user['user_id']);
+	
 	include("{$GLOBALS['scripts_dir']}/$action.php");
 	return $actionoutput;	
 }
+function send_registration_email($user_id){
+	# Function to send the reg email to the user specified
+	$user_to=get_user_info($user_id);
+	
+	# Fill in the data with the proper link
+	$hash=sha1($user_id.$user_to['user_name'].$user_to['user_email']);
+	$data=$user_to;
+	$data['hash']=$hash;
+	function send_email('registration',$email_to,$data){
+	return;
+}
+function validate_registration(){
+	# Function to get the user registered
+	global $user;
+	global $smarty;
 
+
+}
 ?>
