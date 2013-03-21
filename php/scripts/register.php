@@ -180,7 +180,7 @@ function save_registration(){
 	# Now lets set the user id in the pilot record too
 	$stmt=db_prep("
 		UPDATE pilot
-		SET user_id=:user_id,
+		SET user_id=:user_id
 		WHERE pilot_id=:pilot_id
 	");
 	$result=db_exec($stmt,array(
