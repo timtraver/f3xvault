@@ -122,11 +122,11 @@ function message_save() {
 	$user_message_subject=$_REQUEST['user_message_subject'];
 	$user_message_text=$_REQUEST['user_message_text'];
 	
-	# Lets get the to email address
+	# Lets get the to info
 	$stmt=db_exec("
 		SELECT *
-		FROM user u
-		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		FROM pilot p
+		LEFT JOIN user u ON p.pilot_id=u.pilot_id
 		WHERE p.pilot_id=:to_pilot_id
 	");
 	$result=db_exec($stmt,array("to_pilot_id"=>$to_pilot_id));
@@ -153,7 +153,6 @@ function message_save() {
 	$data['from_name']=$user['pilot_first_name'].' '.$user['pilot_last_name'];
 	$data['user_message_subject']=$user_message_subject;
 	$data['user_message_text']=$user_message_text;
-	
 	
 	send_email('message_notification',array($to['pilot_email']),$data);
 	user_message("Message has been sent!");
