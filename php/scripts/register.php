@@ -199,7 +199,8 @@ function send_registration_email($user_id){
 	$hash=sha1($user_id.$user_to['user_name'].$user_to['user_email']);
 	$data=$user_to;
 	$data['hash']=$hash;
-	function send_email('registration',$email_to,$data){
+	
+	function send_email('registration',array($user_to['user_email']),$data);
 	return;
 }
 function validate_registration(){

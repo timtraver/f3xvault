@@ -12,14 +12,14 @@
 <form name="login" method="POST" autocomplete="off">
 <input type="hidden" name="action" value="main">
 <input type="hidden" name="function" value="user_login">
-<table width="30%" cellpadding="2" cellspacing="1" class="tableborder">
-<tr class="table-row-heading-left">
+<table width="30%" cellpadding="2" cellspacing="1">
+<tr>
 	<th colspan="2">
 		RC Vault Login
 	</th>
 </tr>
 <tr>
-	<td align="left" class="table-data-heading-center">
+	<td align="left">
 	<center>        
 	<table cellpadding="3" cellspacing="1">        
 	<tr>        
@@ -35,21 +35,15 @@
 			<a href="?action=main&function=forgot">Forgot your password?</a>
 		</td>
 	</tr>
-	<tr>
-		<td colspan=2 align=center>
-		<input type="submit" value=" Log In " class="button">
-		</td>
-	</tr>
 	</table>
-	<br>
-	Don't have a login? <a href="?action=register">Register Here</a>
-	<br><br>
+		<div style="padding-top:5px;"><input type="submit" value=" Log In " class="button"></div>
 	</center>
 	</td>
 </tr>
 </table>
+Don't have a login? <a href="?action=register">Register Here</a>
 </form>
-
+</center>
 
 
 	</div>
