@@ -58,7 +58,7 @@ $(function() {
 				<input type="hidden" name="to_pilot_id" value="{$user_message.to_pilot_id}">
 				<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 				<tr>
-					<th>Message From</th>
+					<th width="20%" align="right">Message From</th>
 					<td>
 						{if $user_message.user_message_id!=0}
 							<a href="?action=pilot&function=pilot_view&pilot_id={$user_message.pilot_id|escape}">{$user_message.user_first_name|escape} {$user_message.user_last_name|escape}</a>
@@ -68,7 +68,7 @@ $(function() {
 					</td>
 				</tr>
 				<tr>
-					<th>Message To</th>
+					<th align="right">Message To</th>
 					<td>
 						{if $user_message.user_message_id!=0}
 							{$user.pilot_first_name} {$user.pilot_last_name}
@@ -80,7 +80,7 @@ $(function() {
 					</td>
 				</tr>
 				<tr>
-					<th>Message Subject</th>
+					<t align="right"h>Message Subject</th>
 					<td>
 						{if $user_message.user_message_id!=0}
 							{$user_message.user_message_subject|escape}
@@ -90,7 +90,7 @@ $(function() {
 					</td>
 				</tr>
 				<tr>
-					<th>Message Content</th>
+					<th align="right" valign="top">Message Content</th>
 					<td>
 						{if $user_message.user_message_id!=0}
 							<pre>{$user_message.user_message_text}</pre>

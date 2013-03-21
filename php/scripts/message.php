@@ -92,7 +92,7 @@ function message_edit() {
 			# Now lets set the default values for the new message
 			$user_message['user_message_id']=0;
 			$user_message['user_id']=$user_to['user_id'];
-			$user_message['to_pilot_id']=$user_to['user_id'];
+			$user_message['to_pilot_id']=$user_to['pilot_id'];
 			$user_message['to_pilot_name']=$user_to['pilot_first_name'].' '.$user_to['pilot_last_name'];
 			$user_message['user_message_subject']='RE: '.$user_message['user_message_subject'];
 			$user_message['user_message_text']="\n\n\n>".preg_replace("/\n/","\n>",$user_message['user_message_text']);
