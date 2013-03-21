@@ -219,6 +219,7 @@ function send_registration_email($user_id){
 function validate_registration(){
 	# Function to get the user registered
 	global $user;
+	global $fsession;
 	global $smarty;
 
 	# Lets get the inputted strings from the URL
@@ -229,7 +230,18 @@ function validate_registration(){
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
 	if($hash==$compare){
 		# They have successfully activated!
+		# Turn on their activation status
+		$stmt=db_prep("
+			UPDATE user
+			SET user_activated=1
+			WHERE user_id=:user_id
+		");
+		$result=db_exec($stmt,array(
+			"user_id"=>$user_id
+		));
 		user_message("Congratulations! You account is now activated and you have been automatically logged in. Enjoy!");
+		
+		destroy_fsession();
         $path="/";
         $host=$_SERVER['HTTP_HOST'];
         # New session stuff
@@ -239,13 +251,17 @@ function validate_registration(){
         $fsession['user_name']=$user_info['user_name'];
         $user=$user_info;
         save_fsession();
+        
+		$_REQUEST['action']='my';
+		$_REQUEST['function']='';
+		include("{$GLOBALS['scripts_dir']}/my.php");
+		return $actionoutput;	
 	}else{
 		user_message("I'm sorry, but that does not appear to be a proper validation link. If you feel that you have gotten this in error, please send a feedback message about your account, or use the account recovery link on the login screen.",1);
-		$action='main';
 		$_REQUEST['action']='main';
 		$_REQUEST['function']='';
 		$user=array();
-		include("{$GLOBALS['scripts_dir']}/$action.php");
+		include("{$GLOBALS['scripts_dir']}/main.php");
 		return $actionoutput;	
 	}
 }
