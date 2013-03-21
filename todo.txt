@@ -10,6 +10,7 @@ GENERAL
   
   Complete registration emails and reg system
 	Send welcome email once registered and save it as their first message
+	Show sent messages and if they have been read or not
 	
   Check bug in event round drop save query
   
