@@ -168,7 +168,7 @@ function save_registration(){
 			user_status=1
 	");
 	$result=db_exec($stmt,array(
-		"user_name"=>$user_email,
+		"user_name"=>$user_name,
 		"user_first_name"=>$user_first_name,
 		"user_last_name"=>$user_last_name,
 		"user_email"=>$user_email,
@@ -187,6 +187,7 @@ function save_registration(){
 	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process!");
 	
 	send_registration_email($user['user_id']);
+	$user=array();
 	
 	include("{$GLOBALS['scripts_dir']}/$action.php");
 	return $actionoutput;	
@@ -208,6 +209,32 @@ function validate_registration(){
 	global $user;
 	global $smarty;
 
-
+	# Lets get the inputted strings from the URL
+	$user_id=intval($_REQUEST['user_id']);
+	$hash=$_REQUEST['hash'];
+	
+	$user_info=get_user_info($user_id);
+	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);)
+	if($hash==$compare){
+		# They have successfully activated!
+		user_message("Congratulations! You account is now activated and you have been automatically logged in. Enjoy!");
+        $path="/";
+        $host=$_SERVER['HTTP_HOST'];
+        # New session stuff
+        create_fsession($path,$host);
+        $fsession['auth']=TRUE;
+        $fsession['user_id']=$user_info['user_id'];
+        $fsession['user_name']=$user_info['user_name'];
+        $user=$user_info;
+        save_fsession();
+	}else{
+		user_message("I'm sorry, but that does not appear to be a proper validation link. If you feel that you have gotten this in error, please send a feedback message about your account, or use the account recovery link on the login screen.",1);
+		$action='main';
+		$_REQUEST['action']='main';
+		$_REQUEST['function']='';
+		$user=array();
+		include("{$GLOBALS['scripts_dir']}/$action.php");
+		return $actionoutput;	
+	}
 }
 ?>
