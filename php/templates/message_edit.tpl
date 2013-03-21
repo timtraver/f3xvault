@@ -80,7 +80,7 @@ $(function() {
 					</td>
 				</tr>
 				<tr>
-					<t align="right">Message Subject</th>
+					<th align="right">Message Subject</th>
 					<td>
 						{if $user_message.user_message_id!=0}
 							{$user_message.user_message_subject|escape}
