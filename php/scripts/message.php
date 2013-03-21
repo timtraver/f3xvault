@@ -122,28 +122,6 @@ function message_save() {
 	$user_message_subject=$_REQUEST['user_message_subject'];
 	$user_message_text=$_REQUEST['user_message_text'];
 	
-	# Lets save it as a message in the system
-	$stmt=db_prep("
-		INSERT INTO user_message
-		SET user_message_date=now(),
-			user_id=:to_pilot_id,
-			from_user_id=:user_id,
-			user_message_subject=:user_message_subject,
-			user_message_text=:user_message_text,
-			user_message_read_status=0,
-			user_message_status=1
-	");
-	$result=db_exec($stmt,array(
-		"to_pilot_id"=>$to_pilot_id,
-		"user_id"=>$user['user_id'],
-		"user_message_subject"=>$user_message_subject,
-		"user_message_text"=>$user_message_text
-	));
-	
-	$data['from_name']=$user['pilot_first_name'].' '.$user['pilot_last_name'];
-	$data['user_message_subject']=$user_message_subject;
-	$data['user_message_text']=$user_message_text;
-	
 	# Lets get the to email address
 	$stmt=db_exec("
 		SELECT *
@@ -153,6 +131,29 @@ function message_save() {
 	");
 	$result=db_exec($stmt,array("to_pilot_id"=>$to_pilot_id));
 	$to=$result[0];
+
+	# Lets save it as a message in the system
+	$stmt=db_prep("
+		INSERT INTO user_message
+		SET user_message_date=now(),
+			user_id=:to_user_id,
+			from_user_id=:user_id,
+			user_message_subject=:user_message_subject,
+			user_message_text=:user_message_text,
+			user_message_read_status=0,
+			user_message_status=1
+	");
+	$result=db_exec($stmt,array(
+		"to_user_id"=>$to['user_id'],
+		"user_id"=>$user['user_id'],
+		"user_message_subject"=>$user_message_subject,
+		"user_message_text"=>$user_message_text
+	));
+	
+	$data['from_name']=$user['pilot_first_name'].' '.$user['pilot_last_name'];
+	$data['user_message_subject']=$user_message_subject;
+	$data['user_message_text']=$user_message_text;
+	
 	
 	send_email('message_notification',array($to['pilot_email']),$data);
 	user_message("Message has been sent!");
