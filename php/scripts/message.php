@@ -134,7 +134,12 @@ function message_save() {
 		WHERE p.pilot_id=:to_pilot_id
 	");
 	$result=db_exec($stmt,array("to_pilot_id"=>$to_pilot_id));
-	$to=$result[0];
+	if(isset($result[0])){
+		$to=$result[0];
+	}else{
+		user_message("You must select a correct recipient for your message.");
+		return message_edit();
+	}
 
 	# Lets save it as a message in the system
 	$stmt=db_prep("
