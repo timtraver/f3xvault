@@ -34,15 +34,15 @@ function my_user_show() {
 	$stmt=db_prep("
 		SELECT *
 		FROM pilot
-		WHERE pilot_wp_user_id=:pilot_wp_user_id
+		WHERE user_id=:user_id
 	");
-	$result=db_exec($stmt,array("pilot_wp_user_id"=>$GLOBALS['user_id']));	
+	$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));	
 	if(!isset($result[0])){
 		# Lets see if we have any entries in the db already for this pilot that were created in a previous event
 		$stmt=db_prep("
 			SELECT *
 			FROM pilot p
-			WHERE p.pilot_wp_user_id=0
+			WHERE p.user_id=0
 				AND ((p.pilot_first_name=LOWER(:user_first_name) AND p.pilot_last_name=LOWER(:user_last_name))
 					OR p.pilot_email=LOWER(:user_email))
 		");
@@ -160,7 +160,7 @@ function my_user_save(){
 			# Connect the current logged in account to the selected pilot id
 			$stmt=db_prep("
 				UPDATE pilot
-				SET pilot_wp_user_id=:user_id
+				SET user_id=:user_id
 				WHERE pilot_id=:pilot_id
 			");
 			$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id'],"pilot_id"=>$pilot_id));
@@ -200,7 +200,7 @@ function my_user_save(){
 				pilot_city=:pilot_city,
 				state_id=:state_id,
 				country_id=:country_id,
-				pilot_wp_user_id=:user_id
+				user_id=:user_id
 		");
 		$result=db_exec($stmt,array(
 			"pilot_first_name"=>$pilot_first_name,
@@ -226,7 +226,7 @@ function my_user_save(){
 				pilot_city=:pilot_city,
 				state_id=:state_id,
 				country_id=:country_id
-			WHERE pilot_wp_user_id=:pilot_wp_user_id
+			WHERE user_id=:user_id
 		");
 		$result=db_exec($stmt,array(
 			"pilot_first_name"=>$pilot_first_name,
@@ -237,7 +237,7 @@ function my_user_save(){
 			"pilot_city"=>$pilot_city,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
-			"pilot_wp_user_id"=>$GLOBALS['user_id']
+			"user_id"=>$GLOBALS['user_id']
 		));
 		user_message("User Info Saved.");
 	}
@@ -349,9 +349,9 @@ function get_current_pilot_id(){
 	$stmt=db_prep("
 		SELECT *
 		FROM pilot
-		WHERE pilot_wp_user_id=:pilot_wp_user_id
+		WHERE user_id=:user_id
 	");
-	$result=db_exec($stmt,array("pilot_wp_user_id"=>$GLOBALS['user_id']));
+	$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
 	if(isset($result[0])){
 		$pilot_id=$result[0]['pilot_id'];
 	}
