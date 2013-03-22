@@ -1,4 +1,3 @@
-<script src="/includes/jquery.min.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>

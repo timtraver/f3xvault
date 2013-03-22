@@ -239,6 +239,20 @@ function my_user_save(){
 			"country_id"=>$country_id,
 			"user_id"=>$GLOBALS['user_id']
 		));
+		# Lets update the user info that is associated with it
+		$stmt=db_prep("
+			UPDATE user
+			SET user_first_name=:pilot_first_name,
+				user_last_name=:pilot_last_name,
+				user_email=:pilot_email
+			WHERE user_id=:user_id
+		");
+		$result=db_exec($stmt,array(
+			"pilot_first_name"=>$pilot_first_name,
+			"pilot_last_name"=>$pilot_last_name,
+			"pilot_email"=>$pilot_email,
+			"user_id"=>$GLOBALS['user_id']
+		));
 		user_message("User Info Saved.");
 	}
 	log_action($pilot_id);

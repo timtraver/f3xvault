@@ -644,12 +644,20 @@ class Event {
 				$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
 				# Lets clear all the db records of this pilots flights with this flight type as not dropped
 				$stmt=db_prep("
-					UPDATE event_pilot_round_flight
-					SET event_pilot_round_flight_dropped=0
-					WHERE event_pilot_round_id IN (SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
-					AND flight_type_id=:flight_type_id
+					SELECT event_pilot_round_id
+					FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id
 				");
-				$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_id"=>$event_pilot_id));
+				$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+				foreach($result as $r){
+					$stmt=db_prep("
+						UPDATE event_pilot_round_flight
+						SET event_pilot_round_flight_dropped=0
+						WHERE event_pilot_round_id=:event_pilot_round_id
+						AND flight_type_id=:flight_type_id
+					");
+					$result2=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_round_id"=>$r['event_pilot_round_id']));
+				}
+				
 				# Now lets pick off the ones to mark as dropped
 				$drop=0;
 				foreach($temp2 as $round_number=>$f){

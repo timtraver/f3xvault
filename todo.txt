@@ -6,15 +6,7 @@ GENERAL
   
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
-  Create forget password stuff
-  
   Send welcome email once registered and save it as their first message
-
-  Check bug in event round drop save query
-  
-  Change password in my profile
-  
-  Make sure that when they change the pilot name and address, that it changes the user name and address
   
   Make a cool map of the locations in the database in a separate locations map screen using google api
   
@@ -24,18 +16,12 @@ GENERAL
   
 EVENT STUFF
 
-  when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
-  ditto with the location of the event
-  
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
    
   reflights for groups
   
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
-
-  On round entry screen, make a checkbox to allow for entries to be saved after each entry, or enter them all at once for offline entering
-  also make it so that it tabs down to the next BLANK entry if you use the save immediately feature...
 
   Flyoff capability
 
@@ -69,6 +55,13 @@ MOBILE STUFF
 
 COMPLETED
  
+X On round entry screen, make a checkbox to allow for entries to be saved after each entry by ajax without calculating it, or enter them all at once for offline entering
+X Check bug in event round drop save query
+X when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
+X ditto with the location of the event
+X Make sure that when they change the pilot name and address, that it changes the user name and address
+X Change password in my profile
+X Create forget password stuff
 X Add captcha to registration screen
 X Complete registration emails and reg system
 X	Show sent messages and if they have been read or not

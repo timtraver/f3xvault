@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-19 00:42:16
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-22 00:13:00
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1363678576,
+      1 => 1363935270,
       2 => 'file',
     ),
   ),
@@ -49,8 +49,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_511ca3850d27c4_25618471')) {function content_511ca3850d27c4_25618471($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
 if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
-?><script src="/includes/jquery.min.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+?><script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
