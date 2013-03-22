@@ -639,5 +639,50 @@ function my_location_del() {
 	user_message("Removed location from your pilot info.");
 	return my_user_show();
 }
+function show_change_password(){
+	# Function to reset the user password 
+	global $user;
+	global $fsession;
+	global $smarty;
+	
+	# Show them the change password screen
+	$maintpl=find_template("my_change_password.tpl");
+	return $smarty->fetch($maintpl);
+}
+function change_password(){
+	# Function to reset the user password 
+	global $user;
+	global $fsession;
+	global $smarty;
+
+	# Lets get the inputted strings from the URL
+	$pass=$_REQUEST['pass'];
+	$pass1=$_REQUEST['pass1'];
+	$pass2=$_REQUEST['pass2'];
+	# Check the existing pass first
+	if(sha1($pass)!=$user['user_pass']){
+		user_message("I'm sorry, but the entered existing password does not match.",1);
+		return show_change_password();
+	}
+	
+	if($pass1!=$pass2){
+		user_message("I'm sorry, but the two new entered passwords do not match each other.",1);
+		return show_change_password();
+	}
+
+	# They have successfully come here to change their password!
+	# ok, lets change it 
+	$stmt=db_prep("
+		UPDATE user
+		SET user_pass=:pass
+		WHERE user_id=:user_id
+	");
+	$result=db_exec($stmt,array(
+		"pass"=>sha1($pass1),
+		"user_id"=>$user['user_id']
+	));
+	user_message("Congratulations! You have updated your password.");
+	return my_user_show();
+}
 
 ?>

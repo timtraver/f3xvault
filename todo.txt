@@ -10,9 +10,11 @@ GENERAL
   
   Send welcome email once registered and save it as their first message
 
-  Add captcha to registration screen
-  
   Check bug in event round drop save query
+  
+  Change password in my profile
+  
+  Make sure that when they change the pilot name and address, that it changes the user name and address
   
   Make a cool map of the locations in the database in a separate locations map screen using google api
   
@@ -67,6 +69,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Add captcha to registration screen
 X Complete registration emails and reg system
 X	Show sent messages and if they have been read or not
 X Message system so that I can respond to comments and pilots can send each other messages

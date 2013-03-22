@@ -4,11 +4,6 @@
 <h1 class="post-title entry-title">RC Vault User Login</h1>
 <br \>
 <center>
-{if $errorstring != ''}
-	<font color=red>{$errorstring}</font>
-<br>
-<br>
-{/if}
 <form name="login" method="POST" autocomplete="off">
 <input type="hidden" name="action" value="main">
 <input type="hidden" name="function" value="user_login">

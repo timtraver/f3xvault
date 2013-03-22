@@ -93,6 +93,7 @@
 </table>
 <br>
 <input type="submit" value=" Save My User Values " class="block-button">
+<input type="button" value=" Change My Password " class="block-button" onClick="document.change_pass.submit();">
 
 {if $pilot.pilot_id!=0}
 <h1 class="post-title entry-title">My Aircraft</h1>
@@ -217,6 +218,12 @@
 
 {/if}
 {/if}
+
+<form name="change_pass" method="POST">
+<input type="hidden" name="action" value="my">
+<input type="hidden" name="function" value="show_change_password">
+</form>
+
 </div>
 </div>
 </div>

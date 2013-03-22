@@ -153,5 +153,129 @@ function main_feedback_save() {
 	user_message("Thank You for your comments and suggestions!");
 	return view_home();
 }
+function forgot() {
+	global $smarty;
+	global $user;
+	$GLOBALS['current_menu']='login';
+
+	# ok, lets present the user with the ability to enter their user name
+
+	$maintpl=find_template("forgot.tpl");
+	return $smarty->fetch($maintpl);
+}
+function forgot_send() {
+	global $smarty;
+	global $user;
+	$GLOBALS['current_menu']='login';
+
+	# ok, lets present the user with the ability to enter their user name
+	$email=$_REQUEST['email'];
+	if($email==''){
+		user_message("You must enter an email address for the password recovery process.",1);
+		return forgot();
+	}
+	# Lets check if the email address exists
+	$stmt=db_prep("
+		SELECT *
+		FROM user u
+		WHERE u.user_email=:email
+	");
+	$result=db_exec($stmt,array("email"=>$email));
+	if(isset($result[0])){
+		$recovery=get_user_info($result[0]['user_id']);
+	}else{
+		user_message("I'm sorry, I do not recognize a user account with that email address.",1);
+		return forgot();
+	}
+	# If it got here, then we need to send the email
+	
+	$hash=sha1($recovery['user_id'].$recovery['user_name'].$recovery['user_email']);
+	$recovery['hash']=$hash;
+	
+	send_email('password_recovery',array($recovery['user_email']),$recovery);
+	user_message("A Message has been sent to the email address with instructions on how to reset your password.");
+	return view_home();
+}
+function pass_recovery(){
+	# Function to reset the user password 
+	global $user;
+	global $fsession;
+	global $smarty;
+
+	# Lets get the inputted strings from the URL
+	$user_id=intval($_REQUEST['user_id']);
+	$hash=$_REQUEST['hash'];
+	
+	$user_info=get_user_info($user_id);
+	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
+	
+	if($hash!=$compare){
+		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
+		$user=array();
+		return view_home();	
+	}
+	
+	# They have successfully come here to change their password!
+	# Show them the change password screen
+	$smarty->assign("user_info",$user_info);
+	$smarty->assign("hash",$hash);
+	$maintpl=find_template("change_password.tpl");
+	return $smarty->fetch($maintpl);
+}
+function pass_recovery_save(){
+	# Function to reset the user password 
+	global $user;
+	global $fsession;
+	global $smarty;
+
+	# Lets get the inputted strings from the URL
+	$user_id=intval($_REQUEST['user_id']);
+	$hash=$_REQUEST['hash'];
+	$pass1=$_REQUEST['pass1'];
+	$pass2=$_REQUEST['pass2'];
+	
+	if($pass1!=$pass2){
+		user_message("I'm sorry, but the two entered passwords do not match.",1);
+		$user=array();
+		return view_home();
+	}
+	$user_info=get_user_info($user_id);
+	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
+	
+	if($hash!=$compare){
+		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
+		$user=array();
+		return view_home();
+	}
+	
+	# They have successfully come here to change their password!
+	# ok, lets change it and then have them logged in
+	$stmt=db_prep("
+		UPDATE user
+		SET user_pass=:pass
+		WHERE user_id=:user_id
+	");
+	$result=db_exec($stmt,array(
+		"pass"=>sha1($pass1),
+		"user_id"=>$user_id
+	));
+	user_message("Congratulations! You have updated your password and have been automatically logged in. Enjoy!");
+		
+	destroy_fsession();
+	$path="/";
+	$host=$_SERVER['HTTP_HOST'];
+	# New session stuff
+	create_fsession($path,$host);
+	$fsession['auth']=TRUE;
+	$fsession['user_id']=$user_info['user_id'];
+	$fsession['user_name']=$user_info['user_name'];
+	$user=$user_info;
+	save_fsession();
+        
+	$_REQUEST['action']='my';
+	$_REQUEST['function']='';
+	include("{$GLOBALS['scripts_dir']}/my.php");
+	return $actionoutput;	
+}
 
 ?>

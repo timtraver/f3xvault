@@ -13,48 +13,49 @@ You will be sent a verification email and will have to follow the link given to 
 Your email address WILL NOT be shared with ANYONE. It will only be used as communication to you from this site, for a forgotten password link or other administrative actions. You will have the option to allow your club or series affiliations to send reminders if you select that option in your preferences.<br>
 </p>
 <br>
+<center>
 <table width="50%" cellpadding="2" cellspacing="2" class="tableborder">
 <tr class="table-row-heading-left">
 	<th colspan="2">Registration Information</th>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>User Login</th>
+	<th align="right" nowrap>Create User Login</th>
 	<td>
 		<input type="text" name="user_name" size="40" value="{$user.user_name}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>First Name</th>
+	<th align="right" nowrap>First Name</th>
 	<td>
 		<input type="text" name="user_first_name" size="40" value="{$user.user_first_name}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>Last Name</th>
+	<th align="right" nowrap>Last Name</th>
 	<td>
 		<input type="text" name="user_last_name" size="40" value="{$user.user_last_name}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>Email Address</th>
+	<th align="right" nowrap>Email Address</th>
 	<td>
 		<input type="text" name="user_email" size="40" value="{$user.user_email}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>Password</th>
+	<th align="right" nowrap>Password</th>
 	<td>
 		<input type="password" name="user_pass" size="40" value="{$user.user_pass}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>Password Verify</th>
+	<th align="right" nowrap>Password Verify</th>
 	<td>
 		<input type="password" name="user_pass2" size="40" value="{$user.user_pass2}">
 	</td>
 </tr>
 <tr>
-	<th class="table-data-heading-left" nowrap>Human Test</th>
+	<th align="right" nowrap>Human Test</th>
 	<td>
 		{$recaptcha_html}
 	</td>
@@ -65,6 +66,7 @@ Your email address WILL NOT be shared with ANYONE. It will only be used as commu
 	</td>
 </tr>
 </table>
+</center>
 <br><br><br>
 </form>
 
