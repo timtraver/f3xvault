@@ -33,7 +33,7 @@ function lookup_pilot() {
 	global $user;
 	global $smarty;
 
-	$q = urldecode(strtolower($_GET["term"]));
+	$q = trim(urldecode(strtolower($_GET["term"])));
 	$q = '%'.$q.'%';
 	# Do search
 	$stmt=db_prep("
@@ -61,7 +61,7 @@ function lookup_plane() {
 	global $user;
 	global $smarty;
 
-	$q = urldecode(strtolower($_GET["term"]));
+	$q = trim(urldecode(strtolower($_GET["term"])));
 	$q = '%'.$q.'%';
 	
 	# Do search
@@ -87,7 +87,7 @@ function lookup_location() {
 	global $user;
 	global $smarty;
 
-	$q = urldecode(strtolower($_GET["term"]));
+	$q = trim(urldecode(strtolower($_GET["term"])));
 	$q = '%'.$q.'%';
 	
 	# Do search
@@ -114,7 +114,7 @@ function lookup_club() {
 	global $user;
 	global $smarty;
 
-	$q = urldecode(strtolower($_GET["term"]));
+	$q = trim(urldecode(strtolower($_GET["term"])));
 	$q = '%'.$q.'%';
 	
 	# Do search
@@ -141,7 +141,7 @@ function lookup_series() {
 	global $user;
 	global $smarty;
 
-	$q = urldecode(strtolower($_GET["term"]));
+	$q = trim(urldecode(strtolower($_GET["term"])));
 	$q = '%'.$q.'%';
 	
 	# Do search
@@ -163,6 +163,35 @@ function lookup_series() {
 	}
 
 	print json_encode($series);
+}
+function lookup_user() {
+	global $user;
+	global $smarty;
+
+	$q = trim(urldecode(strtolower($_GET["term"])));
+	$q = '%'.$q.'%';
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM user u
+		LEFT JOIN pilot p on u.user_id=p.user_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
+		WHERE LOWER(u.user_first_name) LIKE :term1
+			OR LOWER(u.user_last_name) LIKE :term2
+			OR LOWER(CONCAT(u.user_first_name,' ',u.user_last_name)) LIKE :term3
+	");
+	$result=db_exec($stmt,array("term1"=>$q,"term2"=>$q,"term3"=>$q));
+	
+	foreach($result as $r){
+		$users[]=array(
+			"id"=>$r['user_id'],
+			"label"=>"{$r['user_first_name']} {$r['user_last_name']} - {$r['pilot_city']},{$r['state_code']} - {$r['country_code']}",
+			"value"=>"{$r['user_first_name']} {$r['user_last_name']}"
+		);
+	}
+
+	print json_encode($users);
 }
 ?>
 

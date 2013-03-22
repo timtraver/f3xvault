@@ -1,6 +1,6 @@
 <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
 	<div class="entry clearfix">
-		<h2 class="post-title entry-title">RC Vault Messaging Center</h2>
+		<h2 class="post-title entry-title">RC Vault Message Center</h2>
 		<div class="entry-content clearfix">
 <form name="main" method="POST">
 <input type="hidden" name="action" value="message">
@@ -8,7 +8,13 @@
 
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="6" style="text-align: left;">Messages (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
+	<th colspan="6" style="text-align: left;">
+	Messages (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})
+	<select name="message_box" onChange="document.view_list.message_box.value=document.main.message_box.value;view_list.submit();">
+	<option value="incoming"{if $message_box=='incoming'} SELECTED{/if}>View Incoming Messages</option>
+	<option value="sent"{if $message_box=='sent'} SELECTED{/if}>Sent Messages</option>
+	</select>	
+	</th>
 </tr>
 <tr style="background-color: lightgray;">
         <td align="left" colspan="2">
@@ -26,17 +32,28 @@
 <tr>
 	<th width="1%" style="text-align: left;"></th>
 	<th width="15%" style="text-align: left;">Date</th>
-	<th style="text-align: left;">From User Name</th>
+	<th style="text-align: left;">
+		{if $message_box=='incoming'}From{else}To{/if} User Name</th>
 	<th style="text-align: left;">Subject</th>
 	<th style="text-align: center;">Status</th>
 </tr>
 {foreach $user_messages as $m}
 <tr {if $m.user_message_read_status==0}style="background-color:#87CEFA;"{else}style="background-color:{cycle values="#FFFFFF,#E8E8E8"};"{/if}>
-	<td><input type="checkbox" name="message_{$m.user_message_id}"></td>
-	<td><a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_date}</a></td>
-	<td><a href="?action=pilot&function=pilot_view&pilot_id={$m.pilot_id|escape}">{$m.user_first_name|escape} {$m.user_last_name|escape}</a></td>
-	<td><a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_subject|escape}</a></td>
-	<td align="center">{if $m.user_message_read_status==0}<b>Unread</b>{else}Read{/if}</td>
+	<td>
+		<input type="checkbox" name="message_{$m.user_message_id}">
+	</td>
+	<td>
+		<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_date}</a>
+	</td>
+	<td>
+		<a href="?action=pilot&function=pilot_view&pilot_id={$m.pilot_id|escape}">{$m.user_first_name|escape} {$m.user_last_name|escape}</a>
+	</td>
+	<td>
+		<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}">{$m.user_message_subject|escape}</a>
+	</td>
+	<td align="center">
+		{if $m.user_message_read_status==0}<b>Unread</b>{else}Read{/if}
+	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
@@ -57,7 +74,9 @@
 	<br>
 		<input type="button" value=" Back " onClick="document.goback.submit();" class="button">
 		<input type="button" value=" Send A Message " onClick="document.new_message.submit();" class="button">
+		{if $message_box=='incoming'}
 		<input type="button" value=" Delete Selected Messages " onClick="document.main.submit();" class="button">
+		{/if}
 	</td>
 </tr>
 </table>
@@ -70,6 +89,11 @@
 <input type="hidden" name="action" value="message">
 <input type="hidden" name="function" value="message_edit">
 <input type="hidden" name="user_message_id" value="0">
+</form>
+<form name="view_list" method="POST">
+<input type="hidden" name="action" value="message">
+<input type="hidden" name="function" value="message_list">
+<input type="hidden" name="message_box" value="">
 </form>
 
 

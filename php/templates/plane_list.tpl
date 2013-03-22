@@ -78,12 +78,12 @@
 		<a href="?action={$action|escape}&function=plane_view&plane_id={$plane.plane_id|escape}">{$plane.plane_name|escape}</a>
 	</td>
 	<td>{$plane.plane_type_short_name|escape}</td>
-	<td>{if $plane.plane_info=='good'}<img src="/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
+	<td>{if $plane.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
 	<td>{$plane.plane_manufacturer|escape}</td>
 	<td>{$plane.plane_year}</td>
 	<td>{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units}</td>
 	<td>{$plane.plane_auw|escape} {$plane.plane_auw_units}</td>
-	<td><a href="?action={$action|escape}&function=plane_edit&plane_id={$plane.plane_id|escape}" title="Edit This Plane"><img src="images/icon_edit_small.gif" width="20"></a>
+	<td><a href="?action={$action|escape}&function=plane_edit&plane_id={$plane.plane_id|escape}" title="Edit This Plane"><img src="/images/icon_edit_small.gif" width="20"></a>
 	</td>
 </tr>
 {/foreach}

@@ -7,8 +7,8 @@
 <script>
 {literal}
 $(function() {
-	$("#pilot_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
+	$("#user_name").autocomplete({
+		source: "/lookup.php?function=lookup_user",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -20,14 +20,14 @@ $(function() {
 			loading.style.display = "inline";
 		},
    		select: function( event, ui ) {
-			document.main.to_pilot_id.value = ui.item.id;
-			var name=document.getElementById('pilot_name');
-			document.main.pilot_name.value=name.value;
+			document.main.to_user_id.value = ui.item.id;
+			var name=document.getElementById('user_name');
+			document.main.user_name.value=name.value;
 		},
    		change: function( event, ui ) {
-   			var id=document.getElementById('pilot_name');
+   			var id=document.getElementById('user_name');
    			if(id.value==''){
-				document.main.to_pilot_id.value = 0;
+				document.main.to_user_id.value = 0;
 			}
 		},
    		response: function( event, ui ) {
@@ -47,7 +47,7 @@ $(function() {
 
 <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
 	<div class="entry clearfix">
-		<h2 class="post-title entry-title">RC Vault Messaging Center</h2>
+		<h2 class="post-title entry-title">RC Vault Message Center</h2>
 				<div class="entry-content clearfix">
 
 				<h1>Message View</h1>
@@ -55,13 +55,13 @@ $(function() {
 				<input type="hidden" name="action" value="message">
 				<input type="hidden" name="function" value="message_save">
 				<input type="hidden" name="user_message_id" value="{$user_message.user_message_id}">
-				<input type="hidden" name="to_pilot_id" value="{$user_message.to_pilot_id}">
+				<input type="hidden" name="to_user_id" value="{$user_message.to_user_id}">
 				<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 				<tr>
 					<th width="20%" align="right">Message From</th>
 					<td>
 						{if $user_message.user_message_id!=0}
-							<a href="?action=pilot&function=pilot_view&pilot_id={$user_message.pilot_id|escape}">{$user_message.user_first_name|escape} {$user_message.user_last_name|escape}</a>
+							<a href="?action=pilot&function=pilot_view&pilot_id={$user_message.pilot_id|escape}">{$user_message.from.user_first_name|escape} {$user_message.from.user_last_name|escape}</a>
 						{else}
 							{$user.user_first_name|escape} {$user.user_last_name|escape}
 						{/if}
@@ -71,11 +71,11 @@ $(function() {
 					<th align="right">Message To</th>
 					<td>
 						{if $user_message.user_message_id!=0}
-							{$user.pilot_first_name} {$user.pilot_last_name}
+							{$user_message.to.user_first_name} {$user_message.to.user_last_name}
 						{else}
-							<input type="text" id="pilot_name" name="pilot_name" size="40" value="{$user_message.to_pilot_name}">
+							<input type="text" id="user_name" name="user_name" size="40" value="{if $user_message.to.user_first_name!=''}{$user_message.to.user_first_name} {$user_message.to.user_last_name}{/if}">
 		    				<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		    				<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
+		    				<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search users</span>
 						{/if}
 					</td>
 				</tr>

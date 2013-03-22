@@ -19,42 +19,48 @@ Your email address WILL NOT be shared with ANYONE. It will only be used as commu
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>User Login</th>
-	<td colspan="2">
+	<td>
 		<input type="text" name="user_name" size="40" value="{$user.user_name}">
 	</td>
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>First Name</th>
-	<td colspan="2">
+	<td>
 		<input type="text" name="user_first_name" size="40" value="{$user.user_first_name}">
 	</td>
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>Last Name</th>
-	<td colspan="2">
+	<td>
 		<input type="text" name="user_last_name" size="40" value="{$user.user_last_name}">
 	</td>
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>Email Address</th>
-	<td colspan="2">
+	<td>
 		<input type="text" name="user_email" size="40" value="{$user.user_email}">
 	</td>
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>Password</th>
-	<td colspan="2">
+	<td>
 		<input type="password" name="user_pass" size="40" value="{$user.user_pass}">
 	</td>
 </tr>
 <tr>
 	<th class="table-data-heading-left" nowrap>Password Verify</th>
-	<td colspan="2">
+	<td>
 		<input type="password" name="user_pass2" size="40" value="{$user.user_pass2}">
 	</td>
 </tr>
 <tr>
-	<td colspan="3" class="table-data-heading-center">
+	<th class="table-data-heading-left" nowrap>Human Test</th>
+	<td>
+		{$recaptcha_html}
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="table-data-heading-center">
 	<input type="submit" value=" Register Me " class="button">
 	</td>
 </tr>

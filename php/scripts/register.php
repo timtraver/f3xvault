@@ -27,6 +27,12 @@ function view_registration() {
 	$smarty->assign("user_last_name",$_REQUEST['user_last_name']);
 	$smarty->assign("user_email",$_REQUEST['user_email']);
 	
+	# Set recaptcha
+	include_library('recaptchalib.php');
+	$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
+	$racaptcha_html=recaptcha_get_html($publickey);
+	
+	$smarty->assign("racaptcha_html",$racaptcha_html);
 	$maintpl=find_template("register.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -101,6 +107,21 @@ function save_registration(){
 		user_message("A user with this name already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
 		return view_registration();
 	}
+	
+	# Lets check the recaptcha
+	include_library('recaptchalib.php');
+	$privatekey = "6Le6t94SAAAAAEDs3x4GleessiNUAqBjC0txOdqH";
+	$resp = recaptcha_check_answer ($privatekey,
+                                $_SERVER["REMOTE_ADDR"],
+                                $_POST["recaptcha_challenge_field"],
+                                $_POST["recaptcha_response_field"]);
+
+    if (!$resp->is_valid) {
+	    // What happens when the CAPTCHA was entered incorrectly
+		user_message("The reCaptcha value you chose was not correct. Please try again. {$resp->error}",1);
+		return view_registration();
+	}
+	
 	if($from_show_pilots==0){
 		# Lets first check to see if we have any pilots with that name for them to choose from
 		$stmt=db_prep("

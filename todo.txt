@@ -8,15 +8,13 @@ GENERAL
   
   Create forget password stuff
   
-  Complete registration emails and reg system
-	Send welcome email once registered and save it as their first message
-	Show sent messages and if they have been read or not
-	
+  Send welcome email once registered and save it as their first message
+
+  Add captcha to registration screen
+  
   Check bug in event round drop save query
   
-  Message system so that I can respond to comments and pilots can send each other messages
-  
-  Make a cool map of the locations in the database in a separate locations map screen
+  Make a cool map of the locations in the database in a separate locations map screen using google api
   
   Create a "Using this site" kind of tutorial instructions
   
@@ -69,6 +67,9 @@ MOBILE STUFF
 
 COMPLETED
  
+X Complete registration emails and reg system
+X	Show sent messages and if they have been read or not
+X Message system so that I can respond to comments and pilots can send each other messages
 X Fix email administration saving of quotes in body
 X Add comments and suggestions form for users to comment
 X Make a turn on and off debug by existance of a debug file
