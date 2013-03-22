@@ -31,7 +31,8 @@ function view_registration() {
 	include_library('recaptchalib.php');
 	$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
 	$racaptcha_html=recaptcha_get_html($publickey);
-	
+		
+	$smarty->assign("user",$user);
 	$smarty->assign("racaptcha_html",$racaptcha_html);
 	$maintpl=find_template("register.tpl");
 	return $smarty->fetch($maintpl);
