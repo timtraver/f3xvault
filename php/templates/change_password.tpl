@@ -8,8 +8,8 @@
 <input type="hidden" name="action" value="main">
 <input type="hidden" name="function" value="pass_recovery_save">
 <input type="hidden" name="user_id" value="{$user_info.user_id}">
-<input type="hidden" name="hash" value="hash">
-<table width="30%" cellpadding="2" cellspacing="1">
+<input type="hidden" name="hash" value="{$hash}">
+<table width="40%" cellpadding="2" cellspacing="1">
 <tr>
 	<th colspan="2">
 		RC Vault Password Recovery
@@ -20,13 +20,13 @@
 	<center>        
 	<table cellpadding="3" cellspacing="1">        
 	<tr>
-		<th valign="top">New Password</th>
+		<th valign="top" nowrap>New Password</th>
 		<td>
 			<input type="password" name="pass1" size="30" class="text" autocomplete="off"><br>
 		</td>
 	</tr>
 	<tr>
-		<th valign="top">Verify New Password</th>
+		<th valign="top" nowrap>Verify New Password</th>
 		<td>
 			<input type="password" name="pass2" size="30" class="text" autocomplete="off"><br>
 		</td>
