@@ -14,11 +14,18 @@ GENERAL
   
   Create a "send location" link to a buddy
   
+  Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
+  
+  
 EVENT STUFF
 
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
-   
+  
+  When creating a new round, allow them to view it alphabetically too
+  
+  On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
+  
   reflights for groups
   
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
