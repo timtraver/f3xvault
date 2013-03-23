@@ -297,13 +297,13 @@ function location_view() {
 	$media=db_exec($stmt,array("location_id"=>$location_id));
 	# Step thriough the media to get the user info for it
 	foreach ($media as $key=>$m){
-		if($m['wp_user_id']!=0){
+		if($m['user_id']!=0){
 			$stmt=db_prep("
 				SELECT *
 				FROM pilot p
-				WHERE p.pilot_wp_user_id=:wp_user_id
+				WHERE p.user_id=:user_id
 			");
-			$result2=db_exec($stmt,array("wp_user_id"=>$m['wp_user_id']));
+			$result2=db_exec($stmt,array("user_id"=>$m['user_id']));
 			if($result2[0]){
 				# Add the user info to the array
 				$media[$key]=array_merge($m,$result2[0]);
@@ -588,10 +588,10 @@ function location_media_add() {
 			location_media_type=:location_media_type,
 			location_media_caption=:location_media_caption,
 			location_media_url=:location_media_url,
-			wp_user_id=:wp_user_id,
+			user_id=:user_id,
 			location_media_status=1
 	");
-	$result=db_exec($stmt,array("location_id"=>$location_id,"location_media_type"=>$location_media_type,"location_media_url"=>$location_media_url,"location_media_caption"=>$location_media_caption,"wp_user_id"=>$GLOBALS['user']['user_id']));
+	$result=db_exec($stmt,array("location_id"=>$location_id,"location_media_type"=>$location_media_type,"location_media_url"=>$location_media_url,"location_media_caption"=>$location_media_caption,"user_id"=>$GLOBALS['user']['user_id']));
 
 	log_action($location_id);
 	user_message("Added your $location_media_type media!");
@@ -610,7 +610,7 @@ function location_media_del() {
 		WHERE location_media_id=:location_media_id
 	");
 	$result=db_exec($stmt,array("location_media_id"=>$location_media_id));
-	if($result[0]['wp_user_id']!=$GLOBALS['user']['user_id']){
+	if($result[0]['user_id']!=$GLOBALS['user']['user_id']){
 		user_message("You are not allowed to remove media that you did not upload.",1);
 		return location_edit();
 	}

@@ -121,9 +121,9 @@
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{if $m.location_media_type=='picture'}Picture{else}Video{/if}</td>
 		{if $m.location_media_type=='picture'}
-			<td><a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.wp_user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
+			<td><a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
 		{else}
-			<td><a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.wp_user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
+			<td><a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
 		{/if}
 		<td> <a href="?action=location&function=location_media_del&location_id={$location.location_id}&location_media_id={$m.location_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 	</tr>

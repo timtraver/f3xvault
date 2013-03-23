@@ -334,15 +334,15 @@ function plane_view() {
 	$media2=db_exec($stmt,array("plane_id"=>$plane_id));
 	# Step thriough the media to get the user info for it
 	foreach ($media2 as $key=>$m){
-		if($m['wp_user_id']!=0){
+		if($m['user_id']!=0){
 			$stmt=db_prep("
 				SELECT *
 				FROM pilot p
 				LEFT JOIN state s ON p.state_id=s.state_id
 				LEFT JOIN country c ON p.country_id=c.country_id
-				WHERE p.pilot_wp_user_id=:wp_user_id
+				WHERE p.user_id=:user_id
 			");
-			$result2=db_exec($stmt,array("wp_user_id"=>$m['wp_user_id']));
+			$result2=db_exec($stmt,array("user_id"=>$m['user_id']));
 			if($result2[0]){
 				# Add the user info to the array
 				$media2[$key]=array_merge($m,$result2[0]);
@@ -675,10 +675,10 @@ function plane_media_add() {
 			plane_media_type=:plane_media_type,
 			plane_media_caption=:plane_media_caption,
 			plane_media_url=:plane_media_url,
-			wp_user_id=:wp_user_id,
+			user_id=:user_id,
 			plane_media_status=1
 	");
-	$result=db_exec($stmt,array("plane_id"=>$plane_id,"plane_media_type"=>$plane_media_type,"plane_media_url"=>$plane_media_url,"plane_media_caption"=>$plane_media_caption,"wp_user_id"=>$GLOBALS['user']['user_id']));
+	$result=db_exec($stmt,array("plane_id"=>$plane_id,"plane_media_type"=>$plane_media_type,"plane_media_url"=>$plane_media_url,"plane_media_caption"=>$plane_media_caption,"user_id"=>$GLOBALS['user']['user_id']));
 
 	log_action($plane_id);
 	user_message("Added your $plane_media_type media!");
@@ -697,7 +697,7 @@ function plane_media_del() {
 		WHERE plane_media_id=:plane_media_id
 	");
 	$result=db_exec($stmt,array("plane_media_id"=>$plane_media_id));
-	if($result[0]['wp_user_id']!=$GLOBALS['user']['user_id']){
+	if($result[0]['user_id']!=$GLOBALS['user']['user_id']){
 		user_message("You are not allowed to remove media that you did not upload.",1);
 		return plane_edit();
 	}

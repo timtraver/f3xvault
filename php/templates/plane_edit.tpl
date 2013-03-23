@@ -220,9 +220,9 @@ function calc_area(){ldelim}
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{if $m.plane_media_type=='picture'}Picture{else}Video{/if}</td>
 		{if $m.plane_media_type=='picture'}
-			<td><a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{if $m.wp_user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
+			<td><a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
 		{else}
-			<td><a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{if $m.wp_user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
+			<td><a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
 		{/if}
 		<td> <a href="?action=plane&function=plane_media_del&plane_id={$plane.plane_id}&plane_media_id={$m.plane_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 	</tr>
