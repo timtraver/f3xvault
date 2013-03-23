@@ -193,9 +193,9 @@ function calc_area(){ldelim}
 <h1 class="post-title entry-title">Plane Media</h1>
 {foreach $media as $m}
 	{if $m.plane_media_type == 'picture'}
-		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/icons/picture.png" style="border-style: none;"></a>
+		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
 	{else}
-		<a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/icons/webcam.png" style="border-style: none;"></a>
+		<a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
 	{/if}
 {/foreach}
 </div>
