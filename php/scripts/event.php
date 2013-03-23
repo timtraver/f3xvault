@@ -690,7 +690,7 @@ function event_pilot_save() {
 		
 		$stmt=db_prep("
 			INSERT INTO pilot
-			SET pilot_wp_user_id=0,
+			SET user_id=0,
 				pilot_first_name=:pilot_first_name,
 				pilot_last_name=:pilot_last_name,
 				pilot_email=:pilot_email,

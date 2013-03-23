@@ -43,6 +43,17 @@ class Event {
 	}
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
+		$sort_by=$_REQUEST['sort_by'];
+		switch($sort_by){
+			case 'alphabetical':
+				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'flight_order':
+			case 'round_rank':
+			default:
+				$sort_string='';
+				break;
+		}
 		$stmt=db_prep("
 			SELECT *
 			FROM event_pilot ep
@@ -51,7 +62,7 @@ class Event {
 			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 			WHERE ep.event_id=:event_id
 				AND ep.event_pilot_status=1
-			ORDER BY ep.event_pilot_entry_order
+			$sort_string
 		");
 		$results=db_exec($stmt,array("event_id"=>$this->event_id));
 		foreach($results as $pilot){

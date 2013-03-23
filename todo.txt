@@ -22,8 +22,6 @@ EVENT STUFF
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
-  When creating a new round, allow them to view it alphabetically too
-  
   On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
   
   reflights for groups
@@ -62,6 +60,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X When creating a new round, allow them to view it alphabetically too
 X On round entry screen, make a checkbox to allow for entries to be saved after each entry by ajax without calculating it, or enter them all at once for offline entering
 X Check bug in event round drop save query
 X when a pilot is added to an event and adds a plane, add the plane to their my pilot profile if it doesn't exist.
