@@ -114,9 +114,7 @@ function save_data(element) {ldelim}
 					{$ft.flight_type_name}
 				</th>
 				<th>
-					{if $ft.flight_type_code|strstr:"f3b_"}
 					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0} CHECKED{/if}>
-					{/if}
 				</th>
 			</tr>
 			<tr>

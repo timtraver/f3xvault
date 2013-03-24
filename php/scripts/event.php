@@ -1246,24 +1246,38 @@ function event_round_save() {
 	# First, lets save the round info
 	if($event_round_id==0){
 		# New round, so lets create
+		# Lets first see if maybe we already created one with the quick score routines
 		$stmt=db_prep("
-			INSERT INTO event_round
-			SET event_id=:event_id,
-				event_round_number=:event_round_number,
-				flight_type_id=:flight_type_id,
-				event_round_time_choice=:event_round_time_choice,
-				event_round_score_status=:event_round_score_status,
-				event_round_status=1
+			SELECT *
+			FROM event_round
+			WHERE event_id=:event_id
+			AND event_round_number=:event_round_number
+			AND event_round_status=1
 		");
-		$result=db_exec($stmt,array(
-			"event_id"=>$event_id,
-			"event_round_number"=>$event_round_number,
-			"flight_type_id"=>$flight_type_id,
-			"event_round_time_choice"=>$event_round_time_choice,
-			"event_round_score_status"=>$event_round_score_status
-		));
-		$event_round_id=$GLOBALS['last_insert_id'];
-		$_REQUEST['event_round_id']=$event_round_id;
+		$result=db_exec($stmt,array("event_id"=>$event_id,"event_round_number"=>$event_round_number));
+		if(isset($result[0])){
+			$event_round_id=$result[0]['event_round_id'];
+			$_REQUEST['event_round_id']=$event_round_id;
+		}else{
+			$stmt=db_prep("
+				INSERT INTO event_round
+				SET event_id=:event_id,
+					event_round_number=:event_round_number,
+					flight_type_id=:flight_type_id,
+					event_round_time_choice=:event_round_time_choice,
+					event_round_score_status=:event_round_score_status,
+					event_round_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"event_round_number"=>$event_round_number,
+				"flight_type_id"=>$flight_type_id,
+				"event_round_time_choice"=>$event_round_time_choice,
+				"event_round_score_status"=>$event_round_score_status
+			));
+			$event_round_id=$GLOBALS['last_insert_id'];
+			$_REQUEST['event_round_id']=$event_round_id;
+		}
 	}else{
 		# Lets save it
 		$stmt=db_prep("
@@ -1646,6 +1660,14 @@ function save_individual_flight(){
 				"event_round_score_status"=>$event_round_score_status
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
+			# Lets also create a new event_round_flight that is set to on
+			$stmt=db_prep("
+				INSERT INTO event_round_flight
+				SET event_round_id=:event_round_id,
+					flight_type_id=:flight_type_id,
+					event_round_flight_score=1
+			");
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
 		}
 	}
 	
