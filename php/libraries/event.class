@@ -738,6 +738,7 @@ class Event {
 				}
 			}		
 		}
+		print_r($temp_speeds);
 		$speeds=array_msort($temp_speeds,array("event_pilot_round_flight_seconds"=>SORT_ASC));
 		return $speeds;
 	}

@@ -234,6 +234,9 @@ function event_view() {
 		if($ft['flight_type_code']=='f3b_duration'){
 			$duration=1;
 		}
+		if($ft['flight_type_code']=='f3f_speed' || $ft['flight_type_code']=='f3b_speed'){
+			$speed=1;
+		}
 	}
 	$lap_totals=array();
 	$speed_averages=array();
