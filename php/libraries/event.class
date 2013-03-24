@@ -715,6 +715,9 @@ class Event {
 	}
 	function get_top_speeds(){
 		# Function to get the top speeds of the contest
+		if(count($this->rounds)==0){
+			$this->get_rounds();
+		}
 		if(count($this->totals['pilots'])==0){
 			$this->calculate_event_totals();
 		}
