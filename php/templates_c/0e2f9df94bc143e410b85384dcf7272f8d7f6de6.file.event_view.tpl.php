@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-22 00:13:00
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-24 23:53:37
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1363935270,
+      1 => 1364194390,
       2 => 'file',
     ),
   ),
@@ -924,7 +924,9 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 	
 </div>
 <?php }?>
-
+<script>
+	document.getElementById('pilot_name').focus();
+</script>
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">

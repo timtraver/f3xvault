@@ -212,6 +212,13 @@ function copy_plane_values(){ldelim}
 </table>
 </form>
 
+<script>
+{if $pilot.pilot_id==0}
+	document.main.pilot_city.focus();
+{else}
+	document.main.pilot_ama.focus();
+{/if}
+</script>
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">

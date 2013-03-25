@@ -1628,6 +1628,18 @@ function save_individual_flight(){
 	if($event_round_score_status=='on'){
 		$event_round_score_status=1;
 	}
+
+	# Lets get the info from the field being saved
+	if(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)_(\d+)$/",$field_name,$match)){
+		$field=$match[1];
+		$event_pilot_round_flight_id=$match[2];
+		$event_pilot_id=$match[3];
+		$event_round_flight_type_id=$match[4];
+		if($field_value=='on'){
+			$field_value=1;
+		}
+	}
+
 	# Lets determine if we need to create a new event round record first
 	if($event_round_id==0){
 		# Lets see if it already exists
@@ -1667,18 +1679,7 @@ function save_individual_flight(){
 					flight_type_id=:flight_type_id,
 					event_round_flight_score=1
 			");
-			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
-		}
-	}
-	
-	# Now lets get the info from the field being saved
-	if(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)_(\d+)$/",$field_name,$match)){
-		$field=$match[1];
-		$event_pilot_round_flight_id=$match[2];
-		$event_pilot_id=$match[3];
-		$flight_type_id=$match[4];
-		if($field_value=='on'){
-			$field_value=1;
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$event_round_flight_type_id));
 		}
 	}
 	
@@ -1708,7 +1709,6 @@ function save_individual_flight(){
 	}
 	
 	# Now step through each one and save the flight record
-
 	if($event_pilot_round_flight_id==0){
 		# This flight doesnt yet exist, so lets create it
 		# We need to get the event_pilot_round_id
@@ -1740,7 +1740,7 @@ function save_individual_flight(){
 		");
 		$result2=db_exec($stmt,array(
 			"event_pilot_round_id"=>$event_pilot_round_id,
-			"flight_type_id"=>$flight_type_id,
+			"flight_type_id"=>$event_round_flight_type_id,
 			"value"=>$field_value
 		));
 	}else{

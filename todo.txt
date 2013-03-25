@@ -16,6 +16,12 @@ GENERAL
   
   Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
   
+  Fix bug when saving event round that creates duplicate event_pilot_round_flight records
+  	This stems from auto saving the individual records on a new round
+  
+  Change all the fields in db and on forms to FAI, not FIA
+  
+  Add Edit button to plane and location views to be obvious on how to edit the data
   
 EVENT STUFF
 

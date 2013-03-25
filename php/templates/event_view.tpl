@@ -621,7 +621,9 @@ function toggle(element,tog) {
 	
 </div>
 {/if}
-
+<script>
+	document.getElementById('pilot_name').focus();
+</script>
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
