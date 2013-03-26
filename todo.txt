@@ -24,6 +24,8 @@ EVENT STUFF
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
+  On event pilot detail list, show blanks for rounds that aren't full
+  
   Alternate row shared on event input screen for groups
   
   reflights for groups
@@ -39,6 +41,8 @@ EVENT STUFF
   When event is completed, blast the link to the event to the event participants
   
   Add Pilot Number for contests that might have bibs
+  
+  When printing pilot detail report, print a list of the overall ranking too...maybe
   
 SERIES STUFF
 
