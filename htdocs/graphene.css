@@ -2223,8 +2223,8 @@ h3.author-post-list {
 	background: url(images/sprite_h.png) left -1352px repeat-x #111;
 	border-top: 1px solid #d5d5d5;
 	padding-top: 50px;
-	margin-bottom: 30px;
-	min-height: 80px;
+	margin-bottom: 10px;
+	min-height: 40px;
 	position: relative;
 	color: #999;
 	clear: both;

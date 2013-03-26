@@ -248,18 +248,18 @@ function check_event(){
 <input type="hidden" name="club_id" value="{$event->info.club_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
+	<th>Event Name</th>
+	<td>
+		<input type="text" size="60" name="event_name" value="{$event->info.event_name}">
+	</td>
+</tr>
+<tr>
 	<th>Location</th>
 	<td>
 		<input type="text" id="location_name" name="location_name" size="40" value="{$event->info.location_name}">
 		<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
 		<input type="button" value=" + New Location " class="block-button" onClick="copy_location_values(); create_new_location.submit();">
-	</td>
-</tr>
-<tr>
-	<th>Name</th>
-	<td>
-		<input type="text" size="60" name="event_name" value="{$event->info.event_name}">
 	</td>
 </tr>
 <tr>

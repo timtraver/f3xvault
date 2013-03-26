@@ -1258,6 +1258,15 @@ function event_round_save() {
 		if(isset($result[0])){
 			$event_round_id=$result[0]['event_round_id'];
 			$_REQUEST['event_round_id']=$event_round_id;
+			# Need to update it to say that it no longer needs calculation
+			$stmt=db_prep("
+				UPDATE event_round
+				SET event_round_needs_calc=1
+				WHERE event_round_id=:event_round_id
+			");
+			$result=db_exec($stmt,array(
+				"event_round_id"=>$event_round_id
+			));
 		}else{
 			$stmt=db_prep("
 				INSERT INTO event_round
@@ -1266,6 +1275,7 @@ function event_round_save() {
 					flight_type_id=:flight_type_id,
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
+					event_round_needs_calc=0,
 					event_round_status=1
 			");
 			$result=db_exec($stmt,array(
@@ -1284,7 +1294,8 @@ function event_round_save() {
 			UPDATE event_round
 			SET flight_type_id=:flight_type_id,
 				event_round_time_choice=:event_round_time_choice,
-				event_round_score_status=:event_round_score_status
+				event_round_score_status=:event_round_score_status,
+				event_round_needs_calc=0
 			WHERE event_round_id=:event_round_id
 		");
 		$result=db_exec($stmt,array(
@@ -1355,11 +1366,65 @@ function event_round_save() {
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
-		
+	print "<!--\n";
+	print_r($data);
+	print "\n";
+	
 	# Now step through each one and save the flight record
 	foreach($data as $event_pilot_round_flight_id=>$p){
 		foreach($p as $event_pilot_id=>$f){
 			foreach($f as $flight_type_id=>$v){
+
+				print "event_pilot_round_flight_id=$event_pilot_round_flight_id\n";
+			
+				# We need to get the event_pilot_round_id for this round and event pilot
+				$stmt=db_prep("
+					SELECT *
+					FROM event_pilot_round epr
+					WHERE epr.event_round_id=:event_round_id
+						AND epr.event_pilot_id=:event_pilot_id
+				");
+				$result=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
+				if(!isset($result[0])){
+					# Event round doesn't exist, so lets create one
+					$stmt=db_prep("
+						INSERT INTO event_pilot_round
+						SET event_pilot_id=:event_pilot_id,
+							event_round_id=:event_round_id
+					");
+					$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
+					$event_pilot_round_id=$GLOBALS['last_insert_id'];
+				}else{
+					$event_pilot_round_id=$result[0]['event_pilot_round_id'];
+				}
+
+				print "event_pilot_round_id=$event_pilot_round_id\n";
+				
+				# Now lets check if this is a new one or not
+				if($event_pilot_round_flight_id==0){
+					# This record is a new one (maybe)
+					# Lets check if one already exists from the auto save feature
+					$stmt=db_prep("
+						SELECT *
+						FROM event_pilot_round_flight erf
+						WHERE erf.event_pilot_round_id=:event_pilot_round_id
+							AND erf.flight_type_id=:flight_type_id
+					");
+					$result=db_exec($stmt,array(
+						"event_pilot_round_id"=>$event_pilot_round_id,
+						"flight_type_id"=>$flight_type_id
+					));
+					if(isset($result[0])){
+						$event_pilot_round_flight_id_actual=$result[0]['event_pilot_round_flight_id'];
+					}else{
+						$event_pilot_round_flight_id_actual=0;
+					}
+				}else{
+					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
+				}
+				
+				print "event_pilot_round_flight_id_actual=$event_pilot_round_flight_id_actual\n";
+				
 				# Lets see if this flight already exists
 				$stmt=db_prep("
 					SELECT *
@@ -1367,7 +1432,7 @@ function event_round_save() {
 					WHERE erf.event_pilot_round_flight_id=:event_pilot_round_flight_id
 				");
 				$result=db_exec($stmt,array(
-					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id
+					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual
 				));
 				if(isset($result[0])){
 					# There is already a record, so save this one
@@ -1384,7 +1449,7 @@ function event_round_save() {
 						WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
 					");
 					$result2=db_exec($stmt,array(
-						"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
+						"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
 						"event_pilot_round_flight_group"=>$v['group'],
 						"event_pilot_round_flight_minutes"=>$v['min'],
 						"event_pilot_round_flight_seconds"=>$v['sec'],
@@ -1395,26 +1460,6 @@ function event_round_save() {
 					));
 				}else{
 					# There isn't a record, so lets create a new one
-					# We need to get the event_pilot_round_id
-					$stmt=db_prep("
-						SELECT *
-						FROM event_pilot_round epr
-						WHERE epr.event_round_id=:event_round_id
-							AND epr.event_pilot_id=:event_pilot_id
-					");
-					$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
-					if(!isset($result2[0])){
-						# Event round doesn't exist, so lets create one
-						$stmt=db_prep("
-							INSERT INTO event_pilot_round
-							SET event_pilot_id=:event_pilot_id,
-								event_round_id=:event_round_id
-						");
-						$result3=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
-						$event_pilot_round_id=$GLOBALS['last_insert_id'];
-					}else{
-						$event_pilot_round_id=$result2[0]['event_pilot_round_id'];
-					}
 					$stmt=db_prep("
 						INSERT INTO event_pilot_round_flight
 						SET event_pilot_round_id=:event_pilot_round_id,
@@ -1443,6 +1488,7 @@ function event_round_save() {
 			}
 		}
 	}
+	print "-->\n";
 	# OK, now lets call the routine to do the calculation for a single round
 	# First, since we saved the data, reset the $event object
 	$event=new Event($event_id);
@@ -1653,6 +1699,15 @@ function save_individual_flight(){
 		$result=db_exec($stmt,array("event_id"=>$event_id,"event_round_number"=>$event_round_number));
 		if(isset($result[0])){
 			$event_round_id=$result[0]['event_round_id'];
+			# Need to update it to say that it needs calculation
+			$stmt=db_prep("
+				UPDATE event_round
+				SET event_round_needs_calc=1
+				WHERE event_round_id=:event_round_id
+			");
+			$result=db_exec($stmt,array(
+				"event_round_id"=>$event_round_id
+			));
 		}else{
 			# New round, so lets create
 			$stmt=db_prep("
@@ -1662,6 +1717,7 @@ function save_individual_flight(){
 					flight_type_id=:flight_type_id,
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
+					event_round_needs_calc=1,
 					event_round_status=1
 			");
 			$result=db_exec($stmt,array(

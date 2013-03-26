@@ -115,7 +115,11 @@ class Event {
 		return;
 	}
 	function get_rounds(){
-		$sort_by=$_REQUEST['sort_by'];
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
 		switch($sort_by){
 			case 'flight_order':
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
@@ -128,6 +132,7 @@ class Event {
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
 				break;
 		}
+				
 		# Now lets get the rounds for this event
 		$stmt=db_prep("
 			SELECT *
@@ -144,6 +149,36 @@ class Event {
 			$rounds[$event_round_number]=$round;
 		}
 		$this->rounds=$rounds;
+		
+		# Lets recalculate the rounds if we need to
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round er
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+				AND er.event_round_needs_calc=1
+			ORDER BY ABS(er.event_round_number)
+		");
+		$needed_recalc=0;
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($results as $key=>$round){
+			if($round['event_round_needs_calc']==1){
+				$this->calculate_round($round['event_round_number']);
+				$needed_recalc=1;
+				# turn off the recalc for that round
+				$stmt=db_prep("
+					UPDATE event_round
+					SET event_round_needs_calc=0
+					WHERE event_round_id=:event_round_id
+				");
+				$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+			}
+		}
+		if($needed_recalc==1){
+			# It needed some rounds recalculated, so lets re-do the rounds
+			$this->get_rounds();
+			return;
+		}
 
 		# Now lets get the flights for the round
 		foreach($this->rounds as $key=>$round){
