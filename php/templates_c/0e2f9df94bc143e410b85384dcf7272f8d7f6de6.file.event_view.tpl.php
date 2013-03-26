@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-24 23:53:37
+<?php /* Smarty version Smarty-3.1.11, created on 2013-03-25 23:50:42
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1364194390,
+      1 => 1364280639,
       2 => 'file',
     ),
   ),
@@ -242,7 +242,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<th colspan="<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>10){?>11<?php }else{ ?><?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds)+1;?>
 <?php }?>" align="center" nowrap>
 				Completed Rounds (<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']==0){?>No<?php }else{ ?><?php echo $_smarty_tpl->tpl_vars['event']->value->totals['round_drops'];?>
-<?php }?> Drops In Effect)
+<?php }?> Drop<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']!=1){?>s<?php }?> In Effect)
 			</th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Pen</th>

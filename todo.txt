@@ -16,19 +16,15 @@ GENERAL
   
   Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
   
-  Fix bug when saving event round that creates duplicate event_pilot_round_flight records
-  	This stems from auto saving the individual records on a new round
-  
   Change all the fields in db and on forms to FAI, not FIA
   
-  Add Edit button to plane and location views to be obvious on how to edit the data
   
 EVENT STUFF
 
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
-  On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
+  Alternate row shared on event input screen for groups
   
   reflights for groups
   
@@ -66,6 +62,10 @@ MOBILE STUFF
 
 COMPLETED
  
+X On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
+X Add Edit button to plane and location views to be obvious on how to edit the data
+X Fix bug when saving event round that creates duplicate event_pilot_round_flight records
+X 	This stems from auto saving the individual records on a new round
 X When creating a new round, allow them to view it alphabetically too
 X On round entry screen, make a checkbox to allow for entries to be saved after each entry by ajax without calculating it, or enter them all at once for offline entering
 X Check bug in event round drop save query

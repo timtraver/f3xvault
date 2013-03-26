@@ -806,31 +806,31 @@ function event_pilot_save() {
 		}
 		
 		# Lets create a single round entry to make sure they show up if there are any rounds already
-		$stmt=db_prep("
-			SELECT *,erf.flight_type_id
-			FROM event_round_flight erf
-			LEFT JOIN event_round er ON erf.event_round_id=er.event_round_id
-			WHERE er.event_id=:event_id
-				AND er.event_round_status=1
-		");
-		$result=db_exec($stmt,array("event_id"=>$event_id));
-		if(isset($result[0])){
-			$round=$result[0];
-
-			# There is at least one round, so lets create a flight on the first round
-			$stmt=db_prep("
-				INSERT INTO event_round_flight
-				SET event_round_id=:event_round_id,
-					flight_type_id=:flight_type_id,
-					event_pilot_id=:event_pilot_id,
-					event_round_flight_status=1
-			");
-			$result2=db_exec($stmt,array(
-				"event_round_id"=>$round['event_round_id'],
-				"flight_type_id"=>$round['flight_type_id'],
-				"event_pilot_id"=>$event_pilot_id
-			));
-		}
+#		$stmt=db_prep("
+#			SELECT *,erf.flight_type_id
+#			FROM event_round_flight erf
+#			LEFT JOIN event_round er ON erf.event_round_id=er.event_round_id
+#			WHERE er.event_id=:event_id
+#				AND er.event_round_status=1
+#		");
+#		$result=db_exec($stmt,array("event_id"=>$event_id));
+#		if(isset($result[0])){
+#			$round=$result[0];
+#
+#			# There is at least one round, so lets create a flight on the first round
+#			$stmt=db_prep("
+#				INSERT INTO event_round_flight
+#				SET event_round_id=:event_round_id,
+#					flight_type_id=:flight_type_id,
+#					event_pilot_id=:event_pilot_id,
+#					event_round_flight_status=1
+#			");
+#			$result2=db_exec($stmt,array(
+#				"event_round_id"=>$round['event_round_id'],
+#				"flight_type_id"=>$round['flight_type_id'],
+#				"event_pilot_id"=>$event_pilot_id
+#			));
+#		}
 	}
 	# Lets see if we need to update the pilot's ama or fia number
 	$stmt=db_prep("
@@ -1523,7 +1523,7 @@ function event_round_delete() {
 	$stmt=db_prep("
 		UPDATE event_pilot_round_flight
 		SET event_pilot_round_flight_status=0
-		WHERE event_pilot_round_id=(SELECT event_pilot_round_id FROM event_pilot_round WHERE event_round_id=:event_round_id)
+		WHERE event_pilot_round_id IN (SELECT event_pilot_round_id FROM event_pilot_round WHERE event_round_id=:event_round_id)
 	");
 	$result=db_exec($stmt,array(
 		"event_round_id"=>$event_round_id
@@ -1737,6 +1737,16 @@ function save_individual_flight(){
 			");
 			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$event_round_flight_type_id));
 		}
+	}else{
+		# Set this round to be calculated
+		$stmt=db_prep("
+			UPDATE event_round
+			SET event_round_needs_calc=1
+			WHERE event_round_id=:event_round_id
+		");
+		$result=db_exec($stmt,array(
+			"event_round_id"=>$event_round_id
+		));
 	}
 	
 	# Make the set line based on the type

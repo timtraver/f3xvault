@@ -125,7 +125,7 @@ function save_data(element) {ldelim}
 					<th align="center">Group</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center">Time/Over</th>
+					<th align="center">Time{if $ft.flight_type_over_penalty}/Over{/if}</th>
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center">Landing</th>

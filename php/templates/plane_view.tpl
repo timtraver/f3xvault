@@ -3,7 +3,7 @@
 		<h1 class="post-title entry-title">RC Plane Database</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Plane Details</h1>
+<h1 class="post-title entry-title">Plane Details  <input type="button" value=" Edit Plane Information " class="button" onClick="plane_edit.submit();"></h1>
 <script type="text/javascript">
 function calc_wingspan(){ldelim}
 	var current_units = '{$plane.plane_wingspan_units}';
@@ -191,6 +191,7 @@ function calc_area(){ldelim}
 
 
 <h1 class="post-title entry-title">Plane Media</h1>
+{if !$user.user_id}Log In To Add Media{/if}
 {foreach $media as $m}
 	{if $m.plane_media_type == 'picture'}
 		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
@@ -222,6 +223,11 @@ function calc_area(){ldelim}
 <form name="addcomment" method="GET">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_comment_add">
+<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+</form>
+<form name="plane_edit" method="GET">
+<input type="hidden" name="action" value="plane">
+<input type="hidden" name="function" value="plane_edit">
 <input type="hidden" name="plane_id" value="{$plane.plane_id}">
 </form>
 

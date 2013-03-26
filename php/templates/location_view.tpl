@@ -3,7 +3,7 @@
 		<h1 class="post-title entry-title">RC Location Database</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Location Details</h1>
+<h1 class="post-title entry-title">Location Details <input type="button" value=" Edit Location Information " class="button" onClick="location_edit.submit();"></h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th>Location Name</th>
@@ -112,6 +112,7 @@
 </form>
 
 <h1 class="post-title entry-title">Location Media</h1>
+{if !$user.user_id}Log In To Add Media{/if}
 {foreach $media as $m}
 	{if $m.location_media_type == 'picture'}
 		<a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
@@ -143,6 +144,11 @@
 <form name="addcomment" method="GET">
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_comment_add">
+<input type="hidden" name="location_id" value="{$location.location_id}">
+</form>
+<form name="location_edit" method="GET">
+<input type="hidden" name="action" value="location">
+<input type="hidden" name="function" value="location_edit">
 <input type="hidden" name="location_id" value="{$location.location_id}">
 </form>
 

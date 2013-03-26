@@ -40,6 +40,7 @@
 			{if $user.user_admin==1}
 			<li class="menu-item menu-item-type-custom menu-item-object-custom {if $current_menu=='admin'}current-menu-item{/if}"><a href="/?action=admin"><strong>Admin</strong></a></li>
 			{/if}
+			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=main&function=main_feedback"><strong>Todo</strong></a></li>
 		</ul>            
 	</div>
 	<div class="menu-bottom-shadow">&nbsp;</div>

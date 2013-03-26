@@ -150,36 +150,6 @@ class Event {
 		}
 		$this->rounds=$rounds;
 		
-		# Lets recalculate the rounds if we need to
-		$stmt=db_prep("
-			SELECT *
-			FROM event_round er
-			WHERE er.event_id=:event_id
-				AND er.event_round_status=1
-				AND er.event_round_needs_calc=1
-			ORDER BY ABS(er.event_round_number)
-		");
-		$needed_recalc=0;
-		$results=db_exec($stmt,array("event_id"=>$this->event_id));
-		foreach($results as $key=>$round){
-			if($round['event_round_needs_calc']==1){
-				$this->calculate_round($round['event_round_number']);
-				$needed_recalc=1;
-				# turn off the recalc for that round
-				$stmt=db_prep("
-					UPDATE event_round
-					SET event_round_needs_calc=0
-					WHERE event_round_id=:event_round_id
-				");
-				$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
-			}
-		}
-		if($needed_recalc==1){
-			# It needed some rounds recalculated, so lets re-do the rounds
-			$this->get_rounds();
-			return;
-		}
-
 		# Now lets get the flights for the round
 		foreach($this->rounds as $key=>$round){
 			$event_round_number=$round['event_round_number'];
@@ -233,6 +203,40 @@ class Event {
 				}
 			}
 		}
+		
+		# Lets recalculate any rounds if we need to
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round er
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+				AND er.event_round_needs_calc=1
+			ORDER BY ABS(er.event_round_number)
+		");
+		$needed_recalc=0;
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($results as $key=>$round){
+			if($round['event_round_needs_calc']==1){
+				$this->calculate_round($round['event_round_number']);
+				$needed_recalc=1;
+				# turn off the recalc for that round
+				$stmt=db_prep("
+					UPDATE event_round
+					SET event_round_needs_calc=0
+					WHERE event_round_id=:event_round_id
+				");
+				$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+			}
+		}
+		if($needed_recalc==1){
+			# It needed some rounds recalculated, so lets re-do the rounds
+			$this->get_rounds();
+			$this->calculate_event_totals();	
+			$this->event_save_totals();
+			$this->get_pilots();
+			return;
+		}
+
 		$this->calculate_event_totals();	
 		return;
 	}
@@ -479,6 +483,14 @@ class Event {
 					"event_pilot_round_id"=>$result[0]['event_pilot_round_id']
 				));
 			}else{
+			
+			print "event_pilot_id=$event_pilot_id\n";
+			print "event_round_id=$event_round_id\n";
+			print "raw={$v['raw']}\n";
+			print "drop={$v['drop']}\n";
+			print "total=".($v['raw']-$v['drop'])."\n";
+			print "rank={$v['rank']}\n";
+
 				# Doesn't exist, so lets create it
 				$stmt=db_prep("
 					INSERT INTO event_pilot_round
