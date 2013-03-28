@@ -24,25 +24,29 @@ EVENT STUFF
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
-  On event pilot detail list, show blanks for rounds that aren't full
-  
-  Alternate row shared on event input screen for groups
-  
   reflights for groups
   
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
 
   Flyoff capability
-
+	Now that we've got the field in the db for it
+	Don't calculate the rounds that are marked as flyoffs
+	Create Separate Classification for flyoff rounds only
+		By creating a separate flyoff total calculation
+		
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
   Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
 
-  When event is completed, blast the link to the event to the event participants
+  When event is completed, have a function to blast the link to the event to the event participants if members
   
-  Add Pilot Number for contests that might have bibs
-  
-  When printing pilot detail report, print a list of the overall ranking too...maybe
+  Add Pilot Event Number for contests that might have bibs
+  	Add this number to the classification screen
+  		to the event pilot list
+  		to the event pilot detail report
+  		to the round edits
+  		
+  When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
   
 SERIES STUFF
 
@@ -66,6 +70,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X Alternate row shared on event input screen for groups
+X On event pilot detail list, show blanks for rounds that aren't full
 X On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
 X Add Edit button to plane and location views to be obvious on how to edit the data
 X Fix bug when saving event round that creates duplicate event_pilot_round_flight records

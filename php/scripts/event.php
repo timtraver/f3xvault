@@ -1165,6 +1165,7 @@ function event_round_edit() {
 	$event_id=intval($_REQUEST['event_id']);
 	$event_round_id=intval($_REQUEST['event_round_id']);
 	$zero_round=intval($_REQUEST['zero_round']);
+	$flyoff_round=intval($_REQUEST['flyoff_round']);
 	if(isset($_REQUEST['sort_by'])){
 		$sort_by=$_REQUEST['sort_by'];
 	}else{
@@ -1238,6 +1239,7 @@ function event_round_save() {
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
 	$event_round_time_choice=$_REQUEST['event_round_time_choice'];
 	$event_round_number=$_REQUEST['event_round_number'];
+	$event_round_flyoff=intval($_REQUEST['event_round_flyoff']);
 	$event_round_score_status=0;
 	if(isset($_REQUEST['event_round_score_status']) && $_REQUEST['event_round_score_status']=='on'){
 		$event_round_score_status=1;
@@ -1276,6 +1278,7 @@ function event_round_save() {
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
 					event_round_needs_calc=0,
+					event_round_flyoff=:event_round_flyoff,
 					event_round_status=1
 			");
 			$result=db_exec($stmt,array(
@@ -1283,6 +1286,7 @@ function event_round_save() {
 				"event_round_number"=>$event_round_number,
 				"flight_type_id"=>$flight_type_id,
 				"event_round_time_choice"=>$event_round_time_choice,
+				"event_round_flyoff"=>$event_round_flyoff,
 				"event_round_score_status"=>$event_round_score_status
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
@@ -1295,6 +1299,7 @@ function event_round_save() {
 			SET flight_type_id=:flight_type_id,
 				event_round_time_choice=:event_round_time_choice,
 				event_round_score_status=:event_round_score_status,
+				event_round_flyoff=:event_round_flyoff,
 				event_round_needs_calc=0
 			WHERE event_round_id=:event_round_id
 		");
@@ -1302,6 +1307,7 @@ function event_round_save() {
 			"flight_type_id"=>$flight_type_id,
 			"event_round_time_choice"=>$event_round_time_choice,
 			"event_round_score_status"=>$event_round_score_status,
+			"event_round_flyoff"=>$event_round_flyoff,
 			"event_round_id"=>$event_round_id
 		));
 	}
@@ -1366,10 +1372,8 @@ function event_round_save() {
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
-	print "<!--\n";
-	print_r($data);
-	print "\n";
-	
+
+print "<!-- \n";	
 	# Now step through each one and save the flight record
 	foreach($data as $event_pilot_round_flight_id=>$p){
 		foreach($p as $event_pilot_id=>$f){

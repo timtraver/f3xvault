@@ -172,7 +172,7 @@ class Event {
 				if(isset($result[0])){
 					$ft['event_round_flight_score']=$result[0]['event_round_flight_score'];
 				}else{
-					$ft['event_round_flight_score']=0;
+					$ft['event_round_flight_score']=1;
 				}
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 				
@@ -250,6 +250,10 @@ class Event {
 			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots;
+		}
+		# Set the flyoff round default
+		if($_REQUEST['flyoff_round']==1){
+			$this->rounds[$event_round_number]['event_round_flyoff']=1;
 		}
 		return;
 	}
@@ -484,12 +488,12 @@ class Event {
 				));
 			}else{
 			
-			print "event_pilot_id=$event_pilot_id\n";
-			print "event_round_id=$event_round_id\n";
-			print "raw={$v['raw']}\n";
-			print "drop={$v['drop']}\n";
-			print "total=".($v['raw']-$v['drop'])."\n";
-			print "rank={$v['rank']}\n";
+#			print "event_pilot_id=$event_pilot_id\n";
+#			print "event_round_id=$event_round_id\n";
+#			print "raw={$v['raw']}\n";
+#			print "drop={$v['drop']}\n";
+#			print "total=".($v['raw']-$v['drop'])."\n";
+#			print "rank={$v['rank']}\n";
 
 				# Doesn't exist, so lets create it
 				$stmt=db_prep("
@@ -498,14 +502,15 @@ class Event {
 						event_round_id=:event_round_id,
 						event_pilot_round_raw_score=:raw,
 						event_pilot_round_drop_score=:drop,
+						event_pilot_round_total_score=:total,
 						event_pilot_round_rank=:rank
 				");
 				$result2=db_exec($stmt,array(
 					"event_pilot_id"=>$event_pilot_id,
-					"event_round_id"=>$event_round_id,
+					"event_round_id"=>$this->rounds[$event_round_number]['event_round_id'],
 					"raw"=>$v['raw'],
 					"drop"=>$v['drop'],
-					"total"=>($v['raw']-$v['drop']),
+					"total"=>$v['raw']-$v['drop'],
 					"rank"=>$v['rank']
 				));
 			}

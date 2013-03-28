@@ -58,7 +58,7 @@ function save_data(element) {ldelim}
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" nowrap>Event Round Type</th>
-			<td colspan="3">
+			<td>
 				{if $event->info.event_type_flight_choice==1}
 					<select name="flight_type_id">
 					{foreach $flight_types as $ft}
@@ -71,9 +71,13 @@ function save_data(element) {ldelim}
 					{/foreach}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
-				&nbsp;&nbsp;
+			</td>
+			<th>
+				Max Flight Time
+			</th>
+			<td>
 				{if $event->info.event_type_time_choice==1}
-					Max Flight Time : <input type="text" size="5" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
+					<input type="text" size="5" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
 				{else}
 					<input type="hidden" name="event_round_time_choice" value="0">
 				{/if}
@@ -89,11 +93,25 @@ function save_data(element) {ldelim}
 				</select>
 			</td>
 			<th nowrap>Include This Round In Final Results</th>
-			<td align="center">
+			<td align="left">
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
+		{if $event->rounds.$round_number.event_round_flyoff!=0}
+		<tr>
+			<th nowrap>Flyoff Number</th>
+			<td colspan="3">
+				<input type="text" size="2" name="event_round_flyoff" value="{$event->rounds.$round_number.event_round_flyoff}"> Update this number if there will be multiple flyoff rounds
+			</td>
+		</tr>
+		{/if}
 		</table>
+		<br>
+		<input type="button" value=" Save Event Round Info " onClick="main.submit();" class="block-button">
+		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
+		{if $event_round_id !=0}
+			<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
+		{/if}
 		<br>
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
@@ -114,7 +132,7 @@ function save_data(element) {ldelim}
 					{$ft.flight_type_name}
 				</th>
 				<th>
-					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0} CHECKED{/if}>
+					Include <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>
 				</th>
 			</tr>
 			<tr>
@@ -143,10 +161,16 @@ function save_data(element) {ldelim}
 			{if $f@key!=$ft.flight_type_id}
 				{continue}
 			{/if}
+			{$groupcolor='lightgrey'}
+			{$oldgroup=''}
 			{foreach $f.pilots as $p}
 			{$event_pilot_id=$p@key}
-			<tr style="background-color: lightgrey;">
-				<td>{$num}</td>
+			{if $oldgroup!=$p.event_pilot_round_flight_group}
+				{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
+				{$oldgroup=$p.event_pilot_round_flight_group}
+			{/if}
+			<tr style="background-color: {$groupcolor};">
+				<td style="background-color: lightgrey;">{$num}</td>
 				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
 				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.event_pilot_team}</td>
 					{if $f.flight_type_group}
@@ -205,7 +229,7 @@ function save_data(element) {ldelim}
 
 		</form>
 <br>
-<input type="button" value=" Save and Calculate Event Round " onClick="main.submit();" class="block-button">
+<input type="button" value=" Save Event Round " onClick="main.submit();" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
 {if $event_round_id !=0}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
