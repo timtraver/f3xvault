@@ -28,7 +28,7 @@ This is just a short list of some of the things already on my suggestion and tod
 	<li>Event Scoring</li>
 		<ul>
 		<li>Reflights</li>
-		<li>Flyoff Rounds and Calcs</li>
+		<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		<li>Create flying draw order for All disciplines</li>
 		<li>Full flight time entries for all the flights in F3K</li>
 		<li>Printouts for flight orders and groups</li>

@@ -28,6 +28,11 @@ EVENT STUFF
   
   reflights for groups
   
+  Change Max flight time for F3K to be window time and maybe set defaults for those...
+  Add a few more All up types
+  
+  When group is a blank, sort them last (for nice looking flyoff flights)
+  
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
 
   Flyoff capability
@@ -35,7 +40,7 @@ EVENT STUFF
 	Drops in rounds?
 	Make event settings have preliminary rounds drops vs flyoff round drops
 	Fucked up all of the drops in the drop calc when having flyoffs, so fix ;)
-	
+	Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
 	
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 

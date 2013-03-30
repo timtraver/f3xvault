@@ -1790,7 +1790,7 @@ function save_individual_flight(){
 		");
 		$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
 		if(!isset($result2[0])){
-			# Event round doesn't exist, so lets create one
+			# Event pilot round doesn't exist, so lets create one
 			$stmt=db_prep("
 				INSERT INTO event_pilot_round
 				SET event_pilot_id=:event_pilot_id,
@@ -1801,18 +1801,44 @@ function save_individual_flight(){
 		}else{
 			$event_pilot_round_id=$result2[0]['event_pilot_round_id'];
 		}
+		# Now we need to see if a round flight already exists...sheesh
 		$stmt=db_prep("
-			INSERT INTO event_pilot_round_flight
-			SET event_pilot_round_id=:event_pilot_round_id,
-				flight_type_id=:flight_type_id,
-				$setline,
-				event_pilot_round_flight_status=1
+			SELECT *
+			FROM event_pilot_round_flight
+			WHERE event_pilot_round_id=:event_pilot_round_id
+			AND flight_type_id=:flight_type_id
+			AND event_pilot_round_flight_status=1
 		");
 		$result2=db_exec($stmt,array(
 			"event_pilot_round_id"=>$event_pilot_round_id,
-			"flight_type_id"=>$event_round_flight_type_id,
-			"value"=>$field_value
+			"flight_type_id"=>$event_round_flight_type_id
 		));
+		if(isset($result2[0])){
+			# This one already exists, so lets update it
+			$stmt=db_prep("
+				UPDATE event_pilot_round_flight
+				SET $setline,
+					event_pilot_round_flight_status=1
+				WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+			");
+			$result3=db_exec($stmt,array(
+				"event_pilot_round_flight_id"=>$result2[0]['event_pilot_round_flight_id'],
+				"value"=>$field_value
+			));
+		}else{
+			$stmt=db_prep("
+				INSERT INTO event_pilot_round_flight
+				SET event_pilot_round_id=:event_pilot_round_id,
+					flight_type_id=:flight_type_id,
+					$setline,
+					event_pilot_round_flight_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_pilot_round_id"=>$event_pilot_round_id,
+				"flight_type_id"=>$event_round_flight_type_id,
+				"value"=>$field_value
+			));
+		}
 	}else{
 		# This flight already existed
 		# So lets save it
@@ -1826,7 +1852,6 @@ function save_individual_flight(){
 			"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
 			"value"=>$field_value
 		));
-
 	}
 	return;
 }
