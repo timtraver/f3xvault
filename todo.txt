@@ -24,16 +24,19 @@ EVENT STUFF
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
+  Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
+  
   reflights for groups
   
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
 
   Flyoff capability
-	Now that we've got the field in the db for it
-	Don't calculate the rounds that are marked as flyoffs
-	Create Separate Classification for flyoff rounds only
-		By creating a separate flyoff total calculation
-		
+	Once flyoffs completed, test with more than 10 prelim rounds for formatting
+	Drops in rounds?
+	Make event settings have preliminary rounds drops vs flyoff round drops
+	Fucked up all of the drops in the drop calc when having flyoffs, so fix ;)
+	
+	
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
   Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
@@ -70,6 +73,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Don't show pilots that have zero points in the flyoffs
+X	Now that we've got the field in the db for it
+X	Don't calculate the rounds that are marked as flyoffs
+X	Create Separate Classification for flyoff rounds only
+X		By creating a separate flyoff total calculation
 X Alternate row shared on event input screen for groups
 X On event pilot detail list, show blanks for rounds that aren't full
 X On the auto save function, mark the round as needing calculation, so in the next totals view it gets calculated
