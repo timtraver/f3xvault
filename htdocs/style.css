@@ -96,6 +96,21 @@ html {
 * html body {
 	margin-top: 10px !important;
 }
-
-
-
+#googleMap {
+	line-height:normal;
+}
+#googleMap img{
+	max-width: inherit;
+}
+#infowin {
+	padding: 5px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	overflow:hidden;
+}

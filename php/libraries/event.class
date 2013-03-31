@@ -941,7 +941,7 @@ class Event {
 					# Now lets pick off the ones to mark as dropped
 					$drop=0;
 					foreach($temp2 as $round_number=>$f){
-						if($drop<$this->totals['round_drops']){
+						if($drop<$temp['round_drops']){
 							# Set the drop flag for this flight
 							$stmt=db_prep("
 								UPDATE event_pilot_round_flight

@@ -8,7 +8,6 @@ GENERAL
   
   Send welcome email once registered and save it as their first message
   
-  Make a cool map of the locations in the database in a separate locations map screen using google api
   
   Create a "Using this site" kind of tutorial instructions
   
@@ -18,6 +17,8 @@ GENERAL
   
   Change all the fields in db and on forms to FAI, not FIA
   
+  Printing Event Rounds needs to print flyoff rounds too
+  Separate print buttons for preliminaries and flyoffs
   
 EVENT STUFF
 
@@ -30,16 +31,12 @@ EVENT STUFF
   
   Change Max flight time for F3K to be window time and maybe set defaults for those...
   Add a few more All up types
-  
-  When group is a blank, sort them last (for nice looking flyoff flights)
-  
+    
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
-
+  Show the print statistics button only if there actually are stats to print...;)
+  
   Flyoff capability
 	Once flyoffs completed, test with more than 10 prelim rounds for formatting
-	Drops in rounds?
-	Make event settings have preliminary rounds drops vs flyoff round drops
-	Fucked up all of the drops in the drop calc when having flyoffs, so fix ;)
 	Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
 	
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
@@ -60,7 +57,6 @@ SERIES STUFF
 
   League system to string together events
   	Add series edit access
-X 	show series event list
   	show series pilot standings
   	edit series best of X events to use for scoring
 
@@ -78,6 +74,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X Make a cool map of the locations in the database in a separate locations map screen using google api
+X 	show series event list
+X	Drops in flyoff rounds?
+X	Make event settings have preliminary rounds drops vs flyoff round drops
+X	Fucked up all of the drops in the drop calc when having flyoffs, so fix ;)
 X	Don't show pilots that have zero points in the flyoffs
 X	Now that we've got the field in the db for it
 X	Don't calculate the rounds that are marked as flyoffs

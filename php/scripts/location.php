@@ -678,5 +678,143 @@ function location_comment_save() {
 	user_message("Added your location comment!");
 	return location_view();
 }
+function location_map() {
+	global $smarty;
+
+	$country_id=0;
+	$state_id=0;
+	if(isset($_REQUEST['country_id'])){
+		$country_id=intval($_REQUEST['country_id']);
+		$GLOBALS['fsession']['country_id']=$country_id;
+	}elseif(isset($GLOBALS['fsession']['country_id'])){
+		$country_id=$GLOBALS['fsession']['country_id'];
+	}
+	if(isset($_REQUEST['state_id'])){
+		$state_id=intval($_REQUEST['state_id']);
+		$GLOBALS['fsession']['state_id']=$state_id;
+	}elseif(isset($GLOBALS['fsession']['state_id'])){
+		$state_id=$GLOBALS['fsession']['state_id'];
+	}
+
+	$search='';
+	if(isset($_REQUEST['search']) ){
+		$search=$_REQUEST['search'];
+		$search_operator=$_REQUEST['search_operator'];
+		$GLOBALS['fsession']['search']=$_REQUEST['search'];
+		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
+	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
+		$search=$GLOBALS['fsession']['search'];
+		$search_operator=$GLOBALS['fsession']['search_operator'];
+	}
+	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
+		$search_field_entry=$_REQUEST['search_field'];
+	}elseif(isset($GLOBALS['fsession']['search_field'])){
+		$search_field_entry=$GLOBALS['fsession']['search_field'];
+	}
+	switch($search_field_entry){
+		case 'location_name':
+			$search_field='location_name';
+			break;
+		case 'location_city':
+			$search_field='location_city';
+			break;
+		default:
+			$search_field='location_name';
+			break;
+	}
+	if($search=='' || $search=='%%'){
+		$search_field='location_name';
+	}
+	$GLOBALS['fsession']['search_field']=$search_field;
+	
+	switch($search_operator){
+		case 'contains':
+			$operator='LIKE';
+			$search="%$search%";
+			break;
+		case 'exactly':
+			$operator="=";
+			break;
+		default:
+			$operator="LIKE";
+	}
+
+	$addcountry='';
+	if($country_id!=0){
+		$addcountry.=" AND l.country_id=$country_id ";
+	}
+	$addstate='';
+	if($state_id!=0){
+		$addstate.=" AND l.state_id=$state_id ";
+	}
+#print "addcountry=$addcountry<br>\n";
+#print "addstate=$addstate<br>\n";
+#print "search=$search<br>\n";
+#print "search_field=$search_field<br>\n";
+#print "search_operator=$search_operator<br>\n";
+#print "operator=$operator<br>\n";
+
+	$locations=array();
+	if($search!='%%' && $search!=''){
+		$stmt=db_prep("
+			SELECT *
+			FROM location l
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON l.country_id=c.country_id
+			WHERE l.$search_field $operator :search
+				$addcountry
+				$addstate
+			ORDER BY l.country_id,l.state_id,l.location_name
+		");
+		$locations=db_exec($stmt,array("search"=>$search));
+	}else{
+		# Get all locations for search
+		$stmt=db_prep("
+			SELECT *
+			FROM location l
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON l.country_id=c.country_id
+			WHERE 1
+				$addcountry
+				$addstate
+			ORDER BY l.country_id,l.state_id,l.location_name
+		");
+		$locations=db_exec($stmt,array());
+	}
+	
+#print_r($locations);
+	
+	# Get only countries that we have locations for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT country_id FROM location) l
+		LEFT JOIN country c ON c.country_id=l.country_id
+		WHERE c.country_id!=0
+	");
+	$countries=db_exec($stmt,array());
+	# Get only states that we have locations for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT state_id FROM location) l
+		LEFT JOIN state s ON s.state_id=l.state_id
+		WHERE s.state_id!=0
+	");
+	$states=db_exec($stmt,array());
+	
+	$locations=show_pages($locations,25);
+	
+	$smarty->assign("locations",$locations);
+	$smarty->assign("countries",$countries);
+	$smarty->assign("states",$states);
+
+	$smarty->assign("search",$GLOBALS['fsession']['search']);
+	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
+	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
+	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
+	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
+
+	$maintpl=find_template("location_map.tpl");
+	return $smarty->fetch($maintpl);
+}
 
 ?>

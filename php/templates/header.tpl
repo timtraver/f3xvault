@@ -32,7 +32,12 @@
 				});
 				$('.fancybox-map').fancybox({
 					openEffect  : 'none',
+					autoSize   : false,
 					closeEffect : 'none',
+					type : 'iframe',
+					iframe : {
+						preload : false // this will prevent to place map off center
+					},
 					helpers : {
 						title	: { type : 'inside'},
 						media : {},

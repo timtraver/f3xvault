@@ -37,7 +37,7 @@ This is just a short list of some of the things already on my suggestion and tod
 		</ul>
 	<li>Location Database</li>
 		<ul>
-		<li>Make a cool map of the locations in the database in a separate locations map screen using google api</li>
+		<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Series</li>
 		<ul>
