@@ -141,9 +141,9 @@ function calc_area(){ldelim}
 	<th align="left">FAI Max Wing Loading (Rule)</th>
 	<td bgcolor="lightgrey">
 		{if $plane.plane_wing_area_units == 'in2'}
-			75 g/dm<sup>2</sup> = 0.17 oz/in<sup>2</sup>
-		{else}
 			0.17 oz/in<sup>2</sup> = 75 g/dm<sup>2</sup>
+		{else}
+			75 g/dm<sup>2</sup> = 0.17 oz/in<sup>2</sup>
 		{/if}
 	</td>
 </tr>

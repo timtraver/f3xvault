@@ -69,7 +69,7 @@
 	<th style="text-align: left;">Manufacturer</th>
 	<th style="text-align: left;">Year</th>
 	<th style="text-align: left;">Wing Span</th>
-	<th style="text-align: left;">Plane Weight</th>
+	<th style="text-align: left;">Plane Weight Empty</th>
 	<th style="text-align: left;">Action</th>
 </tr>
 {foreach $planes as $plane}
@@ -82,7 +82,7 @@
 	<td>{$plane.plane_manufacturer|escape}</td>
 	<td>{$plane.plane_year}</td>
 	<td>{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units}</td>
-	<td>{$plane.plane_auw|escape} {$plane.plane_auw_units}</td>
+	<td>{$plane.plane_auw_from|escape} - {$plane.plane_auw_to|escape} {$plane.plane_auw_units}</td>
 	<td><a href="?action={$action|escape}&function=plane_edit&plane_id={$plane.plane_id|escape}" title="Edit This Plane"><img src="/images/icon_edit_small.gif" width="20"></a>
 	</td>
 </tr>

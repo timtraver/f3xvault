@@ -444,7 +444,7 @@ function plane_save() {
 	}else{
 		$plane['plane_auw_from']=0;
 	}
-	if(isset($_REQUEST['plane_auw_from_units'])){
+	if(isset($_REQUEST['plane_auw_units'])){
 		$plane['plane_auw_units']=$_REQUEST['plane_auw_units'];
 	}else{
 		$plane['plane_auw_units']='';
