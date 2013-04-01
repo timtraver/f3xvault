@@ -158,7 +158,7 @@ function plane_list() {
 		if($plane['plane_wing_area']!=0){$total++;}
 		if($plane['plane_manufacturer']!=''){$total++;}
 		if($plane['plane_year']!=0){$total++;}
-		if($plane['plane_auw']!=0){$total++;}
+		if($plane['plane_auw_from']!=0){$total++;}
 		if($total>5){
 			$plane['plane_info']='good';
 		}else{
@@ -439,15 +439,20 @@ function plane_save() {
 	}else{
 		$plane['plane_length_units']='';
 	}
-	if(isset($_REQUEST['plane_auw'])){
-		$plane['plane_auw']=$_REQUEST['plane_auw'];
+	if(isset($_REQUEST['plane_auw_from'])){
+		$plane['plane_auw_from']=$_REQUEST['plane_auw_from'];
 	}else{
-		$plane['plane_auw']=0;
+		$plane['plane_auw_from']=0;
 	}
-	if(isset($_REQUEST['plane_auw_units'])){
+	if(isset($_REQUEST['plane_auw_from_units'])){
 		$plane['plane_auw_units']=$_REQUEST['plane_auw_units'];
 	}else{
 		$plane['plane_auw_units']='';
+	}
+	if(isset($_REQUEST['plane_auw_to'])){
+		$plane['plane_auw_to']=$_REQUEST['plane_auw_to'];
+	}else{
+		$plane['plane_auw_to']=0;
 	}
 	if(isset($_REQUEST['plane_wing_area'])){
 		$plane['plane_wing_area']=$_REQUEST['plane_wing_area'];
@@ -501,8 +506,9 @@ function plane_save() {
 				plane_manufacturer=:plane_manufacturer,
 				plane_year=:plane_year,
 				plane_website=:plane_website,
-				plane_auw=:plane_auw,
+				plane_auw_from=:plane_auw_from,
 				plane_auw_units=:plane_auw_units,
+				plane_auw_to=:plane_auw_to,
 				country_id=:country_id
 		");
 		$result=db_exec($stmt,$plane);
@@ -523,8 +529,9 @@ function plane_save() {
 				plane_manufacturer=:plane_manufacturer,
 				plane_year=:plane_year,
 				plane_website=:plane_website,
-				plane_auw=:plane_auw,
+				plane_auw_from=:plane_auw_from,
 				plane_auw_units=:plane_auw_units,
+				plane_auw_to=:plane_auw_to,
 				country_id=:country_id
 			WHERE plane_id=:plane_id
 		");

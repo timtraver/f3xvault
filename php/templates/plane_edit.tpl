@@ -35,30 +35,34 @@ function calc_length(){ldelim}
 	{rdelim}
 	document.getElementById('length').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
-function calc_weight(){ldelim}
+function calc_auw(){ldelim}
 	var current_units = document.main.plane_auw_units.value;
-	var current_value = document.main.plane_auw.value;
+	var current_from_value = document.main.plane_auw_from.value;
+	var current_to_value = document.main.plane_auw_to.value;
 	var multiple = 28.35;
-	var calc_value = 0;
+	var calc_from_value = 0;
+	var calc_to_value = 0;
 	var calc_units = '';
 	if(current_units == 'oz' || current_units == ''){ldelim}
-		calc_value = multiple * current_value;
+		calc_from_value = multiple * current_from_value;
+		calc_to_value = multiple * current_to_value;
 		calc_units = 'grams';
 	{rdelim}else{ldelim}
-		calc_value = current_value / multiple;
+		calc_from_value = current_from_value / multiple;
+		calc_to_value = current_to_value / multiple;
 		calc_units = 'ounces';
 	{rdelim}
-	document.getElementById('weight').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('auwrange').innerHTML = ' = ' + calc_from_value.toFixed(2) + ' To ' + calc_to_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 function calc_area(){ldelim}
 	var current_units = document.main.plane_wing_area_units.value;
 	var current_value = document.main.plane_wing_area.value;
-	var multiple = 6.45;
+	var multiple = .0645;
 	var calc_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
 		calc_value = multiple * current_value;
-		calc_units = 'Centimeters Squared';
+		calc_units = 'Decimeters Squared';
 	{rdelim}else{ldelim}
 		calc_value = current_value / multiple;
 		calc_units = 'Inches Squared';
@@ -108,23 +112,25 @@ function calc_area(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th>Plane AUW</th>
+	<th>Plane AUW Range (Empty)</th>
 	<td>
-		<input type="text" size="10" name="plane_auw" value="{$plane.plane_auw|string_format:'%.1f'}" onChange="calc_weight();">
-		<select name="plane_auw_units" onChange="calc_weight();">
-		<option value="oz" {if $plane.plane_auw_units=="oz"}SELECTED{/if}>Ounces</option>
-		<option value="gr" {if $plane.plane_auw_units=="gr"}SELECTED{/if}>Grams</option>
+		<input type="text" size="10" name="plane_auw_from" value="{$plane.plane_auw_from|string_format:'%.1f'}" onChange="calc_auw();">
+		To 
+		<input type="text" size="10" name="plane_auw_to" value="{$plane.plane_auw_to|string_format:'%.1f'}" onChange="calc_auw();">
+		<select name="plane_auw_units" onChange="calc_auw();">
+		<option value="oz" {if $plane.plane_auw_from_units=="oz"}SELECTED{/if}>Ounces</option>
+		<option value="gr" {if $plane.plane_auw_from_units=="gr"}SELECTED{/if}>Grams</option>
 		</select>
-		<span id="weight"></span>		
+		<span id="auwrange"></span>		
 	</td>
 </tr>
 <tr>
 	<th>Plane Wing Area</th>
 	<td>
-		<input type="text" size="10" name="plane_wing_area" value="{$plane.plane_wing_area|string_format:'%.1f'}" onChange="calc_area();">
+		<input type="text" size="10" name="plane_wing_area" value="{$plane.plane_wing_area|string_format:'%.2f'}" onChange="calc_area();">
 		<select name="plane_wing_area_units" onChange="calc_area();">
 		<option value="in2" {if $plane.plane_wing_area_units=="in2"}SELECTED{/if}>Inches squared</option>
-		<option value="cm2" {if $plane.plane_wing_area_units=="cm2"}SELECTED{/if}>Centimeters squared</option>
+		<option value="dm2" {if $plane.plane_wing_area_units=="dm2"}SELECTED{/if}>Decimeters squared</option>
 		</select>
 		<span id="area"></span>		
 	</td>
@@ -203,7 +209,7 @@ function calc_area(){ldelim}
 <script type="text/javascript">
 	calc_wingspan();
 	calc_length();
-	calc_weight();
+	calc_auw();
 	calc_area();
 </script>
 

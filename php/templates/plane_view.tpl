@@ -35,30 +35,49 @@ function calc_length(){ldelim}
 	{rdelim}
 	document.getElementById('length').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
-function calc_weight(){ldelim}
+function calc_auw(){ldelim}
 	var current_units = '{$plane.plane_auw_units}';
-	var current_value = {$plane.plane_auw};
+	var current_from_value = {$plane.plane_auw_from};
+	var current_to_value = {$plane.plane_auw_to};
+	var multiple = 28.35;
+	var calc_from_value = 0;
+	var calc_to_value = 0;
+	var calc_units = '';
+	if(current_units == 'oz' || current_units == ''){ldelim}
+		calc_from_value = multiple * current_from_value;
+		calc_to_value = multiple * current_to_value;
+		calc_units = 'grams';
+	{rdelim}else{ldelim}
+		calc_from_value = current_from_value / multiple;
+		calc_to_value = current_to_value / multiple;
+		calc_units = 'ounces';
+	{rdelim}
+	document.getElementById('auwrange').innerHTML = '  =  ' + calc_from_value.toFixed(2) + ' To ' + calc_to_value.toFixed(2) + ' ' + calc_units;
+{rdelim}
+function calc_max_weight(){ldelim}
+	var current_units = '{$plane.plane_wing_area_units}';
+	var current_value = {$plane.plane_wing_area};
 	var multiple = 28.35;
 	var calc_value = 0;
 	var calc_units = '';
-	if(current_units == 'oz' || current_units == ''){ldelim}
-		calc_value = multiple * current_value;
-		calc_units = 'gr';
+	if(current_units == 'in2' || current_units == ''){ldelim}
+		calc_value = 0.17 * current_value;
+		calc_units = 'ounces';
 	{rdelim}else{ldelim}
-		calc_value = current_value / multiple;
-		calc_units = 'oz';
+		calc_value = 75 * current_value;
+		calc_units = 'grams';
 	{rdelim}
-	document.getElementById('weight').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('max_weight').innerHTML = calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 function calc_area(){ldelim}
 	var current_units = '{$plane.plane_wing_area_units}';
 	var current_value = {$plane.plane_wing_area};
-	var multiple = 6.45;
+	var multiple = .0645;
 	var calc_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
 		calc_value = multiple * current_value;
-		calc_units = 'cm<sup>2</sup>';
+		calc_units = 'dm<sup>2</sup>';
 	{rdelim}else{ldelim}
 		calc_value = current_value / multiple;
 		calc_units = 'in2';
@@ -68,12 +87,12 @@ function calc_area(){ldelim}
 </script>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Plane Name</th>
+	<th align="left">Plane Name</th>
 	<td>{$plane.plane_name|escape}</td>
 	<th style="text-align: center;">Plane Media</th>
 </tr>
 <tr>
-	<th>Plane Classification</th>
+	<th align="left">Plane Classification</th>
 	<td>
 		{$plane.plane_type_short_name|escape} - {$plane.plane_type_description|escape}
 	</td>
@@ -90,53 +109,71 @@ function calc_area(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th>Plane Wingspan</th>
+	<th align="left">Plane Wingspan</th>
 	<td>
 		{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units}
 		<span id="wingspan"></span>
 	</td>
 </tr>
 <tr>
-	<th>Plane Length</th>
+	<th align="left">Plane Length</th>
 	<td>
 		{$plane.plane_length|string_format:'%.1f'} {$plane.plane_length_units}
 		<span id="length"></span>		
 	</td>
 </tr>
 <tr>
-	<th>Plane AUW</th>
+	<th align="left">Plane AUW Range (Empty)</th>
 	<td>
-		{$plane.plane_auw|string_format:'%.1f'} {$plane.plane_auw_units}
-		<span id="weight"></span>		
+		{$plane.plane_auw_from|string_format:'%.1f'} To {$plane.plane_auw_to|string_format:'%.1f'} {$plane.plane_auw_units}
+		<span id="auwrange"></span>
 	</td>
 </tr>
 <tr>
-	<th>Plane Wing Area</th>
+	<th align="left">Plane Wing Area</th>
 	<td>
-		{$plane.plane_wing_area|string_format:'%.1f'} {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}cm<sup>2</sup>{/if}
+		{$plane.plane_wing_area|string_format:'%.2f'} {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}dm<sup>2</sup>{/if}
 		<span id="area"></span>		
 	</td>
 </tr>
+{if $plane.plane_type_short_name=='F3B' || $plane.plane_type_short_name=='F3F' || $plane.plane_type_short_name=='F3J'} 
 <tr>
-	<th>Plane Manufacturer</th>
+	<th align="left">FAI Max Wing Loading (Rule)</th>
+	<td bgcolor="lightgrey">
+		{if $plane.plane_wing_area_units == 'in2'}
+			75 g/dm<sup>2</sup> = 0.17 oz/in<sup>2</sup>
+		{else}
+			0.17 oz/in<sup>2</sup> = 75 g/dm<sup>2</sup>
+		{/if}
+	</td>
+</tr>
+<tr>
+	<th align="left">Maximum FAI Weight</th>
+	<td bgcolor="lightgrey">
+	<span id="max_weight"></span>
+	</td>
+</tr>
+{/if}
+<tr>
+	<th align="left">Plane Manufacturer</th>
 	<td>{$plane.plane_manufacturer|escape}</td>
 </tr>
 <tr>
-	<th>Manufacturer Country</th>
+	<th align="left">Manufacturer Country</th>
 	<td>
 		{$plane.country_name}
 	</td>
 </tr>
 <tr>
-	<th>Manufacturer Year</th>
+	<th align="left">Manufacturer Year</th>
 	<td>{$plane.plane_year|escape}</td>
 </tr>
 <tr>
-	<th>Manufacturer Web Site</th>
+	<th align="left">Manufacturer Web Site</th>
 	<td><a href="{$plane.plane_website|escape}" target="_blank">{$plane.plane_website|escape}</a></td>
 </tr>
 <tr>
-	<th valign="top">Plane Attributes</th>
+	<th align="left" valign="top">Plane Attributes</th>
 	<td colspan="3">
 		{if $plane_attributes}
 		<table width="100%" cellspacing="0" cellspadding="1" style="border-style: none;">
@@ -150,7 +187,7 @@ function calc_area(){ldelim}
 					{/if}
 					<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><hr></td></tr>							
 				{/if}
-				<tr style="border-style: none;"><td colspan="4" style="border-style: none;">{$pa.plane_att_cat_name}</td></tr>
+				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$pa.plane_att_cat_name}</b></td></tr>
 				<tr style="border-style: none;"><td style="border-style: none;">
 				{assign var='row' value='1'}
 			{/if}
@@ -182,8 +219,9 @@ function calc_area(){ldelim}
 <script type="text/javascript">
 	calc_wingspan();
 	calc_length();
-	calc_weight();
+	calc_auw();
 	calc_area();
+	calc_max_weight();
 </script>
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="plane">

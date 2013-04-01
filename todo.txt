@@ -19,7 +19,9 @@ GENERAL
   
   Printing Event Rounds needs to print flyoff rounds too
   Separate print buttons for preliminaries and flyoffs
-  
+
+PLANE STUFF
+	
 EVENT STUFF
 
   ability to create flying order F3F and maybe have an option to stagger each round
@@ -74,6 +76,10 @@ MOBILE STUFF
 
 COMPLETED
  
+X	On view, calculate the different unit values for wing area and AUW
+X	Do the calculation for total wing area and show
+X	Show Wing loading calculation
+X	Show max weight for FAI rules
 X Make a cool map of the locations in the database in a separate locations map screen using google api
 X 	show series event list
 X	Drops in flyoff rounds?
