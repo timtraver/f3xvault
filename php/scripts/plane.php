@@ -514,6 +514,7 @@ function plane_save() {
 		$result=db_exec($stmt,$plane);
 		# Set the old plane_id back for the rest of the routine
 		$plane['plane_id']=$GLOBALS['last_insert_id'];
+		$_REQUEST['plane_id']=$plane['plane_id'];
 	}else{
 		# Update the existing record
 		$stmt=db_prep("
@@ -605,7 +606,7 @@ function plane_save() {
 		$from['from_action']='plane';
 		return return_to_action($from);
 	}else{
-		return plane_list();
+		return plane_view();
 	}
 }
 function plane_media_edit() {
