@@ -196,7 +196,7 @@ function calc_area(){ldelim}
 
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value="Cancel Edit" onClick="goback.submit();" class="block-button">
+		<input type="button" value="Back To Plane List" onClick="goback.submit();" class="block-button">
 		<input type="submit" value="Save Plane Values{if $from} and Return{/if}" class="block-button">
 	</th>
 </tr>
