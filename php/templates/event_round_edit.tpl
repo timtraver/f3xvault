@@ -43,7 +43,7 @@ $(function() {
 		close: function() {
 		}
 	});
-	$( "#addreflight" )
+	$( "#addreflightoff" )
 		.button()
 		.click(function() {
 		$( "#add_reflight" ).dialog( "open" );
@@ -305,8 +305,8 @@ $(function() {
 			{if $ft.flight_type_reflight==1}
 			<tr>
 			<th colspan="3">Reflights</th>
-			<th colspan="7">
-				<input id="addreflight" type="button" class="button" value=" Add Reflight Entry " onClick="document.reflight.flight_type_id.value={$ft.flight_type_id}">
+			<th colspan="8">
+				<input id="addreflight" type="button" class="button" value=" Add Reflight Entry " onClick="document.reflight.flight_type_id.value={$ft.flight_type_id};$('#add_reflight').dialog('open');">
 			</th>
 			</tr>
 			{foreach $event->rounds.$round_number.reflights as $f}
