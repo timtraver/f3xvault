@@ -1373,14 +1373,11 @@ function event_round_save() {
 		}
 	}
 
-print "<!-- \n";	
 	# Now step through each one and save the flight record
 	foreach($data as $event_pilot_round_flight_id=>$p){
 		foreach($p as $event_pilot_id=>$f){
 			foreach($f as $flight_type_id=>$v){
 
-				print "event_pilot_round_flight_id=$event_pilot_round_flight_id\n";
-			
 				# We need to get the event_pilot_round_id for this round and event pilot
 				$stmt=db_prep("
 					SELECT *
@@ -1402,8 +1399,6 @@ print "<!-- \n";
 					$event_pilot_round_id=$result[0]['event_pilot_round_id'];
 				}
 
-				print "event_pilot_round_id=$event_pilot_round_id\n";
-				
 				# Now lets check if this is a new one or not
 				if($event_pilot_round_flight_id==0){
 					# This record is a new one (maybe)
@@ -1426,8 +1421,6 @@ print "<!-- \n";
 				}else{
 					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
 				}
-				
-				print "event_pilot_round_flight_id_actual=$event_pilot_round_flight_id_actual\n";
 				
 				# Lets see if this flight already exists
 				$stmt=db_prep("
@@ -1492,7 +1485,6 @@ print "<!-- \n";
 			}
 		}
 	}
-	print "-->\n";
 	# OK, now lets call the routine to do the calculation for a single round
 	# First, since we saved the data, reset the $event object
 	$event=new Event($event_id);
@@ -1504,6 +1496,72 @@ print "<!-- \n";
 	
 	log_action($event_round_id);
 	user_message("Saved event round info.");
+	return event_round_edit();
+}
+function event_round_add_reflight() {
+	# Function to remove a reflight flight
+	$event_id=intval($_REQUEST['event_id']);
+	$event_round_id=intval($_REQUEST['event_round_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$event_round_number=$_REQUEST['event_round_number'];
+	
+	# Need to find the event_pilot_round_id from the info given
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot_round
+		WHERE event_pilot_id=:event_pilot_id
+		AND event_round_id=:event_round_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id,"event_round_id"=>$event_round_id));
+	if(isset($result[0])){
+		$event_pilot_round_id=$result[0]['event_pilot_round_id'];	
+		# Now Lets create this record
+		$stmt=db_prep("
+			INSERT INTO event_pilot_round_flight
+			SET event_pilot_round_id=:event_pilot_round_id,
+				flight_type_id=:flight_type_id,
+				event_pilot_round_flight_reflight=1,
+				event_pilot_round_flight_status=1
+		");
+		$result2=db_exec($stmt,array(
+			"event_pilot_round_id"=>$event_pilot_round_id,
+			"flight_type_id"=>$flight_type_id
+		));
+	}	
+	
+	$event=new Event($event_id);
+	# Refresh the round info
+	$event->get_rounds();
+	log_action($event_round_id);
+	user_message("Added the reflight entry.");
+	return event_round_edit();
+}
+function event_round_flight_delete() {
+	# Function to remove a reflight flight
+	$event_id=intval($_REQUEST['event_id']);
+	$event_round_id=intval($_REQUEST['event_round_id']);
+	$event_pilot_round_flight_id=intval($_REQUEST['event_pilot_round_flight_id']);
+	$event_round_number=$_REQUEST['event_round_number'];
+	
+	# Update to turn off record
+	$stmt=db_prep("
+		UPDATE event_pilot_round_flight
+		SET event_pilot_round_flight_status=0
+		WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+	");
+	$result2=db_exec($stmt,array(
+		"event_pilot_round_flight_id"=>$event_pilot_round_flight_id
+	));
+	
+	$event=new Event($event_id);
+	$event->calculate_round($event_round_number);
+	# Now lets recalculate and save the event total info
+	# Refresh the round info
+	$event->get_rounds();
+	$event->event_save_totals();
+	log_action($event_round_id);
+	user_message("Removed the reflight entry.");
 	return event_round_edit();
 }
 function event_round_delete() {

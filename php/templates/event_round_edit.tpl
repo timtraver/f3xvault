@@ -1,3 +1,10 @@
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.dialog.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 function save_data(element) {ldelim}
 	$.ajax({ldelim}
@@ -17,7 +24,87 @@ function save_data(element) {ldelim}
 		{rdelim}
 	{rdelim});
 {rdelim}
+{literal}
+$(function() {
+	$( "#add_reflight" ).dialog({
+		title: "Add A Pilot To A Reflight Group",
+		autoOpen: false,
+		height: 300,
+		width: 350,
+		modal: false,
+		buttons: {
+			"Add This Pilot": function() {
+				document.reflight.submit();
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+		}
+	});
+	$( "#addreflight" )
+		.button()
+		.click(function() {
+		$( "#add_reflight" ).dialog( "open" );
+		});
+	$("#pilot_name").autocomplete({
+{/literal}
+		source: "/lookup.php?function=lookup_event_pilot&event_id={$event->info.event_id}",
+{literal}
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.reflight.event_pilot_id.value = ui.item.id;
+			var name=document.getElementById('pilot_name');
+			document.reflight.pilot_name.value=name.value;
+			reflight.submit();
+		},
+   		change: function( event, ui ) {
+   			var id=document.getElementById('pilot_name');
+   			if(id.value==''){
+				document.reflight.pilot_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading');
+			loading.style.display = "none";
+   			var mes=document.getElementById('search_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+			}
+		}
+	});
+});
+{/literal}
 </script>
+
+<div id="add_reflight">
+		<form name="reflight" method="POST">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_round_add_reflight">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="event_round_id" value="{$event_round_id}">
+		<input type="hidden" name="event_round_number" value="{$round_number}">
+		<input type="hidden" name="flight_type_id" value="">
+		<input type="hidden" name="event_pilot_id" value="">
+		<input id="pilot_name" type="text" name="pilot_name" size="30"><br>
+		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
+		</form>
+</div>
+
+
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name}</h1>
@@ -218,8 +305,72 @@ function save_data(element) {ldelim}
 			{if $ft.flight_type_reflight==1}
 			<tr>
 			<th colspan="3">Reflights</th>
-			<th colspan="7"><input type="button" value=" Add Reflight " class="button"></th>
+			<th colspan="7">
+				<input id="addreflight" type="button" class="button" value=" Add Reflight Entry " onClick="document.reflight.flight_type_id.value={$ft.flight_type_id}">
+			</th>
 			</tr>
+			{foreach $event->rounds.$round_number.reflights as $f}
+				{if $f@key!=$ft.flight_type_id}
+					{continue}
+				{/if}
+				{$groupcolor='lightgrey'}
+				{$oldgroup=''}
+				{foreach $f.pilots as $p}
+				{$event_pilot_id=$p@key}
+				{if $oldgroup!=$p.event_pilot_round_flight_group}
+					{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
+					{$oldgroup=$p.event_pilot_round_flight_group}
+				{/if}
+				<tr style="background-color: {$groupcolor};">
+					<td style="background-color: lightgrey;">{$num}</td>
+					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.event_pilot_team}</td>
+						{if $f.flight_type_group}
+							<td align="center" nowrap><input autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
+						{/if}
+						{if $f.flight_type_minutes || $f.flight_type_seconds}
+							<td align="center" nowrap>
+								{if $f.flight_type_minutes}<input autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);">m{/if}
+								{if $f.flight_type_seconds}
+									<input autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}" onChange="save_data(this);">s
+								{/if}
+								{if $f.flight_type_over_penalty}
+									<input type="checkbox" name="pilot_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if} onChange="save_data(this);">
+								{/if}
+							</td>
+						{/if}
+						{if $f.flight_type_landing}
+							<td align="center" nowrap><input autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_landing}" onChange="save_data(this);"></td>
+						{/if}
+						{if $f.flight_type_laps}
+							<td align="center" nowrap><input autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps}" onChange="save_data(this);"></td>
+						{/if}
+						<td align="right" nowrap>
+							{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
+							{$p.event_pilot_round_flight_raw_score}
+							{else}
+							{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
+							{/if}
+						</td>
+						<td align="right" nowrap>
+						{if $p.event_pilot_round_flight_dropped}<del><font color="red">{/if}
+						{$p.event_pilot_round_flight_score}
+						{if $p.event_pilot_round_flight_dropped}</font></del>{/if}
+						</td>
+						<td align="center" nowrap>
+							<input autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}" onChange="save_data(this);">
+						</td>
+						<td align="right" nowrap>
+						{$p.event_pilot_round_flight_rank}
+						</td>
+						<td align="right" nowrap>
+						<a href="?action=event&function=event_round_flight_delete&event_id={$event->info.event_id}&event_round_id={$event_round_id}&event_round_number={$round_number}&event_pilot_round_flight_id={$p.event_pilot_round_flight_id}"><img src="/images/icons/delete.png"></a>
+						</td>
+				</tr>
+				{$num=$num+1}
+				{/foreach}
+			{/foreach}
+			
 			{/if}
 		{/foreach}
 		</table>
@@ -234,7 +385,8 @@ function save_data(element) {ldelim}
 {if $event_round_id !=0}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 {/if}
-</div>
+
+
 </div>
 
 <form name="sort_round" method="GET">

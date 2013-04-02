@@ -57,6 +57,37 @@ function lookup_pilot() {
 
 	print json_encode($pilots);
 }
+function lookup_event_pilot() {
+	global $user;
+	global $smarty;
+
+	$event_id=$_REQUEST['event_id'];
+	$q = trim(urldecode(strtolower($_GET["term"])));
+	$q = '%'.$q.'%';
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
+		WHERE ep.event_id=:event_id
+			AND (LOWER(p.pilot_first_name) LIKE :term1
+			OR LOWER(p.pilot_last_name) LIKE :term2
+			OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3)
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id,"term1"=>$q,"term2"=>$q,"term3"=>$q));
+	
+	foreach($result as $r){
+		$pilots[]=array(
+			"id"=>$r['event_pilot_id'],
+			"label"=>"{$r['pilot_first_name']} {$r['pilot_last_name']}",
+			"value"=>"{$r['pilot_first_name']} {$r['pilot_last_name']}"
+		);
+	}
+
+	print json_encode($pilots);
+}
 function lookup_plane() {
 	global $user;
 	global $smarty;

@@ -29,8 +29,12 @@ EVENT STUFF
   
   Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
   
-  reflights for groups
-  
+  Reflights for groups
+  	Make it work with the overall round drops
+  	Determine how to show reflight drops
+  	Determine round_total drop score (currently commented out just below)
+  	Nice popup to add a pilot to a reflight group
+  	
   Change Max flight time for F3K to be window time and maybe set defaults for those...
   Add a few more All up types
     
@@ -76,6 +80,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X 	Verify that penalties get through even on reflights that don't count
+X 	Ability to delete the particular reflight round flight
 X	On view, calculate the different unit values for wing area and AUW
 X	Do the calculation for total wing area and show
 X	Show Wing loading calculation
