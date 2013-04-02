@@ -176,6 +176,7 @@ class Event {
 					$ft['event_round_flight_score']=0;
 				}
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+				$this->rounds[$event_round_number]['reflights'][$flight_type_id]=$ft;
 				
 				# Lets get the pilots for this particular flight
 				$stmt=db_prep("
@@ -190,14 +191,12 @@ class Event {
 					$sort_string
 				");
 				$results=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$flight_type_id));
-				$reflights=0;
 				foreach($results as $flight){
 					$event_pilot_id=$flight['event_pilot_id'];
 					# Set the decimal accuracy for the flight seconds
 					$flight['event_pilot_round_flight_seconds']=sprintf('%02.'.$ft['accuracy'].'f',$flight['event_pilot_round_flight_seconds']);
 					if($flight['event_pilot_round_flight_reflight']==1){
 						$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
-						$reflights=1;
 					}else{
 						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
 					}
@@ -207,10 +206,6 @@ class Event {
 					if(!isset($this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
 						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=array("event_pilot_round_flight_id"=>0);
 					}
-				}
-				# Check if there were reflights and merge the base flight type info
-				if($reflights){
-					$this->rounds[$event_round_number]['reflights'][$flight_type_id]=array_merge($ft,$this->rounds[$event_round_number]['reflights'][$flight_type_id]);
 				}
 			}
 		}
