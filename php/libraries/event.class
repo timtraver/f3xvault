@@ -176,7 +176,9 @@ class Event {
 					$ft['event_round_flight_score']=0;
 				}
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=array();
 				$this->rounds[$event_round_number]['reflights'][$flight_type_id]=$ft;
+				$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots']=array();
 				
 				# Lets get the pilots for this particular flight
 				$stmt=db_prep("
