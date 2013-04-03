@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-30 00:11:23
+<?php /* Smarty version Smarty-3.1.11, created on 2013-04-03 00:50:47
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1364626910,
+      1 => 1364975444,
       2 => 'file',
     ),
   ),
@@ -105,10 +105,10 @@ $(function() {
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
 	 	document.getElementById(element).style.display = 'block';
-	 	tog.innerHTML = '(<u>hide pilots</u>)';
+	 	tog.innerHTML = '(<u>Hide Pilot List</u>)';
 	 } else {
 		 document.getElementById(element).style.display = 'none';
-		 tog.innerHTML = '(<u>show pilots</u>)';
+		 tog.innerHTML = '(<u>Show Pilot List</u>)';
 	 }
 }
 </script>
@@ -173,12 +173,12 @@ function toggle(element,tog) {
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value->pilots){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->pilots);?>
-)<?php }?> <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>hide pilots</u>)</span></h1>
+)<?php }?> <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span></h1>
 		<span id="pilots">
-		<input type="button" value=" Add Pilot " onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
+		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
+		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
@@ -781,12 +781,13 @@ s<br>
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
-<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
 	</div>
 </div>
 
 <?php if (count($_smarty_tpl->tpl_vars['event']->value->classes)>1||$_smarty_tpl->tpl_vars['event']->value->totals['teams']||$_smarty_tpl->tpl_vars['duration_rank']->value||$_smarty_tpl->tpl_vars['speed_rank']->value){?>
-<h1 class="post-title">Contest Ranking Reports</h1>
+<h1 class="post-title">Contest Ranking Reports
+<input type="button" value=" Print Event Rankings " onClick="print_rank.submit();" class="block-button">
+</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
 	<?php if (count($_smarty_tpl->tpl_vars['event']->value->classes)>1){?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
@@ -976,7 +977,9 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 
 <!-- Lets figure out if there are reports for speed or laps -->
 <?php if ($_smarty_tpl->tpl_vars['lap_totals']->value||$_smarty_tpl->tpl_vars['speed_averages']->value||$_smarty_tpl->tpl_vars['top_landing']->value){?>
-<h1 class="post-title">Statistics Reports</h1>
+<h1 class="post-title">Statistics Reports
+<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
+</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
 	<?php if ($_smarty_tpl->tpl_vars['lap_totals']->value){?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
@@ -1184,9 +1187,16 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ">
 <input type="hidden" name="use_print_header" value="1">
 </form>
+<form name="print_rank" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_rank">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
+<input type="hidden" name="use_print_header" value="1">
+</form>
 <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>
 <script>
 	 document.getElementById('pilots').style.display = 'none';
-	 document.getElementById('viewtoggle').innerHTML = '(<u>show pilots</u>)';
+	 document.getElementById('viewtoggle').innerHTML = '(<u>Show Pilot List</u>)';
 </script>
 <?php }?><?php }} ?>

@@ -33,7 +33,7 @@ This is just a short list of some of the things already on my suggestion and tod
 		<li>Full flight time entries for all the flights in F3K</li>
 		<li>Printouts for flight orders and groups</li>
 		<li>Possibly print to PDF format for easier printing</li>
-		<li>Email link to results to event participants</li>
+		<li>Email link to results for event participants</li>
 		</ul>
 	<li>Location Database</li>
 		<ul>

@@ -64,8 +64,8 @@
 				});
 			});
 		</script>
-		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/cupertino/jquery-ui.css">
-		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/cupertino/jquery.ui.theme.css">
+		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
 		<link href="style.css" rel="stylesheet" type="text/css">
 {/literal}
 </head>

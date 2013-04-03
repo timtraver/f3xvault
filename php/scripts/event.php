@@ -1505,6 +1505,7 @@ function event_round_add_reflight() {
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
 	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
 	$event_round_number=$_REQUEST['event_round_number'];
+	$group=$_REQUEST['group'];
 	
 	# Need to find the event_pilot_round_id from the info given
 	$stmt=db_prep("
@@ -1521,12 +1522,14 @@ function event_round_add_reflight() {
 			INSERT INTO event_pilot_round_flight
 			SET event_pilot_round_id=:event_pilot_round_id,
 				flight_type_id=:flight_type_id,
+				event_pilot_round_flight_group=:group,
 				event_pilot_round_flight_reflight=1,
 				event_pilot_round_flight_status=1
 		");
 		$result2=db_exec($stmt,array(
 			"event_pilot_round_id"=>$event_pilot_round_id,
-			"flight_type_id"=>$flight_type_id
+			"flight_type_id"=>$flight_type_id,
+			"group"=>$group
 		));
 	}	
 	

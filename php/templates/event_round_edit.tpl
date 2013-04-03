@@ -24,14 +24,19 @@ function save_data(element) {ldelim}
 		{rdelim}
 	{rdelim});
 {rdelim}
+$(function() {ldelim}
+	var pilots = [
+		{foreach $event->pilots as $p}
+		{ldelim}"id":{$p.event_pilot_id},"label":"{$p.pilot_first_name} {$p.pilot_last_name}","value":"{$p.pilot_first_name} {$p.pilot_last_name}"{rdelim}{if !$t@last},{/if}
+		{/foreach}
+	];
 {literal}
-$(function() {
 	$( "#add_reflight" ).dialog({
 		title: "Add A Pilot To A Reflight Group",
 		autoOpen: false,
-		height: 300,
+		height: 150,
 		width: 350,
-		modal: false,
+		modal: true,
 		buttons: {
 			"Add This Pilot": function() {
 				document.reflight.submit();
@@ -49,9 +54,7 @@ $(function() {
 		$( "#add_reflight" ).dialog( "open" );
 		});
 	$("#pilot_name").autocomplete({
-{/literal}
-		source: "/lookup.php?function=lookup_event_pilot&event_id={$event->info.event_id}",
-{literal}
+		source: pilots,
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -89,7 +92,7 @@ $(function() {
 {/literal}
 </script>
 
-<div id="add_reflight">
+<div id="add_reflight" style="overflow: hidden;">
 		<form name="reflight" method="POST">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_round_add_reflight">
@@ -98,9 +101,16 @@ $(function() {
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="flight_type_id" value="">
 		<input type="hidden" name="event_pilot_id" value="">
-		<input id="pilot_name" type="text" name="pilot_name" size="30"><br>
-		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
+		<div style="float: left;padding-right: 10px;">
+			<input type="text" name="group" size="2"><br>
+			<span style="font-style: italic;color: grey;"> Group </span>
+		</div>
+		<div>
+			<input id="pilot_name" type="text" name="pilot_name" size="30"><br>
+			<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+			<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
+		</div>
+		<br style="clear:both" />
 		</form>
 </div>
 
@@ -364,7 +374,7 @@ $(function() {
 						{$p.event_pilot_round_flight_rank}
 						</td>
 						<td align="right" nowrap>
-						<a href="?action=event&function=event_round_flight_delete&event_id={$event->info.event_id}&event_round_id={$event_round_id}&event_round_number={$round_number}&event_pilot_round_flight_id={$p.event_pilot_round_flight_id}"><img src="/images/icons/delete.png"></a>
+						<a href="?action=event&function=event_round_flight_delete&event_id={$event->info.event_id}&event_round_id={$event_round_id}&event_round_number={$round_number}&event_pilot_round_flight_id={$p.event_pilot_round_flight_id}" onClick="return confirm('Are you sure you wish to remove this pilot reflight?');"><img src="/images/icons/delete.png"></a>
 						</td>
 				</tr>
 				{$num=$num+1}

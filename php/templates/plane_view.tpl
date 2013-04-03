@@ -96,7 +96,7 @@ function calc_area(){ldelim}
 	<td>
 		{$plane.plane_type_short_name|escape} - {$plane.plane_type_description|escape}
 	</td>
-	<td rowspan="9" align="center">
+	<td rowspan="11" align="center">
 	{if $media[$rand]}
 	<img src="{$media[$rand].plane_media_url}" width="300"><br>
 	<a href="{$media[$rand].plane_media_url}" rel="gallery" class="fancybox-button" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}">View Slide Show</a>
@@ -138,7 +138,7 @@ function calc_area(){ldelim}
 </tr>
 {if $plane.plane_type_short_name=='F3B' || $plane.plane_type_short_name=='F3F' || $plane.plane_type_short_name=='F3J'} 
 <tr>
-	<th align="left">FAI Max Wing Loading (Rule)</th>
+	<th align="left">FAI Max Wing Loading (By Rule For Class)</th>
 	<td bgcolor="lightgrey">
 		{if $plane.plane_wing_area_units == 'in2'}
 			0.17 oz/in<sup>2</sup> = 75 g/dm<sup>2</sup>

@@ -6,6 +6,8 @@ GENERAL
   
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
+  Have an intermediate step of registration approval before activating account
+  
   Send welcome email once registered and save it as their first message
   
   
@@ -29,14 +31,15 @@ EVENT STUFF
   
   Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
   
+  Fix Max Flight Time to only be on event types that need it
+  
   Reflights for groups
   	Make it work with the overall round drops
   	Determine how to show reflight drops
   	Determine round_total drop score (currently commented out just below)
-  	Nice popup to add a pilot to a reflight group
   	
   Change Max flight time for F3K to be window time and maybe set defaults for those...
-  Add a few more All up types
+  Add a few more F3K all up types
     
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
@@ -80,6 +83,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X 	Nice popup to add a pilot to a reflight group
 X 	Verify that penalties get through even on reflights that don't count
 X 	Ability to delete the particular reflight round flight
 X	On view, calculate the different unit values for wing area and AUW
