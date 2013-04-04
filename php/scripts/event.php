@@ -952,7 +952,7 @@ function check_event_permission($event_id){
 	global $user;
 	# Function to check to see if this user can edit this event
 	# First check if its an administrator
-	if($user['administrator']){
+	if($user['user_admin']){
 		return 1;
 	}
 	

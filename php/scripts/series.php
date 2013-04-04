@@ -530,7 +530,7 @@ function check_club_permission($club_id){
 	global $user;
 	# Function to check to see if this user can edit this club
 	# First check if its an administrator
-	if($user['administrator']){
+	if($user['user_admin']){
 		return 1;
 	}
 	# Get club info

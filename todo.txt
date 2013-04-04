@@ -10,7 +10,6 @@ GENERAL
   
   Send welcome email once registered and save it as their first message
   
-  
   Create a "Using this site" kind of tutorial instructions
   
   Create a "send location" link to a buddy
@@ -28,6 +27,8 @@ PLANE STUFF
 	
 EVENT STUFF
 
+  Ability to delete event by owner
+	
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
