@@ -35,7 +35,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td colspan="3" valign="center">
+	<td colspan="3" valign="center" nowrap>
 		<div style="clear: both;">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
