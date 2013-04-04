@@ -159,6 +159,8 @@ function save_registration(){
 			}
 			# We have found some records that look like they relate, so lets show them first
 			$smarty->assign("user",$user);
+			$smarty->assign("recaptcha_challenge_field",$_POST["recaptcha_challenge_field"]);
+			$smarty->assign("recaptcha_response_field",$_POST["recaptcha_response_field"]);
 			$smarty->assign("pilots",$pilotlist);
 			$maintpl=find_template("register_show_pilots.tpl");
 			return $smarty->fetch($maintpl);

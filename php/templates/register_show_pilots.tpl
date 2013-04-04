@@ -50,6 +50,8 @@ Look down through this list and check the box that could be you.<br>
 <input type="hidden" name="user_email" value="{$user.user_email}">
 <input type="hidden" name="user_pass" value="{$user.user_pass}">
 <input type="hidden" name="user_pass2" value="{$user.user_pass2}">
+<input type="hidden" name="recaptcha_challenge_field" value="{$recaptcha_challenge_field}">
+<input type="hidden" name="recaptcha_response_field" value="{$recaptcha_response_field}">
 </form>
 
 

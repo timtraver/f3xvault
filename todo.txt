@@ -23,6 +23,8 @@ GENERAL
   Separate print buttons for preliminaries and flyoffs
 
 PLANE STUFF
+	Plane show of slideshow shows the first slide twice...
+	ADjust search parameters
 	
 EVENT STUFF
 
