@@ -93,7 +93,7 @@ $(function() {
 					<th align="right" valign="top">Message Content</th>
 					<td>
 						{if $user_message.user_message_id!=0}
-							<pre>{$user_message.user_message_text}</pre>
+							<pre style="white-space: pre-wrap;">{$user_message.user_message_text}</pre>
 						{else}
 							<textarea cols="80" rows="20" name="user_message_text">{$user_message.user_message_text}</textarea>
 						{/if}

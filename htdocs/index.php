@@ -12,6 +12,7 @@ global $user;
 global $user_id;
 global $fsession;
 global $current_menu;
+global $logsessions;
 global $messages;
 global $message_graphic;
 global $debug;
@@ -21,6 +22,8 @@ if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/loca
 }else{
 	require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
 }
+
+$logsessions=1;
 
 include_library('security_functions.inc');
 include_library('functions.inc');

@@ -7,7 +7,9 @@
 <input type="hidden" name="action" value="my">
 <input type="hidden" name="function" value="my_location_edit">
 
-<h1 class="post-title entry-title">Search For A Flying Location</h1>
+<h1 class="post-title entry-title">Search For A Flying Location To Add
+<input type="button" value=" + Create New Location " class="block-button" onClick="create_new_location.submit();">
+</h1>
 <table>
 <tr>
 	<th>Filter By Country</th>
@@ -19,8 +21,6 @@
 	{/foreach}
 	</select>
 	</td>
-</tr>
-<tr>
 	<th>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
@@ -35,7 +35,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td valign="center">
+	<td colspan="3" valign="center">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
@@ -45,7 +45,7 @@
 		<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
 		</select>
 		<input type="text" name="search" size="30" value="{$search|escape}">
-		<input type="submit" value=" Search " class="block-button">
+		<input type="submit" value=" Search " class="block-button" style="float:left;">
 		<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 		</form>
 	</td>
@@ -119,6 +119,16 @@
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="my">
+</form>
+
+<form name="create_new_location" method="POST">
+<input type="hidden" name="action" value="location">
+<input type="hidden" name="function" value="location_edit">
+<input type="hidden" name="location_id" value="0">
+<input type="hidden" name="location_name" value="">
+<input type="hidden" name="from_action" value="my">
+<input type="hidden" name="from_function" value="my_location_edit">
+<input type="hidden" name="from_pilot_location_id" value="">
 </form>
 
 
