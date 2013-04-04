@@ -47,7 +47,7 @@
 		
 		<input type="text" name="search" size="30" value="{$search|escape}">
 		<input type="submit" value=" Search " class="block-button" style="float: right;">
-		<input type="submit" value=" Reset " class="block-button" style="clear:both;" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
+		<input type="submit" value=" Reset " class="block-button" style="float: right;" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 	</td>
 </tr>
 </table>
