@@ -36,7 +36,6 @@
 		And Search on Field : 
 	</th>
 	<td colspan="3" valign="center" nowrap>
-		<div style="clear: both;">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
@@ -47,9 +46,8 @@
 		</select>
 		
 		<input type="text" name="search" size="30" value="{$search|escape}">
-		<input type="submit" value=" Search " class="block-button" style="display: inline-block;float: right;">
-		<input type="submit" value=" Reset " class="block-button" style="display: inline-block;float:right;" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
-		</div>
+		<input type="submit" value=" Search " class="block-button" style="float: right;">
+		<input type="submit" value=" Reset " class="block-button" style="clear:both;" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 	</td>
 </tr>
 </table>
