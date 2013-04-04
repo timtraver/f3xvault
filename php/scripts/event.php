@@ -21,7 +21,6 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 }
 
 $need_login=array(
-	"event_edit",
 	"event_save",
 	"event_pilot_add",
 	"event_pilot_edit",
@@ -33,9 +32,7 @@ $need_login=array(
 	"add_pilot_quick",
 	"save_pilot_quick_add",
 	"event_pilot_remove",
-	"event_pilot_edit",
 	"event_pilot_save",
-	"event_round_edit",
 	"event_round_save",
 	"event_round_delete"
 );
