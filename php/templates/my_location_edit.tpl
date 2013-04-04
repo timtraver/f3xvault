@@ -21,7 +21,7 @@
 	{/foreach}
 	</select>
 	</td>
-	<th>Filter By State</th>
+	<th nowrap>Filter By State</th>
 	<td>
 	<select name="state_id" onChange="searchform.submit();">
 	<option value="0">Choose State to Narrow Search</option>
