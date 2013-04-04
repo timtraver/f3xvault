@@ -10,7 +10,7 @@
 <h1 class="post-title entry-title">Search For A Flying Location To Add
 <input type="button" value=" + Create New Location " class="block-button" onClick="create_new_location.submit();">
 </h1>
-<table>
+<table width="70%" cellpadding="1" cellspacing="1">
 <tr>
 	<th>Filter By Country</th>
 	<td>
@@ -35,7 +35,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td colspan="3" valign="center" nowrap>
+	<td colspan="3" valign="center">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
