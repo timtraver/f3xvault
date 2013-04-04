@@ -35,7 +35,7 @@
 	<th nowrap>	
 		And Search on Field : 
 	</th>
-	<td colspan="3" valign="center" nowrap>
+	<td colspan="2" valign="center" nowrap>
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
@@ -44,10 +44,10 @@
 		<option value="contains" {if $search_operator=="contains"}SELECTED{/if}>Contains</option>
 		<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
 		</select>
-		
 		<input type="text" name="search" size="30" value="{$search|escape}">
-		<input type="submit" value=" Search " class="block-button" style="float: right;">
-		<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
+	</td>
+	<td>
+		<input type="submit" value=" Search " class="block-button"><input type="submit" value=" Reset " class="block-button" style="display: inline;" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 	</td>
 </tr>
 </table>
