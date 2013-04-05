@@ -237,7 +237,7 @@ function my_user_save(){
 			"pilot_city"=>$pilot_city,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
-			"user_id"=>$GLOBALS['user_id']
+			"user_id"=>$GLOBALS['user']['user_id']
 		));
 		# Lets update the user info that is associated with it
 		$stmt=db_prep("
@@ -251,7 +251,7 @@ function my_user_save(){
 			"pilot_first_name"=>$pilot_first_name,
 			"pilot_last_name"=>$pilot_last_name,
 			"pilot_email"=>$pilot_email,
-			"user_id"=>$GLOBALS['user_id']
+			"user_id"=>$GLOBALS['user']['user_id']
 		));
 		user_message("User Info Saved.");
 	}

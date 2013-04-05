@@ -6,6 +6,7 @@
 <form name="main" method="POST">
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="my_user_save">
+<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
 
 {if $is_pilotlist}
 	<input type="hidden" name="connect" value="1">
