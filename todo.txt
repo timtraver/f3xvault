@@ -27,6 +27,8 @@ PLANE STUFF
 	
 EVENT STUFF
 
+  On Event Round screen, have a "Save and Create Next Round" button...
+  
   Ability to delete event by owner
 	
   ability to create flying order F3F and maybe have an option to stagger each round
