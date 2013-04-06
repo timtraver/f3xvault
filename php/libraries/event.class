@@ -516,6 +516,7 @@ class Event {
 				}
 			}
 		}
+		$scores=array();
 		# Now determine the flight type rank
 		foreach($flight as $flight_type_id=>$p){
 			foreach($p as $event_pilot_id=>$v){
