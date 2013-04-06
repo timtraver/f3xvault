@@ -530,7 +530,7 @@ function event_pilot_edit() {
 		if(isset($_REQUEST['from_action'])){
 			# They are returning from a plane add, so lets set things the way they were
 			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
-			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['pilot_fai']=$_REQUEST['pilot_fai'];
 			$pilot['class_id']=$_REQUEST['class_id'];
 			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
@@ -551,7 +551,7 @@ function event_pilot_edit() {
 		if(isset($_REQUEST['from_action'])){
 			# They are returning from a plane add, so lets set things the way they were
 			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
-			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['pilot_fai']=$_REQUEST['pilot_fai'];
 			$pilot['class_id']=$_REQUEST['class_id'];
 			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
@@ -570,7 +570,7 @@ function event_pilot_edit() {
 			$pilot['country_id']=$_REQUEST['country_id'];
 			$pilot['pilot_email']=$_REQUEST['pilot_email'];
 			$pilot['pilot_ama']=$_REQUEST['pilot_ama'];
-			$pilot['pilot_fia']=$_REQUEST['pilot_fia'];
+			$pilot['pilot_fai']=$_REQUEST['pilot_fai'];
 			$pilot['class_id']=$_REQUEST['class_id'];
 			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
@@ -624,7 +624,7 @@ function event_pilot_save() {
 	$state_id=intval($_REQUEST['state_id']);
 	$country_id=intval($_REQUEST['country_id']);
 	$pilot_ama=$_REQUEST['pilot_ama'];
-	$pilot_fia=$_REQUEST['pilot_fia'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
 	$pilot_email=$_REQUEST['pilot_email'];
 	$class_id=intval($_REQUEST['class_id']);
 	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
@@ -662,7 +662,7 @@ function event_pilot_save() {
 				$smarty->assign("state_id",$state_id);
 				$smarty->assign("country_id",$country_id);
 				$smarty->assign("pilot_ama",$pilot_ama);
-				$smarty->assign("pilot_fia",$pilot_fia);
+				$smarty->assign("pilot_fai",$pilot_fai);
 				$smarty->assign("pilot_email",$pilot_email);
 				$smarty->assign("class_id",$class_id);
 				$smarty->assign("event_pilot_freq",$event_pilot_freq);
@@ -695,7 +695,7 @@ function event_pilot_save() {
 				pilot_last_name=:pilot_last_name,
 				pilot_email=:pilot_email,
 				pilot_ama=:pilot_ama,
-				pilot_fia=:pilot_fia,
+				pilot_fai=:pilot_fai,
 				pilot_city=:pilot_city,
 				state_id=:state_id,
 				country_id=:country_id
@@ -705,7 +705,7 @@ function event_pilot_save() {
 			"pilot_last_name"=>$pilot_last_name,
 			"pilot_email"=>$pilot_email,
 			"pilot_ama"=>$pilot_ama,
-			"pilot_fia"=>$pilot_fia,
+			"pilot_fai"=>$pilot_fai,
 			"pilot_city"=>$pilot_city,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
@@ -829,7 +829,7 @@ function event_pilot_save() {
 #			));
 #		}
 	}
-	# Lets see if we need to update the pilot's ama or fia number
+	# Lets see if we need to update the pilot's ama or fai number
 	$stmt=db_prep("
 		SELECT *
 		FROM event_pilot ep
@@ -839,15 +839,15 @@ function event_pilot_save() {
 	");
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
 	$pilot=$result[0];
-	if($pilot_ama!=$pilot['pilot_ama'] || $pilot_fia!=$pilot['pilot_fia']){
+	if($pilot_ama!=$pilot['pilot_ama'] || $pilot_fai!=$pilot['pilot_fai']){
 		# lets update the pilot record
 		$stmt=db_prep("
 			UPDATE pilot
 			SET pilot_ama=:pilot_ama,
-				pilot_fia=:pilot_fia
+				pilot_fai=:pilot_fai
 				WHERE pilot_id=:pilot_id
 		");
-		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fia"=>$pilot_fia,"pilot_id"=>$pilot['pilot_id']));
+		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fai"=>$pilot_fai,"pilot_id"=>$pilot['pilot_id']));
 	}
 	
 	# Lets see if this pilot has a plane in his my planes area already
@@ -1237,6 +1237,7 @@ function event_round_save() {
 	$event_round_time_choice=$_REQUEST['event_round_time_choice'];
 	$event_round_number=$_REQUEST['event_round_number'];
 	$event_round_flyoff=intval($_REQUEST['event_round_flyoff']);
+	$create_new_round=intval($_REQUEST['create_new_round']);
 	$event_round_score_status=0;
 	if(isset($_REQUEST['event_round_score_status']) && $_REQUEST['event_round_score_status']=='on'){
 		$event_round_score_status=1;
@@ -1490,8 +1491,17 @@ function event_round_save() {
 	# Refresh the round info
 	$event->get_rounds();
 	$event->event_save_totals();
-	
+
 	log_action($event_round_id);
+
+	if($create_new_round==1){
+		#This means they want to save the round and create a new one
+		user_message("Saved round and created the next one.");
+		$_REQUEST['event_round_id']=0;
+		$_REQUEST['zero_round']=0;
+		$_REQUEST['flyoff_round']=0;
+		return event_round_edit();
+	}
 	user_message("Saved event round info.");
 	return event_round_edit();
 }

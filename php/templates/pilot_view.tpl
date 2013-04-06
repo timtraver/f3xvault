@@ -17,8 +17,8 @@
 	<td>{$pilot.pilot_ama|escape}</td>
 </tr>
 <tr>
-	<th>Pilot FIA Number</th>
-	<td>{$pilot.pilot_fia|escape}</td>
+	<th>Pilot FAI Number</th>
+	<td>{$pilot.pilot_fai|escape}</td>
 </tr>
 </table>
 <br>

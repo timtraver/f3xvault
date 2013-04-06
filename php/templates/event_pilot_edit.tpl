@@ -65,7 +65,7 @@ function copy_plane_values(){ldelim}
 	document.add_plane.from_pilot_email.value=document.main.pilot_email.value;
 	{/if}
 	document.add_plane.from_pilot_ama.value=document.main.pilot_ama.value;
-	document.add_plane.from_pilot_fia.value=document.main.pilot_fia.value;
+	document.add_plane.from_pilot_fai.value=document.main.pilot_fai.value;
 	document.add_plane.from_class_id.value=document.main.class_id.value;
 	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
 	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;
@@ -167,9 +167,9 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot FIA #</th>
+	<th align="right" nowrap>Pilot FAI #</th>
 	<td colspan="2">
-		<input type="text" name="pilot_fia" size="15" value="{$pilot.pilot_fia}">
+		<input type="text" name="pilot_fai" size="15" value="{$pilot.pilot_fai}">
 	</td>
 </tr>
 <tr>
@@ -241,7 +241,7 @@ function copy_plane_values(){ldelim}
 <input type="hidden" name="from_country_id" value="">
 <input type="hidden" name="from_pilot_email" value="">
 <input type="hidden" name="from_pilot_ama" value="">
-<input type="hidden" name="from_pilot_fia" value="">
+<input type="hidden" name="from_pilot_fai" value="">
 <input type="hidden" name="from_class_id" value="">
 <input type="hidden" name="from_event_pilot_freq" value="">
 <input type="hidden" name="from_event_pilot_team" value="">

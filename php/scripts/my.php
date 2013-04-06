@@ -177,7 +177,7 @@ function my_user_save(){
 	$state_id=$_REQUEST['state_id'];
 	$country_id=$_REQUEST['country_id'];
 	$pilot_ama=$_REQUEST['pilot_ama'];
-	$pilot_fia=$_REQUEST['pilot_fia'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
 
 	if($pilot_id==0){
 		# Insert new pilot info and assign the current user to it
@@ -196,7 +196,7 @@ function my_user_save(){
 				pilot_last_name=:pilot_last_name,
 				pilot_email=:pilot_email,
 				pilot_ama=:pilot_ama,
-				pilot_fia=:pilot_fia,
+				pilot_fai=:pilot_fai,
 				pilot_city=:pilot_city,
 				state_id=:state_id,
 				country_id=:country_id,
@@ -207,7 +207,7 @@ function my_user_save(){
 			"pilot_last_name"=>$pilot_last_name,
 			"pilot_email"=>$pilot_email,
 			"pilot_ama"=>$pilot_ama,
-			"pilot_fia"=>$pilot_fia,
+			"pilot_fai"=>$pilot_fai,
 			"pilot_city"=>$pilot_city,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
@@ -222,7 +222,7 @@ function my_user_save(){
 				pilot_last_name=:pilot_last_name,
 				pilot_email=:pilot_email,
 				pilot_ama=:pilot_ama,
-				pilot_fia=:pilot_fia,
+				pilot_fai=:pilot_fai,
 				pilot_city=:pilot_city,
 				state_id=:state_id,
 				country_id=:country_id
@@ -233,7 +233,7 @@ function my_user_save(){
 			"pilot_last_name"=>$pilot_last_name,
 			"pilot_email"=>$pilot_email,
 			"pilot_ama"=>$pilot_ama,
-			"pilot_fia"=>$pilot_fia,
+			"pilot_fai"=>$pilot_fai,
 			"pilot_city"=>$pilot_city,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,

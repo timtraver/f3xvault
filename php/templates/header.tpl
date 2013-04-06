@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
 	<head>
-		<title>RC Vault</title>
+		<title>F3X Vault</title>
 		<link rel='stylesheet' id='graphene-stylesheet-css' href='/graphene.css' type='text/css' media='screen' />
 		<link rel='stylesheet' id='graphene-light-header-css' href='/graphene-style-light.css' type='text/css' media='screen' />
 		
@@ -72,9 +72,9 @@
 <body class="home custom-background">
 <div id="container" class="container_16">
 	<div id="header">
-		<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>        	       
-		<h1 class="header_title push_1">RC Vault</h1>
-		<h2 class="header_desc push_1">RC Databases and Scoring of RC Gliding Competitions</h2>
+		<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>
+		<h1 class="header_title push_1">F3X Vault</h1>
+		<h2 class="header_desc push_1">Databases and Scoring of RC Gliding Disciplines</h2>
 		{if $user.user_id!=0}
 		<a href="?action=message"><input type="button" value="Welcome {$user.user_first_name}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
 		{/if}

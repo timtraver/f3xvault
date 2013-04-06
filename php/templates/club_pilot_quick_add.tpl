@@ -57,9 +57,9 @@
 	</td>
 </tr>
 <tr>
-	<th nowrap>Pilot FIA #</th>
+	<th nowrap>Pilot FAI #</th>
 	<td colspan="2">
-		<input type="text" name="pilot_fia" size="15" value="">
+		<input type="text" name="pilot_fai" size="15" value="">
 	</td>
 </tr>
 <tr>

@@ -88,8 +88,8 @@
 	<td><input type="text" size="10" name="pilot_ama" value="{$pilot.pilot_ama|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot FIA Number</th>
-	<td><input type="text" size="10" name="pilot_fia" value="{$pilot.pilot_fia|escape}"></td>
+	<th>Pilot FAI Number</th>
+	<td><input type="text" size="10" name="pilot_fai" value="{$pilot.pilot_fai|escape}"></td>
 </tr>
 </table>
 <br>

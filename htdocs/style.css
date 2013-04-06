@@ -114,3 +114,54 @@ html {
 	border-left-style: none;
 	overflow:hidden;
 }
+#f3choice {
+	height: 20px;
+	width: 25px;
+	background-image: #2982c5;
+	box-shadow: #555555;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	
+	border-top-width: 1px;
+	border-right-width-value: 1px;
+	border-bottom-width: 1px;
+	border-left-width-value: 1px;
+	border-top-style: solid;
+	border-right-style-value: solid;
+	border-bottom-style: solid;
+	border-left-style-value: solid;
+	border-top-color: #1c5fa5;
+	border-right-color-value: #1c5fa5;
+	border-bottom-color: #1c5fa5;
+	border-left-color-value: #1c5fa5;
+	border-image-source: none;
+	border-image-slice: 100% 100% 100% 100%;
+	border-image-width: 1 1 1 1;
+	border-image-outset: 0 0 0 0;
+	border-image-repeat: stretch stretch;
+	color: #090fa3;
+	cursor: pointer;
+	display: block;
+	float: right;
+	font-family: "Pontano Sans",arial,sans-serif;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 700;
+	font-size: 32px;
+	line-height: normal;
+	font-size-adjust: none;
+	font-stretch: normal;
+	margin-top: 0px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	padding-top: 1px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+	padding-left: 4px;
+	position: relative;
+	text-shadow: #16497e;
+	bottom: 30%;
+}
