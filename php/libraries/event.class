@@ -46,13 +46,17 @@ class Event {
 		# Now lets get the pilots assigned to this event
 		$sort_by=$_REQUEST['sort_by'];
 		switch($sort_by){
-			case 'alphabetical':
+			case 'alphabetical_first':
 				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'flight_order':
 			case 'round_rank':
+			case 'entry_order':
 			default:
-				$sort_string='';
+				$sort_string='ORDER BY ep.event_pilot_entry_order';
 				break;
 		}
 		$stmt=db_prep("
@@ -122,11 +126,17 @@ class Event {
 			$sort_by='';
 		}
 		switch($sort_by){
+			case 'entry_order':
+				$sort_string='ORDER BY ep.event_pilot_entry_order';
+				break;
 			case 'flight_order':
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;
-			case 'alphabetical':
+			case 'alphabetical_first':
 				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'round_rank':
 			default:

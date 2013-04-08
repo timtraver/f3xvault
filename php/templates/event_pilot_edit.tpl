@@ -93,6 +93,12 @@ function copy_plane_values(){ldelim}
 		{$event.event_name}
 	</td>
 </tr>
+<tr>
+	<th align="right" nowrap>Event Entry Order</th>
+	<td colspan="2">
+		<input type="text" name="event_pilot_entry_order" size="3" value="{$pilot.event_pilot_entry_order}">
+	</td>
+</tr>
 {if $pilot.pilot_id==0}
 <tr>
 	<th align="right" nowrap>Pilot First Name</th>

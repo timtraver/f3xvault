@@ -585,6 +585,22 @@ function event_pilot_edit() {
 			$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
 		}
 	}
+	# If its a new pilot, lets set the entry order
+	if($event_pilot_id==0){
+		# Lets see what the next increment in the order is
+		$stmt=db_prep("
+			SELECT MAX(event_pilot_entry_order) as max
+			FROM event_pilot
+			WHERE event_id=:event_id
+			AND event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		if($result[0]['max']=='NULL' || $result[0]['max']==0){
+			$pilot['event_pilot_entry_order']=1;
+		}else{
+			$pilot['event_pilot_entry_order']=$result[0]['max']+1;
+		}
+	}
 	
 	# Lets set a default for the Channel
 	if(!isset($pilot['event_pilot_freq']) || $pilot['event_pilot_freq']==''){
@@ -631,6 +647,7 @@ function event_pilot_save() {
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
 	$plane_id=intval($_REQUEST['plane_id']);
 	$from_confirm=intval($_REQUEST['from_confirm']);
+	$event_pilot_entry_order=intval($_REQUEST['event_pilot_entry_order']);
 	
 	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
 	if($pilot_id==0){
@@ -720,6 +737,7 @@ function event_pilot_save() {
 		$stmt=db_prep("
 			UPDATE event_pilot
 			SET class_id=:class_id,
+				event_pilot_entry_order=:event_pilot_entry_order,
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id
@@ -727,26 +745,13 @@ function event_pilot_save() {
 		");
 		$result=db_exec($stmt,array(
 			"class_id"=>$class_id,
+			"event_pilot_entry_order"=>$event_pilot_entry_order,
 			"event_pilot_freq"=>$event_pilot_freq,
 			"event_pilot_team"=>$event_pilot_team,
 			"event_pilot_id"=>$event_pilot_id,
 			"plane_id"=>$plane_id
 		));
 	}else{
-		# Lets see what the next increment in the order is
-		$stmt=db_prep("
-			SELECT MAX(event_pilot_entry_order) as max
-			FROM event_pilot
-			WHERE event_id=:event_id
-			AND event_pilot_status=1
-		");
-		$result=db_exec($stmt,array("event_id"=>$event_id));
-		if($result[0]['max']=='NULL' || $result[0]['max']==0){
-			$event_pilot_entry_order=1;
-		}else{
-			$event_pilot_entry_order=$result[0]['max']+1;
-		}
-
 		# We need to create a new event pilot id
 		# Lets first see if there already is one to just turn on
 		$stmt=db_prep("

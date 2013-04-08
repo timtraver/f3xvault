@@ -186,8 +186,10 @@ $(function() {ldelim}
 			<td>
 				<select name="sort_by" onChange="document.sort_round.sort_by.value=document.main.sort_by.value; sort_round.submit();">
 				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
-				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Flight Order</option>
-				<option value="alphabetical"{if $sort_by=='alphabetical'} SELECTED{/if}>Alphabetical Order</option>
+				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
+				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Round Flight Order</option>
+				<option value="alphabetical_first"{if $sort_by=='alphabetical_first'} SELECTED{/if}>Alphabetical Order - First Name</option>
+				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alphabetical Order - Last Name</option>
 				</select>
 			</td>
 			<th nowrap>Include This Round In Final Results</th>
