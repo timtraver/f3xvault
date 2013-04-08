@@ -9,6 +9,8 @@
 ############################################################################
 $GLOBALS['current_menu']='events';
 
+include_library("series.class");
+
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];
 }else{
@@ -183,49 +185,20 @@ function series_view() {
 	global $smarty;
 	
 	$series_id=intval($_REQUEST['series_id']);
-	
-	# Get the series info
-	$stmt=db_prep("
-		SELECT *
-		FROM series se
-		LEFT JOIN state s ON se.state_id=s.state_id
-		LEFT JOIN country c ON se.country_id=c.country_id
-		WHERE series_id=:series_id
-	");
-	$result=db_exec($stmt,array("series_id"=>$series_id));
-	
-	if(!isset($result[0])){
-		user_message("A series with that id does not exist.",1);
-		return series_list();
-	}else{
-		$series=$result[0];
+	$series=new Series($series_id);
 
-		# Now lets get the events in this series
-		$stmt=db_prep("
-			SELECT *
-			FROM event e
-			LEFT JOIN location l ON e.location_id=l.location_id
-			LEFT JOIN state s ON l.state_id=s.state_id
-			LEFT JOIN country c ON l.country_id=c.country_id
-			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.series_id=:series_id
-			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
-		");
-		$events=db_exec($stmt,array("series_id"=>$series_id));
-		$smarty->assign("events",$events);
-		$total_events=count($events);
-		$smarty->assign("total_events",$total_events);
+	$total_events=count($series->events);
+	$smarty->assign("total_events",$total_events);
 		
-		# Check to see if we need to update the total
-		if($series['series_total_events']!=$total_events){
-			# Update the record
-			$stmt=db_prep("
-				UPDATE series 
-				SET series_total_events=:series_total_events
-				WHERE series_id=:series_id
-			");
-			$result=db_exec($stmt,array("series_id"=>$series_id,"series_total_events"=>$total_events));
-		}
+	# Check to see if we need to update the total
+	if($series->info['series_total_events']!=$total_events){
+		# Update the record
+		$stmt=db_prep("
+			UPDATE series 
+			SET series_total_events=:series_total_events
+			WHERE series_id=:series_id
+		");
+		$result=db_exec($stmt,array("series_id"=>$series_id,"series_total_events"=>$total_events));
 	}
 	
 	$smarty->assign("series",$series);
@@ -254,32 +227,11 @@ function series_edit() {
 	$series=array();
 	if($series_id!=0){
 		# Get series info
-		$stmt=db_prep("
-			SELECT *
-			FROM series se
-			LEFT JOIN state s ON se.state_id=s.state_id
-			LEFT JOIN country c ON se.country_id=c.country_id
-			WHERE se.series_id=:series_id
-		");
-		$result=db_exec($stmt,array("series_id"=>$series_id));
-		$series=$result[0];
+		$series=new Series($series_id);
 	}else{
 		# Set the name
 		$series['series_name']=$series_name;
 	}
-	
-	# Now lets get the users that have additional access
-	$stmt=db_prep("
-		SELECT *
-		FROM series_user su
-		LEFT JOIN pilot p ON su.pilot_id=p.pilot_id
-		LEFT JOIN state s ON p.state_id=s.state_id
-		LEFT JOIN country c ON p.country_id=c.country_id
-		WHERE su.series_id=:series_id
-			AND su.series_user_status=1
-	");
-	$series_users=db_exec($stmt,array("series_id"=>$club_id));
-	$smarty->assign("series_users",$series_users);
 	
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("states",get_states());

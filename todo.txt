@@ -34,8 +34,6 @@ PLANE STUFF
 	
 EVENT STUFF
 
-  Ability to delete event by owner
-	
   ability to create flying order F3F and maybe have an option to stagger each round
   ability to create F3B distance orders before hand
   
@@ -93,6 +91,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Ability to delete event by owner
 X  Change menus to not have the RC in them to make it smaller
 X  Change all the fields in db and on forms to FAI, not FIA
 X  On Event Round screen, have a "Save and Create Next Round" button...

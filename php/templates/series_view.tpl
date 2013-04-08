@@ -46,25 +46,25 @@ $(function() {
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series Settings - {$series.series_name} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
+		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Series Name</th>
 			<td>
-			{$series.series_name}
+			{$series->info.series_name}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Location</th>
 			<td>
-			{$series.series_area},{$series.state_code} {$series.country_code}
+			{$series->info.series_area},{$series->info.state_code} {$series->info.country_code}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Series Web URL</th>
-			<td><a href="{$series.series_url}" target="_new">{$series.series_url}</a></td>
+			<td><a href="{$series->info.series_url}" target="_new">{$series->info.series_url}</a></td>
 		</tr>
 		</table>
 		
@@ -79,7 +79,7 @@ $(function() {
 			<th align="left">Country</th>
 			<th align="left">Map Location</th>
 		</tr>
-		{foreach $events as $e}
+		{foreach $series->events as $e}
 		<tr>
 			<td>
 				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name}</a>
@@ -109,19 +109,19 @@ $(function() {
 <form name="edit_series" method="POST">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_edit">
-<input type="hidden" name="series_id" value="{$series.series_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
 </form>
 <form name="add_pilot" method="POST">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_add_pilot">
-<input type="hidden" name="series_id" value="{$series.series_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
 </form>
 <form name="add_location" method="POST">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_location_add">
-<input type="hidden" name="series_id" value="{$series.series_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
 <input type="hidden" name="location_id" value="">
 </form>
 <form name="create_new_location" method="POST">

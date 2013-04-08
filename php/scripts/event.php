@@ -142,7 +142,8 @@ function event_list() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE $search_prefix$search_field $operator :search
+			WHERE e.event_status=1
+				AND $search_prefix$search_field $operator :search
 				$addcountry
 				$addstate
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
@@ -157,7 +158,7 @@ function event_list() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE 1
+			WHERE e.event_status=1
 				$addcountry
 				$addstate
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
@@ -473,6 +474,32 @@ function event_save() {
 	}
 	log_action($event_id);
 	return event_edit();
+}
+function event_delete() {
+	global $smarty;
+	global $user;
+
+	$event_id=intval($_REQUEST['event_id']);
+	# Lets check to make sure that its the owner that is deleting it
+	$e=new Event($event_id);
+	if($user['user_id']!=$e->info['user_id']){
+		# This is not the owner, so don't delete it...
+		user_message("I'm sorry, but only the owner of the event can delete it.",1);
+		return event_list();
+	}
+	# Save the database record for this event to delete it
+	$stmt=db_prep("
+		UPDATE event
+		SET event_status=0
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array(
+		"event_id"=>$event_id
+	));
+	user_message("Removed Event!");
+
+	log_action($event_id);
+	return event_list();
 }
 function event_pilot_edit() {
 	global $smarty;

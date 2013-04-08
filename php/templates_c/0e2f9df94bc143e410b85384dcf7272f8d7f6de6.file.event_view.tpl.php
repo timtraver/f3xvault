@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-04-03 00:50:47
+<?php /* Smarty version Smarty-3.1.11, created on 2013-04-07 22:18:54
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1364975444,
+      1 => 1365398332,
       2 => 'file',
     ),
   ),
@@ -35,6 +35,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'fast_id' => 0,
     'flyoff_number' => 0,
     't' => 0,
+    'user' => 0,
     'duration_rank' => 0,
     'speed_rank' => 0,
     'c' => 0,
@@ -781,6 +782,9 @@ s<br>
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
+<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']==$_smarty_tpl->tpl_vars['event']->value->info['user_id']){?>
+<input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
+<?php }?>
 	</div>
 </div>
 
@@ -1152,6 +1156,12 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
+</form>
+<form name="event_delete" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_delete">
 <input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 </form>

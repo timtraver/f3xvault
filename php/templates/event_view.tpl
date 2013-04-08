@@ -507,6 +507,9 @@ function toggle(element,tog) {
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
+{if $user.user_id==$event->info.user_id}
+<input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
+{/if}
 	</div>
 </div>
 
@@ -777,6 +780,11 @@ function toggle(element,tog) {
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_delete" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_delete">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_pilot_add" method="POST">
