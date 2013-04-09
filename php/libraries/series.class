@@ -23,7 +23,7 @@ class Series {
 		# Initialization of the class
 		$this->series_id=$series_id;
 		$stmt=db_prep("
-			SELECT *
+			SELECT *,s.*,c.*
 			FROM series se
 			LEFT JOIN state s ON se.state_id=s.state_id
 			LEFT JOIN country c ON se.country_id=c.country_id
