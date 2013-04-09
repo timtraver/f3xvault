@@ -103,6 +103,35 @@ $(function() {
 </form>
 
 {if $series->info.series_id!=0}
+<h1 class="post-title entry-title">Edit Series Parameters</h1>
+<form name="event_options" method="POST">
+<input type="hidden" name="action" value="series">
+<input type="hidden" name="function" value="series_param_save">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th colspan="2" align="left">The Following Specific Parameters Are for this series</th>
+</tr>
+{foreach $series->options as $o}
+<tr>
+	<th align="right" width="30%">{$o.event_type_option_name} (<a href="#" title="{$o.event_type_option_description}">?</a>)</th>
+	<td>
+		{if $o.event_type_option_type == 'boolean'}
+				<input type="checkbox" name="option_{$o.event_type_option_id}" {if $o.event_option_status==1 && $o.event_option_value ==1}CHECKED{/if}>
+		{else}
+				<input type="text" name="option_{$o.event_type_option_id}" size="{$o.event_type_option_size}" value="{$o.event_option_value}"> 
+		{/if}
+	</td>
+</tr>
+{/foreach}
+<tr>
+	<th colspan="2">
+		<input type="submit" value=" Save These Series Parameters " class="block-button">
+	</th>
+</tr>
+
+</table>
+</form>
 
 <h1 class="post-title entry-title">Edit Series Access</h1>
 <form name="series_user" method="POST">
