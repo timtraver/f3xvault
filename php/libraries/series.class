@@ -106,6 +106,7 @@ class Series {
 		# Function to calculate the subtotals and totals per pilot for the series
 
 		# Lets get the event drops
+		$drop_rounds=array();
 		foreach($this->options as $o){
 			if(preg_match("/drop/",$o['series_option_type_code'])){
 				$drop_rounds[]=$o['series_option_value'];
