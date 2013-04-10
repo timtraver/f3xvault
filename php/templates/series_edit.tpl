@@ -7,7 +7,7 @@
 {literal}
 $(function() {
 	$("#series_user_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
+		source: "/lookup.php?function=lookup_user",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -19,11 +19,11 @@ $(function() {
 			loading.style.display = "inline";
 		},
    		select: function( event, ui ) {
-			document.series_user.pilot_id.value = ui.item.id;
+			document.series_user.user_id.value = ui.item.id;
 		},
    		change: function( event, ui ) {
    			if(document.series_user.series_user_name.value==''){
-				document.series_user.pilot_id.value = 0;
+				document.series_user.user_id.value = 0;
 			}
 		},
    		response: function( event, ui ) {
@@ -114,12 +114,15 @@ $(function() {
 </tr>
 {foreach $series->options as $o}
 <tr>
-	<th align="right" width="30%">{$o.event_type_option_name} (<a href="#" title="{$o.event_type_option_description}">?</a>)</th>
+	<th align="right" width="30%">{$o.series_option_type_name} (<a href="#" title="{$o.series_option_type_description}">?</a>)</th>
 	<td>
-		{if $o.event_type_option_type == 'boolean'}
-				<input type="checkbox" name="option_{$o.event_type_option_id}" {if $o.event_option_status==1 && $o.event_option_value ==1}CHECKED{/if}>
+		{if $o.series_option_type_type == 'boolean'}
+			<select name="option_{$o.series_option_type_id}_{$o.series_option_id}">
+			<option value="yes" {if $o.series_option_status==1 && $o.series_option_value ==1}SELECTED{/if}>Yes</option>
+			<option value="no" {if $o.series_option_status==1 && $o.series_option_value ==0}SELECTED{/if}>No</option>
+			</select>
 		{else}
-				<input type="text" name="option_{$o.event_type_option_id}" size="{$o.event_type_option_size}" value="{$o.event_option_value}"> 
+				<input type="text" name="option_{$o.series_option_type_id}_{$o.series_option_id}" size="{$o.series_option_type_size}" value="{$o.series_option_value}"> 
 		{/if}
 	</td>
 </tr>
@@ -127,6 +130,7 @@ $(function() {
 <tr>
 	<th colspan="2">
 		<input type="submit" value=" Save These Series Parameters " class="block-button">
+		<input type="button" value=" Add Drop " class="block-button" onClick="var round=prompt('Enter Round for new drop :');if(round!=null && round!=''){ldelim}document.add_drop.drop_round.value=round;document.add_drop.submit();{rdelim}">
 	</th>
 </tr>
 
@@ -138,7 +142,7 @@ $(function() {
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_user_save">
 <input type="hidden" name="series_id" value="{$series->info.series_id}">
-<input type="hidden" name="pilot_id" value="">
+<input type="hidden" name="user_id" value="">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th colspan="2" align="left">The Following Users Have Access To Edit This Series</th>
@@ -171,6 +175,12 @@ $(function() {
 <input type="hidden" name="function" value="series_view">
 <input type="hidden" name="series_id" value="{$series->info.series_id}">
 {/if}
+</form>
+<form name="add_drop" method="POST">
+<input type="hidden" name="action" value="series">
+<input type="hidden" name="function" value="series_option_add_drop">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
+<input type="hidden" name="drop_round" value="0">
 </form>
 
 </div>

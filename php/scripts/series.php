@@ -20,10 +20,10 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 $need_login=array(
 	"series_edit",
 	"series_save",
+	"series_param_save",
+	"series_option_add_drop",
 	"series_user_save",
-	"series_user_delete",
-	"series_location_add",
-	"series_location_remove"
+	"series_user_delete"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
@@ -34,7 +34,7 @@ if(check_user_function($function)){
 	}else{
 		# Now check to see if they have permission to edit this club
 		if(isset($_REQUEST['series_id']) && $_REQUEST['series_id']!=0){
-			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_club_permission($_REQUEST['series_id']))){
+			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_series_permission($_REQUEST['series_id']))){
 				# They are allowed
 				eval("\$actionoutput=$function();");
 			}else{
@@ -201,6 +201,9 @@ function series_view() {
 		$result=db_exec($stmt,array("series_id"=>$series_id,"series_total_events"=>$total_events));
 	}
 	
+	# Now lets calculate the totals
+	$series->calculate_series_totals();
+	
 	$smarty->assign("series",$series);
 	$maintpl=find_template("series_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -273,6 +276,24 @@ function series_save() {
 		user_message("Added your New Series!");
 		$_REQUEST['series_id']=$GLOBALS['last_insert_id'];
 		$series_id=$GLOBALS['last_insert_id'];
+		# Lets add a default drop to the series
+		# First get the drop type
+		$stmt=db_prep("
+			SELECT *
+			FROM series_option_type
+			WHERE series_option_type_code='drop'
+		");
+		$result=db_exec($stmt,array());
+		$series_option_type_id=$result[0]['series_option_type_id'];
+		# Now lets add one
+		$stmt=db_prep("
+			INSERT INTO series_option
+			SET series_id=:series_id,
+				series_option_type_id=:series_option_type_id,
+				series_option_value='4',
+				series_option_status=1
+		");
+		$result=db_exec($stmt,array("series_id"=>$series_id,"series_option_type_id"=>$series_option_type_id));
 	}else{
 		# Save the database record for this club
 		$stmt=db_prep("
@@ -306,359 +327,241 @@ function series_save() {
 		return series_edit();
 	}
 }
-
-
-
-function club_user_save() {
+function series_param_save() {
 	global $smarty;
 	global $user;
 	
-	$club_id=intval($_REQUEST['club_id']);
-	$pilot_id=intval($_REQUEST['pilot_id']);
+	$series_id=intval($_REQUEST['series_id']);
+		
+	# Now lets step through the options and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^option_(\d+)_(\d+)/",$key,$match)){
+				$type_id=$match[1];
+				$id=$match[2];
+				if($value=='yes'){
+					$value=1;
+				}
+				if($value=='no'){
+					$value=0;
+				}
+		}else{
+			continue;
+		}
 
-	if($pilot_id==0){
-		user_message("Cannot add a blank user for access.",1);
-		return club_edit();
-	}
-	# Get the current user pilot id to make sure they don't add themselves
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM series_option so
+			LEFT JOIN series_option_type sot ON so.series_option_type_id=sot.series_option_type_id
+			WHERE so.series_id=:series_id
+				AND so.series_option_id=:series_option_id
+		");
+		$result=db_exec($stmt,array("series_option_id"=>$id,"series_id"=>$series_id));
+		if($result){
+			# There is already a record, so lets update it
+			$series_option_id=$result[0]['series_option_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE series_option
+					SET series_option_value=:value,
+						series_option_status=1
+					WHERE series_option_id=:series_option_id
+				");
+				$result2=db_exec($stmt,array("value"=>$value,"series_option_id"=>$series_option_id));
+			}else{
+				if($result[0]['series_option_type_code']=='drop'){
+					# Lets turn this one off
+					$stmt=db_prep("
+						UPDATE series_option
+						SET series_option_status=0
+							WHERE series_option_id=:series_option_id
+					");
+					$result2=db_exec($stmt,array("series_option_id"=>$series_option_id));
+				}
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO series_option
+					SET series_id=:series_id,
+						series_option_type_id=:series_option_type_id,
+						series_option_value=:value,
+						series_option_status=1
+				");
+				$result2=db_exec($stmt,array("series_id"=>$series_id,"series_option_type_id"=>$type_id,"value"=>$value));
+			}
+		}
+	}	
+	# Now lets recalculate and save the event info because the parameters may have changed
+	#$e=new Event($event_id);
+	#$e->event_save_totals();
+	
+	log_action($series_id);
+	user_message("Series Parameters Saved.");
+	return series_edit();
+}
+function series_option_add_drop() {
+
+	$series_id=intval($_REQUEST['series_id']);
+	$drop_round=intval($_REQUEST['drop_round']);
+
+	# First get the drop type
 	$stmt=db_prep("
 		SELECT *
-		FROM club cl
-		WHERE club_id=:club_id
+		FROM series_option_type
+		WHERE series_option_type_code='drop'
 	");
-	$result=db_exec($stmt,array("club_id"=>$club_id));
-	if(isset($result[0])){
-		$club=$result[0];
+	$result=db_exec($stmt,array());
+	$series_option_type_id=$result[0]['series_option_type_id'];
+	# Now lets add one
+	$stmt=db_prep("
+		INSERT INTO series_option
+		SET series_id=:series_id,
+			series_option_type_id=:series_option_type_id,
+			series_option_value=:drop_round,
+			series_option_status=1
+	");
+	$result=db_exec($stmt,array("series_id"=>$series_id,"series_option_type_id"=>$series_option_type_id,"drop_round"=>$drop_round));
+
+	user_message("Added a drop round for this series.");
+	return series_edit();
+}
+function series_user_save() {
+	global $smarty;
+	global $user;
+	
+	$series_id=intval($_REQUEST['series_id']);
+	$user_id=intval($_REQUEST['user_id']);
+
+	if($user_id==0){
+		user_message("Cannot add a blank user for access.",1);
+		return series_edit();
 	}
-	if($club['pilot_id']==$pilot_id){
-		user_message("You do not need to give access to yourself, as you will always have access as the owner of this club.");
-		return club_edit();
+	# Get the current user id to make sure they don't add themselves
+	$stmt=db_prep("
+		SELECT *
+		FROM series s
+		WHERE series_id=:series_id
+	");
+	$result=db_exec($stmt,array("series_id"=>$series_id));
+	if(isset($result[0])){
+		$series=$result[0];
+	}
+	if($series['user_id']==$user_id){
+		user_message("You do not need to give access to yourself, as you will always have access as the owner of this series.");
+		return series_edit();
 	}
 	
-	# Now lets check to see if this is the club owner, because only they can add an club user
-	if($club['pilot_id']!=$user['pilot_id']){
-		user_message("You do not have access to give anyone else access. Only the club owner can do that.",1);
-		return club_edit();
+	# Now lets check to see if this is the series owner, because only they can add a series user
+	if($series['user_id']!=$user['user_id']){
+		user_message("You do not have access to give anyone else access. Only the series owner can do that.",1);
+		return series_edit();
 	}
 	
 	# Lets first see if this one is already added
 	$stmt=db_prep("
 		SELECT *
-		FROM club_user
-		WHERE club_id=:club_id
-			AND pilot_id=:pilot_id
+		FROM series_user
+		WHERE series_id=:series_id
+			AND user_id=:user_id
 	");
-	$result=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
+	$result=db_exec($stmt,array("series_id"=>$series_id,"user_id"=>$user_id));
 	
 	if(isset($result[0])){
 		# This record already exists, so lets just turn it on
 		$stmt=db_prep("
-			UPDATE club_user
-			SET club_user_status=1
-			WHERE club_user_id=:club_user_id
+			UPDATE series_user
+			SET series_user_status=1
+			WHERE series_user_id=:series_user_id
 		");
-		$result=db_exec($stmt,array("club_user_id"=>$result[0]['club_user_id']));
+		$result=db_exec($stmt,array("series_user_id"=>$result[0]['series_user_id']));
 	}else{
 		# Lets create a new record
 		$stmt=db_prep("
-			INSERT INTO club_user
-			SET club_id=:club_id,
-				pilot_id=:pilot_id,
-				club_user_status=1
+			INSERT INTO series_user
+			SET series_id=:series_id,
+				user_id=:user_id,
+				series_user_status=1
 		");
 		$result=db_exec($stmt,array(
-			"club_id"=>$club_id,
-			"pilot_id"=>$pilot_id
+			"series_id"=>$series_id,
+			"user_id"=>$user_id
 		));
 	}
-	user_message("New user given access to edit this club.");
-	return club_edit();
+	user_message("New user given access to edit this series.");
+	return series_edit();
 }
-function club_user_delete() {
+function series_user_delete() {
 	global $smarty;
 	global $user;
 	
-	$club_id=intval($_REQUEST['club_id']);
-	$club_user_id=intval($_REQUEST['club_user_id']);
+	$series_id=intval($_REQUEST['series_id']);
+	$series_user_id=intval($_REQUEST['series_user_id']);
 
 	# Lets see if they are allowed to do this
 	$stmt=db_prep("
 		SELECT *
-		FROM club
-		WHERE club_id=:club_id
+		FROM series
+		WHERE series_id=:series_id
 	");
-	$result=db_exec($stmt,array("club_id"=>$club_id));
+	$result=db_exec($stmt,array("series_id"=>$series_id));
 	if(isset($result[0])){
-		$club=$result[0];
+		$series=$result[0];
 	}
 	
-	# Now lets check to see if this is the club owner, because only they can delete a user
-	if($club['pilot_id']!=$user['pilot_id']){
-		user_message("You do not have access to remove access to this club. Only the club owner can do that.",1);
-		return club_edit();
+	# Now lets check to see if this is the series owner, because only they can delete a user
+	if($series['user_id']!=$user['user_id']){
+		user_message("You do not have access to remove access to this series. Only the series owner can do that.",1);
+		return series_edit();
 	}
 
 	# Lets turn off this record
 	$stmt=db_prep("
-		UPDATE club_user
-		SET club_user_status=0
-		WHERE club_user_id=:club_user_id
+		UPDATE series_user
+		SET series_user_status=0
+		WHERE series_user_id=:series_user_id
 	");
-	$result=db_exec($stmt,array("club_user_id"=>$club_user_id));
+	$result=db_exec($stmt,array("series_user_id"=>$series_user_id));
 	
-	user_message("Removed user access to edit this club.");
-	return club_edit();
+	user_message("Removed user access to edit this series.");
+	return series_edit();
 }
-function club_location_add() {
-	global $smarty;
-	
-	$club_id=intval($_REQUEST['club_id']);
-	if($club_id==0){
-		user_message("That is not a proper club id to add a location to.");
-		return club_list();
-	}
-	$location_id=intval($_REQUEST['location_id']);
-	
-	# If pilot_id is zero, then send them to the quick add pilot screen
-	if($location_id==0){
-		user_message("Must select a location from the searched list or create a new one.",1);
-		return club_view();
-	}else{
-		# Check to see if the location already exists in this club
-		$stmt=db_prep("
-			SELECT *
-			FROM club_location cl
-			WHERE cl.club_id=:club_id
-				AND cl.location_id=:location_id
-		");
-		$result=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
-		if(isset($result[0])){
-			# The record already exists, so lets see if it has its status to 1 or not
-			if($result[0]['club_location_status']==1){
-				# This record already exists!
-				user_message("The Location you have chosen to add is already in this club.",1);
-				return club_view();
-			}else{
-				# Lets turn this record back on
-				$stmt=db_prep("
-					UPDATE club_location
-					SET club_location_status=1
-					WHERE club_location_id=:club_location_id
-				");
-				$result2=db_exec($stmt,array("club_location_id"=>$result[0]['club_location_id']));
-				$_REQUEST['club_location_id']=$result[0]['club_location_id'];
-			}
-		}else{
-			# This record doesn't exist, so lets add it
-			$stmt=db_prep("
-				INSERT INTO club_location
-				SET club_id=:club_id,
-					location_id=:location_id,
-					club_location_status=1
-			");
-			$result2=db_exec($stmt,array("club_id"=>$club_id,"location_id"=>$location_id));
-			$_REQUEST['club_location_id']=$GLOBALS['last_insert_id'];
-		}
-		user_message("Location Added to club.");
-		return club_view();
-	}
-}
-function club_location_remove() {
-	global $smarty;
-
-	$club_id=intval($_REQUEST['club_id']);
-	$club_location_id=$_REQUEST['club_location_id'];
-
-	$stmt=db_prep("
-		UPDATE club_location
-		SET club_location_status=0
-		WHERE club_location_id=:club_location_id
-	");
-	$result=db_exec($stmt,array("club_location_id"=>$club_location_id));
-	user_message("Location removed from club.");
-	return club_view();
-}
-function check_club_permission($club_id){
+function check_series_permission($series_id){
 	global $user;
 	# Function to check to see if this user can edit this club
 	# First check if its an administrator
 	if($user['user_admin']){
 		return 1;
 	}
-	# Get club info
+	# Get series info
 	$stmt=db_prep("
 		SELECT *
-		FROM club
-		WHERE club_id=:club_id
+		FROM series
+		WHERE series_id=:series_id
 	");
-	$result=db_exec($stmt,array("club_id"=>$club_id));
-	$club=$result[0];
+	$result=db_exec($stmt,array("series_id"=>$series_id));
+	$series=$result[0];
 
-	if($club['pilot_id']==$user['pilot_id']){
-		# This is the owner of the club, so of course he has access
+	if($series['user_id']==$user['user_id']){
+		# This is the owner of the series, so of course he has access
 		return 1;
 	}
 	$allowed=0;
 	# Now lets get the other permissions
 	$stmt=db_prep("
 		SELECT *
-		FROM club_user
-		WHERE club_id=:club_id
-			AND club_user_status=1
+		FROM series_user
+		WHERE series_id=:series_id
+			AND series_user_status=1
 	");
-	$users=db_exec($stmt,array("club_id"=>$club_id));
+	$users=db_exec($stmt,array("series_id"=>$series_id));
 	foreach($users as $u){
-		if($user['pilot_id']==$u['pilot_id']){
+		if($user['user_id']==$u['user_id']){
 			$allowed=1;
 		}
 	}
 	return $allowed;
-}
-function club_add_pilot() {
-	global $smarty;
-
-	$club_id=intval($_REQUEST['club_id']);
-	if($club_id==0){
-		user_message("That is not a proper club id to add a pilot to.");
-		return club_view();
-	}
-	$pilot_id=intval($_REQUEST['pilot_id']);
-	
-	# If pilot_id is zero, then send them to the quick add pilot screen
-	if($pilot_id==0){
-		return club_pilot_quick_add();
-	}else{
-		# Check to see if the pilot already exists in this club
-		$stmt=db_prep("
-			SELECT *
-			FROM club_pilot cp
-			WHERE cp.club_id=:club_id
-				AND cp.pilot_id=:pilot_id
-		");
-		$result=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
-		if(isset($result[0])){
-			# The record already exists, so lets see if it has its status to 1 or not
-			if($result[0]['club_pilot_status']==1){
-				# This record already exists!
-				user_message("The Pilot you have chosen to add is already in this club.",1);
-				return club_view();
-			}else{
-				# Lets turn this record back on
-				$stmt=db_prep("
-					UPDATE club_pilot
-					SET club_pilot_status=1
-					WHERE club_pilot_id=:club_pilot_id
-				");
-				$result2=db_exec($stmt,array("club_pilot_id"=>$result[0]['club_pilot_id']));
-				$_REQUEST['club_pilot_id']=$result[0]['club_pilot_id'];
-				
-			}
-		}else{
-			# This record doesn't exist, so lets add it
-			$stmt=db_prep("
-				INSERT INTO club_pilot
-				SET club_id=:club_id,
-					pilot_id=:pilot_id,
-					club_pilot_status=1
-			");
-			$result2=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
-			$_REQUEST['club_pilot_id']=$GLOBALS['last_insert_id'];
-		}
-		user_message("Pilot Added to club.");
-		return club_view();
-	}
-}
-function club_pilot_quick_add() {
-	global $smarty;
-
-	$club_id=intval($_REQUEST['club_id']);
-	$pilot_name=ucwords($_REQUEST['pilot_name']);
-
-	$club=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM club cl
-		LEFT JOIN state s ON cl.state_id=s.state_id
-		LEFT JOIN country c ON cl.country_id=c.country_id
-		WHERE cl.club_id=:club_id
-	");
-	$result=db_exec($stmt,array("club_id"=>$club_id));
-	$club=$result[0];
-	$smarty->assign("club",$club);
-	
-	#Lets split apart the first and last names
-	$name=preg_split("/\s/",$pilot_name,2);
-	$smarty->assign("pilot_first_name",$name[0]);
-	$smarty->assign("pilot_last_name",$name[1]);
-
-	$smarty->assign("states",get_states());
-	$smarty->assign("countries",get_countries());
-
-	$maintpl=find_template("club_pilot_quick_add.tpl");
-	return $smarty->fetch($maintpl);
-}
-function club_save_pilot_quick_add() {
-	global $smarty;
-
-	$club_id=intval($_REQUEST['club_id']);
-	$pilot_first_name=$_REQUEST['pilot_first_name'];
-	$pilot_last_name=$_REQUEST['pilot_last_name'];
-	$pilot_city=$_REQUEST['pilot_city'];
-	$state_id=intval($_REQUEST['state_id']);
-	$country_id=intval($_REQUEST['country_id']);
-	$pilot_ama=$_REQUEST['pilot_ama'];
-	$pilot_fai=$_REQUEST['pilot_fai'];
-	$pilot_email=$_REQUEST['pilot_email'];
-
-	# Lets add the pilot to the pilot table
-	$stmt=db_prep("
-		INSERT INTO pilot
-		SET user_id=0,
-			pilot_first_name=:pilot_first_name,
-			pilot_last_name=:pilot_last_name,
-			pilot_email=:pilot_email,
-			pilot_ama=:pilot_ama,
-			pilot_fai=:pilot_fai,
-			pilot_city=:pilot_city,
-			state_id=:state_id,
-			country_id=:country_id
-	");
-	$result=db_exec($stmt,array(
-		"pilot_first_name"=>$pilot_first_name,
-		"pilot_last_name"=>$pilot_last_name,
-		"pilot_email"=>$pilot_email,
-		"pilot_ama"=>$pilot_ama,
-		"pilot_fai"=>$pilot_fai,
-		"pilot_city"=>$pilot_city,
-		"state_id"=>$state_id,
-		"country_id"=>$country_id,
-	));
-	$pilot_id=$GLOBALS['last_insert_id'];
-	
-	# Now lets add him to the current club
-	$stmt=db_prep("
-		INSERT INTO club_pilot
-		SET club_id=:club_id,
-			pilot_id=:pilot_id,
-			club_pilot_status=1
-	");
-	$result2=db_exec($stmt,array("club_id"=>$club_id,"pilot_id"=>$pilot_id));
-	user_message("New pilot created and added to club.");
-	return club_view();
-}
-function club_pilot_remove() {
-	global $smarty;
-
-	$club_id=intval($_REQUEST['club_id']);
-	$club_pilot_id=$_REQUEST['club_pilot_id'];
-
-	$stmt=db_prep("
-		UPDATE club_pilot
-		SET club_pilot_status=0
-		WHERE club_pilot_id=:club_pilot_id
-	");
-	$result=db_exec($stmt,array("club_pilot_id"=>$club_pilot_id));
-	user_message("Pilot removed from club.");
-	return club_view();
 }
 ?>

@@ -427,7 +427,6 @@ class Event {
 		}
 		return;
 	}
-	
 	function calculate_flights($event_round_number,$flights){
 		# Function to calculate a group of flights in a particular round
 		$flight=array();
@@ -568,7 +567,6 @@ class Event {
 		}
 		return $flight;
 	}
-	
 	function calculate_event_totals(){
 		# Function to calculate the subtotals and totals per pilot for an event
 		$subtotals=array();
