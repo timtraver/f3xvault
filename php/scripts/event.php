@@ -34,7 +34,9 @@ $need_login=array(
 	"event_pilot_remove",
 	"event_pilot_save",
 	"event_round_save",
-	"event_round_delete"
+	"event_round_delete",
+	"event_round_flight_delete",
+	"save_individual_flight"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){

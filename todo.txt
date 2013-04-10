@@ -1,14 +1,16 @@
 Todo list for rcvault project
 
+= before launch
+
 GENERAL
 
-  Secure all of the shown variables to prevent XSS
+=  Secure all of the shown variables to prevent XSS
   
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
   Have an intermediate step of registration approval before activating account
   
-  Send welcome email once registered and save it as their first message
+=  Send welcome email once registered and save it as their first message
   
   Create a "Using this site" kind of tutorial instructions
   
@@ -19,18 +21,18 @@ GENERAL
   Printing Event Rounds needs to print flyoff rounds too
   Separate print buttons for preliminaries and flyoffs
 
-  Possibly change the site name to F3XVault and have an interesting big button to toggle between them all, having the searches default to be for
+=  Possibly change the site name to F3XVault and have an interesting big button to toggle between them all, having the searches default to be for
   	locations for the discipline, or planes for that discipline, etc...
   
-  Add blog menu item and set up simple wordpress blog
+=  Add blog menu item and set up simple wordpress blog
   
 LOCATION STUFF
-	Ability to assign multiple designations to a location (like F3B and F3F)
+=	Ability to assign multiple designations to a location (like F3B and F3F)
 
 PLANE STUFF
 	Plane show of slide show shows the first slide twice...
-	Adjust search parameters for Chrome
-	Ability to assign multiple designations to a plane (like F3B and F3F)
+=	Adjust search parameters for Chrome
+=	Ability to assign multiple designations to a plane (like F3B and F3F)
 	
 EVENT STUFF
 
@@ -41,10 +43,10 @@ EVENT STUFF
   
   Fix Max Flight Time to only be on event types that need it
   
-  Reflights for groups
-  	Make it work with the overall round drops
-  	Determine how to show reflight drops
-  	Determine round_total drop score (currently commented out just below)
+=  Reflights for groups
+=  	Make it work with the overall round drops
+=  	Determine how to show reflight drops
+ = 	Determine round_total drop score (currently commented out just below)
   	
   Change Max flight time for F3K to be window time and maybe set defaults for those...
   Add a few more F3K all up types
@@ -62,21 +64,22 @@ EVENT STUFF
 
   When event is completed, have a function to blast the link to the event to the event participants if members
   
-  Add Pilot Event Number for contests that might have bibs
-  	Add this number to the classification screen
-  		to the event pilot list
-  		to the event pilot detail report
-  		to the round edits
+=  Add Pilot Event Number for contests that might have bibs
+ = 	Add this number to the classification screen
+ = 		to the event pilot list
+ = 		to the event pilot detail report
+ = 		to the round edits
   		
   When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
   
 SERIES STUFF
-
+	print series pilot detail view
+	
 OTHER STUFF
 
   Add Events and Series to club view screen
  
-  Check settings to allow non users to view almost everything, but not change
+=  Check settings to allow non users to view almost everything, but not change
 
 MOBILE STUFF
 

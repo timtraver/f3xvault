@@ -73,14 +73,19 @@ $(function() {
 		<h1 class="post-title entry-title">Series Events</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
+			<th align="center">#</th>
+			<th align="left" width="10%">Date</th>
 			<th align="left">Event Name</th>
 			<th align="left">Location</th>
 			<th align="left">State</th>
 			<th align="left">Country</th>
 			<th align="left">Pilots</th>
 		</tr>
+		{$num=1}
 		{foreach $series->events as $e}
 		<tr>
+			<td align="center">{$num}</td>
+			<td nowrap>{$e.event_start_date|date_format:"Y-m-d"}</td>
 			<td>
 				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name}</a>
 			</td>
@@ -129,7 +134,7 @@ $(function() {
 		{$pilot_id=$p@key}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$p.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$p.pilot_first_name} {$p.pilot_last_name}</a></td>
+			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}">{$p.pilot_first_name} {$p.pilot_last_name}</a></td>
 			{foreach $series->events as $e}
 				{$event_id=$e.event_id}
 				<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>

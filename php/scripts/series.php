@@ -564,4 +564,20 @@ function check_series_permission($series_id){
 	}
 	return $allowed;
 }
+function series_pilot_view() {
+	global $smarty;
+	# Function to view the event summaries for a particular pilot
+	
+	$series_id=intval($_REQUEST['series_id']);
+	$pilot_id=intval($_REQUEST['pilot_id']);
+
+	$series=new Series($series_id);
+	$series->calculate_series_totals();
+	$smarty->assign("pilot_id",$pilot_id);
+	$smarty->assign("series",$series);
+	
+	$maintpl=find_template("series_pilot_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+
 ?>
