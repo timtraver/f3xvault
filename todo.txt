@@ -72,11 +72,6 @@ EVENT STUFF
   
 SERIES STUFF
 
-  League system to string together events
-  	Add series edit access
-  	show series pilot standings
-  	edit series best of X events to use for scoring
-
 OTHER STUFF
 
   Add Events and Series to club view screen
@@ -91,6 +86,10 @@ MOBILE STUFF
 
 COMPLETED
  
+X League system to string together events
+X 	Add series edit access
+X 	show series pilot standings
+X 	edit series best of X events to use for scoring
 X Ability to delete event by owner
 X  Change menus to not have the RC in them to make it smaller
 X  Change all the fields in db and on forms to FAI, not FIA
