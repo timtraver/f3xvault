@@ -34,6 +34,9 @@ PLANE STUFF
 =	Adjust search parameters for Chrome
 =	Ability to assign multiple designations to a plane (like F3B and F3F)
 	
+	Build log links!
+	Setup links!
+	
 EVENT STUFF
 
   ability to create flying order F3F and maybe have an option to stagger each round

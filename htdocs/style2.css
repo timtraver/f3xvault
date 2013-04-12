@@ -32,34 +32,30 @@ html, body {
 	text-shadow: white 0px 1px 0px;
 }
 
-.depth {
-    display: block;
-    padding-top: 20px;
-    padding-left: 40px;
-	color: white;
-    font: bold 80px Arial, sans-serif;
-    position: relative;
-}
 
-.depth:before, .depth:after {
-    content: attr(title);
-    padding-top: 20px;
-	padding-left: 40px;
-    color: rgba(255,255,255,.3);
-    position: absolute;
-}
-
-.depth:before { top: 1px; left: 1px }
-.depth:after  { top: 2px; left: 2px }
-
-.embossed2 {
+.embossed, .embossed a {
 	color: white;
 	text-shadow: 0px 1px 0px #999,
 		0px 2px 0px #888,
 		0px 8px 7px #001135;
 	font-family: "Palatino",arial,sans-serif;
 	font: 28px "Palatino Sans";
-
+	text-decoration: none;
+}
+#splash-title {
+	margin-left: 50px;
+}
+.embossed-title, .embossed-title a {
+	color: white;
+	text-shadow: 0px 1px 0px #999,
+		0px 2px 0px #888,
+		0px 8px 7px #001135;
+	font-family: "Palatino",arial,sans-serif;
+	font: 64px "Palatino Sans";
+	text-decoration: none;
+}
+.embossed a:hover {
+	color: grey;
 }
 .embossed-nav {
 	color: white;
@@ -72,16 +68,16 @@ html, body {
 	margin-right:auto;
 	margin-left: 5px;
 }
+.embossed-nav-selected {
+	color: white;
+	text-shadow: 0px 1px 0px #999,
+		0px 2px 0px #888,
+		0px 8px 7px #001135;
+	font-family: "Palatino",arial,sans-serif;
+	font: 28px "Palatino Sans";
+	float:left;
+	margin-right:auto;
+	margin-left: 5px;
+}
 
-.dark-on-light{
-	background:#eee;
-	color:#223;
-	text-shadow:0 -1px 0 rgba(0,0,0,0.15),0 1px 0 rgba(255,255,255,0.8)
-}
-.light-on-dark{
-	background:#223;
-	color:#eee;
-    font: 28px 'Palatino';
-	text-shadow:0 -1px 0 rgba(0,0,0,0.3),0 1px 0 rgba(255,255,255,0.4)
-}
 
