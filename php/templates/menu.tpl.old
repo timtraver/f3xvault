@@ -31,7 +31,17 @@
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=club&country_id=0&state_id=0&search=">RC Clubs Browse</a></li>
 				</ul>
 			</li>
+			{if $user.user_id!=0}
+			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=main&function=logout"><strong>Log Out</strong></a></li>
+			{else}
+			<li class="menu-item menu-item-type-custom menu-item-object-custom {if $current_menu=='login'}current-menu-item{/if}"><a href="/?action=main&function=login"><strong>Log In</strong></a></li>
+			<li class="menu-item menu-item-type-custom menu-item-object-custom {if $current_menu=='register'}current-menu-item{/if}"><a href="/?action=register"><strong>Register</strong></a></li>
+			{/if}
+			{if $user.user_admin==1}
+			<li class="menu-item menu-item-type-custom menu-item-object-custom {if $current_menu=='admin'}current-menu-item{/if}"><a href="/?action=admin"><strong>Admin</strong></a></li>
+			{/if}
 			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=main&function=main_feedback"><strong>Todo</strong></a></li>
-		</ul>
+		</ul>            
 	</div>
+	<div class="menu-bottom-shadow">&nbsp;</div>
 </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
 	<head>
-		<title>F3X Vault</title>
+		<title>RC Vault</title>
 		<link rel='stylesheet' id='graphene-stylesheet-css' href='/graphene.css' type='text/css' media='screen' />
 		<link rel='stylesheet' id='graphene-light-header-css' href='/graphene-style-light.css' type='text/css' media='screen' />
 		
@@ -66,48 +66,19 @@
 		</script>
 		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
-		<link href="style2.css" rel="stylesheet" type="text/css">
+		<link href="style.css" rel="stylesheet" type="text/css">
 {/literal}
 </head>
 <body class="home custom-background">
-	<div id="global-nav">
-		<div class="embossed-nav">
-		F3X Disciplines - 
-		</div>
-		<div id="nav-f3b" class="embossed-nav">
-			All
-		</div>
-		<div id="nav-f3b" class="embossed-nav">
-			F3B
-		</div>
-		<div id="nav-f3f" class="embossed-nav">
-			F3F
-		</div>
-		<div id="nav-f3j" class="embossed-nav">
-			F3J
-		</div>
-		<div id="nav-f3k" class="embossed-nav">
-			F3K
-		</div>
-		<div id="nav-td" class="embossed-nav">
-			TD
-		</div>
+<div id="container" class="container_16">
+	<div id="header">
+		<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>        	       
+		<h1 class="header_title push_1">RC Vault</h1>
+		<h2 class="header_desc push_1">RC Databases and Scoring of RC Gliding Competitions</h2>
 		{if $user.user_id!=0}
-			<a href="?action=main&function=logout"><input id="welcome-button" type="button" value="Log Out" class="button"></a>
-			<a href="?action=admin"><input id="welcome-button" type="button" value="Admin" class="button"></a>
-			<a href="?action=message"><input id="welcome-button" type="button" value="Welcome {$user.user_first_name}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
-		{else}
-			<a href="?action=register"><input id="welcome-button" type="button" value="Register" class="button"></a>
-			<a href="?action=main&function=login"><input id="welcome-button" type="button" value="Log In" class="button"></a>
+		<a href="?action=message"><input type="button" value="Welcome {$user.user_first_name}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
 		{/if}
 	</div>
-	<div id="container" class="container_16">
-		<div id="header">
-			<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>
-			<h1 class="header_title push_1">F3X Vault</h1>
-			<h2 class="header_desc push_1">Databases and Scoring of RC Gliding Disciplines</h2>
-		</div>
-		{include file="menu.tpl"}
-		<div class="menu-bottom-shadow">&nbsp;</div>
-		<div id="content" class="clearfix hfeed">
-			<div id="content-main" class="clearfix grid_11">
+    {include file="menu.tpl"}
+    <div id="content" class="clearfix hfeed">
+		<div id="content-main" class="clearfix grid_11">
