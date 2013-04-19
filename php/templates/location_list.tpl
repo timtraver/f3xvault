@@ -8,6 +8,16 @@
 <input type="hidden" name="function" value="location_list">
 <table>
 <tr>
+	<th>Filter By Discipline</th>
+	<td colspan="3">
+	<select name="disc" onChange="document.searchform.state_id.value=0;searchform.submit();">
+	{foreach $disciplines as $d}
+		<option value="{$d.discipline_code}" {if $disc==$d.discipline_code}SELECTED{/if}>{$d.discipline_name}</option>
+	{/foreach}
+	</select>
+	</td>
+</tr>
+<tr>
 	<th>Filter By Country</th>
 	<td>
 	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">

@@ -517,9 +517,9 @@ a:hover {
 	border-bottom: none;
 	color: #000;
 	position: relative;
-	top: 68%;
+	top: 60%;
 	width: 852px;
-	font: normal 22px "Pontano Sans", arial, sans-serif;
+	font: normal 18px "Pontano Sans", arial, sans-serif;
 }
 #header_img_link {
 	display: block;

@@ -73,6 +73,7 @@ $smarty->assign("include_paths",$GLOBALS['include_paths']);
 $smarty->assign("template_dir",$GLOBALS['template_dir']);
 $smarty->assign("compile_dir",$GLOBALS['compile_dir']);
 $smarty->assign("user",$user);
+$smarty->assign("function",$_REQUEST['function']);
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
         include("{$GLOBALS['scripts_dir']}/$action.php");

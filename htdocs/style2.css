@@ -69,6 +69,12 @@ html, body {
 	padding-left: 8px;
 	padding-right: 8px;
 }
+.embossed-nav a{
+	color: white;
+}
+.embossed-nav a:hover{
+	color: orange;
+}
 .embossed-nav-selected {
 	color: white;
 	text-shadow: 0px 1px 0px #999,
@@ -79,6 +85,10 @@ html, body {
 	float:left;
 	margin-right:auto;
 	margin-left: 5px;
+}
+#nav-all {
+	padding-left: 8px;
+	padding-right: 8px;
 }
 #nav-f3b {
 	padding-left: 8px;

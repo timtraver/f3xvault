@@ -74,23 +74,23 @@
 		<div class="embossed-nav">
 		F3X Disciplines - 
 		</div>
-		<div id="nav-f3b" class="embossed-nav">
-			All
+		<div id="nav-all" class="embossed-nav">
+			<a href="?action={$action}&function={$function}&disc=all">All</a>
 		</div>
 		<div id="nav-f3b" class="embossed-nav">
-			F3B
+			<a href="?action={$action}&function={$function}&disc=f3b">F3B</a>
 		</div>
 		<div id="nav-f3f" class="embossed-nav">
-			F3F
+			<a href="?action={$action}&function={$function}&disc=f3f">F3F</a>
 		</div>
 		<div id="nav-f3j" class="embossed-nav">
-			F3J
+			<a href="?action={$action}&function={$function}&disc=f3j">F3J</a>
 		</div>
 		<div id="nav-f3k" class="embossed-nav">
-			F3K
+			<a href="?action={$action}&function={$function}&disc=f3k">F3K</a>
 		</div>
 		<div id="nav-td" class="embossed-nav">
-			TD
+			<a href="?action={$action}&function={$function}&disc=td">TD</a>
 		</div>
 		{if $user.user_id!=0}
 			<a href="?action=main&function=logout"><input id="welcome-button" type="button" value="Log Out" class="button"></a>
