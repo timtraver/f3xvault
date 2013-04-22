@@ -149,6 +149,7 @@ function location_list() {
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
+	$smarty->assign("disciplines",get_disciplines());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);

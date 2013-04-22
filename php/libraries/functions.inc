@@ -541,6 +541,20 @@ function get_country_code_value($country_id){
 	$result=db_exec($stmt,array("country_id"=>$country_id));
 	return $result[0]['country_code'];
 }
+function get_disciplines(){
+	# Function to get discipline list
+	$disc=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM discipline
+		ORDER BY discipline_order
+	");
+	$disc=db_exec($stmt,array());
+	$disciplines=array();
+	$disciplines[]=array("discipline_id"=>0,"discipline_code"=>'all',"discipline_description"=>'All F3X Disiplines');
+	$disciplines=array_merge($disciplines,$disc);
+	return $disciplines;
+}
 function return_to_action($from){
 	# Function to return to a screen from whence they came
 	# Lets change the request array to the new values

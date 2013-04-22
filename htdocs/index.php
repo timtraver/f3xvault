@@ -47,7 +47,31 @@ if($user && $user['user_status']==0){
 
 # Main control
 
-
+# Set the default category of site
+if(isset($_REQUEST['disc'])){
+	switch($_REQUEST['disc']){
+		case "f3b":
+			$disc='f3b';
+			break;
+		case "f3f":
+			$disc='f3f';
+			break;
+		case "f3j":
+			$disc='f3j';
+			break;
+		case "f3k":
+			$disc='f3k';
+			break;
+		case "td":
+			$disc='td';
+			break;
+		case "all":
+		default:
+			$disc='all';
+			break;
+	}
+	$fsession['disc']=$disc;
+}
 # Set default current menu item
 $current_menu='home';
 
@@ -74,6 +98,7 @@ $smarty->assign("template_dir",$GLOBALS['template_dir']);
 $smarty->assign("compile_dir",$GLOBALS['compile_dir']);
 $smarty->assign("user",$user);
 $smarty->assign("function",$_REQUEST['function']);
+$smarty->assign("disc",$disc);
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
         include("{$GLOBALS['scripts_dir']}/$action.php");

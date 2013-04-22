@@ -105,7 +105,7 @@
 		<div id="header">
 			<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>
 			<h1 class="header_title push_1">F3X Vault</h1>
-			<h2 class="header_desc push_1">Databases and Scoring of RC Gliding Disciplines</h2>
+			<h2 class="header_desc push_1">Databases and Scoring of F3X Gliding Disciplines</h2>
 		</div>
 		{include file="menu.tpl"}
 		<div class="menu-bottom-shadow">&nbsp;</div>
