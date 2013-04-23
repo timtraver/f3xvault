@@ -71,6 +71,15 @@ if(isset($_REQUEST['disc'])){
 			break;
 	}
 	$fsession['disc']=$disc;
+	# Get discipline id for the selected one
+	$disciplines=get_disciplines();
+	foreach($disciplines as $d){
+		if($disc==$d['discipline_code']){
+			$discipline_id=$d['discipline_id'];
+			break;
+		}
+	}
+	$fsession['discipline_id']=$discipline_id;
 }
 # Set default current menu item
 $current_menu='home';

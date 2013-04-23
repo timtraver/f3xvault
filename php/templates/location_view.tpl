@@ -40,6 +40,14 @@
 	</td>
 </tr>
 <tr>
+	<th valign="top">Location Flying Disciplines</th>
+	<td>
+		{foreach $disciplines as $d}
+		{$d.discipline_description}<br>
+		{/foreach}
+	</td>
+</tr>
+<tr>
 	<th>Local RC Club</th>
 	<td>
 		{$location.location_club|escape}

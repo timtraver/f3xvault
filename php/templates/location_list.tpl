@@ -10,9 +10,9 @@
 <tr>
 	<th>Filter By Site Discipline</th>
 	<td colspan="3">
-	<select name="disc" onChange="document.searchform.state_id.value=0;searchform.submit();">
+	<select name="discipline_id" onChange="searchform.submit();">
 	{foreach $disciplines as $d}
-		<option value="{$d.discipline_code}" {if $disc==$d.discipline_code}SELECTED{/if}>{$d.discipline_description}</option>
+		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description}</option>
 	{/foreach}
 	</select>
 	</td>

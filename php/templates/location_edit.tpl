@@ -12,11 +12,17 @@
 <tr>
 	<th>Location Name</th>
 	<td><input type="text" size="50" name="location_name" value="{$location.location_name|escape}"></td>
+	<th>Location Disciplines</th>
 </tr>
 <tr>
 	<th>Location City</th>
 	<td>
 		<input type="text" size="50" name="location_city" value="{$location.location_city|escape}">
+	</td>
+	<td rowspan="6">
+	{foreach $disciplines as $d}
+	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description}<br>
+	{/foreach}
 	</td>
 </tr>
 <tr>
@@ -53,15 +59,15 @@
 </tr>
 <tr>
 	<th valign="top">Location Description</th>
-	<td><textarea cols="70" rows="10" name="location_description">{$location.location_description|escape}</textarea></td>
+	<td colspan="2"><textarea cols="70" rows="10" name="location_description">{$location.location_description|escape}</textarea></td>
 </tr>
 <tr>
 	<th valign="top">Location Detailed Directions</th>
-	<td><textarea cols="70" rows="10" name="location_directions">{$location.location_directions|escape}</textarea></td>
+	<td colspan="2"><textarea cols="70" rows="10" name="location_directions">{$location.location_directions|escape}</textarea></td>
 </tr>
 <tr>
 	<th valign="top">Location Attributes</th>
-	<td>
+	<td colspan="2">
 		<table width="100%" cellspacing="0" cellspadding="1" style="border-style: none;">
 		{assign var='cat' value=''}
 		{foreach $location_attributes as $la}

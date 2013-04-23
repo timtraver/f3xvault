@@ -541,7 +541,7 @@ function get_country_code_value($country_id){
 	$result=db_exec($stmt,array("country_id"=>$country_id));
 	return $result[0]['country_code'];
 }
-function get_disciplines(){
+function get_disciplines($add_all=1){
 	# Function to get discipline list
 	$disc=array();
 	$stmt=db_prep("
@@ -551,8 +551,12 @@ function get_disciplines(){
 	");
 	$disc=db_exec($stmt,array());
 	$disciplines=array();
-	$disciplines[]=array("discipline_id"=>0,"discipline_code"=>'all',"discipline_description"=>'All F3X Disiplines');
-	$disciplines=array_merge($disciplines,$disc);
+	if($add_all){
+		$disciplines[]=array("discipline_id"=>0,"discipline_code"=>'all',"discipline_description"=>'All F3X Disiplines');
+		$disciplines=array_merge($disciplines,$disc);
+	}else{
+		$disciplines=$disc;
+	}
 	return $disciplines;
 }
 function return_to_action($from){

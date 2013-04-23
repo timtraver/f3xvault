@@ -38,6 +38,12 @@ function location_list() {
 	}elseif(isset($GLOBALS['fsession']['state_id'])){
 		$state_id=$GLOBALS['fsession']['state_id'];
 	}
+	if(isset($_REQUEST['discipline_id'])){
+		$discipline_id=intval($_REQUEST['discipline_id']);
+		$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	}elseif(isset($GLOBALS['fsession']['discipline_id'])){
+		$discipline_id=$GLOBALS['fsession']['discipline_id'];
+	}
 
 	$search='';
 	if(isset($_REQUEST['search']) ){
@@ -97,6 +103,13 @@ function location_list() {
 #print "search_operator=$search_operator<br>\n";
 #print "operator=$operator<br>\n";
 
+	# Add search options for discipline
+	$joind='';
+	$extrad='';
+	if($discipline_id!=0){
+		$joind='LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
+		$extrad='AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
+	}
 	$locations=array();
 	if($search!='%%' && $search!=''){
 		$stmt=db_prep("
@@ -104,9 +117,11 @@ function location_list() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			$joind
 			WHERE l.$search_field $operator :search
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
 		$locations=db_exec($stmt,array("search"=>$search));
@@ -117,9 +132,11 @@ function location_list() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			$joind
 			WHERE 1
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
 		$locations=db_exec($stmt,array());
@@ -150,6 +167,7 @@ function location_list() {
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 	$smarty->assign("disciplines",get_disciplines());
+	$smarty->assign("discipline_id",$discipline_id);
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
@@ -246,11 +264,32 @@ function location_edit() {
 	");
 	$media=db_exec($stmt,array("location_id"=>$location_id));
 
+	# Get disciplines to select for this location
+	$disciplines=get_disciplines(0);
+	# Lets get the records that this location has
+	$stmt=db_prep("
+		SELECT *
+		FROM location_discipline
+		WHERE location_id=:location_id
+			AND location_discipline_status=1
+	");
+	$values=db_exec($stmt,array("location_id"=>$location_id));
+	# Step through each of the values and put those entries into the disciplines array
+	foreach ($disciplines as $key=>$disc){
+		$id=$disc['discipline_id'];
+		foreach($values as $value){
+			if($value['discipline_id']==$id){
+				$disciplines[$key]['discipline_selected']=1;
+			}
+		}
+	}
+
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);
 	$smarty->assign("media",$media);
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("states",get_states());
+	$smarty->assign("disciplines",$disciplines);
 
 	$maintpl=find_template("location_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -335,12 +374,23 @@ function location_view() {
 	");
 	$comments=db_exec($stmt,array("location_id"=>$location_id));
 
+	# Lets get the disciplines that this location has
+	$stmt=db_prep("
+		SELECT *
+		FROM location_discipline ld
+		LEFT JOIN discipline d ON ld.discipline_id=d.discipline_id
+		WHERE ld.location_id=:location_id
+			AND ld.location_discipline_status=1
+	");
+	$disciplines=db_exec($stmt,array("location_id"=>$location_id));
+
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);
 	$smarty->assign("rand",$rand);
 	$smarty->assign("media",$media);
 	$smarty->assign("comments",$comments);
 	$smarty->assign("comments_num",count($comments));
+	$smarty->assign("disciplines",$disciplines);
 
 	$maintpl=find_template("location_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -499,6 +549,58 @@ function location_save() {
 						location_att_value_status=1
 				");
 				$result2=db_exec($stmt,array("location_id"=>$location['location_id'],"location_att_id"=>$id,"value"=>$value));
+			}
+		}
+	}	
+	# Lets clear out all of the discipline values that this location has
+	$stmt=db_prep("
+		UPDATE location_discipline
+		SET location_discipline_status=0
+		WHERE location_id=:location_id
+	");
+	$result=db_exec($stmt,array("location_id"=>$location['location_id']));
+	
+	# Now lets step through the disciplines and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^disc_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM location_discipline
+			WHERE location_id=:location_id
+				AND discipline_id=:discipline_id
+		");
+		$result=db_exec($stmt,array("discipline_id"=>$id,"location_id"=>$location['location_id']));
+		if($result){
+			# There is already a record, so lets update it
+			$location_discipline_id=$result[0]['location_discipline_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE location_discipline
+					SET location_discipline_status=1
+					WHERE location_discipline_id=:location_discipline_id
+				");
+				$result2=db_exec($stmt,array("location_discipline_id"=>$location_discipline_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO location_discipline
+					SET location_id=:location_id,
+						discipline_id=:discipline_id,
+						location_discipline_status=1
+				");
+				$result2=db_exec($stmt,array("location_id"=>$location['location_id'],"discipline_id"=>$id));
 			}
 		}
 	}	
