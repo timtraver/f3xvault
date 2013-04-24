@@ -1,6 +1,6 @@
 <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
 	<div class="entry clearfix">
-		<h2 class="post-title entry-title">Welcome To The RC Vault !</h2>
+		<h2 class="post-title entry-title">Welcome To The F3X Vault !</h2>
 
 				<div class="entry-content clearfix">
 					<p>

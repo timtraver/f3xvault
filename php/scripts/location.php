@@ -26,6 +26,7 @@ function location_list() {
 
 	$country_id=0;
 	$state_id=0;
+	$discipline_id=0;
 	if(isset($_REQUEST['country_id'])){
 		$country_id=intval($_REQUEST['country_id']);
 		$GLOBALS['fsession']['country_id']=$country_id;
@@ -162,12 +163,14 @@ function location_list() {
 	$states=db_exec($stmt,array());
 	
 	$locations=show_pages($locations,25);
-	
+
+	# Lets reset the discipline for the top bar if needed
+	set_disipline($discipline_id);
+
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 	$smarty->assign("disciplines",get_disciplines());
-	$smarty->assign("discipline_id",$discipline_id);
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
@@ -786,6 +789,7 @@ function location_map() {
 
 	$country_id=0;
 	$state_id=0;
+	$discipline_id=0;
 	if(isset($_REQUEST['country_id'])){
 		$country_id=intval($_REQUEST['country_id']);
 		$GLOBALS['fsession']['country_id']=$country_id;
@@ -797,6 +801,12 @@ function location_map() {
 		$GLOBALS['fsession']['state_id']=$state_id;
 	}elseif(isset($GLOBALS['fsession']['state_id'])){
 		$state_id=$GLOBALS['fsession']['state_id'];
+	}
+	if(isset($_REQUEST['discipline_id'])){
+		$discipline_id=intval($_REQUEST['discipline_id']);
+		$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	}elseif(isset($GLOBALS['fsession']['discipline_id'])){
+		$discipline_id=$GLOBALS['fsession']['discipline_id'];
 	}
 
 	$search='';
@@ -857,6 +867,14 @@ function location_map() {
 #print "search_operator=$search_operator<br>\n";
 #print "operator=$operator<br>\n";
 
+	# Add search options for discipline
+	$joind='';
+	$extrad='';
+	if($discipline_id!=0){
+		$joind='LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
+		$extrad='AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
+	}
+
 	$locations=array();
 	if($search!='%%' && $search!=''){
 		$stmt=db_prep("
@@ -864,9 +882,11 @@ function location_map() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			$joind
 			WHERE l.$search_field $operator :search
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
 		$locations=db_exec($stmt,array("search"=>$search));
@@ -877,9 +897,11 @@ function location_map() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			$joind
 			WHERE 1
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
 		$locations=db_exec($stmt,array());
@@ -905,10 +927,14 @@ function location_map() {
 	$states=db_exec($stmt,array());
 	
 	$locations=show_pages($locations,25);
+
+	# Lets reset the discipline for the top bar if needed
+	set_disipline($discipline_id);
 	
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
+	$smarty->assign("disciplines",get_disciplines());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);

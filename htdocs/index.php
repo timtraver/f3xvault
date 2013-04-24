@@ -80,6 +80,12 @@ if(isset($_REQUEST['disc'])){
 		}
 	}
 	$fsession['discipline_id']=$discipline_id;
+}else if(isset($fsession['disc'])){
+	$disc=$fsession['disc'];
+	$discipline_id=$fsession['discipline_id'];
+}else{
+	$disc='all';
+	$discipline_id=0;
 }
 # Set default current menu item
 $current_menu='home';

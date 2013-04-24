@@ -75,22 +75,22 @@
 		F3X Disciplines - 
 		</div>
 		<div id="nav-all" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=all">All</a>
+			<a href="?action={$action}&function={$function}&disc=all"{if $disc=='all'} style="color:orange;"{/if}>All</a>
 		</div>
 		<div id="nav-f3b" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=f3b">F3B</a>
+			<a href="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} style="color:orange;"{/if}>F3B</a>
 		</div>
 		<div id="nav-f3f" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=f3f">F3F</a>
+			<a href="?action={$action}&function={$function}&disc=f3f"{if $disc=='f3f'} style="color:orange;"{/if}>F3F</a>
 		</div>
 		<div id="nav-f3j" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=f3j">F3J</a>
+			<a href="?action={$action}&function={$function}&disc=f3j"{if $disc=='f3j'} style="color:orange;"{/if}>F3J</a>
 		</div>
 		<div id="nav-f3k" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=f3k">F3K</a>
+			<a href="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} style="color:orange;"{/if}>F3K</a>
 		</div>
 		<div id="nav-td" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=td">TD</a>
+			<a href="?action={$action}&function={$function}&disc=td"{if $disc=='td'} style="color:orange;"{/if}>TD</a>
 		</div>
 		{if $user.user_id!=0}
 			<a href="?action=main&function=logout"><input id="welcome-button" type="button" value="Log Out" class="button"></a>

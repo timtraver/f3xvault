@@ -552,12 +552,29 @@ function get_disciplines($add_all=1){
 	$disc=db_exec($stmt,array());
 	$disciplines=array();
 	if($add_all){
-		$disciplines[]=array("discipline_id"=>0,"discipline_code"=>'all',"discipline_description"=>'All F3X Disiplines');
+		$disciplines[]=array("discipline_id"=>0,"discipline_code"=>'all',"discipline_description"=>'All F3X Disciplines');
 		$disciplines=array_merge($disciplines,$disc);
 	}else{
 		$disciplines=$disc;
 	}
 	return $disciplines;
+}
+function set_disipline($discipline_id){
+	global $smarty;
+	# Function to set discipline in the session and template
+	$stmt=db_prep("
+		SELECT *
+		FROM discipline
+		WHERE discipline_id=:discipline_id
+	");
+	$result=db_exec($stmt,array("discipline_id"=>$discipline_id));
+	
+	$smarty->assign("disc",$result[0]['discipline_code']);
+	$smarty->assign("discipline_id",$discipline_id);
+	$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	$GLOBALS['fsession']['disc']=$result[0]['discipline_code'];
+	
+	return;
 }
 function return_to_action($from){
 	# Function to return to a screen from whence they came
