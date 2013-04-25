@@ -3,21 +3,18 @@
 		<h1 class="post-title entry-title">Browse RC Plane Database</h1>
 		<div class="entry-content clearfix">
 
+<form method="POST" name="filter">
+<input type="hidden" name="action" value="plane">
+<input type="hidden" name="function" value="plane_list">
 <table>
 <tr>
-	<th>
-		<form method="POST" name="filter">
-		<input type="hidden" name="action" value="plane">
-		<input type="hidden" name="function" value="plane_list">
-		Filter on Plane Type : 
-	</th>
-	<td>
-		<select name="plane_type_id" onChange="filter.submit();">
-		<option value="0" {if $plane_type.plane_type_id==$plane_type_id}SELECTED{/if}>All Plane Types</option>
-		{foreach $plane_types as $plane_type}
-			<option value="{$plane_type.plane_type_id|escape}" {if $plane_type.plane_type_id==$plane_type_id}SELECTED{/if}>{$plane_type.plane_type_short_name|escape} - {$plane_type.plane_type_description|escape}</option>
-		{/foreach}
-		</select>
+	<th>Filter By Site Discipline</th>
+	<td colspan="3">
+	<select name="discipline_id" onChange="filter.submit();">
+	{foreach $disciplines as $d}
+		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description}</option>
+	{/foreach}
+	</select>
 	</td>
 </tr>
 <tr>
@@ -40,11 +37,11 @@
 		</select>
 		<input type="text" name="search" size="20" value="{$search|escape}">
 		<input type="submit" value=" Search " class="block-button">
-		<input type="submit" value=" Reset " class="block-button" onClick="document.filter.plane_type_id.value=0;document.filter.search_field.value='plane_name';document.filter.search_operator.value='contains';document.filter.search.value='';filter.submit();">
-		</form>
+		<input type="submit" value=" Reset " class="block-button" onClick="document.filter.search_field.value='plane_name';document.filter.search_operator.value='contains';document.filter.search.value='';filter.submit();">
 	</td>
 </tr>
 </table>
+</form>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
 	<th colspan="8" style="text-align: left;">Planes (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>

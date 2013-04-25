@@ -92,9 +92,11 @@ function calc_area(){ldelim}
 	<th style="text-align: center;">Plane Media</th>
 </tr>
 <tr>
-	<th align="left">Plane Classification</th>
+	<th align="left" valign="top">Plane Flying Disciplines</th>
 	<td>
-		{$plane.plane_type_short_name|escape} - {$plane.plane_type_description|escape}
+		{foreach $disciplines as $d}
+		{$d.discipline_description}<br>
+		{/foreach}
 	</td>
 	<td rowspan="11" align="center">
 	{if $media[$rand]}

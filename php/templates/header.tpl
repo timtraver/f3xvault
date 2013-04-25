@@ -75,7 +75,7 @@
 		F3X Disciplines - 
 		</div>
 		<div id="nav-all" class="embossed-nav">
-			<a href="?action={$action}&function={$function}&disc=all"{if $disc=='all'} style="color:orange;"{/if}>All</a>
+			<a href="?action={$action}&function={$function}&disc=all"{if $disc=='all' || $disc==''} style="color:orange;"{/if}>All</a>
 		</div>
 		<div id="nav-f3b" class="embossed-nav">
 			<a href="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} style="color:orange;"{/if}>F3B</a>

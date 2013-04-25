@@ -78,16 +78,7 @@ function calc_area(){ldelim}
 <tr>
 	<th>Plane Name</th>
 	<td><input type="text" size="40" name="plane_name" value="{$plane.plane_name|escape}"></td>
-</tr>
-<tr>
-	<th>Plane Classification</th>
-	<td>
-		<select name="plane_type_id">
-		{foreach $plane_types as $plane_type}
-			<option value="{$plane_type.plane_type_id|escape}" {if $plane_type.plane_type_id==$plane.plane_type_id}SELECTED{/if}>{$plane_type.plane_type_short_name|escape} - {$plane_type.plane_type_description|escape}</option>
-		{/foreach}
-		</select>
-	</td>
+	<th>Plane Disciplines</th>
 </tr>
 <tr>
 	<th>Plane Wingspan</th>
@@ -98,6 +89,11 @@ function calc_area(){ldelim}
 		<option value="cm" {if $plane.plane_wingspan_units=="cm"}SELECTED{/if}>Centimeters</option>
 		</select>
 		<span id="wingspan"></span>
+	</td>
+	<td rowspan="6">
+	{foreach $disciplines as $d}
+	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description}<br>
+	{/foreach}
 	</td>
 </tr>
 <tr>
@@ -151,15 +147,15 @@ function calc_area(){ldelim}
 </tr>
 <tr>
 	<th>Manufacturer Year</th>
-	<td><input type="text" size="10" name="plane_year" value="{$plane.plane_year|escape}"></td>
+	<td colspan="2"><input type="text" size="10" name="plane_year" value="{$plane.plane_year|escape}"></td>
 </tr>
 <tr>
 	<th>Manufacturer Web Site</th>
-	<td><input type="text" size="60" name="plane_website" value="{$plane.plane_website|escape}"></td>
+	<td colspan="2"><input type="text" size="60" name="plane_website" value="{$plane.plane_website|escape}"></td>
 </tr>
 <tr>
 	<th valign="top">Plane Attributes</th>
-	<td>
+	<td colspan="2">
 		<table width="100%" cellspacing="0" cellspadding="1" style="border-style: none;">
 		{assign var='cat' value=''}
 		{foreach $plane_attributes as $pa}

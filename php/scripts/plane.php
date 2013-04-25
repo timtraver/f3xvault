@@ -25,12 +25,12 @@ function plane_list() {
 	global $smarty;
 	global $export;
 
-	$plane_type_id=0;
-	if(isset($_REQUEST['plane_type_id'])){
-		$plane_type_id=intval($_REQUEST['plane_type_id']);
-		$GLOBALS['fsession']['plane_type_id']=$_REQUEST['plane_type_id'];
-	}elseif(isset($GLOBALS['fsession']['plane_type_id'])){
-		$plane_type_id=$GLOBALS['fsession']['plane_type_id'];
+	$discipline_id=0;
+	if(isset($_REQUEST['discipline_id'])){
+		$discipline_id=intval($_REQUEST['discipline_id']);
+		$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	}elseif(isset($GLOBALS['fsession']['discipline_id'])){
+		$discipline_id=$GLOBALS['fsession']['discipline_id'];
 	}
 	$search='';
 	if(isset($_REQUEST['search']) ){
@@ -105,49 +105,36 @@ function plane_list() {
 #print "search_operator=$search_operator<br>\n";
 #print "operator=$operator<br>\n";
 
-	if($plane_type_id==0){
-		# Get all planes
-		if($search){
-			$stmt=db_prep("
-				SELECT *
-				FROM plane p
-				LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
-				WHERE $search_field $operator :search
-				ORDER BY p.plane_name
-			");
-			$planes=db_exec($stmt,array("search"=>$search));
-		}else{
-			$stmt=db_prep("
-				SELECT *
-				FROM plane p
-				LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
-				ORDER BY p.plane_name
-			");
-			$planes=db_exec($stmt,array());
-		}
+	# Add search options for discipline
+	$joind='';
+	$extrad='';
+	if($discipline_id!=0){
+		$joind='LEFT JOIN plane_discipline pd ON p.plane_id=pd.plane_id';
+		$extrad='AND pd.discipline_id='.$discipline_id.' AND pd.plane_discipline_status=1';
+	}
+
+	if($search!='%%' && $search!=''){
+		# Get all planes in this plane_type with the search criteria
+		$stmt=db_prep("
+			SELECT *
+			FROM plane p
+			$joind
+			WHERE $search_field $operator :search
+			$extrad
+			ORDER BY p.plane_name
+		");
+		$planes=db_exec($stmt,array("search"=>$search));
 	}else{
-		if($search){
-			# Get all planes in this plane_type with the search criteria
-			$stmt=db_prep("
-				SELECT *
-				FROM plane p
-				LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
-				WHERE p.plane_type_id=:plane_type_id
-					AND $search_field $operator :search
-				ORDER BY p.plane_name
-			");
-			$planes=db_exec($stmt,array("plane_type_id"=>$plane_type_id,"search"=>$search));
-		}else{
-			# Get all planes in this plane_type
-			$stmt=db_prep("
-				SELECT *
-				FROM plane p
-				LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
-				WHERE p.plane_type_id=:plane_type_id
-				ORDER BY p.plane_name
-			");
-			$planes=db_exec($stmt,array("plane_type_id"=>$plane_type_id));
-		}
+		# Get all planes
+		$stmt=db_prep("
+			SELECT *
+			FROM plane p
+			$joind
+			WHERE 1
+			$extrad
+			ORDER BY p.plane_name
+		");
+		$planes=db_exec($stmt,array());
 	}
 	# Step through each plane to figure out if it has enough information
 	foreach($planes as $plane){
@@ -168,12 +155,15 @@ function plane_list() {
 	}
 	$planes=show_pages($newplanes,25);
 
+	# Lets reset the discipline for the top bar if needed
+	set_disipline($discipline_id);
+
 	$smarty->assign("planes",$planes);
-	$smarty->assign("plane_type_id",$plane_type_id);
 	$smarty->assign("plane_types",$plane_types);
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
 	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
+	$smarty->assign("disciplines",get_disciplines());
 
 	$maintpl=find_template("plane_list.tpl");
 	return $smarty->fetch($maintpl);
@@ -252,13 +242,25 @@ function plane_edit() {
 		}
 	}
 	
-	# Get all plane types
+	# Get disciplines to select for this plane
+	$disciplines=get_disciplines(0);
+	# Lets get the records that this plane has
 	$stmt=db_prep("
 		SELECT *
-		FROM plane_type
-		ORDER BY plane_type_short_name
+		FROM plane_discipline
+		WHERE plane_id=:plane_id
+			AND plane_discipline_status=1
 	");
-	$plane_types=db_exec($stmt,array());
+	$values=db_exec($stmt,array("plane_id"=>$plane_id));
+	# Step through each of the values and put those entries into the disciplines array
+	foreach ($disciplines as $key=>$disc){
+		$id=$disc['discipline_id'];
+		foreach($values as $value){
+			if($value['discipline_id']==$id){
+				$disciplines[$key]['discipline_selected']=1;
+			}
+		}
+	}
 	
 	# Get plane media records
 	$media=array();
@@ -272,7 +274,7 @@ function plane_edit() {
 
 	$smarty->assign("plane",$plane);
 	$smarty->assign("plane_attributes",$plane_attributes);
-	$smarty->assign("plane_types",$plane_types);
+	$smarty->assign("disciplines",$disciplines);
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("media",$media);
 
@@ -379,6 +381,16 @@ function plane_view() {
 	}else{
 		$rand=0;
 	}
+
+	# Lets get the disciplines that this plane has
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_discipline pd
+		LEFT JOIN discipline d ON pd.discipline_id=d.discipline_id
+		WHERE pd.plane_id=:plane_id
+			AND pd.plane_discipline_status=1
+	");
+	$disciplines=db_exec($stmt,array("plane_id"=>$plane_id));
 	
 	# Get the plane comments
 	$comments=array();
@@ -398,6 +410,7 @@ function plane_view() {
 	$smarty->assign("plane_attributes",$plane_attributes);
 	$smarty->assign("comments",$comments);
 	$smarty->assign("comments_num",count($comments));
+	$smarty->assign("disciplines",$disciplines);
 
 	$maintpl=find_template("plane_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -592,6 +605,58 @@ function plane_save() {
 						plane_att_value_status=1
 				");
 				$result2=db_exec($stmt,array("plane_id"=>$plane['plane_id'],"plane_att_id"=>$id,"value"=>$value));
+			}
+		}
+	}
+	# Lets clear out all of the discipline values that this plane has
+	$stmt=db_prep("
+		UPDATE plane_discipline
+		SET plane_discipline_status=0
+		WHERE plane_id=:plane_id
+	");
+	$result=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+	
+	# Now lets step through the disciplines and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^disc_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_discipline
+			WHERE plane_id=:plane_id
+				AND discipline_id=:discipline_id
+		");
+		$result=db_exec($stmt,array("discipline_id"=>$id,"plane_id"=>$plane['plane_id']));
+		if($result){
+			# There is already a record, so lets update it
+			$plane_discipline_id=$result[0]['plane_discipline_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE plane_discipline
+					SET plane_discipline_status=1
+					WHERE plane_discipline_id=:plane_discipline_id
+				");
+				$result2=db_exec($stmt,array("plane_discipline_id"=>$plane_discipline_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO plane_discipline
+					SET plane_id=:plane_id,
+						discipline_id=:discipline_id,
+						plane_discipline_status=1
+				");
+				$result2=db_exec($stmt,array("plane_id"=>$plane['plane_id'],"discipline_id"=>$id));
 			}
 		}
 	}
