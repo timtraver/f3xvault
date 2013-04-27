@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-03-20 00:15:19
+<?php /* Smarty version Smarty-3.1.11, created on 2013-04-26 23:24:18
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1363763209,
+      1 => 1367043854,
       2 => 'file',
     ),
   ),
@@ -19,6 +19,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_511ca2948cf284_23831098',
   'variables' => 
   array (
+    'disciplines' => 0,
+    'd' => 0,
+    'discipline_id' => 0,
     'countries' => 0,
     'country' => 0,
     'country_id' => 0,
@@ -49,7 +52,23 @@ if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
-<table>
+<table width="80%">
+<tr>
+	<th>Filter By Event Discipline</th>
+	<td colspan="3">
+	<select name="discipline_id" onChange="searchform.submit();">
+	<?php  $_smarty_tpl->tpl_vars['d'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['d']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['disciplines']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['d']->key => $_smarty_tpl->tpl_vars['d']->value){
+$_smarty_tpl->tpl_vars['d']->_loop = true;
+?>
+		<option value="<?php echo $_smarty_tpl->tpl_vars['d']->value['discipline_id'];?>
+" <?php if ($_smarty_tpl->tpl_vars['discipline_id']->value==$_smarty_tpl->tpl_vars['d']->value['discipline_id']){?>SELECTED<?php }?>><?php echo $_smarty_tpl->tpl_vars['d']->value['discipline_description'];?>
+</option>
+	<?php } ?>
+	</select>
+	</td>
+</tr>
 <tr>
 	<th>Filter By Country</th>
 	<td>

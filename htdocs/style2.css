@@ -10,10 +10,11 @@ html, body {
 }
 #global-nav {
 	height: 34px;
-	postion: absolute;
 	padding-left: 8px;
 	top: 0px;
-	width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
 }
 #container, footer
 {

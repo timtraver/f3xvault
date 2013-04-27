@@ -1,12 +1,12 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Browse RC Location Database</h1>
+		<h1 class="post-title entry-title">Browse F3X Location Database</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_list">
-<table>
+<table width="80%">
 <tr>
 	<th>Filter By Site Discipline</th>
 	<td colspan="3">

@@ -21,18 +21,12 @@ GENERAL
   Printing Event Rounds needs to print flyoff rounds too
   Separate print buttons for preliminaries and flyoffs
 
-=  Possibly change the site name to F3XVault and have an interesting big button to toggle between them all, having the searches default to be for
-  	locations for the discipline, or planes for that discipline, etc...
-  
 =  Add blog menu item and set up simple wordpress blog
   
 LOCATION STUFF
-=	Ability to assign multiple designations to a location (like F3B and F3F)
 
 PLANE STUFF
 	Plane show of slide show shows the first slide twice...
-=	Adjust search parameters for Chrome
-=	Ability to assign multiple designations to a plane (like F3B and F3F)
 	
 	Build log links!
 	Setup links!
@@ -92,6 +86,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Adjust search parameters for Chrome
+X	Ability to assign multiple designations to a plane (like F3B and F3F)
+X	Ability to assign multiple designations to a location (like F3B and F3F)
+X  Possibly change the site name to F3XVault and have an interesting big button to toggle between them all, having the searches default to be for
+  	locations for the discipline, or planes for that discipline, etc...
 X League system to string together events
 X 	Add series edit access
 X 	show series pilot standings

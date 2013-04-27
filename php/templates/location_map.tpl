@@ -49,7 +49,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_map">
-<table>
+<table width="80%">
 <tr>
 	<th>Filter By Site Discipline</th>
 	<td colspan="3">

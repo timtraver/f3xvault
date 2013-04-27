@@ -28,7 +28,7 @@
 			</li>
 			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='clubs'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_clubs"><strong>Clubs</strong></a>
 				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=club&country_id=0&state_id=0&search=">RC Clubs Browse</a></li>
+					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=club&country_id=0&state_id=0&search=">F3X Clubs Browse</a></li>
 				</ul>
 			</li>
 			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=main&function=main_feedback"><strong>Todo</strong></a></li>

@@ -6,9 +6,9 @@
 <form method="POST" name="filter">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_list">
-<table>
+<table width="80%">
 <tr>
-	<th>Filter By Site Discipline</th>
+	<th>Filter By Plane Discipline</th>
 	<td colspan="3">
 	<select name="discipline_id" onChange="filter.submit();">
 	{foreach $disciplines as $d}
@@ -19,7 +19,7 @@
 </tr>
 <tr>
 	<th nowrap>	
-		And Search on Field : 
+		And Search on Field 
 	</th>
 	<td valign="center">
 		<select name="search_field">

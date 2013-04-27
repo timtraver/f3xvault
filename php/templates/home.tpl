@@ -5,7 +5,7 @@
 				<div class="entry-content clearfix">
 					<p>
 						<h3>Where Are You?</h3>
-						You have stumbled upon a storage vault of information about RC Model Flying. It includes databases for flying locations, planes, competitions, and clubs and all related data.
+						You have stumbled upon a storage vault of information about RC F3X Model Flying. It includes databases for flying locations, planes, competitions, and clubs and all related data.
 						<h3>What can you do here?</h3>
 						You can view and most importantly contribute to the knowledge base of our flying sports. A database is only as good as the data that you put in it, so fill it up!!!
 						<h3>How can I start?</h3>
@@ -18,7 +18,7 @@
 						</center>
 						<h3>From the Author</h3>
 						<p style="padding-left:10px">
-						Welcome to my web database of all things RC Flying. It wasn't very long ago that I started this hobby, and as I have increased my passion for it, I noticed that it was difficult to find information about where to fly,
+						Welcome to my web database of all things F3X Flying. It wasn't very long ago that I started this hobby, and as I have increased my passion for it, I noticed that it was difficult to find information about where to fly,
 						what planes are out there and the results of many competitions. In my research, I have found remnants of information in scattered places, but many are dead end links because the people that gathered that info have 
 						had life intervene and haven't been able to add to them or keep them up to date.<br>
 						<br>

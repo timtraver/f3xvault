@@ -69,6 +69,7 @@ function event_list() {
 
 	$country_id=0;
 	$state_id=0;
+	$discipline_id=0;
 	if(isset($_REQUEST['country_id'])){
 		$country_id=intval($_REQUEST['country_id']);
 		$GLOBALS['fsession']['country_id']=$country_id;
@@ -80,6 +81,12 @@ function event_list() {
 		$GLOBALS['fsession']['state_id']=$state_id;
 	}elseif(isset($GLOBALS['fsession']['state_id'])){
 		$state_id=$GLOBALS['fsession']['state_id'];
+	}
+	if(isset($_REQUEST['discipline_id'])){
+		$discipline_id=intval($_REQUEST['discipline_id']);
+		$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	}elseif(isset($GLOBALS['fsession']['discipline_id'])){
+		$discipline_id=$GLOBALS['fsession']['discipline_id'];
 	}
 
 	$search='';
@@ -135,6 +142,21 @@ function event_list() {
 		$addstate.=" AND l.state_id=$state_id ";
 	}
 
+	# Add search options for discipline
+	$disciplines=get_disciplines();
+	$extrad='';
+	if($discipline_id!=0){
+		# Lets determine the discipline code that was chosen
+		foreach($disciplines as $d){
+			if($d['discipline_id']==$discipline_id){
+				$discipline_code=$d['discipline_code'];
+			}
+		}
+		
+		$extrad='AND et.event_type_code LIKE '."'$discipline_code'";
+	}
+
+
 	$events=array();
 	if($search!='%%' && $search!=''){
 		$stmt=db_prep("
@@ -148,6 +170,7 @@ function event_list() {
 				AND $search_prefix$search_field $operator :search
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
 		");
 		$events=db_exec($stmt,array("search"=>$search));
@@ -163,6 +186,7 @@ function event_list() {
 			WHERE e.event_status=1
 				$addcountry
 				$addstate
+				$extrad
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
 		");
 		$events=db_exec($stmt,array());
@@ -188,10 +212,14 @@ function event_list() {
 	$states=db_exec($stmt,array());
 	
 	$events=show_pages($events,25);
+
+	# Lets reset the discipline for the top bar if needed
+	set_disipline($discipline_id);
 	
 	$smarty->assign("events",$events);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
+	$smarty->assign("disciplines",$disciplines);
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);

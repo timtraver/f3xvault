@@ -7,7 +7,7 @@
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_list">
 
-<table>
+<table width="80%">
 <tr>
 	<th>Filter By Country</th>
 	<td>

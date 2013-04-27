@@ -6,7 +6,17 @@
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
-<table>
+<table width="80%">
+<tr>
+	<th>Filter By Event Discipline</th>
+	<td colspan="3">
+	<select name="discipline_id" onChange="searchform.submit();">
+	{foreach $disciplines as $d}
+		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description}</option>
+	{/foreach}
+	</select>
+	</td>
+</tr>
 <tr>
 	<th>Filter By Country</th>
 	<td>
