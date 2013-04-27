@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Plane Database</h1>
+		<h1 class="post-title entry-title">F3X Plane Database</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Plane Details  <input type="button" value=" Edit Plane Information " class="button" onClick="plane_edit.submit();"></h1>
@@ -98,12 +98,12 @@ function calc_area(){ldelim}
 		{$d.discipline_description}<br>
 		{/foreach}
 	</td>
-	<td rowspan="11" align="center">
+	<td rowspan="9" align="center">
 	{if $media[$rand]}
-	<img src="{$media[$rand].plane_media_url}" width="300"><br>
-	<a href="{$media[$rand].plane_media_url}" rel="gallery" class="fancybox-button" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}">View Slide Show</a>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}"><img src="{$media[$rand].plane_media_url}" width="300"></a><br>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}">View Slide Show</a>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="View all of the Videos">View Videos</a>
+	<a data-trigger-rel="videos" class="fancybox-trigger" href="{$m.plane_media_url}" title="View all of the Videos">View Videos</a>
 	{else}
 		There are currently No pictures or videos available<br>
 		Help us out and add some!<br>

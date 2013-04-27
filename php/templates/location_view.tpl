@@ -18,12 +18,12 @@
 	<td rowspan="4" align="center">
 	{if $media[$rand]}
 	<img src="{$media[$rand].location_media_url}" width="300"><br>
-	<a href="{$media[$rand].location_media_url}" rel="gallery" class="fancybox-button" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} - {/if}{$media[$rand].location_media_caption}">View Slide Show</a>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} - {/if}{$media[$rand].location_media_caption}">View Slide Show</a>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	{assign var="found" value="0"}
 	{foreach $media as $m}
 		{if $m.location_media_type=='video' && $var==0}
-			<a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">View Videos</a>
+			<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">View Videos</a>
 			{assign var="found" value="1"}
 		{/if}
 	{/foreach}

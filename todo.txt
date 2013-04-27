@@ -26,7 +26,6 @@ GENERAL
 LOCATION STUFF
 
 PLANE STUFF
-	Plane show of slide show shows the first slide twice...
 	
 	Build log links!
 	Setup links!
@@ -86,6 +85,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Plane show of slide show shows the first slide twice...
 X	Adjust search parameters for Chrome
 X	Ability to assign multiple designations to a plane (like F3B and F3F)
 X	Ability to assign multiple designations to a location (like F3B and F3F)

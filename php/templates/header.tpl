@@ -62,6 +62,11 @@
 						buttons	: {}
 					}
 				});
+				$(".fancybox-trigger").click(function() {
+					$("a[rel='" + $(this).data('trigger-rel') + "']").eq(0).trigger('click');
+					return false;
+
+				});
 			});
 		</script>
 		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">

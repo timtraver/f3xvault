@@ -126,7 +126,7 @@
 	<input type="button" value="Add A New Plane to my Quiver" onClick="add_plane.submit()" class="block-button">
 </form>
 
-<h1 class="post-title entry-title">My RC Club Affiliations</h1>
+<h1 class="post-title entry-title">My Club Affiliations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Club Name</th>
@@ -149,7 +149,7 @@
 </table>
 <br>
 
-<h1 class="post-title entry-title">My RC Flying Locations</h1>
+<h1 class="post-title entry-title">My Flying Locations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Location Name</th>
@@ -189,7 +189,7 @@
 <input type="hidden" name="pilot_location_id" value="0">
 </form>
 
-<h1 class="post-title entry-title">My RC Events</h1>
+<h1 class="post-title entry-title">My Events</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Event Date</th>
