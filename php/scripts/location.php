@@ -326,6 +326,7 @@ function location_view() {
 		LEFT JOIN location_att_cat lc ON lc.location_att_cat_id=la.location_att_cat_id
 		WHERE lav.location_id=:location_id
 			AND lav.location_att_value_status=1
+		ORDER BY lc.location_att_cat_order,la.location_att_order
 	");
 	$location_attributes=db_exec($stmt,array("location_id"=>$location_id));
 
@@ -681,7 +682,7 @@ function location_media_add() {
 			user_message("There was an error uploading the file, please try again!");
 			return location_edit();
 		}
-		$location_media_url="{$GLOBALS['base_url']}{$GLOBALS['base_location_media']}/$location_id/$name";
+		$location_media_url="{$GLOBALS['base_location_media']}/$location_id/$name";
 	}else{
 		$location_media_url=$_REQUEST['location_media_url'];
 	}

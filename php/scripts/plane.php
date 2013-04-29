@@ -735,7 +735,7 @@ function plane_media_add() {
 			user_message("There was an error uploading the file, please try again!");
 			return plane_edit();
 		}
-		$plane_media_url="{$GLOBALS['base_url']}{$GLOBALS['base_plane_media']}/$plane_id/$name";
+		$plane_media_url="{$GLOBALS['base_plane_media']}/$plane_id/$name";
 	}else{
 		$plane_media_url=$_REQUEST['plane_media_url'];
 	}

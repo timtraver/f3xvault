@@ -244,7 +244,7 @@ $(function() {ldelim}
 					<th align="center">Group</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center">Time{if $ft.flight_type_over_penalty}/Over{/if}</th>
+					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center">Landing</th>
@@ -279,6 +279,13 @@ $(function() {ldelim}
 					{/if}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="center" nowrap>
+							{if $ft.flight_type_sub_flights!=0}
+							{for $sub=1 to $ft.flight_type_sub_flights}
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="" onChange="save_data(this);"> {if $sub!=$ft.flight_type_sub_flights}-{/if} 
+								{$tabindex=$tabindex+1}
+							{/for}
+							= Total
+							{/if}
 							{if $f.flight_type_minutes}
 								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);">m
 								{$tabindex=$tabindex+1}

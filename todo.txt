@@ -26,7 +26,8 @@ GENERAL
 LOCATION STUFF
 
 PLANE STUFF
-	
+	fix pic links to not go to a different URL...
+	fix bug if no planes for that discipline are present...showing php warning
 	Build log links!
 	Setup links!
 	
@@ -38,6 +39,8 @@ EVENT STUFF
   Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
   
   Fix Max Flight Time to only be on event types that need it
+  
+  Add carryover or not to Flyoffs
   
 =  Reflights for groups
 =  	Make it work with the overall round drops
