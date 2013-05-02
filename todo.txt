@@ -56,9 +56,9 @@ EVENT STUFF
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
   Sub Flight times in pilot report for F3K event
-  Shortcut for ladder entry by putting the highest made time in the first flight time
   Individual save of flight times routines for sub flights
-  
+  	And modify the check ladder script to save those individual times too
+  	
   When event is completed, have a function to blast the link to the event to the event participants if members
   
 =  Add Pilot Event Number for contests that might have bibs
@@ -86,6 +86,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X  Shortcut for ladder entry by putting the highest made time in the first flight time
 X  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
 X  Add a few more F3K all up types
 X Fix Max Flight Time to only be on event types that need it

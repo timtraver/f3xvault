@@ -6,6 +6,12 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
+{$flight_type_code=''}
+{$flight_type_subs=0}
+{foreach $event->rounds.$round_number.flights as $f}
+	{$flight_type_code=$f.flight_type_code}
+	{$flight_type_subs=$f.flight_type_sub_flights}
+{/foreach}
 function save_data(element) {ldelim}
 	$.ajax({ldelim}
 		type: "POST",
@@ -23,6 +29,35 @@ function save_data(element) {ldelim}
 			field_value: element.value
 		{rdelim}
 	{rdelim});
+{rdelim}
+function check_ladder(element) {ldelim}
+	var numsubs={$flight_type_subs};
+	var subnum=element.name.charAt(17);
+	var subrest=element.name.substr(18);
+	if(subnum != '1'){ldelim}
+		return;
+	{rdelim}
+	var subval=element.value;
+	var times = new Array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
+	var times_alt = new Array("30","45","100","115","130","145","200");
+
+	var i=times.indexOf(subval);
+	var j=times_alt.indexOf(subval);
+	if(i>0 || j>0){ldelim}
+		// They entered an entry that matched the array and wasn't the first one
+		var z=i;
+		if(j>i){ldelim}z=j{rdelim}
+		// Now lets step through the array and set the values to zero first
+		for(x=1;x<=numsubs;x++){ldelim}
+			var fieldstring = "pilot_sub_flight_" + x + subrest;
+			document.main[fieldstring].value='';
+		{rdelim}
+		// Now lets populate up until the time that was entered
+		for(x=1;x<=z+1;x++){ldelim}
+			var fieldstring = "pilot_sub_flight_" + x + subrest;
+			document.main[fieldstring].value=times[x-1];
+		{rdelim}
+	{rdelim}
 {rdelim}
 $(function() {ldelim}
 	var pilots = [
@@ -90,6 +125,7 @@ $(function() {ldelim}
 	});
 });
 {/literal}
+
 </script>
 
 <div id="add_reflight" style="overflow: hidden;">
@@ -230,7 +266,7 @@ $(function() {ldelim}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			<tr>
-				<th colspan="3">Round {$round_number}</th>
+				<th colspan="2">Round {$round_number}</th>
 				<th colspan="{$cols}">
 					{$ft.flight_type_name}
 				</th>
@@ -241,7 +277,6 @@ $(function() {ldelim}
 			<tr>
 				<th width="2%" align="left"></th>
 				<th align="left">Pilot Name</th>
-				<th align="left">Team</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
 				{/if}
@@ -276,7 +311,6 @@ $(function() {ldelim}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
 				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.event_pilot_team}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
 					{/if}
@@ -285,7 +319,7 @@ $(function() {ldelim}
 							{if $ft.flight_type_sub_flights!=0}
 								{$time_disabled=1}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val}{/if}" onChange="save_data(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val}{/if}" onChange="check_ladder(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
