@@ -56,7 +56,7 @@ function calc_auw(){ldelim}
 {rdelim}
 function calc_max_weight(){ldelim}
 	var current_units = '{$plane.plane_wing_area_units}';
-	var current_value = {$plane.plane_wing_area};
+	var current_value = {$plane.plane_wing_area + $plane.plane_tail_area};
 	var multiple = 28.35;
 	var calc_value = 0;
 	var calc_units = '';
@@ -71,18 +71,25 @@ function calc_max_weight(){ldelim}
 {rdelim}
 function calc_area(){ldelim}
 	var current_units = '{$plane.plane_wing_area_units}';
-	var current_value = {$plane.plane_wing_area};
+	var current_wing_value = {$plane.plane_wing_area};
+	var current_tail_value = {$plane.plane_tail_area};
 	var multiple = .0645;
-	var calc_value = 0;
+	var calc_wing_value = 0;
+	var calc_tail_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
-		calc_value = multiple * current_value;
+		calc_wing_value = multiple * current_wing_value;
+		calc_tail_value = multiple * current_tail_value;
 		calc_units = 'dm<sup>2</sup>';
 	{rdelim}else{ldelim}
-		calc_value = current_value / multiple;
-		calc_units = 'in2';
+		calc_wing_value = current_wing_value / multiple;
+		calc_tail_value = current_tail_value / multiple;
+		calc_units = 'in<sup>2</sup>';
 	{rdelim}
-	document.getElementById('area').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	var totalarea = (current_wing_value*1) + (current_tail_value*1);
+	document.getElementById('wingarea').innerHTML = ' = ' + calc_wing_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('tailarea').innerHTML = ' = ' + calc_tail_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('totalarea').innerHTML = totalarea.toFixed(2);
 {rdelim}
 </script>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -94,11 +101,15 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left" valign="top">Plane Flying Disciplines</th>
 	<td>
+		{$calc_max=0}
 		{foreach $disciplines as $d}
 		{$d.discipline_description}<br>
+		{if $d.discipline_code=='f3b' || $d.discipline_code=='f3f' || $d.discipline_code=='f3j'}
+			{$calc_max=1}
+		{/if} 
 		{/foreach}
 	</td>
-	<td rowspan="9" align="center">
+	<td rowspan="10" align="center">
 	{if $media[$rand]}
 	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}"><img src="{$media[$rand].plane_media_url}" width="300"></a><br>
 	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}">View Slide Show</a>
@@ -135,10 +146,23 @@ function calc_area(){ldelim}
 	<th align="left">Plane Wing Area</th>
 	<td>
 		{$plane.plane_wing_area|string_format:'%.2f'} {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}dm<sup>2</sup>{/if}
-		<span id="area"></span>		
+		<span id="wingarea"></span>		
 	</td>
 </tr>
-{if $plane.plane_type_short_name=='F3B' || $plane.plane_type_short_name=='F3F' || $plane.plane_type_short_name=='F3J'} 
+<tr>
+	<th align="left">Plane Tail Area</th>
+	<td>
+		{$plane.plane_tail_area|string_format:'%.2f'} {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}dm<sup>2</sup>{/if}
+		<span id="tailarea"></span>		
+	</td>
+</tr>
+<tr>
+	<th align="left">Plane Total Area</th>
+	<td bgcolor="lightgrey">
+		<span id="totalarea"></span> {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}dm<sup>2</sup>{/if}
+	</td>
+</tr>
+{if $calc_max}
 <tr>
 	<th align="left">FAI Max Wing Loading (By Rule For Class)</th>
 	<td bgcolor="lightgrey">

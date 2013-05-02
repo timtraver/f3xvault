@@ -1305,6 +1305,15 @@ function event_round_save() {
 		$event_round_score_status=1;
 	}
 	
+	# Get flight type info for determining max sub flights and stuff
+	$stmt=db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_id=:flight_type_id
+	");
+	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
+	$flight_type=$result[0];
+	
 	# First, lets save the round info
 	if($event_round_id==0){
 		# New round, so lets create
@@ -1421,7 +1430,23 @@ function event_round_save() {
 	# Lets build the data grid
 	$data=array();
 	foreach($_REQUEST as $key=>$value){
-		if(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)_(\d+)$/",$key,$match)){
+		if(preg_match("/^pilot_sub_flight_(\d+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
+			$sub=$match[1];
+			$event_pilot_round_flight_id=$match[2];
+			$event_pilot_id=$match[3];
+			$flight_type_id=$match[4];
+			# Now lets massage the value to make sure its entered in colon notation, or insert the colons
+			$value=convert_string_to_colon($value);
+			# Lets check to see if this sub flight has a max set up and change it if it does
+			if($flight_type['flight_type_sub_flights_max_time']!=0){
+				$seconds=convert_colon_to_seconds($value);
+				if($seconds>$flight_type['flight_type_sub_flights_max_time']){
+					$seconds=$flight_type['flight_type_sub_flights_max_time'];
+					$value=convert_seconds_to_colon($seconds);
+				}
+			}
+			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub'][$sub]=$value;
+		}elseif(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
 			$field=$match[1];
 			$event_pilot_round_flight_id=$match[2];
 			$event_pilot_id=$match[3];
@@ -1430,6 +1455,22 @@ function event_round_save() {
 				$value=1;
 			}
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
+		}
+	}
+	# Lets total up the subflights to calculate the full flight time
+	if($flight_type['flight_type_sub_flights']!=0){
+		# It has sub flights
+		foreach($data as $event_pilot_round_flight_id=>$p){
+			foreach($p as $event_pilot_id=>$f){
+				foreach($f as $flight_type_id=>$v){
+					$tot=0;
+					foreach($v['sub'] as $num=>$t){
+						$tot=$tot+convert_colon_to_seconds($t);
+					}
+					$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min']=floor($tot/60);
+					$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec']=sprintf("%02d",fmod($tot,60));
+				}
+			}
 		}
 	}
 
@@ -1541,6 +1582,55 @@ function event_round_save() {
 						"event_pilot_round_flight_landing"=>$v['land'],
 						"event_pilot_round_flight_penalty"=>$v['pen']
 					));
+					$event_pilot_round_flight_id_actual=$GLOBALS['last_insert_id'];
+				}
+				
+				# lets save the sub flights now if there are any
+				if(isset($v['sub'])){
+					# There are sub flights, so lets save them
+					foreach($v['sub'] as $num=>$t){
+						# Lets see if one exists already
+						$stmt=db_prep("
+							SELECT *
+							FROM event_pilot_round_flight_sub erfs
+							WHERE erfs.event_pilot_round_flight_id=:event_pilot_round_flight_id
+								AND erfs.event_pilot_round_flight_sub_num=:num
+						");
+						$result=db_exec($stmt,array(
+							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
+							"num"=>$num
+						));
+						if(isset($result[0])){
+							$event_pilot_round_flight_sub_id=$result[0]['event_pilot_round_flight_sub_id'];
+						}else{
+							$event_pilot_round_flight_sub_id=0;
+						}
+						if($event_pilot_round_flight_sub_id==0){
+							# Create a new record
+							$stmt=db_prep("
+								INSERT INTO event_pilot_round_flight_sub
+								SET event_pilot_round_flight_id=:event_pilot_round_flight_id,
+									event_pilot_round_flight_sub_num=:num,
+									event_pilot_round_flight_sub_val=:val
+							");
+							$result=db_exec($stmt,array(
+								"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
+								"num"=>$num,
+								"val"=>$t
+							));
+						}else{
+							# Save the existing record
+							$stmt=db_prep("
+								UPDATE event_pilot_round_flight_sub
+								SET event_pilot_round_flight_sub_val=:val
+								WHERE event_pilot_round_flight_sub_id=:event_pilot_round_flight_sub_id
+							");
+							$result=db_exec($stmt,array(
+								"event_pilot_round_flight_sub_id"=>$event_pilot_round_flight_sub_id,
+								"val"=>$t
+							));
+						}
+					}
 				}
 			}
 		}

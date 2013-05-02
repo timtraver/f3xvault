@@ -26,8 +26,6 @@ GENERAL
 LOCATION STUFF
 
 PLANE STUFF
-	fix pic links to not go to a different URL...
-	fix bug if no planes for that discipline are present...showing php warning
 	Build log links!
 	Setup links!
 	
@@ -38,8 +36,6 @@ EVENT STUFF
   
   Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
   
-  Fix Max Flight Time to only be on event types that need it
-  
   Add carryover or not to Flyoffs
   
 =  Reflights for groups
@@ -47,8 +43,8 @@ EVENT STUFF
 =  	Determine how to show reflight drops
  = 	Determine round_total drop score (currently commented out just below)
   	
+  Show window time in F3K events in upper right
   Change Max flight time for F3K to be window time and maybe set defaults for those...
-  Add a few more F3K all up types
     
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
@@ -59,8 +55,10 @@ EVENT STUFF
 	
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
-  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
-
+  Sub Flight times in pilot report for F3K event
+  Shortcut for ladder entry by putting the highest made time in the first flight time
+  Individual save of flight times routines for sub flights
+  
   When event is completed, have a function to blast the link to the event to the event participants if members
   
 =  Add Pilot Event Number for contests that might have bibs
@@ -88,6 +86,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
+X  Add a few more F3K all up types
+X Fix Max Flight Time to only be on event types that need it
+X	fix bug if no planes for that discipline are present...showing php warning
+X	fix pic links to not go to a different URL...
 X	Plane show of slide show shows the first slide twice...
 X	Adjust search parameters for Chrome
 X	Ability to assign multiple designations to a plane (like F3B and F3F)

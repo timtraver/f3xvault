@@ -212,6 +212,19 @@ class Event {
 					}else{
 						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
 					}
+					# Lets get the sub flights if there are any
+					if($ft['flight_type_sub_flights']!=0){
+						$stmt=db_prep("
+							SELECT *
+							FROM event_pilot_round_flight_sub
+							WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+						");
+						$results2=db_exec($stmt,array("event_pilot_round_flight_id"=>$flight['event_pilot_round_flight_id']));
+						foreach($results2 as $r){
+							$num=$r['event_pilot_round_flight_sub_num'];
+							$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=$r;
+						}
+					}
 				}
 				# Now add any pilots that dont have a flight
 				foreach($this->pilots as $event_pilot_id=>$p){
@@ -298,6 +311,7 @@ class Event {
 		$stmt=db_prep("
 			SELECT *
 			FROM flight_type
+			ORDER BY flight_type_code
 		");
 		$result=db_exec($stmt,array());
 		$type=$this->info['event_type_code'];

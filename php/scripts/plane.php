@@ -113,6 +113,8 @@ function plane_list() {
 		$extrad='AND pd.discipline_id='.$discipline_id.' AND pd.plane_discipline_status=1';
 	}
 
+	$planes=array();
+	$newplanes=array();
 	if($search!='%%' && $search!=''){
 		# Get all planes in this plane_type with the search criteria
 		$stmt=db_prep("
@@ -154,6 +156,19 @@ function plane_list() {
 		$newplanes[]=$plane;
 	}
 	$planes=show_pages($newplanes,25);
+
+	foreach($planes as $key=>$plane){
+		# Lets get the plane types
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_discipline pd
+			LEFT JOIN discipline d ON pd.discipline_id=d.discipline_id
+			WHERE pd.plane_id=:plane_id
+			ORDER BY d.discipline_order
+		");
+		$disciplines=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+		$planes[$key]['disciplines']=$disciplines;
+	}
 
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
@@ -472,6 +487,11 @@ function plane_save() {
 	}else{
 		$plane['plane_wing_area']=0;
 	}
+	if(isset($_REQUEST['plane_tail_area'])){
+		$plane['plane_tail_area']=$_REQUEST['plane_tail_area'];
+	}else{
+		$plane['plane_tail_area']=0;
+	}
 	if(isset($_REQUEST['plane_wing_area_units'])){
 		$plane['plane_wing_area_units']=$_REQUEST['plane_wing_area_units'];
 	}else{
@@ -515,6 +535,7 @@ function plane_save() {
 				plane_length=:plane_length,
 				plane_length_units=:plane_length_units,
 				plane_wing_area=:plane_wing_area,
+				plane_tail_area=:plane_tail_area,
 				plane_wing_area_units=:plane_wing_area_units,
 				plane_manufacturer=:plane_manufacturer,
 				plane_year=:plane_year,
@@ -539,6 +560,7 @@ function plane_save() {
 				plane_length=:plane_length,
 				plane_length_units=:plane_length_units,
 				plane_wing_area=:plane_wing_area,
+				plane_tail_area=:plane_tail_area,
 				plane_wing_area_units=:plane_wing_area_units,
 				plane_manufacturer=:plane_manufacturer,
 				plane_year=:plane_year,

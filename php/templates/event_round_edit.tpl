@@ -170,6 +170,7 @@ $(function() {ldelim}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
 			</td>
+			{if $event->info.event_type_time_choice==1}
 			<th>
 				Max Flight Time
 			</th>
@@ -180,6 +181,9 @@ $(function() {ldelim}
 					<input type="hidden" name="event_round_time_choice" value="0">
 				{/if}
 			</td>
+			{else}
+			<th colspan="2">&nbsp;</th>
+			{/if}
 		</tr>
 		<tr>
 			<th nowrap>Event Round Sort By</th>
@@ -197,14 +201,12 @@ $(function() {ldelim}
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
-		{if $event->rounds.$round_number.event_round_flyoff!=0}
 		<tr>
 			<th nowrap>Flyoff Number</th>
 			<td colspan="3">
-				<input type="text" size="2" name="event_round_flyoff" value="{$event->rounds.$round_number.event_round_flyoff}"> Update this number if there will be multiple flyoff rounds
+				<input type="text" size="2" name="event_round_flyoff" value="{$event->rounds.$round_number.event_round_flyoff}"> Update this number if there will be multiple flyoff rounds or to 0 for normal round
 			</td>
 		</tr>
-		{/if}
 		</table>
 		<br>
 		<input type="button" value=" Save Event Round Info " onClick="main.submit();" class="block-button">
@@ -270,6 +272,7 @@ $(function() {ldelim}
 				{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
 				{$oldgroup=$p.event_pilot_round_flight_group}
 			{/if}
+			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
 				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
@@ -280,18 +283,19 @@ $(function() {ldelim}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="center" nowrap>
 							{if $ft.flight_type_sub_flights!=0}
-							{for $sub=1 to $ft.flight_type_sub_flights}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="" onChange="save_data(this);"> {if $sub!=$ft.flight_type_sub_flights}-{/if} 
-								{$tabindex=$tabindex+1}
-							{/for}
-							= Total
+								{$time_disabled=1}
+								{for $sub=1 to $ft.flight_type_sub_flights}
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val}{/if}" onChange="save_data(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									{$tabindex=$tabindex+1}
+								{/for}
+								= Total
 							{/if}
 							{if $f.flight_type_minutes}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);">m
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>m
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $f.flight_type_seconds}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}" onChange="save_data(this);">s
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>s
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $f.flight_type_over_penalty}

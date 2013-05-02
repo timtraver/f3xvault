@@ -56,18 +56,25 @@ function calc_auw(){ldelim}
 {rdelim}
 function calc_area(){ldelim}
 	var current_units = document.main.plane_wing_area_units.value;
-	var current_value = document.main.plane_wing_area.value;
+	var current_wing_value = document.main.plane_wing_area.value;
+	var current_tail_value = document.main.plane_tail_area.value;
 	var multiple = .0645;
-	var calc_value = 0;
+	var calc_wing_value = 0;
+	var calc_tail_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
-		calc_value = multiple * current_value;
+		calc_wing_value = multiple * current_wing_value;
+		calc_tail_value = multiple * current_tail_value;
 		calc_units = 'Decimeters Squared';
 	{rdelim}else{ldelim}
-		calc_value = current_value / multiple;
+		calc_wing_value = current_wing_value / multiple;
+		calc_tail_value = current_tail_value / multiple;
 		calc_units = 'Inches Squared';
 	{rdelim}
-	document.getElementById('area').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	var totalarea = (current_wing_value*1) + (current_tail_value*1);
+	document.getElementById('wingarea').innerHTML = ' = ' + calc_wing_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('tailarea').innerHTML = ' = ' + calc_tail_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('totalarea').innerHTML = totalarea + ' ' + current_units;
 {rdelim}
 </script>
 <form name="main" method="POST">
@@ -128,7 +135,20 @@ function calc_area(){ldelim}
 		<option value="in2" {if $plane.plane_wing_area_units=="in2"}SELECTED{/if}>Inches squared</option>
 		<option value="dm2" {if $plane.plane_wing_area_units=="dm2"}SELECTED{/if}>Decimeters squared</option>
 		</select>
-		<span id="area"></span>		
+		<span id="wingarea"></span>		
+	</td>
+</tr>
+<tr>
+	<th>Plane Tail Area</th>
+	<td>
+		<input type="text" size="10" name="plane_tail_area" value="{$plane.plane_tail_area|string_format:'%.2f'}" onChange="calc_area();">
+		<span id="tailarea"></span>		
+	</td>
+</tr>
+<tr>
+	<th>Plane Total Area</th>
+	<td>
+		<span id="totalarea"></span>		
 	</td>
 </tr>
 <tr>
@@ -192,8 +212,9 @@ function calc_area(){ldelim}
 
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value="Back To Plane List" onClick="goback.submit();" class="block-button">
 		<input type="submit" value="Save Plane Values{if $from} and Return{/if}" class="block-button">
+		<input type="button" value="Back To Plane View" onClick="backtoview.submit();" class="block-button">
+		<input type="button" value="Back To Plane List" onClick="backtolist.submit();" class="block-button">
 	</th>
 </tr>
 </table>
@@ -247,7 +268,12 @@ function calc_area(){ldelim}
 <input type="hidden" name="plane_id" value="{$plane.plane_id}">
 </form>
 
-<form name="goback" method="GET">
+<form name="backtoview" method="GET">
+<input type="hidden" name="action" value="plane">
+<input type="hidden" name="function" value="plane_view">
+<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+</form>
+<form name="backtolist" method="GET">
 <input type="hidden" name="action" value="plane">
 </form>
 
