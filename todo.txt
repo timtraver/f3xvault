@@ -45,7 +45,8 @@ EVENT STUFF
 =  	Make it work with the overall round drops
 =  	Determine how to show reflight drops
  = 	Determine round_total drop score (currently commented out just below)
-  	    
+  	Show reflight data on pilot report
+  	
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
   

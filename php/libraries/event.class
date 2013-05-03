@@ -183,7 +183,7 @@ class Event {
 				if(isset($result[0])){
 					$ft['event_round_flight_score']=$result[0]['event_round_flight_score'];
 				}else{
-					$ft['event_round_flight_score']=1;
+					$ft['event_round_flight_score']=0;
 				}
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=array();
@@ -343,13 +343,39 @@ class Event {
 		$reflights=array();
 		$reflights=$this->calculate_flights($event_round_number,$this->rounds[$event_round_number]['reflights']);
 
-		# Figure out how to calculate the best flights out of the reflights and normal flights
 
+		# Lets set all of the reflight drop values for this pilot to 1 for this round and type and then find the biggest and mark it good
+		# Loop through only the reflights, cause we don't need to change the other pilots
+		foreach($reflights as $flight_type_id=>$p){
+			foreach($p as $event_pilot_id=>$v){
+				$stmt=db_prep("
+					SELECT event_pilot_round_id
+					FROM event_pilot_round
+					WHERE event_pilot_id=:event_pilot_id
+					AND event_round_id=:event_round_id
+				");
+				$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id,"event_round_id"=>$this->rounds[$event_round_number]['event_round_id']));
+				foreach($result as $r){
+					$stmt=db_prep("
+						UPDATE event_pilot_round_flight
+						SET event_pilot_round_flight_reflight_dropped=1
+						WHERE event_pilot_round_id=:event_pilot_round_id
+						AND flight_type_id=:flight_type_id
+					");
+					$result2=db_exec($stmt,array("event_pilot_round_id"=>$r['event_pilot_round_id'],"flight_type_id"=>$flight_type_id));
+				}
+			}
+		}
+
+		# Figure out how to calculate the best flights out of the reflights and normal flights
+		# And then drop the ones that we don't need
 		# Loop through the normal flights
 		foreach($flights as $flight_type_id=>$p){
 			foreach($p as $event_pilot_id=>$v){
 				$score[$flight_type_id]=$v['event_pilot_round_flight_score'];
-				# Now lets step through each reflight and see if it is greater
+				$goodid=$v['event_pilot_round_flight_id'];
+				
+				# Now lets step through each reflight and see if it is a better score
 				foreach($reflights as $rftid=>$rp){
 					if($rftid!=$flight_type_id){
 						continue;
@@ -360,18 +386,23 @@ class Event {
 						}
 						if($rv['event_pilot_round_flight_score']>$score[$flight_type_id]){
 							$score[$flight_type_id]=$rv['event_pilot_round_flight_score'];
+							$goodid=$rv['event_pilot_round_flight_id'];
 						}
 					}
 				}
 				$round_total_score[$event_pilot_id]+=$score[$flight_type_id];
 				$round_totals[$event_pilot_id]['raw']+=$score[$flight_type_id];
+				
+				# Now lets save the good record to have the reflight dropped flag set back to 0
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_reflight_dropped=0
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result2=db_exec($stmt,array("event_pilot_round_flight_id"=>$goodid));
 			}
 		}
 		
-#				if($v['event_pilot_round_flight_dropped']==1){
-#					$round_totals[$event_pilot_id]['dropped']+=$v['event_pilot_round_flight_score'];
-#				}
-
 		# Determine the overall round rank
 		foreach($round_total_score as $event_pilot_id=>$p){
 			arsort($round_total_score);
@@ -913,7 +944,7 @@ class Event {
 					# Now lets pick off the ones to mark as dropped
 					$drop=0;
 					foreach($temp2 as $round_number=>$f){
-						if($drop<$this->totals['round_drops']){
+						if($drop<$this->totals['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
 							# Set the drop flag for this flight
 							$stmt=db_prep("
 								UPDATE event_pilot_round_flight
@@ -962,7 +993,7 @@ class Event {
 				# Now lets pick off the ones to mark as dropped
 				$drop=0;
 				foreach($temp2 as $round_number=>$f){
-					if($drop<$this->totals['round_drops']){
+					if($drop<$this->totals['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
 						# Set the drop flag for this flight
 						$stmt=db_prep("
 							UPDATE event_pilot_round_flight
@@ -1019,7 +1050,7 @@ class Event {
 					# Now lets pick off the ones to mark as dropped
 					$drop=0;
 					foreach($temp2 as $round_number=>$f){
-						if($drop<$temp['round_drops']){
+						if($drop<$temp['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
 							# Set the drop flag for this flight
 							$stmt=db_prep("
 								UPDATE event_pilot_round_flight

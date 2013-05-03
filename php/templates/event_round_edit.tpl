@@ -360,9 +360,9 @@ $(function() {ldelim}
 						{/if}
 					</td>
 					<td align="right" nowrap>
-					{if $p.event_pilot_round_flight_dropped}<del><font color="red">{/if}
-					{$p.event_pilot_round_flight_score}
-					{if $p.event_pilot_round_flight_dropped}</font></del>{/if}
+					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
+					{$p.event_pilot_round_flight_score}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 					</td>
 					<td align="center" nowrap>
 						<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}" onChange="save_data(this);">
@@ -396,7 +396,6 @@ $(function() {ldelim}
 				<tr style="background-color: {$groupcolor};">
 					<td style="background-color: lightgrey;">{$num}</td>
 					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.event_pilot_team}</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
 						{/if}
@@ -432,9 +431,9 @@ $(function() {ldelim}
 							{/if}
 						</td>
 						<td align="right" nowrap>
-						{if $p.event_pilot_round_flight_dropped}<del><font color="red">{/if}
-						{$p.event_pilot_round_flight_score}
-						{if $p.event_pilot_round_flight_dropped}</font></del>{/if}
+						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
+						{$p.event_pilot_round_flight_score}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 						</td>
 						<td align="center" nowrap>
 							<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}" onChange="save_data(this);">
