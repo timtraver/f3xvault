@@ -136,8 +136,15 @@
 						</td>					
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-						<td align="center" nowrap style="background-color: {$bgcolor};">
+						<td align="right" nowrap style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							
+								{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
+									{foreach $r.flights.$flight_type_id.pilots.$event_pilot_id.sub as $s}
+									<span style="background-color: #9DCFF0;padding: 3px;">{$s.event_pilot_round_flight_sub_val}</span>
+									{/foreach}
+									= 
+								{/if}
 								{if $ft.flight_type_minutes}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_minutes}m{/if}
 								{if $ft.flight_type_seconds}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s{/if}
 							{/if}

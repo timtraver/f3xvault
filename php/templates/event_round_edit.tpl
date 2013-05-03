@@ -37,6 +37,9 @@ function check_ladder(element) {ldelim}
 	if(subnum != '1'){ldelim}
 		return;
 	{rdelim}
+	{if $flight_type_code!='f3k_d'}
+		return;
+	{/if}
 	var subval=element.value;
 	var times = new Array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
 	var times_alt = new Array("30","45","100","115","130","145","200");
@@ -57,6 +60,9 @@ function check_ladder(element) {ldelim}
 			var fieldstring = "pilot_sub_flight_" + x + subrest;
 			document.main[fieldstring].value=times[x-1];
 		{rdelim}
+		// Lets see if I can tab to the next row
+		var fieldstring = "pilot_sub_flight_" + numsubs + subrest;
+		document.main[fieldstring].focus();
 	{rdelim}
 {rdelim}
 $(function() {ldelim}

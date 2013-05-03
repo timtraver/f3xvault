@@ -20,7 +20,10 @@ GENERAL
   
   Printing Event Rounds needs to print flyoff rounds too
   Separate print buttons for preliminaries and flyoffs
-
+  Fix printing of overall classification
+  Fix printing of pilot scores
+  Make an individual round print
+  
 =  Add blog menu item and set up simple wordpress blog
   
 LOCATION STUFF
@@ -42,10 +45,7 @@ EVENT STUFF
 =  	Make it work with the overall round drops
 =  	Determine how to show reflight drops
  = 	Determine round_total drop score (currently commented out just below)
-  	
-  Show window time in F3K events in upper right
-  Change Max flight time for F3K to be window time and maybe set defaults for those...
-    
+  	    
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
   
@@ -55,10 +55,6 @@ EVENT STUFF
 	
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
-  Sub Flight times in pilot report for F3K event
-  Individual save of flight times routines for sub flights
-  	And modify the check ladder script to save those individual times too
-  	
   When event is completed, have a function to blast the link to the event to the event participants if members
   
 =  Add Pilot Event Number for contests that might have bibs
@@ -86,6 +82,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Sub Flight times in pilot report for F3K event
 X  Shortcut for ladder entry by putting the highest made time in the first flight time
 X  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)
 X  Add a few more F3K all up types

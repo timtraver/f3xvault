@@ -183,7 +183,7 @@ class Event {
 				if(isset($result[0])){
 					$ft['event_round_flight_score']=$result[0]['event_round_flight_score'];
 				}else{
-					$ft['event_round_flight_score']=0;
+					$ft['event_round_flight_score']=1;
 				}
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
 				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=array();

@@ -359,6 +359,7 @@ function start_fsession(){
         global $fsession;
         global $fsid;
 
+		$fsession=array();
         if(isset($_COOKIE['fsid'])){
                 $fsid=$_COOKIE['fsid'];
         }else{
