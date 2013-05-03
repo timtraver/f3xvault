@@ -311,7 +311,7 @@ class Event {
 		$stmt=db_prep("
 			SELECT *
 			FROM flight_type
-			ORDER BY flight_type_code
+			ORDER BY flight_type_order
 		");
 		$result=db_exec($stmt,array());
 		$type=$this->info['event_type_code'];
