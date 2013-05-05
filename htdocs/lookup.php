@@ -101,6 +101,7 @@ function lookup_plane() {
 		FROM plane p
 		LEFT JOIN plane_type pt ON p.plane_type_id=pt.plane_type_id
 		WHERE LOWER(p.plane_name) LIKE :q
+		ORDER BY plane_name
 	");
 	$result=db_exec($stmt,array("q"=>$q));
 	
