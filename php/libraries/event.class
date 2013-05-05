@@ -648,6 +648,8 @@ class Event {
 							}
 							if($rv['event_pilot_round_flight_score']>$sub){
 								$sub=$rv['event_pilot_round_flight_score'];
+								# Also replace the flight info with the relight info for the totals
+								$p=$rv;
 							}
 							if($rv['event_pilot_round_flight_penalty']>0){
 								$penalty+=$rv['event_pilot_round_flight_penalty'];
@@ -674,10 +676,11 @@ class Event {
 						}
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
 						
 						if($r['event_round_score_status']==1){
-							if($p['event_pilot_round_flight_dropped']==0){
+							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
 								# This means that this flight was not dropped, and the round is being scored
 								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
 								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties']+=$penalty;
@@ -707,10 +710,11 @@ class Event {
 						}
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
 						
 						if($r['event_round_score_status']==1){
-							if($p['event_pilot_round_flight_dropped']==0){
+							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
 								# This means that this flight was not dropped, and the round is being scored
 								$subtotals[$event_pilot_id]['subtotal']+=$sub;
 								$subtotals[$event_pilot_id]['penalties']+=$penalty;
@@ -917,6 +921,7 @@ class Event {
 						if($r['event_round_score_status']==1){
 							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
 							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
 						}
 					}
 				}
@@ -968,6 +973,7 @@ class Event {
 						if($r['event_round_score_status']==1){
 							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
 							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
 						}
 					}
 				}
@@ -1021,6 +1027,7 @@ class Event {
 							if($r['event_round_score_status']==1){
 								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
 								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
 							}
 						}
 					}

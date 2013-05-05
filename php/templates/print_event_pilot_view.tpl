@@ -1,11 +1,9 @@
-
-<div class="page type-page status-publish hentry clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
+<div class="page type-page clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
 	<div class="entry clearfix">                
-		<h2 class="post-title entry-title">Event - {$event->info.event_name}</h2>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h2 class="post-title entry-title" style="margin:0px;">Event - {$event->info.event_name}</h2>
+		<table width="80%" cellpadding="2" cellspacing="1" class="printborder">
 		<tr>
-			<th width="20%" align="right">Event Dates</th>
+			<th width="15%" align="right">Event Dates</th>
 			<td>
 			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
 			</td>
@@ -14,22 +12,10 @@
 			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
 			</td>
 		</tr>
-		<tr>
-			<th align="right">Event Type</th>
-			<td>
-			{$event->info.event_type_name}
-			</td>
-			<th align="right">Event Contest Director</th>
-			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
-			</td>
-		</tr>
 		</table>
-	</div>
 
-		<br>
-		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h1 class="post-title entry-title" style="margin:0px;">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableprint">
 		<tr>
 			<th width="2%" align="left">Round</th>
 			{if $event->info.event_type_code!='f3k'}
@@ -114,12 +100,25 @@
 			<tr>
 				{$round=$r@key}
 				{$bgcolor='#9DCFF0'}
-				<td style="background-color: {$bgcolor};">{$round}</td>
+				<td align="center" style="background-color: {$bgcolor};">{$round}</td>
 				{foreach $event->flight_types as $ft}
 					{$flight_type_id = $ft@key}
 					{if $event->info.event_type_code=='f3k' && $ft.flight_type_id!=$r.flight_type_id}
 						{continue}
 					{/if}
+					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
+					{if $values.event_pilot_round_flight_reflight_dropped==1}
+						{foreach $r.reflights as $rf}
+							{if $rf@key!=$flight_type_id}{continue}{/if}
+							{foreach $rf.pilots as $rp}
+								{if $rp@key!=$event_pilot_id}{continue}{/if}
+								{if $rp.event_pilot_round_flight_reflight_dropped==0}
+									{$values=$rp}
+								{/if}
+							{/foreach}
+						{/foreach}
+					{/if}
+
 					{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 					{if $event->info.event_type_code=='f3k'}
 						<th width="5%" align="left" nowrap style="background-color: {$bgcolor};">
@@ -127,37 +126,68 @@
 						</th>
 					{/if}
 					{if $ft.flight_type_group}
-						<td align="center" nowrap style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}</td>					
+						<td align="center" nowrap style="background-color: {$bgcolor};">
+							{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							{$values.event_pilot_round_flight_group}{if $values.event_pilot_round_flight_reflight}(R){/if}
+							{/if}
+						</td>					
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-						<td align="center" nowrap style="background-color: {$bgcolor};">
-							{if $ft.flight_type_minutes}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_minutes}m{/if}
-							{if $ft.flight_type_seconds}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s{/if}
+						<td align="right" nowrap style="background-color: {$bgcolor};">
+							{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							
+								{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
+									{foreach $values.sub as $s}
+									<span style="background-color: #9DCFF0;padding: 1px;">{$s.event_pilot_round_flight_sub_val}</span>
+									{/foreach}
+									= 
+								{/if}
+								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes}m{/if}
+								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds}s{/if}
+							{/if}
 						</td>
 					{/if}
-					{if $ft.flight_type_landing}<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_landing}</td>{/if}
+					{if $ft.flight_type_landing}
+						<td align="center" style="background-color: {$bgcolor};">
+							{if $r.flights.$flight_type_id.event_round_flight_score==1}
+								{$values.event_pilot_round_flight_landing}
+							{/if}
+						</td>
+					{/if}
 					{if $ft.flight_type_laps}
-						<td align="center" style="background-color: {$bgcolor};">{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_laps}</td>
+						<td align="center" style="background-color: {$bgcolor};">
+							{if $r.flights.$flight_type_id.event_round_flight_score==1}
+								{$values.event_pilot_round_flight_laps}
+							{/if}
+						</td>
 					{/if}
 					<td align="right" nowrap style="background-color: {$bgcolor};">
-						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
-						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_raw_score}
-						{else}
-						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+						{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+								{$values.event_pilot_round_flight_raw_score}
+							{else}
+								{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+							{/if}
 						{/if}
 					</td>
 					<td align="right" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
-						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_score|string_format:"%06.3f"}
-						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_dropped==1}</font></del>{/if}
-						{$round_total=$round_total+$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_score}
+						{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							{if $values.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
+							{$values.event_pilot_round_flight_score|string_format:"%06.3f"}
+							{if $values.event_pilot_round_flight_dropped==1}</font></del>{/if}
+							{$round_total=$round_total+$values.event_pilot_round_flight_score}
+						{/if}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty!=0}{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty}{/if}
-						{$round_pen=$round_pen+$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_penalty}
+						{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty}{/if}
+							{$round_pen=$round_pen+$values.event_pilot_round_flight_penalty}
+						{/if}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
-						{$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_rank}
+						{if $r.flights.$flight_type_id.event_round_flight_score==1}
+							{$values.event_pilot_round_flight_rank}
+						{/if}
 					</td>
 				{/foreach}
 				{foreach $event->totals.pilots as $p}
@@ -173,7 +203,6 @@
 		{/foreach}
 		</table>
 		
-		<br>
 		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
 		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>

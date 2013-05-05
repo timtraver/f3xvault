@@ -600,28 +600,6 @@ function toggle(element,tog) {
 		</table>
 	</div>
 	{/if}
-	{if $speed_rank}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
-		<h1 class="post-title">Speed Ranking</h1>
-		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-			<th></th>
-			<th>Pilot</th>
-			<th>Score</th>
-		</tr>
-		{$rank=1}
-		{foreach $speed_rank as $p}
-			{$event_pilot_id=$p.event_pilot_id}
-			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
-			</tr>
-			{$rank=$rank+1}
-		{/foreach}
-		</table>
-	</div>
-	{/if}
 	{if $distance_rank}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Distance Ranking</h1>
@@ -644,7 +622,28 @@ function toggle(element,tog) {
 		</table>
 	</div>
 	{/if}
-	
+	{if $speed_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Speed Ranking</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Score</th>
+		</tr>
+		{$rank=1}
+		{foreach $speed_rank as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$rank}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+			</tr>
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
 	
 </div>
 {/if}

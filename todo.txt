@@ -34,18 +34,10 @@ PLANE STUFF
 	
 EVENT STUFF
 
-  ability to create flying order F3F and maybe have an option to stagger each round
-  ability to create F3B distance orders before hand
-  
-  Bug when calculating score above max flight time (i.e. in K I could enter a time more than the max)
-  
-  Add carryover or not to Flyoffs
-  
-=  Reflights for groups
-=  	Make it work with the overall round drops
-=  	Determine how to show reflight drops
- = 	Determine round_total drop score (currently commented out just below)
-  	Show reflight data on pilot report
+  Draw : ability to create flying order F3F and maybe have an option to stagger each round
+  Draw : ability to create F3B distance orders before hand
+    
+  Add carryover score or not to Flyoffs as an event preference
   	
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
@@ -58,11 +50,11 @@ EVENT STUFF
 
   When event is completed, have a function to blast the link to the event to the event participants if members
   
-=  Add Pilot Event Number for contests that might have bibs
- = 	Add this number to the classification screen
- = 		to the event pilot list
- = 		to the event pilot detail report
- = 		to the round edits
+  Add Pilot Event Number for contests that might have bibs
+  	Add this number to the classification screen
+  		to the event pilot list
+  		to the event pilot detail report
+  		to the round edits
   		
   When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
   
@@ -83,6 +75,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X  Reflights for groups
+X  	Make it work with the overall round drops
+X  	Determine how to show reflight drops
+X 	Show reflight data on pilot report
+X 	show printed pilot report and have reflight info
 X Sub Flight times in pilot report for F3K event
 X  Shortcut for ladder entry by putting the highest made time in the first flight time
 X  Full flight time entries for all the flights in F3K (basically sub flights for each flight type)

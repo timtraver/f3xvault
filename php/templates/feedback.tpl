@@ -27,10 +27,10 @@ This is just a short list of some of the things already on my suggestion and tod
 <ul>
 	<li>Event Scoring</li>
 		<ul>
-		<li>Reflights</li>
+		<li>Reflights<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		<li>Create flying draw order for All disciplines</li>
-		<li>Full flight time entries for all the flights in F3K</li>
+		<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		<li>Printouts for flight orders and groups</li>
 		<li>Possibly print to PDF format for easier printing</li>
 		<li>Email link to results for event participants</li>
@@ -41,7 +41,7 @@ This is just a short list of some of the things already on my suggestion and tod
 		</ul>
 	<li>Series</li>
 		<ul>
-		<li>Series preferences and standings</li>
+		<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		<li>Multiple Series assignment (Events can be part of more than one series)</li>
 		</ul>
 	<li>Clubs</li>

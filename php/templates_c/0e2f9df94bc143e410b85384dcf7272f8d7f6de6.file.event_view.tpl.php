@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-04-07 22:18:54
+<?php /* Smarty version Smarty-3.1.11, created on 2013-05-04 00:29:01
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1365398332,
+      1 => 1367652538,
       2 => 'file',
     ),
   ),
@@ -912,37 +912,6 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		</table>
 	</div>
 	<?php }?>
-	<?php if ($_smarty_tpl->tpl_vars['speed_rank']->value){?>
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
-		<h1 class="post-title">Speed Ranking</h1>
-		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-			<th></th>
-			<th>Pilot</th>
-			<th>Score</th>
-		</tr>
-		<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable(1, null, 0);?>
-		<?php  $_smarty_tpl->tpl_vars['p'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['p']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['speed_rank']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
-foreach ($_from as $_smarty_tpl->tpl_vars['p']->key => $_smarty_tpl->tpl_vars['p']->value){
-$_smarty_tpl->tpl_vars['p']->_loop = true;
-?>
-			<?php $_smarty_tpl->tpl_vars['event_pilot_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['p']->value['event_pilot_id'], null, 0);?>
-			<tr style="background-color: <?php echo smarty_function_cycle(array('values'=>"#9DCFF0,white"),$_smarty_tpl);?>
-;">
-				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
-</td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
-</td>
-				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
-</td>
-			</tr>
-			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
-		<?php } ?>
-		</table>
-	</div>
-	<?php }?>
 	<?php if ($_smarty_tpl->tpl_vars['distance_rank']->value){?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Distance Ranking</h1>
@@ -974,7 +943,37 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		</table>
 	</div>
 	<?php }?>
-	
+	<?php if ($_smarty_tpl->tpl_vars['speed_rank']->value){?>
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Speed Ranking</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Score</th>
+		</tr>
+		<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable(1, null, 0);?>
+		<?php  $_smarty_tpl->tpl_vars['p'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['p']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['speed_rank']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['p']->key => $_smarty_tpl->tpl_vars['p']->value){
+$_smarty_tpl->tpl_vars['p']->_loop = true;
+?>
+			<?php $_smarty_tpl->tpl_vars['event_pilot_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['p']->value['event_pilot_id'], null, 0);?>
+			<tr style="background-color: <?php echo smarty_function_cycle(array('values'=>"#9DCFF0,white"),$_smarty_tpl);?>
+;">
+				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
+</td>
+				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+</td>
+				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
+</td>
+			</tr>
+			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
+		<?php } ?>
+		</table>
+	</div>
+	<?php }?>
 	
 </div>
 <?php }?>

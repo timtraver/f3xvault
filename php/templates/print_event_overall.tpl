@@ -27,10 +27,7 @@
 		
 	</div>
 
-		<h1 class="post-title entry-title">Event Rounds {if $event->rounds}({$event->rounds|count}) {/if} Overall Classification
-			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
-			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
-		</h1>
+		<h1 class="post-title entry-title">Event Rounds {if $event->rounds}({$event->rounds|count}) {/if} Overall Classification</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
 			<td width="2%" align="left"></td>
@@ -58,7 +55,7 @@
 						View Details of Round {$r.event_round_number}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					{if $r.event_round_score_status==0}<del><font color="red">{/if}{$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}
 					</div>
 				</th>
 				{/if}
@@ -73,7 +70,7 @@
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
+			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=10}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -171,7 +168,7 @@
 			{foreach $event->rounds as $r}
 				{if $r@iteration >10}
 				<th width="5%" align="center" nowrap>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					{if $r.event_round_score_status==0}<del><font color="red">{/if}{$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}
 				</th>
 				{/if}
 			{/foreach}
@@ -246,3 +243,4 @@
 
 	</div>
 </div>
+<br>
