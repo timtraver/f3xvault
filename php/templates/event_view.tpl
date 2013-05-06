@@ -154,7 +154,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->totals.total_rounds > 9}10{else}{$event->totals.total_rounds + 1 -$event->flyoff_totals.total_rounds}{/if}" align="center" nowrap>
+			<th colspan="{if $event->totals.total_rounds > 9}10{else}{$event->totals.total_rounds + 1}{/if}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
 			<th width="5%" nowrap>SubTotal</th>
@@ -287,7 +287,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{$event->rounds|count - 8 - $event->flyoff_totals.total_rounds}" align="center" nowrap>
+			<th colspan="{$event->totals.total_rounds - 8}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
 			<th width="5%" nowrap>SubTotal</th>
