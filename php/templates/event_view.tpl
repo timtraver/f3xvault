@@ -169,7 +169,7 @@ function toggle(element,tog) {
 				{if $r.event_round_flyoff!=0}
 					{continue}
 				{/if}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
@@ -281,7 +281,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{$event->rounds|count - 9}" align="center" nowrap>Completed Rounds</th>
+			<th colspan="{$event->rounds|count - 8}" align="center" nowrap>Completed Rounds</th>
 			<th width="5%" nowrap>SubTotal</th>
 			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total Score</th>
