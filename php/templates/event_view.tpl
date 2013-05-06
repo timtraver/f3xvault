@@ -198,7 +198,7 @@ function toggle(element,tog) {
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
-				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
 					{$dropped=0}
@@ -312,7 +312,7 @@ function toggle(element,tog) {
 					{continue}
 				{/if}
 				{if $r@iteration >9}
-				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -423,7 +423,7 @@ function toggle(element,tog) {
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
-				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
 					{$dropped=0}
