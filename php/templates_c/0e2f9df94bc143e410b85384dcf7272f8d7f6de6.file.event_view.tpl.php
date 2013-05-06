@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-05 22:25:08
+<?php /* Smarty version Smarty-3.1.11, created on 2013-05-05 23:26:08
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1367817901,
+      1 => 1367821564,
       2 => 'file',
     ),
   ),
@@ -270,6 +270,9 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 					<div style="position:relative;">
 					<span>
 						<?php $_smarty_tpl->tpl_vars['flight_type_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['r']->value['flight_type_id'], null, 0);?>
+						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?>
+							<font color="red"><b>Round Not Currently Scored</b></font><br>
+						<?php }?>
 						<?php if (strstr($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_code'],"f3k")){?>
 							View Details of Round<br><?php echo $_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'];?>
 
@@ -280,8 +283,8 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 					</span>
 					<a href="/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
-" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?></del></font><?php }?></a>
+" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?></del></font><?php }?></a>
 					</div>
 				</th>
 				<?php }?>
@@ -453,10 +456,25 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 ?>
 				<?php if ($_smarty_tpl->tpl_vars['r']->iteration>9){?>
 				<th width="5%" align="center" nowrap>
+					<div style="position:relative;">
+					<span>
+						<?php $_smarty_tpl->tpl_vars['flight_type_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['r']->value['flight_type_id'], null, 0);?>
+						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?>
+							<font color="red"><b>Round Not Currently Scored</b></font><br>
+						<?php }?>
+						<?php if (strstr($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_code'],"f3k")){?>
+							View Details of Round<br><?php echo $_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'];?>
+
+						<?php }else{ ?>
+							View Details of Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+
+						<?php }?>
+					</span>
 					<a href="/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
-" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?></del></font><?php }?></a>
+" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?></del></font><?php }?></a>
+					</div>
 				</th>
 				<?php }?>
 			<?php } ?>

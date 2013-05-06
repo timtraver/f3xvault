@@ -174,13 +174,16 @@ function toggle(element,tog) {
 					<div style="position:relative;">
 					<span>
 						{$flight_type_id=$r.flight_type_id}
+						{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}
+							<font color="red"><b>Round Not Currently Scored</b></font><br>
+						{/if}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
 							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
 						{else}
 							View Details of Round {$r.event_round_number}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}</del></font>{/if}</a>
 					</div>
 				</th>
 				{/if}
@@ -293,7 +296,20 @@ function toggle(element,tog) {
 			{foreach $event->rounds as $r}
 				{if $r@iteration >9}
 				<th width="5%" align="center" nowrap>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<div style="position:relative;">
+					<span>
+						{$flight_type_id=$r.flight_type_id}
+						{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}
+							<font color="red"><b>Round Not Currently Scored</b></font><br>
+						{/if}
+						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+						{else}
+							View Details of Round {$r.event_round_number}
+						{/if}
+					</span>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0)}</del></font>{/if}</a>
+					</div>
 				</th>
 				{/if}
 			{/foreach}
