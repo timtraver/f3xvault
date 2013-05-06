@@ -438,7 +438,6 @@ function toggle(element,tog) {
 				{if $r.event_round_flyoff!=$flyoff_number}
 					{continue}
 				{/if}
-				{if $r@iteration <=9}
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
@@ -452,7 +451,6 @@ function toggle(element,tog) {
 					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 					</div>
 				</th>
-				{/if}
 			{/foreach}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
