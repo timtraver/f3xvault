@@ -34,6 +34,8 @@ PLANE STUFF
 	
 EVENT STUFF
 
+  Make it so that if you are not logged in and one of the owners of the event, that you don't even see the buttons that would save, and you cannot change the scores (i.e. the quicksave feature shouldnt work)
+  Fix popups on round scores on the 10-19 rounds and the pilot links
   
   Draw : ability to create flying order F3F and maybe have an option to stagger each round
   Draw : ability to create F3B distance orders before hand

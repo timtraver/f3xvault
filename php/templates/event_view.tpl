@@ -276,11 +276,14 @@ function toggle(element,tog) {
 		{/if}
 		</table>
 
-
 		{if $event->totals.total_rounds >9}
 		<br>
-		<h3 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if} Rounds Continued</h3>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$event->totals.total_rounds}) {/if} Overall Classification
+			<input type="button" value=" Add Flyoff Round " onClick="document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();" class="block-button">
+			{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">{/if}
+			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
+		</h1>
+		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
@@ -296,6 +299,9 @@ function toggle(element,tog) {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
+				{if $r.event_round_flyoff!=0}
+					{continue}
+				{/if}
 				{if $r@iteration >9}
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
@@ -322,15 +328,14 @@ function toggle(element,tog) {
 			<th>&nbsp;</th>
 		</tr>
 		{foreach $event->totals.pilots as $e}
+		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
-				{if $r.event_round_flyoff!=0}
-					{continue}
-				{/if}
-				{if $r@iteration >9}
-				<td align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				{if $r@iteration>9}
+				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+					<div style="position:relative;">
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -342,13 +347,32 @@ function toggle(element,tog) {
 					{$drop=0}
 					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
 					{if $drop==1}<del><font color="red">{/if}
-						{$r.event_pilot_round_total_score}
+						{$r.event_pilot_round_total_score|string_format:"%06.3f"}
 					{if $drop==1}</font></del>{/if}
+					{* lets determine the content to show on popup *}
+						<span>
+							{$event_round_number=$r@key}
+							{foreach $event->rounds.$event_round_number.flights as $f}
+								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
+									{if $f.flight_type_code=='f3b_duration'}A - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'distance'}
+									{if $f.flight_type_code=='f3b_distance'}B - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'speed'}
+									{if $f.flight_type_code=='f3b_speed'}C - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+								{/if}
+							{/foreach}
+						</span>
+					</div>
 				</td>
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap align="right">{$e.subtotal}</td>
+			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
 			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
@@ -358,7 +382,7 @@ function toggle(element,tog) {
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration >9}
+				{if $r@iteration>9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}
@@ -385,6 +409,8 @@ function toggle(element,tog) {
 		{/if}
 		</table>
 		{/if}
+
+
 
 
 		<!--# Now lets do the flyoff rounds -->
