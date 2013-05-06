@@ -34,7 +34,6 @@ PLANE STUFF
 	
 EVENT STUFF
 
-  For round entry, add a sort type of group and alphabetical
   
   Draw : ability to create flying order F3F and maybe have an option to stagger each round
   Draw : ability to create F3B distance orders before hand
@@ -77,6 +76,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X For round entry, add a sort type of group and alphabetical
 X  Reflights for groups
 X  	Make it work with the overall round drops
 X  	Determine how to show reflight drops
