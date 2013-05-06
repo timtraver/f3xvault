@@ -295,7 +295,7 @@ function toggle(element,tog) {
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
 				{if $r@iteration >9}
-				<th width="5%" align="center" nowrap>
+				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
 						{$flight_type_id=$r.flight_type_id}
