@@ -32,7 +32,7 @@
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->rounds|count > 10}11{else}{$event->rounds|count + 1}{/if}" align="center" nowrap>
+			<th colspan="{if $event->rounds|count > 9}10{else}{$event->rounds|count + 1}{/if}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drops In Effect)
 			</th>
 			<th width="5%" nowrap>SubTotal</th>
@@ -44,7 +44,7 @@
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
@@ -72,7 +72,7 @@
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
@@ -121,7 +121,7 @@
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}
@@ -149,7 +149,7 @@
 		</table>
 
 
-		{if $event->rounds|count >10}
+		{if $event->rounds|count >9}
 		<br>
 		<h3 class="post-title entry-title">Event Rounds Continued</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -166,7 +166,7 @@
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 				<th width="5%" align="center" nowrap>
 					{if $r.event_round_score_status==0}<del><font color="red">{/if}{$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}
 				</th>
@@ -183,7 +183,7 @@
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
 			{foreach $e.rounds as $r}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					{$dropval=0}
 					{$dropped=0}
@@ -212,7 +212,7 @@
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}

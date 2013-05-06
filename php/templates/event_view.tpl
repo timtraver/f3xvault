@@ -154,7 +154,7 @@ function toggle(element,tog) {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $event->totals.total_rounds > 10}11{else}{$event->totals.total_rounds + 1}{/if}" align="center" nowrap>
+			<th colspan="{if $event->totals.total_rounds > 9}10{else}{$event->totals.total_rounds + 1}{/if}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
 			<th width="5%" nowrap>SubTotal</th>
@@ -197,7 +197,7 @@ function toggle(element,tog) {
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
@@ -246,7 +246,7 @@ function toggle(element,tog) {
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}
@@ -274,7 +274,7 @@ function toggle(element,tog) {
 		</table>
 
 
-		{if $event->totals.total_rounds >10}
+		{if $event->totals.total_rounds >9}
 		<br>
 		<h3 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if} Rounds Continued</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -291,7 +291,7 @@ function toggle(element,tog) {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 				<th width="5%" align="center" nowrap>
 					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 				</th>
@@ -311,7 +311,7 @@ function toggle(element,tog) {
 				{if $r.event_round_flyoff!=0}
 					{continue}
 				{/if}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 				<td align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					{$dropval=0}
 					{$dropped=0}
@@ -340,7 +340,7 @@ function toggle(element,tog) {
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration >10}
+				{if $r@iteration >9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}
@@ -394,7 +394,7 @@ function toggle(element,tog) {
 				{if $r.event_round_flyoff!=$flyoff_number}
 					{continue}
 				{/if}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
@@ -422,7 +422,7 @@ function toggle(element,tog) {
 			<td>{$e.overall_rank}</td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
 			{foreach $e.rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 					{$dropval=0}
@@ -471,7 +471,7 @@ function toggle(element,tog) {
 		<tr>
 			<th colspan="2" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
-				{if $r@iteration <=10}
+				{if $r@iteration <=9}
 					{$fast=1000}
 					{$fast_id=0}
 					{foreach $r.flights as $f}
