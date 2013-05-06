@@ -317,7 +317,7 @@ $(function() {ldelim}
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
 					{/if}
