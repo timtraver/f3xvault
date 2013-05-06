@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-04 00:29:01
+<?php /* Smarty version Smarty-3.1.11, created on 2013-05-05 20:04:55
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1367652538,
+      1 => 1367809490,
       2 => 'file',
     ),
   ),
@@ -235,7 +235,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<h1 class="post-title entry-title">Event <?php if (count($_smarty_tpl->tpl_vars['event']->value->flyoff_totals)>0){?>Preliminary <?php }?>Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>(<?php echo $_smarty_tpl->tpl_vars['event']->value->totals['total_rounds'];?>
 ) <?php }?> Overall Classification
 			<input type="button" value=" Add Flyoff Round " onClick="document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();" class="block-button">
-			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
+			<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button"><?php }?>
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">

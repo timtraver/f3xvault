@@ -234,6 +234,7 @@ $(function() {ldelim}
 				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
 				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
 				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Round Flight Order</option>
+				<option value="group_alphabetical_first"{if $sort_by=='group_alphabetical_first'} SELECTED{/if}>Group, then Alphabetical Order - First Name</option>
 				<option value="alphabetical_first"{if $sort_by=='alphabetical_first'} SELECTED{/if}>Alphabetical Order - First Name</option>
 				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alphabetical Order - Last Name</option>
 				</select>

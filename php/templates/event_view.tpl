@@ -147,7 +147,7 @@ function toggle(element,tog) {
 		<br>
 		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$event->totals.total_rounds}) {/if} Overall Classification
 			<input type="button" value=" Add Flyoff Round " onClick="document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();" class="block-button">
-			<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">
+			{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button">{/if}
 			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">

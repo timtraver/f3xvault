@@ -1360,6 +1360,9 @@ function event_round_save() {
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
 			$_REQUEST['event_round_id']=$event_round_id;
+			# Lets set the default of the round info to be on so it  gets created in the next section
+			$string='event_round_flight_score_'.$flight_type_id;
+			$_REQUEST[$string]='on';
 		}
 	}else{
 		# Lets save it

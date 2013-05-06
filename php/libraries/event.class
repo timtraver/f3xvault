@@ -132,6 +132,9 @@ class Event {
 			case 'flight_order':
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;
+			case 'group_alphabetical_first':
+				$sort_string='ORDER BY erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
+				break;
 			case 'alphabetical_first':
 				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
 				break;
