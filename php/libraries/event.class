@@ -813,6 +813,24 @@ class Event {
 			$count++;
 		}
 		
+		# Lets see if the flyoff has a carryover score from the prelims and add those subtotals in before we determine rank
+		$carry=0;
+		foreach($this->options as $o){
+			if(preg_match("/\_flyoff_carry/",$o['event_type_option_code'])){
+				$carry=$o['event_option_value'];
+			}
+		}
+		if($carry==1){
+			# This flyoff is meant to have a carryover from the prelims
+			# Lets step though and add the subtotals from the prelim to each pilot
+			foreach($flyoff_subtotals as $flyoff_number=>$s){
+				foreach($s as $event_pilot_id=>$t){
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$subtotals[$event_pilot_id]['total'];
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$subtotals[$event_pilot_id]['subtotal'];
+				}
+			}
+		}
+		
 		# Now determine the overall flyoff rank
 		foreach($flyoff_subtotals as $flyoff_number=>$s){
 			$at_least_one_score=0;

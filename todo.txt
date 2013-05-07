@@ -35,7 +35,6 @@ PLANE STUFF
 EVENT STUFF
 
   Make it so that if you are not logged in and one of the owners of the event, that you don't even see the buttons that would save, and you cannot change the scores (i.e. the quicksave feature shouldnt work)
-  Fix popups on round scores on the 10-19 rounds and the pilot links
   
   Draw : ability to create flying order F3F and maybe have an option to stagger each round
   Draw : ability to create F3B distance orders before hand
@@ -52,6 +51,7 @@ EVENT STUFF
   Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
 
   When event is completed, have a function to blast the link to the event to the event participants if members
+  
   
   Add Pilot Event Number for contests that might have bibs
   	Add this number to the classification screen
@@ -78,6 +78,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X  Pilot round detail to separate flyoff rounds and include subtotals?
+X Fix popups on round scores on the 10-19 rounds and the pilot links
 X For round entry, add a sort type of group and alphabetical
 X  Reflights for groups
 X  	Make it work with the overall round drops

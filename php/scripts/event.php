@@ -1306,13 +1306,54 @@ function event_round_save() {
 	}
 	
 	# Get flight type info for determining max sub flights and stuff
+	$flight_type=array();
 	$stmt=db_prep("
 		SELECT *
 		FROM flight_type
 		WHERE flight_type_id=:flight_type_id
 	");
 	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
-	$flight_type=$result[0];
+	if(isset($result[0])){
+		$flight_type=$result[0];
+	}else{
+		# No flight type chosen so lets set it on the event type
+		$stmt=db_prep("
+			SELECT *
+			FROM event e
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+			WHERE e.event_id=:event_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		$event_code=$result[0]['event_type_code'];
+		$pattern='';
+		switch($event_code){
+			case 'f3f':
+				$pattern='f3f_speed';
+				break;
+			case 'f3b_speed':
+				$pattern='f3b_speed';
+				break;
+			case 'f3j':
+				$pattern='f3j_duration';
+				break;
+			case 'td':
+				$pattern='td_duration';
+				break;				
+			case 'f3b':
+			case 'f3k':
+			default:
+		}
+		if($pattern!=''){
+			$stmt=db_prep("
+				SELECT *
+				FROM flight_type
+				WHERE flight_type_code=:pattern
+			");
+			$result=db_exec($stmt,array("pattern"=>$pattern));
+			$flight_type=$result[0];
+			$flight_type_id=$flight_type['flight_type_id'];
+		}
+	}
 	
 	# First, lets save the round info
 	if($event_round_id==0){

@@ -31,7 +31,6 @@
 				{$cols=7}
 			{/if}
 			<th colspan="{$cols}" align="center" nowrap>Round Data</th>
-			<th width="5%" nowrap>Sub</th>
 			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total</th>
 		</tr>
@@ -46,7 +45,6 @@
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
 				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name}</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
 		</tr>
@@ -76,7 +74,6 @@
 			{/foreach}
 			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
-			<th width="5%" nowrap></th>
 		</tr>
 		{else}
 		<tr>
@@ -90,13 +87,18 @@
 			<th align="center">Rank</th>
 			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
-			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
-		
+		{$flyoff_label=0}
 		{foreach $event->rounds as $r}
 			{$round_pen=0}
 			{$round_total=0}
+			{if $r.event_round_flyoff!=0 && $flyoff_label==0}
+			<tr>
+				<th colspan="2" style="color:red;">Flyoffs</th>
+			</tr>
+			{$flyoff_label=1}
+			{/if}
 			<tr>
 				{$round=$r@key}
 				{$bgcolor='#9DCFF0'}
@@ -193,7 +195,6 @@
 				{foreach $event->totals.pilots as $p}
 					{if $p.event_pilot_id==$event_pilot_id}
 						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
-						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$p.rounds.$round.event_pilot_round_total_score|string_format:"%06.3f"}</td>
 						<td width="5%" align="center" nowrap style="background-color: {$bgcolor};">{if $round_pen!=0}{$round_pen|string_format:"%03.0f"}{/if}</td>
 						{$round_total=$round_total-$round_pen}
 						<td width="5%" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
