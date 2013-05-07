@@ -825,8 +825,10 @@ class Event {
 			# Lets step though and add the subtotals from the prelim to each pilot
 			foreach($flyoff_subtotals as $flyoff_number=>$s){
 				foreach($s as $event_pilot_id=>$t){
-					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$subtotals[$event_pilot_id]['total'];
-					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$subtotals[$event_pilot_id]['subtotal'];
+					if($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']!=0){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$subtotals[$event_pilot_id]['total'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$subtotals[$event_pilot_id]['subtotal'];
+					}
 				}
 			}
 		}
