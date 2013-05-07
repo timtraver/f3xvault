@@ -39,6 +39,12 @@ This is just a short list of some of the things already on my suggestion and tod
 		<ul>
 		<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
+	<li>Plane Database</li>
+		<ul>
+		<li>Have an are to share plane setup values</li>
+		<li>Plane Reviews</li>
+		<li>Plane links to build logs</li>
+		</ul>
 	<li>Series</li>
 		<ul>
 		<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
