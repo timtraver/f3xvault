@@ -94,6 +94,7 @@ $(function() {
 			<td>{$e.country_name}</td>
 			<td nowrap>{$e.total_pilots}</td>
 		</tr>
+		{$num=$num+1}
 		{/foreach}
 		</table>
 
