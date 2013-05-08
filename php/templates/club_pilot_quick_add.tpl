@@ -15,13 +15,13 @@
 <tr>
 	<th nowrap>Pilot First Name</th>
 	<td colspan="2">
-		<input type="text" name="pilot_first_name" size="40" value="{$pilot_first_name}">
+		<input type="text" name="pilot_first_name" size="40" value="{$pilot_first_name|escape}">
 	</td>
 </tr>
 <tr>
 	<th nowrap>Pilot Last Name</th>
 	<td colspan="2">
-		<input type="text" name="pilot_last_name" size="40" value="{$pilot_last_name}">
+		<input type="text" name="pilot_last_name" size="40" value="{$pilot_last_name|escape}">
 	</td>
 </tr>
 <tr>

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-06 01:10:30
+<?php /* Smarty version Smarty-3.1.11, created on 2013-05-08 01:09:45
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1367827815,
+      1 => 1368000221,
       2 => 'file',
     ),
   ),
@@ -19,6 +19,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_511ca3850d27c4_25618471',
   'variables' => 
   array (
+    'permission' => 0,
     'event' => 0,
     'num' => 0,
     'p' => 0,
@@ -112,13 +113,21 @@ function toggle(element,tog) {
 		 tog.innerHTML = '(<u>Show Pilot List</u>)';
 	 }
 }
-</script>
 
+function check_permission() {
+	<?php if ($_smarty_tpl->tpl_vars['permission']->value!=1){?>
+		alert('Sorry, but you do not have permission to edit this event. Contact the event owner if you need access to edit this event.');
+		return 0;
+	<?php }else{ ?>
+		return 1;
+	<?php }?>
+}
+</script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_name'];?>
- <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
+		<h1 class="post-title entry-title"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['event_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){document.event_edit.submit();}" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -132,24 +141,24 @@ function toggle(element,tog) {
 			<th align="right">Location</th>
 			<td>
 			<a href="?action=location&function=location_view&location_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['location_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['event']->value->info['location_name'];?>
- - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['location_city'];?>
-,<?php echo $_smarty_tpl->tpl_vars['event']->value->info['state_code'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->info['country_code'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['location_name'], ENT_QUOTES, 'UTF-8', true);?>
+ - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['location_city'], ENT_QUOTES, 'UTF-8', true);?>
+,<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['state_code'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 </a>
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_type_name'];?>
+			<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['event_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			<?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_last_name'];?>
- - <?php echo $_smarty_tpl->tpl_vars['event']->value->info['pilot_city'];?>
+			<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
+ - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['pilot_city'], ENT_QUOTES, 'UTF-8', true);?>
 
 			</td>
 		</tr>
@@ -158,13 +167,13 @@ function toggle(element,tog) {
 			<th align="right">Part Of Series</th>
 			<td>
 			<a href="?action=series&function=series_view&series_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['series_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['event']->value->info['series_name'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['series_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a>
 			</td>
 			<th align="right">Club</th>
 			<td>
 			<a href="?action=club&function=club_view&club_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['club_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['event']->value->info['club_name'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['club_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a>
 			</td>
 		</tr>
@@ -176,7 +185,7 @@ function toggle(element,tog) {
 		<h1 class="post-title entry-title">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value->pilots){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->pilots);?>
 )<?php }?> <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span></h1>
 		<span id="pilots">
-		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();">
+		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();}">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
@@ -200,18 +209,18 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<tr>
 			<td><?php echo $_smarty_tpl->tpl_vars['num']->value;?>
 </td>
-			<td align="center"><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_ama'];?>
+			<td align="center"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_ama'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_last_name'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['class_description'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['class_description'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['plane_name'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['plane_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_freq'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_freq'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_team'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_team'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			<td nowrap>
 				<a href="/?action=event&function=event_pilot_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
@@ -219,7 +228,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 " title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
 				<a href="/?action=event&function=event_pilot_remove&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_id'];?>
-" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
+" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
  from the event?');"><img width="14px" src="/images/del.gif"></a>
 			</td>
 		</tr>
@@ -234,9 +243,9 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<br>
 		<h1 class="post-title entry-title">Event <?php if (count($_smarty_tpl->tpl_vars['event']->value->flyoff_totals)>0){?>Preliminary <?php }?>Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>(<?php echo $_smarty_tpl->tpl_vars['event']->value->totals['total_rounds'];?>
 ) <?php }?> Overall Classification
-			<input type="button" value=" Add Flyoff Round " onClick="document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();" class="block-button">
-			<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="document.event_add_round.zero_round.value=1; document.event_add_round.submit();" class="block-button"><?php }?>
-			<input type="button" value=" Add Round " onClick="document.event_add_round.submit();" class="block-button">
+			<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}" class="block-button">
+			<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}" class="block-button"><?php }?>
+			<input type="button" value=" Add Round " onClick="if(check_permission()){document.event_add_round.submit();}" class="block-button">
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
@@ -270,21 +279,21 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 					<div style="position:relative;">
 					<span>
 						<?php $_smarty_tpl->tpl_vars['flight_type_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['r']->value['flight_type_id'], null, 0);?>
-						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?>
+						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?>
 							<font color="red"><b>Round Not Currently Scored</b></font><br>
 						<?php }?>
 						<?php if (strstr($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_code'],"f3k")){?>
-							View Details of Round<br><?php echo $_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'];?>
+							View Details of Round<br><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }else{ ?>
-							View Details of Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+							View Details of Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }?>
 					</span>
 					<a href="/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
-" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?></del></font><?php }?></a>
+" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?><del><font color="red"><?php }?>Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
+<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?></del></font><?php }?></a>
 					</div>
 				</th>
 				<?php }?>
@@ -303,12 +312,12 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 		<?php $_smarty_tpl->tpl_vars['event_pilot_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['e']->value['event_pilot_id'], null, 0);?>
 		<tr style="background-color: <?php echo smarty_function_cycle(array('values'=>"#9DCFF0,white"),$_smarty_tpl);?>
 ;">
-			<td><?php echo $_smarty_tpl->tpl_vars['e']->value['overall_rank'];?>
+			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['overall_rank'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['e']->value['event_pilot_id'];?>
 &event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_last_name'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a></td>
 			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['e']->value['rounds']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -348,19 +357,19 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 ?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'duration')||strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'f3k')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_duration'){?>A - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'];?>
-:<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
-<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'], ENT_QUOTES, 'UTF-8', true);?>
+:<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
+<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?><br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'distance')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_distance'){?>B - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'], ENT_QUOTES, 'UTF-8', true);?>
  Laps<br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'speed')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_speed'){?>C - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
 s
 								<?php }?>
 							<?php } ?>
@@ -372,7 +381,7 @@ s
 			<td></td>
 			<td width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
 </td>
-			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo $_smarty_tpl->tpl_vars['e']->value['penalties'];?>
+			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['penalties'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?></td>
 			<td width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
 </td>
@@ -412,13 +421,13 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php if ($_smarty_tpl->tpl_vars['fast']->value==1000){?><?php $_smarty_tpl->tpl_vars['fast'] = new Smarty_variable(0, null, 0);?><?php }?>
 					<th class="info" align="center">
 						<div style="position:relative;">
-						<a href="" onClick="return false;"><?php echo $_smarty_tpl->tpl_vars['fast']->value;?>
+						<a href="" onClick="return false;"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['fast']->value, ENT_QUOTES, 'UTF-8', true);?>
 s</a>
 						<span>
 							Fast Time : <?php echo $_smarty_tpl->tpl_vars['fast']->value;?>
 s<br>
-							<?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'];?>
+							<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						</span>
 						</div>
@@ -441,7 +450,7 @@ s<br>
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="<?php echo count($_smarty_tpl->tpl_vars['event']->value->rounds)-8;?>
+			<th colspan="<?php echo $_smarty_tpl->tpl_vars['event']->value->totals['total_rounds']-8;?>
 " align="center" nowrap>
 				Completed Rounds (<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']==0){?>No<?php }else{ ?><?php echo $_smarty_tpl->tpl_vars['event']->value->totals['round_drops'];?>
 <?php }?> Drop<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['round_drops']!=1){?>s<?php }?> In Effect)
@@ -469,21 +478,21 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 					<div style="position:relative;">
 					<span>
 						<?php $_smarty_tpl->tpl_vars['flight_type_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['r']->value['flight_type_id'], null, 0);?>
-						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?>
+						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?>
 							<font color="red"><b>Round Not Currently Scored</b></font><br>
 						<?php }?>
 						<?php if (strstr($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_code'],"f3k")){?>
-							View Details of Round<br><?php echo $_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'];?>
+							View Details of Round<br><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }else{ ?>
-							View Details of Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+							View Details of Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }?>
 					</span>
 					<a href="/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
-" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0)){?></del></font><?php }?></a>
+" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?><del><font color="red"><?php }?>Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
+<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0||($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']!='f3b'&&$_smarty_tpl->tpl_vars['r']->value['flights'][$_smarty_tpl->tpl_vars['flight_type_id']->value]['event_round_flight_score']==0&&$_smarty_tpl->tpl_vars['flight_type_id']->value!=0)){?></del></font><?php }?></a>
 					</div>
 				</th>
 				<?php }?>
@@ -506,8 +515,8 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 </td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['e']->value['event_pilot_id'];?>
 &event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_last_name'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a></td>
 			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['e']->value['rounds']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -547,19 +556,19 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 ?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'duration')||strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'f3k')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_duration'){?>A - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'];?>
-:<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
-<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'], ENT_QUOTES, 'UTF-8', true);?>
+:<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
+<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?><br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'distance')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_distance'){?>B - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'], ENT_QUOTES, 'UTF-8', true);?>
  Laps<br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'speed')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_speed'){?>C - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
 s
 								<?php }?>
 							<?php } ?>
@@ -616,8 +625,8 @@ s</a>
 						<span>
 							Fast Time : <?php echo $_smarty_tpl->tpl_vars['fast']->value;?>
 s<br>
-							<?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'];?>
+							<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						</span>
 						</div>
@@ -671,26 +680,24 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 				<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_flyoff']!=$_smarty_tpl->tpl_vars['flyoff_number']->value){?>
 					<?php continue 1?>
 				<?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['r']->iteration<=9){?>
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
 						<?php $_smarty_tpl->tpl_vars['flight_type_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['r']->value['flight_type_id'], null, 0);?>
 						<?php if (strstr($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_code'],"f3k")){?>
-							View Details of Round<br><?php echo $_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'];?>
+							View Details of Round<br><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->flight_types[$_smarty_tpl->tpl_vars['flight_type_id']->value]['flight_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }else{ ?>
-							View Details of Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+							View Details of Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
 
 						<?php }?>
 					</span>
 					<a href="/?action=event&function=event_round_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_round_id=<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_id'];?>
-" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?><del><font color="red"><?php }?>Round <?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+" title="Edit Round"><?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?><del><font color="red"><?php }?>Round <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['r']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
 <?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_score_status']==0){?></del></font><?php }?></a>
 					</div>
 				</th>
-				<?php }?>
 			<?php } ?>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -710,8 +717,8 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 </td>
 			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['e']->value['event_pilot_id'];?>
 &event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['e']->value['pilot_last_name'];?>
+"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a></td>
 			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['e']->value['rounds']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -751,19 +758,19 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 ?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'duration')||strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'f3k')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_duration'){?>A - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'];?>
-:<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
-<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_minutes'], ENT_QUOTES, 'UTF-8', true);?>
+:<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
+<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_landing']){?> - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_landing'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?><br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'distance')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_distance'){?>B - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_laps'], ENT_QUOTES, 'UTF-8', true);?>
  Laps<br>
 								<?php }?>
 								<?php if (strstr($_smarty_tpl->tpl_vars['f']->value['flight_type_code'],'speed')){?>
 									<?php if ($_smarty_tpl->tpl_vars['f']->value['flight_type_code']=='f3b_speed'){?>C - <?php }?>
-									<?php echo $_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'];?>
+									<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['f']->value['pilots'][$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_round_flight_seconds'], ENT_QUOTES, 'UTF-8', true);?>
 s
 								<?php }?>
 							<?php } ?>
@@ -820,8 +827,8 @@ s</a>
 						<span>
 							Fast Time : <?php echo $_smarty_tpl->tpl_vars['fast']->value;?>
 s<br>
-							<?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'];?>
+							<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 						</span>
 						</div>
@@ -841,7 +848,7 @@ s<br>
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
-<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']==$_smarty_tpl->tpl_vars['event']->value->info['user_id']){?>
+<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&$_smarty_tpl->tpl_vars['user']->value['user_id']==$_smarty_tpl->tpl_vars['event']->value->info['user_id']){?>
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 <?php }?>
 	</div>
@@ -863,7 +870,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
 ?>
 			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable(1, null, 0);?>
 					<tr>
-						<th colspan="3" nowrap><?php echo $_smarty_tpl->tpl_vars['c']->value['class_description'];?>
+						<th colspan="3" nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['c']->value['class_description'], ENT_QUOTES, 'UTF-8', true);?>
  Rankings</th>
 					</tr>
 					<tr>
@@ -882,8 +889,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 						<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-						<td nowrap><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_last_name'];?>
+						<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 						<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
@@ -913,7 +920,7 @@ $_smarty_tpl->tpl_vars['t']->_loop = true;
 		<tr style="background-color:#9DCFF0;">
 			<td><?php echo $_smarty_tpl->tpl_vars['t']->value['rank'];?>
 </td>
-			<td nowrap><?php echo $_smarty_tpl->tpl_vars['t']->value['team_name'];?>
+			<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['t']->value['team_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['t']->value['total']);?>
 </td>
@@ -927,8 +934,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<?php if ($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_team']==$_smarty_tpl->tpl_vars['t']->value['team_name']){?>
 			<tr>
 				<td></td>
-				<td><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_last_name'];?>
+				<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
@@ -960,8 +967,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
@@ -991,8 +998,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
@@ -1022,8 +1029,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
@@ -1059,12 +1066,12 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ?>
 			<tr style="background-color: <?php echo smarty_function_cycle(array('values'=>"#9DCFF0,white"),$_smarty_tpl);?>
 ;">
-				<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_lap_rank'];?>
+				<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_lap_rank'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-				<td align="center"><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_total_laps'];?>
+				<td align="center"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_total_laps'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			</tr>
 		<?php } ?>
@@ -1091,10 +1098,10 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-				<td align="center"><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_laps'];?>
+				<td align="center"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_laps'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			</tr>
 			<?php if ($_smarty_tpl->tpl_vars['rank']->value==20){?><?php break 1?><?php }?>
@@ -1123,8 +1130,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_average_speed_rank'];?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['p']->value['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_average_speed']);?>
 </td>
@@ -1154,12 +1161,12 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_seconds']);?>
 </td>
-				<td align="center"><?php echo $_smarty_tpl->tpl_vars['p']->value['event_round_number'];?>
+				<td align="center"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_round_number'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 			</tr>
 			<?php if ($_smarty_tpl->tpl_vars['rank']->value==20){?><?php break 1?><?php }?>
@@ -1188,8 +1195,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ;">
 				<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
-				<td nowrap><?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'];?>
+				<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
 				<td><?php echo sprintf("%02.2f",$_smarty_tpl->tpl_vars['p']->value['average_landing']);?>
 </td>

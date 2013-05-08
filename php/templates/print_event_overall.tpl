@@ -143,7 +143,7 @@
 					{if $fast==1000}{$fast=0}{/if}
 					<th class="info" align="center">
 						<div style="position:relative;">
-						<a href="" onClick="return false;">{$fast}s</a>
+						{$fast}s
 						<span>
 							Fast Time : {$fast}s<br>
 							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}

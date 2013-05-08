@@ -243,20 +243,20 @@ function check_event(){
 <input type="hidden" name="function" value="event_save">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="location_id" value="{$event->info.location_id}">
-<input type="hidden" name="event_cd" value="{$event->info.event_cd}">
+<input type="hidden" name="event_cd" value="{$event->info.event_cd|escape}">
 <input type="hidden" name="series_id" value="{$event->info.series_id}">
 <input type="hidden" name="club_id" value="{$event->info.club_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th>Event Name</th>
 	<td>
-		<input type="text" size="60" name="event_name" value="{$event->info.event_name}">
+		<input type="text" size="60" name="event_name" value="{$event->info.event_name|escape}">
 	</td>
 </tr>
 <tr>
 	<th>Location</th>
 	<td>
-		<input type="text" id="location_name" name="location_name" size="40" value="{$event->info.location_name}">
+		<input type="text" id="location_name" name="location_name" size="40" value="{$event->info.location_name|escape}">
 		<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
 		<input type="button" value=" + New Location " class="block-button" onClick="copy_location_values(); create_new_location.submit();">
@@ -274,7 +274,7 @@ function check_event(){
 	<td>
 	<select name="event_type_id">
 	{foreach $event_types as $t}
-		<option value="{$t.event_type_id}" {if $event->info.event_type_id==$t.event_type_id}SELECTED{/if}>{$t.event_type_name}</option>
+		<option value="{$t.event_type_id}" {if $event->info.event_type_id==$t.event_type_id}SELECTED{/if}>{$t.event_type_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -282,7 +282,7 @@ function check_event(){
 <tr>
 	<th>Contest Director</th>
 	<td>
-		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.event_cd_name!=''}{$event->info.event_cd_name}{else}{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name} {$event->info.pilot_last_name}{/if}{/if}">
+		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.event_cd_name!=''}{$event->info.event_cd_name|escape}{else}{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}{/if}{/if}">
 		<img id="loading_cd" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
@@ -299,7 +299,7 @@ function check_event(){
 <tr>
 	<th>Club Association</th>
 	<td>
-		<input type="text" id="club_name" name="club_name" size="50" value="{$event->info.club_name}">
+		<input type="text" id="club_name" name="club_name" size="50" value="{$event->info.club_name|escape}">
 		<img id="loading_club" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="club_message" style="font-style: italic;color: grey;">Start typing to search clubs</span>
 		<input type="button" value=" + New Club " class="block-button" onClick="copy_club_values(); create_new_club.submit();">
@@ -322,16 +322,16 @@ function check_event(){
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th colspan="2" align="left">The Following Specific Parameters Are for this {$event->info.event_type_name}</th>
+	<th colspan="2" align="left">The Following Specific Parameters Are for this {$event->info.event_type_name|escape}</th>
 </tr>
 {foreach $event->options as $o}
 <tr>
-	<th align="right" width="30%">{$o.event_type_option_name} (<a href="#" title="{$o.event_type_option_description}">?</a>)</th>
+	<th align="right" width="30%">{$o.event_type_option_name|escape} (<a href="#" title="{$o.event_type_option_description|escape}">?</a>)</th>
 	<td>
 		{if $o.event_type_option_type == 'boolean'}
 				<input type="checkbox" name="option_{$o.event_type_option_id}" {if $o.event_option_status==1 && $o.event_option_value ==1}CHECKED{/if}>
 		{else}
-				<input type="text" name="option_{$o.event_type_option_id}" size="{$o.event_type_option_size}" value="{$o.event_option_value}"> 
+				<input type="text" name="option_{$o.event_type_option_id}" size="{$o.event_type_option_size}" value="{$o.event_option_value|escape}"> 
 		{/if}
 	</td>
 </tr>
@@ -357,7 +357,7 @@ function check_event(){
 </tr>
 {foreach $event_users as $u}
 <tr>
-	<td>{$u.pilot_first_name} {$u.pilot_last_name} - {$u.pilot_city}, {$u.state_code} {$u.country_code}</td>
+	<td>{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
 	<td width="2%">
 		<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}"><img src="/images/del.gif"></a></td>
 </tr>

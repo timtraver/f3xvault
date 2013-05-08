@@ -12,7 +12,7 @@
 <table width="40%" cellpadding="2" cellspacing="1">
 <tr>
 	<th colspan="2">
-		RC Vault Password Recovery
+		F3X Vault Password Recovery
 	</th>
 </tr>
 <tr>

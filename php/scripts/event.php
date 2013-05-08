@@ -1288,6 +1288,9 @@ function event_round_edit() {
 	$smarty->assign("event",$event);
 	$smarty->assign("total_pilots",count($event->pilots));
 	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
 	$maintpl=find_template("event_round_edit.tpl");
 	return $smarty->fetch($maintpl);
 }

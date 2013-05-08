@@ -12,7 +12,7 @@
 	<td colspan="3">
 	<select name="discipline_id" onChange="searchform.submit();">
 	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description}</option>
+		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -23,7 +23,7 @@
 	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 	<option value="0">Choose Country to Narrow Search</option>
 	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -32,7 +32,7 @@
 	<select name="state_id" onChange="searchform.submit();">
 	<option value="0">Choose State to Narrow Search</option>
 	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>

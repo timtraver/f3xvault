@@ -63,7 +63,6 @@ function toggle(element,tog) {
 function check_permission() {ldelim}
 	{if $permission!=1}
 		alert('Sorry, but you do not have permission to edit this event. Contact the event owner if you need access to edit this event.');
-		
 		return 0;
 	{else}
 		return 1;
@@ -73,7 +72,7 @@ function check_permission() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">{$event->info.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
+		<h1 class="post-title entry-title">{$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -84,28 +83,28 @@ function check_permission() {ldelim}
 			</td>
 			<th align="right">Location</th>
 			<td>
-			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}</a>
+			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}</a>
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			{$event->info.event_type_name}
+			{$event->info.event_type_name|escape}
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
 		{if $event->info.series_name || $event->info.club_name}
 		<tr>
 			<th align="right">Part Of Series</th>
 			<td>
-			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name}</a>
+			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name|escape}</a>
 			</td>
 			<th align="right">Club</th>
 			<td>
-			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name}</a>
+			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name|escape}</a>
 			</td>
 		</tr>
 		{/if}
@@ -134,15 +133,15 @@ function check_permission() {ldelim}
 		{foreach $event->pilots as $p}
 		<tr>
 			<td>{$num}</td>
-			<td align="center">{$p.pilot_ama}</td>
-			<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-			<td>{$p.class_description}</td>
-			<td>{$p.plane_name}</td>
-			<td>{$p.event_pilot_freq}</td>
-			<td>{$p.event_pilot_team}</td>
+			<td align="center">{$p.pilot_ama|escape}</td>
+			<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+			<td>{$p.class_description|escape}</td>
+			<td>{$p.plane_name|escape}</td>
+			<td>{$p.event_pilot_freq|escape}</td>
+			<td>{$p.event_pilot_team|escape}</td>
 			<td nowrap>
 				<a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
-				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the event?');"><img width="14px" src="/images/del.gif"></a>
+				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name|escape} from the event?');"><img width="14px" src="/images/del.gif"></a>
 			</td>
 		</tr>
 		{assign var=num value=$num+1}
@@ -187,12 +186,12 @@ function check_permission() {ldelim}
 							<font color="red"><b>Round Not Currently Scored</b></font><br>
 						{/if}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
 						{else}
-							View Details of Round {$r.event_round_number}
+							View Details of Round {$r.event_round_number|escape}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
 					</div>
 				</th>
 				{/if}
@@ -206,8 +205,8 @@ function check_permission() {ldelim}
 		{foreach $event->totals.pilots as $e}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
-			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
+			<td>{$e.overall_rank|escape}</td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -231,15 +230,15 @@ function check_permission() {ldelim}
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -249,7 +248,7 @@ function check_permission() {ldelim}
 			{/foreach}
 			<td></td>
 			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
-			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
+			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
 			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
@@ -272,10 +271,10 @@ function check_permission() {ldelim}
 					{if $fast==1000}{$fast=0}{/if}
 					<th class="info" align="center">
 						<div style="position:relative;">
-						<a href="" onClick="return false;">{$fast}s</a>
+						<a href="" onClick="return false;">{$fast|escape}s</a>
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>
@@ -320,12 +319,12 @@ function check_permission() {ldelim}
 							<font color="red"><b>Round Not Currently Scored</b></font><br>
 						{/if}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
 						{else}
-							View Details of Round {$r.event_round_number}
+							View Details of Round {$r.event_round_number|escape}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
 					</div>
 				</th>
 				{/if}
@@ -340,7 +339,7 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration>9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -364,15 +363,15 @@ function check_permission() {ldelim}
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -408,7 +407,7 @@ function check_permission() {ldelim}
 						<a href="" onClick="return false;">{$fast}s</a>
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>
@@ -452,12 +451,12 @@ function check_permission() {ldelim}
 					<span>
 						{$flight_type_id=$r.flight_type_id}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
 						{else}
-							View Details of Round {$r.event_round_number}
+							View Details of Round {$r.event_round_number|escape}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 					</div>
 				</th>
 			{/foreach}
@@ -471,7 +470,7 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name} {$e.pilot_last_name}</a></td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -495,15 +494,15 @@ function check_permission() {ldelim}
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -539,7 +538,7 @@ function check_permission() {ldelim}
 						<a href="" onClick="return false;">{$fast}s</a>
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>
@@ -576,7 +575,7 @@ function check_permission() {ldelim}
 			{foreach $event->classes as $c}
 			{$rank=1}
 					<tr>
-						<th colspan="3" nowrap>{$c.class_description} Rankings</th>
+						<th colspan="3" nowrap>{$c.class_description|escape} Rankings</th>
 					</tr>
 					<tr>
 						<th></th>
@@ -588,7 +587,7 @@ function check_permission() {ldelim}
 					{if $event->pilots.$event_pilot_id.class_id==$c.class_id}
 					<tr style="background-color: {cycle values="#9DCFF0,white"};">
 						<td>{$rank}</td>
-						<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+						<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 						<td>{$p.total|string_format:"%06.3f"}</td>
 					</tr>
 					{$rank=$rank+1}
@@ -611,7 +610,7 @@ function check_permission() {ldelim}
 		{foreach $event->totals.teams as $t}
 		<tr style="background-color:#9DCFF0;">
 			<td>{$t.rank}</td>
-			<td nowrap>{$t.team_name}</td>
+			<td nowrap>{$t.team_name|escape}</td>
 			<td>{$t.total|string_format:"%06.3f"}</td>
 		</tr>
 			{foreach $event->totals.pilots as $p}
@@ -619,7 +618,7 @@ function check_permission() {ldelim}
 			{if $event->pilots.$event_pilot_id.event_pilot_team==$t.team_name}
 			<tr>
 				<td></td>
-				<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 				<td align="right">{$p.total|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
@@ -643,7 +642,7 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -665,7 +664,7 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -687,7 +686,7 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -716,9 +715,9 @@ function check_permission() {ldelim}
 		</tr>
 		{foreach $lap_totals as $p}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$p.event_pilot_lap_rank}</td>
-				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-				<td align="center">{$p.event_pilot_total_laps}</td>
+				<td>{$p.event_pilot_lap_rank|escape}</td>
+				<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+				<td align="center">{$p.event_pilot_total_laps|escape}</td>
 			</tr>
 		{/foreach}
 		</table>
@@ -738,8 +737,8 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-				<td align="center">{$p.event_pilot_round_flight_laps}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
@@ -761,7 +760,7 @@ function check_permission() {ldelim}
 			{if $p.event_pilot_average_speed_rank!=0}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_average_speed_rank}</td>
-				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
@@ -783,9 +782,9 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
-				<td align="center">{$p.event_round_number}</td>
+				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
@@ -807,7 +806,7 @@ function check_permission() {ldelim}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td>{$p.average_landing|string_format:"%02.2f"}</td>
 			</tr>
 			{if $rank==20}{break}{/if}

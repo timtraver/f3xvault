@@ -55,13 +55,13 @@ $(function() {
 <tr>
 	<th>Club Name</th>
 	<td>
-		<input type="text" size="60" name="club_name" value="{$club.club_name}">
+		<input type="text" size="60" name="club_name" value="{$club.club_name|escape}">
 	</td>
 </tr>
 <tr>
 	<th>Club City</th>
 	<td>
-		<input type="text" size="60" name="club_city" value="{$club.club_city}">
+		<input type="text" size="60" name="club_city" value="{$club.club_city|escape}">
 	</td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@ $(function() {
 <tr>
 	<th>Club Web URL</th>
 	<td>
-		<input type="text" size="60" name="club_url" value="{$club.club_url}">
+		<input type="text" size="60" name="club_url" value="{$club.club_url|escape}">
 	</td>
 </tr>
 <tr>
@@ -104,7 +104,7 @@ $(function() {
 </tr>
 </table>
 {foreach $from as $f}
-<input type="hidden" name="{$f.key}" value="{$f.value}">
+<input type="hidden" name="{$f.key}" value="{$f.value|escape}">
 {/foreach}
 </form>
 
@@ -122,7 +122,7 @@ $(function() {
 </tr>
 {foreach $club_users as $u}
 <tr>
-	<td>{$u.pilot_first_name} {$u.pilot_last_name} - {$u.pilot_city}, {$u.state_code} {$u.country_code}</td>
+	<td>{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
 	<td width="2%">
 		<a href="?action=club&function=club_user_delete&club_id={$club.club_id}&club_user_id={$u.club_user_id}"><img src="/images/del.gif"></a></td>
 </tr>

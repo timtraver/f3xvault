@@ -13,6 +13,7 @@
 	{$flight_type_subs=$f.flight_type_sub_flights}
 {/foreach}
 function save_data(element) {ldelim}
+	{if $permission==1}
 	$.ajax({ldelim}
 		type: "POST",
 		url: "/",
@@ -21,7 +22,7 @@ function save_data(element) {ldelim}
 			function: "save_individual_flight",
 			event_id: "{$event->info.event_id}",
 			event_round_id: "{$event_round_id}",
-			event_round_number: "{$round_number}",
+			event_round_number: "{$round_number|escape}",
 			flight_type_id: document.main.flight_type_id.value,
 			event_round_time_choice: document.main.event_round_time_choice.value,
 			event_round_score_status: document.main.event_round_score_status.value,
@@ -29,6 +30,9 @@ function save_data(element) {ldelim}
 			field_value: element.value
 		{rdelim}
 	{rdelim});
+	{else}
+		return;
+	{/if}
 {rdelim}
 function check_ladder(element) {ldelim}
 	var numsubs={$flight_type_subs};
@@ -68,7 +72,7 @@ function check_ladder(element) {ldelim}
 $(function() {ldelim}
 	var pilots = [
 		{foreach $event->pilots as $p}
-		{ldelim}"id":{$p.event_pilot_id},"label":"{$p.pilot_first_name} {$p.pilot_last_name}","value":"{$p.pilot_first_name} {$p.pilot_last_name}"{rdelim}{if !$t@last},{/if}
+		{ldelim}"id":{$p.event_pilot_id},"label":"{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}","value":"{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}"{rdelim}{if !$t@last},{/if}
 		{/foreach}
 	];
 {literal}
@@ -131,7 +135,14 @@ $(function() {ldelim}
 	});
 });
 {/literal}
-
+function check_permission() {ldelim}
+	{if $permission!=1}
+		alert('Sorry, but you do not have permission to edit this event. Contact the event owner if you need access to edit this event.');
+		return 0;
+	{else}
+		return 1;
+	{/if}
+{rdelim}
 </script>
 
 <div id="add_reflight" style="overflow: hidden;">
@@ -140,7 +151,7 @@ $(function() {ldelim}
 		<input type="hidden" name="function" value="event_round_add_reflight">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
 		<input type="hidden" name="event_round_id" value="{$event_round_id}">
-		<input type="hidden" name="event_round_number" value="{$round_number}">
+		<input type="hidden" name="event_round_number" value="{$round_number|escape}">
 		<input type="hidden" name="flight_type_id" value="">
 		<input type="hidden" name="event_pilot_id" value="">
 		<div style="float: left;padding-right: 10px;">
@@ -159,7 +170,7 @@ $(function() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name}</h1>
+		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -169,17 +180,17 @@ $(function() {ldelim}
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			{$event->info.event_type_name}
+			{$event->info.event_type_name|escape}
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
 		</table>
@@ -194,7 +205,7 @@ $(function() {ldelim}
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="create_new_round" value="0">
 		
-		<h1 class="post-title entry-title">Event Round {$round_number}</h1>
+		<h1 class="post-title entry-title">Event Round {$round_number|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" nowrap>Event Round Type</th>
@@ -202,12 +213,12 @@ $(function() {ldelim}
 				{if $event->info.event_type_flight_choice==1}
 					<select name="flight_type_id">
 					{foreach $flight_types as $ft}
-					<option value="{$ft.flight_type_id}" {if $ft.flight_type_id==$event->rounds.$round_number.flight_type_id}SELECTED{/if}>{$ft.flight_type_name}</option>
+					<option value="{$ft.flight_type_id}" {if $ft.flight_type_id==$event->rounds.$round_number.flight_type_id}SELECTED{/if}>{$ft.flight_type_name|escape}</option>
 					{/foreach}
 					</select>
 				{else}
 					{foreach $flight_types as $ft}
-						{$ft.flight_type_name}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
+						{$ft.flight_type_name|escape}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
 					{/foreach}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
@@ -252,9 +263,9 @@ $(function() {ldelim}
 		</tr>
 		</table>
 		<br>
-		<input type="button" value=" Save Event Round Info " onClick="main.submit();" class="block-button">
+		<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
 		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-		{if $event_round_id !=0}
+		{if $event_round_id !=0 && $permission==1}
 			<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 		{/if}
 		<br>
@@ -273,9 +284,9 @@ $(function() {ldelim}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			<tr>
-				<th colspan="2">Round {$round_number}</th>
+				<th colspan="2">Round {$round_number|escape}</th>
 				<th colspan="{$cols}">
-					{$ft.flight_type_name}
+					{$ft.flight_type_name|escape}
 				</th>
 				<th>
 					Score <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>
@@ -312,31 +323,31 @@ $(function() {ldelim}
 			{$event_pilot_id=$p@key}
 			{if $oldgroup!=$p.event_pilot_round_flight_group}
 				{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
-				{$oldgroup=$p.event_pilot_round_flight_group}
+				{$oldgroup=$p.event_pilot_round_flight_group|escape}
 			{/if}
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 					{if $f.flight_type_group}
-						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
+						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 					{/if}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="center" nowrap>
 							{if $ft.flight_type_sub_flights!=0}
 								{$time_disabled=1}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val}{/if}" onChange="check_ladder(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" onChange="check_ladder(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
 							{/if}
 							{if $f.flight_type_minutes}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>m
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes|escape}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>m
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $f.flight_type_seconds}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>s
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds|escape}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>s
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $f.flight_type_over_penalty}
@@ -346,16 +357,16 @@ $(function() {ldelim}
 						</td>
 					{/if}
 					{if $f.flight_type_landing}
-						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_landing}" onChange="save_data(this);"></td>
+						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_landing|escape}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
 					{if $f.flight_type_laps}
-						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps}" onChange="save_data(this);"></td>
+						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps|escape}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>
 						{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
-						{$p.event_pilot_round_flight_raw_score}
+						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
 						{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
 						{/if}
@@ -366,10 +377,10 @@ $(function() {ldelim}
 					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 					</td>
 					<td align="center" nowrap>
-						<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}" onChange="save_data(this);">
+						<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}" onChange="save_data(this);">
 					</td>
 					<td align="right" nowrap>
-					{$p.event_pilot_round_flight_rank}
+					{$p.event_pilot_round_flight_rank|escape}
 					</td>
 			</tr>
 			{$num=$num+1}
@@ -396,18 +407,18 @@ $(function() {ldelim}
 				{/if}
 				<tr style="background-color: {$groupcolor};">
 					<td style="background-color: lightgrey;">{$num}</td>
-					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 						{if $f.flight_type_group}
-							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group}" onChange="save_data(this);"></td>					
+							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 						{/if}
 						{if $f.flight_type_minutes || $f.flight_type_seconds}
 							<td align="center" nowrap>
 								{if $f.flight_type_minutes}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes}" onChange="save_data(this);">m
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;text-align: right;" name="pilot_min_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_minutes|escape}" onChange="save_data(this);">m
 									{$tabindex=$tabindex+1}
 								{/if}
 								{if $f.flight_type_seconds}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds}" onChange="save_data(this);">s
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:{$ft.accuracy*10 + 20}px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_seconds|escape}" onChange="save_data(this);">s
 									{$tabindex=$tabindex+1}
 								{/if}
 								{if $f.flight_type_over_penalty}
@@ -417,11 +428,11 @@ $(function() {ldelim}
 							</td>
 						{/if}
 						{if $f.flight_type_landing}
-							<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_landing}" onChange="save_data(this);"></td>
+							<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:25px;text-align: right;" name="pilot_land_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_landing|escape}" onChange="save_data(this);"></td>
 							{$tabindex=$tabindex+1}
 						{/if}
 						{if $f.flight_type_laps}
-							<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps}" onChange="save_data(this);"></td>
+							<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps|escape}" onChange="save_data(this);"></td>
 							{$tabindex=$tabindex+1}
 						{/if}
 						<td align="right" nowrap>
@@ -437,10 +448,10 @@ $(function() {ldelim}
 						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 						</td>
 						<td align="center" nowrap>
-							<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty}{/if}" onChange="save_data(this);">
+							<input tabindex="1000" autocomplete="off" type="text" size="4" style="width:25px;text-align: right;" name="pilot_pen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}" onChange="save_data(this);">
 						</td>
 						<td align="right" nowrap>
-						{$p.event_pilot_round_flight_rank}
+						{$p.event_pilot_round_flight_rank|escape}
 						</td>
 						<td align="right" nowrap>
 						<a href="?action=event&function=event_round_flight_delete&event_id={$event->info.event_id}&event_round_id={$event_round_id}&event_round_number={$round_number}&event_pilot_round_flight_id={$p.event_pilot_round_flight_id}" onClick="return confirm('Are you sure you wish to remove this pilot reflight?');"><img src="/images/icons/delete.png"></a>
@@ -459,10 +470,10 @@ $(function() {ldelim}
 
 		</form>
 <br>
-<input type="button" value=" Save Event Round " onClick="main.submit();" class="block-button">
-<input type="button" value=" Save And Create New Round " onClick="document.main.create_new_round.value=1;main.submit();" class="block-button">
+<input type="button" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
+<input type="button" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-{if $event_round_id !=0}
+{if $event_round_id !=0 && $permission==1}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 {/if}
 
@@ -488,5 +499,5 @@ $(function() {ldelim}
 <input type="hidden" name="function" value="event_round_delete">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_round_id" value="{$event_round_id}">
-<input type="hidden" name="event_round_number" value="{$round_number}">
+<input type="hidden" name="event_round_number" value="{$round_number|escape}">
 </form>

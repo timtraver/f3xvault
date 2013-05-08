@@ -78,20 +78,20 @@ $(function() {
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Club Settings - {$club.club_name} <input type="button" value=" Edit Club Parameters " onClick="document.edit_club.submit();" class="block-button">
+		<h1 class="post-title entry-title">Club Settings - {$club.club_name|escape} <input type="button" value=" Edit Club Parameters " onClick="document.edit_club.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Club Name</th>
 			<td>
-			{$club.club_name}
+			{$club.club_name|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Location</th>
 			<td>
-			{$club.club_city},{$club.state_code} {$club.country_code}
+			{$club.club_city|escape},{$club.state_code|escape} {$club.country_code|escape}
 			</td>
 		</tr>
 		<tr>
@@ -100,7 +100,7 @@ $(function() {
 		</tr>
 		<tr>
 			<th align="right">Club Web URL</th>
-			<td><a href="{$club.club_url}" target="_new">{$club.club_url}</a></td>
+			<td><a href="{$club.club_url}" target="_new">{$club.club_url|escape}</a></td>
 		</tr>
 		</table>
 		
@@ -123,10 +123,10 @@ $(function() {
 		</tr>
 		{foreach $club_locations as $cl}
 		<tr>
-			<td>{$cl.location_name}</td>
-			<td>{$cl.location_city}</td>
-			<td>{$cl.state_name}</td>
-			<td>{$cl.country_name}</td>
+			<td>{$cl.location_name|escape}</td>
+			<td>{$cl.location_city|escape}</td>
+			<td>{$cl.state_name|escape}</td>
+			<td>{$cl.country_name|escape}</td>
 			<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 			<td nowrap>
 				<a href="/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"><img src="/images/del.gif"></a>
@@ -155,11 +155,11 @@ $(function() {
 		{foreach $pilots as $p}
 		<tr>
 			<td>{$num}</td>
-			<td align="center">{$p.pilot_ama}</td>
-			<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-			<td>{$p.pilot_city}</td>
-			<td>{$p.state_name}</td>
-			<td>{$p.country_name}</td>
+			<td align="center">{$p.pilot_ama|escape}</td>
+			<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+			<td>{$p.pilot_city|escape}</td>
+			<td>{$p.state_name|escape}</td>
+			<td>{$p.country_name|escape}</td>
 			<td nowrap>
 				<a href="/?action=club&function=club_pilot_remove&club_id={$club.club_id}&club_pilot_id={$p.club_pilot_id}" title="Remove Club Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name} from the club?');"><img src="/images/del.gif"></a>
 			</td>

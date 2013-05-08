@@ -1,7 +1,7 @@
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
+		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -12,17 +12,17 @@
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			{$event->info.event_type_name}
+			{$event->info.event_type_name|escape}
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
 		</table>
@@ -30,7 +30,7 @@
 	</div>
 
 		<br>
-		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left">Round</th>
@@ -58,7 +58,7 @@
 				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
-				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name}</th>
+				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
 			<th width="5%" nowrap></th>
 		</tr>
@@ -136,13 +136,13 @@
 					{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 					{if $event->info.event_type_code=='f3k'}
 						<th width="5%" align="left" nowrap style="background-color: {$bgcolor};">
-							{$ft.flight_type_name}
+							{$ft.flight_type_name|escape}
 						</th>
 					{/if}
 					{if $ft.flight_type_group}
 						<td align="center" nowrap style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{$values.event_pilot_round_flight_group}{if $values.event_pilot_round_flight_reflight}(R){/if}
+							{$values.event_pilot_round_flight_group|escape}{if $values.event_pilot_round_flight_reflight}(R){/if}
 							{/if}
 						</td>					
 					{/if}
@@ -152,33 +152,33 @@
 							
 								{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
 									{foreach $values.sub as $s}
-									<span style="background-color: #9DCFF0;padding: 3px;">{$s.event_pilot_round_flight_sub_val}</span>
+									<span style="background-color: #9DCFF0;padding: 3px;">{$s.event_pilot_round_flight_sub_val|escape}</span>
 									{/foreach}
 									= 
 								{/if}
-								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes}m{/if}
-								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds}s{/if}
+								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes|escape}m{/if}
+								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds|escape}s{/if}
 							{/if}
 						</td>
 					{/if}
 					{if $ft.flight_type_landing}
 						<td align="center" style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_landing}
+								{$values.event_pilot_round_flight_landing|escape}
 							{/if}
 						</td>
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_laps}
+								{$values.event_pilot_round_flight_laps|escape}
 							{/if}
 						</td>
 					{/if}
 					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
 							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
-								{$values.event_pilot_round_flight_raw_score}
+								{$values.event_pilot_round_flight_raw_score|escape}
 							{else}
 								{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
 							{/if}
@@ -194,13 +194,13 @@
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty}{/if}
+							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty|escape}{/if}
 							{$round_pen=$round_pen+$values.event_pilot_round_flight_penalty}
 						{/if}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{$values.event_pilot_round_flight_rank}
+							{$values.event_pilot_round_flight_rank|escape}
 						{/if}
 					</td>
 				{/foreach}
@@ -216,30 +216,30 @@
 		</table>
 		
 		<br>
-		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
 		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th>Overall Rank</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_position']}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_position|escape}</td>
 		</tr>
 		<tr>
 			<th>Total Points</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_score']|string_format:"%06.3f"}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:"%06.3f"}</td>
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_percentage']|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
 		</tr>
-		{if $event->pilots[$event_pilot_id]['event_pilot_total_laps']>0}
+		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr>
 			<th>Total Distance Laps</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_laps']} (rank {$event->pilots[$event_pilot_id]['event_pilot_lap_rank']})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_laps|escape} (rank {$event->pilots.$event_pilot_id.event_pilot_lap_rank|escape})</td>
 		</tr>
 		{/if}
-		{if $event->pilots[$event_pilot_id]['event_pilot_average_speed']>0}
+		{if $event->pilots.$event_pilot_id.event_pilot_average_speed>0}
 		<tr>
 			<th>Pilot Average Speed</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_average_speed']|string_format:"%06.3f"} (rank {$event->pilots[$event_pilot_id]['event_pilot_average_speed_rank']})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:"%06.3f"} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
 		</tr>
 		{/if}
 		</table>
@@ -252,17 +252,17 @@
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 </form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 </form>
 <form name="print_pilot" action="?" method="GET" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_pilot">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="event_pilot_id" value="{$event_pilot_id}">
+<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
+<input type="hidden" name="event_pilot_id" value="{$event_pilot_id|escape}">
 <input type="hidden" name="use_print_header" value="1">
 </form>
