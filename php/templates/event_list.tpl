@@ -65,11 +65,11 @@
 	<th colspan="7" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
+        <td align="left" colspan="2">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="4">PerPage
+        <td align="right" colspan="3">PerPage
                 [<a href="?action=event&function=event_list&&perpage=25">25</a>]
                 [<a href="?action=event&function=event_list&&perpage=50">50</a>]
                 [<a href="?action=event&function=event_list&&perpage=100">100</a>]
@@ -83,7 +83,6 @@
 	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: center;">Map</th>
-	<th style="text-align: center;"></th>
 </tr>
 {foreach $events as $event}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -94,16 +93,14 @@
 	<td>{$event.event_type_name|escape}</td>
 	<td>{$event.location_name|escape}, {$event.state_code|escape} - {$event.country_code|escape}</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
-	<td><a href="?action=event&function=event_view&event_id={$event.event_id|escape}" title="Edit This Event"><img src="images/icon_edit_small.gif" width="20"></a>
-	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
+        <td align="left" colspan="2">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="4">PerPage
+        <td align="right" colspan="3">PerPage
                 [<a href="?action=event&function=event_list&perpage=25">25</a>]
                 [<a href="?action=event&function=event_list&perpage=50">50</a>]
                 [<a href="?action=event&function=event_list&perpage=100">100</a>]
@@ -114,7 +111,7 @@
 <tr>
 	<td colspan="7" align="center">
 		<br>
-		<input type="button" value=" Create New Event " onclick="newevent.submit();" class="block-button">
+		<input type="button" value=" Create New Event " onclick="{if $user.user_id!=0}newevent.submit();{else}alert('You must be registered and logged in to create a new event.');{/if}" class="block-button">
 	</td>
 </tr>
 </table>

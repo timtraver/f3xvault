@@ -41,7 +41,7 @@ $need_login=array(
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
 		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
+		user_message("Sorry, but you must be logged in as a user to Edit information.",1);
 		$maintpl=find_template("feature_requires_login.tpl");
 		$actionoutput=$smarty->fetch($maintpl);
 	}else{
@@ -303,6 +303,8 @@ function event_view() {
 	}
 	
 	$smarty->assign("event",$e);
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
 	
 	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
