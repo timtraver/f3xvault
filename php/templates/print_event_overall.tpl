@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate" style="-webkit-print-color-adjust:exact;">
 	<div class="entry clearfix">                
-		<h2 class="post-title entry-title">Event - {$event->info.event_name}</h2>
+		<h2 class="post-title entry-title">Event - {$event->info.event_name|escape}</h2>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -10,17 +10,17 @@
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			{$event->info.event_type_name}
+			{$event->info.event_type_name|escape}
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
 		</table>
@@ -78,7 +78,7 @@
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			<td align="right" nowrap>{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -102,15 +102,15 @@
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -146,7 +146,7 @@
 						{$fast}s
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>
@@ -188,7 +188,7 @@
 							<font color="red"><b>Round Not Currently Scored</b></font><br>
 						{/if}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
 						{else}
 							View Details of Round {$r.event_round_number}
 						{/if}
@@ -208,7 +208,7 @@
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap>{$e.pilot_first_name} {$e.pilot_last_name}</td>
+			<td align="right" nowrap>{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration>9}
 				<td class="info" align="right"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -232,15 +232,15 @@
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -276,7 +276,7 @@
 						<a href="" onClick="return false;">{$fast}s</a>
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>
@@ -320,7 +320,7 @@
 					<span>
 						{$flight_type_id=$r.flight_type_id}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
 						{else}
 							View Details of Round {$r.event_round_number}
 						{/if}
@@ -363,15 +363,15 @@
 							{foreach $event->rounds.$event_round_number.flights as $f}
 								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing}{/if}<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'distance'}
 									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps} Laps<br>
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
 								{/if}
 								{if $f.flight_type_code|strstr:'speed'}
 									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds}s
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
 								{/if}
 							{/foreach}
 						</span>
@@ -407,7 +407,7 @@
 						<a href="" onClick="return false;">{$fast}s</a>
 						<span>
 							Fast Time : {$fast}s<br>
-							{$event->pilots.$fast_id.pilot_first_name} {$event->pilots.$fast_id.pilot_last_name}
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</div>
 					</th>

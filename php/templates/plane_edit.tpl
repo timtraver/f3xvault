@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Plane Database</h1>
+		<h1 class="post-title entry-title">F3X Plane Database</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Plane Information Edit</h1>
@@ -99,7 +99,7 @@ function calc_area(){ldelim}
 	</td>
 	<td rowspan="6">
 	{foreach $disciplines as $d}
-	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description}<br>
+	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
 	{/foreach}
 	</td>
 </tr>
@@ -183,17 +183,17 @@ function calc_area(){ldelim}
 				{if $pa.plane_att_cat_name != ''}
 				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><hr></td></tr>
 				{/if}
-				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$pa.plane_att_cat_name}</b></td></tr>
+				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$pa.plane_att_cat_name|escape}</b></td></tr>
 				<tr style="border-style: none;">
 				{assign var='col' value='1'}
 			{/if}
 			{if $pa.plane_att_type == 'boolean'}
 				<td style="border-style: none;" nowrap>
-					<input type="checkbox" name="plane_att_{$pa.plane_att_id}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name}
+					<input type="checkbox" name="plane_att_{$pa.plane_att_id}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
 				</td>
 			{else}
 				<td style="border-style: none;" nowrap>
-					{$pa.plane_att_name} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value}{/if}"> 
+					{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
 				</td>
 			{/if}
 			{if $col > 3}
@@ -243,9 +243,9 @@ function calc_area(){ldelim}
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{if $m.plane_media_type=='picture'}Picture{else}Video{/if}</td>
 		{if $m.plane_media_type=='picture'}
-			<td><a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
+			<td><a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.plane_media_caption|escape}">{$m.plane_media_url}</a></td>
 		{else}
-			<td><a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.plane_media_caption}">{$m.plane_media_url}</a></td>
+			<td><a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.plane_media_caption|escape}">{$m.plane_media_url}</a></td>
 		{/if}
 		<td> <a href="?action=plane&function=plane_media_del&plane_id={$plane.plane_id}&plane_media_id={$m.plane_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 	</tr>

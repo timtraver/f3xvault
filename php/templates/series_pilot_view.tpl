@@ -1,10 +1,10 @@
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series - {$series->info.series_name}</h1>
+		<h1 class="post-title entry-title">Series - {$series->info.series_name|escape}</h1>
 
 		<br>
-		<h1 class="post-title entry-title">Pilot Event Detail for {$series->totals.pilots.$pilot_id.pilot_first_name} {$series->totals.pilots.$pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title">Pilot Event Detail for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="center">Number</th>
@@ -18,7 +18,7 @@
 				{$event_id=$e@key}
 				{$bgcolor='#9DCFF0'}
 				<td align="center">{$num}</td>
-				<td align="left">{$e.event_name}</td>
+				<td align="left">{$e.event_name|escape}</td>
 				<td align="right" nowrap>
 					{if $series->totals.pilots.$pilot_id.events.$event_id.dropped==1}<del><font color="red">{/if}
 						{$series->totals.pilots.$pilot_id.events.$event_id.event_score|string_format:"%06.3f"}
@@ -33,7 +33,7 @@
 		</table>
 		
 		<br>
-		<h1 class="post-title entry-title">Pilot Totals for {$series->totals.pilots.$pilot_id.pilot_first_name} {$series->totals.pilots.$pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title">Pilot Totals for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h1>
 		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th>Overall Rank</th>

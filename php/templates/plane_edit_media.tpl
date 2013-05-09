@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Plane Database</h1>
+		<h1 class="post-title entry-title">F3X Plane Database</h1>
 		<div class="entry-content clearfix">
 		
 <script type="text/javascript">
@@ -27,7 +27,7 @@
 <tr>
 	<th>Plane</th>
 	<td>
-		{$plane.plane_name}
+		{$plane.plane_name|escape}
 	</td>
 </tr>
 <tr>

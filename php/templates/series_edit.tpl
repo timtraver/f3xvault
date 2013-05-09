@@ -55,13 +55,13 @@ $(function() {
 <tr>
 	<th>Series Name</th>
 	<td>
-		<input type="text" size="60" name="series_name" value="{$series->info.series_name}">
+		<input type="text" size="60" name="series_name" value="{$series->info.series_name|escape}">
 	</td>
 </tr>
 <tr>
 	<th>Series Area</th>
 	<td>
-		<input type="text" size="60" name="series_area" value="{$series->info.series_area}">
+		<input type="text" size="60" name="series_area" value="{$series->info.series_area|escape}">
 	</td>
 </tr>
 <tr>
@@ -69,7 +69,7 @@ $(function() {
 	<td>
 	<select name="state_id">
 	{foreach $states as $s}
-		<option value="{$s.state_id}" {if $series->info.state_id==$s.state_id}SELECTED{/if}>{$s.state_name}</option>
+		<option value="{$s.state_id}" {if $series->info.state_id==$s.state_id}SELECTED{/if}>{$s.state_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -79,7 +79,7 @@ $(function() {
 	<td>
 	<select name="country_id">
 	{foreach $countries as $c}
-		<option value="{$c.country_id}" {if $series->info.country_id==$c.country_id}SELECTED{/if}>{$c.country_name}</option>
+		<option value="{$c.country_id}" {if $series->info.country_id==$c.country_id}SELECTED{/if}>{$c.country_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -114,7 +114,7 @@ $(function() {
 </tr>
 {foreach $series->options as $o}
 <tr>
-	<th align="right" width="30%">{$o.series_option_type_name} (<a href="#" title="{$o.series_option_type_description}">?</a>)</th>
+	<th align="right" width="30%">{$o.series_option_type_name|escape} (<a href="#" title="{$o.series_option_type_description|escape}">?</a>)</th>
 	<td>
 		{if $o.series_option_type_type == 'boolean'}
 			<select name="option_{$o.series_option_type_id}_{$o.series_option_id}">
@@ -122,7 +122,7 @@ $(function() {
 			<option value="no" {if $o.series_option_status==1 && $o.series_option_value ==0}SELECTED{/if}>No</option>
 			</select>
 		{else}
-				<input type="text" name="option_{$o.series_option_type_id}_{$o.series_option_id}" size="{$o.series_option_type_size}" value="{$o.series_option_value}"> 
+				<input type="text" name="option_{$o.series_option_type_id}_{$o.series_option_id}" size="{$o.series_option_type_size}" value="{$o.series_option_value|escape}"> 
 		{/if}
 	</td>
 </tr>
@@ -149,7 +149,7 @@ $(function() {
 </tr>
 {foreach $series->access as $u}
 <tr>
-	<td>{$u.user_first_name} {$u.user_last_name}</td>
+	<td>{$u.user_first_name|escape} {$u.user_last_name|escape}</td>
 	<td width="2%">
 		<a href="?action=series&function=series_user_delete&series_id={$series->info.series_id}&series_user_id={$u.series_user_id}"><img src="/images/del.gif"></a></td>
 </tr>

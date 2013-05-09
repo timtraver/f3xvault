@@ -5,7 +5,7 @@
 	{$message_graphic}
 	{foreach $messages as $message}
 	<font color="{$message.message_color}" size="-1">
-	{$message.message}
+	{$message.message|escape}
 	</font>
 	<br>
 	{/foreach}

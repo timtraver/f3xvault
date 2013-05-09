@@ -46,20 +46,20 @@ $(function() {
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
+		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name|escape} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Series Name</th>
 			<td>
-			{$series->info.series_name}
+			{$series->info.series_name|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Location</th>
 			<td>
-			{$series->info.series_area},{$series->info.state_code} {$series->info.country_code}
+			{$series->info.series_area|escape},{$series->info.state_code|escape} {$series->info.country_code|escape}
 			</td>
 		</tr>
 		<tr>
@@ -87,12 +87,12 @@ $(function() {
 			<td align="center">{$num}</td>
 			<td nowrap>{$e.event_start_date|date_format:"Y-m-d"}</td>
 			<td>
-				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name}</a>
+				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name|escape}</a>
 			</td>
-			<td>{$e.location_name}</td>
-			<td>{$e.state_name}</td>
-			<td>{$e.country_name}</td>
-			<td nowrap>{$e.total_pilots}</td>
+			<td>{$e.location_name|escape}</td>
+			<td>{$e.state_name|escape}</td>
+			<td>{$e.country_name|escape}</td>
+			<td nowrap>{$e.total_pilots|escape}</td>
 		</tr>
 		{$num=$num+1}
 		{/foreach}
@@ -120,7 +120,7 @@ $(function() {
 				<th class="info" width="5%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
-						{$e.event_name}
+						{$e.event_name|escape}
 					</span>
 					<a href="/?action=event&function=event_view&event_id={$e.event_id}">Event {$event_num}</a>
 					</div>
@@ -135,7 +135,7 @@ $(function() {
 		{$pilot_id=$p@key}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$p.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}">{$p.pilot_first_name} {$p.pilot_last_name}</a></td>
+			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
 			{foreach $series->events as $e}
 				{$event_id=$e.event_id}
 				<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>

@@ -1,7 +1,7 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 
-<h1 class="post-title entry-title">RC Vault User Login</h1>
+<h1 class="post-title entry-title">F3X Vault User Login</h1>
 <br \>
 <center>
 <form name="login" method="POST" autocomplete="off">
@@ -10,7 +10,7 @@
 <table width="30%" cellpadding="2" cellspacing="1">
 <tr>
 	<th colspan="2">
-		RC Vault Login
+		F3X Vault Login
 	</th>
 </tr>
 <tr>

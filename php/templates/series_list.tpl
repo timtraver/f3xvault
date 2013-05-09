@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Browse RC Event Series</h1>
+		<h1 class="post-title entry-title">Browse F3X Event Series</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
@@ -14,7 +14,7 @@
 	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 	<option value="0">Choose Country to Narrow Search</option>
 	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -23,7 +23,7 @@
 	<select name="state_id" onChange="searchform.submit();">
 	<option value="0">Choose State to Narrow Search</option>
 	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>

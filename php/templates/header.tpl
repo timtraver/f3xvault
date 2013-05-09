@@ -100,7 +100,7 @@
 		{if $user.user_id!=0}
 			<a href="?action=main&function=logout"><input id="welcome-button" type="button" value="Log Out" class="button"></a>
 			<a href="?action=admin"><input id="welcome-button" type="button" value="Admin" class="button"></a>
-			<a href="?action=message"><input id="welcome-button" type="button" value="Welcome {$user.user_first_name}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
+			<a href="?action=message"><input id="welcome-button" type="button" value="Welcome {$user.user_first_name|escape}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
 		{else}
 			<a href="?action=register"><input id="welcome-button" type="button" value="Register" class="button"></a>
 			<a href="?action=main&function=login"><input id="welcome-button" type="button" value="Log In" class="button"></a>

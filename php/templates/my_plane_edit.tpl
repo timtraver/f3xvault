@@ -63,7 +63,7 @@ function copy_plane_values(){
 <tr>
 	<th width="20%">Plane</th>
 	<td>
-		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name}">
+		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name|escape}">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
 	</td>
@@ -98,9 +98,9 @@ function copy_plane_values(){
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{if $m.pilot_plane_media_type=='picture'}Picture{else}Video{/if}</td>
 		{if $m.location_media_type=='picture'}
-			<td><a href="{$m.pilot_plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.location_media_caption}">{$m.pilot_plane_media_url}</a></td>
+			<td><a href="{$m.pilot_plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.location_media_caption|escape}">{$m.pilot_plane_media_url}</a></td>
 		{else}
-			<td><a href="{$m.pilot_plane_media_url}" rel="videos" class="fancybox-media" title="{$m.location_media_caption}">{$m.pilot_plane_media_url}</a></td>
+			<td><a href="{$m.pilot_plane_media_url}" rel="videos" class="fancybox-media" title="{$m.location_media_caption|escape}">{$m.pilot_plane_media_url}</a></td>
 		{/if}
 		<td> <a href="?action=my&function=my_plane_media_del&pilot_plane_id={$pilot_plane.pilot_plane_id}&pilot_plane_media_id={$m.pilot_plane_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 	</tr>

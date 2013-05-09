@@ -9,12 +9,12 @@
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
 			</td>
 		</tr>
 		</table>
 
-		<h1 class="post-title entry-title" style="margin:0px;">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title" style="margin:0px;">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableprint">
 		<tr>
 			<th width="2%" align="left">Round</th>
@@ -43,7 +43,7 @@
 				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
-				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name}</th>
+				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
 			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
@@ -124,13 +124,13 @@
 					{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 					{if $event->info.event_type_code=='f3k'}
 						<th width="5%" align="left" nowrap style="background-color: {$bgcolor};">
-							{$ft.flight_type_name}
+							{$ft.flight_type_name|escape}
 						</th>
 					{/if}
 					{if $ft.flight_type_group}
 						<td align="center" nowrap style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{$values.event_pilot_round_flight_group}{if $values.event_pilot_round_flight_reflight}(R){/if}
+							{$values.event_pilot_round_flight_group|escape}{if $values.event_pilot_round_flight_reflight}(R){/if}
 							{/if}
 						</td>					
 					{/if}
@@ -140,33 +140,33 @@
 							
 								{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
 									{foreach $values.sub as $s}
-									<span style="background-color: #9DCFF0;padding: 1px;">{$s.event_pilot_round_flight_sub_val}</span>
+									<span style="background-color: #9DCFF0;padding: 1px;">{$s.event_pilot_round_flight_sub_val|escape}</span>
 									{/foreach}
 									= 
 								{/if}
-								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes}m{/if}
-								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds}s{/if}
+								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes|escape}m{/if}
+								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds|escape}s{/if}
 							{/if}
 						</td>
 					{/if}
 					{if $ft.flight_type_landing}
 						<td align="center" style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_landing}
+								{$values.event_pilot_round_flight_landing|escape}
 							{/if}
 						</td>
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" style="background-color: {$bgcolor};">
 							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_laps}
+								{$values.event_pilot_round_flight_laps|escape}
 							{/if}
 						</td>
 					{/if}
 					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
 							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
-								{$values.event_pilot_round_flight_raw_score}
+								{$values.event_pilot_round_flight_raw_score|escape}
 							{else}
 								{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
 							{/if}
@@ -182,13 +182,13 @@
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty}{/if}
+							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty|escape}{/if}
 							{$round_pen=$round_pen+$values.event_pilot_round_flight_penalty}
 						{/if}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{$values.event_pilot_round_flight_rank}
+							{$values.event_pilot_round_flight_rank|escape}
 						{/if}
 					</td>
 				{/foreach}
@@ -204,30 +204,30 @@
 		{/foreach}
 		</table>
 		
-		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</h1>
+		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
 		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th>Overall Rank</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_position']}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_position}</td>
 		</tr>
 		<tr>
 			<th>Total Points</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_score']|string_format:"%06.3f"}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:"%06.3f"}</td>
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_percentage']|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage.|string_format:"%06.3f"} %</td>
 		</tr>
-		{if $event->pilots[$event_pilot_id]['event_pilot_total_laps']>0}
+		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr>
 			<th>Total Distance Laps</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_total_laps']} (rank {$event->pilots[$event_pilot_id]['event_pilot_lap_rank']})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_laps} (rank {$event->pilots.$event_pilot_id.event_pilot_lap_rank})</td>
 		</tr>
 		{/if}
-		{if $event->pilots[$event_pilot_id]['event_pilot_average_speed']>0}
+		{if $event->pilots.$event_pilot_id.event_pilot_average_speed>0}
 		<tr>
 			<th>Pilot Average Speed</th>
-			<td>{$event->pilots[$event_pilot_id]['event_pilot_average_speed']|string_format:"%06.3f"} (rank {$event->pilots[$event_pilot_id]['event_pilot_average_speed_rank']})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:"%06.3f"} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
 		</tr>
 		{/if}
 		</table>

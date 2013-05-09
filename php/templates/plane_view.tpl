@@ -111,8 +111,8 @@ function calc_area(){ldelim}
 	</td>
 	<td rowspan="10" align="center">
 	{if $media[$rand]}
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}"><img src="{$media[$rand].plane_media_url}" width="300"></a><br>
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} {$media[$rand].state_code} - {$media[$rand].plane_media_caption}">View Slide Show</a>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} {$media[$rand].state_code|escape} - {$media[$rand].plane_media_caption|escape}"><img src="{$media[$rand].plane_media_url}" width="300"></a><br>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} {$media[$rand].state_code|escape} - {$media[$rand].plane_media_caption|escape}">View Slide Show</a>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<a data-trigger-rel="videos" class="fancybox-trigger" href="{$m.plane_media_url}" title="View all of the Videos">View Videos</a>
 	{else}
@@ -124,21 +124,21 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left">Plane Wingspan</th>
 	<td>
-		{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units}
+		{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units|escape}
 		<span id="wingspan"></span>
 	</td>
 </tr>
 <tr>
 	<th align="left">Plane Length</th>
 	<td>
-		{$plane.plane_length|string_format:'%.1f'} {$plane.plane_length_units}
+		{$plane.plane_length|string_format:'%.1f'} {$plane.plane_length_units|escape}
 		<span id="length"></span>		
 	</td>
 </tr>
 <tr>
 	<th align="left">Plane AUW Range (Empty)</th>
 	<td>
-		{$plane.plane_auw_from|string_format:'%.1f'} To {$plane.plane_auw_to|string_format:'%.1f'} {$plane.plane_auw_units}
+		{$plane.plane_auw_from|string_format:'%.1f'} To {$plane.plane_auw_to|string_format:'%.1f'} {$plane.plane_auw_units|escape}
 		<span id="auwrange"></span>
 	</td>
 </tr>
@@ -187,7 +187,7 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left">Manufacturer Country</th>
 	<td>
-		{$plane.country_name}
+		{$plane.country_name|escape}
 	</td>
 </tr>
 <tr>
@@ -213,14 +213,14 @@ function calc_area(){ldelim}
 					{/if}
 					<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><hr></td></tr>							
 				{/if}
-				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$pa.plane_att_cat_name}</b></td></tr>
+				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$pa.plane_att_cat_name|escape}</b></td></tr>
 				<tr style="border-style: none;"><td style="border-style: none;">
 				{assign var='row' value='1'}
 			{/if}
 			{if $pa.plane_att_type == 'boolean'}
 				{$pa.plane_att_name}
 			{else}
-				{$pa.plane_att_name} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{$pa.plane_att_value_value}">
+				{$pa.plane_att_name} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{$pa.plane_att_value_value|escape}">
 			{/if}
 			{assign var='cat' value=$pa.plane_att_cat_name}
 			{assign var='nextit' value=$smarty.foreach.pas.index + 1}
@@ -258,9 +258,9 @@ function calc_area(){ldelim}
 {if !$user.user_id}Log In To Add Media{/if}
 {foreach $media as $m}
 	{if $m.plane_media_type == 'picture'}
-		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
+		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name|escape}, {$m.pilot_city|escape} {$m.state_code|escape} - {$m.plane_media_caption|escape}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
 	{else}
-		<a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{$m.pilot_first_name}, {$m.pilot_city} {$m.state_code} - {$m.plane_media_caption}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
+		<a href="{$m.plane_media_url}" rel="videos" class="fancybox-media" title="{$m.pilot_first_name|escape}, {$m.pilot_city|escape} {$m.state_code|escape} - {$m.plane_media_caption|escape}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
 	{/if}
 {/foreach}
 </div>
@@ -273,9 +273,9 @@ function calc_area(){ldelim}
 		{foreach $comments as $c}
 			<li class="comment byuser bypostauthor even thread-even depth-1 clearfix" style="padding-left: 10px;">
 			<div class="comment-avatar-wrap">{$c.avatar}</div>
-			<h5 class="comment-author">{$c.user_first_name} {$c.user_last_name}</h5>
+			<h5 class="comment-author">{$c.user_first_name|escape} {$c.user_last_name|escape}</h5>
 			<div class="comment-meta"><p class="commentmetadata">{$c.plane_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</p></div>
-			<div class="comment-entry"><p>{$c.plane_comment_string}</p></div>
+			<div class="comment-entry"><p>{$c.plane_comment_string|escape}</p></div>
 			</li>
 		{/foreach}
 	</ol>

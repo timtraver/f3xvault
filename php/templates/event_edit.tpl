@@ -234,7 +234,7 @@ function check_event(){
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Event Edit</h1>
+		<h1 class="post-title entry-title">F3X Event Edit</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Edit Basic Event Parameters</h1>

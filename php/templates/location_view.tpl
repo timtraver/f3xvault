@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Location Database</h1>
+		<h1 class="post-title entry-title">F3X Location Database</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Location Details <input type="button" value=" Edit Location Information " class="button" onClick="location_edit.submit();"></h1>
@@ -17,13 +17,13 @@
 	</td>
 	<td rowspan="4" align="center">
 	{if $media[$rand]}
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} - {/if}{$media[$rand].location_media_caption}"><img src="{$media[$rand].location_media_url}" width="300"></a><br>
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name}, {$media[$rand].pilot_city} - {/if}{$media[$rand].location_media_caption}">View Slide Show</a>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} - {/if}{$media[$rand].location_media_caption|escape}"><img src="{$media[$rand].location_media_url}" width="300"></a><br>
+	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} - {/if}{$media[$rand].location_media_caption|escape}">View Slide Show</a>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	{assign var="found" value="0"}
 	{foreach $media as $m}
 		{if $m.location_media_type=='video' && $found==0}
-			<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">View Videos</a>
+			<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">View Videos</a>
 			{assign var="found" value="1"}
 		{/if}
 	{/foreach}
@@ -36,14 +36,14 @@
 <tr>
 	<th>Location Map Coordinates</th>
 	<td>
-		{$location.location_coordinates|escape} {if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
+		{$location.location_coordinates|escape} {if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name|escape})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
 	</td>
 </tr>
 <tr>
 	<th valign="top">Location Flying Disciplines</th>
 	<td>
 		{foreach $disciplines as $d}
-		{$d.discipline_description}<br>
+		{$d.discipline_description|escape}<br>
 		{/foreach}
 	</td>
 </tr>
@@ -62,13 +62,13 @@
 <tr>
 	<th valign="top">Full Location Description</th>
 	<td colspan="2">
-		{$location.location_description}
+		{$location.location_description|escape}
 	</td>
 </tr>
 <tr>
 	<th valign="top">Location Directions</th>
 	<td colspan="2">
-		{$location.location_directions}
+		{$location.location_directions|escape}
 	</td>
 </tr>
 <tr>
@@ -90,9 +90,9 @@
 				{assign var='row' value='1'}
 			{/if}
 			{if $la.location_att_type == 'boolean'}
-				<span title="{$la.location_att_description}">{$la.location_att_name}</span>
+				<span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span>
 			{else}
-				<span title="{$la.location_att_description}">{$la.location_att_name}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{$la.location_att_value_value}">
+				<span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{$la.location_att_value_value|escape}">
 			{/if}
 			{assign var='cat' value=$la.location_att_cat_name}
 			{assign var='nextit' value=$smarty.foreach.las.index + 1}
@@ -123,9 +123,9 @@
 {if !$user.user_id}Log In To Add Media{/if}
 {foreach $media as $m}
 	{if $m.location_media_type == 'picture'}
-		<a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
+		<a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
 	{else}
-		<a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
+		<a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
 	{/if}
 {/foreach}
 </div>
@@ -138,9 +138,9 @@
 		{foreach $comments as $c}
 			<li class="comment byuser bypostauthor even thread-even depth-1 clearfix" style="padding-left: 10px;">
 			<div class="comment-avatar-wrap">{$c.avatar}</div>
-			<h5 class="comment-author">{$c.user_first_name} {$c.user_last_name}</h5>
+			<h5 class="comment-author">{$c.user_first_name|escape} {$c.user_last_name|escape}</h5>
 			<div class="comment-meta"><p class="commentmetadata">{$c.location_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</p></div>
-			<div class="comment-entry"><p>{$c.location_comment_string}</p></div>
+			<div class="comment-entry"><p>{$c.location_comment_string|escape}</p></div>
 			</li>
 		{/foreach}
 	</ol>

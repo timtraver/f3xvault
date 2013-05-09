@@ -14,7 +14,7 @@
 						Many of us fly for the sheer joy of flying, but there are also many that are addicted to the friendly competitions that we have with our planes. After a competition,
 						the person that volunteered to do the scoring would have to blast an email containing some spreadsheet or scribbled notes about who won.<br>
 						<br>
-						This portion of the RC Vault is dedicated to the scoring of events. I currently have programming for scoring F3B, F3F, F3J, F3K and TD contests along with all the cool
+						This portion of the F3X Vault is dedicated to the scoring of events. I currently have programming for scoring F3B, F3F, F3J, F3K and TD contests along with all the cool
 						statistics that I could think of to go along with them. I have made it so that a user can create an event and give access for other users to edit the event so that
 						others can help out those people that may be busy. I have also tried my hardest to make the input of the data quick and efficient so that you don't have 
 						to spend hours after a tiring day inputting data.<br>

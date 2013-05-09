@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Location Database</h1>
+		<h1 class="post-title entry-title">F3X Location Database</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Location Information Edit</h1>
@@ -21,7 +21,7 @@
 	</td>
 	<td rowspan="6">
 	{foreach $disciplines as $d}
-	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description}<br>
+	<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
 	{/foreach}
 	</td>
 </tr>
@@ -75,17 +75,17 @@
 				{if $la.location_att_cat_name != ''}
 				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><hr></td></tr>
 				{/if}
-				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$la.location_att_cat_name}</b></td></tr>
+				<tr style="border-style: none;"><td colspan="4" style="border-style: none;"><b>{$la.location_att_cat_name|escape}</b></td></tr>
 				<tr style="border-style: none;">
 				{assign var='col' value='1'}
 			{/if}
 			{if $la.location_att_type == 'boolean'}
 				<td style="border-style: none;" nowrap>
-					<input type="checkbox" name="location_att_{$la.location_att_id}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> <span title="{$la.location_att_description}">{$la.location_att_name}</span>
+					<input type="checkbox" name="location_att_{$la.location_att_id}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> <span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span>
 				</td>
 			{else}
 				<td style="border-style: none;" nowrap>
-					<span title="{$la.location_att_description}">{$la.location_att_name}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value}{/if}"> 
+					<span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value|escape}{/if}"> 
 				</td>
 			{/if}
 			{if $col > 2}
@@ -127,9 +127,9 @@
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{if $m.location_media_type=='picture'}Picture{else}Video{/if}</td>
 		{if $m.location_media_type=='picture'}
-			<td><a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
+			<td><a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">{$m.location_media_url}</a></td>
 		{else}
-			<td><a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name}, {$m.pilot_city} - {/if}{$m.location_media_caption}">{$m.location_media_url}</a></td>
+			<td><a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">{$m.location_media_url}</a></td>
 		{/if}
 		<td> <a href="?action=location&function=location_media_del&location_id={$location.location_id}&location_media_id={$m.location_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 	</tr>

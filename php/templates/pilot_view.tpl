@@ -34,10 +34,10 @@
 	{if $pilot_planes}
 		{foreach $pilot_planes as $pp}
 			<tr bgcolor="{cycle values="white,lightgray"}">
-			<td><a href="?action=plane&function=plane_view&plane_id={$pp.plane_id}" title="View Aircraft">{$pp.plane_name}</a></td>
-			<td>{$pp.plane_type_short_name}</td>
-			<td>{$pp.plane_manufacturer}</td>
-			<td>{$pp.pilot_plane_color}</td>
+			<td><a href="?action=plane&function=plane_view&plane_id={$pp.plane_id}" title="View Aircraft">{$pp.plane_name|escape}</a></td>
+			<td>{$pp.plane_type_short_name|escape}</td>
+			<td>{$pp.plane_manufacturer|escape}</td>
+			<td>{$pp.pilot_plane_color|escape}</td>
 		</tr>
 		{/foreach}
 	{else}
@@ -48,7 +48,7 @@
 	</table>
 	<br>
 
-<h1 class="post-title entry-title">Pilot RC Club Affiliations</h1>
+<h1 class="post-title entry-title">Pilot F3X Club Affiliations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Club Name</th>
@@ -58,9 +58,9 @@
 {if $pilot_clubs}
 	{foreach $pilot_clubs as $pc}
 	<tr bgcolor="{cycle values="white,lightgray"}">
-		<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club">{$pc.club_name}</a></td>
-		<td>{$pc.club_city}</td>
-		<td>{$pc.state_name}, {$pc.country_code}</td>
+		<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club">{$pc.club_name|escape}</a></td>
+		<td>{$pc.club_city|escape}</td>
+		<td>{$pc.state_name|escape}, {$pc.country_code|escape}</td>
 	</tr>
 	{/foreach}
 {else}
@@ -71,7 +71,7 @@
 </table>
 <br>
 
-<h1 class="post-title entry-title">Pilot RC Flying Locations</h1>
+<h1 class="post-title entry-title">Pilot F3X Flying Locations</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Location Name</th>
@@ -82,9 +82,9 @@
 {if $pilot_locations}
 	{foreach $pilot_locations as $pl}
 	<tr bgcolor="{cycle values="white,lightgray"}">
-		<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name}</a></td>
-		<td>{$pl.location_city}</td>
-		<td>{$pl.state_name}, {$pl.country_code}</td>
+		<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name|escape}</a></td>
+		<td>{$pl.location_city|escape}</td>
+		<td>{$pl.state_name|escape}, {$pl.country_code|escape}</td>
 		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 	</tr>
 	{/foreach}
@@ -97,7 +97,7 @@
 <br>
 
 
-<h1 class="post-title entry-title">Pilot RC Events</h1>
+<h1 class="post-title entry-title">Pilot F3X Events</h1>
 <table width="100%" cellpadding="2" cellspacing="1">
 <tr>
 	<th style="text-align: left;">Event Date</th>
@@ -109,9 +109,9 @@
 	{foreach $pilot_events as $pe}
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{$pe.event_start_date|date_format:"Y-m-d"}</td>
-		<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name}</a></td>
-		<td><a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name}</a></td>
-		<td>{$pe.state_name}, {$pe.country_code}</td>
+		<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name|escape}</a></td>
+		<td><a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name|escape}</a></td>
+		<td>{$pe.state_name|escape}, {$pe.country_code|escape}</td>
 	</tr>
 	{/foreach}
 {else}

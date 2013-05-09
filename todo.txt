@@ -4,8 +4,6 @@ Todo list for rcvault project
 
 GENERAL
 
-=  Secure all of the shown variables to prevent XSS
-     Done up to all event templates
      
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
@@ -62,7 +60,6 @@ OTHER STUFF
 
   Add Events and Series to club view screen
  
-=  Check settings to allow non users to view almost everything, but not change
 
 MOBILE STUFF
 
@@ -72,6 +69,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X  Check settings to allow non users to view almost everything, but not change
+X  Secure all of the shown variables to prevent XSS
 X	Once flyoffs completed, test with more than 10 prelim rounds for formatting
 X Add carryover score or not to Flyoffs as an event preference
 X Fix printing of pilot scores

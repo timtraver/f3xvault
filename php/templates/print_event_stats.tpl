@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
 	<div class="entry clearfix">                
-		<h2 class="post-title entry-title">Event - {$event->info.event_name}</h2>
+		<h2 class="post-title entry-title">Event - {$event->info.event_name|escape}</h2>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" border="solid">
 		<tr>
@@ -10,17 +10,17 @@
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name} - {$event->info.location_city},{$event->info.state_code} {$event->info.country_code}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
 			</td>
 		</tr>
 		<tr>
 			<th align="right">Event Type</th>
 			<td>
-			{$event->info.event_type_name}
+			{$event->info.event_type_name|escape}
 			</td>
 			<th align="right">Event Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name} {$event->info.pilot_last_name} - {$event->info.pilot_city}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
 		</table>
@@ -36,7 +36,7 @@
 			{foreach $event->classes as $c}
 			{$rank=1}
 					<tr>
-						<th colspan="3" nowrap>{$c.class_description} Rankings</th>
+						<th colspan="3" nowrap>{$c.class_description|escape} Rankings</th>
 					</tr>
 					<tr>
 						<th></th>
@@ -48,7 +48,7 @@
 					{if $event->pilots.$event_pilot_id.class_id==$c.class_id}
 					<tr style="background-color: {cycle values="#9DCFF0,white"};">
 						<td>{$rank}</td>
-						<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+						<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 						<td>{$p.total|string_format:"%06.3f"}</td>
 					</tr>
 					{$rank=$rank+1}
@@ -71,7 +71,7 @@
 		{foreach $event->totals.teams as $t}
 		<tr style="background-color:#9DCFF0;">
 			<td>{$t.rank}</td>
-			<td nowrap>{$t.team_name}</td>
+			<td nowrap>{$t.team_name|escape}</td>
 			<td>{$t.total|string_format:"%06.3f"}</td>
 		</tr>
 			{foreach $event->totals.pilots as $p}
@@ -79,7 +79,7 @@
 			{if $event->pilots.$event_pilot_id.event_pilot_team==$t.team_name}
 			<tr>
 				<td></td>
-				<td>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 				<td align="right">{$p.total|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
@@ -103,7 +103,7 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -125,7 +125,7 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -147,7 +147,7 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
@@ -176,8 +176,8 @@
 		{foreach $lap_totals as $p}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_lap_rank}</td>
-				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
-				<td align="center">{$p.event_pilot_total_laps}</td>
+				<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+				<td align="center">{$p.event_pilot_total_laps|escape}</td>
 			</tr>
 		{/foreach}
 		</table>
@@ -197,8 +197,8 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
-				<td align="center">{$p.event_pilot_round_flight_laps}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
@@ -220,7 +220,7 @@
 			{if $p.event_pilot_average_speed_rank!=0}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_average_speed_rank}</td>
-				<td nowrap>{$p.pilot_first_name} {$p.pilot_last_name}</td>
+				<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
@@ -242,7 +242,7 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
 				<td align="center">{$p.event_round_number}</td>
 			</tr>
@@ -266,7 +266,7 @@
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 				<td>{$p.average_landing|string_format:"%02.2f"}</td>
 			</tr>
 			{if $rank==20}{break}{/if}

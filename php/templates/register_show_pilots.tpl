@@ -1,7 +1,7 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 
-<h1 class="post-title entry-title">Register with RC Vault</h1>
+<h1 class="post-title entry-title">Register with F3X Vault</h1>
 <form method="POST">
 <input type="hidden" name="action" value="register">
 <input type="hidden" name="function" value="save_registration">
@@ -26,9 +26,9 @@ Look down through this list and check the box that could be you.<br>
 	<td class="table-data-heading-left" nowrap>
 		<input type="radio" name="pilot_id" value="{$pilot.pilot_id}">
 	</td>
-	<td>{$pilot.pilot_last_name}</td>
-	<td>{$pilot.pilot_first_name}</td>
-	<td>{$pilot.eventstring}</td>
+	<td>{$pilot.pilot_last_name|escape}</td>
+	<td>{$pilot.pilot_first_name|escape}</td>
+	<td>{$pilot.eventstring|escape}</td>
 </tr>
 {/foreach}
 <tr>
@@ -45,13 +45,13 @@ Look down through this list and check the box that could be you.<br>
 </table>
 <br><br><br>
 <input type="hidden" name="user_name" value="{$user.user_name}">
-<input type="hidden" name="user_first_name" value="{$user.user_first_name}">
-<input type="hidden" name="user_last_name" value="{$user.user_last_name}">
-<input type="hidden" name="user_email" value="{$user.user_email}">
-<input type="hidden" name="user_pass" value="{$user.user_pass}">
-<input type="hidden" name="user_pass2" value="{$user.user_pass2}">
-<input type="hidden" name="recaptcha_challenge_field" value="{$recaptcha_challenge_field}">
-<input type="hidden" name="recaptcha_response_field" value="{$recaptcha_response_field}">
+<input type="hidden" name="user_first_name" value="{$user.user_first_name|escape}">
+<input type="hidden" name="user_last_name" value="{$user.user_last_name|escape}">
+<input type="hidden" name="user_email" value="{$user.user_email|escape}">
+<input type="hidden" name="user_pass" value="{$user.user_pass|escape}">
+<input type="hidden" name="user_pass2" value="{$user.user_pass2|escape}">
+<input type="hidden" name="recaptcha_challenge_field" value="{$recaptcha_challenge_field|escape}">
+<input type="hidden" name="recaptcha_response_field" value="{$recaptcha_response_field|escape}">
 </form>
 
 

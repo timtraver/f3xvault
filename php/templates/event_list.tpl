@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Browse RC Event List</h1>
+		<h1 class="post-title entry-title">Browse F3X Event List</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">

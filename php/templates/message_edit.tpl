@@ -47,7 +47,7 @@ $(function() {
 
 <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
 	<div class="entry clearfix">
-		<h2 class="post-title entry-title">RC Vault Message Center</h2>
+		<h2 class="post-title entry-title">F3X Vault Message Center</h2>
 				<div class="entry-content clearfix">
 
 				<h1>Message View</h1>
@@ -71,9 +71,9 @@ $(function() {
 					<th align="right">Message To</th>
 					<td>
 						{if $user_message.user_message_id!=0}
-							{$user_message.to.user_first_name} {$user_message.to.user_last_name}
+							{$user_message.to.user_first_name|escape} {$user_message.to.user_last_name|escape}
 						{else}
-							<input type="text" id="user_name" name="user_name" size="40" value="{if $user_message.to.user_first_name!=''}{$user_message.to.user_first_name} {$user_message.to.user_last_name}{/if}">
+							<input type="text" id="user_name" name="user_name" size="40" value="{if $user_message.to.user_first_name!=''}{$user_message.to.user_first_name|escape} {$user_message.to.user_last_name|escape}{/if}">
 		    				<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    				<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search users</span>
 						{/if}
@@ -93,9 +93,9 @@ $(function() {
 					<th align="right" valign="top">Message Content</th>
 					<td>
 						{if $user_message.user_message_id!=0}
-							<pre style="white-space: pre-wrap;">{$user_message.user_message_text}</pre>
+							<pre style="white-space: pre-wrap;">{$user_message.user_message_text|escape}</pre>
 						{else}
-							<textarea cols="80" rows="20" name="user_message_text">{$user_message.user_message_text}</textarea>
+							<textarea cols="80" rows="20" name="user_message_text">{$user_message.user_message_text|escape}</textarea>
 						{/if}
 					</td>
 				</tr>

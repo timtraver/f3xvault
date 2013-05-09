@@ -27,7 +27,7 @@
 <tr>
 	<th>Plane</th>
 	<td>
-		{$plane.plane_type_short_name} - {$plane.plane_name}
+		{$plane.plane_type_short_name|escape} - {$plane.plane_name|escape}
 	</td>
 </tr>
 <tr>

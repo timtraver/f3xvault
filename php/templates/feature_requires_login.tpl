@@ -8,8 +8,8 @@
 			<ul>
 				<li>Edit your pilot profile which includes which planes you fly and your favorite locations</li>
 				<li>Add comments to posts, locations, planes, etc...</li>
-				<li>Add and edit RC flying locations to the database</li>
-				<li>Add and edit RC planes to the database</li>
+				<li>Add and edit F3X flying locations to the database</li>
+				<li>Add and edit F3X planes to the database</li>
 				<li>Use the event scoring system</li>
 				<li>Edit club and series info</li>
 			</p>

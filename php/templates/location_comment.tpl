@@ -1,6 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">RC Location Database</h1>
+		<h1 class="post-title entry-title">F3X Location Database</h1>
 		<div class="entry-content clearfix">
 		
 <form name="main" method="POST">
@@ -14,7 +14,7 @@
 <tr>
 	<th>Location</th>
 	<td>
-		{$location.location_name}
+		{$location.location_name|escape}
 	</td>
 </tr>
 <tr>

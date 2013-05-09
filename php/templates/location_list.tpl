@@ -12,7 +12,7 @@
 	<td colspan="3">
 	<select name="discipline_id" onChange="searchform.submit();">
 	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description}</option>
+		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
 	{/foreach}
 	</select>
 	</td>
