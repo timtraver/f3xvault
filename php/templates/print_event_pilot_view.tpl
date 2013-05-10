@@ -216,7 +216,7 @@
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage.|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
 		</tr>
 		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr>

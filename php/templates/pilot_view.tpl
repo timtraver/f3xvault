@@ -35,7 +35,11 @@
 		{foreach $pilot_planes as $pp}
 			<tr bgcolor="{cycle values="white,lightgray"}">
 			<td><a href="?action=plane&function=plane_view&plane_id={$pp.plane_id}" title="View Aircraft">{$pp.plane_name|escape}</a></td>
-			<td>{$pp.plane_type_short_name|escape}</td>
+			<td>
+				{foreach $pp.disciplines as $d}
+					{$d.discipline_code_view}{if !$d@last},{/if}
+				{/foreach}
+			</td>
 			<td>{$pp.plane_manufacturer|escape}</td>
 			<td>{$pp.pilot_plane_color|escape}</td>
 		</tr>
