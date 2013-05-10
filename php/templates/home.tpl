@@ -5,7 +5,7 @@
 				<div class="entry-content clearfix">
 					<p>
 						<h3>Where Are You?</h3>
-						You have stumbled upon a storage vault of information about RC F3X Model Flying. It includes databases for flying locations, planes, competitions, and clubs and all related data.
+						You have stumbled upon a storage vault of information about RC F3X Model Flying. It includes databases for flying locations, planes, competitions, and clubs and all related data. It even includes a full scoring system for all of the disciplines to run a live competition!
 						<h3>What can you do here?</h3>
 						You can view and most importantly contribute to the knowledge base of our flying sports. A database is only as good as the data that you put in it, so fill it up!!!
 						<h3>How can I start?</h3>
