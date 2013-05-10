@@ -208,7 +208,7 @@
 					{if $p.event_pilot_id==$event_pilot_id}
 						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
 						{$round_total=$round_total-$round_pen}
-						<td width="5%" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
+						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
 					{/if}
 				{/foreach}
 			</tr>
