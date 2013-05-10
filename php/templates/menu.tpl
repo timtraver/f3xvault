@@ -8,12 +8,12 @@
 					<li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=location&function=location_map&country_id=0&state_id=0&search=">Location Map</a></li>
 				</ul>
 			</li>
-			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='planes'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_planes"><strong>Plane Database</strong></a>
+			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='planes'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_planes"><strong>Planes</strong></a>
 				<ul class="sub-menu">
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=plane&search=">Database Browse</a></li>
 				</ul>
 			</li>
-			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='events'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_events"><strong>Events</strong></a>
+			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='events'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_events"><strong>Competitions</strong></a>
 				<ul class="sub-menu">
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=event&country_id=0&state_id=0&search=">Event Browse</a></li>
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=series&country_id=0&state_id=0&search=">Series Browse</a></li>
