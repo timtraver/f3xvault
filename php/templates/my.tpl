@@ -108,9 +108,13 @@
 	</tr>
 	{if $pilot_planes}
 		{foreach $pilot_planes as $pp}
-			<tr bgcolor="{cycle values="white,lightgray"}">
+		<tr bgcolor="{cycle values="white,lightgray"}">
 			<td><a href="?action=my&function=my_plane_edit&pilot_plane_id={$pp.pilot_plane_id}" title="Edit My Aircraft">{$pp.plane_name|escape}</a></td>
-			<td>{$pp.plane_type_short_name|escape}</td>
+			<td>
+				{foreach $pp.disciplines as $d}
+					{$d.discipline_code_view}{if !$d@last},{/if}
+				{/foreach}
+			</td>
 			<td>{$pp.plane_manufacturer|escape}</td>
 			<td>{$pp.pilot_plane_color|escape}</td>
 			<td> <a href="?action=my&function=my_plane_del&pilot_plane_id={$pp.pilot_plane_id}" title="Remove Plane" onClick="confirm('Are you sure you wish to remove this plane?')"><img src="images/del.gif"></a></td>

@@ -94,6 +94,19 @@ function my_user_show() {
 				AND pp.pilot_plane_status=1
 		");
 		$pilot_planes=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		foreach($pilot_planes as $key=>$plane){
+			$disciplines=array();
+			# Lets get the plane types
+			$stmt=db_prep("
+				SELECT *
+				FROM plane_discipline pd
+				LEFT JOIN discipline d ON pd.discipline_id=d.discipline_id
+				WHERE pd.plane_id=:plane_id
+				ORDER BY d.discipline_order
+			");
+			$disciplines=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+			$pilot_planes[$key]['disciplines']=$disciplines;
+		}
 		
 		# Get the pilots favorite locations
 		$pilot_locations=array();
