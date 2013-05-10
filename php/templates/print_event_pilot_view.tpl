@@ -31,7 +31,6 @@
 				{$cols=7}
 			{/if}
 			<th colspan="{$cols}" align="center" nowrap>Round Data</th>
-			<th width="5%" nowrap>Pen</th>
 			<th width="5%" nowrap>Total</th>
 		</tr>
 		{if $event->info.event_type_code!='f3k'}
@@ -45,7 +44,6 @@
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
 				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
@@ -72,7 +70,6 @@
 				<th align="center">Pen</th>
 				<th align="center">Rank</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
 		</tr>
 		{else}
@@ -195,9 +192,8 @@
 				{foreach $event->totals.pilots as $p}
 					{if $p.event_pilot_id==$event_pilot_id}
 						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
-						<td width="5%" align="center" nowrap style="background-color: {$bgcolor};">{if $round_pen!=0}{$round_pen|string_format:"%03.0f"}{/if}</td>
 						{$round_total=$round_total-$round_pen}
-						<td width="5%" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
+						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
 					{/if}
 				{/foreach}
 			</tr>
@@ -216,7 +212,7 @@
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage.|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
 		</tr>
 		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr>
