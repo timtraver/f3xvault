@@ -21,10 +21,14 @@ $(function() {
 		},
    		select: function( event, ui ) {
 			document.main.plane_id.value = ui.item.id;
+			document.getElementById('search_message').innerHTML = ' Plane Selected';
+			document.getElementById('create_button').disabled = true;
+			$("#create_button").css({ opacity: 0.5 });
 		},
    		change: function( event, ui ) {
    			if(document.main.plane_name.value==''){
 				document.main.plane_id.value = 0;
+				document.getElementById('search_message').innerHTML = ' Start typing to search plane database';
 			}
 		},
    		response: function( event, ui ) {
@@ -34,7 +38,9 @@ $(function() {
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
-				mes.innerHTML = ' No Results Found. Use Create button to add new plane.';
+				mes.innerHTML = ' No Results Found. Use Create button to add new model.';
+				document.getElementById('create_button').disabled = false;
+				$("#create_button").css({ opacity: 1 });
 			}
 		}
 	});
@@ -42,6 +48,9 @@ $(function() {
 function copy_plane_values(){
 	document.create_new_plane.plane_name.value=document.main.plane_name.value;
 	document.create_new_plane.from_pilot_plane_color.value=document.main.pilot_plane_color.value;
+	document.create_new_plane.from_pilot_plane_serial.value=document.main.pilot_plane_serial.value;
+	document.create_new_plane.from_pilot_plane_auw.value=document.main.pilot_plane_auw.value;
+	document.create_new_plane.from_pilot_plane_auw_units.value=document.main.pilot_plane_auw_units.value;
 }
 </script>
 {/literal}
@@ -56,21 +65,46 @@ function copy_plane_values(){
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
 <input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
 
-<h1 class="post-title entry-title">My Plane
-<input type="button" value=" + Create New Plane " class="block-button" onClick="copy_plane_values(); create_new_plane.submit();">
+<h1 class="post-title entry-title">
+My Plane
+<input type="button" value=" Back To My Pilot Profile " class="block-button" onclick="goback.submit();">
 </h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+{if $pilot_plane.pilot_plane_id==0}
 <tr>
-	<th width="20%">Plane</th>
+	<th align="right" width="20%">Plane Model</th>
 	<td>
 		<input type="text" id="plane_name" name="plane_name" size="40" value="{$pilot_plane.plane_name|escape}">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
+		    <span id="search_message" style="font-style: italic;color: grey;">Start typing to search plane database</span>
+			<input id="create_button" type="button" value=" + Create New Model " class="block-button" onClick="copy_plane_values(); create_new_plane.submit();">
 	</td>
 </tr>
+{else}
 <tr>
-	<th>Plane Color Scheme</th>
+	<th align="right" width="20%">Plane Model</th>
+	<td>
+		{$pilot_plane.plane_name|escape}
+	</td>
+</tr>
+{/if}
+<tr>
+	<th align="right">Plane Color Scheme</th>
 	<td><input type="text" size="50" name="pilot_plane_color" value="{$pilot_plane.pilot_plane_color|escape}"></td>
+</tr>
+<tr>
+	<th align="right">Plane Serial Number</th>
+	<td><input type="text" size="20" name="pilot_plane_serial" value="{$pilot_plane.pilot_plane_serial|escape}"></td>
+</tr>
+<tr>
+	<th align="right">Plane Empty Weight</th>
+	<td>
+		<input type="text" size="10" name="pilot_plane_auw" value="{$pilot_plane.pilot_plane_auw|string_format:'%.1f'}">
+		<select name="pilot_plane_auw_units">
+		<option value="oz" {if $plane.pilot_plane_auw_units=="oz"}SELECTED{/if}>Ounces</option>
+		<option value="gr" {if $plane.pilot_plane_auw_units=="gr"}SELECTED{/if}>Grams</option>
+		</select>
+	</td>
 </tr>
 </table>
 <center>
@@ -79,8 +113,8 @@ function copy_plane_values(){
 	<input type="submit" value=" Add This Plane To My Quiver " class="block-button" onClick="if(document.main.plane_id.value==0){ldelim}alert('You must choose or add a valid plane before saving this record.');return false;{rdelim}">
 {else}
 	<input type="submit" value=" Save This Plane Info " class="block-button">
+	<input type="button" value=" Delete This Plane From My Quiver " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this plane from your quiver?') && document.deleteplane.submit();">
 {/if}
-<input type="button" value=" Back To My Pilot Profile " class="block-button" onclick="goback.submit();">
 </center>
 </form>
 
@@ -129,6 +163,12 @@ function copy_plane_values(){
 <input type="hidden" name="action" value="my">
 </form>
 
+<form name="deleteplane" method="GET">
+<input type="hidden" name="action" value="my">
+<input type="hidden" name="function" value="my_plane_del">
+<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
+</form>
+
 <form name="create_new_plane" method="POST">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_edit">
@@ -137,6 +177,9 @@ function copy_plane_values(){
 <input type="hidden" name="from_action" value="my">
 <input type="hidden" name="from_function" value="my_plane_edit">
 <input type="hidden" name="from_pilot_plane_color" value="">
+<input type="hidden" name="from_pilot_plane_serial" value="">
+<input type="hidden" name="from_pilot_plane_auw" value="">
+<input type="hidden" name="from_pilot_plane_auw_units" value="">
 </form>
 
 </div>

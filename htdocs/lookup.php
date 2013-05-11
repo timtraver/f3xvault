@@ -99,7 +99,6 @@ function lookup_plane() {
 	$stmt=db_prep("
 		SELECT *
 		FROM plane p
-		LEFT JOIN plane_type pt ON p.plane_type_id=pt.plane_type_id
 		WHERE LOWER(p.plane_name) LIKE :q
 		ORDER BY plane_name
 	");
@@ -108,7 +107,7 @@ function lookup_plane() {
 	foreach($result as $r){
 		$planes[]=array(
 			"id"=>$r['plane_id'],
-			"label"=>"{$r['plane_type_short_name']} {$r['plane_name']}",
+			"label"=>"{$r['plane_name']}",
 			"value"=>"{$r['plane_name']}"
 		);
 	}

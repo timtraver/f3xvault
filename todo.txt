@@ -32,6 +32,9 @@ EVENT STUFF
 
   Don't show flyoff number if not a flyoff event type on round screen
   
+  For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
+  	and when adding new flyoff rounds, only those pilots are shown.
+  	
   Draw : ability to create flying order F3F and maybe have an option to stagger each round
   Draw : ability to create F3B distance orders before hand
     
@@ -57,7 +60,7 @@ SERIES STUFF
 	print series pilot detail view
 	
 OTHER STUFF
-
+  Put a "Send This Pilot a Message" button on the pilot view screen
   Add Events and Series to club view screen
  
 

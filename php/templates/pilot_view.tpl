@@ -108,6 +108,8 @@
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: left;">State/Country</th>
+	<th style="text-align: left;">Finishing Position</th>
+	<th style="text-align: left;">Finishing Percentage</th>
 </tr>
 {if $pilot_events}
 	{foreach $pilot_events as $pe}
@@ -116,6 +118,8 @@
 		<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name|escape}</a></td>
 		<td><a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name|escape}</a></td>
 		<td>{$pe.state_name|escape}, {$pe.country_code|escape}</td>
+		<td align="center">{$pe.event_pilot_position|escape}</td>
+		<td align="right">{$pe.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 	</tr>
 	{/foreach}
 {else}

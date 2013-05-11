@@ -299,6 +299,15 @@ function my_plane_edit() {
 		if(isset($_REQUEST['pilot_plane_color'])){
 			$pilot_plane['pilot_plane_color']=$_REQUEST['pilot_plane_color'];
 		}
+		if(isset($_REQUEST['pilot_plane_serial'])){
+			$pilot_plane['pilot_plane_serial']=$_REQUEST['pilot_plane_serial'];
+		}
+		if(isset($_REQUEST['pilot_plane_auw'])){
+			$pilot_plane['pilot_plane_auw']=$_REQUEST['pilot_plane_auw'];
+		}
+		if(isset($_REQUEST['pilot_plane_auw_units'])){
+			$pilot_plane['pilot_plane_auw_units']=$_REQUEST['pilot_plane_auw_units'];
+		}
 	}
 	
 	# Get plane media records
@@ -323,6 +332,9 @@ function my_plane_save() {
 	$pilot_plane_id=$_REQUEST['pilot_plane_id'];
 	$plane_id=$_REQUEST['plane_id'];
 	$pilot_plane_color=$_REQUEST['pilot_plane_color'];
+	$pilot_plane_serial=$_REQUEST['pilot_plane_serial'];
+	$pilot_plane_auw=$_REQUEST['pilot_plane_auw'];
+	$pilot_plane_auw_units=$_REQUEST['pilot_plane_auw_units'];
 
 	# Save this pilot plane
 	if($pilot_plane_id==0){
@@ -332,12 +344,18 @@ function my_plane_save() {
 			SET pilot_id=:pilot_id,
 				plane_id=:plane_id,
 				pilot_plane_color=:pilot_plane_color,
+				pilot_plane_serial=:pilot_plane_serial,
+				pilot_plane_auw=:pilot_plane_auw,
+				pilot_plane_auw_units=:pilot_plane_auw_units,
 				pilot_plane_status=1
 		");
 		$result=db_exec($stmt,array(
 			"pilot_id"=>$pilot_id,
 			"plane_id"=>$plane_id,
-			"pilot_plane_color"=>$pilot_plane_color		
+			"pilot_plane_color"=>$pilot_plane_color,
+			"pilot_plane_serial"=>$pilot_plane_serial,
+			"pilot_plane_auw"=>$pilot_plane_auw,
+			"pilot_plane_auw_units"=>$pilot_plane_auw_units
 		));
 		user_message("Added New Plane to your quiver!");
 		$_REQUEST['pilot_plane_id']=$GLOBALS['last_insert_id'];
@@ -345,10 +363,20 @@ function my_plane_save() {
 		$stmt=db_prep("
 			UPDATE pilot_plane
 			SET plane_id=:plane_id,
-				pilot_plane_color=:pilot_plane_color
+				pilot_plane_color=:pilot_plane_color,
+				pilot_plane_serial=:pilot_plane_serial,
+				pilot_plane_auw=:pilot_plane_auw,
+				pilot_plane_auw_units=:pilot_plane_auw_units
 			WHERE pilot_plane_id=:pilot_plane_id
 		");
-		$result=db_exec($stmt,array("plane_id"=>$plane_id,"pilot_plane_color"=>$pilot_plane_color,"pilot_plane_id"=>$pilot_plane_id));
+		$result=db_exec($stmt,array(
+			"plane_id"=>$plane_id,
+			"pilot_plane_color"=>$pilot_plane_color,
+			"pilot_plane_serial"=>$pilot_plane_serial,
+			"pilot_plane_auw"=>$pilot_plane_auw,
+			"pilot_plane_auw_units"=>$pilot_plane_auw_units,
+			"pilot_plane_id"=>$pilot_plane_id
+		));
 		user_message("Updated Your Plane Info");
 	}
 	log_action($pilot_id);

@@ -61,20 +61,23 @@ function calc_area(){ldelim}
 	var multiple = .0645;
 	var calc_wing_value = 0;
 	var calc_tail_value = 0;
+	var calc_total_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
 		calc_wing_value = multiple * current_wing_value;
 		calc_tail_value = multiple * current_tail_value;
-		calc_units = 'Decimeters Squared';
+		calc_total_value = calc_wing_value + calc_tail_value;
+		calc_units = 'dm<sup>2</sup>';
 	{rdelim}else{ldelim}
 		calc_wing_value = current_wing_value / multiple;
 		calc_tail_value = current_tail_value / multiple;
-		calc_units = 'Inches Squared';
+		calc_total_value = calc_wing_value + calc_tail_value;
+		calc_units = 'in<sup>2</sup>';
 	{rdelim}
 	var totalarea = (current_wing_value*1) + (current_tail_value*1);
 	document.getElementById('wingarea').innerHTML = ' = ' + calc_wing_value.toFixed(2) + ' ' + calc_units;
 	document.getElementById('tailarea').innerHTML = ' = ' + calc_tail_value.toFixed(2) + ' ' + calc_units;
-	document.getElementById('totalarea').innerHTML = totalarea + ' ' + current_units;
+	document.getElementById('totalarea').innerHTML = totalarea + ' ' + current_units + ' = ' + calc_total_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 </script>
 <form name="main" method="POST">

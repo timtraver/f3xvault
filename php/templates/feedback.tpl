@@ -27,45 +27,46 @@ This is just a short list of some of the things already on my suggestion and tod
 <ul>
 	<li>Event Scoring</li>
 		<ul>
-		<li>Reflights<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-		<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-		<li>Create flying draw order for All disciplines</li>
-		<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-		<li>Printouts for flight orders and groups</li>
-		<li>Possibly print to PDF format for easier printing</li>
-		<li>Email link to results for event participants</li>
+			<li>Reflights<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Create flying draw order for All disciplines</li>
+			<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Printouts for flight orders and groups</li>
+			<li>Possibly print to PDF format for easier printing</li>
+			<li>Email link to results for event participants</li>
+			<li>Full Mobile version for tablets and smartphones</li>
 		</ul>
 	<li>Location Database</li>
 		<ul>
-		<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Plane Database</li>
 		<ul>
-		<li>Have an are to share plane setup values</li>
-		<li>Plane Reviews</li>
-		<li>Plane links to build logs</li>
+			<li>Add plane setups to allow pilots to show setup info</li>
+			<li>Plane Reviews</li>
+			<li>Plane links to build logs</li>
 		</ul>
 	<li>Series</li>
 		<ul>
-		<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-		<li>Multiple Series assignment (Events can be part of more than one series)</li>
+			<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Multiple Series assignment (Events can be part of more than one series)</li>
 		</ul>
 	<li>Clubs</li>
 		<ul>
-		<li>Club Member management (possible due paying?)</li>
-		<li>Club Mailing List management</li>
-		<li>Club Calendar</li>
-		<li>Add Events and Series to club view screen</li>
+			<li>Club Member management (possible due paying?)</li>
+			<li>Club Mailing List management</li>
+			<li>Club Calendar</li>
+			<li>Add Events and Series to club view screen</li>
 		</ul>
 	<li>General</li>
 		<ul>
-		<li>Create a "Using this site" kind of tutorial instructions</li>
-		<li>Create a mobile version of the site to be able to view locations, planes, and events</li>
-		<li>Mobile score entry by end user</li>
+			<li>Create a "Using this site" kind of tutorial instructions</li>
+			<li>Create a mobile version of the site to be able to view locations, planes, and events</li>
+			<li>Mobile score entry by end user</li>
 		</ul>
 	<li>Wish List</li>
 		<ul>
-		<li>Live Timing board control</li>
+			<li>Live Timing board control</li>
 		</ul>
 </ul>
 </div>

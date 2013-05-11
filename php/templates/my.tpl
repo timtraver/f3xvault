@@ -48,23 +48,23 @@
 {else}
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Pilot First Name</th>
+	<th align="right">First Name</th>
 	<td><input type="text" size="30" name="pilot_first_name" value="{$pilot.pilot_first_name|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot Last Name</th>
+	<th align="right">Last Name</th>
 	<td><input type="text" size="30" name="pilot_last_name" value="{$pilot.pilot_last_name|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot Email</th>
+	<th align="right">Email Address</th>
 	<td><input type="text" size="30" name="pilot_email" value="{$pilot.pilot_email|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot City</th>
+	<th align="right">City</th>
 	<td><input type="text" size="30" name="pilot_city" value="{$pilot.pilot_city|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot State</th>
+	<th align="right">State</th>
 	<td>
 		<select name="state_id">
 		{foreach $states as $state}
@@ -74,7 +74,7 @@
 	</td>
 </tr>
 <tr>
-	<th>Pilot Country</th>
+	<th align="right">Country</th>
 	<td>
 		<select name="country_id">
 		{foreach $countries as $country}
@@ -84,11 +84,11 @@
 	</td>
 </tr>
 <tr>
-	<th>Pilot AMA Number</th>
+	<th align="right">AMA Number</th>
 	<td><input type="text" size="10" name="pilot_ama" value="{$pilot.pilot_ama|escape}"></td>
 </tr>
 <tr>
-	<th>Pilot FAI Number</th>
+	<th align="right">FAI Number</th>
 	<td><input type="text" size="10" name="pilot_fai" value="{$pilot.pilot_fai|escape}"></td>
 </tr>
 </table>

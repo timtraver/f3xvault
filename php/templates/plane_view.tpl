@@ -46,11 +46,11 @@ function calc_auw(){ldelim}
 	if(current_units == 'oz' || current_units == ''){ldelim}
 		calc_from_value = multiple * current_from_value;
 		calc_to_value = multiple * current_to_value;
-		calc_units = 'grams';
+		calc_units = 'gr';
 	{rdelim}else{ldelim}
 		calc_from_value = current_from_value / multiple;
 		calc_to_value = current_to_value / multiple;
-		calc_units = 'ounces';
+		calc_units = 'oz';
 	{rdelim}
 	document.getElementById('auwrange').innerHTML = '  =  ' + calc_from_value.toFixed(2) + ' To ' + calc_to_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
@@ -59,15 +59,21 @@ function calc_max_weight(){ldelim}
 	var current_value = {$plane.plane_wing_area + $plane.plane_tail_area};
 	var multiple = 28.35;
 	var calc_value = 0;
+	var calc_to = 0;
 	var calc_units = '';
+	var calc_to_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
 		calc_value = 0.17 * current_value;
-		calc_units = 'ounces';
+		calc_units = 'oz';
+		calc_to = multiple * calc_value;
+		calc_to_units = 'gr';
 	{rdelim}else{ldelim}
 		calc_value = 75 * current_value;
-		calc_units = 'grams';
+		calc_units = 'gr';
+		calc_to = calc_value / multiple;
+		calc_to_units = 'oz';
 	{rdelim}
-	document.getElementById('max_weight').innerHTML = calc_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('max_weight').innerHTML = calc_value.toFixed(2) + ' ' + calc_units + ' = ' + calc_to.toFixed(2) + ' ' + calc_to_units;
 {rdelim}
 function calc_area(){ldelim}
 	var current_units = '{$plane.plane_wing_area_units}';
@@ -76,20 +82,25 @@ function calc_area(){ldelim}
 	var multiple = .0645;
 	var calc_wing_value = 0;
 	var calc_tail_value = 0;
+	var calc_total_value = 0;
 	var calc_units = '';
 	if(current_units == 'in2' || current_units == ''){ldelim}
 		calc_wing_value = multiple * current_wing_value;
 		calc_tail_value = multiple * current_tail_value;
+		calc_total_value = calc_wing_value +  calc_tail_value;
+		current_units = 'in<sup>2</sup>';
 		calc_units = 'dm<sup>2</sup>';
 	{rdelim}else{ldelim}
 		calc_wing_value = current_wing_value / multiple;
 		calc_tail_value = current_tail_value / multiple;
+		calc_total_value = calc_wing_value +  calc_tail_value;
+		current_units = 'dm<sup>2</sup>';
 		calc_units = 'in<sup>2</sup>';
 	{rdelim}
 	var totalarea = (current_wing_value*1) + (current_tail_value*1);
 	document.getElementById('wingarea').innerHTML = ' = ' + calc_wing_value.toFixed(2) + ' ' + calc_units;
 	document.getElementById('tailarea').innerHTML = ' = ' + calc_tail_value.toFixed(2) + ' ' + calc_units;
-	document.getElementById('totalarea').innerHTML = totalarea.toFixed(2);
+	document.getElementById('totalarea').innerHTML = totalarea.toFixed(2) + ' ' + current_units + ' = ' + calc_total_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 </script>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -159,7 +170,7 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left">Plane Total Area</th>
 	<td bgcolor="lightgrey">
-		<span id="totalarea"></span> {if $plane.plane_wing_area_units == 'in2'}in<sup>2</sup>{else}dm<sup>2</sup>{/if}
+		<span id="totalarea"></span>
 	</td>
 </tr>
 {if $calc_max}
@@ -269,19 +280,16 @@ function calc_area(){ldelim}
 
 <div id="comments" class="clearfix no-ping">
 <h4 class="comments gutter-left current">{$comments_num} Plane Comments</h4>
+	<input type="button" value="Add A Comment About This Plane" onClick="addcomment.submit();" class="block-button">
 <ol class="clearfix" id="comments_list">
 		{foreach $comments as $c}
 			<li class="comment byuser bypostauthor even thread-even depth-1 clearfix" style="padding-left: 10px;">
-			<div class="comment-avatar-wrap">{$c.avatar}</div>
 			<h5 class="comment-author">{$c.user_first_name|escape} {$c.user_last_name|escape}</h5>
 			<div class="comment-meta"><p class="commentmetadata">{$c.plane_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</p></div>
 			<div class="comment-entry"><p>{$c.plane_comment_string|escape}</p></div>
 			</li>
 		{/foreach}
 	</ol>
-<center>
-	<input type="button" value="Add A Comment About This Plane" onClick="addcomment.submit();" class="block-button">
-</center>
 </div>
 
 <form name="addcomment" method="GET">
