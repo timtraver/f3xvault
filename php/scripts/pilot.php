@@ -110,7 +110,7 @@ function pilot_list() {
 			WHERE p.$search_field $operator :search
 				$addcountry
 				$addstate
-			ORDER BY p.country_id,p.state_id,p.pilot_first_name
+			ORDER BY p.pilot_first_name
 		");
 		$pilots=db_exec($stmt,array("search"=>$search));
 	}else{
@@ -123,7 +123,7 @@ function pilot_list() {
 			WHERE 1
 				$addcountry
 				$addstate
-			ORDER BY p.country_id,p.state_id,p.pilot_first_name
+			ORDER p.pilot_first_name
 		");
 		$pilots=db_exec($stmt,array());
 	}
