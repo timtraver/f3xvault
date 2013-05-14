@@ -112,7 +112,9 @@ function check_permission() {ldelim}
 		
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span></h1>
+		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span>
+			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
+		</h1>
 		<span id="pilots">
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
@@ -829,6 +831,11 @@ function check_permission() {ldelim}
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_draw" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_delete" method="POST">

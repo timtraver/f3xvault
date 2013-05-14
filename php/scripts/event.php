@@ -2121,4 +2121,59 @@ function save_individual_flight(){
 	}
 	return;
 }
+function event_draw() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
+	$smarty->assign("event",$e);
+
+	$maintpl=find_template("event_draw.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_draw_print() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$print_round_from=intval($_REQUEST['print_round_from']);
+	$print_round_to=intval($_REQUEST['print_round_to']);
+	$print_type=intval($_REQUEST['print_type']);
+	
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+
+	$smarty->assign("print_round_from",$print_round_from);
+	$smarty->assign("print_round_to",$print_round_to);
+	$smarty->assign("flight_type_id",$flight_type_id);
+	$smarty->assign("event",$e);
+
+	$template='';
+	switch($print_type){
+		case 'cd':
+			$template="print_draw_cd.tpl";
+			break;
+		case 'pilot':
+			$template="print_draw_pilot.tpl";
+			break;
+		case 'individual':
+			$template="print_draw_individual.tpl";
+			break;
+		case 'full':
+		default:
+			$template="print_draw_full.tpl";
+			break;
+	}
+
+	$maintpl=find_template($template);
+	return $smarty->fetch($maintpl);
+}
+
 ?>
