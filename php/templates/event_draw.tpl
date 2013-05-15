@@ -332,9 +332,11 @@ function copy_club_values(){
 		{/foreach}
 		</select>
 		<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
+		{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
 		<input type="button" value=" Pilot Recording Sheets " onClick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();" class="block-button">
-		<input type="button" value=" Individual Pilot Draw " onClick="document.print_{$ft.flight_type_id}.print_type.value='individual';submit();" class="block-button">
-		<input type="button" value=" Full Draw Matrix " onClick="document.print_{$ft.flight_type_id}.print_type.value='full';submit();" class="block-button">
+		{/if}
+		<input type="button" value=" Draw Table " onClick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();" class="block-button">
+		<input type="button" value=" Full Draw Matrix " onClick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();" class="block-button">
 	</td>
 </tr>
 </form>

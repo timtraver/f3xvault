@@ -2144,7 +2144,7 @@ function event_draw_print() {
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
 	$print_round_from=intval($_REQUEST['print_round_from']);
 	$print_round_to=intval($_REQUEST['print_round_to']);
-	$print_type=intval($_REQUEST['print_type']);
+	$print_type=$_REQUEST['print_type'];
 	
 	$e=new Event($event_id);
 	$e->get_teams();
@@ -2157,18 +2157,18 @@ function event_draw_print() {
 
 	$template='';
 	switch($print_type){
-		case 'cd':
+		case "cd":
 			$template="print_draw_cd.tpl";
 			break;
-		case 'pilot':
+		case "pilot":
 			$template="print_draw_pilot.tpl";
 			break;
-		case 'individual':
-			$template="print_draw_individual.tpl";
+		case "table":
+			$template="print_draw_table.tpl";
 			break;
-		case 'full':
-		default:
-			$template="print_draw_full.tpl";
+		case "matrix":
+		default :
+			$template="print_draw_matrix.tpl";
 			break;
 	}
 
