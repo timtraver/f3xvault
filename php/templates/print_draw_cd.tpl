@@ -1,5 +1,3 @@
-<div class="page type-page clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
-	<div class="entry clearfix">
 		<h2>{$event->info.event_name}</h2>           
 		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
 		<tr>
@@ -52,7 +50,7 @@
 			{$bottom=1}
 		{/if}
 		<tr>
-			<td align="center">{if $p@first}{$r.event_round_number}{/if}</td>
+			<td align="center" {if $p@first}style="border-top: 2px solid black;"{/if}>{if $p@first}{$r.event_round_number}{/if}</td>
 			{if $event->flight_types.$flight_type_id.flight_type_group}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
@@ -60,42 +58,38 @@
 			{/if}
 			<td align="left" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
-				<td style="border: thin solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
-				<td style="border: thin solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_laps}
-				<td style="border: thin solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
-			<td style="border: thin solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+			<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 		</tr>
 		{$total_rows=$total_rows+1}
 		{$oldgroup=$p.event_pilot_round_flight_group}
 		{$bottom=0}
 		{/foreach}
 		{if $r.flights.$flight_type_id.flight_type_reflight==1}
-		{for $var=1 to (35-$total_rows)}
+		{for $var=1 to (41-$total_rows)}
 		<tr>
 			<td align="center">{if $var==1}Reflights{/if}</td>
 			<td align="center" style="border-bottom: 1px solid black;">&nbsp;</td>
 			<td align="left" style="border-bottom: 1px solid black;">&nbsp;</td>
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
-				<td style="border: thin solid black;">&nbsp;</td>
+				<td style="border: 1px solid black;">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
-				<td style="border: thin solid black;">&nbsp;</td>
+				<td style="border: 1px solid black;">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_laps}
-				<td style="border: thin solid black;">&nbsp;</td>
+				<td style="border: 1px solid black;">&nbsp;</td>
 			{/if}
-			<td style="border: thin solid black;">&nbsp;</td>
+			<td style="border: 1px solid black;">&nbsp;</td>
 		</tr>
 		{/for}
 		{/if}
 		</table>
 		{/foreach}
-		
-
-</div>
-</div>

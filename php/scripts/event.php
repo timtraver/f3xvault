@@ -2156,24 +2156,75 @@ function event_draw_print() {
 	$smarty->assign("event",$e);
 
 	$template='';
+	$title='';
+	$orientation='P';
 	switch($print_type){
 		case "cd":
 			$template="print_draw_cd.tpl";
+			$title="CD Recording Sheet";
+			$orientation="P";
 			break;
 		case "pilot":
-			$template="print_draw_pilot.tpl";
+			$template="print_draw_pilot_recording.tpl";
+			$title="Pilot Score Recording Sheets";
+			$orientation="L";
 			break;
 		case "table":
 			$template="print_draw_table.tpl";
+			$title="Draw Table";
+			$orientation="P";
 			break;
 		case "matrix":
 		default :
 			$template="print_draw_matrix.tpl";
+			$title="Draw Matrix";
+			$orientation="P";
 			break;
 	}
-
+	# Create the PDF
+	include_library('tcpdf/config/lang/eng.php');
+	include_library('tcpdf/tcpdf.php');
 	$maintpl=find_template($template);
-	return $smarty->fetch($maintpl);
+	$page_html=$smarty->fetch($template);
+	
+	# Now create the pdf from the above template and save it
+	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+	$pdf->SetCreator('F3X Vault');
+	$pdf->SetAuthor('F3X Vault');
+	$pdf->SetTitle($title);
+	$pdf->setPrintHeader(false);
+	$pdf->setHeaderMargin(0);
+	$pdf->setFooterData($tc=array(0,64,0), $lc=array(0,64,128));
+#	$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+	$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+	$pdf->SetMargins(10, 0, 10);
+	$pdf->SetHeaderMargin(0);
+	$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+	$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+	$pdf->setFontSubsetting(true);
+	$pdf->SetFont('times', '', 10, '', true);
+	$pdf->AddPage($orientation);
+	$pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $page_html, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
+	$file_contents=$pdf->Output("$title.pdf", 'D');
+	
+	# Now send it to the browser
+	#header("Pragma: public");
+	#header("Expires: 0");
+	#header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	#header("Content-Type: application/force-download");
+	#header("Content-Type: application/octet-stream");
+	#header("Content-Type: application/download");
+	#header("Content-Disposition: attachment; filename=$title;");
+	#header("Content-Transfer-Encoding: binary");
+	#header("Content-Length: ".filesize($fullpath));
+
+     #   readfile($fullpath);
+
+
+
+	return $page_html;
 }
 
 ?>

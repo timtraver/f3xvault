@@ -1,11 +1,6 @@
 
-	</div>
-	</div>
-        <div id="copyright">
-    	<h3>Copyright &copy; Tim Traver 2013</h3>
-   	    </div>
-
-</div><!-- #container -->
+<div id="copyright" style="clear:both;">
+	<h4>Copyright &copy; Tim Traver 2013</h4>
 </div>
 
     </body>

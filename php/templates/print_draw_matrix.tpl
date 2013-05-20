@@ -1,5 +1,3 @@
-<div class="page type-page clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
-	<div class="entry clearfix">
 		<h2>{$event->info.event_name}</h2>           
 		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
 		<tr>
@@ -15,18 +13,20 @@
 		</table>
 		<h2 class="post-title entry-title" style="margin:0px;">Draw Matrix - {$event->flight_types.$flight_type_id.flight_type_name}</h2>	
 		{foreach $event->rounds as $r}
-		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
+		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || $r.flights.$flight_type_id.event_round_flight_score==0}
 			{continue}
 		{/if}
-		<table {if $r@iteration is not div by 5 && !$r@last}align="left"{/if} cellpadding="2" cellspacing="1" style="border: 1px solid black;font-size:12;">
+		<table width="200" {if $r@iteration is not div by 5 && !$r@last}align="left"{/if} cellpadding="2" cellspacing="1" style="border: 1px solid black;font-size:12;">
 		<tr bgcolor="lightgray">
-			<th>Round</th>
+			<th colspan="2">Round {$r.event_round_number}</th>
+		</tr>
+		<tr bgcolor="lightgray">
 			{if $event->flight_types.$flight_type_id.flight_type_group}
 				<th>Group</th>
 			{else}
 				<th>Order</th>
 			{/if}
-			<th align="left">Pilot</th>
+			<th>Pilot</th>
 		</tr>
 		{$oldgroup='1000'}
 		{$bottom=0}
@@ -41,7 +41,6 @@
 			{$bottom=1}
 		{/if}
 		<tr>
-			<td align="center" {if $bottom}style="border-top: 2px solid black;"{/if}>{if $p@first}{$r.event_round_number}{/if}</td>
 			{if $event->flight_types.$flight_type_id.flight_type_group}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
@@ -58,6 +57,3 @@
 			<br style="page-break-after: always;">
 		{/if}
 		{/foreach}
-		<br>
-</div>
-</div>

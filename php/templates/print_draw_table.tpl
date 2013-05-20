@@ -1,5 +1,3 @@
-<div class="page type-page clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
-	<div class="entry clearfix">
 		<h2>{$event->info.event_name}</h2>           
 		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
 		<tr>
@@ -16,19 +14,19 @@
 		{$bgcolor="lightgrey"}
 		{$oldteam=""}
 		<h2 class="post-title entry-title">Pilot Matrix List - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
-		<table cellpadding="3" cellspacing="1" style="border: 1px solid black;">
+		<table width="550" cellpadding="3" cellspacing="1" style="border: 1px solid black;">
 		<tr bgcolor="lightgray">
-			<th colspan="2"></th>
+			<th width="225" colspan="2"></th>
 			<th colspan="{$event->rounds|count}">Event Rounds</th>
 		</tr>
 		<tr bgcolor="lightgray">
-			<th>Pilot</th>
-			<th>Team</th>
+			<th width="125">Pilot</th>
+			<th width="100">Team</th>
 			{foreach $event->rounds as $r}
-				{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
+				{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to  || $r.flights.$flight_type_id.event_round_flight_score==0}
 					{continue}
 				{/if}
-			<th width="40">{$r.event_round_number}</th>
+			<th width="20" align="center">{$r.event_round_number}</th>
 			{/foreach}
 		</tr>
 		{foreach $event->pilots as $p}
@@ -45,11 +43,11 @@
 			<td>{$p.event_pilot_team|escape}</td>
 			{foreach $event->rounds as $r}
 				{$event_round_number=$r.event_round_number}
-				{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
+				{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || $r.flights.$flight_type_id.event_round_flight_score==0}
 					{continue}
 				{/if}
 			<td align="center">
-				{if $ft.flight_type_group==1}
+				{if $event->flight_types.$flight_type_id.flight_type_group==1}
 					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}
 				{else}
 					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_order}
@@ -60,6 +58,3 @@
 		{$oldteam=$p.event_pilot_team}
 		{/foreach}
 		</table>
-
-</div>
-</div>
