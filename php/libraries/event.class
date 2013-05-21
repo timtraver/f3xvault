@@ -129,6 +129,9 @@ class Event {
 			case 'entry_order':
 				$sort_string='ORDER BY ep.event_pilot_entry_order';
 				break;
+			case 'team':
+				$sort_string='ORDER BY ep.event_pilot_team,p.pilot_first_name';
+				break;
 			case 'flight_order':
 				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;

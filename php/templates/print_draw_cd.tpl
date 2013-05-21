@@ -73,7 +73,7 @@
 		{$bottom=0}
 		{/foreach}
 		{if $r.flights.$flight_type_id.flight_type_reflight==1}
-		{for $var=1 to (41-$total_rows)}
+		{for $var=1 to (40-$total_rows)}
 		<tr>
 			<td align="center">{if $var==1}Reflights{/if}</td>
 			<td align="center" style="border-bottom: 1px solid black;">&nbsp;</td>

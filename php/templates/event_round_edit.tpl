@@ -24,7 +24,6 @@ function save_data(element) {ldelim}
 			event_round_id: "{$event_round_id}",
 			event_round_number: "{$round_number|escape}",
 			flight_type_id: document.main.flight_type_id.value,
-			event_round_time_choice: document.main.event_round_time_choice.value,
 			event_round_score_status: document.main.event_round_score_status.value,
 			field_name: element.name,
 			field_value: element.value
@@ -278,8 +277,7 @@ function check_permission() {ldelim}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=3}
-			{if $ft.flight_type_group}{$cols=$cols+1}{/if}
+			{$cols=4}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -297,6 +295,8 @@ function check_permission() {ldelim}
 				<th align="left">Pilot Name</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
+				{else}
+					<th align="center">Order</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
@@ -331,6 +331,8 @@ function check_permission() {ldelim}
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
+					{else}
+						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 					{/if}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="center" nowrap>
@@ -410,6 +412,8 @@ function check_permission() {ldelim}
 					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
+						{else}
+							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 						{/if}
 						{if $f.flight_type_minutes || $f.flight_type_seconds}
 							<td align="center" nowrap>

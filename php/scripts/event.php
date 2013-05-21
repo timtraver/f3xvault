@@ -1309,7 +1309,10 @@ function event_round_save() {
 	if(isset($_REQUEST['event_round_score_status']) && $_REQUEST['event_round_score_status']=='on'){
 		$event_round_score_status=1;
 	}
-	
+	$new_round=0;
+	if($event_round_id==0){
+		$new_round=1;
+	}
 	# Get flight type info for determining max sub flights and stuff
 	$flight_type=array();
 	$stmt=db_prep("
@@ -1428,49 +1431,79 @@ function event_round_save() {
 	}
 
 	# Now lets save the round flight type scoring data
-	# First, lets turn off all of the round scoring data for this round and the flights
-	$stmt=db_prep("
-		UPDATE event_round_flight
-		SET event_round_flight_score=0
-		WHERE event_round_id=:event_round_id
-	");
-	$result=db_exec($stmt,array("event_round_id"=>$event_round_id));
-	# Now lets step through the ones that are "on" and update or create the record
-	foreach($_REQUEST as $key=>$value){
-		if(preg_match("/^event_round_flight_score_(\d+)$/",$key,$match)){
-			$ftype_id=$match[1];
-			if($value=='on'){
-				# lets save or create this record
-				# First lets see if it exists
-				$stmt=db_prep("
-					SELECT *
-					FROM event_round_flight
-					WHERE event_round_id=:event_round_id
-					AND flight_type_id=:ftype_id
-				");
-				$result=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
-				if(isset($result[0])){
-					# This one already exists, so lets update it
+	if($new_round && $event_code!='f3b'){
+		# Its a new round, so lets create the flight types with the scoring already turned on
+		# First lets see if it exists
+		$stmt=db_prep("
+			SELECT *
+			FROM event_round_flight
+			WHERE event_round_id=:event_round_id
+			AND flight_type_id=:flight_type_id
+		");
+		$result=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
+		if(isset($result[0])){
+			# This one already exists, so lets update it
+			$stmt=db_prep("
+				UPDATE event_round_flight
+				SET event_round_flight_score=1
+				WHERE event_round_flight_id=:event_round_flight_id
+			");
+			$result2=db_exec($stmt,array("event_round_flight_id"=>$result[0]['event_round_flight_id']));
+		}else{
+			# This record doesn't exist, so lets create a new one
+			$stmt=db_prep("
+				INSERT INTO event_round_flight
+				SET event_round_id=:event_round_id,
+					flight_type_id=:flight_type_id,
+					event_round_flight_score=1
+			");
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
+		}
+	}else{
+		# This round already existed, so lets update everything
+		# First, lets turn off all of the round scoring data for this round and the flights
+		$stmt=db_prep("
+			UPDATE event_round_flight
+			SET event_round_flight_score=0
+			WHERE event_round_id=:event_round_id
+		");
+		$result=db_exec($stmt,array("event_round_id"=>$event_round_id));
+		# Now lets step through the ones that are "on" and update or create the record
+		foreach($_REQUEST as $key=>$value){
+			if(preg_match("/^event_round_flight_score_(\d+)$/",$key,$match)){
+				$ftype_id=$match[1];
+				if($value=='on'){
+					# lets save or create this record
+					# First lets see if it exists
 					$stmt=db_prep("
-						UPDATE event_round_flight
-						SET event_round_flight_score=1
-						WHERE event_round_flight_id=:event_round_flight_id
+						SELECT *
+						FROM event_round_flight
+						WHERE event_round_id=:event_round_id
+						AND flight_type_id=:ftype_id
 					");
-					$result2=db_exec($stmt,array("event_round_flight_id"=>$result[0]['event_round_flight_id']));
-				}else{
-					# This record doesn't exist, so lets create a new one
-					$stmt=db_prep("
-						INSERT INTO event_round_flight
-						SET event_round_id=:event_round_id,
-							flight_type_id=:ftype_id,
-							event_round_flight_score=1
-					");
-					$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+					$result=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+					if(isset($result[0])){
+						# This one already exists, so lets update it
+						$stmt=db_prep("
+							UPDATE event_round_flight
+							SET event_round_flight_score=1
+							WHERE event_round_flight_id=:event_round_flight_id
+						");
+						$result2=db_exec($stmt,array("event_round_flight_id"=>$result[0]['event_round_flight_id']));
+					}else{
+						# This record doesn't exist, so lets create a new one
+						$stmt=db_prep("
+							INSERT INTO event_round_flight
+							SET event_round_id=:event_round_id,
+								flight_type_id=:ftype_id,
+								event_round_flight_score=1
+						");
+						$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+					}
 				}
 			}
 		}
 	}
-
 
 	# Now lets save the pilot flight info
 	# Lets build the data grid
@@ -1588,6 +1621,7 @@ function event_round_save() {
 							event_pilot_round_flight_over=:event_pilot_round_flight_over,
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
+							event_pilot_round_flight_order=:event_pilot_round_flight_order,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
 							event_pilot_round_flight_status=1
 						WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
@@ -1600,6 +1634,7 @@ function event_round_save() {
 						"event_pilot_round_flight_over"=>$v['over'],
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
+						"event_pilot_round_flight_order"=>$v['order'],
 						"event_pilot_round_flight_penalty"=>$v['pen']
 					));
 				}else{
@@ -1614,6 +1649,7 @@ function event_round_save() {
 							event_pilot_round_flight_over=:event_pilot_round_flight_over,
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
+							event_pilot_round_flight_order=:event_pilot_round_flight_order,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
 							event_pilot_round_flight_status=1
 					");
@@ -1626,6 +1662,7 @@ function event_round_save() {
 						"event_pilot_round_flight_over"=>$v['over'],
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
+						"event_pilot_round_flight_order"=>$v['order'],
 						"event_pilot_round_flight_penalty"=>$v['pen']
 					));
 					$event_pilot_round_flight_id_actual=$GLOBALS['last_insert_id'];
@@ -2036,6 +2073,9 @@ function save_individual_flight(){
 		case "land":
 			$setline='event_pilot_round_flight_laps=:value';
 			break;
+		case "order":
+			$setline='event_pilot_round_flight_order=:value';
+			break;
 		case "laps":
 			$setline='event_pilot_round_flight_landing=:value';
 			break;
@@ -2146,6 +2186,40 @@ function event_draw_print() {
 	$print_round_to=intval($_REQUEST['print_round_to']);
 	$print_type=$_REQUEST['print_type'];
 	
+
+	$template='';
+	$title='';
+	$orientation='P';
+	$sort_by='';
+	switch($print_type){
+		case "cd":
+			$template="print_draw_cd.tpl";
+			$title="CD Recording Sheet";
+			$orientation="P";
+			$sort_by='flight_order';
+			break;
+		case "pilot":
+			$template="print_draw_pilot_recording.tpl";
+			$title="Pilot Score Recording Sheets";
+			$orientation="L";
+			$sort_by='alphabetical_first';
+			break;
+		case "table":
+			$template="print_draw_table.tpl";
+			$title="Draw Table";
+			$orientation="P";
+			$sort_by='team';
+			break;
+		case "matrix":
+		default :
+			$template="print_draw_matrix.tpl";
+			$title="Draw Matrix";
+			$orientation="P";
+			$sort_by='flight_order';
+			break;
+	}
+	$_REQUEST['sort_by']=$sort_by;
+	
 	$e=new Event($event_id);
 	$e->get_teams();
 	$e->get_rounds();
@@ -2154,33 +2228,8 @@ function event_draw_print() {
 	$smarty->assign("print_round_to",$print_round_to);
 	$smarty->assign("flight_type_id",$flight_type_id);
 	$smarty->assign("event",$e);
-
-	$template='';
-	$title='';
-	$orientation='P';
-	switch($print_type){
-		case "cd":
-			$template="print_draw_cd.tpl";
-			$title="CD Recording Sheet";
-			$orientation="P";
-			break;
-		case "pilot":
-			$template="print_draw_pilot_recording.tpl";
-			$title="Pilot Score Recording Sheets";
-			$orientation="L";
-			break;
-		case "table":
-			$template="print_draw_table.tpl";
-			$title="Draw Table";
-			$orientation="P";
-			break;
-		case "matrix":
-		default :
-			$template="print_draw_matrix.tpl";
-			$title="Draw Matrix";
-			$orientation="P";
-			break;
-	}
+	
+	
 	# Create the PDF
 	include_library('tcpdf/config/lang/eng.php');
 	include_library('tcpdf/tcpdf.php');
