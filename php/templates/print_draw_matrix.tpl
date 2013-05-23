@@ -18,6 +18,7 @@
 			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || $r.flights.$flight_type_id.event_round_flight_score==0}
 				{continue}
 			{/if}
+			{$bgcolor=''}
 			<td>
 				<table cellpadding="1" cellspacing="1" style="border: 1px solid black;font-size:{if $print_format=="pdf"}8{else}12{/if};">
 				<tr bgcolor="lightgray">
@@ -36,12 +37,16 @@
 				{foreach $r.flights.$flight_type_id.pilots as $p}
 					{$event_pilot_id=$p@key}
 					{if $oldgroup!=$p.event_pilot_round_flight_group}
-						{if $bgcolor=='white' || $r.flights.$flight_type_id.flight_type_code=='f3b_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_speed'}
-							{$bgcolor='lightgray'}
+						{if $r.flights.$flight_type_id.flight_type_code=='f3b_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_speed'}
+							{$bgcolor="white"}
 						{else}
-							{$bgcolor='white'}
+							{if $bgcolor=='white'}
+								{$bgcolor='lightgray'}
+							{else}
+								{$bgcolor='white'}
+							{/if}
+							{$bottom=1}
 						{/if}
-						{$bottom=1}
 					{/if}
 					<tr>
 						{if $event->flight_types.$flight_type_id.flight_type_group}
