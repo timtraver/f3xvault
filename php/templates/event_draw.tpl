@@ -317,7 +317,7 @@ function copy_club_values(){
 <input type="hidden" name="print_type" value="">
 <input type="hidden" name="use_print_header" value="1">
 <tr>
-	<th width="20%" nowrap>{$ft.flight_type_name}</th>
+	<th width="10%" nowrap>{$ft.flight_type_name}</th>
 	<td>
 		Rounds
 		<select name="print_round_from">
@@ -330,6 +330,10 @@ function copy_club_values(){
 		{foreach $event->rounds as $r}
 		<option value="{$r.event_round_number}" {if $r@last}SELECTED{/if}>{$r.event_round_number}</option>
 		{/foreach}
+		</select>
+		<select name="print_format">
+		<option value="pdf">PDF</option>
+		<option value="html">HTML</option>
 		</select>
 		<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
 		{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}

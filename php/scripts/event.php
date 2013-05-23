@@ -2185,7 +2185,7 @@ function event_draw_print() {
 	$print_round_from=intval($_REQUEST['print_round_from']);
 	$print_round_to=intval($_REQUEST['print_round_to']);
 	$print_type=$_REQUEST['print_type'];
-	
+	$print_format=$_REQUEST['print_format'];
 
 	$template='';
 	$title='';
@@ -2226,54 +2226,43 @@ function event_draw_print() {
 
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);
+	$smarty->assign("print_format",$print_format);
 	$smarty->assign("flight_type_id",$flight_type_id);
 	$smarty->assign("event",$e);
 	
 	
-	# Create the PDF
-	include_library('tcpdf/config/lang/eng.php');
-	include_library('tcpdf/tcpdf.php');
-	$maintpl=find_template($template);
-	$page_html=$smarty->fetch($template);
+	if($print_format=='pdf'){
+		# Create the PDF
+		include_library('tcpdf/config/lang/eng.php');
+		include_library('tcpdf/tcpdf.php');
+		$maintpl=find_template($template);
+		$page_html=$smarty->fetch($template);
 	
-	# Now create the pdf from the above template and save it
-	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-	$pdf->SetCreator('F3X Vault');
-	$pdf->SetAuthor('F3X Vault');
-	$pdf->SetTitle($title);
-	$pdf->setPrintHeader(false);
-	$pdf->setHeaderMargin(0);
-	$pdf->setFooterData($tc=array(0,64,0), $lc=array(0,64,128));
-#	$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-	$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-	$pdf->SetMargins(10, 0, 10);
-	$pdf->SetHeaderMargin(0);
-	$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-	$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-	$pdf->setFontSubsetting(true);
-	$pdf->SetFont('times', '', 10, '', true);
-	$pdf->AddPage($orientation);
-	$pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $page_html, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
-	$file_contents=$pdf->Output("$title.pdf", 'D');
-	
-	# Now send it to the browser
-	#header("Pragma: public");
-	#header("Expires: 0");
-	#header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	#header("Content-Type: application/force-download");
-	#header("Content-Type: application/octet-stream");
-	#header("Content-Type: application/download");
-	#header("Content-Disposition: attachment; filename=$title;");
-	#header("Content-Transfer-Encoding: binary");
-	#header("Content-Length: ".filesize($fullpath));
-
-     #   readfile($fullpath);
-
-
-
-	return $page_html;
+		# Now create the pdf from the above template and save it
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->SetCreator('F3X Vault');
+		$pdf->SetAuthor('F3X Vault');
+		$pdf->SetTitle($title);
+		$pdf->setPrintHeader(false);
+		$pdf->setHeaderMargin(0);
+		$pdf->setFooterData($tc=array(0,64,0), $lc=array(0,64,128));
+#		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+		$pdf->SetMargins(10, 0, 10);
+		$pdf->SetHeaderMargin(0);
+		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		$pdf->setFontSubsetting(true);
+		$pdf->SetFont('times', '', 10, '', true);
+		$pdf->AddPage($orientation);
+		$pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $page_html, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
+		$file_contents=$pdf->Output("$title.pdf", 'D');
+	}else{
+		$maintpl=find_template($template);
+		return $smarty->fetch($maintpl);
+	}
 }
 
 ?>

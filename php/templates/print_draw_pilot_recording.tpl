@@ -1,5 +1,6 @@
-<div class="page type-page clearfix post nodate"  style="-webkit-print-color-adjust:exact;">
-	<div class="entry clearfix">
+		<table>
+		<tr>
+		
 		{$number=1}
 		{foreach $event->pilots as $p}
 			{$event_pilot_id=$p@key}
@@ -8,10 +9,12 @@
 					{continue}
 				{/if}
 				{$event_round_number=$r.event_round_number}
-				<span style="margin:10px;">
-				<table align="left" height="220" width="220" cellpadding="2" cellspacing="2" style="border: 1px solid black;font-size:14;margin:10px;">
+				
+			<td>
+				
+				<table align="left" height="220" width="220" cellpadding="2" cellspacing="2" style="border: 1px solid black;font-size:{if $print_format=="pdf"}8{else}12{/if};margin:10px;">
 				<tr bgcolor="lightgrey">
-					<th colspan="2" align="left" style="font-size:10;">
+					<th colspan="2" align="left" style="font-size:{if $print_format=="pdf"}8{else}10{/if};">
 						{$event->info.event_name} - {$event->info.event_start_date|date_format:"%Y-%m-%d"}
 					</th>
 				</tr>
@@ -43,10 +46,25 @@
 					<td style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				</table>
-				</span>
-				{if $number is div by 4}<div style="{if $number is div by 12}page-break-after: always;{/if}"></div>{/if}
-				{$number=$number+1}
+
+			</td>
+
+			{if $number is div by 12}
+				</tr>
+				</table>
+				{if $print_format=='html'}
+					<div style="{if $number is div by 12}page-break-after: always;{/if}"></div>
+				{/if}
+				<table>
+				<tr>
+			{else}
+				{if $number is div by 4}
+					</tr>
+					<tr>
+				{/if}
+			{/if}
+			{$number=$number+1}
 			{/foreach}
 		{/foreach}
-	</div>
-</div>
+		</tr>
+		</table>
