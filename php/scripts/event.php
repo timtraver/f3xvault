@@ -2233,7 +2233,7 @@ function event_draw_print() {
 	
 	if($print_format=='pdf'){
 		# Create the PDF
-		include_library('tcpdf/config/lang/eng.php');
+		#include_library('tcpdf/config/lang/eng.php');
 		include_library('tcpdf/tcpdf.php');
 		$maintpl=find_template($template);
 		$page_html=$smarty->fetch($template);
