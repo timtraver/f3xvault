@@ -260,6 +260,7 @@ function copy_club_values(){
 	</div>
 	
 	<br>
+	<h3 style="color:red;">In Construction...</h3>
 <h1 class="post-title entry-title">Draw Parameters</h1>
 	
 <form name="main" method="POST">
@@ -332,8 +333,8 @@ function copy_club_values(){
 		{/foreach}
 		</select>
 		<select name="print_format">
-		<option value="pdf">PDF</option>
 		<option value="html">HTML</option>
+		<option value="pdf">PDF</option>
 		</select>
 		<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
 		{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
