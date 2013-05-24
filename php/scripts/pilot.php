@@ -114,7 +114,7 @@ function pilot_list() {
 		");
 		$pilots=db_exec($stmt,array("search"=>$search));
 	}else{
-		# Get all locations for search
+		# Get all pilots for search
 		$stmt=db_prep("
 			SELECT *
 			FROM pilot p
@@ -123,11 +123,10 @@ function pilot_list() {
 			WHERE 1
 				$addcountry
 				$addstate
-			ORDER p.pilot_first_name
+			ORDER BY p.pilot_first_name
 		");
 		$pilots=db_exec($stmt,array());
 	}
-	
 #print_r($pilots);
 	
 	# Get only countries that we have pilots for
