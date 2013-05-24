@@ -413,7 +413,7 @@ function check_permission() {ldelim}
 						{if $f.flight_type_group}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 						{else}
-							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
+							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 						{/if}
 						{if $f.flight_type_minutes || $f.flight_type_seconds}
 							<td align="center" nowrap>
