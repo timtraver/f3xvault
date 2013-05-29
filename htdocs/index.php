@@ -16,6 +16,7 @@ global $logsessions;
 global $messages;
 global $message_graphic;
 global $debug;
+global $total_queries;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
@@ -129,6 +130,7 @@ $smarty->assign("current_menu",$current_menu);
 $smarty->assign("fsession",$fsession);
 $smarty->assign("messages",$GLOBALS['messages']);
 $smarty->assign("message_graphic",$GLOBALS['message_graphic']);
+$smarty->assign("total_queries",$GLOBALS['total_queries']);
 $no_header_footer=0;
 if(isset($_REQUEST['no_header_footer'])){
 	$no_header_footer=$_REQUEST['no_header_footer'];

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-13 21:11:52
+<?php /* Smarty version Smarty-3.1.11, created on 2013-05-28 22:26:39
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1368503150,
+      1 => 1369805195,
       2 => 'file',
     ),
   ),
@@ -26,6 +26,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'r' => 0,
     'flight_type_id' => 0,
     'e' => 0,
+    'previous' => 0,
+    'diff_to_lead' => 0,
+    'diff' => 0,
     'f' => 0,
     'dropval' => 0,
     'dropped' => 0,
@@ -306,11 +309,20 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
+		<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable(0, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['diff_to_lead'] = new Smarty_variable(0, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['diff'] = new Smarty_variable(0, null, 0);?>
 		<?php  $_smarty_tpl->tpl_vars['e'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['e']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['event']->value->totals['pilots']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['e']->key => $_smarty_tpl->tpl_vars['e']->value){
 $_smarty_tpl->tpl_vars['e']->_loop = true;
 ?>
+		<?php if ($_smarty_tpl->tpl_vars['e']->value['total']>$_smarty_tpl->tpl_vars['previous']->value){?>
+			<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable($_smarty_tpl->tpl_vars['e']->value['total'], null, 0);?>
+		<?php }else{ ?>
+			<?php $_smarty_tpl->tpl_vars['diff'] = new Smarty_variable($_smarty_tpl->tpl_vars['previous']->value-$_smarty_tpl->tpl_vars['e']->value['total'], null, 0);?>
+			<?php $_smarty_tpl->tpl_vars['diff_to_lead'] = new Smarty_variable($_smarty_tpl->tpl_vars['diff_to_lead']->value+$_smarty_tpl->tpl_vars['diff']->value, null, 0);?>
+		<?php }?>
 		<?php $_smarty_tpl->tpl_vars['event_pilot_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['e']->value['event_pilot_id'], null, 0);?>
 		<tr style="background-color: <?php echo smarty_function_cycle(array('values'=>"#9DCFF0,white"),$_smarty_tpl);?>
 ;">
@@ -381,15 +393,26 @@ s
 				<?php }?>
 			<?php } ?>
 			<td></td>
-			<td width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
+			<td class="info" width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
 </td>
 			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['penalties'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?></td>
-			<td width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
-</td>
+			<td class="info" width="5%" nowrap align="right">
+				<div style="position:relative;">
+					<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
+
+					<span>
+					Behind Prev : <?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['diff']->value);?>
+<br>
+					Behind Lead : <?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
+<br>
+					</span>
+				</div>
+			</td>
 			<td width="5%" nowrap align="right"><?php echo sprintf("%03.2f",$_smarty_tpl->tpl_vars['e']->value['event_pilot_total_percentage']);?>
 %</td>
 		</tr>
+		<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable($_smarty_tpl->tpl_vars['e']->value['total'], null, 0);?>
 		<?php } ?>
 		<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']=='f3f'){?>
 		<tr>

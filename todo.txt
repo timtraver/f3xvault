@@ -4,7 +4,6 @@ Todo list for rcvault project
 
 GENERAL
 
-     
   Add pilot privacy stuff to prevent anyone looking at any of their info
   
   Have an intermediate step of registration approval before activating account
@@ -30,6 +29,20 @@ PLANE STUFF
 	
 EVENT STUFF
 
+  Bug with auto saving lap count
+  
+  Create subtotal column that has everything
+  Create a drop subtotal as well
+  
+  In the stats area, don't count the dropped rounds for things like averages
+  Have a setting for top X teammates to be used in the team standings
+  
+  Do a cool +- mouseover on the total scores on event summary screen
+  
+  Make it so that it can do 20+ rounds and have good formatting (i.e. make loop out of second round chunk) or maybe make loop out of first one
+  
+  Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
+  
   Don't show flyoff number if not a flyoff event type on round screen
   
   For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports

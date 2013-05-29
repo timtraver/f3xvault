@@ -119,6 +119,14 @@ function db_prep ($querystring) {
 function db_exec ($stmt,$data=array()) {
         global $dbh;
         global $last_insert_id;
+        global $total_queries;
+
+		# Set the default type of return
+		if(preg_match("/SELECT/i",$stmt->queryString)){
+			$results=array();
+		}else{
+			$results=0;
+		}
 
         # Function to wrap the query execution
         try {
@@ -135,6 +143,7 @@ function db_exec ($stmt,$data=array()) {
                 query_error($stmt->queryString,$string);
         }
         $last_insert_id=$dbh->lastInsertId();
+        $total_queries++;
         return $results;
 }
 function query_error($query,$error){

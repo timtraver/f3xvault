@@ -204,7 +204,16 @@ function check_permission() {ldelim}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
+		{$previous=0}
+		{$diff_to_lead=0}
+		{$diff=0}
 		{foreach $event->totals.pilots as $e}
+		{if $e.total>$previous}
+			{$previous=$e.total}
+		{else}
+			{$diff=$previous-$e.total}
+			{$diff_to_lead=$diff_to_lead+$diff}
+		{/if}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank|escape}</td>
@@ -249,11 +258,20 @@ function check_permission() {ldelim}
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
+			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
-			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
+			<td class="info" width="5%" nowrap align="right">
+				<div style="position:relative;">
+					{$e.total|string_format:"%06.3f"}
+					<span>
+					Behind Prev : {$diff|string_format:"%06.3f"}<br>
+					Behind Lead : {$diff_to_lead|string_format:"%06.3f"}<br>
+					</span>
+				</div>
+			</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
+		{$previous=$e.total}
 		{/foreach}
 		{if $event->info.event_type_code=='f3f'}
 		<tr>

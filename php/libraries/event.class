@@ -272,9 +272,9 @@ class Event {
 			$this->event_save_totals();
 			$this->get_pilots();
 			return;
+		}else{
+			$this->calculate_event_totals();
 		}
-
-		$this->calculate_event_totals();	
 		return;
 	}
 	function get_new_round($event_round_number){
@@ -355,21 +355,17 @@ class Event {
 		foreach($reflights as $flight_type_id=>$p){
 			foreach($p as $event_pilot_id=>$v){
 				$stmt=db_prep("
-					SELECT event_pilot_round_id
-					FROM event_pilot_round
-					WHERE event_pilot_id=:event_pilot_id
-					AND event_round_id=:event_round_id
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_reflight_dropped=1
+					WHERE event_pilot_round_id IN (
+						SELECT event_pilot_round_id
+						FROM event_pilot_round
+						WHERE event_pilot_id=:event_pilot_id
+						AND event_round_id=:event_round_id
+					)
+					AND flight_type_id=:flight_type_id
 				");
 				$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id,"event_round_id"=>$this->rounds[$event_round_number]['event_round_id']));
-				foreach($result as $r){
-					$stmt=db_prep("
-						UPDATE event_pilot_round_flight
-						SET event_pilot_round_flight_reflight_dropped=1
-						WHERE event_pilot_round_id=:event_pilot_round_id
-						AND flight_type_id=:flight_type_id
-					");
-					$result2=db_exec($stmt,array("event_pilot_round_id"=>$r['event_pilot_round_id'],"flight_type_id"=>$flight_type_id));
-				}
 			}
 		}
 
@@ -980,20 +976,13 @@ class Event {
 					$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
 					# Lets clear all the db records of this pilots flights with this flight type as not dropped
 					$stmt=db_prep("
-						SELECT event_pilot_round_id
-						FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id
+						UPDATE event_pilot_round_flight
+						SET event_pilot_round_flight_dropped=0
+						WHERE event_pilot_round_id IN ( SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
+						AND flight_type_id=:flight_type_id
 					");
-					$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
-					foreach($result as $r){
-						$stmt=db_prep("
-							UPDATE event_pilot_round_flight
-							SET event_pilot_round_flight_dropped=0
-							WHERE event_pilot_round_id=:event_pilot_round_id
-							AND flight_type_id=:flight_type_id
-						");
-						$result2=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_round_id"=>$r['event_pilot_round_id']));
-					}
-					
+					$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_id"=>$event_pilot_id));
+
 					# Now lets pick off the ones to mark as dropped
 					$drop=0;
 					foreach($temp2 as $round_number=>$f){
@@ -1031,18 +1020,11 @@ class Event {
 				$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
 				# Lets clear all the db records of this pilots flights as not dropped
 				$stmt=db_prep("
-					SELECT event_pilot_round_id
-					FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_dropped=0
+					WHERE event_pilot_round_id IN ( SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
 				");
-				$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
-				foreach($result as $r){
-					$stmt=db_prep("
-						UPDATE event_pilot_round_flight
-						SET event_pilot_round_flight_dropped=0
-						WHERE event_pilot_round_id=:event_pilot_round_id
-					");
-					$result2=db_exec($stmt,array("event_pilot_round_id"=>$r['event_pilot_round_id']));
-				}
+				$result2=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
 				
 				# Now lets pick off the ones to mark as dropped
 				$drop=0;
@@ -1085,22 +1067,17 @@ class Event {
 					$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
 					# Lets clear all the db records of this pilots flights as not dropped
 					$stmt=db_prep("
-						SELECT epr.event_pilot_round_id
-						FROM event_pilot_round epr
-						LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
-						WHERE epr.event_pilot_id=:event_pilot_id
-							AND er.event_round_flyoff=:event_round_flyoff
-						
+						UPDATE event_pilot_round_flight
+						SET event_pilot_round_flight_dropped=0
+						WHERE event_pilot_round_id IN (
+							SELECT epr.event_pilot_round_id
+							FROM event_pilot_round epr
+							LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+							WHERE epr.event_pilot_id=:event_pilot_id
+								AND er.event_round_flyoff=:event_round_flyoff
+						)
 					");
 					$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id,"event_round_flyoff"=>$flyoff_number));
-					foreach($result as $r){
-						$stmt=db_prep("
-							UPDATE event_pilot_round_flight
-							SET event_pilot_round_flight_dropped=0
-							WHERE event_pilot_round_id=:event_pilot_round_id
-						");
-						$result2=db_exec($stmt,array("event_pilot_round_id"=>$r['event_pilot_round_id']));
-					}
 				
 					# Now lets pick off the ones to mark as dropped
 					$drop=0;
