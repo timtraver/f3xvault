@@ -145,8 +145,59 @@ function my_user_show() {
 			LEFT JOIN country c on c.country_id=l.country_id
 			WHERE ep.pilot_id=:pilot_id
 				AND ep.event_pilot_status=1
+			ORDER BY e.event_start_date desc
 		");
 		$pilot_events=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		# Lets make sure this pilot can see the event
+		$owns=array();
+		$ispilot=array();
+		if($GLOBALS['user_id']!=0 && $GLOBALS['user']['user_admin']!=1){
+			# Lets get the events that this person owns and is a part of
+			$stmt=db_prep("
+				SELECT e.event_id
+				FROM event e
+				LEFT JOIN pilot p ON e.pilot_id=p.pilot_id
+				WHERE p.user_id=:user_id
+			");
+			$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
+			foreach($result as $r){
+				$owns[]=$r['event_id'];
+			}
+			$stmt=db_prep("
+				SELECT ep.event_id
+				FROM event_pilot ep
+				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+				WHERE p.user_id=:user_id
+			");
+			$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
+			foreach($result as $r){
+				$ispilot[]=$r['event_id'];
+			}
+		}
+		if($GLOBALS['user']['user_admin']!=1){
+			$newevents=array();
+			foreach($pilot_events as $key=>$e){
+				switch($e['event_view_status']){
+					case 1 :
+						# Viewable by all
+						$newevents[]=$e;
+						break;
+					case 2 : 
+						# Viewable only by participants
+						if(in_array($e['event_id'], $ispilot) || in_array($e['event_id'], $owns)){
+							$newevents[]=$e;
+						}
+						break;
+					case 3 : 
+						# Viewable only by owner
+						if(in_array($e['event_id'], $owns)){
+							$newevents[]=$e;
+						}
+						break;
+				}
+			}
+			$pilot_events=$newevents;
+		}
 	}
 	
 	$smarty->assign("pilot",$pilot);

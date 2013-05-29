@@ -577,7 +577,7 @@ function check_permission() {ldelim}
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
-{if $user.user_id!=0 && $user.user_id==$event->info.user_id}
+{if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 {/if}
 	</div>

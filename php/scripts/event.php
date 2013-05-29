@@ -174,6 +174,7 @@ function event_list() {
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
 		");
 		$events=db_exec($stmt,array("search"=>$search));
+		
 	}else{
 		# Get all events for search
 		$stmt=db_prep("
@@ -191,7 +192,58 @@ function event_list() {
 		");
 		$events=db_exec($stmt,array());
 	}
-		
+	
+	# Lets figure out if they are able to see this event based on the viewing prefs for the event
+	$owns=array();
+	$ispilot=array();
+	if($GLOBALS['user_id']!=0 && $GLOBALS['user']['user_admin']!=1){
+		# Lets get the events that this person owns and is a part of
+		$stmt=db_prep("
+			SELECT e.event_id
+			FROM event e
+			LEFT JOIN pilot p ON e.pilot_id=p.pilot_id
+			WHERE p.user_id=:user_id
+		");
+		$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
+		foreach($result as $r){
+			$owns[]=$r['event_id'];
+		}
+		$stmt=db_prep("
+			SELECT ep.event_id
+			FROM event_pilot ep
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			WHERE p.user_id=:user_id
+		");
+		$result=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
+		foreach($result as $r){
+			$ispilot[]=$r['event_id'];
+		}
+	}
+	if($GLOBALS['user']['user_admin']!=1){
+		$newevents=array();
+		foreach($events as $key=>$e){
+			switch($e['event_view_status']){
+				case 1 :
+					# Viewable by all
+					$newevents[]=$e;
+					break;
+				case 2 : 
+					# Viewable only by participants
+					if(in_array($e['event_id'], $ispilot) || in_array($e['event_id'], $owns)){
+						$newevents[]=$e;
+					}
+					break;
+				case 3 : 
+					# Viewable only by owner
+					if(in_array($e['event_id'], $owns)){
+						$newevents[]=$e;
+					}
+					break;
+			}
+		}
+		$events=$newevents;
+	}
+	
 	# Get only countries that we have events for
 	$stmt=db_prep("
 		SELECT DISTINCT c.*
@@ -421,6 +473,7 @@ function event_save() {
 	$event_cd=intval($_REQUEST['event_cd']);
 	$series_id=intval($_REQUEST['series_id']);
 	$club_id=intval($_REQUEST['club_id']);
+	$event_view_status=intval($_REQUEST['event_view_status']);
 
 	if($event_id==0){
 		$stmt=db_prep("
@@ -434,6 +487,7 @@ function event_save() {
 				event_cd=:event_cd,
 				series_id=:series_id,
 				club_id=:club_id,
+				event_view_status=:event_view_status,
 				event_status=1
 		");
 		$result=db_exec($stmt,array(
@@ -445,7 +499,8 @@ function event_save() {
 			"event_type_id"=>$event_type_id,
 			"event_cd"=>$event_cd,
 			"series_id"=>$series_id,
-			"club_id"=>$club_id
+			"club_id"=>$club_id,
+			"event_view_status"=>$event_view_status
 		));
 
 		user_message("Added your New Event!");
@@ -485,7 +540,8 @@ function event_save() {
 				event_type_id=:event_type_id,
 				event_cd=:event_cd,
 				series_id=:series_id,
-				club_id=:club_id
+				club_id=:club_id,
+				event_view_status=:event_view_status
 			WHERE event_id=:event_id
 		");
 		$result=db_exec($stmt,array(
@@ -497,6 +553,7 @@ function event_save() {
 			"event_cd"=>$event_cd,
 			"series_id"=>$series_id,
 			"club_id"=>$club_id,
+			"event_view_status"=>$event_view_status,
 			"event_id"=>$event_id
 		));
 		user_message("Updated Base Event Info!");
@@ -514,7 +571,7 @@ function event_delete() {
 	$event_id=intval($_REQUEST['event_id']);
 	# Lets check to make sure that its the owner that is deleting it
 	$e=new Event($event_id);
-	if($user['user_id']!=$e->info['user_id']){
+	if($user['user_id']!=$e->info['user_id'] && $user['user_admin']!=1){
 		# This is not the owner, so don't delete it...
 		user_message("I'm sorry, but only the owner of the event can delete it.",1);
 		return event_list();

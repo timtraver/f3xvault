@@ -306,6 +306,16 @@ function check_event(){
 	</td>
 </tr>
 <tr>
+	<th>Viewing Ability</th>
+	<td>
+	<select name="event_view_status">
+		<option value="1" {if $event->info.event_view_status==1}SELECTED{/if}>&nbsp;Public Event : Viewable By All</option>
+		<option value="2" {if $event->info.event_view_status==2}SELECTED{/if}>Private Event : Viewable Only By Participants</option>
+		<option value="3" {if $event->info.event_view_status==3}SELECTED{/if}>Private Event : Viewable Only By Creator</option>
+	</select>
+	</td>
+</tr>
+<tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
 		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
