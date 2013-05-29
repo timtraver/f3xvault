@@ -149,7 +149,7 @@ function event_list() {
 		# Lets determine the discipline code that was chosen
 		foreach($disciplines as $d){
 			if($d['discipline_id']==$discipline_id){
-				$discipline_code=$d['discipline_code'];
+				$discipline_code=$d['discipline_code'].'%';
 			}
 		}
 		
