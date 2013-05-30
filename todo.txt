@@ -28,13 +28,8 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
-
-  Bug with auto saving lap count
   
-  Create subtotal column that has everything
-  Create a drop subtotal as well
   
-  In the stats area, don't count the dropped rounds for things like averages
   Have a setting for top X teammates to be used in the team standings
   
   Do a cool +- mouseover on the total scores on event summary screen
@@ -85,6 +80,10 @@ MOBILE STUFF
 
 COMPLETED
  
+X In the stats area, don't count the dropped rounds for things like averages
+X Create subtotal column that has everything
+X Create a drop subtotal as well
+X Bug with auto saving lap count
 X  Check settings to allow non users to view almost everything, but not change
 X  Secure all of the shown variables to prevent XSS
 X	Once flyoffs completed, test with more than 10 prelim rounds for formatting

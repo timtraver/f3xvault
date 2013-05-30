@@ -702,7 +702,7 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];					
 					
-						if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') && $p['event_pilot_round_flight_seconds']!=0){
+						if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') && $p['event_pilot_round_flight_seconds']!=0 && ($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0)){
 							# Lets add the speed rounds together and get an average for the pilot
 							$subtotals[$event_pilot_id]['speed_total_seconds']+=$p['event_pilot_round_flight_seconds'];
 							$subtotals[$event_pilot_id]['speed_total_runs']++;
@@ -718,16 +718,16 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
 												
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$subtotals[$event_pilot_id]['subtotal']+=$sub;
+							$subtotals[$event_pilot_id]['penalties']+=$penalty;
 							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
 								# This means that this flight was not dropped, and the round is being scored
-								$subtotals[$event_pilot_id]['subtotal']+=$sub;
-								$subtotals[$event_pilot_id]['penalties']+=$penalty;
-								$subtotals[$event_pilot_id]['total']+=$sub-$penalty;
+								$subtotals[$event_pilot_id]['total']+=$sub;
 							}else{
 								# This means that the round is being scored, but the flight was dropped
-								$subtotals[$event_pilot_id]['penalties']+=$penalty;
-								$subtotals[$event_pilot_id]['total']-=$penalty;
+								$subtotals[$event_pilot_id]['drop']+=$sub;
 							}
+							$subtotals[$event_pilot_id]['total']-=$penalty;
 						}
 					}
 				}

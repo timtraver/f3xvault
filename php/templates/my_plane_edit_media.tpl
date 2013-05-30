@@ -19,7 +19,7 @@
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="my_plane_media_add">
 <input type="hidden" name="pilot_plane_id" value="{$pilot_plane_id}">
-<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+<input type="hidden" name="MAX_FILE_SIZE" value="5000000">
 
 <h1 class="post-title entry-title">Plane Media Edit</h1>
 
@@ -42,7 +42,7 @@
 <tbody id="picture" style="display: none;">
 <tr>
 	<th>Upload Picture</th>
-	<td><input type="file" size="50" name="uploaded_file" value=""></td>
+	<td><input type="file" size="50" name="uploaded_file" value=""> (Max of 5 Mbytes)</td>
 </tr>
 </tbody>
 <tbody id="media" style="display: none;">

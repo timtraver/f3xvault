@@ -2127,13 +2127,13 @@ function save_individual_flight(){
 		case "over":
 			$setline='event_pilot_round_flight_over=:value';
 			break;
-		case "land":
+		case "laps":
 			$setline='event_pilot_round_flight_laps=:value';
 			break;
 		case "order":
 			$setline='event_pilot_round_flight_order=:value';
 			break;
-		case "laps":
+		case "land":
 			$setline='event_pilot_round_flight_landing=:value';
 			break;
 		case "pen":
