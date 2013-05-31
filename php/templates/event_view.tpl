@@ -154,6 +154,7 @@ function check_permission() {ldelim}
 
 		{$perpage=8}
 		{$pages=ceil($event->rounds|count / $perpage)}
+		{if $pages==0}{$pages=1}{/if}
 		{$start_round=1}
 		{$end_round=$perpage}
 		{if $end_round>$event->rounds|count}

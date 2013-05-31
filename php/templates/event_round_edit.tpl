@@ -24,6 +24,7 @@ function save_data(element) {ldelim}
 			event_round_id: "{$event_round_id}",
 			event_round_number: "{$round_number|escape}",
 			flight_type_id: document.main.flight_type_id.value,
+			event_round_time_choice: document.main.event_round_time_choice.value,
 			event_round_score_status: document.main.event_round_score_status.value,
 			field_name: element.name,
 			field_value: element.value
