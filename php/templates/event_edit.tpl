@@ -65,7 +65,7 @@ $(function() {
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
+				mes.innerHTML = ' No Results Found. Use Add button to add new CD.';
 			}
 		}
 	});
@@ -214,6 +214,23 @@ function copy_club_values(){
 	document.create_new_club.from_series_id.value=document.main.series_id.value;
 	document.create_new_club.from_series_name.value=document.main.series_name.value;
 }
+function copy_cd_values(){
+	document.create_new_cd.pilot_name.value=document.main.event_cd_name.value;
+	document.create_new_series.from_club_id.value=document.main.club_id.value;
+	document.create_new_series.from_club_name.value=document.main.club_name.value;
+	document.create_new_cd.from_location_name.value=document.main.location_name.value;
+	document.create_new_cd.from_location_id.value=document.main.location_id.value;
+	document.create_new_cd.from_event_name.value=document.main.event_name.value;
+	document.create_new_cd.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
+	document.create_new_cd.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
+	document.create_new_cd.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
+	document.create_new_cd.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
+	document.create_new_cd.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
+	document.create_new_cd.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
+	document.create_new_cd.from_event_type_id.value=document.main.event_type_id.value;
+	document.create_new_cd.from_series_id.value=document.main.series_id.value;
+	document.create_new_cd.from_series_name.value=document.main.series_name.value;
+}
 function check_event(){
 	if(document.main.location_id.value==0 || document.main.location_id.value==''){
 		alert('You must choose or add a valid location for this event before saving it.');
@@ -285,6 +302,7 @@ function check_event(){
 		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{if $event->info.event_cd_name!=''}{$event->info.event_cd_name|escape}{else}{if $event->info.pilot_first_name!=''}{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}{/if}{/if}">
 		<img id="loading_cd" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
+		<input type="button" value=" + New CD " class="block-button" onClick="copy_cd_values(); create_new_cd.submit();">
 	</td>
 </tr>
 <tr>
@@ -458,6 +476,29 @@ function check_event(){
 <input type="hidden" name="from_event_type_id" value="">
 <input type="hidden" name="from_event_cd" value="">
 <input type="hidden" name="from_event_cd_name" value="">
+<input type="hidden" name="from_location_id" value="">
+<input type="hidden" name="from_location_name" value="">
+<input type="hidden" name="from_series_id" value="">
+<input type="hidden" name="from_series_name" value="">
+</form>
+<form name="create_new_cd" method="POST">
+<input type="hidden" name="action" value="pilot">
+<input type="hidden" name="function" value="pilot_add_cd">
+<input type="hidden" name="pilot_id" value="0">
+<input type="hidden" name="pilot_name" value="">
+<input type="hidden" name="club_id" value="0">
+<input type="hidden" name="club_name" value="">
+<input type="hidden" name="from_action" value="event">
+<input type="hidden" name="from_function" value="event_edit">
+<input type="hidden" name="from_event_id" value="{$event->info.event_id}">
+<input type="hidden" name="from_event_name" value="">
+<input type="hidden" name="from_event_start_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_start_dateDay" value="">
+<input type="hidden" name="from_event_start_dateYear" value="">
+<input type="hidden" name="from_event_end_dateMonth" value="{$pilot.pilot_id}">
+<input type="hidden" name="from_event_end_dateDay" value="">
+<input type="hidden" name="from_event_end_dateYear" value="">
+<input type="hidden" name="from_event_type_id" value="">
 <input type="hidden" name="from_location_id" value="">
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_series_id" value="">

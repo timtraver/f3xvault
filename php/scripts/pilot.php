@@ -259,5 +259,81 @@ function pilot_view() {
 	$maintpl=find_template("pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }
+function pilot_add_cd() {
+	global $smarty;
+
+	$pilot_name=$_REQUEST['pilot_name'];
+	# Lets set the name that was sent
+	$name=preg_split("/\s/",$pilot_name,2);
+	$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
+	$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+
+	if(isset($_REQUEST['from_action'])){
+		# Lets make an array of all of the return values
+		foreach($_REQUEST as $key=>$value){
+			if(preg_match("/from_(\S+)/",$key,$match)){
+				$from[]=array("key"=>$key,"value"=>$value);
+			}
+		}
+		# Now lets add that array to the template
+		$smarty->assign("from",$from);
+	}
+
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+	$smarty->assign("pilot",$pilot);
+
+	$maintpl=find_template("event_cd_add.tpl");
+	return $smarty->fetch($maintpl);
+}
+function pilot_save_cd() {
+	global $smarty;
+
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
+	$pilot_email=$_REQUEST['pilot_email'];
+
+	# Lets create the pilot
+	$stmt=db_prep("
+		INSERT INTO pilot
+		SET user_id=0,
+			pilot_first_name=:pilot_first_name,
+			pilot_last_name=:pilot_last_name,
+			pilot_email=:pilot_email,
+			pilot_ama=:pilot_ama,
+			pilot_fai=:pilot_fai,
+			pilot_city=:pilot_city,
+			state_id=:state_id,
+			country_id=:country_id
+	");
+	$result=db_exec($stmt,array(
+		"pilot_first_name"=>$pilot_first_name,
+		"pilot_last_name"=>$pilot_last_name,
+		"pilot_email"=>$pilot_email,
+		"pilot_ama"=>$pilot_ama,
+		"pilot_fai"=>$pilot_fai,
+		"pilot_city"=>$pilot_city,
+		"state_id"=>$state_id,
+		"country_id"=>$country_id,
+	));
+	$pilot_id=$GLOBALS['last_insert_id'];
+	user_message("Created new pilot $pilot_first_name $pilot_last_name for the CD role.");
+
+	if(isset($_REQUEST['from_action'])){
+		# This came from somewhere else, so go back to that screen
+		# But lets add the new cd id to the list
+		$from['event_cd']=$pilot_id;
+		$from['event_cd_name']=$pilot_first_name." ".$pilot_last_name;
+		$from['from_action']='event';
+		return return_to_action($from);
+	}else{
+		return event_list();
+	}
+}
 
 ?>

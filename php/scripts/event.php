@@ -429,6 +429,12 @@ function event_edit() {
 		if(isset($_REQUEST['club_name'])){
 			$e->info['club_name']=$_REQUEST['club_name'];
 		}
+		if(isset($_REQUEST['event_cd'])){
+			$e->info['event_cd']=$_REQUEST['event_cd'];
+		}
+		if(isset($_REQUEST['event_cd_name'])){
+			$e->info['event_cd_name']=$_REQUEST['event_cd_name'];
+		}
 	}
 
 	# Get all event types
@@ -2330,5 +2336,4 @@ function event_draw_print() {
 		return $smarty->fetch($maintpl);
 	}
 }
-
 ?>
