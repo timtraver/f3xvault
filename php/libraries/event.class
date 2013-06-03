@@ -1300,6 +1300,7 @@ class Event {
 	}
 	function get_draws(){
 		# Now lets get the draws that have been created for this event
+		$draws=array();
 		$stmt=db_prep("
 			SELECT *
 			FROM event_draw ed

@@ -2255,7 +2255,58 @@ function event_draw_create() {
 
 	$event_id=intval($_REQUEST['event_id']);
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
+
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_draws();
+
+	# Get flight type info
+	$ft=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_id=:flight_type_id
+	");
+	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
+	$ft=$result[0];
+
+	$num_teams=count($e->teams);
+	$max_groups_np=ceil(count($e->pilots)/2);
 	
+	# Lets determine the largest team
+	foreach($e->pilots as $p){
+		$team_name=$p['event_pilot_team'];
+		$teams[$team_name]++;
+	}
+	arsort($teams);
+	$max_on_team=array_shift($teams);
+	$max_groups_p=$num_teams;
+
+	$smarty->assign("event",$e);
+	$smarty->assign("event_id",$event_id);
+	$smarty->assign("ft",$ft);
+	
+	$maintpl=find_template("event_draw_create.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_draw_save(){
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$round_from=intval($_REQUEST['round_from']);
+	$round_to=intval($_REQUEST['round_to']);
+	$event_draw_type=$_REQUEST['event_draw_type'];
+	$event_draw_number_groups=intval($_REQUEST['flight_groups']);
+
+	$event_draw_team_protection=0;
+	if(isset($_REQUEST['event_draw_team_protection']) && $_REQUEST['event_draw_team_protection']=='on'){
+		$event_draw_team_protection=1;
+	}
+	$event_draw_team_separation=0;
+	if(isset($_REQUEST['event_draw_team_separation']) && $_REQUEST['event_draw_team_separation']=='on'){
+		$event_draw_team_separation=1;
+	}
 	# Get flight type info
 	$ft=array();
 	$stmt=db_prep("
@@ -2266,12 +2317,48 @@ function event_draw_create() {
 	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
 	$ft=$result[0];
 	
-	$smarty->assign("event_id",$event_id);
-	$smarty->assign("ft",$ft);
+	# Lets save the main draw parameters
+	$stmt=db_prep("
+		INSERT INTO event_draw
+		SET event_id=:event_id,
+			flight_type_id=:flight_type_id,
+			event_draw_type=:event_draw_type,
+			event_draw_number_groups=:event_draw_number_groups,
+			event_draw_team_protection=:event_draw_team_protection,
+			event_draw_team_separation=:event_draw_team_separation,
+			event_draw_active=0,
+			event_draw_status=1
+	");
+	$result=db_exec($stmt,array(
+		"event_id"=>$event_id,
+		"flight_type_id"=>$flight_type_id,
+		"event_draw_type"=>$event_draw_type,
+		"event_draw_number_groups"=>$event_draw_number_groups,
+		"event_draw_team_protection"=>$event_draw_team_protection,
+		"event_draw_team_separation"=>$event_draw_team_separation
+	));
+	$event_draw_id=$GLOBALS['last_insert_id'];
 	
-	$maintpl=find_template("event_draw_create.tpl");
-	return $smarty->fetch($maintpl);
+	include_library('draw.class');
+	$draw=new Draw($event_draw_id);
+	# OK, I guess lets build the draw elements now
+	if($ft.flight_type_group==1){
+		# This is a group task
+		
+	}else{
+		# This is an order task (speed)
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	return event_draw();
 }
+
 function event_draw_print() {
 	global $smarty;
 
