@@ -19,6 +19,7 @@ class Event {
 	var $options=array();
 	var $classes=array();
 	var $flight_types=array();
+	var $draws=array();
 	
 	function Event($event_id){
 		# Initialization of the class
@@ -1297,5 +1298,36 @@ class Event {
 		$speed=array_msort($temp_speed,array("event_pilot_round_flight_score"=>SORT_DESC));
 		return $speed;
 	}
+	function get_draws(){
+		# Now lets get the draws that have been created for this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_draw ed
+			WHERE ed.event_id=:event_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		# Now lets step through each of the draws and get the draw rounds
+		foreach($result as $draw){
+			$event_draw_id=$draw['event_draw_id'];
+			$draws[$event_draw_id]=$draw;
+			$flight_type_id=$draw['flight_type_id'];
+			$stmt=db_prep("
+				SELECT *
+				FROM event_draw_round 
+				WHERE event_draw_id=:event_draw_id
+					AND event_draw_round_status=1
+				ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_order
+			");
+			$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+			foreach($rounds as $round){
+				$round_number=$round['event_draw_round_number'];
+				$event_pilot_id=$round['event_pilot_id'];
+				$draws[$event_draw_id]['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
+			}
+		}
+		$this->draws=$draws;
+		return;
+	}
+	
 }
 ?>

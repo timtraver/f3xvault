@@ -36,9 +36,13 @@ EVENT STUFF
   For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
   	and when adding new flyoff rounds, only those pilots are shown.
   	
-  Draw : ability to create flying order F3F and maybe have an option to stagger each round
-  Draw : ability to create F3B distance orders before hand
-    
+  Draw
+  	ability to create F3B distance orders before hand
+    draw types
+    	random order
+    	staggered order for F3F
+    	set number of groups
+    	
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
   

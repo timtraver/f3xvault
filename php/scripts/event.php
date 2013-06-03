@@ -2240,6 +2240,7 @@ function event_draw() {
 	$e=new Event($event_id);
 	$e->get_teams();
 	$e->get_rounds();
+	$e->get_draws();
 	
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
@@ -2247,6 +2248,28 @@ function event_draw() {
 	$smarty->assign("event",$e);
 
 	$maintpl=find_template("event_draw.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_draw_create() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	
+	# Get flight type info
+	$ft=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_id=:flight_type_id
+	");
+	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
+	$ft=$result[0];
+	
+	$smarty->assign("event_id",$event_id);
+	$smarty->assign("ft",$ft);
+	
+	$maintpl=find_template("event_draw_create.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_draw_print() {

@@ -38,182 +38,7 @@ $(function() {
 			}
 		}
 	});
-	$("#event_cd_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_cd');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-			document.main.event_cd.value = ui.item.id;
-		},
-   		change: function( event, ui ) {
-   			if(document.main.event_cd_name.value==''){
-				document.main.event_cd.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_cd');
-			loading.style.display = "none";
-   			var mes=document.getElementById('cd_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
-			}
-		}
-	});
-	$("#series_name").autocomplete({
-		source: "/lookup.php?function=lookup_series",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_series');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-			document.main.series_id.value = ui.item.id;
-		},
-   		change: function( event, ui ) {
-   			if(document.main.series_name.value==''){
-				document.main.series_id.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_series');
-			loading.style.display = "none";
-   			var mes=document.getElementById('series_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new series.';
-			}
-		}
-	});
-	$("#club_name").autocomplete({
-		source: "/lookup.php?function=lookup_club",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_club');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-			document.main.club_id.value = ui.item.id;
-		},
-   		change: function( event, ui ) {
-   			if(document.main.club_name.value==''){
-				document.main.club_id.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_club');
-			loading.style.display = "none";
-   			var mes=document.getElementById('club_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new club.';
-			}
-		}
-	});
-	$("#event_user_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_pilot');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-			document.event_user_add.pilot_id.value = ui.item.id;
-		},
-   		change: function( event, ui ) {
-   			if(document.event_user_add.event_user_name.value==''){
-				document.event_user_add.pilot.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_pilot');
-			loading.style.display = "none";
-   			var mes=document.getElementById('user_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
-			}
-		}
-	});
 });
-function copy_location_values(){
-	document.create_new_location.location_name.value=document.main.location_name.value;
-	document.create_new_location.from_event_name.value=document.main.event_name.value;
-	document.create_new_location.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
-	document.create_new_location.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
-	document.create_new_location.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
-	document.create_new_location.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
-	document.create_new_location.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
-	document.create_new_location.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
-	document.create_new_location.from_event_type_id.value=document.main.event_type_id.value;
-	document.create_new_location.from_event_cd.value=document.main.event_cd.value;
-	document.create_new_location.from_event_cd_name.value=document.main.event_cd_name.value;
-	document.create_new_location.from_series_id.value=document.main.series_id.value;
-	document.create_new_location.from_series_name.value=document.main.series_name.value;
-	document.create_new_location.from_club_id.value=document.main.club_id.value;
-	document.create_new_location.from_club_name.value=document.main.club_name.value;
-}
-function copy_series_values(){
-	document.create_new_series.series_name.value=document.main.series_name.value;
-	document.create_new_series.from_location_name.value=document.main.location_name.value;
-	document.create_new_series.from_location_id.value=document.main.location_id.value;
-	document.create_new_series.from_event_name.value=document.main.event_name.value;
-	document.create_new_series.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
-	document.create_new_series.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
-	document.create_new_series.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
-	document.create_new_series.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
-	document.create_new_series.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
-	document.create_new_series.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
-	document.create_new_series.from_event_type_id.value=document.main.event_type_id.value;
-	document.create_new_series.from_event_cd.value=document.main.event_cd.value;
-	document.create_new_series.from_event_cd_name.value=document.main.event_cd_name.value;
-	document.create_new_series.from_club_id.value=document.main.club_id.value;
-	document.create_new_series.from_club_name.value=document.main.club_name.value;
-}
-function copy_club_values(){
-	document.create_new_club.club_name.value=document.main.club_name.value;
-	document.create_new_club.from_location_name.value=document.main.location_name.value;
-	document.create_new_club.from_location_id.value=document.main.location_id.value;
-	document.create_new_club.from_event_name.value=document.main.event_name.value;
-	document.create_new_club.from_event_start_dateMonth.value=document.main.event_start_dateMonth.value;
-	document.create_new_club.from_event_start_dateDay.value=document.main.event_start_dateDay.value;
-	document.create_new_club.from_event_start_dateYear.value=document.main.event_start_dateYear.value;
-	document.create_new_club.from_event_end_dateMonth.value=document.main.event_end_dateMonth.value;
-	document.create_new_club.from_event_end_dateDay.value=document.main.event_end_dateDay.value;
-	document.create_new_club.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
-	document.create_new_club.from_event_type_id.value=document.main.event_type_id.value;
-	document.create_new_club.from_event_cd.value=document.main.event_cd.value;
-	document.create_new_club.from_event_cd_name.value=document.main.event_cd_name.value;
-	document.create_new_club.from_series_id.value=document.main.series_id.value;
-	document.create_new_club.from_series_name.value=document.main.series_name.value;
-}
 </script>
 {/literal}
 
@@ -260,49 +85,46 @@ function copy_club_values(){
 	</div>
 	
 	<br>
-	<h3 style="color:red;">In Construction...</h3>
-<h1 class="post-title entry-title">Draw Parameters</h1>
+	<h2 style="color:red;">Under Construction...</h2>
+<h1 class="post-title entry-title">Draws
+		<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
+</h1>
 	
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw_save">
+<input type="hidden" name="function" value="event_draw_create">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="flight_type_id" value="0">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th width="20%" nowrap>Current Number of Pilots</th>
+	<th width="20%" nowrap>Flight Type</th>
+	<th width="5%" nowrap>Current</th>
+	<th width="10%" nowrap>Round From</th>
+	<th width="10%" nowrap>Round To</th>
+	<th nowrap>Statistics</th>
+	<th width="5%" nowrap>Action</th>
+</tr>
+{foreach $event->flight_types as $ft}
+<tr>
+	<th width="20%" nowrap>{$ft.flight_type_name}</th>
+	{if $event->draws|count==0}
+		<td colspan="4">No draws created</td>
+	{else}
+		<td align="center"><input type="checkbox"></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	{/if}
 	<td>
-		{$event->pilots|count}
 	</td>
 </tr>
+{/foreach}
 <tr>
-	<th width="20%" nowrap>Current Number of Teams</th>
-	<td>
-		{$event->teams|count}
+	<td colspan="6">
+		{foreach $event->flight_types as $ft}
+		<input type="button" value=" Create {$ft.flight_type_name} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
+		{/foreach}
 	</td>
-</tr>
-<tr>
-	<th width="20%" nowrap>Optimum Pilots Per Team</th>
-	<td>
-		{round($event->pilots|count / $event->teams|count)}
-	</td>
-</tr>
-<tr>
-	<th width="20%" nowrap>Minimum Number of Flight Groups</th>
-	<td>
-
-	</td>
-</tr>
-<tr>
-	<th width="20%" nowrap>Draws Currently in place</th>
-	<td>
-
-	</td>
-</tr>
-<tr>
-	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save Draw Parameters " class="block-button">
-	</th>
 </tr>
 </table>
 </form>
