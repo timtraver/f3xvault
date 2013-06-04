@@ -1305,6 +1305,7 @@ class Event {
 			SELECT *
 			FROM event_draw ed
 			WHERE ed.event_id=:event_id
+			AND event_draw_status=1
 		");
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
 		# Now lets step through each of the draws and get the draw rounds

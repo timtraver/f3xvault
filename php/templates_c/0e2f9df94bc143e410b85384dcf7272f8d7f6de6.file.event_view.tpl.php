@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-29 22:39:45
+<?php /* Smarty version Smarty-3.1.11, created on 2013-06-03 00:36:00
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1369891898,
+      1 => 1370244833,
       2 => 'file',
     ),
   ),
@@ -24,8 +24,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'num' => 0,
     'p' => 0,
     'perpage' => 0,
-    'end_round' => 0,
     'pages' => 0,
+    'end_round' => 0,
     'start_round' => 0,
     'page_num' => 0,
     'numrounds' => 0,
@@ -252,6 +252,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 
 		<?php $_smarty_tpl->tpl_vars['perpage'] = new Smarty_variable(8, null, 0);?>
 		<?php $_smarty_tpl->tpl_vars['pages'] = new Smarty_variable(ceil(count($_smarty_tpl->tpl_vars['event']->value->rounds)/$_smarty_tpl->tpl_vars['perpage']->value), null, 0);?>
+		<?php if ($_smarty_tpl->tpl_vars['pages']->value==0){?><?php $_smarty_tpl->tpl_vars['pages'] = new Smarty_variable(1, null, 0);?><?php }?>
 		<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable(1, null, 0);?>
 		<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
 		<?php if ($_smarty_tpl->tpl_vars['end_round']->value>count($_smarty_tpl->tpl_vars['event']->value->rounds)){?>

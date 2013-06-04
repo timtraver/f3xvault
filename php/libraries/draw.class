@@ -14,6 +14,7 @@ class Draw {
 	var $event_id;
 	var $draw=array();
 	var $pilots=array();
+	var $teams=array();
 	var $rounds=array();
 	
 	function Draw($event_draw_id){
@@ -26,59 +27,24 @@ class Draw {
 		");
 		$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
 		$this->draw=$result[0];
+		$this->event_id=$this->draw['event_id'];
+		$this->get_pilots();
 	}
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
-		$sort_by=$_REQUEST['sort_by'];
-		switch($sort_by){
-			case 'alphabetical_first':
-				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
-				break;
-			case 'alphabetical_last':
-				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
-				break;
-			case 'flight_order':
-			case 'round_rank':
-			case 'entry_order':
-			default:
-				$sort_string='ORDER BY ep.event_pilot_entry_order';
-				break;
-		}
 		$stmt=db_prep("
 			SELECT *
 			FROM event_pilot ep
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			LEFT JOIN class c ON ep.class_id=c.class_id
-			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 			WHERE ep.event_id=:event_id
 				AND ep.event_pilot_status=1
-			$sort_string
 		");
 		$results=db_exec($stmt,array("event_id"=>$this->event_id));
 		foreach($results as $pilot){
 			$event_pilot_id=$pilot['event_pilot_id'];
+			$team=$pilot['event_pilot_team'];
 			$this->pilots[$event_pilot_id]=$pilot;
-			$class_id=$pilot['class_id'];
-			if(!isset($this->classes[$class_id]['class_description'])){
-				$this->classes[$class_id]=array("class_id"=>$pilot['class_id'],"class_description"=>$pilot['class_description']);
-			}
-		}
-		return;
-	}
-	function get_new_round($event_round_number){
-		# Now lets make a new round in the rounds array so that the round edit screen shows properly
-		foreach($this->pilots as $event_pilot_id=>$p){
-			$pilots[$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
-		}
-		foreach($this->flight_types as $flight_type_id=>$ft){
-			$this->rounds[$event_round_number]['event_round_id']=0;
-			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
-			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
-			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots;
-		}
-		# Set the flyoff round default
-		if($_REQUEST['flyoff_round']==1){
-			$this->rounds[$event_round_number]['event_round_flyoff']=1;
+			$this->teams[$team][$event_pilot_id]=$pilot;
 		}
 		return;
 	}
@@ -98,34 +64,49 @@ class Draw {
 		$this->teams=$names;
 		return;
 	}
-	function get_flight_types(){
-		# Function to get the flight types in this event
-		# Lets figure out the round type base on the event type
-		$this->flight_types=array();
-		$stmt=db_prep("
-			SELECT *
-			FROM flight_type
-			ORDER BY flight_type_order
-		");
-		$result=db_exec($stmt,array());
-		$type=$this->info['event_type_code'];
-		foreach($result as $r){
-			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
-				$id=$r['flight_type_id'];
-				# Lets step through each of the options and set the accuracy for this flight type
-				$code=$r['flight_type_code'];
-				foreach($this->options as $o){
-					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
-						$r['accuracy']=$o['event_option_value'];
-					}
-					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
-						$r['accuracy']=$o['event_option_value'];
-					}
+	function create_order_rounds(){
+		# Function to create the round array for an order type of round
+		# This means we essentially create the random array
+		
+		$round_from=$this->draw['event_draw_round_from'];
+		$round_to=$this->draw['event_draw_round_to'];
+		
+		for($round=$round_from;$round<=$round_to;$round++){
+			$ok=0;
+			$last_team='';
+			$order=array();
+			$pilots=$this->pilots;
+			shuffle($pilots);
+			$loop=count($pilots);
+			$total_pilots=count($pilots);
+			for($x=1;$x<=$loop;$x++){
+#				print "x=$x<br>\n";
+				if(count($pilots)>1){
+					$rand=mt_rand(0,$total_pilots);
+#					print "rand=$rand<br>\n";
+#					print "total_pilots=$total_pilots<br>\n";
+#					print "size of pilots=".count($pilots)."<br>\n";
+					$splice=array_splice($pilots,$rand-1,1);
+					$order[]=$splice[0];
+				}else{
+					$order[]=$pilots[0];
 				}
-				$this->flight_types[$id]=$r;
+				$total_pilots--;
 			}
+#print_r($order);
+			$x=1;
+			foreach($order as $key=>$o){
+				print "$x - {$o['pilot_first_name']} {$o['pilot_last_name']} - {$o['event_pilot_team']}<br>\n";
+				$x++;
+			}
+			print "<br>";
+
 		}
+		
+		
 		return;
 	}
+	
+
 }
 ?>

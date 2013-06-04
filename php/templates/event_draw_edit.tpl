@@ -9,7 +9,8 @@
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw_save">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_draw_id" value="{$event_draw_id}">
+<input type="hidden" name="event_id" value="{$event_id}">
 <input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
@@ -21,13 +22,13 @@
 <tr>
 	<th width="10%" nowrap>Round Start</th>
 	<td>
-		<input type="text" name="round_from" size="2" value="1">
+		<input type="text" name="event_draw_round_from" size="2" value="{$draw.event_draw_round_from}">
 	</td>
 </tr>
 <tr>
 	<th width="10%" nowrap>Round Finish</th>
 	<td>
-		<input type="text" name="round_to" size="2" value="10">
+		<input type="text" name="event_draw_round_to" size="2" value="{$draw.event_draw_round_to}">
 	</td>
 </tr>
 <tr>
@@ -46,27 +47,27 @@
 <tr>
 	<th nowrap>Team Protection</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_protection"> This will not have team pilots matched up against each other.
+		<input type="checkbox" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1} CHECKED{/if}> This will not have team pilots matched up against each other.
 	</td>
 </tr>
 
 <tr>
 	<th nowrap>Desired Number of Flight Groups</th>
 	<td>
-		<input type="text" name="flight_groups" size="2">
+		<input type="text" name="event_draw_number_groups" size="2" value="{$draw.event_draw_number_groups}">
 	</td>
 </tr>
 {else}
 <tr>
 	<th nowrap>Team Separation</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_separation"> This will make sure team pilots are separated by at least one pilot.
+		<input type="checkbox" name="event_draw_team_separation"{if $draw.event_draw_team_separation==1} CHECKED{/if}> This will make sure team pilots are separated by at least one pilot.
 	</td>
 </tr>
 {/if}
 <tr>
 	<td colspan="2">
-		<input type="submit" value=" Create {$ft.flight_type_name} Draw " class="block-button">
+		<input type="submit" value=" {if $event_draw_id==0}Create{else}Save{/if} {$ft.flight_type_name} Draw " class="block-button">
 	</td>
 </tr>
 </table>

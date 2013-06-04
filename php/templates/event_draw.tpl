@@ -48,32 +48,57 @@
 	
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw_create">
+<input type="hidden" name="function" value="event_draw_edit">
+<input type="hidden" name="event_draw_id" value="0">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="flight_type_id" value="0">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th width="20%" nowrap>Flight Type</th>
-	<th width="5%" nowrap>Current</th>
+	<th width="20%" nowrap>Status</th>
 	<th width="10%" nowrap>Round From</th>
 	<th width="10%" nowrap>Round To</th>
 	<th nowrap>Statistics</th>
-	<th width="5%" nowrap>Action</th>
+	<th width="20%" nowrap>Action</th>
 </tr>
 {foreach $event->flight_types as $ft}
-<tr>
-	<th width="20%" nowrap>{$ft.flight_type_name}</th>
-	{if $event->draws|count==0}
-		<td colspan="4">No draws created</td>
-	{else}
-		<td align="center"><input type="checkbox"></td>
-		<td></td>
-		<td></td>
-		<td></td>
+	{$total=0}
+	{foreach $event->draws as $d}
+		{if $d.flight_type_id==$ft.flight_type_id}
+			{$total=$total+1}
+		{/if}
+	{/foreach}
+	{if $total==0}
+		<tr>
+			<th width="20%" nowrap>{$ft.flight_type_name}</th>
+			<td colspan="4">No draws created</td>
+		</tr>
+	{else}	
+		{foreach $event->draws as $d}
+			{if $d.flight_type_id!=$ft.flight_type_id}
+				{continue}
+			{/if}
+			<tr>
+			<th width="20%" nowrap>{$ft.flight_type_name}</th>
+			{if $d.event_draw_active}
+				<td align="center" bgcolor="#9DCFF0">
+					Active
+				</td>
+			{else}
+				<td align="center">
+					Not Applied
+				</td>
+			{/if}
+			<td>{$d.event_draw_round_from}</td>
+			<td>{$d.event_draw_round_to}</td>
+			<td>View Statistics</td>
+			<td>
+				<a href="?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}">Edit Draw</a>
+				<a href="?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}"><img src="/images/del.gif"></a>
+			</td>
+			</tr>
+		{/foreach}
 	{/if}
-	<td>
-	</td>
-</tr>
 {/foreach}
 <tr>
 	<td colspan="6">
