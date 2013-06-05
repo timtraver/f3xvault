@@ -101,7 +101,7 @@
 	{/if}
 {/foreach}
 <tr>
-	<td colspan="6">
+	<td colspan="6" style="padding-top:10px;">
 		{foreach $event->flight_types as $ft}
 		<input type="button" value=" Create {$ft.flight_type_name} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
 		{/foreach}
@@ -122,7 +122,7 @@
 <input type="hidden" name="use_print_header" value="1">
 <tr>
 	<th width="10%" nowrap>{$ft.flight_type_name}</th>
-	<td>
+	<td style="padding-top:10px;">
 		Rounds
 		<select name="print_round_from">
 		{foreach $event->rounds as $r}

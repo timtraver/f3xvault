@@ -2313,6 +2313,7 @@ function event_draw_save(){
 	$event_draw_round_to=intval($_REQUEST['event_draw_round_to']);
 	$event_draw_type=$_REQUEST['event_draw_type'];
 	$event_draw_number_groups=intval($_REQUEST['event_draw_number_groups']);
+	$event_draw_changed=intval($_REQUEST['event_draw_changed']);
 
 	$event_draw_team_protection=0;
 	if(isset($_REQUEST['event_draw_team_protection']) && $_REQUEST['event_draw_team_protection']=='on'){
@@ -2332,65 +2333,65 @@ function event_draw_save(){
 	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
 	$ft=$result[0];
 	
-	# Lets save the main draw parameters
-	if($event_draw_id==0){
-		$stmt=db_prep("
-			INSERT INTO event_draw
-			SET event_id=:event_id,
-				flight_type_id=:flight_type_id,
-				event_draw_type=:event_draw_type,
-				event_draw_round_from=:event_draw_round_from,
-				event_draw_round_to=:event_draw_round_to,
-				event_draw_number_groups=:event_draw_number_groups,
-				event_draw_team_protection=:event_draw_team_protection,
-				event_draw_team_separation=:event_draw_team_separation,
-				event_draw_active=0,
-				event_draw_status=1
-		");
-		$result=db_exec($stmt,array(
-			"event_id"=>$event_id,
-			"flight_type_id"=>$flight_type_id,
-			"event_draw_round_from"=>$event_draw_round_from,
-			"event_draw_round_to"=>$event_draw_round_to,
-			"event_draw_type"=>$event_draw_type,
-			"event_draw_number_groups"=>$event_draw_number_groups,
-			"event_draw_team_protection"=>$event_draw_team_protection,
-			"event_draw_team_separation"=>$event_draw_team_separation
-		));
-		$event_draw_id=$GLOBALS['last_insert_id'];
-	}else{
-		# Save the existing one
-		$stmt=db_prep("
-			UPDATE event_draw
-			SET event_draw_type=:event_draw_type,
-				event_draw_round_from=:event_draw_round_from,
-				event_draw_round_to=:event_draw_round_to,
-				event_draw_number_groups=:event_draw_number_groups,
-				event_draw_team_protection=:event_draw_team_protection,
-				event_draw_team_separation=:event_draw_team_separation
-		");
-		$result=db_exec($stmt,array(
-			"event_draw_round_from"=>$event_draw_round_from,
-			"event_draw_round_to"=>$event_draw_round_to,
-			"event_draw_type"=>$event_draw_type,
-			"event_draw_number_groups"=>$event_draw_number_groups,
-			"event_draw_team_protection"=>$event_draw_team_protection,
-			"event_draw_team_separation"=>$event_draw_team_separation
-		));
-	}	
-	include_library('draw.class');
-	$draw=new Draw($event_draw_id);
-
-	# OK, I guess lets build the draw elements now
-	if($ft.flight_type_group==1){
-		# This is a group task
-		
-	}else{
-		# This is an order task (speed)
-		$draw->create_order_rounds();
-		
-	}
+	if($event_draw_changed==1){
+		# Lets save the main draw parameters
+		if($event_draw_id==0){
+			$stmt=db_prep("
+				INSERT INTO event_draw
+				SET event_id=:event_id,
+					flight_type_id=:flight_type_id,
+					event_draw_type=:event_draw_type,
+					event_draw_round_from=:event_draw_round_from,
+					event_draw_round_to=:event_draw_round_to,
+					event_draw_number_groups=:event_draw_number_groups,
+					event_draw_team_protection=:event_draw_team_protection,
+					event_draw_team_separation=:event_draw_team_separation,
+					event_draw_active=0,
+					event_draw_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"flight_type_id"=>$flight_type_id,
+				"event_draw_round_from"=>$event_draw_round_from,
+				"event_draw_round_to"=>$event_draw_round_to,
+				"event_draw_type"=>$event_draw_type,
+				"event_draw_number_groups"=>$event_draw_number_groups,
+				"event_draw_team_protection"=>$event_draw_team_protection,
+				"event_draw_team_separation"=>$event_draw_team_separation
+			));
+			$event_draw_id=$GLOBALS['last_insert_id'];
+		}else{
+			# Save the existing one
+			$stmt=db_prep("
+				UPDATE event_draw
+				SET event_draw_type=:event_draw_type,
+					event_draw_round_from=:event_draw_round_from,
+					event_draw_round_to=:event_draw_round_to,
+					event_draw_number_groups=:event_draw_number_groups,
+					event_draw_team_protection=:event_draw_team_protection,
+					event_draw_team_separation=:event_draw_team_separation
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_round_from"=>$event_draw_round_from,
+				"event_draw_round_to"=>$event_draw_round_to,
+				"event_draw_type"=>$event_draw_type,
+				"event_draw_number_groups"=>$event_draw_number_groups,
+				"event_draw_team_protection"=>$event_draw_team_protection,
+				"event_draw_team_separation"=>$event_draw_team_separation
+			));
+		}	
+		include_library('draw.class');
+		$draw=new Draw($event_draw_id);
 	
+		# OK, I guess lets build the draw elements now
+		if($ft.flight_type_group==1){
+			# This is a group task
+			
+		}else{
+			# This is an order task (speed)
+			$draw->create_order_rounds();
+		}
+	}
 	return event_draw();
 }
 function event_draw_delete() {

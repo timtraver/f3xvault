@@ -66,19 +66,21 @@ class Draw {
 	}
 	function create_order_rounds(){
 		# Function to create the round array for an order type of round
-		# This means we essentially create the random array
+		# This means we essentially create the random array for speed rounds
 		
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
-		
+		$last_team='';
 		for($round=$round_from;$round<=$round_to;$round++){
-			$ok=0;
-			$last_team='';
+			$round_ok=1;
 			$order=array();
 			$pilots=$this->pilots;
 			shuffle($pilots);
 			$loop=count($pilots);
 			$total_pilots=count($pilots);
+			# Set a y value to prevent looping
+			$y=0;
+			print "Building round $round<br>\n";
 			for($x=1;$x<=$loop;$x++){
 #				print "x=$x<br>\n";
 				if(count($pilots)>1){
@@ -86,23 +88,102 @@ class Draw {
 #					print "rand=$rand<br>\n";
 #					print "total_pilots=$total_pilots<br>\n";
 #					print "size of pilots=".count($pilots)."<br>\n";
-					$splice=array_splice($pilots,$rand-1,1);
-					$order[]=$splice[0];
+					$test=array_slice($pilots,$rand-1,1);
+					if($test[0]['event_pilot_team']!=$last_team || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
+						# This chosen one is indeed on a different team, so lets pop it off the array
+						$splice=array_splice($pilots,$rand-1,1);
+						$order[]=$splice[0];
+						$total_pilots--;
+						$last_team=$splice[0]['event_pilot_team'];
+						if($y>20){
+							$round_ok=0;
+						}
+						$y=0;
+					}else{
+						# Try again by resetting the x var
+						$x--;
+						$y++;
+					}
 				}else{
 					$order[]=$pilots[0];
+					$total_pilots--;
+					$last_team=$pilots[0]['event_pilot_team'];
 				}
-				$total_pilots--;
 			}
-#print_r($order);
+			if($round_ok==0){
+				# This means that the separation didn't work
+				print "Redo the whole round<br>\n";
+				$round--;
+			}
+
+			# OK, now lets save this round draw info
+			# lets blank the round first
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+					AND event_draw_round_number=:round
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round"=>$round
+			));
+			
+			# Now lets step through the array and save the round info
 			$x=1;
 			foreach($order as $key=>$o){
+				# Lets see if a record already exists
+				$event_draw_round_id=0;
+				$stmt=db_prep("
+					SELECT event_draw_round_id
+					FROM event_draw_round
+					WHERE event_draw_id=:event_draw_id
+						AND event_draw_round_number=:round
+						AND event_draw_round_order=:event_draw_round_order
+				");
+				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
+				if(isset($result[0])){
+					$event_draw_round_id=$result[0]['event_draw_round_id'];
+				}
+				
+				if($event_draw_round_id==0){
+					# Make a new record
+					$stmt=db_prep("
+						INSERT INTO event_draw_round
+						SET event_draw_id=:event_draw_id,
+							event_draw_round_number=:event_draw_round_number,
+							event_pilot_id=:event_pilot_id,
+							event_draw_round_group='',
+							event_draw_round_order=:x,
+							event_draw_round_status=1
+					");
+					$result=db_exec($stmt,array(
+						"event_draw_id"=>$this->event_draw_id,
+						"event_draw_round_number"=>$round,
+						"event_pilot_id"=>$o['event_pilot_id'],
+						"x"=>$x
+					));
+				}else{
+					# Update an existing record
+					$stmt=db_prep("
+						UPDATE event_draw_round
+						SET event_pilot_id=:event_pilot_id,
+							event_draw_round_group='',
+							event_draw_round_order=:x,
+							event_draw_round_status=1
+						WHERE event_draw_round_id=:event_draw_round_id
+					");
+					$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+				}
+				
 				print "$x - {$o['pilot_first_name']} {$o['pilot_last_name']} - {$o['event_pilot_team']}<br>\n";
 				$x++;
 			}
 			print "<br>";
 
 		}
-		
 		
 		return;
 	}
