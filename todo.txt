@@ -27,6 +27,8 @@ PLANE STUFF
 	
 EVENT STUFF
   
+  Check drops with TD as they might have been messed up by the complete round change
+  
   Have a setting for top X teammates to be used in the team standings
   
   Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
