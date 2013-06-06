@@ -3,8 +3,6 @@ Todo list for rcvault project
 = before launch
 
 GENERAL
-
-  Add pilot privacy stuff to prevent anyone looking at any of their info
     
 =  Send welcome email once registered and save it as their first message
   
@@ -26,8 +24,6 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
-  
-  Check drops with TD as they might have been messed up by the complete round change
   
   Have a setting for top X teammates to be used in the team standings
   
@@ -51,8 +47,6 @@ EVENT STUFF
   Flyoff capability
 	Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
 	
-  Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
-
   When event is completed, have a function to blast the link to the event to the event participants if members
   
   Add Pilot Event Number for contests that might have bibs
@@ -79,6 +73,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X Add contest director quick add link to add them as a pilot and come back to the same screen with the same data
+X Check drops with TD as they might have been messed up by the complete round change
 X Make it so that it can do 20+ rounds and have good formatting (i.e. make loop out of second round chunk) or maybe make loop out of first one
 X Do a cool +- mouseover on the total scores on event summary screen
 X In the stats area, don't count the dropped rounds for things like averages
