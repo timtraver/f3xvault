@@ -77,6 +77,7 @@ function login() {
 function user_login() {
 	global $smarty;
 	global $user;
+	global $actionoutput;
 	$GLOBALS['current_menu']='login';
 
 	# ok, lets log the user in
@@ -87,7 +88,11 @@ function user_login() {
 		$user=get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
 		log_action($user['user_id']);
-		return view_home();
+		$_REQUEST['action']='my';
+		$_REQUEST['function']='';
+		$GLOBALS['user_id']=$user['user_id'];
+        include("{$GLOBALS['scripts_dir']}/my.php");
+		return $actionoutput;
 	}
 	# Unsuccessful login
 	$user=array();
