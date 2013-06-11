@@ -80,14 +80,9 @@ class Draw {
 			$total_pilots=count($pilots);
 			# Set a y value to prevent looping
 			$y=0;
-			print "Building round $round<br>\n";
 			for($x=1;$x<=$loop;$x++){
-#				print "x=$x<br>\n";
 				if(count($pilots)>1){
 					$rand=mt_rand(0,$total_pilots);
-#					print "rand=$rand<br>\n";
-#					print "total_pilots=$total_pilots<br>\n";
-#					print "size of pilots=".count($pilots)."<br>\n";
 					$test=array_slice($pilots,$rand-1,1);
 					if($test[0]['event_pilot_team']!=$last_team || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
 						# This chosen one is indeed on a different team, so lets pop it off the array
@@ -112,7 +107,6 @@ class Draw {
 			}
 			if($round_ok==0){
 				# This means that the separation didn't work
-				print "Redo the whole round<br>\n";
 				$round--;
 			}
 
@@ -177,17 +171,10 @@ class Draw {
 					");
 					$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
 				}
-				
-				print "$x - {$o['pilot_first_name']} {$o['pilot_last_name']} - {$o['event_pilot_team']}<br>\n";
 				$x++;
 			}
-			print "<br>";
-
 		}
-		
 		return;
 	}
-	
-
 }
 ?>

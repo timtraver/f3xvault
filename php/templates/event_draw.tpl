@@ -89,12 +89,17 @@
 					Not Applied
 				</td>
 			{/if}
-			<td>{$d.event_draw_round_from}</td>
-			<td>{$d.event_draw_round_to}</td>
-			<td>View Statistics</td>
+			<td align="center">{$d.event_draw_round_from}</td>
+			<td align="center">{$d.event_draw_round_to}</td>
+			<td align="center">
+				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
+					View Statistics
+				{/if}
+			</td>
 			<td>
-				<a href="?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}">Edit Draw</a>
-				<a href="?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}"><img src="/images/del.gif"></a>
+				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
+				<a href="?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}"><input type="button" value="Edit" class="button"></a>
+				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the current and future rounds?')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 			</td>
 			</tr>
 		{/foreach}

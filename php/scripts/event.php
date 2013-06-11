@@ -1334,6 +1334,16 @@ function event_round_edit() {
 		}else{
 			$event->rounds[$round_number]['event_round_score_status']=1;
 		}
+		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
+		$event->get_draws();
+		foreach($event->draws as $event_draw_id=>$d){
+			foreach($d['flights'] as $flight_type_id=>$f){
+				foreach($f[$round_number]['pilots'] as $event_pilot_id=>$p){
+					$event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+					$event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+				}
+			}
+		}
 	}else{
 		# Step through and get the round number from the event_round_id
 		foreach($event->rounds as $event_round_number=>$data){
@@ -2091,7 +2101,6 @@ function save_individual_flight(){
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
 					event_round_needs_calc=1,
-					event_round_time_choice=:event_round_time_choice,
 					event_round_status=1
 			");
 			$result=db_exec($stmt,array(
@@ -2099,8 +2108,7 @@ function save_individual_flight(){
 				"event_round_number"=>$event_round_number,
 				"flight_type_id"=>$flight_type_id,
 				"event_round_time_choice"=>$event_round_time_choice,
-				"event_round_score_status"=>$event_round_score_status,
-				"event_round_time_choice"=>$event_round_time_choice
+				"event_round_score_status"=>$event_round_score_status
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
 			# Lets also create a new event_round_flight that is set to on
@@ -2283,7 +2291,8 @@ function event_draw_edit() {
 	$ft=$result[0];
 
 	$num_teams=count($e->teams);
-	$max_groups_np=ceil(count($e->pilots)/2);
+	$min_groups_np=1;
+	$max_groups_np=floor(count($e->pilots)/2);
 	
 	# Lets determine the largest team
 	foreach($e->pilots as $p){
@@ -2292,7 +2301,19 @@ function event_draw_edit() {
 	}
 	arsort($teams);
 	$max_on_team=array_shift($teams);
-	$max_groups_p=$num_teams;
+	if($num_teams>$max_on_team){
+		$min_groups_p=$num_teams;
+	}else{
+		$min_groups_p=$max_on_team;
+	}
+	$max_groups_p=floor(count($e->pilots)/2);
+	
+	print "min groups with protection=$min_groups_p<br>\n";
+	print "max groups with protection=$max_groups_p<br>\n";
+	
+	print "min groups no protection=$min_groups_np<br>\n";
+	print "max groups no protection=$max_groups_np<br>\n";
+	
 
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
@@ -2392,6 +2413,125 @@ function event_draw_save(){
 			$draw->create_order_rounds();
 		}
 	}
+	return event_draw();
+}
+function event_draw_apply(){
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+
+	# Get flight type info
+	$ft=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_id=:flight_type_id
+	");
+	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
+	$ft=$result[0];
+
+	# Get draw info
+	$draw=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw
+		WHERE event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	$draw=$result[0];
+	
+	# Ok, now lets get the rounds for this draw, and apply the group or order number to the existing event rounds
+	$draw_rounds=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw_round
+		WHERE event_draw_id=:event_draw_id
+			AND event_draw_round_status=1
+		ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_order
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	foreach($result as $r){
+		$round_number=$r['event_draw_round_number'];
+		$event_pilot_id=$r['event_pilot_id'];
+		$draw_rounds[$round_number][$event_pilot_id]=$r;
+	}
+	# OK, now lets step through the existing rounds and save the flight orders for this flight type in the existing rounds
+	$e=new Event($event_id);
+	$e->get_rounds();
+	foreach($e->rounds as $round_number=>$r){
+		foreach($r['flights'][$flight_type_id]['pilots'] as $event_pilot_id=>$p){
+			$group='';
+			$order=0;
+			if(isset($draw_rounds[$round_number][$event_pilot_id]['event_draw_round_group'])){
+				$group=$draw_rounds[$round_number][$event_pilot_id]['event_draw_round_group'];
+			}
+			if(isset($draw_rounds[$round_number][$event_pilot_id]['event_draw_round_order'])){
+				$order=$draw_rounds[$round_number][$event_pilot_id]['event_draw_round_order'];
+			}
+			# lets save that flight now
+			if($p['event_pilot_round_flight_id']){
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_group=:group,
+						event_pilot_round_flight_order=:order
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result=db_exec($stmt,array(
+					"group"=>$group,
+					"order"=>$order,
+					"event_pilot_round_flight_id"=>$p['event_pilot_round_flight_id']
+				));
+			}else{
+				# Looks like this is a new pilot that doesn't have a record yet, so lets create one
+				# Lets get the event_pilot_round
+				$stmt=db_prep("
+					SELECT *
+					FROM event_pilot_round epr
+					WHERE epr.event_round_id=:event_round_id
+						AND epr.event_pilot_id=:event_pilot_id
+				");
+				$result2=db_exec($stmt,array("event_round_id"=>$r['event_round_id'],"event_pilot_id"=>$event_pilot_id));
+				if(!isset($result2[0])){
+					# Event pilot round doesn't exist, so lets create one
+					$stmt=db_prep("
+						INSERT INTO event_pilot_round
+						SET event_pilot_id=:event_pilot_id,
+							event_round_id=:event_round_id
+					");
+					$result3=db_exec($stmt,array("event_round_id"=>$r['event_round_id'],"event_pilot_id"=>$event_pilot_id));
+					$event_pilot_round_id=$GLOBALS['last_insert_id'];
+				}else{
+					$event_pilot_round_id=$result2[0]['event_pilot_round_id'];
+				}
+				
+				$stmt=db_prep("
+					INSERT INTO event_pilot_round_flight
+					SET event_pilot_round_id=:event_pilot_round_id,
+						flight_type_id=:flight_type_id,
+						event_pilot_round_flight_group=:group,
+						event_pilot_round_flight_order=:order,
+						event_pilot_round_flight_status=1
+				");
+				$result=db_exec($stmt,array(
+					"event_pilot_round_id"=>$event_pilot_round_id,
+					"flight_type_id"=>$flight_type_id,
+					"group"=>$group,
+					"order"=>$order
+				));
+			}
+		}
+	}
+	# Now lets change the status of the draw to active
+	$stmt=db_prep("
+		UPDATE event_draw
+		SET event_draw_active=1
+		WHERE event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	
+	user_message("Event Draw Applied.");
 	return event_draw();
 }
 function event_draw_delete() {

@@ -59,13 +59,21 @@ function set_changed(){ldelim}
 		<input type="checkbox" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1} CHECKED{/if} onChange="set_changed();"> This will not have team pilots matched up against each other.
 	</td>
 </tr>
-
 <tr>
 	<th nowrap>Desired Number of Flight Groups</th>
 	<td>
-		<input type="text" name="event_draw_number_groups" size="2" value="{$draw.event_draw_number_groups}" onChange="set_changed();">
+		<span id="no_protection">
+			<select name="groups">
+			</select>
+		</span>
+		<span id="with_protection">
+			<select name="groups">
+			</select>
+		</span>
+		<input type="hidden" name="event_draw_number_groups" value="">
 	</td>
 </tr>
+
 {else}
 <tr>
 	<th nowrap>Team Separation</th>
@@ -76,7 +84,7 @@ function set_changed(){ldelim}
 {/if}
 <tr>
 	<td colspan="2">
-		<input type="button" value=" {if $event_draw_id==0}Create{else}Save{/if} {$ft.flight_type_name} Draw " class="block-button" onClick="if(changed==1){ldelim}confirm('You have changed the draw values. Do you wish to re-calculate the draw?') && document.main.submit();{rdelim}else{ldelim}document.main.submit();{rdelim}">
+		<input type="button" value=" {if $event_draw_id==0}Create{else}Save{/if} {$ft.flight_type_name} Draw " class="block-button" onClick="if(changed==1 && document.main.event_draw_id.value!=0){ldelim}confirm('You have changed the draw values. Do you wish to re-calculate the draw?') && document.main.submit();{rdelim}else{ldelim}document.main.submit();{rdelim}">
 	</td>
 </tr>
 </table>

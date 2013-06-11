@@ -1,4 +1,4 @@
-Todo list for rcvault project
+Todo list for f3xvault project
 
 = before launch
 
@@ -40,7 +40,9 @@ EVENT STUFF
     	random order
     	staggered order for F3F
     	set number of groups
-    	
+    make the printing of the draws use the current rounds and the draw rounds
+    check for overlap when saving new draw
+    
 / printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
   Show the print statistics button only if there actually are stats to print...;)
   
