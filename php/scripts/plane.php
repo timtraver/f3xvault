@@ -141,13 +141,14 @@ function plane_list() {
 	# Step through each plane to figure out if it has enough information
 	foreach($planes as $plane){
 		$total=0;
-		if($plane['plane_type_id']!=0){$total++;}
 		if($plane['plane_wingspan']!=''){$total++;}
 		if($plane['plane_length']!=0){$total++;}
 		if($plane['plane_wing_area']!=0){$total++;}
 		if($plane['plane_manufacturer']!=''){$total++;}
 		if($plane['plane_year']!=0){$total++;}
 		if($plane['plane_auw_from']!=0){$total++;}
+		if($plane['plane_website']!=''){$total++;}
+		if($plane['country_id']!=0){$total++;}
 		if($total>5){
 			$plane['plane_info']='good';
 		}else{
