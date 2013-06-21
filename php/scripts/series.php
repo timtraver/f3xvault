@@ -257,7 +257,7 @@ function series_save() {
 	if($series_id==0){
 		$stmt=db_prep("
 			INSERT INTO series
-			SET pilot_id=:pilot_id,
+			SET user_id=:user_id,
 				series_name=:series_name,
 				series_area=:series_area,
 				state_id=:state_id,
@@ -265,7 +265,7 @@ function series_save() {
 				series_url=:series_url
 		");
 		$result=db_exec($stmt,array(
-			"pilot_id"=>$user['pilot_id'],
+			"user_id"=>$user['user_id'],
 			"series_name"=>$series_name,
 			"series_area"=>$series_area,
 			"state_id"=>$state_id,
