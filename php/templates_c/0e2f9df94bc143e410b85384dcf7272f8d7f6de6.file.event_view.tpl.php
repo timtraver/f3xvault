@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-06-05 22:47:47
+<?php /* Smarty version Smarty-3.1.11, created on 2013-06-21 01:38:16
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1370497665,
+      1 => 1371803891,
       2 => 'file',
     ),
   ),
@@ -25,6 +25,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'p' => 0,
     'r' => 0,
     'flyoff_rounds' => 0,
+    'zero_rounds' => 0,
     'prelim_rounds' => 0,
     'perpage' => 0,
     'pages' => 0,
@@ -266,24 +267,50 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 				<?php $_smarty_tpl->tpl_vars['flyoff_rounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['flyoff_rounds']->value+1, null, 0);?>
 			<?php }?>
 		<?php } ?>
+		
+		<?php $_smarty_tpl->tpl_vars['zero_rounds'] = new Smarty_variable(0, null, 0);?>
+		<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['r']->iteration=0;
+foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
+$_smarty_tpl->tpl_vars['r']->_loop = true;
+ $_smarty_tpl->tpl_vars['r']->iteration++;
+?>
+			<?php if ($_smarty_tpl->tpl_vars['r']->value['event_round_number']==0){?>
+				<?php $_smarty_tpl->tpl_vars['zero_rounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['zero_rounds']->value+1, null, 0);?>
+			<?php }?>
+		<?php } ?>
 		<?php $_smarty_tpl->tpl_vars['prelim_rounds'] = new Smarty_variable(count($_smarty_tpl->tpl_vars['event']->value->rounds)-$_smarty_tpl->tpl_vars['flyoff_rounds']->value, null, 0);?>
 		<?php $_smarty_tpl->tpl_vars['pages'] = new Smarty_variable(ceil($_smarty_tpl->tpl_vars['prelim_rounds']->value/$_smarty_tpl->tpl_vars['perpage']->value), null, 0);?>
 		<?php if ($_smarty_tpl->tpl_vars['pages']->value==0){?><?php $_smarty_tpl->tpl_vars['pages'] = new Smarty_variable(1, null, 0);?><?php }?>
-		<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable(1, null, 0);?>
-		<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
-		<?php if ($_smarty_tpl->tpl_vars['end_round']->value>$_smarty_tpl->tpl_vars['prelim_rounds']->value){?>
-			<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['prelim_rounds']->value, null, 0);?>
+		<?php if ($_smarty_tpl->tpl_vars['zero_rounds']->value>0){?>
+			<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable(0, null, 0);?>
+			<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['perpage']->value-$_smarty_tpl->tpl_vars['zero_rounds']->value, null, 0);?>
+			<?php if ($_smarty_tpl->tpl_vars['end_round']->value>=$_smarty_tpl->tpl_vars['prelim_rounds']->value){?>
+				<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['prelim_rounds']->value-$_smarty_tpl->tpl_vars['zero_rounds']->value, null, 0);?>
+			<?php }?>
+			<?php $_smarty_tpl->tpl_vars['numrounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value-$_smarty_tpl->tpl_vars['start_round']->value+$_smarty_tpl->tpl_vars['zero_rounds']->value, null, 0);?>
+		<?php }else{ ?>
+			<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable(1, null, 0);?>
+			<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
+			<?php if ($_smarty_tpl->tpl_vars['end_round']->value>=$_smarty_tpl->tpl_vars['prelim_rounds']->value){?>
+				<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['prelim_rounds']->value-$_smarty_tpl->tpl_vars['zero_rounds']->value, null, 0);?>
+			<?php }?>
+			<?php $_smarty_tpl->tpl_vars['numrounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value-$_smarty_tpl->tpl_vars['start_round']->value+1, null, 0);?>
 		<?php }?>
+		
 		<?php $_smarty_tpl->tpl_vars['page_num'] = new Smarty_Variable;$_smarty_tpl->tpl_vars['page_num']->step = 1;$_smarty_tpl->tpl_vars['page_num']->total = (int)ceil(($_smarty_tpl->tpl_vars['page_num']->step > 0 ? $_smarty_tpl->tpl_vars['pages']->value+1 - (1) : 1-($_smarty_tpl->tpl_vars['pages']->value)+1)/abs($_smarty_tpl->tpl_vars['page_num']->step));
 if ($_smarty_tpl->tpl_vars['page_num']->total > 0){
 for ($_smarty_tpl->tpl_vars['page_num']->value = 1, $_smarty_tpl->tpl_vars['page_num']->iteration = 1;$_smarty_tpl->tpl_vars['page_num']->iteration <= $_smarty_tpl->tpl_vars['page_num']->total;$_smarty_tpl->tpl_vars['page_num']->value += $_smarty_tpl->tpl_vars['page_num']->step, $_smarty_tpl->tpl_vars['page_num']->iteration++){
 $_smarty_tpl->tpl_vars['page_num']->first = $_smarty_tpl->tpl_vars['page_num']->iteration == 1;$_smarty_tpl->tpl_vars['page_num']->last = $_smarty_tpl->tpl_vars['page_num']->iteration == $_smarty_tpl->tpl_vars['page_num']->total;?>
-		<?php $_smarty_tpl->tpl_vars['numrounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value-$_smarty_tpl->tpl_vars['start_round']->value+1, null, 0);?>
+		<?php if ($_smarty_tpl->tpl_vars['page_num']->value>1){?>
+			<?php $_smarty_tpl->tpl_vars['numrounds'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value-$_smarty_tpl->tpl_vars['start_round']->value+1, null, 0);?>
+		<?php }?>
 		<h1 class="post-title entry-title">Event <?php if (count($_smarty_tpl->tpl_vars['event']->value->flyoff_totals)>0){?>Preliminary <?php }?>Rounds <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>(<?php echo $_smarty_tpl->tpl_vars['start_round']->value;?>
 -<?php echo $_smarty_tpl->tpl_vars['end_round']->value;?>
 ) <?php }?> Overall Classification
 			<?php if ($_smarty_tpl->tpl_vars['page_num']->value==1){?>
-				<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}" class="block-button">
+				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_flyoff']==1){?><input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}" class="block-button"><?php }?>
 				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}" class="block-button"><?php }?>
 				<input type="button" value=" Add Round " onClick="if(check_permission()){document.event_add_round.submit();}" class="block-button">
 			<?php }?>
@@ -509,15 +536,19 @@ s<br>
 		</tr>
 		<?php }?>
 		</table>
-		<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['start_round']->value+$_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
-		<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value+$_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['start_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['end_round']->value+1, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['start_round']->value+$_smarty_tpl->tpl_vars['perpage']->value, null, 0);?>
 		<?php if ($_smarty_tpl->tpl_vars['end_round']->value>$_smarty_tpl->tpl_vars['prelim_rounds']->value){?>
-			<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['prelim_rounds']->value, null, 0);?>
+			<?php $_smarty_tpl->tpl_vars['end_round'] = new Smarty_variable($_smarty_tpl->tpl_vars['prelim_rounds']->value-$_smarty_tpl->tpl_vars['zero_rounds']->value, null, 0);?>
 		<?php }?>
 		<?php if ($_smarty_tpl->tpl_vars['page_num']->value!=$_smarty_tpl->tpl_vars['pages']->value||$_smarty_tpl->tpl_vars['flyoff_rounds']->value!=0){?>
 		<br style="page-break-after: always;">
 		<?php }?>
 		<?php }} ?>
+
+
+
+
 
 		<!--# Now lets do the flyoff rounds -->
 		<?php  $_smarty_tpl->tpl_vars['t'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['t']->_loop = false;

@@ -2052,8 +2052,10 @@ function save_individual_flight(){
 	$flight_type_id=$_REQUEST['flight_type_id'];
 	$field_name=$_REQUEST['field_name'];
 	$field_value=$_REQUEST['field_value'];
-	if($event_round_score_status=='on'){
+	if($event_round_score_status == 'on'){
 		$event_round_score_status=1;
+	}else{
+		$event_round_score_status=0;
 	}
 
 	# Lets get the info from the field being saved

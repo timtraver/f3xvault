@@ -255,12 +255,14 @@ function check_permission() {ldelim}
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
+		{if $event->info.event_type_flyoff==1}
 		<tr>
 			<th nowrap>Flyoff Number</th>
 			<td colspan="3">
 				<input type="text" size="2" name="event_round_flyoff" value="{$event->rounds.$round_number.event_round_flyoff}"> Update this number if there will be multiple flyoff rounds or to 0 for normal round
 			</td>
 		</tr>
+		{/if}
 		</table>
 		<br>
 		<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
