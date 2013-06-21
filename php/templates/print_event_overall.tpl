@@ -35,16 +35,36 @@
 				{$flyoff_rounds=$flyoff_rounds+1}
 			{/if}
 		{/foreach}
+		{* Lets figure out how many zero rounds there are *}
+		{$zero_rounds=0}
+		{foreach $event->rounds as $r}
+			{if $r.event_round_number==0}
+				{$zero_rounds=$zero_rounds+1}
+			{/if}
+		{/foreach}
 		{$prelim_rounds=$event->rounds|count - $flyoff_rounds}
 		{$pages=ceil($prelim_rounds / $perpage)}
 		{if $pages==0}{$pages=1}{/if}
-		{$start_round=1}
-		{$end_round=$perpage}
-		{if $end_round>$prelim_rounds}
-			{$end_round=$prelim_rounds}
+		{if $zero_rounds>0}
+			{$start_round=0}
+			{$end_round=$perpage - $zero_rounds}
+			{if $end_round>=$prelim_rounds}
+				{$end_round=$prelim_rounds - $zero_rounds}
+			{/if}
+			{$numrounds=$end_round-$start_round + $zero_rounds}
+		{else}
+			{$start_round=1}
+			{$end_round=$perpage}
+			{if $end_round>=$prelim_rounds}
+				{$end_round=$prelim_rounds - $zero_rounds}
+			{/if}
+			{$numrounds=$end_round-$start_round + 1}
 		{/if}
+		
 		{for $page_num=1 to $pages}
-		{$numrounds=$end_round-$start_round+1}
+		{if $page_num>1}
+			{$numrounds=$end_round-$start_round+1}
+		{/if}
 		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if} Overall Classification
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
@@ -200,10 +220,10 @@
 		</tr>
 		{/if}
 		</table>
-		{$start_round=$start_round+$perpage}
-		{$end_round=$end_round+$perpage}
+		{$start_round=$end_round+1}
+		{$end_round=$start_round+$perpage}
 		{if $end_round>$prelim_rounds}
-			{$end_round=$prelim_rounds}
+			{$end_round=$prelim_rounds - $zero_rounds}
 		{/if}
 		{if $page_num!=$pages || $flyoff_rounds!=0}
 		<br style="page-break-after: always;">
