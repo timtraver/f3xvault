@@ -13,6 +13,10 @@
 	{$flight_type_subs=$f.flight_type_sub_flights}
 {/foreach}
 function save_data(element) {ldelim}
+	var event_round_score_status=1;
+	if(document.main.event_round_score_status.checked==false){ldelim}
+		event_round_score_status=0;
+	{rdelim}
 	{if $permission==1}
 	$.ajax({ldelim}
 		type: "POST",
@@ -25,7 +29,7 @@ function save_data(element) {ldelim}
 			event_round_number: "{$round_number|escape}",
 			flight_type_id: document.main.flight_type_id.value,
 			{if $event->info.event_type_time_choice==1}event_round_time_choice: document.main.event_round_time_choice.value,{/if}
-			event_round_score_status: document.main.event_round_score_status.value,
+			event_round_score_status: event_round_score_status,
 			field_name: element.name,
 			field_value: element.value
 		{rdelim}
@@ -204,7 +208,7 @@ function check_permission() {ldelim}
 		<input type="hidden" name="event_round_id" value="{$event_round_id}">
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="create_new_round" value="0">
-		
+
 		<h1 class="post-title entry-title">Event Round {$round_number|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>

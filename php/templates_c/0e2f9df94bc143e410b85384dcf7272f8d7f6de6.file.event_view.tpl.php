@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-06-21 01:38:16
+<?php /* Smarty version Smarty-3.1.11, created on 2013-06-22 00:57:04
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1371803891,
+      1 => 1371887820,
       2 => 'file',
     ),
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'permission' => 0,
     'event' => 0,
+    'r' => 0,
     'num' => 0,
     'p' => 0,
-    'r' => 0,
     'flyoff_rounds' => 0,
     'zero_rounds' => 0,
     'prelim_rounds' => 0,
@@ -69,6 +69,8 @@ if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apa
 <script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.dialog.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 
@@ -116,6 +118,28 @@ $(function() {
 			event_pilot_add.submit();
         }
     });
+	$( "#print_round" ).dialog({
+		title: "Print Individual Round Details",
+		autoOpen: false,
+		height: 150,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Print Rounds": function() {
+				document.printround.submit();
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+		}
+	});
+	$( "#printroundoff" )
+		.button()
+		.click(function() {
+		$( "#print_round" ).dialog( "open" );
+	});
 });
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
@@ -136,6 +160,48 @@ function check_permission() {
 	<?php }?>
 }
 </script>
+<div id="print_round" style="overflow: hidden;">
+		<form name="printround" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_round">
+		<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
+		<input type="hidden" name="use_print_header" value="1">
+		<div style="float: left;padding-right: 10px;">
+			Print Round From :
+			<select name="round_start_number">
+			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['r']->iteration=0;
+foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
+$_smarty_tpl->tpl_vars['r']->_loop = true;
+ $_smarty_tpl->tpl_vars['r']->iteration++;
+?>
+			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+</option>
+			<?php } ?>
+			</select>
+			To 
+			<select name="round_end_number">
+			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['r']->iteration=0;
+foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
+$_smarty_tpl->tpl_vars['r']->_loop = true;
+ $_smarty_tpl->tpl_vars['r']->iteration++;
+?>
+			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+</option>
+			<?php } ?>
+			</select><br>
+			<br>
+			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
+		</div>
+		<br style="clear:both" />
+		</form>
+</div>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -253,7 +319,11 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		</span>
 		<br>
 
-		<?php $_smarty_tpl->tpl_vars['perpage'] = new Smarty_variable(8, null, 0);?>
+
+		<?php $_smarty_tpl->tpl_vars['perpage'] = new Smarty_variable(9, null, 0);?>
+		<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_code']=='f3b'){?>
+			<?php $_smarty_tpl->tpl_vars['perpage'] = new Smarty_variable(8, null, 0);?>
+		<?php }?>
 		
 		<?php $_smarty_tpl->tpl_vars['flyoff_rounds'] = new Smarty_variable(0, null, 0);?>
 		<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
@@ -770,6 +840,7 @@ s<br>
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
+<input id="printround" type="button" value=" Print Round Detail " onClick="$('#print_round').dialog('open');" class="block-button">
 <?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&$_smarty_tpl->tpl_vars['user']->value['user_id']==$_smarty_tpl->tpl_vars['event']->value->info['user_id']||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1){?>
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 <?php }?>

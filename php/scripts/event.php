@@ -1950,6 +1950,32 @@ function event_print_overall() {
 	$maintpl=find_template("print_event_overall.tpl");
 	return $smarty->fetch($maintpl);
 }
+function event_print_round() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_list();
+	}
+	$round_from=$_REQUEST['round_start_number'];
+	$round_to=$_REQUEST['round_end_number'];
+	$one_per_page=0;
+	if(isset($_REQUEST['oneper']) && $_REQUEST['oneper']=='on'){
+		$one_per_page=1;
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+
+	$smarty->assign("event",$e);
+	$smarty->assign("round_from",$round_from);
+	$smarty->assign("round_to",$round_to);
+	$smarty->assign("one_per_page",$one_per_page);
+	
+	$maintpl=find_template("print_event_rounds.tpl");
+	return $smarty->fetch($maintpl);
+}
 function event_print_pilot() {
 	global $smarty;
 	# Function to view the rounds for a particular pilot

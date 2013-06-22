@@ -2,6 +2,8 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.dialog.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
@@ -49,6 +51,28 @@ $(function() {
 			event_pilot_add.submit();
         }
     });
+	$( "#print_round" ).dialog({
+		title: "Print Individual Round Details",
+		autoOpen: false,
+		height: 150,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Print Rounds": function() {
+				document.printround.submit();
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+		}
+	});
+	$( "#printroundoff" )
+		.button()
+		.click(function() {
+		$( "#print_round" ).dialog( "open" );
+	});
 });
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
@@ -69,6 +93,31 @@ function check_permission() {ldelim}
 	{/if}
 {rdelim}
 </script>
+<div id="print_round" style="overflow: hidden;">
+		<form name="printround" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_round">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="use_print_header" value="1">
+		<div style="float: left;padding-right: 10px;">
+			Print Round From :
+			<select name="round_start_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select>
+			To 
+			<select name="round_end_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select><br>
+			<br>
+			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
+		</div>
+		<br style="clear:both" />
+		</form>
+</div>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -152,7 +201,11 @@ function check_permission() {ldelim}
 		</span>
 		<br>
 
-		{$perpage=8}
+
+		{$perpage=9}
+		{if $event->info.event_type_code=='f3b'}
+			{$perpage=8}
+		{/if}
 		{* Lets figure out how many flyoff rounds there are *}
 		{$flyoff_rounds=0}
 		{foreach $event->rounds as $r}
@@ -508,6 +561,7 @@ function check_permission() {ldelim}
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
+<input id="printround" type="button" value=" Print Round Detail " onClick="$('#print_round').dialog('open');" class="block-button">
 {if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 {/if}

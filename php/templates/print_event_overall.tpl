@@ -27,7 +27,10 @@
 		
 	</div>
 
-		{$perpage=8}
+		{$perpage=9}
+		{if $event->info.event_type_code=='f3b'}
+			{$perpage=8}
+		{/if}
 		{* Lets figure out how many flyoff rounds there are *}
 		{$flyoff_rounds=0}
 		{foreach $event->rounds as $r}
