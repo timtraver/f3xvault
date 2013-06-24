@@ -1379,8 +1379,10 @@ function event_round_save() {
 	$event_round_flyoff=intval($_REQUEST['event_round_flyoff']);
 	$create_new_round=intval($_REQUEST['create_new_round']);
 	$event_round_score_status=0;
-	if(isset($_REQUEST['event_round_score_status']) && $_REQUEST['event_round_score_status']=='on'){
+	if(isset($_REQUEST['event_round_score_status']) && ($_REQUEST['event_round_score_status']=='on' || $_REQUEST['event_round_score_status']==1)){
 		$event_round_score_status=1;
+	}else{
+		$event_round_score_status=0;
 	}
 	$new_round=0;
 	if($event_round_id==0){
@@ -2078,12 +2080,12 @@ function save_individual_flight(){
 	$flight_type_id=$_REQUEST['flight_type_id'];
 	$field_name=$_REQUEST['field_name'];
 	$field_value=$_REQUEST['field_value'];
-	if($event_round_score_status == 'on'){
+	if($event_round_score_status == 'on' || $event_round_score_status == 1){
 		$event_round_score_status=1;
 	}else{
 		$event_round_score_status=0;
 	}
-
+	
 	# Lets get the info from the field being saved
 	if(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)_(\d+)$/",$field_name,$match)){
 		$field=$match[1];
@@ -2112,12 +2114,16 @@ function save_individual_flight(){
 			$stmt=db_prep("
 				UPDATE event_round
 				SET event_round_needs_calc=1,
-					event_round_time_choice=:event_round_time_choice
+					event_round_time_choice=:event_round_time_choice,
+					event_round_score_status=:event_round_score_status,
+					flight_type_id=:flight_type_id
 				WHERE event_round_id=:event_round_id
 			");
 			$result=db_exec($stmt,array(
 				"event_round_id"=>$event_round_id,
-				"event_round_time_choice"=>$event_round_time_choice
+				"event_round_time_choice"=>$event_round_time_choice,
+				"event_round_score_status"=>$event_round_score_status,
+				"flight_type_id"=>$flight_type_id
 			));
 		}else{
 			# New round, so lets create
@@ -2153,12 +2159,16 @@ function save_individual_flight(){
 		$stmt=db_prep("
 			UPDATE event_round
 			SET event_round_needs_calc=1,
-				event_round_time_choice=:event_round_time_choice
+				event_round_time_choice=:event_round_time_choice,
+				event_round_score_status=:event_round_score_status,
+				flight_type_id=:flight_type_id
 			WHERE event_round_id=:event_round_id
 		");
 		$result=db_exec($stmt,array(
 			"event_round_id"=>$event_round_id,
-			"event_round_time_choice"=>$event_round_time_choice
+			"event_round_time_choice"=>$event_round_time_choice,
+			"event_round_score_status"=>$event_round_score_status,
+			"flight_type_id"=>$flight_type_id
 		));
 	}
 	
@@ -2257,14 +2267,12 @@ function save_individual_flight(){
 		$stmt=db_prep("
 			UPDATE event_pilot_round_flight
 			SET $setline,
-				event_pilot_round_flight_status=1,
-				event_round_time_choice=:event_round_time_choice
+				event_pilot_round_flight_status=1
 			WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
 		");
 		$result2=db_exec($stmt,array(
 			"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
-			"value"=>$field_value,
-			"event_round_time_choice"=>$event_round_time_choice
+			"value"=>$field_value
 		));
 	}
 	return;

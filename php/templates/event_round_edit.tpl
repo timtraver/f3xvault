@@ -13,10 +13,7 @@
 	{$flight_type_subs=$f.flight_type_sub_flights}
 {/foreach}
 function save_data(element) {ldelim}
-	var event_round_score_status=1;
-	if(document.main.event_round_score_status.checked==false){ldelim}
-		event_round_score_status=0;
-	{rdelim}
+	var event_round_score_status=document.main.elements["event_round_score_status"].checked ? 1 : 0;
 	{if $permission==1}
 	$.ajax({ldelim}
 		type: "POST",
