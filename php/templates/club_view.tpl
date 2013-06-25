@@ -100,7 +100,7 @@ $(function() {
 		</tr>
 		<tr>
 			<th align="right">Club Web URL</th>
-			<td><a href="{$club.club_url}" target="_new">{$club.club_url|escape}</a></td>
+			<td><a href="{$club.club_url}" target="_blank">{$club.club_url|escape}</a></td>
 		</tr>
 		</table>
 		
