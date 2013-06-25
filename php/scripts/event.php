@@ -2290,6 +2290,26 @@ function event_draw() {
 	$smarty->assign("permission",$permission);
 	
 	$smarty->assign("event",$e);
+	
+	# Lets determine the round #'s to print for the draw from the existing rounds to the max on the draws
+	$print_rounds=array();
+
+	foreach($e->draws as $d){
+		if($d['event_draw_active']!=1){
+			continue;
+		}
+		$min=1;
+		$max=0;
+		if($d['event_draw_round_to']<$min){
+			$min=$d['event_draw_round_from'];
+		}
+		if($d['event_draw_round_to']>$max){
+			$max=$d['event_draw_round_to'];
+		}
+		$ft=$d['flight_type_id'];
+		$print_rounds[$ft]=array("min"=>$min,"max"=>$max);
+	}
+	$smarty->assign("print_rounds",$print_rounds);
 
 	$maintpl=find_template("event_draw.tpl");
 	return $smarty->fetch($maintpl);
@@ -2344,11 +2364,11 @@ function event_draw_edit() {
 	}
 	$max_groups_p=floor(count($e->pilots)/2);
 	
-	print "min groups with protection=$min_groups_p<br>\n";
-	print "max groups with protection=$max_groups_p<br>\n";
+#	print "min groups with protection=$min_groups_p<br>\n";
+#	print "max groups with protection=$max_groups_p<br>\n";
 	
-	print "min groups no protection=$min_groups_np<br>\n";
-	print "max groups no protection=$max_groups_np<br>\n";
+#	print "min groups no protection=$min_groups_np<br>\n";
+#	print "max groups no protection=$max_groups_np<br>\n";
 	
 
 	$smarty->assign("event",$e);
@@ -2634,6 +2654,7 @@ function event_draw_print() {
 	$e=new Event($event_id);
 	$e->get_teams();
 	$e->get_rounds();
+	$e->get_draws();
 
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);

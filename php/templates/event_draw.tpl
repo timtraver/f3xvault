@@ -118,6 +118,7 @@
 <h1 class="post-title entry-title">Printing Draws</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 {foreach $event->flight_types as $ft}
+{$flight_type_id=$ft.flight_type_id}
 <form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw_print">
@@ -130,15 +131,15 @@
 	<td style="padding-top:10px;">
 		Rounds
 		<select name="print_round_from">
-		{foreach $event->rounds as $r}
-		<option value="{$r.event_round_number}">{$r.event_round_number}</option>
-		{/foreach}
+		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+		<option value="{$i}">{$i}</option>
+		{/for}
 		</select>
 		To
 		<select name="print_round_to">
-		{foreach $event->rounds as $r}
-		<option value="{$r.event_round_number}" {if $r@last}SELECTED{/if}>{$r.event_round_number}</option>
-		{/foreach}
+		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+		<option value="{$i}">{$i}</option>
+		{/for}
 		</select>
 		<select name="print_format">
 		<option value="html">HTML</option>
