@@ -2309,6 +2309,15 @@ function event_draw() {
 		$ft=$d['flight_type_id'];
 		$print_rounds[$ft]=array("min"=>$min,"max"=>$max);
 	}
+	# Now lets step through the rounds and see if its a different max
+	$num_rounds=count($e->rounds);
+	foreach($e->flight_types as $flight_type_id=>$ft){
+		if($print_rounds[$flight_type_id]['max']<count($e->rounds)){
+			$print_rounds[$flight_type_id]['max']=count($e->rounds);
+			$print_rounds[$flight_type_id]['min']=1;
+		}
+	}
+	
 	$smarty->assign("print_rounds",$print_rounds);
 
 	$maintpl=find_template("event_draw.tpl");
