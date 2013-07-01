@@ -2665,6 +2665,51 @@ function event_draw_print() {
 	$e->get_rounds();
 	$e->get_draws();
 
+	# Lets add the rounds that don't exist with the draw values
+	# Step through any existing rounds and use those
+	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
+		if(!isset($e->rounds[$event_round_number])){
+			# Lets create the event round and enough info from the draw to print
+			foreach($e->draws as $d){
+				if($d['event_draw_active']==1){
+					#Step through the draw rounds and see if one exists for this round
+					foreach($d['flights'] as $flight_type_id=>$f){
+						foreach($f as $round_num=>$v){
+							if($round_num==$event_round_number){
+								# Lets create the round info
+								$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+								$e->rounds[$event_round_number]['event_round_status']=1;
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['flight_type_id']=$flight_type_id;
+								#print_r($v);
+								foreach($v['pilots'] as $event_pilot_id=>$p){
+									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+								
+								# Need more fields here for the print templates
+								
+								
+
+								}
+							}
+						}
+					}	
+				}
+			}
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+	}
+
+
+
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);
 	$smarty->assign("print_format",$print_format);
