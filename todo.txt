@@ -13,7 +13,6 @@ GENERAL
   Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
   
   Separate print buttons for preliminaries and flyoffs
-  Make an individual round print
   
 =  Add blog menu item and set up simple wordpress blog
   
@@ -38,7 +37,9 @@ EVENT STUFF
     	random order
     	staggered order for F3F
     	set number of groups
-    make the printing of the draws use the current rounds and the draw rounds
+X   make the printing of the draws use the current rounds and the draw rounds
+	have draw view buttons to show draw even if not active
+	When adding a round, default apply the draw and sort it by the draw order or group
     check for overlap when saving new draw
     
   Flyoff capability
@@ -70,6 +71,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Make an individual round print
 X printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)
 X  Don't show flyoff number if not a flyoff event type on round screen
 X Add contest director quick add link to add them as a pilot and come back to the same screen with the same data

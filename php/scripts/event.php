@@ -1334,16 +1334,6 @@ function event_round_edit() {
 		}else{
 			$event->rounds[$round_number]['event_round_score_status']=1;
 		}
-		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
-		$event->get_draws();
-		foreach($event->draws as $event_draw_id=>$d){
-			foreach($d['flights'] as $flight_type_id=>$f){
-				foreach($f[$round_number]['pilots'] as $event_pilot_id=>$p){
-					$event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
-					$event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
-				}
-			}
-		}
 	}else{
 		# Step through and get the round number from the event_round_id
 		foreach($event->rounds as $event_round_number=>$data){
@@ -2665,7 +2655,7 @@ function event_draw_print() {
 	$e->get_rounds();
 	$e->get_draws();
 
-	# Lets add the rounds that don't exist with the draw values
+	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
 	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
 		if(!isset($e->rounds[$event_round_number])){
@@ -2679,33 +2669,20 @@ function event_draw_print() {
 								# Lets create the round info
 								$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
 								$e->rounds[$event_round_number]['event_round_status']=1;
-								$e->rounds[$event_round_number]['flights'][$flight_type_id]['flight_type_id']=$flight_type_id;
-								#print_r($v);
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
 								foreach($v['pilots'] as $event_pilot_id=>$p){
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+									$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 								
-								# Need more fields here for the print templates
-								
-								
-
 								}
 							}
 						}
 					}	
 				}
 			}
-			
-			
-			
-			
-			
 		}
-		
-		
-		
-		
 	}
 
 
