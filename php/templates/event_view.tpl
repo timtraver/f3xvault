@@ -60,6 +60,7 @@ $(function() {
 		buttons: {
 			"Print Rounds": function() {
 				document.printround.submit();
+				$( this ).dialog( "close" );
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -330,7 +331,13 @@ function check_permission() {ldelim}
 						{if $r.event_pilot_round_total_score==1000}
 							1000
 						{else}
-							{$r.event_pilot_round_total_score|string_format:"%06.3f"}
+							{if $r.event_pilot_round_flight_dns==1}
+								<font color="red">DNS</font>
+							{elseif $r.event_pilot_round_flight_dnf==1}
+								<font color="red">DNF</font>
+							{else}
+								{$r.event_pilot_round_total_score|string_format:"%06.3f"}
+							{/if}
 						{/if}
 					{if $drop==1}</font></del>{/if}
 					{* lets determine the content to show on popup *}

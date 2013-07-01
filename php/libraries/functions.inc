@@ -123,17 +123,17 @@ function db_exec ($stmt,$data=array()) {
 
         # Function to wrap the query execution
         try {
-                $stmt->execute($data);
-                if(preg_match("/SELECT/i",$stmt->queryString)){
-                        $results=$stmt->fetchAll(PDO::FETCH_ASSOC);
-                }elseif(preg_match("/INSERT/i",$stmt->queryString)){
-                        $results=$dbh->lastInsertId();
-                }else{
-                        $results=$stmt->rowCount();
-                }
+	        $stmt->execute($data);
+	        if(preg_match("/UPDATE/i",$stmt->queryString) || preg_match("/DELETE/i",$stmt->queryString)){
+				$results=$stmt->rowCount();
+	        }elseif(preg_match("/INSERT/i",$stmt->queryString)){
+				$results=$dbh->lastInsertId();
+	        }elseif(preg_match("/SELECT/i",$stmt->queryString)){
+				$results=$stmt->fetchAll(PDO::FETCH_ASSOC);
+	        }
         } catch (PDOException $e) {
-                $string=$e->getMessage();
-                query_error($stmt->queryString,$string);
+			$string=$e->getMessage();
+			query_error($stmt->queryString,$string);
         }
         $last_insert_id=$dbh->lastInsertId();
         $total_queries++;

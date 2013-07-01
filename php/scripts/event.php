@@ -1667,6 +1667,18 @@ function event_round_save() {
 					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
 				}
 				
+				# Lets see if the values are DNS or DNF and set the parameters
+				$dns=0;
+				$dnf=0;
+				if(strtolower($v['sec'])=='dns'){
+					$dns=1;
+					$v['sec']=0;
+				}
+				if(strtolower($v['sec'])=='dnf'){
+					$dnf=1;
+					$v['sec']=0;
+				}
+				
 				# Lets see if this flight already exists
 				$stmt=db_prep("
 					SELECT *
@@ -1687,6 +1699,8 @@ function event_round_save() {
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 							event_pilot_round_flight_order=:event_pilot_round_flight_order,
+							event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
+							event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
 							event_pilot_round_flight_status=1
 						WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
@@ -1700,6 +1714,8 @@ function event_round_save() {
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
 						"event_pilot_round_flight_order"=>$v['order'],
+						"event_pilot_round_flight_dns"=>$dns,
+						"event_pilot_round_flight_dnf"=>$dnf,
 						"event_pilot_round_flight_penalty"=>$v['pen']
 					));
 				}else{
@@ -1715,6 +1731,8 @@ function event_round_save() {
 							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 							event_pilot_round_flight_order=:event_pilot_round_flight_order,
+							event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
+							event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
 							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
 							event_pilot_round_flight_status=1
 					");
@@ -1728,6 +1746,8 @@ function event_round_save() {
 						"event_pilot_round_flight_laps"=>$v['laps'],
 						"event_pilot_round_flight_landing"=>$v['land'],
 						"event_pilot_round_flight_order"=>$v['order'],
+						"event_pilot_round_flight_dns"=>$dns,
+						"event_pilot_round_flight_dnf"=>$dnf,
 						"event_pilot_round_flight_penalty"=>$v['pen']
 					));
 					$event_pilot_round_flight_id_actual=$GLOBALS['last_insert_id'];
@@ -2162,6 +2182,10 @@ function save_individual_flight(){
 		));
 	}
 	
+	# Lets see if the values are DNS or DNF and set the parameters
+	$dns=0;
+	$dnf=0;
+
 	# Make the set line based on the type
 	switch($field){
 		case "group":
@@ -2171,7 +2195,15 @@ function save_individual_flight(){
 			$setline='event_pilot_round_flight_minutes=:value';
 			break;
 		case "sec":
-			$setline='event_pilot_round_flight_seconds=:value';
+			if(strtolower($field_value)=='dns'){
+				$dns=1;
+				$field_value=0;
+			}
+			if(strtolower($field_value)=='dnf'){
+				$dnf=1;
+				$field_value=0;
+			}
+			$setline='event_pilot_round_flight_seconds=:value ';
 			break;
 		case "over":
 			$setline='event_pilot_round_flight_over=:value';
@@ -2243,12 +2275,16 @@ function save_individual_flight(){
 				SET event_pilot_round_id=:event_pilot_round_id,
 					flight_type_id=:flight_type_id,
 					$setline,
+					event_pilot_round_flight_dns=:dns,
+					event_pilot_round_flight_dnf=:dnf,
 					event_pilot_round_flight_status=1
 			");
 			$result2=db_exec($stmt,array(
 				"event_pilot_round_id"=>$event_pilot_round_id,
 				"flight_type_id"=>$event_round_flight_type_id,
-				"value"=>$field_value
+				"value"=>$field_value,
+				"dns"=>$dns,
+				"dnf"=>$dnf
 			));
 		}
 	}else{
@@ -2257,12 +2293,16 @@ function save_individual_flight(){
 		$stmt=db_prep("
 			UPDATE event_pilot_round_flight
 			SET $setline,
+				event_pilot_round_flight_dns=:dns,
+				event_pilot_round_flight_dnf=:dnf,
 				event_pilot_round_flight_status=1
 			WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
 		");
 		$result2=db_exec($stmt,array(
 			"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
-			"value"=>$field_value
+			"value"=>$field_value,
+			"dns"=>$dns,
+			"dnf"=>$dnf
 		));
 	}
 	return;

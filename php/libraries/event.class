@@ -729,6 +729,8 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];					
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 					
 						if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') 
 							&& $p['event_pilot_round_flight_seconds']!=0 
@@ -746,6 +748,8 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
 												
