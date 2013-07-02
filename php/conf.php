@@ -21,6 +21,7 @@ global $user_name;
 global $user_id;
 global $session_expiration;
 global $logsessions;
+global $device;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	$base = 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2';

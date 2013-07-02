@@ -3,7 +3,7 @@
 		</div>
 		<div id="footer" class="clearfix">
     	    <div id="copyright">
-    	     	Copyright &copy; Tim Traver 2013
+    	     	Copyright &copy; Tim Traver 2013 (Using {$device})
    		    </div>
    		    
    		    <input type="button" value="Give Some Site Feedback" class="button" onClick="feedback.submit();">

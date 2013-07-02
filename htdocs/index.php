@@ -48,12 +48,11 @@ if($user && $user['user_status']==0){
 	$errorstring="User is no longer active.";
 }
 
-# Main control
 # Lets determine the current device they are using
 $detect = new Mobile_Detect;
 $device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
-print "<!-- device=$device -->\n";
+# Main control
 
 # Set the default category of site
 if(isset($_REQUEST['disc'])){
@@ -122,6 +121,7 @@ $smarty->assign("compile_dir",$GLOBALS['compile_dir']);
 $smarty->assign("user",$user);
 $smarty->assign("function",$_REQUEST['function']);
 $smarty->assign("disc",$disc);
+$smarty->assign("device",$device);
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
         include("{$GLOBALS['scripts_dir']}/$action.php");
