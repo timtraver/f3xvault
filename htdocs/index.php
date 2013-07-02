@@ -17,6 +17,7 @@ global $messages;
 global $message_graphic;
 global $debug;
 global $total_queries;
+global $device;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
@@ -29,6 +30,7 @@ $logsessions=1;
 include_library('security_functions.inc');
 include_library('functions.inc');
 include_library('smarty/libs/Smarty.class.php');
+include_library('Mobile-Detect/Mobile_Detect.php');
 
 start_fsession();
 
@@ -47,6 +49,11 @@ if($user && $user['user_status']==0){
 }
 
 # Main control
+# Lets determine the current device they are using
+$detect = new Mobile_Detect;
+$device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+
+print "<!-- device=$device -->\n";
 
 # Set the default category of site
 if(isset($_REQUEST['disc'])){
