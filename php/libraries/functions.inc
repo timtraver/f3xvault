@@ -383,7 +383,7 @@ function start_fsession(){
                         $fsid='';
                         return;
                 }
-                # OK, now read the session data and populate the snsession array
+                # OK, now read the session data and populate the fsession array
                 $data=explode("\n",$session['session_data']);
                 foreach($data as $key=>$value){
                         $line_array=explode("=",$value);

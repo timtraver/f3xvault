@@ -49,8 +49,18 @@ if($user && $user['user_status']==0){
 }
 
 # Lets determine the current device they are using
-$detect = new Mobile_Detect;
-$device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+if(!isset($fsession['device'])){
+	$detect = new Mobile_Detect;
+	$device = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+	$fsession['device']=$device;
+	save_fsession();
+}else{
+	$device=$fsession['device'];
+}
+if($device=='phone'){
+	$GLOBALS['include_paths']['templates']="{$GLOBALS['include_paths']['base']}/php/templates/mobile";
+	$GLOBALS['template_dir']=$GLOBALS['include_paths']['templates'];
+}
 
 # Main control
 
@@ -133,6 +143,7 @@ $smarty->assign("unread_messages",$unread);
 
 # Add the user var again just in case it was changed by loging or logout status
 $smarty->assign("user",$user);
+$smarty->assign("device",$device);
 $smarty->assign("current_menu",$current_menu);
 $smarty->assign("fsession",$fsession);
 $smarty->assign("messages",$GLOBALS['messages']);

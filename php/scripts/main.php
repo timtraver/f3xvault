@@ -283,5 +283,25 @@ function pass_recovery_save(){
 	include("{$GLOBALS['scripts_dir']}/my.php");
 	return $actionoutput;	
 }
+function change_format() {
+	global $smarty;
+	global $user;
+
+	$format=$_REQUEST['format'];
+	switch($format){
+		case 'phone':
+			$format='phone';
+			break;
+		case 'tablet':
+		case 'computer':
+		default :
+			$format='computer';
+			break;
+	}
+	$GLOBALS['fsession']['device']=$format;
+	save_fsession();
+	header("Location: ");
+	exit;
+}
 
 ?>
