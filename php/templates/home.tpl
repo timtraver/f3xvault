@@ -54,5 +54,3 @@
 <form name="register" method="GET">
 <input type="hidden" name="action" value="register">
 </form>
-
- 

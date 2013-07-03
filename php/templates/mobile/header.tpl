@@ -28,6 +28,7 @@
 		<script src="/includes/mobile/twitter.js"			type="text/javascript"></script>
 		<script src="/includes/mobile/retina.js"			type="text/javascript"></script>
 		<script src="/includes/mobile/custom.js"			type="text/javascript"></script>
+
 	</head>
 	<body>
 
@@ -46,7 +47,7 @@
     	<div class="header">
  			<a href="#" class="show-sidebar"></a>
     		<a href="#" class="hide-sidebar"></a>   
-     	   <p>Welcome To F3XVault Mobile!</p>
+     	   <p>F3XVault Mobile</p>
      	   <a href="?action=message" class="header-mail"></a>
   		</div>
     	<br><br><br>

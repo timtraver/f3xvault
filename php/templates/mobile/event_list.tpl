@@ -1,60 +1,52 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Browse F3X Event List</h1>
+		<h1 class="post-title entry-title">Search F3X Event List</h1>
 		<div class="entry-content clearfix">
 
 <form name="searchform" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
-<table width="80%">
+<input type="hidden" name="discipline_id" value="{$discipline_id}">
+<table>
 <tr>
-	<th>Filter By Event Discipline</th>
-	<td colspan="3">
-	<select name="discipline_id" onChange="searchform.submit();">
-	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
-	{/foreach}
-	</select>
+	<th>Filter By Country</th>
+	<td align="left" style="text-align: left;">
+		<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
+		<option value="0">Choose Country to Narrow Search</option>
+		{foreach $countries as $country}
+			<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
+		{/foreach}
+		</select>
 	</td>
 </tr>
 <tr>
-	<th>Filter By Country</th>
-	<td>
-	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
-	<option value="0">Choose Country to Narrow Search</option>
-	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
-	{/foreach}
-	</select>
-	</td>
 	<th>Filter By State</th>
-	<td>
-	<select name="state_id" onChange="searchform.submit();">
-	<option value="0">Choose State to Narrow Search</option>
-	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
-	{/foreach}
-	</select>
+	<td align="left" style="text-align: left;">
+		<select name="state_id" onChange="searchform.submit();">
+		<option value="0">Choose State to Narrow Search</option>
+		{foreach $states as $state}
+			<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
+		{/foreach}
+		</select>
 	</td>
 </tr>
 <tr>
 	<th nowrap>	
-		And Search on Field : 
+		Search on Field : 
 	</th>
-	<td valign="center" colspan="3">
-		<select name="search_field">
-		<option value="event_name" {if $search_field=="event_name"}SELECTED{/if}>Event Name</option>
-		<option value="event_type_name" {if $search_field=="event_type_name"}SELECTED{/if}>Event Type</option>
-		<option value="event_start_date" {if $search_field=="event_start_date"}SELECTED{/if}>Start Date</option>
-		</select>
-		<select name="search_operator">
-		<option value="contains" {if $search_operator=="contains"}SELECTED{/if}>Contains</option>
-		<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
-		</select>
-		<input type="text" name="search" size="30" value="{$search|escape}">
-		<input type="submit" value=" Search " class="block-button">
-		<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
-		</form>
+	<td align="left" valign="center" colspan="3" nowrap style="text-align: left;">
+			<select name="search_field">
+				<option value="event_name" {if $search_field=="event_name"}SELECTED{/if}>Event Name</option>
+				<option value="event_type_name" {if $search_field=="event_type_name"}SELECTED{/if}>Event Type</option>
+				<option value="event_start_date" {if $search_field=="event_start_date"}SELECTED{/if}>Start Date</option>
+			</select>
+			<select name="search_operator">
+				<option value="contains" {if $search_operator=="contains"}SELECTED{/if}>Contains</option>
+				<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
+			</select>
+			<input type="text" name="search" size="15" value="{$search|escape}" style="float:left;">
+			<input type="submit" value=" Search " class="block-button">
+			<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 	</td>
 </tr>
 </table>
@@ -64,48 +56,37 @@
 <tr class="table-row-heading-left">
 	<th colspan="7" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
-<tr style="background-color: lightgray;">
-        <td align="left" colspan="2">
-                {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
-                {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
-        </td>
-        <td align="right" colspan="3">PerPage
-                [<a href="?action=event&function=event_list&&perpage=25">25</a>]
-                [<a href="?action=event&function=event_list&&perpage=50">50</a>]
-                [<a href="?action=event&function=event_list&&perpage=100">100</a>]
-                [<a href="?action=event&function=event_list&page=1">First Page</a>]
-                [<a href="?action=event&function=event_list&page={$totalpages|escape}">Last Page</a>]
-        </td>
-</tr>
 <tr>
-	<th style="text-align: left;">Event Date</th>
-	<th style="text-align: left;">Event Name</th>
-	<th style="text-align: left;">Event Type</th>
-	<th style="text-align: left;">Event Location</th>
+	<th style="text-align: center;">Date</th>
+	<th style="text-align: center;">Event Name</th>
+	<th style="text-align: left;">Type</th>
+	<th style="text-align: left;">Location</th>
 	<th style="text-align: center;">Map</th>
 </tr>
 {foreach $events as $event}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
-	<td>{$event.event_start_date|date_format:"%Y-%m-%d"}</td>
+	<td>{$event.event_start_date|date_format:"%m/%d/%y"}</td>
 	<td>
 		<a href="?action=event&function=event_view&event_id={$event.event_id|escape}">{$event.event_name|escape}</a>
 	</td>
-	<td>{$event.event_type_name|escape}</td>
+	<td>{$event.event_type_code|upper}</td>
 	<td>{$event.location_name|escape}, {$event.state_code|escape} - {$event.country_code|escape}</td>
-	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
+	<td align="center">
+		{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
+		&nbsp;&nbsp;
+		&nbsp;&nbsp;
+		&nbsp;&nbsp;
+	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
         <td align="left" colspan="2">
-                {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
-                {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
+                {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}" style="display:inline;"> &lt;&lt; Prev Page</a>]{/if}
+                {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}" style="display:inline;">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="3">PerPage
-                [<a href="?action=event&function=event_list&perpage=25">25</a>]
-                [<a href="?action=event&function=event_list&perpage=50">50</a>]
-                [<a href="?action=event&function=event_list&perpage=100">100</a>]
-                [<a href="?action=event&function=event_list&page=1">First Page</a>]
-                [<a href="?action=event&function=event_list&page={$totalpages|escape}">Last Page</a>]
+        <td align="right" colspan="3">
+                [<a href="?action=event&function=event_list&page=1" style="display:inline;">First Page</a>]
+                [<a href="?action=event&function=event_list&page={$totalpages|escape}" style="display:inline;">Last Page</a>]
         </td>
 </tr>
 <tr>

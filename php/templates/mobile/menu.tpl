@@ -46,7 +46,9 @@
               <a class="{if $current_menu=='events'}menu-enabled{else}menu-disabled{/if} deploy-submenu" href="#">F3X Competitions</a>
               <div class="clear"></div>
               <div class="submenu">
-                  <a href="/?action=event&country_id=0&state_id=0&search=">Event Browse</a>        <em class="submenu-decoration"></em>
+              
+                  <a href="/?action=event&function=event_view&event_id={$fsession.current_event_id}">View Current Event</a>        <em class="submenu-decoration"></em>
+                  <a href="/?action=event&country_id=0&state_id=0&search=">Event Search</a>        <em class="submenu-decoration"></em>
                   <a href="/?action=series&country_id=0&state_id=0&search=">Series Browse</a>        <em class="submenu-decoration"></em>
               </div>
           </div>

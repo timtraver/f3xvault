@@ -300,7 +300,7 @@ function change_format() {
 	}
 	$GLOBALS['fsession']['device']=$format;
 	save_fsession();
-	header("Location: ");
+	header("Location: /");
 	exit;
 }
 
