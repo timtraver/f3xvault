@@ -2,117 +2,57 @@
 <html>
 	<head>
 		<title>F3X Vault</title>
-		<link rel='stylesheet' id='graphene-stylesheet-css' href='/graphene.css' type='text/css' media='screen' />
-		<link rel='stylesheet' id='graphene-light-header-css' href='/graphene-style-light.css' type='text/css' media='screen' />
+		<!--Declare page as mobile friendly --> 
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+		<!-- Declare page as iDevice WebApp friendly -->
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<!-- iDevice WebApp Splash Screen, Regular Icon, iPhone, iPad, iPod Retina Icons -->
+		<link rel="apple-touch-icon" sizes="114x114" href="images/mobile/splash/splash-icon.png"> 
+		<link rel="apple-touch-startup-image" href="images/mobile/splash/splash-screen.png" media="screen and (max-device-width: 320px)" /> 
+		<link rel="apple-touch-startup-image" href="images/mobile/splash/splash-screen@2x.png" media="(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)" /> 
+		<link rel="apple-touch-startup-image" href="images/mobile/splash/splash-screen@3x.png" sizes="640x1096">
 		
-		<!-- Add jQuery library -->
-		<script type="text/javascript" src="/includes/jquery.min.js"></script>
-		<!-- Add mousewheel plugin (this is optional) -->
-		<script type="text/javascript" src="/includes/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-		<!-- Add fancyBox -->
-		<link rel="stylesheet" href="/includes/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
-		<script type="text/javascript" src="/includes/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>
-		<!-- Optionally add helpers - button, thumbnail and/or media -->
-		<link rel="stylesheet" href="/includes/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" type="text/css" media="screen" />
-		<script type="text/javascript" src="/includes/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
-		<script type="text/javascript" src="/includes/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
-		<link rel="stylesheet" href="/includes/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" type="text/css" media="screen" />
-		<script type="text/javascript" src="/includes/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
-		{literal}
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('.fancybox-media').fancybox({
-					openEffect  : 'none',
-					closeEffect : 'none',
-					helpers : {
-						title	: { type : 'inside'},
-						media : {},
-						buttons	: {}
-					}
-				});
-				$('.fancybox-map').fancybox({
-					openEffect  : 'none',
-					autoSize   : false,
-					closeEffect : 'none',
-					type : 'iframe',
-					iframe : {
-						preload : false // this will prevent to place map off center
-					},
-					helpers : {
-						title	: { type : 'inside'},
-						media : {},
-						buttons	: {}
-					}
-				});
-				$(".fancybox").fancybox();
-				$(".fancybox-button").fancybox({
-					prevEffect		: 'none',
-					nextEffect		: 'none',
-					closeBtn		: false,
-					beforeShow: function () {
-						if (this.title) {
-							// New line
-							this.title += '<br />';                
-							// Add FaceBook like button
-							this.title += '<iframe src="//www.facebook.com/plugins/like.php?href=' + this.href + '&amp;layout=button_count&amp;show_faces=true&amp;width=500&amp;action=like&amp;font&amp;colorscheme=light&amp;height=23" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:110px; height:23px;" allowTransparency="true"></iframe>';
-						}
-					},
-					helpers: {
-						title	: { type : 'inside' },
-						buttons	: {}
-					}
-				});
-				$(".fancybox-trigger").click(function() {
-					$("a[rel='" + $(this).data('trigger-rel') + "']").eq(0).trigger('click');
-					return false;
+		<!-- Stylesheet Load -->
+		<link href="/styles/mobile/style.css"				rel="stylesheet" 	type="text/css">
+		<link href="/styles/mobile/framework-style.css"		rel="stylesheet" 	type="text/css">
+		<link href="/styles/mobile/framework.css"			rel="stylesheet" 	type="text/css">
+		<link href="/styles/mobile/icons.css"				rel="stylesheet" 	type="text/css">
+		<link href="/styles/mobile/retina.css"				rel="stylesheet" 	type="text/css" 	media="only screen and (-webkit-min-device-pixel-ratio: 2)" />
 
-				});
-			});
-		</script>
-		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
-		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
-		<link href="style2.css" rel="stylesheet" type="text/css">
-{/literal}
-</head>
-<body class="home custom-background">
-	<div id="global-nav">
-		<div class="embossed-nav">
-		F3X Disciplines - 
-		</div>
-		<div id="nav-all" class="embossed-nav">
-			<a href="?action={$action}&disc=all"{if $disc=='all' || $disc==''} style="color:red;"{/if}>All</a>
-		</div>
-		<div id="nav-f3b" class="embossed-nav">
-			<a href="?action={$action}&disc=f3b"{if $disc=='f3b'} style="color:red;"{/if}>F3B</a>
-		</div>
-		<div id="nav-f3f" class="embossed-nav">
-			<a href="?action={$action}&disc=f3f"{if $disc=='f3f'} style="color:red;"{/if}>F3F</a>
-		</div>
-		<div id="nav-f3j" class="embossed-nav">
-			<a href="?action={$action}&disc=f3j"{if $disc=='f3j'} style="color:red;"{/if}>F3J</a>
-		</div>
-		<div id="nav-f3k" class="embossed-nav">
-			<a href="?action={$action}&disc=f3k"{if $disc=='f3k'} style="color:red;"{/if}>F3K</a>
-		</div>
-		<div id="nav-td" class="embossed-nav">
-			<a href="?action={$action}&disc=td"{if $disc=='td'} style="color:red;"{/if}>TD</a>
-		</div>
-		{if $user.user_id!=0}
-			<a href="?action=main&function=logout"><input id="welcome-button" type="button" value="Log Out" class="button"></a>
-			<a href="?action=admin"><input id="welcome-button" type="button" value="Admin" class="button"></a>
-			<a href="?action=message"><input id="welcome-button" type="button" value="Welcome {$user.user_first_name|escape}{if $unread_messages>0} ({$unread_messages} unread messages){/if}" class="button"></a>
-		{else}
-			<a href="?action=register"><input id="welcome-button" type="button" value="Register" class="button"></a>
-			<a href="?action=main&function=login"><input id="welcome-button" type="button" value="Log In" class="button"></a>
-		{/if}
+		<script src="/includes/mobile/jquery.min.js"		type="text/javascript"></script>
+		<script src="/includes/mobile/jquery-ui-min.js"		type="text/javascript"></script>
+		<script src="/includes/mobile/contact.js"			type="text/javascript"></script>
+		<script src="/includes/mobile/swipe.js"				type="text/javascript"></script>
+		<script src="/includes/mobile/swipebox.js"			type="text/javascript"></script>
+		<script src="/includes/mobile/colorbox.js"			type="text/javascript"></script>
+		<script src="/includes/mobile/twitter.js"			type="text/javascript"></script>
+		<script src="/includes/mobile/retina.js"			type="text/javascript"></script>
+		<script src="/includes/mobile/custom.js"			type="text/javascript"></script>
+	</head>
+	<body>
+
+	<div id="preloader">
+		<div id="status">
+  		  	<p class="center-text">
+				Loading the content...
+ 	           <em>Loading depends on your connection speed!</em>
+	        </p>
+	    </div>
 	</div>
-	<div id="container" class="container_16">
-		<div id="header">
-			<img src="/images/vampire_launch.jpg" alt="" class="header-img" style="z-index:0;"/>
-			<h1 class="header_title push_1">F3X Vault</h1>
-			<h2 class="header_desc push_1">Databases and Scoring of F3X Gliding Disciplines</h2>
-		</div>
-		{include file="menu.tpl"}
-		<div class="menu-bottom-shadow">&nbsp;</div>
-		<div id="content" class="clearfix hfeed">
-			<div id="content-main" class="clearfix grid_11">
+
+	{include file="menu.tpl"}
+
+	<div class="page-content">
+    	<div class="header">
+ 			<a href="#" class="show-sidebar"></a>
+    		<a href="#" class="hide-sidebar"></a>   
+     	   <p>Welcome To F3XVault Mobile!</p>
+     	   <a href="?action=message" class="header-mail"></a>
+  		</div>
+    	<br><br><br>
+		<div class="header-decoration"></div>            
+
+        
+
+
+
