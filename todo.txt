@@ -26,7 +26,6 @@ EVENT STUFF
   
   Have a setting for top X teammates to be used in the team standings
   
-  Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
   
   For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
   	and when adding new flyoff rounds, only those pilots are shown.
@@ -71,6 +70,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
 X Ability to enter DNF and DNS to F3F rounds and have them show on event Overall
 X Make an individual round print
 X printable reports for rounds, and overall standings (Maybe use PDF's with PHP pdf class?)

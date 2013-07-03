@@ -11,13 +11,27 @@
 			</td>
 		</tr>
 		</table>
+		{$num_rounds_printed=0}
 		{foreach $event->rounds as $r}
 		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 			{continue}
 		{/if}
+		{$num_rounds_printed=$num_rounds_printed+1}
 		{$total_rows=1}
 		<h2 class="post-title entry-title" style="margin:0px;">CD Recording Sheet - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
-		<table width="600" cellpadding="2" cellspacing="1" style="border: 1px solid black;{if $r.event_round_number!=$print_round_to}page-break-after: always;{/if}">
+		<table width="600" cellpadding="2" cellspacing="1" 
+			style="border: 1px solid black;
+				{if ($event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed') && $event->pilots|count<=20}
+					{* We want to skip every other round for a new page to have two on a page *}
+					{if $num_rounds_printed is div by 2}
+						{if $r.event_round_number!=$print_round_to}
+						page-break-after: always;
+						{/if}
+					{/if}
+				{else}
+						{if $r.event_round_number!=$print_round_to}page-break-after: always;{/if}
+				{/if}
+				">
 		<tr bgcolor="lightgray">
 			<th width="60">Round</th>
 			{if $event->flight_types.$flight_type_id.flight_type_group}
@@ -25,7 +39,7 @@
 			{else}
 				<th width="60">Order</th>
 			{/if}
-			<th width="200"align="left">Pilot</th>
+			<th width="200" align="left">Pilot</th>
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
 				<th width="100">Time</th>
 			{/if}
@@ -54,7 +68,7 @@
 			{if $event->flight_types.$flight_type_id.flight_type_group}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
-				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p@iteration}</td>
+				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
 			{/if}
 			<td align="left" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
