@@ -33,7 +33,7 @@
 						<br>						
 						Tim
 						<center>
-						<img src="images/tim.jpg" width="600"><br>
+						<img src="images/tim.jpg" width="200"><br>
 						San Diego, California USA
 						</center>
 						</p>
