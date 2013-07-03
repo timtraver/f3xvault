@@ -74,8 +74,7 @@ function check_permission() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">{$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
-		</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -111,11 +110,10 @@ function check_permission() {ldelim}
 		</tr>
 		{/if}
 		</table>
-		
+		 <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span>
-			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
 		</h1>
 		<span id="pilots">
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
@@ -152,10 +150,11 @@ function check_permission() {ldelim}
 		{/foreach}
 		</table>
 		</span>
+			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
 		<br>
 
 
-		{$perpage=9}
+		{$perpage=4}
 		{if $event->info.event_type_code=='f3b'}
 			{$perpage=8}
 		{/if}
@@ -208,12 +207,12 @@ function check_permission() {ldelim}
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{$numrounds+1}" align="center" nowrap>
-				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
+				Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
-			<th width="5%" nowrap>SubTotal</th>
+			<th width="5%" nowrap>Sub</th>
 			<th width="5%" nowrap>Drop</th>
 			<th width="5%" nowrap>Pen</th>
-			<th width="5%" nowrap>Total Score</th>
+			<th width="5%" nowrap>Total</th>
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
@@ -237,7 +236,7 @@ function check_permission() {ldelim}
 							View Details of Round {$r.event_round_number|escape}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}R {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
 					</div>
 				</th>
 				{/if}
@@ -286,7 +285,7 @@ function check_permission() {ldelim}
 							{elseif $r.event_pilot_round_flight_dnf==1}
 								<font color="red">DNF</font>
 							{else}
-								{$r.event_pilot_round_total_score|string_format:"%06.3f"}
+								{$r.event_pilot_round_total_score|string_format:"%03.0f"}
 							{/if}
 						{/if}
 					{if $drop==1}</font></del>{/if}
@@ -313,12 +312,12 @@ function check_permission() {ldelim}
 				{/if}
 			{/foreach}
 			<td></td>
-			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
+			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%03.0f"}</td>
+			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%03.0f"}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
 			<td class="info" width="5%" nowrap align="right">
 				<div style="position:relative;">
-					{$e.total|string_format:"%06.3f"}
+					{$e.total|string_format:"%03.0f"}
 					<span>
 					Behind Prev : {$diff|string_format:"%06.3f"}<br>
 					Behind Lead : {$diff_to_lead|string_format:"%06.3f"}<br>
