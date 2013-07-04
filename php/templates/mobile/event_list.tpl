@@ -32,19 +32,20 @@
 </tr>
 <tr>
 	<th nowrap>	
-		Search on Field : 
+		Search on : 
 	</th>
 	<td align="left" valign="center" colspan="3" nowrap style="text-align: left;">
-			<select name="search_field">
+			<select name="search_field" style="display:inline;">
 				<option value="event_name" {if $search_field=="event_name"}SELECTED{/if}>Event Name</option>
 				<option value="event_type_name" {if $search_field=="event_type_name"}SELECTED{/if}>Event Type</option>
 				<option value="event_start_date" {if $search_field=="event_start_date"}SELECTED{/if}>Start Date</option>
 			</select>
-			<select name="search_operator">
+			<select name="search_operator" style="display:inline;">
 				<option value="contains" {if $search_operator=="contains"}SELECTED{/if}>Contains</option>
 				<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
 			</select>
-			<input type="text" name="search" size="15" value="{$search|escape}" style="float:left;">
+			<input type="text" name="search" size="10" value="{$search|escape}" style="display:inline;">
+			<br>
 			<input type="submit" value=" Search " class="block-button">
 			<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
 	</td>
