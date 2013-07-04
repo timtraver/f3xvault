@@ -56,6 +56,7 @@
 <tr>
 	<th width="20%" nowrap>Flight Type</th>
 	<th width="20%" nowrap>Status</th>
+	<th width="20%" nowrap>Draw Type</th>
 	<th width="10%" nowrap>Round From</th>
 	<th width="10%" nowrap>Round To</th>
 	<th nowrap>Statistics</th>
@@ -89,6 +90,7 @@
 					Not Applied
 				</td>
 			{/if}
+			<td align="center">{$d.event_draw_type}</td>
 			<td align="center">{$d.event_draw_round_from}</td>
 			<td align="center">{$d.event_draw_round_to}</td>
 			<td align="center">
