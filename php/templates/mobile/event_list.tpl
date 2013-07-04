@@ -9,7 +9,7 @@
 <input type="hidden" name="discipline_id" value="{$discipline_id}">
 <table>
 <tr>
-	<th>Filter By Country</th>
+	<th>Country</th>
 	<td align="left" style="text-align: left;">
 		<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 		<option value="0">Choose Country to Narrow Search</option>
@@ -20,7 +20,7 @@
 	</td>
 </tr>
 <tr>
-	<th>Filter By State</th>
+	<th>State</th>
 	<td align="left" style="text-align: left;">
 		<select name="state_id" onChange="searchform.submit();">
 		<option value="0">Choose State to Narrow Search</option>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
 	<th nowrap>	
-		Search on : 
+		Field 
 	</th>
 	<td align="left" valign="center" colspan="3" nowrap style="text-align: left;">
 			<select name="search_field" style="display:inline;">
