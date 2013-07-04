@@ -4,6 +4,13 @@ function set_changed(){ldelim}
 	changed=1;
 	document.main.event_draw_changed.value=1;
 {rdelim}
+function check_draw_step(){ldelim}
+	if(document.main.event_draw_type.value=="random_step"){ldelim}
+		document.getElementById("draw_step").style.display="block";
+	{rdelim}else{ldelim}
+		document.getElementById("draw_step").style.display="none";
+	{rdelim}
+{rdelim}
 </script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
@@ -42,14 +49,20 @@ function set_changed(){ldelim}
 </tr>
 <tr>
 	<th nowrap>Draw Type</th>
-	<td>
-	<select name="event_draw_type" onChange="set_changed();">
+	<td style="text-align:left;">
+	<select name="event_draw_type" onChange="set_changed();check_draw_step();" style="display:inline;">
 	{if $ft.flight_type_group==1}
-		<option value="group">Standard Modified Random Group Draw</option>
+		<option value="group" {if $draw.event_draw_type=="group"}SELECTED{/if}>Standard Modified Random Group Draw</option>
 	{else}
-		<option value="order">Random Order Draw Every Round</option>
+		<option value="random" {if $draw.event_draw_type=="random"}SELECTED{/if}>Random Order Draw Every Round</option>
+		<option value="random_step" {if $draw.event_draw_type=="random_step"}SELECTED{/if}>Random Order First Round With Stepped Progression</option>
 	{/if}
 	</select>
+	{if $ft.flight_type_group!=1}
+		<span id="draw_step" style="{if $draw.event_draw_type=="random_step"}display:block;{else}display:none;{/if}">
+			Step Size <input type="text" name="event_draw_step_size" size="2" value="{$draw.event_draw_step_size}" onChange="set_changed();">  This is the number of pilots to skip every round.
+		</span>
+	{/if}
 	</td>
 </tr>
 {if $ft.flight_type_group==1}

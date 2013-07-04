@@ -1,12 +1,11 @@
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
-		</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="20%" align="right">Event Dates</th>
+			<th width="20%" align="right">Dates</th>
 			<td>
 			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
 			</td>
@@ -16,21 +15,21 @@
 			</td>
 		</tr>
 		<tr>
-			<th align="right">Event Type</th>
+			<th align="right">Type</th>
 			<td>
 			{$event->info.event_type_name|escape}
 			</td>
-			<th align="right">Event Contest Director</th>
+			<th align="right">CD</th>
 			<td>
-			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}
 			</td>
 		</tr>
 		</table>
-		
 	</div>
 
 		<br>
-		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
+		<h1 class="post-title entry-title">Pilot Round Detail for</h1>
+		<h1>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left">Round</th>
@@ -245,7 +244,6 @@
 		</table>
 <br>
 <input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
-<input type="button" value=" Print Pilot Results " onClick="print_pilot.submit();" class="block-button">
 </div>
 </div>
 

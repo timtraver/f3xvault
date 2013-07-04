@@ -55,10 +55,10 @@ $(function() {
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
 	 	document.getElementById(element).style.display = 'block';
-	 	tog.innerHTML = '(<u>Hide Pilot List</u>)';
+	 	tog.innerHTML = '(<u>Hide</u>)';
 	 } else {
 		 document.getElementById(element).style.display = 'none';
-		 tog.innerHTML = '(<u>Show Pilot List</u>)';
+		 tog.innerHTML = '(<u>Show</u>)';
 	 }
 }
 {/literal}
@@ -113,7 +113,7 @@ function check_permission() {ldelim}
 		 <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 	</div>
 		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span>
+		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide</u>)</span>
 		</h1>
 		<span id="pilots">
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
@@ -152,6 +152,12 @@ function check_permission() {ldelim}
 		</span>
 			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
 		<br>
+
+		<h1 class="post-title entry-title">Leader Board</h1>
+
+
+
+
 
 
 		{$perpage=4}
@@ -195,13 +201,12 @@ function check_permission() {ldelim}
 		{if $page_num>1}
 			{$numrounds=$end_round-$start_round+1}
 		{/if}
-		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if} Overall Classification
+		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}</h1>
 			{if $page_num==1}
 				{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button">{/if}
 				{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button">{/if}
 				<input type="button" value=" Add Round " onClick="if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}" class="block-button">
 			{/if}
-		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
 			<td width="2%" align="left"></td>
@@ -810,6 +815,6 @@ function check_permission() {ldelim}
 {if $event->rounds}
 <script>
 	 document.getElementById('pilots').style.display = 'none';
-	 document.getElementById('viewtoggle').innerHTML = '(<u>Show Pilot List</u>)';
+	 document.getElementById('viewtoggle').innerHTML = '(<u>Show</u>)';
 </script>
 {/if}

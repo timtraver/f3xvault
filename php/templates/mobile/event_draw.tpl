@@ -1,7 +1,8 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">{$event->info.event_name|escape} - Event Draw</h1>
+		<h1 class="post-title entry-title">Event Draw</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -54,12 +55,13 @@
 <input type="hidden" name="flight_type_id" value="0">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th width="20%" nowrap>Flight Type</th>
-	<th width="20%" nowrap>Status</th>
+	<th width="15%" nowrap>Flight Type</th>
+	<th width="10%" nowrap>Status</th>
+	<th width="15%" nowrap>Draw Type</th>
 	<th width="10%" nowrap>Round From</th>
 	<th width="10%" nowrap>Round To</th>
 	<th nowrap>Statistics</th>
-	<th width="20%" nowrap>Action</th>
+	<th width="40%" nowrap>Action</th>
 </tr>
 {foreach $event->flight_types as $ft}
 	{$total=0}
@@ -89,16 +91,19 @@
 					Not Applied
 				</td>
 			{/if}
+			<td align="center">{if $d.event_draw_type=="random"}Random{elseif $d.event_draw_type=='random_step'}Random With Step{elseif $d.event_draw_type=='group'}Group{/if}</td>
 			<td align="center">{$d.event_draw_round_from}</td>
 			<td align="center">{$d.event_draw_round_to}</td>
 			<td align="center">
 				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
 					View Statistics
 				{/if}
+				<a href="?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1" target="_blank"><input type="button" value="View Draw" class="button"></a>
 			</td>
-			<td>
+			<td nowrap>
 				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
 				<a href="?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}"><input type="button" value="Edit" class="button"></a>
+				<input type="button" value="UnApply" class="button" onClick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the current and future rounds?')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 			</td>
 			</tr>
@@ -106,7 +111,7 @@
 	{/if}
 {/foreach}
 <tr>
-	<td colspan="6" style="padding-top:10px;">
+	<td colspan="7" style="padding-top:10px;">
 		{foreach $event->flight_types as $ft}
 		<input type="button" value=" Create {$ft.flight_type_name} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
 		{/foreach}
