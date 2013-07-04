@@ -5,7 +5,7 @@
 <form method="POST">
 <input type="hidden" name="action" value="register">
 <input type="hidden" name="function" value="save_registration">
-<p>
+<p style="margin-left:10px;">
 Become a registered member of F3X Vault and be able to create and Edit Events, Series, Clubs, Planes and Locations!<br>
 <br>
 You will be sent a verification email and will have to follow the link given to verify your email address.<br>
@@ -55,8 +55,10 @@ Your email address WILL NOT be shared with ANYONE. It will only be used as commu
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Human Test</th>
-	<td>
+	<th align="right" nowrap colspan="2">Human Test</th>
+</tr>
+<tr>
+	<td colspan="2">
 		{$recaptcha_html}
 	</td>
 </tr>

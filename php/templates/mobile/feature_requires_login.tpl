@@ -3,9 +3,9 @@
 		<h1 class="post-title entry-title">Feature Requirement</h1>		
 		<div class="entry-content clearfix">
 			<h3>You must be a registered member and logged in to use this feature!</h3>
-			<p>In order to take full advantage of all of this sites features, you must be a registered user, and log in with your username and password.</p>
-			<p>When logged in, you will be able to :
-			<ul>
+			<p style="margin-left:10px;">In order to take full advantage of all of this sites features, you must be a registered user, and log in with your username and password.</p>
+			<p style="margin-left:10px;">When logged in, you will be able to :
+			<ul style="margin-left:30px;">
 				<li>Edit your pilot profile which includes which planes you fly and your favorite locations</li>
 				<li>Add comments to posts, locations, planes, etc...</li>
 				<li>Add and edit F3X flying locations to the database</li>
@@ -28,3 +28,60 @@
 <form name="register" method="GET">
 <input type="hidden" name="action" value="register">
 </form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

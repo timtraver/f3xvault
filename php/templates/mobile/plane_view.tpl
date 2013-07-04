@@ -107,7 +107,6 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left">Plane Name</th>
 	<td>{$plane.plane_name|escape}</td>
-	<th style="text-align: center;">Plane Media</th>
 </tr>
 <tr>
 	<th align="left" valign="top">Plane Flying Disciplines</th>
@@ -119,17 +118,6 @@ function calc_area(){ldelim}
 			{$calc_max=1}
 		{/if} 
 		{/foreach}
-	</td>
-	<td rowspan="10" align="center">
-	{if $media[$rand]}
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} {$media[$rand].state_code|escape} - {$media[$rand].plane_media_caption|escape}"><img src="{$media[$rand].plane_media_url}" width="300"></a><br>
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].plane_media_url}" title="{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} {$media[$rand].state_code|escape} - {$media[$rand].plane_media_caption|escape}">View Slide Show</a>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<a data-trigger-rel="videos" class="fancybox-trigger" href="{$m.plane_media_url}" title="View all of the Videos">View Videos</a>
-	{else}
-		There are currently No pictures or videos available<br>
-		Help us out and add some!<br>
-	{/if}
 	</td>
 </tr>
 <tr>

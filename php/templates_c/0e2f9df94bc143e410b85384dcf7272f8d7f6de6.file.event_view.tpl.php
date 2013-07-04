@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-06-22 00:57:04
+<?php /* Smarty version Smarty-3.1.11, created on 2013-07-03 19:27:32
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1371887820,
+      1 => 1372741995,
       2 => 'file',
     ),
   ),
@@ -127,6 +127,7 @@ $(function() {
 		buttons: {
 			"Print Rounds": function() {
 				document.printround.submit();
+				$( this ).dialog( "close" );
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -498,8 +499,14 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']==1000){?>
 							1000
 						<?php }else{ ?>
-							<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
+							<?php if ($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_flight_dns']==1){?>
+								<font color="red">DNS</font>
+							<?php }elseif($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_flight_dnf']==1){?>
+								<font color="red">DNF</font>
+							<?php }else{ ?>
+								<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
 
+							<?php }?>
 						<?php }?>
 					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?></font></del><?php }?>
 					

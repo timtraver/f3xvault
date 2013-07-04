@@ -26,20 +26,19 @@ EVENT STUFF
   
   Have a setting for top X teammates to be used in the team standings
   
-  
   For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
   	and when adding new flyoff rounds, only those pilots are shown.
   
   Draw
   	ability to create F3B distance orders before hand
     draw types
-    	random order
-    	staggered order for F3F
+X    	random order
+X    	staggered order for F3F
     	set number of groups
 X   make the printing of the draws use the current rounds and the draw rounds
-	have draw view buttons to show draw even if not active
-	When adding a round, default apply the draw and sort it by the draw order or group
-    check for overlap when saving new draw
+X	have draw view buttons to show draw even if not active
+X	When adding a round, default apply the draw and sort it by the draw order or group
+X    check for overlap when applying new draw
     
   Flyoff capability
 	Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)

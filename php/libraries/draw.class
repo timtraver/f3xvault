@@ -64,12 +64,13 @@ class Draw {
 		$this->teams=$names;
 		return;
 	}
-	function create_order_rounds(){
+	function create_random_rounds(){
 		# Function to create the round array for an order type of round
 		# This means we essentially create the random array for speed rounds
 		
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
+		
 		$last_team='';
 		for($round=$round_from;$round<=$round_to;$round++){
 			$round_ok=1;
@@ -109,7 +110,6 @@ class Draw {
 				# This means that the separation didn't work
 				$round--;
 			}
-
 			# OK, now lets save this round draw info
 			# lets blank the round first
 			$stmt=db_prep("
@@ -124,7 +124,135 @@ class Draw {
 				"event_draw_id"=>$this->event_draw_id,
 				"round"=>$round
 			));
+	
+			# Now lets step through the array and save the round info
+			$x=1;
+			foreach($order as $key=>$o){
+				# Lets see if a record already exists
+				$event_draw_round_id=0;
+				$stmt=db_prep("
+					SELECT event_draw_round_id
+					FROM event_draw_round
+					WHERE event_draw_id=:event_draw_id
+						AND event_draw_round_number=:round
+						AND event_draw_round_order=:event_draw_round_order
+				");
+				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
+				if(isset($result[0])){
+					$event_draw_round_id=$result[0]['event_draw_round_id'];
+				}
+				
+				if($event_draw_round_id==0){
+					# Make a new record
+					$stmt=db_prep("
+						INSERT INTO event_draw_round
+						SET event_draw_id=:event_draw_id,
+							event_draw_round_number=:event_draw_round_number,
+							event_pilot_id=:event_pilot_id,
+							event_draw_round_group='',
+							event_draw_round_order=:x,
+							event_draw_round_status=1
+					");
+					$result=db_exec($stmt,array(
+						"event_draw_id"=>$this->event_draw_id,
+						"event_draw_round_number"=>$round,
+						"event_pilot_id"=>$o['event_pilot_id'],
+						"x"=>$x
+					));
+				}else{
+					# Update an existing record
+					$stmt=db_prep("
+						UPDATE event_draw_round
+						SET event_pilot_id=:event_pilot_id,
+							event_draw_round_group='',
+							event_draw_round_order=:x,
+							event_draw_round_status=1
+						WHERE event_draw_round_id=:event_draw_round_id
+					");
+					$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+				}
+				$x++;
+			}
+		}
+		return;
+	}
+	function create_random_step_rounds(){
+		# Function to create the round array for an random draw with a step
+		# We create the first round as random, and then step the pilots forward X amount every round
+		
+		$round_from=$this->draw['event_draw_round_from'];
+		$round_to=$this->draw['event_draw_round_to'];
+		
+		$last_team='';
+		$first_round=1;
+		$order=array();
+		$step=$this->draw['event_draw_step_size'];
+		for($round=$round_from;$round<=$round_to;$round++){
+			$round_ok=1;
 			
+			if($first_round){
+				$pilots=$this->pilots;
+				shuffle($pilots);
+				$loop=count($pilots);
+				$total_pilots=count($pilots);
+				# Set a y value to prevent looping
+				$y=0;
+				for($x=1;$x<=$loop;$x++){
+					if(count($pilots)>1){
+						$rand=mt_rand(0,$total_pilots);
+						$test=array_slice($pilots,$rand-1,1);
+						if($test[0]['event_pilot_team']!=$last_team || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
+							# This chosen one is indeed on a different team, so lets pop it off the array
+							$splice=array_splice($pilots,$rand-1,1);
+							$order[]=$splice[0];
+							$total_pilots--;
+							$last_team=$splice[0]['event_pilot_team'];
+							if($y>20){
+								$round_ok=0;
+							}
+							$y=0;
+						}else{
+							# Try again by resetting the x var
+							$x--;
+							$y++;
+						}
+					}else{
+						$order[]=$pilots[0];
+						$total_pilots--;
+						$last_team=$pilots[0]['event_pilot_team'];
+					}
+				}
+				if($round_ok==0){
+					# This means that the separation didn't work
+					$round--;
+					continue;
+				}
+			}else{
+				# After the first round, now we will just move the array forward X amount
+				# We just need to grab the offset of the array and re-order it
+				$temp=array();
+				for($x=1;$x<=$step;$x++){
+					$temp=array_shift($order);
+					$order[]=$temp;
+				}
+			}
+			$first_round=0;
+			
+			# OK, now lets save this round draw info
+			# lets blank the round first
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+					AND event_draw_round_number=:round
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round"=>$round
+			));
+	
 			# Now lets step through the array and save the round info
 			$x=1;
 			foreach($order as $key=>$o){

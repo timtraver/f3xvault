@@ -3,40 +3,27 @@
 		<h1 class="post-title entry-title">F3X Location Database</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Location Details <input type="button" value=" Edit Location Information " class="button" onClick="location_edit.submit();"></h1>
+<h1 class="post-title entry-title">Location Details</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th>Location Name</th>
 	<td>{$location.location_name|escape}</td>
-	<th style="text-align: center;">Location Media</th>
 </tr>
 <tr>
 	<th>Location</th>
 	<td>
 		{$location.location_city|escape} - {$location.state_code|escape}, {$location.country_code|escape}
 	</td>
-	<td rowspan="4" align="center">
-	{if $media[$rand]}
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} - {/if}{$media[$rand].location_media_caption|escape}"><img src="{$media[$rand].location_media_url}" width="300"></a><br>
-	<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$media[$rand].location_media_url}" title="{if $media[$rand].user_id!=0}{$media[$rand].pilot_first_name|escape}, {$media[$rand].pilot_city|escape} - {/if}{$media[$rand].location_media_caption|escape}">View Slide Show</a>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	{assign var="found" value="0"}
-	{foreach $media as $m}
-		{if $m.location_media_type=='video' && $found==0}
-			<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">View Videos</a>
-			{assign var="found" value="1"}
-		{/if}
-	{/foreach}
-	{else}
-		There are currently No pictures or videos available<br>
-		Help us out and add some!<br>
-	{/if}
-	</td>
 </tr>
 <tr>
 	<th>Location Map Coordinates</th>
 	<td>
-		{$location.location_coordinates|escape} {if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name|escape})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
+		{$location.location_coordinates|escape}
+		{if $location.location_coordinates!=''}
+		<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name|escape})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps.">
+			<img src="/images/icons/world.png" style="display:inline;">
+		</a>
+		{/if}
 	</td>
 </tr>
 <tr>
@@ -114,13 +101,13 @@
 	</th>
 </tr>
 </table>
-
+<input type="button" value=" Edit Location Information " class="button" onClick="location_edit.submit();">
+<div class="clear"></div>
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="location">
 </form>
 
 <h1 class="post-title entry-title">Location Media</h1>
-{if !$user.user_id}Log In To Add Media{/if}
 {foreach $media as $m}
 	{if $m.location_media_type == 'picture'}
 		<a href="{$m.location_media_url}" rel="gallery" class="fancybox-button" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
@@ -133,7 +120,7 @@
 </div>
 
 <div id="comments" class="clearfix no-ping">
-<h4 class="comments gutter-left current">{$comments_num} Location Comments</h4>
+<h4 class="comments gutter-left current">Location Comments ({$comments_num})</h4>
 <ol class="clearfix" id="comments_list">
 		{foreach $comments as $c}
 			<li class="comment byuser bypostauthor even thread-even depth-1 clearfix" style="padding-left: 10px;">

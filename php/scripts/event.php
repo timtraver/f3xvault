@@ -2376,7 +2376,6 @@ function event_draw_edit() {
 		");
 		$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 		$draw=$result[0];
-		
 	}	
 	# Get flight type info
 	$ft=array();
@@ -2432,6 +2431,7 @@ function event_draw_save(){
 	$event_draw_round_to=intval($_REQUEST['event_draw_round_to']);
 	$event_draw_type=$_REQUEST['event_draw_type'];
 	$event_draw_number_groups=intval($_REQUEST['event_draw_number_groups']);
+	$event_draw_step_size=intval($_REQUEST['event_draw_step_size']);
 	$event_draw_changed=intval($_REQUEST['event_draw_changed']);
 
 	$event_draw_team_protection=0;
@@ -2463,6 +2463,7 @@ function event_draw_save(){
 					event_draw_round_from=:event_draw_round_from,
 					event_draw_round_to=:event_draw_round_to,
 					event_draw_number_groups=:event_draw_number_groups,
+					event_draw_step_size=:event_draw_step_size,
 					event_draw_team_protection=:event_draw_team_protection,
 					event_draw_team_separation=:event_draw_team_separation,
 					event_draw_active=0,
@@ -2475,6 +2476,7 @@ function event_draw_save(){
 				"event_draw_round_to"=>$event_draw_round_to,
 				"event_draw_type"=>$event_draw_type,
 				"event_draw_number_groups"=>$event_draw_number_groups,
+				"event_draw_step_size"=>$event_draw_step_size,
 				"event_draw_team_protection"=>$event_draw_team_protection,
 				"event_draw_team_separation"=>$event_draw_team_separation
 			));
@@ -2487,6 +2489,7 @@ function event_draw_save(){
 					event_draw_round_from=:event_draw_round_from,
 					event_draw_round_to=:event_draw_round_to,
 					event_draw_number_groups=:event_draw_number_groups,
+					event_draw_step_size=:event_draw_step_size,
 					event_draw_team_protection=:event_draw_team_protection,
 					event_draw_team_separation=:event_draw_team_separation
 			");
@@ -2495,6 +2498,7 @@ function event_draw_save(){
 				"event_draw_round_to"=>$event_draw_round_to,
 				"event_draw_type"=>$event_draw_type,
 				"event_draw_number_groups"=>$event_draw_number_groups,
+				"event_draw_step_size"=>$event_draw_step_size,
 				"event_draw_team_protection"=>$event_draw_team_protection,
 				"event_draw_team_separation"=>$event_draw_team_separation
 			));
@@ -2503,13 +2507,21 @@ function event_draw_save(){
 		$draw=new Draw($event_draw_id);
 	
 		# OK, I guess lets build the draw elements now
-		if($ft.flight_type_group==1){
-			# This is a group task
-			
-		}else{
-			# This is an order task (speed)
-			$draw->create_order_rounds();
+		switch($event_draw_type){
+			case 'random':
+				# This is an order task (speed)
+				$draw->create_random_rounds();
+				break;
+			case 'random_step':
+				# This is an order task (speed) with a step progression
+				$draw->create_random_step_rounds();
+				break;
+			case 'group':
+				# This is an group task
+				$draw->create_group_rounds();
+				break;
 		}
+
 	}
 	return event_draw();
 }
@@ -2539,6 +2551,39 @@ function event_draw_apply(){
 	");
 	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 	$draw=$result[0];
+	
+	# Lets check to see if this round has overlap with existing active rounds and error out if so
+	# Get other active draws for this event
+	$other_draws=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw
+		WHERE event_id=:event_id
+			AND flight_type_id=:flight_type_id
+			AND event_draw_status=1
+			AND event_draw_active=1
+			AND event_draw_id!=:event_draw_id
+	");
+	$other_draws=db_exec($stmt,array(
+		"event_id"=>$event_id,
+		"flight_type_id"=>$flight_type_id,
+		"event_draw_id"=>$event_draw_id
+	));
+	
+	$from=$draw['event_draw_round_from'];
+	$to=$draw['event_draw_round_to'];
+	$overlap=0;
+	foreach($other_draws as $o){
+		$ofrom=$o['event_draw_round_from'];
+		$oto=$o['event_draw_round_to'];
+		if(($from>=$ofrom && $from<=$oto) || ($to>=$ofrom && $to<=$oto)){
+			$overlap=1;
+		}
+	}
+	if($overlap){
+		user_message("Cannot Apply the draw because it overlaps with another existing active draw.",1);
+		return event_draw();
+	}
 	
 	# Ok, now lets get the rounds for this draw, and apply the group or order number to the existing event rounds
 	$draw_rounds=array();
@@ -2630,6 +2675,44 @@ function event_draw_apply(){
 	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 	
 	user_message("Event Draw Applied.");
+	return event_draw();
+}
+function event_draw_unapply(){
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+
+	# Get flight type info
+	$ft=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_id=:flight_type_id
+	");
+	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
+	$ft=$result[0];
+
+	# Get draw info
+	$draw=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw
+		WHERE event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	$draw=$result[0];
+	
+	# Now lets change the status of the draw to inactive
+	$stmt=db_prep("
+		UPDATE event_draw
+		SET event_draw_active=0
+		WHERE event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	
+	user_message("Event Draw Inactivated.");
 	return event_draw();
 }
 function event_draw_delete() {
@@ -2769,5 +2852,82 @@ function event_draw_print() {
 		$maintpl=find_template($template);
 		return $smarty->fetch($maintpl);
 	}
+}
+function event_draw_view() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+
+	$template="print_draw_matrix.tpl";
+	$title="Draw Matrix";
+	$sort_by='flight_order';
+	
+	# Lets get the draw info
+	$draw=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw ed
+		WHERE ed.event_draw_id=:event_draw_id
+		AND event_draw_status=1
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	$draw=$result[0];
+	
+	$print_round_from=$draw['event_draw_round_from'];
+	$print_round_to=$draw['event_draw_round_to'];
+	
+	# Now lets get the draw rounds
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw_round 
+		WHERE event_draw_id=:event_draw_id
+			AND event_draw_round_status=1
+		ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_order
+	");
+	$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	foreach($rounds as $round){
+		$round_number=$round['event_draw_round_number'];
+		$event_pilot_id=$round['event_pilot_id'];
+		$draw['rounds']['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
+	}
+	
+	$e=new Event($event_id);
+	$e->get_teams();
+	
+	# Lets add the rounds that don't exist with the draw values for printing
+	# Step through any existing rounds and use those
+	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
+		if(!isset($e->rounds[$event_round_number])){
+			# Lets create the event round and enough info from the draw to print
+			#Step through the draw rounds and see if one exists for this round
+			foreach($draw['rounds']['flights'] as $flight_type_id=>$f){
+				foreach($f as $round_num=>$v){
+					if($round_num==$event_round_number){
+						# Lets create the round info
+						$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+						$e->rounds[$event_round_number]['event_round_status']=1;
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+						foreach($v['pilots'] as $event_pilot_id=>$p){
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
+						}
+					}
+				}
+			}	
+		}
+	}
+
+	$smarty->assign("print_round_from",$print_round_from);
+	$smarty->assign("print_round_to",$print_round_to);
+	$smarty->assign("flight_type_id",$flight_type_id);
+	$smarty->assign("print_format","html");
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template($template);
+	return $smarty->fetch($maintpl);
 }
 ?>

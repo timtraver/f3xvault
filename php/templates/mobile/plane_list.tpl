@@ -1,27 +1,18 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Browse F3X Plane Database</h1>
+		<h1 class="post-title entry-title">Search F3X Plane Database</h1>
 		<div class="entry-content clearfix">
 
 <form method="POST" name="filter">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_list">
+<input type="hidden" name="discipline_id" value="{$discipline_id}">
 <table width="80%">
 <tr>
-	<th>Filter By Plane Discipline</th>
-	<td colspan="3">
-	<select name="discipline_id" onChange="filter.submit();">
-	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-<tr>
 	<th nowrap>	
-		And Search on Field 
+		Search on Field 
 	</th>
-	<td valign="center">
+	<td valign="center" style="text-align: left;">
 		<select name="search_field">
 		<option value="plane_name" {if $search_field=="plane_name"}SELECTED{/if}>Plane Name</option>
 		<option value="plane_manufacturer" {if $search_field=="plane_manufacturer"}SELECTED{/if}>Manufacturer</option>
@@ -46,28 +37,12 @@
 <tr class="table-row-heading-left">
 	<th colspan="8" style="text-align: left;">Planes (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
-<tr style="background-color: lightgray;">
-        <td align="left" colspan="4">
-                {if $startrecord>1}[<a href="?action=plane&function=plane_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
-                {if $endrecord<$totalrecords}[<a href="?action=plane&function=plane_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
-        </td>
-        <td align="right" colspan="4">PerPage
-                [<a href="?action=plane&function=plane_list&&perpage=25">25</a>]
-                [<a href="?action=plane&function=plane_list&&perpage=50">50</a>]
-                [<a href="?action=plane&function=plane_list&&perpage=100">100</a>]
-                [<a href="?action=plane&function=plane_list&page=1">First Page</a>]
-                [<a href="?action=plane&function=plane_list&page={$totalpages|escape}">Last Page</a>]
-        </td>
-</tr>
 <tr>
 	<th style="text-align: left;">Plane Name</th>
 	<th style="text-align: left;">Plane Type</th>
 	<th style="text-align: center;">Info</th>
 	<th style="text-align: left;">Manufacturer</th>
-	<th style="text-align: left;">Year</th>
 	<th style="text-align: left;">Wing Span</th>
-	<th style="text-align: left;">Plane Weight Empty</th>
-	<th style="text-align: left;">Action</th>
 </tr>
 {foreach $planes as $plane}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -81,22 +56,15 @@
 	</td>
 	<td align="center">{if $plane.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
 	<td>{$plane.plane_manufacturer|escape}</td>
-	<td>{$plane.plane_year|escape}</td>
 	<td>{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units|escape}</td>
-	<td>{$plane.plane_auw_from|escape} - {$plane.plane_auw_to|escape} {$plane.plane_auw_units|escape}</td>
-	<td><a href="?action={$action|escape}&function=plane_edit&plane_id={$plane.plane_id|escape}" title="Edit This Plane"><img src="/images/icon_edit_small.gif" width="20"></a>
-	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="4">
+        <td align="left" colspan="2">
                 {if $startrecord>1}[<a href="?action=plane&function=plane_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=plane&function=plane_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="4">PerPage
-                [<a href="?action=plane&function=plane_list&perpage=25">25</a>]
-                [<a href="?action=plane&function=plane_list&perpage=50">50</a>]
-                [<a href="?action=plane&function=plane_list&perpage=100">100</a>]
+        <td align="right" colspan="3">
                 [<a href="?action=plane&function=plane_list&page=1">First Page</a>]
                 [<a href="?action=plane&function=plane_list&page={$totalpages|escape}">Last Page</a>]
         </td>

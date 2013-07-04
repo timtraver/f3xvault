@@ -26,7 +26,8 @@
 	<tr>
 		<th valign="top">Password</th>
 		<td>
-			<input type="password" name="password" size="30" class="text" autocomplete="off"><br>
+			<input type="password" name="password" size="30" class="text" autocomplete="off">
+
 			<a href="?action=main&function=forgot">Forgot your password?</a>
 		</td>
 	</tr>
@@ -43,3 +44,23 @@ Don't have a login? <a href="?action=register">Register Here</a>
 
 	</div>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>

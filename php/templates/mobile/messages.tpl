@@ -1,5 +1,5 @@
 {if $messages}
-<table width="100%" bgcolor="#lightblue" height="30" cellpadding="10">
+<table width="90%" bgcolor="#lightblue" height="30" cellpadding="10">
 <tr>
 	<td align="left">
 	{$message_graphic}

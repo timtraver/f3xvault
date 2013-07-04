@@ -1,4 +1,4 @@
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDYRplmgH2DUnWhVS1WSJCTHYYpELFcG44&sensor=false"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDYRplmgH2DUnWhVS1WSJCTHYYpELFcG44&sensor=true"></script>
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Location Interactive Map</h1>
