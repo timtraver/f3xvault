@@ -179,9 +179,11 @@ function check_permission() {ldelim}
 			<td>
 			{$event->info.event_start_date|date_format:"%Y-%m-%d"}{if $event->info.event_end_date!=$event->info.event_start_date} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}{/if}
 			</td>
+		</tr>
+		<tr>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape}
+			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.state_code|escape} {$event->info.country_code|escape}</a>
 			</td>
 		</tr>
 		<tr>
@@ -189,6 +191,8 @@ function check_permission() {ldelim}
 			<td>
 			{$event->info.event_type_name|escape}
 			</td>
+		</tr>
+		<tr>
 			<th align="right">CD</th>
 			<td>
 			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}

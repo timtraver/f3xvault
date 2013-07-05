@@ -82,6 +82,8 @@ function check_permission() {ldelim}
 			<td>
 			{$event->info.event_start_date|date_format:"%Y-%m-%d"}{if $event->info.event_end_date!=$event->info.event_start_date} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}{/if}
 			</td>
+		</tr>
+		<tr>
 			<th align="right">Location</th>
 			<td>
 			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.state_code|escape} {$event->info.country_code|escape}</a>
@@ -92,6 +94,8 @@ function check_permission() {ldelim}
 			<td>
 			{$event->info.event_type_name|escape}
 			</td>
+		</tr>
+		<tr>
 			<th align="right">CD</th>
 			<td>
 			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}
@@ -99,10 +103,12 @@ function check_permission() {ldelim}
 		</tr>
 		{if $event->info.series_name || $event->info.club_name}
 		<tr>
-			<th align="right">Part Of Series</th>
+			<th align="right">Series</th>
 			<td>
 			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name|escape}</a>
 			</td>
+		</tr>
+		<tr>
 			<th align="right">Club</th>
 			<td>
 			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name|escape}</a>
