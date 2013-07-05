@@ -171,27 +171,27 @@ function check_permission() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape}</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="20%" align="right">Event Dates</th>
+			<th width="20%" align="right">Dates</th>
 			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
+			{$event->info.event_start_date|date_format:"%Y-%m-%d"}{if $event->info.event_end_date!=$event->info.event_start_date} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}{/if}
 			</td>
 			<th align="right">Location</th>
 			<td>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
+			{$event->info.location_name|escape} - {$event->info.location_city|escape}
 			</td>
 		</tr>
 		<tr>
-			<th align="right">Event Type</th>
+			<th align="right">Type</th>
 			<td>
 			{$event->info.event_type_name|escape}
 			</td>
-			<th align="right">Event Contest Director</th>
+			<th align="right">CD</th>
 			<td>
-			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
+			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}
 			</td>
 		</tr>
 		</table>
@@ -207,9 +207,9 @@ function check_permission() {ldelim}
 		<input type="hidden" name="create_new_round" value="0">
 
 		<h1 class="post-title entry-title">Event Round {$round_number|escape}</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="95%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="20%" nowrap>Event Round Type</th>
+			<th width="20%" nowrap>Round Type</th>
 			<td>
 				{if $event->info.event_type_flight_choice==1}
 					<select name="flight_type_id">
@@ -224,7 +224,9 @@ function check_permission() {ldelim}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
 			</td>
-			{if $event->info.event_type_time_choice==1}
+		</tr>
+		{if $event->info.event_type_time_choice==1}
+		<tr>
 			<th>
 				Max Flight Time
 			</th>
@@ -235,23 +237,23 @@ function check_permission() {ldelim}
 					<input type="hidden" name="event_round_time_choice" value="0">
 				{/if}
 			</td>
-			{else}
-			<th colspan="2">&nbsp;</th>
-			{/if}
 		</tr>
+		{/if}
 		<tr>
-			<th nowrap>Event Round Sort By</th>
+			<th nowrap>Sort By</th>
 			<td>
 				<select name="sort_by" onChange="document.sort_round.sort_by.value=document.main.sort_by.value; sort_round.submit();">
 				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
 				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
-				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Round Flight Order</option>
-				<option value="group_alphabetical_first"{if $sort_by=='group_alphabetical_first'} SELECTED{/if}>Group, then Alphabetical Order - First Name</option>
-				<option value="alphabetical_first"{if $sort_by=='alphabetical_first'} SELECTED{/if}>Alphabetical Order - First Name</option>
-				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alphabetical Order - Last Name</option>
+				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Flight Order</option>
+				<option value="group_alphabetical_first"{if $sort_by=='group_alphabetical_first'} SELECTED{/if}>Group, then Alpha by First Name</option>
+				<option value="alphabetical_first"{if $sort_by=='alphabetical_first'} SELECTED{/if}>Alpha by First Name</option>
+				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alpha by Last Name</option>
 				</select>
 			</td>
-			<th nowrap>Include This Round In Final Results</th>
+		</tr>
+		<tr>
+			<th>Include In Final Results</th>
 			<td align="left">
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
@@ -274,14 +276,14 @@ function check_permission() {ldelim}
 		<br>
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="95%" cellpadding="2" cellspacing="1" class="tableborder">
 		{$tabindex=2}
 		{foreach $flight_types as $ft}
 			{$flight_type_id=$ft.flight_type_id}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=4}
+			{$cols=3}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -296,11 +298,11 @@ function check_permission() {ldelim}
 			</tr>
 			<tr>
 				<th width="2%" align="left"></th>
-				<th align="left">Pilot Name</th>
+				<th align="left">Pilot</th>
 				{if $ft.flight_type_group}
-					<th align="center">Group</th>
+					<th align="center">Grp</th>
 				{else}
-					<th align="center">Order</th>
+					<th align="center">Ord</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
@@ -311,10 +313,9 @@ function check_permission() {ldelim}
 				{if $ft.flight_type_laps}
 					<th align="center">Laps</th>
 				{/if}
-				<th align="center">Raw Score</th>
-				<th align="center">Normalized Score</th>
-				<th align="center">Penalty</th>
-				<th align="center">Flight Rank</th>
+				<th align="center">Score</th>
+				<th align="center">Pen</th>
+				<th align="center">Rank</th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
@@ -332,7 +333,7 @@ function check_permission() {ldelim}
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|substr:0:1} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 					{else}
@@ -370,13 +371,6 @@ function check_permission() {ldelim}
 						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:15px;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$f.flight_type_id}" value="{$p.event_pilot_round_flight_laps|escape}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
-					<td align="right" nowrap>
-						{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
-						{$p.event_pilot_round_flight_raw_score|escape}
-						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
-						{/if}
-					</td>
 					<td align="right" nowrap>
 					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
 					{$p.event_pilot_round_flight_score}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}

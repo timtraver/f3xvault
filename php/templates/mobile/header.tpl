@@ -28,6 +28,9 @@
 		<script src="/includes/mobile/twitter.js"			type="text/javascript"></script>
 		<script src="/includes/mobile/retina.js"			type="text/javascript"></script>
 		<script src="/includes/mobile/custom.js"			type="text/javascript"></script>
+		
+		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
 
 	</head>
 	<body>

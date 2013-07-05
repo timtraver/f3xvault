@@ -60,15 +60,12 @@ OTHER STUFF
   Put a "Send This Pilot a Message" button on the pilot view screen
   Add Events and Series to club view screen
  
-
 MOBILE STUFF
-
-  Create a mobile version of the site to be able to view locations, planes, and events
-  
   Mobile score entry by end user
 
 COMPLETED
  
+X Create a mobile version of the site to be able to view locations, planes, and events
 X Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
 X Ability to enter DNF and DNS to F3F rounds and have them show on event Overall
 X Make an individual round print

@@ -44,7 +44,7 @@ body {
 	color: #fff;
 }
 
-div, p, img, blockquote, form, fieldset, textarea, input, label, iframe, code, pre {
+div, p, img, blockquote, form, fieldset, textarea, input, iframe, label, code, pre {
 	display: block;
 	overflow:hidden;
 	position:relative;

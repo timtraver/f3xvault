@@ -51,18 +51,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <input type="hidden" name="function" value="location_map">
 <table width="80%">
 <tr>
-	<th>Filter By Site Discipline</th>
-	<td colspan="3">
-	<select name="discipline_id" onChange="searchform.submit();">
-	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-<tr>
-	<th>Filter By Country</th>
-	<td>
+	<th>Country</th>
+	<td style="text-align: left;">
 	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 	<option value="0">Choose Country to Narrow Search</option>
 	{foreach $countries as $country}
@@ -70,8 +60,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 	{/foreach}
 	</select>
 	</td>
-	<th>Filter By State</th>
-	<td>
+</tr>
+<tr>
+	<th>State</th>
+	<td style="text-align: left;">
 	<select name="state_id" onChange="searchform.submit();">
 	<option value="0">Choose State to Narrow Search</option>
 	{foreach $states as $state}
@@ -82,9 +74,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
 </tr>
 <tr>
 	<th nowrap>	
-		And Search on Field : 
+		Field 
 	</th>
-	<td valign="center" colspan="3">
+	<td valign="center" colspan="3" style="text-align: left;">
 		<select name="search_field">
 		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
 		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
@@ -96,7 +88,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<input type="text" name="search" size="30" value="{$search|escape}">
 		<input type="submit" value=" Search " class="block-button">
 		<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
-		</form>
 	</td>
 </tr>
 </table>
@@ -106,7 +97,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <br>
 
- <div id="googleMap" style="width:900px;height:600px;"></div>
+
+ <div id="googleMap" class="maps-container" style="width: 300px; height: 300px;overflow-x:visible;overflow-y:visible;">
+ 
+ </div>
  
  <br>
 

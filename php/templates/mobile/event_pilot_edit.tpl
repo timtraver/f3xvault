@@ -94,14 +94,14 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Event Entry Order</th>
+	<th align="right" nowrap>Entry Order</th>
 	<td colspan="2">
 		<input type="text" name="event_pilot_entry_order" size="3" value="{$pilot.event_pilot_entry_order|escape}">
 	</td>
 </tr>
 {if $pilot.pilot_id==0}
 <tr>
-	<th align="right" nowrap>Pilot First Name</th>
+	<th align="right" nowrap>First Name</th>
 	<td colspan="2">
 		{if $pilot.pilot_id==0}
 		<input type="text" name="pilot_first_name" size="40" value="{$pilot.pilot_first_name|escape}">
@@ -111,7 +111,7 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot Last Name</th>
+	<th align="right" nowrap>Last Name</th>
 	<td colspan="2">
 		{if $pilot.pilot_id==0}
 		<input type="text" name="pilot_last_name" size="40" value="{$pilot.pilot_last_name|escape}">
@@ -121,13 +121,13 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot City</th>
+	<th align="right" nowrap>City</th>
 	<td colspan="2">
 		<input type="text" name="pilot_city" size="40" value="{$pilot.pilot_city|escape}">
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot State</th>
+	<th align="right" nowrap>State</th>
 	<td colspan="2">
 		<select name="state_id">
 		{foreach $states as $state}
@@ -137,7 +137,7 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot Country</th>
+	<th align="right" nowrap>Country</th>
 	<td colspan="2">
 		<select name="country_id">
 		{foreach $countries as $country}
@@ -147,7 +147,7 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot Email</th>
+	<th align="right" nowrap>Email</th>
 	<td colspan="2">
 		<input type="text" name="pilot_email" size="40" value="{$pilot.pilot_email|escape}">
 	</td>
@@ -160,14 +160,14 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot Location</th>
-	<td colspan="2">
+	<th align="right" nowrap>Location</th>
+	<td colspan="2" align="left">
 		{$pilot.pilot_city|escape}, {$pilot.state_name|escape} - {$pilot.country_code|escape}
 	</td>
 </tr>
 {/if}
 <tr>
-	<th align="right" nowrap>Pilot AMA #</th>
+	<th align="right" nowrap>AMA #</th>
 	<td colspan="2">
 		<input type="text" name="pilot_ama" size="15" value="{$pilot.pilot_ama|escape}">
 	</td>
@@ -180,7 +180,7 @@ function copy_plane_values(){ldelim}
 </tr>
 <tr>
 	<th align="right" nowrap>Pilot Class</th>
-	<td colspan="2">
+	<td colspan="2" align="left">
 		<select name="class_id">
 		{foreach $classes as $c}
 			<option value="{$c.class_id}" {if $pilot.class_id==$c.class_id}SELECTED{/if}>{$c.class_description|escape}</option>
@@ -189,7 +189,7 @@ function copy_plane_values(){ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right" nowrap>Pilot Radio Frequency</th>
+	<th align="right" nowrap>Radio Freq</th>
 	<td colspan="2">
 		<input type="text" name="event_pilot_freq" size="15" value="{$pilot.event_pilot_freq|escape}">
 	</td>
@@ -197,13 +197,13 @@ function copy_plane_values(){ldelim}
 <tr>
 	<th align="right" nowrap>Event Team</th>
 	<td colspan="2">
-		<input type="text" id="event_pilot_team" name="event_pilot_team" size="40" value="{$pilot.event_pilot_team|escape}">
+		<input type="text" id="event_pilot_team" name="event_pilot_team" size="15" value="{$pilot.event_pilot_team|escape}">
 	</td>
 </tr>
 <tr>
 	<th align="right" nowrap>Event Plane</th>
 	<td colspan="2">
-		<input type="text" id="event_plane" name="event_plane" size="40" value="{$pilot.plane_name|escape}">
+		<input type="text" id="event_plane" name="event_plane" size="15" value="{$pilot.plane_name|escape}">
 		<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		<span id="plane_message" style="font-style: italic;color: grey;">Start typing to search planes</span>
 		<input type="button" value=" + New Plane " class="button" onClick="copy_plane_values(); add_plane.submit();">

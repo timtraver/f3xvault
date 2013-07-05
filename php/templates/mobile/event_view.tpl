@@ -78,17 +78,17 @@ function check_permission() {ldelim}
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
-			<th width="20%" align="right">Event Dates</th>
+			<th width="20%" align="right">Dates</th>
 			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
+			{$event->info.event_start_date|date_format:"%Y-%m-%d"}{if $event->info.event_end_date!=$event->info.event_start_date} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}{/if}
 			</td>
 			<th align="right">Location</th>
 			<td>
-			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}</a>
+			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.state_code|escape} {$event->info.country_code|escape}</a>
 			</td>
 		</tr>
 		<tr>
-			<th align="right">Event Type</th>
+			<th align="right">Type</th>
 			<td>
 			{$event->info.event_type_name|escape}
 			</td>
@@ -110,14 +110,15 @@ function check_permission() {ldelim}
 		</tr>
 		{/if}
 		</table>
-		 <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
+		<input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
+		<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide</u>)</span>
 		</h1>
 		<span id="pilots">
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
-		<input type="text" id="pilot_name" name="pilot_name" size="20">
+		<input type="text" id="pilot_name" name="pilot_name" size="15">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -127,43 +128,72 @@ function check_permission() {ldelim}
 			<th align="left">Pilot Name</th>
 			<th align="left">Pilot Class</th>
 			<th align="left">Pilot Plane</th>
-			<th align="left">Pilot Freq</th>
 			<th align="left">Team</th>
-			<th align="left" width="4%"></th>
 		</tr>
 		{assign var=num value=1}
 		{foreach $event->pilots as $p}
 		<tr>
 			<td>{$num}</td>
 			<td align="center">{$p.pilot_ama|escape}</td>
-			<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+			<td><a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
 			<td>{$p.class_description|escape}</td>
 			<td>{$p.plane_name|escape}</td>
-			<td>{$p.event_pilot_freq|escape}</td>
 			<td>{$p.event_pilot_team|escape}</td>
-			<td nowrap>
-				<a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif" style="display:inline;"></a>
-				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name|escape} from the event?');"><img width="14px" src="/images/del.gif" style="display:inline;"></a>
-			</td>
 		</tr>
 		{assign var=num value=$num+1}
 		{/foreach}
 		</table>
 		</span>
-			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
-		<br>
 
+
+
+
+
+	{if $event->totals}
 		<h1 class="post-title entry-title">Leader Board</h1>
+		<h4>After {$event->totals.total_rounds} Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)</h4>
 
-
-
-
-
-
-		{$perpage=4}
-		{if $event->info.event_type_code=='f3b'}
-			{$perpage=8}
+		<table width="100%" cellpadding="2" cellspacing="2">
+		<tr>
+			<td width="2%" align="left"></td>
+			<th width="10%" align="left" nowrap>Pilot Name</th>
+			<th width="5%" nowrap>Sub</th>
+			<th width="5%" nowrap>Drop</th>
+			<th width="5%" nowrap>Pen</th>
+			<th width="5%" nowrap>Total</th>
+			<th width="5%" nowrap>Diff</th>
+		</tr>
+		{$previous=0}
+		{$diff_to_lead=0}
+		{$diff=0}
+		{foreach $event->totals.pilots as $e}
+		{if $e.total>$previous}
+			{$previous=$e.total}
+		{else}
+			{$diff=$previous-$e.total}
+			{$diff_to_lead=$diff_to_lead+$diff}
 		{/if}
+		{$event_pilot_id=$e.event_pilot_id}
+		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+			<td>{$e.overall_rank|escape}</td>
+			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%03.0f"}</td>
+			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%03.0f"}{/if}</td>
+			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
+			<td width="5%" nowrap align="right">{$e.total|string_format:"%03.0f"}</td>
+			<td width="5%" nowrap align="right"><font color="red">-{if $diff!=0}{$diff|string_format:"%3.0f"}{/if}</font></td>
+		</tr>
+		{$previous=$e.total}
+		{/foreach}
+		</table>
+	{/if}
+
+
+
+
+
+
+		{$perpage=5}
 		{* Lets figure out how many flyoff rounds there are *}
 		{$flyoff_rounds=0}
 		{foreach $event->rounds as $r}
@@ -203,9 +233,9 @@ function check_permission() {ldelim}
 		{/if}
 		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}</h1>
 			{if $page_num==1}
-				{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button">{/if}
-				{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button">{/if}
-				<input type="button" value=" Add Round " onClick="if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}" class="block-button">
+				<input type="button" value=" Add Round " onClick="if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">
+				{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">{/if}
+				{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">{/if}
 			{/if}
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
@@ -214,10 +244,6 @@ function check_permission() {ldelim}
 			<th colspan="{$numrounds+1}" align="center" nowrap>
 				Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
-			<th width="5%" nowrap>Sub</th>
-			<th width="5%" nowrap>Drop</th>
-			<th width="5%" nowrap>Pen</th>
-			<th width="5%" nowrap>Total</th>
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
@@ -246,10 +272,6 @@ function check_permission() {ldelim}
 				</th>
 				{/if}
 			{/foreach}
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
 		{$previous=0}
@@ -317,18 +339,6 @@ function check_permission() {ldelim}
 				{/if}
 			{/foreach}
 			<td></td>
-			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%03.0f"}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%03.0f"}{/if}</td>
-			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
-			<td class="info" width="5%" nowrap align="right">
-				<div style="position:relative;">
-					{$e.total|string_format:"%03.0f"}
-					<span>
-					Behind Prev : {$diff|string_format:"%06.3f"}<br>
-					Behind Lead : {$diff_to_lead|string_format:"%06.3f"}<br>
-					</span>
-				</div>
-			</td>
 		</tr>
 		{$previous=$e.total}
 		{/foreach}
