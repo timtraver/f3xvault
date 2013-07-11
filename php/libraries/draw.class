@@ -16,6 +16,7 @@ class Draw {
 	var $pilots=array();
 	var $teams=array();
 	var $rounds=array();
+	var $grow_only;
 	
 	function Draw($event_draw_id){
 		# Initialization of the class
@@ -29,6 +30,7 @@ class Draw {
 		$this->draw=$result[0];
 		$this->event_id=$this->draw['event_id'];
 		$this->get_pilots();
+		$this->grow_only=0;
 	}
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
@@ -64,12 +66,29 @@ class Draw {
 		$this->teams=$names;
 		return;
 	}
-	function create_random_rounds(){
+	function create_random_rounds($recalc=0){
 		# Function to create the round array for an order type of round
 		# This means we essentially create the random array for speed rounds
+		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
 		
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
+		
+		# Lets turn off any rounds that are outside the range
+		$stmt=db_prep("
+			UPDATE event_draw_round
+			SET event_pilot_id=0,
+				event_draw_round_group='',
+				event_draw_round_status=0
+			WHERE event_draw_id=:event_draw_id
+				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+				
+		");
+		$result=db_exec($stmt,array(
+			"event_draw_id"=>$this->event_draw_id,
+			"round_from"=>$round_from,
+			"round_to"=>$round_to
+		));
 		
 		$last_team='';
 		for($round=$round_from;$round<=$round_to;$round++){
@@ -110,21 +129,7 @@ class Draw {
 				# This means that the separation didn't work
 				$round--;
 			}
-			# OK, now lets save this round draw info
-			# lets blank the round first
-			$stmt=db_prep("
-				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
-					AND event_draw_round_number=:round
-			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round"=>$round
-			));
-	
+			
 			# Now lets step through the array and save the round info
 			$x=1;
 			foreach($order as $key=>$o){
@@ -136,6 +141,7 @@ class Draw {
 					WHERE event_draw_id=:event_draw_id
 						AND event_draw_round_number=:round
 						AND event_draw_round_order=:event_draw_round_order
+						AND event_draw_round_status=1
 				");
 				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
 				if(isset($result[0])){
@@ -160,35 +166,78 @@ class Draw {
 						"x"=>$x
 					));
 				}else{
-					# Update an existing record
-					$stmt=db_prep("
-						UPDATE event_draw_round
-						SET event_pilot_id=:event_pilot_id,
-							event_draw_round_group='',
-							event_draw_round_order=:x,
-							event_draw_round_status=1
-						WHERE event_draw_round_id=:event_draw_round_id
-					");
-					$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+					if($recalc==1){
+						# Update an existing record if its being recalced
+						$stmt=db_prep("
+							UPDATE event_draw_round
+							SET event_pilot_id=:event_pilot_id,
+								event_draw_round_group='',
+								event_draw_round_order=:x,
+								event_draw_round_status=1
+							WHERE event_draw_round_id=:event_draw_round_id
+						");
+						$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+					}
 				}
 				$x++;
 			}
 		}
 		return;
 	}
-	function create_random_step_rounds(){
+	function create_random_step_rounds($recalc=0){
 		# Function to create the round array for an random draw with a step
 		# We create the first round as random, and then step the pilots forward X amount every round
+		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
 		
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
 		
+		# Lets turn off any rounds that are outside the range
+		$stmt=db_prep("
+			UPDATE event_draw_round
+			SET event_pilot_id=0,
+				event_draw_round_group='',
+				event_draw_round_status=0
+			WHERE event_draw_id=:event_draw_id
+				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+				
+		");
+		$result=db_exec($stmt,array(
+			"event_draw_id"=>$this->event_draw_id,
+			"round_from"=>$round_from,
+			"round_to"=>$round_to
+		));
+		
+		$existing_first=array();
+		if($recalc==0){
+			# Lets see if we can get the first round of the existing range to use as the start order
+			$stmt=db_prep("
+				SELECT *
+				FROM event_draw_round edr
+				LEFT JOIN event_pilot ep ON edr.event_pilot_id=ep.event_pilot_id
+				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+				WHERE edr.event_draw_id=:event_draw_id
+					AND edr.event_draw_round_number=:round_from
+					AND edr.event_draw_round_status=1
+			");
+			$existing_first=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round_from"=>$round_from
+			));
+		}
+				
 		$last_team='';
 		$first_round=1;
 		$order=array();
 		$step=$this->draw['event_draw_step_size'];
 		for($round=$round_from;$round<=$round_to;$round++){
 			$round_ok=1;
+			
+			if($first_round && count($existing_first)>0 && $recalc==0){
+				$order=$existing_first;
+				$first_round=0;
+				continue;
+			}
 			
 			if($first_round){
 				$pilots=$this->pilots;
@@ -237,22 +286,7 @@ class Draw {
 				}
 			}
 			$first_round=0;
-			
-			# OK, now lets save this round draw info
-			# lets blank the round first
-			$stmt=db_prep("
-				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
-					AND event_draw_round_number=:round
-			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round"=>$round
-			));
-	
+				
 			# Now lets step through the array and save the round info
 			$x=1;
 			foreach($order as $key=>$o){
@@ -264,6 +298,7 @@ class Draw {
 					WHERE event_draw_id=:event_draw_id
 						AND event_draw_round_number=:round
 						AND event_draw_round_order=:event_draw_round_order
+						AND event_draw_round_status=1
 				");
 				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
 				if(isset($result[0])){
@@ -289,15 +324,17 @@ class Draw {
 					));
 				}else{
 					# Update an existing record
-					$stmt=db_prep("
-						UPDATE event_draw_round
-						SET event_pilot_id=:event_pilot_id,
-							event_draw_round_group='',
-							event_draw_round_order=:x,
-							event_draw_round_status=1
-						WHERE event_draw_round_id=:event_draw_round_id
-					");
-					$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+					if($recalc==1){
+						$stmt=db_prep("
+							UPDATE event_draw_round
+							SET event_pilot_id=:event_pilot_id,
+								event_draw_round_group='',
+								event_draw_round_order=:x,
+								event_draw_round_status=1
+							WHERE event_draw_round_id=:event_draw_round_id
+						");
+						$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+					}
 				}
 				$x++;
 			}

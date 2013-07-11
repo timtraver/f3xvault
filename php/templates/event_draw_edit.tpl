@@ -11,13 +11,22 @@ function check_draw_step(){ldelim}
 		document.getElementById("draw_step").style.display="none";
 	{rdelim}
 {rdelim}
+function check_protection(){ldelim}
+	if(document.main.event_draw_team_protection.checked==true){ldelim}
+		document.getElementById("no_protection").style.display="none";
+		document.getElementById("with_protection").style.display="block";
+	{rdelim}else{ldelim}
+		document.getElementById("no_protection").style.display="block";
+		document.getElementById("with_protection").style.display="none";
+	{rdelim}
+{rdelim}
 </script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                	
 	<br>
 	<h2 style="color:red;">Under Construction...</h2>
-<h1 class="post-title entry-title">Draw Create
+<h1 class="post-title entry-title">Draw {if $event_draw_id==0}Create{else}Edit{/if}
 		<input type="button" value=" Back To Event Draws " onClick="goback.submit();" class="block-button">
 </h1>
 	
@@ -32,7 +41,11 @@ function check_draw_step(){ldelim}
 <tr>
 	<th width="20%" nowrap>Draw Flight Type</th>
 	<td>
-		{$ft.flight_type_name}
+		{if $event->info.event_type_code=='f3k'}
+			F3K
+		{else}
+			{$ft.flight_type_name}
+		{/if}
 	</td>
 </tr>
 <tr>
@@ -69,7 +82,7 @@ function check_draw_step(){ldelim}
 <tr>
 	<th nowrap>Team Protection</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1} CHECKED{/if} onChange="set_changed();"> This will not have team pilots matched up against each other.
+		<input type="checkbox" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1} CHECKED{/if} onChange="set_changed();check_protection();"> This will not have team pilots matched up against each other.
 	</td>
 </tr>
 <tr>
@@ -77,10 +90,17 @@ function check_draw_step(){ldelim}
 	<td>
 		<span id="no_protection">
 			<select name="groups">
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
 			</select>
 		</span>
-		<span id="with_protection">
+		<span id="with_protection" style="display:none;">
 			<select name="groups">
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
 			</select>
 		</span>
 		<input type="hidden" name="event_draw_number_groups" value="">
@@ -95,9 +115,20 @@ function check_draw_step(){ldelim}
 	</td>
 </tr>
 {/if}
+{if $event_draw_id!=0}
+<tr>
+	<th nowrap>Save Parameters</th>
+	<td>
+		<input type="radio" name="recalc" value="grow" onChange="set_changed();" CHECKED> Grow or shrink rounds keeping existing rounds intact<br>
+		<input type="radio" name="recalc" value="recalc" onChange="set_changed();"> Recalculate draw with new draw values
+	</td>
+</tr>
+{else}
+<input type="hidden" name="recalc" value="recalc">
+{/if}
 <tr>
 	<td colspan="2">
-		<input type="button" value=" {if $event_draw_id==0}Create{else}Save{/if} {$ft.flight_type_name} Draw " class="block-button" onClick="if(changed==1 && document.main.event_draw_id.value!=0){ldelim}confirm('You have changed the draw values. Do you wish to re-calculate the draw?') && document.main.submit();{rdelim}else{ldelim}document.main.submit();{rdelim}">
+		<input type="button" value=" {if $event_draw_id==0}Create{else}Save{/if} Draw " class="block-button" onClick="if(changed==1 && document.main.event_draw_id.value!=0){ldelim}confirm('You have changed the draw values. Are you sure you wish to save the draw?') && document.main.submit();{rdelim}else{ldelim}document.main.submit();{rdelim}">
 	</td>
 </tr>
 </table>

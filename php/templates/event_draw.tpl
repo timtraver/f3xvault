@@ -63,7 +63,14 @@
 	<th nowrap>Statistics</th>
 	<th width="40%" nowrap>Action</th>
 </tr>
+
+
+
+{$f3k_first=0}
 {foreach $event->flight_types as $ft}
+	{if $f3k_first!=0}
+		{continue}
+	{/if}
 	{$total=0}
 	{foreach $event->draws as $d}
 		{if $d.flight_type_id==$ft.flight_type_id}
@@ -72,7 +79,13 @@
 	{/foreach}
 	{if $total==0}
 		<tr>
-			<th width="20%" nowrap>{$ft.flight_type_name}</th>
+			<th width="20%" nowrap>
+				{if $event->info.event_type_code=='f3k'}
+					F3K
+				{else}
+					{$ft.flight_type_name}
+				{/if}
+			</th>
 			<td colspan="4">No draws created</td>
 		</tr>
 	{else}	
@@ -98,22 +111,32 @@
 				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
 					View Statistics
 				{/if}
-				<a href="?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1" target="_blank"><input type="button" value="View Draw" class="button"></a>
+				<input type="button" value="View Draw" class="button" onClick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');">
 			</td>
 			<td nowrap>
 				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
-				<a href="?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}"><input type="button" value="Edit" class="button"></a>
+				<input type="button" value="Edit" class="button" onClick="location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
 				<input type="button" value="UnApply" class="button" onClick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the current and future rounds?')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 			</td>
 			</tr>
 		{/foreach}
 	{/if}
+	{if $event->info.event_type_code=='f3k'}
+		{$f3k_first=1}
+	{/if}
 {/foreach}
 <tr>
 	<td colspan="7" style="padding-top:10px;">
+		{$f3k_first=0}
 		{foreach $event->flight_types as $ft}
-		<input type="button" value=" Create {$ft.flight_type_name} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
+		{if $f3k_first!=0}
+			{continue}
+		{/if}
+		<input type="button" value=" Create {if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
+		{if $event->info.event_type_code=='f3k'}
+			{$f3k_first=1}
+		{/if}
 		{/foreach}
 	</td>
 </tr>
@@ -122,7 +145,11 @@
 
 <h1 class="post-title entry-title">Printing Draws</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+{$f3k_first=0}
 {foreach $event->flight_types as $ft}
+	{if $f3k_first!=0}
+		{continue}
+	{/if}
 {$flight_type_id=$ft.flight_type_id}
 <form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
 <input type="hidden" name="action" value="event">
@@ -132,7 +159,7 @@
 <input type="hidden" name="print_type" value="">
 <input type="hidden" name="use_print_header" value="1">
 <tr>
-	<th width="10%" nowrap>{$ft.flight_type_name}</th>
+	<th width="10%" nowrap>{if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if}</th>
 	<td style="padding-top:10px;">
 		Rounds
 		<select name="print_round_from">
@@ -159,6 +186,9 @@
 	</td>
 </tr>
 </form>
+{if $event->info.event_type_code=='f3k'}
+	{$f3k_first=1}
+{/if}
 {/foreach}
 </table>
 </form>

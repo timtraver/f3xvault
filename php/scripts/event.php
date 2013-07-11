@@ -2442,6 +2442,10 @@ function event_draw_save(){
 	if(isset($_REQUEST['event_draw_team_separation']) && $_REQUEST['event_draw_team_separation']=='on'){
 		$event_draw_team_separation=1;
 	}
+	$recalc=0;
+	if(isset($_REQUEST['recalc']) && $_REQUEST['recalc']=='recalc'){
+		$recalc=1;
+	}
 	# Get flight type info
 	$ft=array();
 	$stmt=db_prep("
@@ -2492,6 +2496,7 @@ function event_draw_save(){
 					event_draw_step_size=:event_draw_step_size,
 					event_draw_team_protection=:event_draw_team_protection,
 					event_draw_team_separation=:event_draw_team_separation
+				WHERE event_draw_id=:event_draw_id
 			");
 			$result=db_exec($stmt,array(
 				"event_draw_round_from"=>$event_draw_round_from,
@@ -2500,28 +2505,29 @@ function event_draw_save(){
 				"event_draw_number_groups"=>$event_draw_number_groups,
 				"event_draw_step_size"=>$event_draw_step_size,
 				"event_draw_team_protection"=>$event_draw_team_protection,
-				"event_draw_team_separation"=>$event_draw_team_separation
+				"event_draw_team_separation"=>$event_draw_team_separation,
+				"event_draw_id"=>$event_draw_id
 			));
-		}	
+		}
+		
 		include_library('draw.class');
 		$draw=new Draw($event_draw_id);
-	
+
 		# OK, I guess lets build the draw elements now
 		switch($event_draw_type){
 			case 'random':
 				# This is an order task (speed)
-				$draw->create_random_rounds();
+				$draw->create_random_rounds($recalc);
 				break;
 			case 'random_step':
 				# This is an order task (speed) with a step progression
-				$draw->create_random_step_rounds();
+				$draw->create_random_step_rounds($recalc);
 				break;
 			case 'group':
 				# This is an group task
-				$draw->create_group_rounds();
+				$draw->create_group_rounds($recalc);
 				break;
 		}
-
 	}
 	return event_draw();
 }
