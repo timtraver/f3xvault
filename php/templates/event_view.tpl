@@ -203,20 +203,14 @@ function check_permission() {ldelim}
 		<br>
 
 
-		{$perpage=9}
-		{if $event->info.event_type_code=='f3b'}
-			{$perpage=8}
-		{/if}
-		{* Lets figure out how many flyoff rounds there are *}
+		{$perpage=8}
+		{* Lets figure out how many flyoff and zero  rounds there are *}
 		{$flyoff_rounds=0}
+		{$zero_rounds=0}
 		{foreach $event->rounds as $r}
 			{if $r.event_round_flyoff!=0}
 				{$flyoff_rounds=$flyoff_rounds+1}
 			{/if}
-		{/foreach}
-		{* Lets figure out how many zero rounds there are *}
-		{$zero_rounds=0}
-		{foreach $event->rounds as $r}
 			{if $r.event_round_number==0}
 				{$zero_rounds=$zero_rounds+1}
 			{/if}
@@ -242,7 +236,7 @@ function check_permission() {ldelim}
 		
 		{for $page_num=1 to $pages}
 		{if $page_num>1}
-			{$numrounds=$end_round-$start_round+1}
+			{$numrounds=$end_round-$start_round + 1}
 		{/if}
 		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if} Overall Classification
 			{if $page_num==1}
@@ -411,7 +405,7 @@ function check_permission() {ldelim}
 		{/if}
 		</table>
 		{$start_round=$end_round+1}
-		{$end_round=$start_round+$perpage}
+		{$end_round=$start_round+$perpage - 1}
 		{if $end_round>$prelim_rounds}
 			{$end_round=$prelim_rounds - $zero_rounds}
 		{/if}

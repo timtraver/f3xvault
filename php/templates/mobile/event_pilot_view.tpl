@@ -144,67 +144,50 @@
 					{/if}
 					{if $ft.flight_type_group}
 						<td align="center" nowrap style="background-color: {$bgcolor};">
-							{if $r.flights.$flight_type_id.event_round_flight_score==1}
 							{$values.event_pilot_round_flight_group|escape}{if $values.event_pilot_round_flight_reflight}(R){/if}
-							{/if}
 						</td>					
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 						<td align="right" nowrap style="background-color: {$bgcolor};">
-							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							
-								{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
-									{foreach $values.sub as $s}
-									<span style="background-color: #9DCFF0;padding: 3px;">{$s.event_pilot_round_flight_sub_val|escape}</span>
-									{/foreach}
-									= 
-								{/if}
-								{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes|escape}m{/if}
-								{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds|escape}s{/if}
+							{if $r.flights.$flight_type_id.flight_type_sub_flights!=0}
+								{foreach $values.sub as $s}
+								<span style="background-color: #9DCFF0;padding: 3px;">{$s.event_pilot_round_flight_sub_val|escape}</span>
+								{/foreach}
+								= 
 							{/if}
+							{if $ft.flight_type_minutes}{$values.event_pilot_round_flight_minutes|escape}m{/if}
+							{if $ft.flight_type_seconds}{$values.event_pilot_round_flight_seconds|escape}s{/if}
 						</td>
 					{/if}
 					{if $ft.flight_type_landing}
 						<td align="center" style="background-color: {$bgcolor};">
-							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_landing|escape}
-							{/if}
+							{$values.event_pilot_round_flight_landing|escape}
 						</td>
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" style="background-color: {$bgcolor};">
-							{if $r.flights.$flight_type_id.event_round_flight_score==1}
-								{$values.event_pilot_round_flight_laps|escape}
-							{/if}
+							{$values.event_pilot_round_flight_laps|escape}
 						</td>
 					{/if}
 					<td align="right" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
-								{$values.event_pilot_round_flight_raw_score|escape}
-							{else}
-								{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
-							{/if}
+						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+							{$values.event_pilot_round_flight_raw_score|escape}
+						{else}
+							{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
 						{/if}
 					</td>
 					<td align="right" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{if $values.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
-							{$values.event_pilot_round_flight_score|string_format:"%06.3f"}
-							{if $values.event_pilot_round_flight_dropped==1}</font></del>{/if}
-							{$round_total=$round_total+$values.event_pilot_round_flight_score}
-						{/if}
+						{if $values.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
+						{$values.event_pilot_round_flight_score|string_format:"%06.3f"}
+						{if $values.event_pilot_round_flight_dropped==1}</font></del>{/if}
+						{$round_total=$round_total+$values.event_pilot_round_flight_score}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty|escape}{/if}
-							{$round_pen=$round_pen+$values.event_pilot_round_flight_penalty}
-						{/if}
+						{if $values.event_pilot_round_flight_penalty!=0}{$values.event_pilot_round_flight_penalty|escape}{/if}
+						{$round_pen=$round_pen+$values.event_pilot_round_flight_penalty}
 					</td>
 					<td align="center" nowrap style="background-color: {$bgcolor};">
-						{if $r.flights.$flight_type_id.event_round_flight_score==1}
-							{$values.event_pilot_round_flight_rank|escape}
-						{/if}
+						{$values.event_pilot_round_flight_rank|escape}
 					</td>
 				{/foreach}
 				{foreach $event->totals.pilots as $p}
