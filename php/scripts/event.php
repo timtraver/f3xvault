@@ -2936,4 +2936,21 @@ function event_draw_view() {
 	$maintpl=find_template($template);
 	return $smarty->fetch($maintpl);
 }
+function event_chart() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->calculate_event_totals();
+	
+	$smarty->assign("event",$e);
+	$smarty->assign("event_id",$event_id);
+	
+	$maintpl=find_template("event_chart.tpl");
+	return $smarty->fetch($maintpl);
+}
+
 ?>

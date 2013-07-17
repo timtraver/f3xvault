@@ -563,6 +563,7 @@ function check_permission() {ldelim}
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
 <input id="printround" type="button" value=" Print Round Detail " onClick="$('#print_round').dialog('open');" class="block-button">
+<input type="button" value=" View Position Chart " onClick="chart.submit();" class="block-button">
 {if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 {/if}
@@ -868,6 +869,11 @@ function check_permission() {ldelim}
 <input type="hidden" name="function" value="event_print_overall">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="chart" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_chart">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="print_stats" method="GET" action="?" target="_blank">
 <input type="hidden" name="action" value="event">
