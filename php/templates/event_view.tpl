@@ -870,7 +870,7 @@ function check_permission() {ldelim}
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="use_print_header" value="1">
 </form>
-<form name="chart" method="GET" action="?" target="_blank">
+<form name="chart" method="GET" action="?">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_chart">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">

@@ -101,6 +101,6 @@ $(function () {ldelim}
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>

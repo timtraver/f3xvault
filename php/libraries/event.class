@@ -1409,6 +1409,21 @@ class Event {
 					}
 				}	
 			}
+			# Now we have to include any penalties that we might find in those rounds
+			foreach($this->rounds as $ern=>$er){
+				if($ern>$event_round_number || $er['event_round_score_status']==0 ){
+					continue;
+				}
+				# Lets step through each of the pilots and see if there were any penalties
+				foreach($er['flights'] as $f){
+					foreach($f['pilots'] as $epid=>$epf){
+						if($epf['event_pilot_round_flight_penalty']!=0){
+							$pilots[$epid]['subtotal']-=$epf['event_pilot_round_flight_penalty'];
+						}
+					}
+				}
+			}
+			
 			#print "event_round_number=$event_round_number<br>\n";
 			#print "drops=$drops<br>\n";
 			arsort($pilots);
