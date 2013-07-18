@@ -1366,5 +1366,69 @@ class Event {
 		return;
 	}
 	
+	function get_running_totals(){
+		# Function to figure out the running totals for each round
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		# First, lets get the round drop values
+		foreach($this->options as $o){
+			if(preg_match("/\_drop\d/",$o['event_type_option_code']) && !preg_match("/flyoff\_drop/",$o['event_type_option_code'])){
+				$drop_rounds[]=$o['event_option_value'];
+			}
+		}
+		# Lets step through each round and get the totals
+		$drops=0;
+		foreach($this->rounds as $event_round_number=>$r){
+			if(in_array($event_round_number,$drop_rounds)){
+				$drops++;
+			}
+			if($r['event_round_score_status']==0){
+				continue;
+			}
+			$pilots=array();
+			foreach($this->totals['pilots'] as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				foreach($p['rounds'] as $ern=>$pr){
+					if($ern>$event_round_number || $pr['event_round_score_status']==0 ){
+						continue;
+					}
+					$pilots[$event_pilot_id]['subtotal']+=$pr['event_pilot_round_total_score'];
+					$pilots[$event_pilot_id]['flight_scores'][]=$pr['event_pilot_round_total_score'];
+				}
+			}
+			if($drops!=0){
+				# We have to drop the lowest scores from the subtotal
+				foreach($pilots as $event_pilot_id=>$p){
+					$temparray=$p['flight_scores'];
+					arsort($temparray);
+					$dropped=0;
+					while($dropped<$drops){
+						$pilots[$event_pilot_id]['subtotal']-=array_pop($temparray);
+						$dropped++;
+					}
+				}	
+			}
+			#print "event_round_number=$event_round_number<br>\n";
+			#print "drops=$drops<br>\n";
+			arsort($pilots);
+			
+			# Now lets sort the array to determine the position
+			$pos=1;
+			$temp=array_msort($pilots,array('subtotal'=>SORT_ASC));
+			foreach($pilots as $event_pilot_id=>$p){
+				foreach($this->totals['pilots'] as $key=>$tp){
+					if($event_pilot_id!=$tp['event_pilot_id']){
+						continue;
+					}
+					$this->totals['pilots'][$key]['rounds'][$event_round_number]['event_round_upto_rank']=$pos;
+					$this->totals['pilots'][$key]['rounds'][$event_round_number]['event_round_upto_sub']=$p['subtotal'];
+				}
+				$pos++;
+			}
+		}
+		return;
+	}
+	
 }
 ?>

@@ -2945,6 +2945,7 @@ function event_chart() {
 	$e->get_teams();
 	$e->get_rounds();
 	$e->calculate_event_totals();
+	$e->get_running_totals();
 	
 	$smarty->assign("event",$e);
 	$smarty->assign("event_id",$event_id);
