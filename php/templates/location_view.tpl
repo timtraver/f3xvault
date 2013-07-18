@@ -62,13 +62,13 @@
 <tr>
 	<th valign="top">Full Location Description</th>
 	<td colspan="2">
-		<pre syle="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">{$location.location_description|escape}</pre>
+		<pre style="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">{$location.location_description|escape}</pre>
 	</td>
 </tr>
 <tr>
 	<th valign="top">Location Directions</th>
 	<td colspan="2">
-		<pre syle="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">{$location.location_directions|escape}</pre>
+		<pre style="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">{$location.location_directions|escape}</pre>
 	</td>
 </tr>
 <tr>
