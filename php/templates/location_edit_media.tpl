@@ -70,7 +70,7 @@
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="location">
-<input type="hidden" name="function" value="location_edit">
+<input type="hidden" name="function" value="location_view">
 <input type="hidden" name="location_id" value="{$location_id}">
 </form>
 

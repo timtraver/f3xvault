@@ -6,7 +6,7 @@
 <h1 class="post-title entry-title">Location Details <input type="button" value=" Edit Location Information " class="button" onClick="location_edit.submit();"></h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Location Name</th>
+	<th nowrap>Site Name</th>
 	<td>{$location.location_name|escape}</td>
 	<th style="text-align: center;">Location Media</th>
 </tr>
@@ -23,7 +23,7 @@
 	{assign var="found" value="0"}
 	{foreach $media as $m}
 		{if $m.location_media_type=='video' && $found==0}
-			<a data-trigger-rel="gallery" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">View Videos</a>
+			<a data-trigger-rel="videos" class="fancybox-trigger" href="{$m.location_media_url}" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}">View Videos</a>
 			{assign var="found" value="1"}
 		{/if}
 	{/foreach}
@@ -34,13 +34,13 @@
 	</td>
 </tr>
 <tr>
-	<th>Location Map Coordinates</th>
+	<th nowrap>Map Coordinates</th>
 	<td>
 		{$location.location_coordinates|escape} {if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name|escape})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
 	</td>
 </tr>
 <tr>
-	<th valign="top">Location Flying Disciplines</th>
+	<th valign="top">Flying Disciplines</th>
 	<td>
 		{foreach $disciplines as $d}
 		{$d.discipline_description|escape}<br>
@@ -62,17 +62,17 @@
 <tr>
 	<th valign="top">Full Location Description</th>
 	<td colspan="2">
-		{$location.location_description|escape}
+		<pre>{$location.location_description|escape}</pre>
 	</td>
 </tr>
 <tr>
 	<th valign="top">Location Directions</th>
 	<td colspan="2">
-		{$location.location_directions|escape}
+		<pre>{$location.location_directions|escape}</pre>
 	</td>
 </tr>
 <tr>
-	<th valign="top">Location Attributes</th>
+	<th valign="top">Attributes</th>
 	<td colspan="3">
 		{if $location_attributes}
 		<table width="100%" cellspacing="0" cellspadding="1" style="border-style: none;">
@@ -128,6 +128,15 @@
 		<a href="{$m.location_media_url}" rel="videos" class="fancybox-media" title="{if $m.user_id!=0}{$m.pilot_first_name|escape}, {$m.pilot_city|escape} - {/if}{$m.location_media_caption|escape}"><img src="/images/icons/webcam.png" style="border-style: none;"></a>
 	{/if}
 {/foreach}
+
+<input type="button" name="media" value="Add New Location Media" onClick="add_media.submit()" class="block-button" {if $location.location_id==0}disabled="disabled" style=""{/if}>
+
+<form name="add_media" method="GET">
+<input type="hidden" name="action" value="location">
+<input type="hidden" name="function" value="location_media_edit">
+<input type="hidden" name="location_id" value="{$location.location_id}">
+</form>
+
 </div>
 </div>
 </div>

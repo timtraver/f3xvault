@@ -10,12 +10,12 @@
 <input type="hidden" name="location_id" value="{$location.location_id|escape}">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th>Location Name</th>
+	<th>Name</th>
 	<td><input type="text" size="50" name="location_name" value="{$location.location_name|escape}"></td>
-	<th>Location Disciplines</th>
+	<th>Disciplines</th>
 </tr>
 <tr>
-	<th>Location City</th>
+	<th>City</th>
 	<td>
 		<input type="text" size="50" name="location_city" value="{$location.location_city|escape}">
 	</td>
@@ -26,7 +26,7 @@
 	</td>
 </tr>
 <tr>
-	<th>Location State</th>
+	<th>State</th>
 	<td>
 		<select name="state_id">
 		{foreach $states as $state}
@@ -36,7 +36,7 @@
 	</td>
 </tr>
 <tr>
-	<th>Location Country</th>
+	<th>Country</th>
 	<td>
 		<select name="country_id">
 		{foreach $countries as $country}
@@ -58,11 +58,11 @@
 	<td><input type="text" size="50" name="location_club_url" value="{$location.location_club_url|escape}"></td>
 </tr>
 <tr>
-	<th valign="top">Location Description</th>
+	<th valign="top">Description</th>
 	<td colspan="2"><textarea cols="70" rows="10" name="location_description">{$location.location_description|escape}</textarea></td>
 </tr>
 <tr>
-	<th valign="top">Location Detailed Directions</th>
+	<th valign="top">Detailed Directions</th>
 	<td colspan="2"><textarea cols="70" rows="10" name="location_directions">{$location.location_directions|escape}</textarea></td>
 </tr>
 <tr>

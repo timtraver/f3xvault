@@ -618,7 +618,7 @@ function location_save() {
 		$from['from_action']='location';
 		return return_to_action($from);
 	}else{
-		return location_list();
+		return location_view();
 	}
 }
 function location_media_edit() {
@@ -702,7 +702,7 @@ function location_media_add() {
 
 	log_action($location_id);
 	user_message("Added your $location_media_type media!");
-	return location_edit();
+	return location_view();
 }
 function location_media_del() {
 	global $user;

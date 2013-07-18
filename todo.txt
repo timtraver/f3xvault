@@ -4,67 +4,77 @@ Todo list for f3xvault project
 
 GENERAL
     
-=  Send welcome email once registered and save it as their first message
-  
-  Create a "Using this site" kind of tutorial instructions
-  
-  Create a "send location" link to a buddy
-  
-  Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
-  
-  Separate print buttons for preliminaries and flyoffs
-  
-=  Add blog menu item and set up simple wordpress blog
+=	Send welcome email once registered and save it as their first message
+	Create a "Using this site" kind of tutorial instructions
+	Create a "send location" link to a buddy
+	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
+	Separate print buttons for preliminaries and flyoffs
+=	Add blog menu item and set up simple wordpress blog
   
 LOCATION STUFF
+	Add Map waypoints to make for better maps
+
 
 PLANE STUFF
+	Add layup types as a function to the planes
+	Add Root chord width and AR calculation to plane db
 	Build log links!
 	Setup links!
 	
 EVENT STUFF
   
-  Have a setting for top X teammates to be used in the team standings
+	Make it so that the even only recalculates on the main screen if its the owner of the event, not people just watching
+	Don't allow the user to select the sort type until after the round is saved
   
-  For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
-  	and when adding new flyoff rounds, only those pilots are shown.
+	Have a setting for top X teammates to be used in the team standings
   
-  Draw
-  	ability to create F3B distance orders before hand
-    draw types
+	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
+		and when adding new flyoff rounds, only those pilots are shown.
+  
+	Draw
+		ability to create F3B distance orders before hand
+		draw types
 X    	random order
 X    	staggered order for F3F
     	set number of groups
-X   make the printing of the draws use the current rounds and the draw rounds
-X	have draw view buttons to show draw even if not active
-X	When adding a round, default apply the draw and sort it by the draw order or group
-X    check for overlap when applying new draw
+X		make the printing of the draws use the current rounds and the draw rounds
+X		have draw view buttons to show draw even if not active
+X		When adding a round, default apply the draw and sort it by the draw order or group
+X			check for overlap when applying new draw
     
-  Flyoff capability
-	Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
+	Flyoff capability
+		Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
 	
-  When event is completed, have a function to blast the link to the event to the event participants if members
+	When event is completed, have a function to blast the link to the event to the event participants if members
   
-  Add Pilot Event Number for contests that might have bibs
-  	Add this number to the classification screen
-  		to the event pilot list
-  		to the event pilot detail report
-  		to the round edits
+	Add Pilot Event Number for contests that might have bibs
+		Add this number to the classification screen
+			to the event pilot list
+			to the event pilot detail report
+			to the round edits
   		
-  When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
+	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
   
 SERIES STUFF
 	print series pilot detail view
 	
 OTHER STUFF
-  Put a "Send This Pilot a Message" button on the pilot view screen
-  Add Events and Series to club view screen
+	Put a "Send This Pilot a Message" button on the pilot view screen
+	Add Events and Series to club view screen
  
 MOBILE STUFF
-  Mobile score entry by end user
+	Mobile score entry by end user
+	Change code for mobile maps to show correctly
+	Ability to expand with the fingers
+	Change the menu icon, or include some kind of popup so they know where it is
+	
+
 
 COMPLETED
  
+X	Fix viewing of videos in the media window
+X	Put an add media button at the bottom to more quickly add media
+X	Make the directions and description area a pre format area
 X Create a mobile version of the site to be able to view locations, planes, and events
 X Printing of CD report so that speed and f3f rounds don't have to be 1 per page depending on number of pilots
 X Ability to enter DNF and DNS to F3F rounds and have them show on event Overall
