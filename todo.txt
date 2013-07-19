@@ -14,7 +14,6 @@ GENERAL
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 
-
 PLANE STUFF
 	Add layup types as a function to the planes
 	Add Root chord width and AR calculation to plane db

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-07-16 23:55:04
+<?php /* Smarty version Smarty-3.1.11, created on 2013-07-19 00:37:29
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1374043345,
+      1 => 1374214747,
       2 => 'file',
     ),
   ),
@@ -1254,7 +1254,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 ">
 <input type="hidden" name="use_print_header" value="1">
 </form>
-<form name="chart" method="GET" action="?" target="_blank">
+<form name="chart" method="GET" action="?">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_chart">
 <input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
