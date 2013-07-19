@@ -107,7 +107,7 @@ $(function() {
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
-			<th colspan="{if $series->totals.total_events > 10}11{else}{$series->totals.total_events + 1}{/if}" align="center" nowrap>
+			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
 				Completed Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect)
 			</th>
 			<th width="5%" nowrap>Total Score</th>
@@ -143,11 +143,14 @@ $(function() {
 						{$drop=$p.events.$event_id.dropped}
 						{if $drop==1}<del><font color="red">{/if}
 						{if $p.events.$event_id.event_score!=0}
-						{$p.events.$event_id.event_score|string_format:"%06.3f"}
+						{$p.events.$event_id.event_score|string_format:"%03.0f"}
 						{else}
 						0
 						{/if}
 						{if $drop==1}</font></del>{/if}
+						<span>
+						{$p.events.$event_id.event_score|string_format:"%06.3f"}
+						</span>
 					</div>
 				</td>
 			{/foreach}
