@@ -1394,18 +1394,23 @@ class Event {
 						continue;
 					}
 					$pilots[$event_pilot_id]['subtotal']+=$pr['event_pilot_round_total_score'];
-					$pilots[$event_pilot_id]['flight_scores'][]=$pr['event_pilot_round_total_score'];
+					foreach($pr['flights'] as $ftid=>$prf){
+						$pilots[$event_pilot_id]['flight_scores'][$ftid][]=$prf['event_pilot_round_total_score'];
+					}
 				}
 			}
 			if($drops!=0){
 				# We have to drop the lowest scores from the subtotal
 				foreach($pilots as $event_pilot_id=>$p){
-					$temparray=$p['flight_scores'];
-					arsort($temparray);
-					$dropped=0;
-					while($dropped<$drops){
-						$pilots[$event_pilot_id]['subtotal']-=array_pop($temparray);
-						$dropped++;
+					foreach($p['flight_scores'] as $ftid=>$prf){
+						$temparray=$prf;
+					
+						arsort($temparray);
+						$dropped=0;
+						while($dropped<$drops){
+							$pilots[$event_pilot_id]['subtotal']-=array_pop($temparray);
+							$dropped++;
+						}
 					}
 				}	
 			}

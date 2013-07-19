@@ -45,8 +45,7 @@ $(function () {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">{$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
-		</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
