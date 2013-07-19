@@ -1395,6 +1395,9 @@ class Event {
 					}
 					$pilots[$event_pilot_id]['subtotal']+=$pr['event_pilot_round_total_score'];
 					foreach($pr['flights'] as $ftid=>$prf){
+						if($this->info['event_type_code']=='f3k'){
+							$ftid=1;
+						}
 						$pilots[$event_pilot_id]['flight_scores'][$ftid][]=$prf['event_pilot_round_total_score'];
 					}
 				}
