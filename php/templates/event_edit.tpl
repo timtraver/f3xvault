@@ -282,8 +282,8 @@ function check_event(){
 <tr>
 	<th>Dates</th>
 	<td>
-	{html_select_date prefix="event_start_date" start_year="-2" end_year="+3" day_format="%02d" time=$event->info.event_start_date} to 
-	{html_select_date prefix="event_end_date" start_year="-2" end_year="+3" day_format="%02d" time=$event->info.event_end_date}
+	{html_select_date prefix="event_start_date" start_year="-15" end_year="+3" day_format="%02d" time=$event->info.event_start_date} to 
+	{html_select_date prefix="event_end_date" start_year="-15" end_year="+3" day_format="%02d" time=$event->info.event_end_date}
 	</td>
 </tr>
 <tr>

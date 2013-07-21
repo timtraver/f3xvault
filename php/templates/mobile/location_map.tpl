@@ -97,11 +97,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <br>
 
-
  <div id="googleMap" class="maps-container" style="width: 300px; height: 300px;overflow-x:visible;overflow-y:visible;">
  
  </div>
- 
+
  <br>
 
 </div>
