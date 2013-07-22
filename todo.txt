@@ -22,7 +22,6 @@ PLANE STUFF
 	
 EVENT STUFF
   
-	Make it so that the even only recalculates on the main screen if its the owner of the event, not people just watching
 	Don't allow the user to select the sort type until after the round is saved
   
 	Have a setting for top X teammates to be used in the team standings
@@ -71,6 +70,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Make it so that the even only recalculates on the main screen if its the owner of the event, not people just watching
 X	Fix viewing of videos in the media window
 X	Put an add media button at the bottom to more quickly add media
 X	Make the directions and description area a pre format area

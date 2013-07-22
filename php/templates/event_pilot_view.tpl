@@ -1,8 +1,110 @@
+<script src="/includes/highcharts/js/highcharts.js"></script>
+
+<script>
+$(function () {ldelim} 
+    $('#chart_div').highcharts({ldelim}
+        chart: {ldelim}
+            type: 'line'
+        {rdelim},
+        colors: [
+			'#2f7ed8', 
+			'#8bbc21', 
+			'#FF0000', 
+			'#1aadce', 
+			'#492970',
+			'#f28f43', 
+			'#77a1e5', 
+			'#c42525', 
+			'#a6c96a'
+		],
+        title: {ldelim}
+            text: 'Round Chart'
+        {rdelim},
+        xAxis: {ldelim}
+            title: {ldelim}
+            	text: 'Round'
+        	{rdelim},
+        	tickInterval: 1,
+        	tickPixelInterval: 10
+        {rdelim},
+        yAxis: [{ldelim}
+            title: {ldelim}
+                text: 'Time (s)'
+            {rdelim},
+            min: 25,
+        	tickInterval: 1
+        {rdelim},
+        	{ldelim}
+            title: {ldelim}
+                text: 'Points'
+            {rdelim},
+			opposite: true,
+			tickInterval: 20,
+			min: 0
+        {rdelim}],
+        legend: {ldelim}
+        	align: 'right',
+        	verticalAlign: 'top',
+        	layout: 'vertical',
+        	y: 15,
+        	itemMarginTop: 2
+        {rdelim},
+        series: [
+        	{ldelim}
+        	type: 'column',
+            name: 'Fastest Time',
+            yAxis: 0,
+            data: [
+            {foreach $event->rounds as $r}
+				{$round=$r@key}
+				{foreach $event->flight_types as $ft}
+					{$flight_type_id = $ft@key}
+					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
+						{$fast=($values.event_pilot_round_flight_score*$values.event_pilot_round_flight_seconds)/1000}
+						[{$round},{$fast|string_format:"%03.2f"}]{if !$r@last},{/if}
+				{/foreach}
+			{/foreach}
+				]
+        	{rdelim},
+        	{ldelim}
+        	type: 'line',
+            name: 'Flight Time',
+            yAxis: 0,
+            data: [
+            {foreach $event->rounds as $r}
+				{$round=$r@key}
+				{foreach $event->flight_types as $ft}
+					{$flight_type_id = $ft@key}
+					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
+						[{$round},{$values.event_pilot_round_flight_seconds|escape}]{if !$r@last},{/if}
+				{/foreach}
+			{/foreach}
+				]
+        	{rdelim},
+        	{ldelim}
+        	type: 'line',
+            name: 'Points Lost',
+            yAxis: 1,
+            data: [
+            {foreach $event->rounds as $r}
+				{$round=$r@key}
+				{foreach $event->flight_types as $ft}
+					{$flight_type_id = $ft@key}
+					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
+						{$lost=1000 - $values.event_pilot_round_flight_score}
+						[{$round},{$lost|string_format:"%03.2f"}]{if !$r@last},{/if}
+				{/foreach}
+			{/foreach}
+				]
+        	{rdelim}
+       	]
+    {rdelim});
+{rdelim});
+</script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="document.event_edit.submit();" class="block-button">
-		</h1>
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -198,6 +300,15 @@
 			</tr>
 		{/foreach}
 		</table>
+		
+{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed'}
+	<br>
+	<h1 class="post-title entry-title">Round Position Chart</h1>
+
+    <div id="chart_div" style="width: 900px;height: {30*$event->rounds|count}px;"></div>
+{/if}
+		
+		
 		
 		<br>
 		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
