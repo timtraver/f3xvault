@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>F3X Vault</title>
+		<link rel="icon" type="image/ico" href="/favicon.ico">
 		<link rel='stylesheet' id='graphene-stylesheet-css' href='/graphene.css' type='text/css' media='screen' />
 		<link rel='stylesheet' id='graphene-light-header-css' href='/graphene-style-light.css' type='text/css' media='screen' />
 		
