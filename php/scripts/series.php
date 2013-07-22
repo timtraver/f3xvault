@@ -130,7 +130,7 @@ function series_list() {
 			WHERE se.$search_field $operator :search
 				$addcountry
 				$addstate
-			ORDER BY se.country_id,se.state_id,se.series_name
+			ORDER BY se.country_id,se.state_id,se.series_name desc
 		");
 		$series=db_exec($stmt,array("search"=>$search));
 	}else{
@@ -143,7 +143,7 @@ function series_list() {
 			WHERE 1
 				$addcountry
 				$addstate
-			ORDER BY se.country_id,se.state_id,se.series_name
+			ORDER BY se.country_id,se.state_id,se.series_name desc
 		");
 		$series=db_exec($stmt,array());
 	}

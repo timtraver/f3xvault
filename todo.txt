@@ -13,6 +13,8 @@ GENERAL
   
 LOCATION STUFF
 	Add Map waypoints to make for better maps
+	Add a Competitions held here section
+	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
 
 PLANE STUFF
 	Add layup types as a function to the planes

@@ -2974,18 +2974,19 @@ function event_import() {
 	if($imported){
 		$rawlines=file($import_file);
 		foreach($rawlines as $r){
-			$line_array=explode(",",$r);
+			$templine=trim($r);
+			$line_array=explode(",",$templine);
 			# Lets see what the columns are
 			$lines[]=$line_array;
 		}
 		
 		$columns=array();
 		foreach($lines[0] as $key=>$l){
-			if(preg_match("/\S+/",$l)){
+			if(preg_match("/\S+/",$l) && !preg_match("/^dns/i",$l) && !preg_match("/^dnf/i",$l)){
 				# This column has strings in it
 				$columns[$key]='alpha';
 			}
-			if(preg_match("/\d+/",$l) || $l==''){
+			if(preg_match("/\d+/",$l) || $l=='' || preg_match("/^dns/i",$l) || preg_match("/^dnf/i",$l)){
 				# This column has numbers in it
 				$columns[$key]='numeric';
 			}
@@ -3173,7 +3174,8 @@ function event_import_save() {
 				$event_round_id=$result[0]['event_round_id'];
 				$stmt=db_prep("
 					UPDATE event_round
-					SET event_round_needs_calc=1
+					SET event_round_needs_calc=1,
+						event_round_status=1
 					WHERE event_round_id=:event_round_id
 				");
 				$result2=db_exec($stmt,array(

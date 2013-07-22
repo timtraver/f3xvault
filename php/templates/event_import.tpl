@@ -134,7 +134,7 @@
 				{if $found}<img src="/images/icons/accept.png">{else}<img src="/images/icons/exclamation.png">{/if}
 			{else}
 				{$l}
-				<input type="hidden" name="round_{$line_number}_{$round}" value="{$l|string_format:"%03.3f"}">
+				<input type="hidden" name="round_{$line_number}_{$round}" value="{$l}">
 				{$round=$round+1}
 			{/if}
 		</td>
