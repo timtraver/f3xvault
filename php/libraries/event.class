@@ -298,9 +298,8 @@ class Event {
 				$this->get_pilots();
 				return;
 			}
-		}else{
-			$this->calculate_event_totals();
 		}
+		$this->calculate_event_totals();
 		return;
 	}
 	function get_new_round($event_round_number){
