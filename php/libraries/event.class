@@ -207,6 +207,7 @@ class Event {
 					WHERE epr.event_round_id=:event_round_id
 						AND erf.flight_type_id=:flight_type_id
 						AND erf.event_pilot_round_flight_status=1
+						AND ep.event_pilot_status=1
 					$sort_string
 				");
 				$results=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$flight_type_id));
