@@ -32,7 +32,7 @@ $(function () {ldelim}
                 text: 'Time (s)'
             {rdelim},
             min: 25,
-        	tickInterval: 1
+        	tickInterval: 2
         {rdelim},
         	{ldelim}
             title: {ldelim}
@@ -46,7 +46,6 @@ $(function () {ldelim}
         	align: 'right',
         	verticalAlign: 'top',
         	layout: 'vertical',
-        	y: 15,
         	itemMarginTop: 2
         {rdelim},
         series: [
