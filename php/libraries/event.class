@@ -25,7 +25,7 @@ class Event {
 		# Initialization of the class
 		$this->event_id=$event_id;
 		$stmt=db_prep("
-			SELECT *
+			SELECT *,s.state_id,c.country_id
 			FROM event e
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN state s ON l.state_id=s.state_id
@@ -244,36 +244,60 @@ class Event {
 		}
 		
 		# Lets recalculate any rounds if we need to
-		$stmt=db_prep("
-			SELECT *
-			FROM event_round er
-			WHERE er.event_id=:event_id
-				AND er.event_round_status=1
-				AND er.event_round_needs_calc=1
-			ORDER BY ABS(er.event_round_number)
-		");
-		$needed_recalc=0;
-		$results=db_exec($stmt,array("event_id"=>$this->event_id));
-		foreach($results as $key=>$round){
-			if($round['event_round_needs_calc']==1){
-				$this->calculate_round($round['event_round_number']);
-				$needed_recalc=1;
-				# turn off the recalc for that round
-				$stmt=db_prep("
-					UPDATE event_round
-					SET event_round_needs_calc=0
-					WHERE event_round_id=:event_round_id
-				");
-				$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+		# Lets see if this is the owner of the event or a person allowed to recalculate rounds
+		# This will cut down on the system recalculating rounds when someone is just viewing while rounds are being entered
+		global $user;
+		$try_recalc=0;
+		if($user['user_admin']==1 || $this->info['pilot_id']==$user['pilot_id']){
+			$try_recalc=1;
+		}
+		if($try_recalc==0){
+			# Lets see if there are other users that have permissions that could recalc this event
+			$stmt=db_prep("
+				SELECT *
+				FROM event_user
+				WHERE event_id=:event_id
+					AND event_user_status=1
+			");
+			$results=db_exec($stmt,array("event_id"=>$this->event_id));
+			foreach($results as $u){
+				if($user['pilot_id']==$u['pilot_id']){
+					$try_recalc=1;
+				}
 			}
 		}
-		if($needed_recalc==1){
-			# It needed some rounds recalculated, so lets re-do the rounds
-			$this->get_rounds();
-			$this->calculate_event_totals();	
-			$this->event_save_totals();
-			$this->get_pilots();
-			return;
+		if($try_recalc){
+			$stmt=db_prep("
+				SELECT *
+				FROM event_round er
+				WHERE er.event_id=:event_id
+					AND er.event_round_status=1
+					AND er.event_round_needs_calc=1
+				ORDER BY ABS(er.event_round_number)
+			");
+			$needed_recalc=0;
+			$results=db_exec($stmt,array("event_id"=>$this->event_id));
+			foreach($results as $key=>$round){
+				if($round['event_round_needs_calc']==1){
+					$this->calculate_round($round['event_round_number']);
+					$needed_recalc=1;
+					# turn off the recalc for that round
+					$stmt=db_prep("
+						UPDATE event_round
+						SET event_round_needs_calc=0
+						WHERE event_round_id=:event_round_id
+					");
+					$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+				}
+			}
+			if($needed_recalc==1){
+				# It needed some rounds recalculated, so lets re-do the rounds
+				$this->get_rounds();
+				$this->calculate_event_totals();	
+				$this->event_save_totals();
+				$this->get_pilots();
+				return;
+			}
 		}else{
 			$this->calculate_event_totals();
 		}

@@ -337,6 +337,9 @@ function check_event(){
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
 		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
+		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
+			<input type="button" value=" Import Event " class="block-button" onClick="document.import.submit();">
+		{/if}
 	</th>
 </tr>
 </table>
@@ -411,6 +414,11 @@ function check_event(){
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 {/if}
+</form>
+<form name="import" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_import">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="create_new_location" method="POST">
 <input type="hidden" name="action" value="location">

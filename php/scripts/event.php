@@ -2953,5 +2953,330 @@ function event_chart() {
 	$maintpl=find_template("event_chart.tpl");
 	return $smarty->fetch($maintpl);
 }
+function event_import() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$imported=0;
+	if(isset($_FILES['import_file'])){
+		$import_file=$_FILES['import_file']['tmp_name'];
+		$imported=1;
+	}
+	$event_zero_round=0;
+	if(isset($_REQUEST['event_zero_round']) && ($_REQUEST['event_zero_round']=='on' || $_REQUEST['event_zero_round']==1)){
+		$event_zero_round=1;
+	}
+
+	$event=new Event($event_id);
+
+	# If the file is imported, lets get the content
+	$lines=array();
+	if($imported){
+		$rawlines=file($import_file);
+		foreach($rawlines as $r){
+			$line_array=explode(",",$r);
+			# Lets see what the columns are
+			$lines[]=$line_array;
+		}
+		
+		$columns=array();
+		foreach($lines[0] as $key=>$l){
+			if(preg_match("/\S+/",$l)){
+				# This column has strings in it
+				$columns[$key]='alpha';
+			}
+			if(preg_match("/\d+/",$l) || $l==''){
+				# This column has numbers in it
+				$columns[$key]='numeric';
+			}
+		}
+		
+		# Now lets step through each actual line and look up the pilot for a match
+		foreach($lines as $key=>$l){
+			$pilot_entered=$l[0];
+			$q = trim(urldecode(strtolower($pilot_entered)));
+			$q = '%'.$q.'%';
+			# lets get the first name and last name out of it
+			$words=preg_split("/\s+/",$pilot_entered,2);
+			$first_name=$words[0];
+			$last_name=$words[1];
+			# Do search
+			$found_pilots=array();
+			$pilots=array();
+			$stmt=db_prep("
+				SELECT *
+				FROM pilot p
+				LEFT JOIN state s ON p.state_id=s.state_id
+				LEFT JOIN country c ON p.country_id=c.country_id
+				WHERE LOWER(p.pilot_first_name) LIKE :term1
+					OR LOWER(p.pilot_last_name) LIKE :term2
+					OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
+			");
+			$found_pilots=db_exec($stmt,array("term1"=>$first_name,"term2"=>$last_name,"term3"=>$q));
+			$pilots[]=array("pilot_id"=>0,"pilot_full_name"=>'Add As New Pilot');
+			foreach($found_pilots as $p){
+				$p['pilot_full_name']=$p['pilot_first_name']." ".$p['pilot_last_name'];
+				$pilots[]=$p;
+			}
+			$lines[$key]['pilots']=$pilots;
+		}
+	}
+
+	$smarty->assign("event",$event);
+	$smarty->assign("event_zero_round",$event_zero_round);
+	$smarty->assign("lines",$lines);
+	$smarty->assign("columns",$columns);
+
+	$maintpl=find_template("event_import.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_import_save() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event=new Event($event_id);
+	$event_zero_round=0;
+	if(isset($_REQUEST['event_zero_round']) && ($_REQUEST['event_zero_round']=='on' || $_REQUEST['event_zero_round']==1)){
+		$event_zero_round=1;
+	}
+	
+	# Now this is where we do the save, creating the whole thing
+	# lets first make the array of imported values
+	$import=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/pilot_original_(\d+)/",$key,$match)){
+			$line=$match[1];
+			$import[$line]['pilot_original']=$value;
+		}
+		if(preg_match("/pilot_id_(\d+)/",$key,$match)){
+			$line=$match[1];
+			$import[$line]['pilot_id']=$value;
+		}
+		if(preg_match("/round_(\d+)\_(\d+)/",$key,$match)){
+			$line=$match[1];
+			$round=$match[2];
+			$import[$line]['rounds'][$round]=$value;
+		}
+	}
+
+	$default_state_id=$event->info['state_id'];
+	$default_country_id=$event->info['country_id'];
+	
+	# Now lets step through and create the pilots that don't exist and create the event pilot id's
+	foreach($import as $line=>$i){
+		if($i['pilot_id']==0){
+			# Lets split it up into the first name and last name
+			$words=preg_split("/\s+/",$i['pilot_original'],2);
+			$first_name=$words[0];
+			$last_name=$words[1];
+			
+			# Lets create this pilot
+			$stmt=db_prep("
+				INSERT INTO pilot
+				SET user_id=0,
+					pilot_first_name=:pilot_first_name,
+					pilot_last_name=:pilot_last_name,
+					state_id=:state_id,
+					country_id=:country_id
+			");
+			$result=db_exec($stmt,array(
+				"pilot_first_name"=>$first_name,
+				"pilot_last_name"=>$last_name,
+				"state_id"=>$default_state_id,
+				"country_id"=>$default_country_id
+			));
+			$pilot_id=$GLOBALS['last_insert_id'];
+			# replace the pilot_id in the main array
+			$import[$line]['pilot_id']=$pilot_id;
+			user_message("Created new pilot $first_name $last_name.");
+		}else{
+			$pilot_id=$i['pilot_id'];
+		}
+		# ok, now that we have the pilot id, lets add the pilots to the event
+		# Lets see if one exists already so we don't create lots of new ones if we import it again
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			WHERE event_id=:event_id
+				AND pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		if($result[0]){
+			$event_pilot_id=$result[0]['event_pilot_id'];
+			# This one already exists
+			if($result[0]['event_pilot_status']==0){
+				# We need to update the status to turn them back on
+				$stmt=db_prep("
+					UPDATE event_pilot
+					SET event_pilot_status=1
+					WHERE event_pilot_id=:event_pilot_id
+				");
+				$result2=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+			}
+		}else{
+			# There isn't one, so lets add it
+			$stmt=db_prep("
+				INSERT INTO event_pilot
+				SET event_id=:event_id,
+					pilot_id=:pilot_id,
+					class_id=1,
+					event_pilot_entry_order=:event_pilot_entry_order,
+					event_pilot_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"pilot_id"=>$pilot_id,
+				"event_pilot_entry_order"=>$line
+			));
+			$event_pilot_id=$GLOBALS['last_insert_id'];
+		}
+		
+		# Add the event_pilot_id to the main array now
+		$import[$line]['event_pilot_id']=$event_pilot_id;
+	}	
+
+	# Get default flight_type_id to use
+	foreach($event->flight_types as $flight_type_id=>$ft){
+		$flight_type_id=$ft['flight_type_id'];
+		break;
+	}
+
+	# OK, now that we have all the pilots and event pilot ids, lets create the rounds and data
+	foreach($import as $line=>$i){
+		$event_pilot_id=$i['event_pilot_id'];
+		foreach($i['rounds'] as $round_number=>$time){
+			if($event_zero_round==1){
+				$round_number-=1;
+			}
+			
+			$dns=0;
+			$dnf=0;
+			if(strtolower($time)=='dns'){
+				$dns=1;
+				$time=0;
+			}
+			if(strtolower($time)=='dnf'){
+				$dnf=1;
+				$time=0;
+			}
+			
+			# See if an event round exists
+			$stmt=db_prep("
+				SELECT *
+				FROM event_round
+				WHERE event_id=:event_id
+					AND event_round_number=:event_round_number
+			");
+			$result=db_exec($stmt,array("event_id"=>$event_id,"event_round_number"=>$round_number));
+			if(isset($result[0])){
+				# This event round already exists
+				$event_round_id=$result[0]['event_round_id'];
+				$stmt=db_prep("
+					UPDATE event_round
+					SET event_round_needs_calc=1
+					WHERE event_round_id=:event_round_id
+				");
+				$result2=db_exec($stmt,array(
+					"event_round_id"=>$event_round_id
+				));
+			}else{
+				# Create a new event round
+				$stmt=db_prep("
+					INSERT INTO event_round
+					SET event_id=:event_id,
+						event_round_needs_calc=1,
+						event_round_number=:event_round_number,
+						flight_type_id=:flight_type_id,
+						event_round_score_status=1,
+						event_round_status=1
+				");
+				$result2=db_exec($stmt,array(
+					"event_id"=>$event_id,
+					"event_round_number"=>$round_number,
+					"flight_type_id"=>$flight_type_id
+				));
+				$event_round_id=$GLOBALS['last_insert_id'];
+				
+				# Lets also create a new event_round_flight that is set to on
+				$stmt=db_prep("
+					INSERT INTO event_round_flight
+					SET event_round_id=:event_round_id,
+						flight_type_id=:flight_type_id,
+						event_round_flight_score=1
+				");
+				$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
+			}
+			
+			# We need to get the event_pilot_round_id
+			$stmt=db_prep("
+			SELECT *
+				FROM event_pilot_round epr
+				WHERE epr.event_round_id=:event_round_id
+					AND epr.event_pilot_id=:event_pilot_id
+			");
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
+			if(!isset($result2[0])){
+				# Event pilot round doesn't exist, so lets create one
+				$stmt=db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id=:event_pilot_id,
+						event_round_id=:event_round_id
+				");
+				$result3=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
+				$event_pilot_round_id=$GLOBALS['last_insert_id'];
+			}else{
+				$event_pilot_round_id=$result2[0]['event_pilot_round_id'];
+			}
+			
+			# Now we need to see if a round flight already exists...sheesh
+			$stmt=db_prep("
+				SELECT *
+				FROM event_pilot_round_flight
+				WHERE event_pilot_round_id=:event_pilot_round_id
+				AND flight_type_id=:flight_type_id
+				AND event_pilot_round_flight_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"event_pilot_round_id"=>$event_pilot_round_id,
+				"flight_type_id"=>$event_round_flight_type_id
+			));
+			if(isset($result2[0])){
+				# This one already exists, so lets update it
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_seconds=:value,
+						event_pilot_round_flight_status=1
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result3=db_exec($stmt,array(
+					"event_pilot_round_flight_id"=>$result2[0]['event_pilot_round_flight_id'],
+					"value"=>$time
+				));
+			}else{
+				$stmt=db_prep("
+					INSERT INTO event_pilot_round_flight
+					SET event_pilot_round_id=:event_pilot_round_id,
+						flight_type_id=:flight_type_id,
+						event_pilot_round_flight_seconds=:value,
+						event_pilot_round_flight_dns=:dns,
+						event_pilot_round_flight_dnf=:dnf,
+						event_pilot_round_flight_status=1
+				");
+				$result2=db_exec($stmt,array(
+					"event_pilot_round_id"=>$event_pilot_round_id,
+					"flight_type_id"=>$flight_type_id,
+					"value"=>$time,
+					"dns"=>$dns,
+					"dnf"=>$dnf
+				));
+			}
+		}
+	}
+	$event->get_rounds();
+	$event->calculate_event_totals();
+	
+	return event_view();
+}
+
 
 ?>
