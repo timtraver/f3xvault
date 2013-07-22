@@ -39,7 +39,7 @@ $(function () {ldelim}
                 text: 'Points'
             {rdelim},
 			opposite: true,
-			tickInterval: 20,
+			tickInterval: 25,
 			min: 0
         {rdelim}],
         legend: {ldelim}
