@@ -305,7 +305,7 @@ $(function () {ldelim}
 	<br>
 	<h1 class="post-title entry-title">Round Position Chart</h1>
 
-    <div id="chart_div" style="width: 900px;height: {30*$event->rounds|count}px;"></div>
+    <div id="chart_div" style="width: 900px;"></div>
 {/if}
 		
 		
