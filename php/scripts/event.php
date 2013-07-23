@@ -1960,6 +1960,7 @@ function event_print_overall() {
 	
 	$e=new Event($event_id);
 	$e->get_rounds();
+	$e->calculate_event_totals();
 
 	$smarty->assign("event",$e);
 	
