@@ -18,6 +18,7 @@ global $message_graphic;
 global $debug;
 global $total_queries;
 global $device;
+global $trace;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
@@ -149,6 +150,7 @@ $smarty->assign("fsession",$fsession);
 $smarty->assign("messages",$GLOBALS['messages']);
 $smarty->assign("message_graphic",$GLOBALS['message_graphic']);
 $smarty->assign("total_queries",$GLOBALS['total_queries']);
+$smarty->assign("trace",$GLOBALS['trace']);
 $no_header_footer=0;
 if(isset($_REQUEST['no_header_footer'])){
 	$no_header_footer=$_REQUEST['no_header_footer'];
@@ -174,6 +176,7 @@ if($no_header_footer==1){
 		$footertpl=find_template("footer.tpl");
 	}
 	$smarty->display($footertpl);
+#	print "<!-- trace : $trace -->";
 }
 
 save_fsession();

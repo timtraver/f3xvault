@@ -751,5 +751,12 @@ function convert_seconds_to_colon($seconds){
 	$sec=sprintf("%02d",$mod);
 	return sprintf("%d:%02d",$min,$sec);
 }
-
+function sub_trace(){
+	# This is a small function to add to the subroutine trace string so I can see which routines I am hitting
+	global $trace;
+	
+	$callers=debug_backtrace();
+	$trace.="\n".$callers[1]['function'];
+	return;
+}
 ?>

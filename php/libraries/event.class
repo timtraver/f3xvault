@@ -302,7 +302,6 @@ class Event {
 				return;
 			}
 		}
-		$this->calculate_event_totals();
 		return;
 	}
 	function get_new_round($event_round_number){
