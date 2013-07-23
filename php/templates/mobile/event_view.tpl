@@ -199,7 +199,7 @@ function check_permission() {ldelim}
 
 
 
-		{$perpage=5}
+		{$perpage=4}
 		{* Lets figure out how many flyoff and zero  rounds there are *}
 		{$flyoff_rounds=0}
 		{$zero_rounds=0}
