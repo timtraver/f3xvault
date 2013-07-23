@@ -1,5 +1,6 @@
 <script src="/includes/highcharts/js/highcharts.js"></script>
 
+{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed'}
 <script>
 $(function () {ldelim} 
     $('#chart_div').highcharts({ldelim}
@@ -100,6 +101,7 @@ $(function () {ldelim}
     {rdelim});
 {rdelim});
 </script>
+{/if}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                

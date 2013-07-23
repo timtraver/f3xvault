@@ -754,9 +754,12 @@ function convert_seconds_to_colon($seconds){
 function sub_trace(){
 	# This is a small function to add to the subroutine trace string so I can see which routines I am hitting
 	global $trace;
+	global $trace_on;
 	
-	$callers=debug_backtrace();
-	$trace.="\n".$callers[1]['function'];
+	if($trace_on){
+		$callers=debug_backtrace();
+		$trace.="\n".$callers[1]['function'];
+	}
 	return;
 }
 ?>

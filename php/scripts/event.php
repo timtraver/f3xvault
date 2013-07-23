@@ -293,7 +293,8 @@ function event_view() {
 	
 	$e=new Event($event_id);
 	$e->get_rounds();
-
+	$e->calculate_event_totals();
+	
 	# Lets determine if we need a laps report and an average speed report
 	$laps=0;
 	$speed=0;

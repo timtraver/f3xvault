@@ -19,6 +19,7 @@ global $debug;
 global $total_queries;
 global $device;
 global $trace;
+global $trace_on;
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
@@ -120,6 +121,10 @@ $debug=0;
 if(isset($_REQUEST['debug']) || file_exists("{$GLOBALS['include_paths']['base']}/debug")){
 	$debug=1;
 }
+$trace_on=0;
+if(isset($_REQUEST['trace']) || file_exists("{$GLOBALS['include_paths']['base']}/trace")){
+	$trace_on=1;
+}
 
 # export main template
 start_smarty();
@@ -176,7 +181,9 @@ if($no_header_footer==1){
 		$footertpl=find_template("footer.tpl");
 	}
 	$smarty->display($footertpl);
-#	print "<!-- trace : $trace -->";
+	if($trace_on){
+		print "<!-- trace : $trace \n-->";
+	}
 }
 
 save_fsession();

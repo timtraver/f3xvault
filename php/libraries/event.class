@@ -42,6 +42,7 @@ class Event {
 		$this->get_options();
 		$this->get_pilots();
 		$this->get_flight_types();
+		sub_trace();
 	}
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
@@ -79,6 +80,7 @@ class Event {
 				$this->classes[$class_id]=array("class_id"=>$pilot['class_id'],"class_description"=>$pilot['class_description']);
 			}
 		}
+		sub_trace();
 		return;
 	}
 	function get_options(){
@@ -302,6 +304,7 @@ class Event {
 				return;
 			}
 		}
+		sub_trace();
 		return;
 	}
 	function get_new_round($event_round_number){
@@ -526,6 +529,7 @@ class Event {
 			}
 	
 		}
+		sub_trace();
 		return;
 	}
 	function calculate_flights($event_round_number,$flights){
@@ -666,6 +670,7 @@ class Event {
 				));
 			}
 		}
+		sub_trace();
 		return $flight;
 	}
 	function calculate_event_totals(){
@@ -1012,6 +1017,7 @@ class Event {
 		$this->totals['pilots']= $totals;		
 		
 		$this->flyoff_totals= $flyoff_totals;
+		sub_trace();
 		return;
 	}
 	function event_save_totals(){
@@ -1193,7 +1199,7 @@ class Event {
 				"event_pilot_id"=>$p['event_pilot_id']
 			));
 		}
-
+		sub_trace();
 		return;
 	}
 	function get_top_speeds(){
