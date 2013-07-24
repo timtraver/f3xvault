@@ -858,11 +858,12 @@ function event_pilot_save() {
 	}
 
 	
-	if($event_pilot_id!=0){
+	if($event_pilot_id!=0){		
 		# Lets save this existing event pilot
 		$stmt=db_prep("
 			UPDATE event_pilot
-			SET class_id=:class_id,
+			SET pilot_id=:pilot_id,
+				class_id=:class_id,
 				event_pilot_entry_order=:event_pilot_entry_order,
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
@@ -870,6 +871,7 @@ function event_pilot_save() {
 				WHERE event_pilot_id=:event_pilot_id
 		");
 		$result=db_exec($stmt,array(
+			"pilot_id"=>$pilot_id,
 			"class_id"=>$class_id,
 			"event_pilot_entry_order"=>$event_pilot_entry_order,
 			"event_pilot_freq"=>$event_pilot_freq,
@@ -891,7 +893,8 @@ function event_pilot_save() {
 			# This event_pilot already exists, so lets just update it
 			$stmt=db_prep("
 				UPDATE event_pilot
-				SET class_id=:class_id,
+				SET pilot_id=:pilot_id,
+					class_id=:class_id,
 					event_pilot_entry_order=:event_pilot_entry_order,
 					event_pilot_freq=:event_pilot_freq,
 					event_pilot_team=:event_pilot_team,
@@ -900,6 +903,7 @@ function event_pilot_save() {
 				WHERE event_pilot_id=:event_pilot_id
 			");
 			$result2=db_exec($stmt,array(
+				"pilot_id"=>$pilot_id,
 				"class_id"=>$class_id,
 				"event_pilot_entry_order"=>$event_pilot_entry_order,
 				"event_pilot_freq"=>$event_pilot_freq,
@@ -932,33 +936,6 @@ function event_pilot_save() {
 			));
 			$event_pilot_id=$GLOBALS['last_insert_id'];
 		}
-		
-		# Lets create a single round entry to make sure they show up if there are any rounds already
-#		$stmt=db_prep("
-#			SELECT *,erf.flight_type_id
-#			FROM event_round_flight erf
-#			LEFT JOIN event_round er ON erf.event_round_id=er.event_round_id
-#			WHERE er.event_id=:event_id
-#				AND er.event_round_status=1
-#		");
-#		$result=db_exec($stmt,array("event_id"=>$event_id));
-#		if(isset($result[0])){
-#			$round=$result[0];
-#
-#			# There is at least one round, so lets create a flight on the first round
-#			$stmt=db_prep("
-#				INSERT INTO event_round_flight
-#				SET event_round_id=:event_round_id,
-#					flight_type_id=:flight_type_id,
-#					event_pilot_id=:event_pilot_id,
-#					event_round_flight_status=1
-#			");
-#			$result2=db_exec($stmt,array(
-#				"event_round_id"=>$round['event_round_id'],
-#				"flight_type_id"=>$round['flight_type_id'],
-#				"event_pilot_id"=>$event_pilot_id
-#			));
-#		}
 	}
 	# Lets see if we need to update the pilot's ama or fai number
 	$stmt=db_prep("

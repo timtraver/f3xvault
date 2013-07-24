@@ -52,6 +52,37 @@ $(function() {ldelim}
 			}
 		}
 	});
+	$("#pilot_name").autocomplete({
+		source: "/lookup.php?function=lookup_pilot",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var pilot_loading=document.getElementById('pilot_loading');
+			pilot_loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.pilot_id.value = ui.item.id;
+			var name=document.getElementById('pilot_name');
+			document.main.pilot_name.value=name.value;
+		},
+   		change: function( event, ui ) {
+   			var id=document.getElementById('pilot_name');
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('pilot_loading');
+			pilot_loading.style.display = "none";
+   			var mes=document.getElementById('pilot_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found.';
+			}
+		}
+	});
 });
 {/literal}
 function copy_plane_values(){ldelim}
@@ -69,6 +100,14 @@ function copy_plane_values(){ldelim}
 	document.add_plane.from_class_id.value=document.main.class_id.value;
 	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
 	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;
+{rdelim}
+function change_pilot(){ldelim}
+	var pilot_search=document.getElementById('pilot_search');
+	pilot_search.style.display = "inline";
+	var change_pilot_button=document.getElementById('change_pilot_button');
+	change_pilot_button.style.display = "none";
+	var pilot_message=document.getElementById('pilot_message');
+	pilot_message.style.display = "inline";
 {rdelim}
 </script>
 <div class="page type-page status-publish hentry clearfix post nodate">
@@ -157,6 +196,13 @@ function copy_plane_values(){ldelim}
 	<th align="right" nowrap>Pilot Name</th>
 	<td colspan="2">
 		{$pilot.pilot_first_name|escape} {$pilot.pilot_last_name|escape}
+		<span id="pilot_search" style="vertical-align: middle;display: none;">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---> Change Pilot To
+			<input type="text" id="pilot_name" name="pilot_name" size="40" value="">
+			<img id="pilot_loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+			<span id="pilot_message" style="font-style: italic;color: grey;display: none;">Start typing to search pilots</span>
+		</span>
+		<input type="button" id="change_pilot_button" value=" Change Pilot " class="button" onClick="change_pilot();">
 	</td>
 </tr>
 <tr>
