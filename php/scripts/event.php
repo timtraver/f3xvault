@@ -709,6 +709,7 @@ function event_pilot_edit() {
 			$name=preg_split("/\s/",$pilot_name,2);
 			$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
 			$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+			$pilot['state_id']=$event['state_id'];
 		}
 	}
 	# If its a new pilot, lets set the entry order
