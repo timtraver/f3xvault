@@ -3256,6 +3256,7 @@ function event_import_save() {
 	}
 	$event->get_rounds();
 	$event->calculate_event_totals();
+	$event->event_save_totals();
 	
 	return event_view();
 }
