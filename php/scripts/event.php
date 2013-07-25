@@ -2368,7 +2368,7 @@ function event_draw_edit() {
 	$ft=$result[0];
 
 	$num_teams=count($e->teams);
-	$min_groups_np=1;
+	$min_groups_np=2;
 	$max_groups_np=floor(count($e->pilots)/2);
 	
 	# Lets determine the largest team
@@ -2385,9 +2385,10 @@ function event_draw_edit() {
 	}
 	$max_groups_p=floor(count($e->pilots)/2);
 	
+#	print "number of teams=$num_teams<br>\n";
 #	print "min groups with protection=$min_groups_p<br>\n";
 #	print "max groups with protection=$max_groups_p<br>\n";
-	
+#	
 #	print "min groups no protection=$min_groups_np<br>\n";
 #	print "max groups no protection=$max_groups_np<br>\n";
 	
@@ -2397,6 +2398,13 @@ function event_draw_edit() {
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("ft",$ft);
+	$smarty->assign("min_groups_p",$min_groups_p);
+	$smarty->assign("max_groups_p",$max_groups_p);
+	$smarty->assign("min_groups_np",$min_groups_np);
+	$smarty->assign("max_groups_np",$max_groups_np);
+
+
+
 	
 	$maintpl=find_template("event_draw_edit.tpl");
 	return $smarty->fetch($maintpl);

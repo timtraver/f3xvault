@@ -20,6 +20,38 @@ function check_protection(){ldelim}
 		document.getElementById("with_protection").style.display="none";
 	{rdelim}
 {rdelim}
+function calc_groups(){ldelim}
+	if(document.getElementById("event_draw_team_protection")){ldelim}
+		if(document.getElementById("event_draw_team_protection").checked==true){ldelim}
+			var num_groups=parseInt(document.getElementById("groups_p").value);
+		{rdelim}else{ldelim}
+			var num_groups=parseInt(document.getElementById("groups_np").value);
+		{rdelim}
+	{rdelim}else{ldelim}
+		var num_groups=parseInt(document.getElementById("groups_np").value);
+	{rdelim}
+	var num_pilots={$event->pilots|count};
+	var per_group=Math.floor(num_pilots/num_groups);
+	var left_over=num_pilots%num_groups;
+	if(left_over==0){ldelim}
+		document.getElementById("per_group").innerHTML=num_groups + " groups of " + per_group;
+	{rdelim}else{ldelim}
+		var left_over_string=' groups of ';
+		var num_groups_string=' groups of ';
+		if(left_over==1){ldelim}
+			left_over_string=' group of ';
+		{rdelim}
+		if((num_groups-left_over)==1){ldelim}
+			num_groups_string=' group of ';
+		{rdelim}
+		if(left_over > (num_groups-left_over)){ldelim}
+			document.getElementById("per_group").innerHTML=left_over + left_over_string + (per_group+1) + ", and <br>" + (num_groups-left_over) + num_groups_string + per_group;
+		{rdelim}else{ldelim}
+			document.getElementById("per_group").innerHTML=(num_groups-left_over) + num_groups_string + per_group + ", and <br>" + left_over + left_over_string + (per_group+1);
+		{rdelim}
+	{rdelim}
+
+{rdelim}
 </script>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
@@ -79,30 +111,37 @@ function check_protection(){ldelim}
 	</td>
 </tr>
 {if $ft.flight_type_group==1}
+{if $event->teams|count > 0}
 <tr>
 	<th nowrap>Team Protection</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1} CHECKED{/if} onChange="set_changed();check_protection();"> This will not have team pilots matched up against each other.
+		<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other.
 	</td>
 </tr>
+{/if}
 <tr>
-	<th nowrap>Desired Number of Flight Groups</th>
+	<th nowrap valign="top">Desired Number of Flight Groups</th>
 	<td>
+		There are currently <b>{$event->pilots|count}</b> Pilots in this event{if $event->teams|count > 0} on {$event->teams|count} teams{/if}.<br>
 		<span id="no_protection">
-			<select name="groups">
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
+			Using  
+			<select id="groups_np" name="groups" onChange="calc_groups();">
+			{for $x=$min_groups_np;$x<=$max_groups_np;$x++}
+			<option value="{$x}">{$x}</option>
+			{/for}
 			</select>
+			Flight Groups{if $event->teams|count > 0} with No Team Protection{/if} will result in<br>
 		</span>
 		<span id="with_protection" style="display:none;">
-			<select name="groups">
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
+			Using  
+			<select id="groups_p" name="groups" onChange="calc_groups();">
+			{for $x=$min_groups_p;$x<=$max_groups_p;$x++}
+			<option value="{$x}">{$x}</option>
+			{/for}
 			</select>
+			Flight Groups{if $event->teams|count > 0} with Team Protection{/if} will result in<br>
 		</span>
+		<br><p style="padding-left: 20px;"><span id="per_group"></span></p>
 		<input type="hidden" name="event_draw_number_groups" value="">
 	</td>
 </tr>
@@ -139,7 +178,12 @@ function check_protection(){ldelim}
 <input type="hidden" name="function" value="event_draw">
 <input type="hidden" name="event_id" value="{$event_id}">
 </form>
-
+<script>
+{if $event->teams|count > 0}
+check_protection();
+{/if}
+calc_groups();
+</script>
 </div>
 </div>
 
