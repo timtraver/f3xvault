@@ -957,17 +957,19 @@ class Event {
 						if($rftid!=$flight_type_id){
 							continue;
 						}
-						foreach($rp['pilots'] as $repid=>$rv){
-							if($repid!=$event_pilot_id){
-								continue;
-							}
-							if($rv['event_pilot_round_flight_score']>$sub){
-								$sub=$rv['event_pilot_round_flight_score'];
-								# Also replace the flight info with the relight info for the totals
-								$p=$rv;
-							}
-							if($rv['event_pilot_round_flight_penalty']>0){
-								$penalty+=$rv['event_pilot_round_flight_penalty'];
+						if(isset($rp['pilots'])){
+							foreach($rp['pilots'] as $repid=>$rv){
+								if($repid!=$event_pilot_id){
+									continue;
+								}
+								if($rv['event_pilot_round_flight_score']>$sub){
+									$sub=$rv['event_pilot_round_flight_score'];
+									# Also replace the flight info with the relight info for the totals
+									$p=$rv;
+								}
+								if($rv['event_pilot_round_flight_penalty']>0){
+									$penalty+=$rv['event_pilot_round_flight_penalty'];
+								}
 							}
 						}
 					}
