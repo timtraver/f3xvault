@@ -182,7 +182,7 @@ if($no_header_footer==1){
 	}
 	$smarty->display($footertpl);
 	if($trace_on){
-		print "<!-- trace : $trace \n-->";
+		print "<!-- trace : $trace\n Total Queries : {$GLOBALS['total_queries']}\n-->";
 	}
 }
 

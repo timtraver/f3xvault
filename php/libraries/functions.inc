@@ -758,7 +758,7 @@ function sub_trace(){
 	
 	if($trace_on){
 		$callers=debug_backtrace();
-		$trace.="\n".$callers[1]['function'];
+		$trace.="\n".$callers[1]['function']." - {$GLOBALS['total_queries']}";
 	}
 	return;
 }
