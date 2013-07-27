@@ -22,7 +22,7 @@ global $trace;
 global $trace_on;
 global $start_time;
 
-$start_time=microtime();
+$start_time=microtime(true);
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
