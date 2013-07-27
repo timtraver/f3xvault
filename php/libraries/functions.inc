@@ -757,8 +757,9 @@ function sub_trace(){
 	global $trace_on;
 	
 	if($trace_on){
+		$seconds=microtime()-$start_time;
 		$callers=debug_backtrace();
-		$trace.="\n".$callers[1]['function']." - {$GLOBALS['total_queries']}";
+		$trace.="\n".$callers[1]['function']." - total_queries:{$GLOBALS['total_queries']} - total_seconds:{$seconds}";
 	}
 	return;
 }

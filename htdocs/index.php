@@ -20,6 +20,9 @@ global $total_queries;
 global $device;
 global $trace;
 global $trace_on;
+global $start_time;
+
+$start_time=microtime();
 
 if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
 	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");

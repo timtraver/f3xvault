@@ -802,6 +802,9 @@ class Event {
 		}
 		# Now lets step through the flight data and set some of the basics
 		foreach($flights as $flight_type_id=>$f){
+			if(!isset($f['pilots'])){
+				continue;
+			}
 			foreach($f['pilots'] as $event_pilot_id=>$v){
 				$raw=0;
 				if($f['flight_type_minutes']==1){
