@@ -755,6 +755,7 @@ function sub_trace(){
 	# This is a small function to add to the subroutine trace string so I can see which routines I am hitting
 	global $trace;
 	global $trace_on;
+	global $start_time;
 	
 	if($trace_on){
 		$seconds=microtime()-$start_time;
