@@ -318,32 +318,32 @@ class Event {
 		}
 		switch($sort_by){
 			case 'entry_order':
-				$sort_string='ORDER BY ep.event_pilot_entry_order';
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_entry_order';
 				break;
 			case 'team':
-				$sort_string='ORDER BY ep.event_pilot_team,p.pilot_first_name';
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_team,p.pilot_first_name';
 				break;
 			case 'flight_order':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;
 			case 'group_alphabetical_first':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
 				break;
 			case 'group_alphabetical_last':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,p.pilot_last_name,p.pilot_first_name';
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group,p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'group_entry':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,ep.event_pilot_entry_order';
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group,ep.event_pilot_entry_order';
 				break;
 			case 'alphabetical_first':
-				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				$sort_string='ORDER BY er.event_round_number,p.pilot_first_name,p.pilot_last_name';
 				break;
 			case 'alphabetical_last':
-				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
+				$sort_string='ORDER BY er.event_round_number,p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'round_rank':
 			default:
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
 				break;
 		}
 				

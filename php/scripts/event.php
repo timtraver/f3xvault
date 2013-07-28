@@ -1628,9 +1628,10 @@ function event_round_save() {
 		$event_pilot_round_id=$eprf['event_pilot_round_id'];
 		$flight_type_id=$eprf['flight_type_id'];
 		$event_pilot_round_flight_id=$eprf['event_pilot_round_flight_id'];
-		$eprfs[$event_pilot_round_id][$flight_type_id]=$eprfevent_pilot_round_flight_id;
+		$eprfs[$event_pilot_round_id][$flight_type_id]=$eprf['event_pilot_round_flight_id'];
 		$eprfs_actual[$event_pilot_round_flight_id]=1;
 	}
+	
 	# Lets do a query to get existing sub flights so we don't have to do it in the loop
 	$subs=array();
 	$stmt=db_prep("
@@ -1677,7 +1678,6 @@ function event_round_save() {
 				}else{
 					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
 				}
-				
 				# Lets see if the values are DNS or DNF and set the parameters
 				$dns=0;
 				$dnf=0;
