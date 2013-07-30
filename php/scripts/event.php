@@ -3160,9 +3160,14 @@ function event_import_save() {
 	# OK, now that we have all the pilots and event pilot ids, lets create the rounds and data
 	foreach($import as $line=>$i){
 		$event_pilot_id=$i['event_pilot_id'];
+		$in_zero_round=$event_zero_round;
 		foreach($i['rounds'] as $round_number=>$time){
-			if($event_zero_round==1){
+			if($in_zero_round==1){
 				$round_number-=1;
+				$event_round_score_status=0;
+				$in_zero_round=0;
+			}else{
+				$event_round_score_status=1;
 			}
 			
 			$dns=0;
@@ -3190,11 +3195,13 @@ function event_import_save() {
 				$stmt=db_prep("
 					UPDATE event_round
 					SET event_round_needs_calc=1,
+						event_round_score_status=:event_round_score_status,
 						event_round_status=1
 					WHERE event_round_id=:event_round_id
 				");
 				$result2=db_exec($stmt,array(
-					"event_round_id"=>$event_round_id
+					"event_round_id"=>$event_round_id,
+					"event_round_score_status"=>$event_round_score_status
 				));
 			}else{
 				# Create a new event round
@@ -3204,13 +3211,14 @@ function event_import_save() {
 						event_round_needs_calc=1,
 						event_round_number=:event_round_number,
 						flight_type_id=:flight_type_id,
-						event_round_score_status=1,
+						event_round_score_status=:event_round_score_status,
 						event_round_status=1
 				");
 				$result2=db_exec($stmt,array(
 					"event_id"=>$event_id,
 					"event_round_number"=>$round_number,
-					"flight_type_id"=>$flight_type_id
+					"flight_type_id"=>$flight_type_id,
+					"event_round_score_status"=>$event_round_score_status
 				));
 				$event_round_id=$GLOBALS['last_insert_id'];
 				
