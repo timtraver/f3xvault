@@ -3162,10 +3162,8 @@ function event_import_save() {
 		$event_pilot_id=$i['event_pilot_id'];
 		$in_zero_round=$event_zero_round;
 		foreach($i['rounds'] as $round_number=>$time){
-			if($in_zero_round==1){
-				$round_number-=1;
+			if($round_number==0){
 				$event_round_score_status=0;
-				$in_zero_round=0;
 			}else{
 				$event_round_score_status=1;
 			}

@@ -113,7 +113,11 @@
 	{foreach $lines as $line}
 	<tr>
 		<th>{$line_number}</th>
-		{$round=1}
+		{if $event_zero_round==1}
+			{$round=0}
+		{else}
+			{$round=1}
+		{/if}
 		{foreach $line as $l}
 		{$key=$l@key}
 		{if !$columns.$key}
