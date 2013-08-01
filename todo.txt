@@ -10,22 +10,31 @@ GENERAL
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 	Separate print buttons for preliminaries and flyoffs
 =	Add blog menu item and set up simple wordpress blog
-  
+	On Login screen make thefocus go to the login user
+	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 	Add a Competitions held here section
 	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
-
+	Speed records for F3F and F3B
+	Recent events
+	
 PLANE STUFF
 	Add layup types as a function to the planes
 	Add Root chord width and AR calculation to plane db
+	Speed records for F3F and F3B (top 5 and a link to bigger list)
+	Lap count records for F3B (top 5 and a link to bigger list)
+	Pilots Flying Model
+	Recent events
 	Build log links!
 	Setup links!
 	
 EVENT STUFF
-  
+	Allow the accuracy of calculations to be set for an event
+	
 	Don't allow the user to select the sort type until after the round is saved
-  
+
+	Have an event pilot flag to count for team totals or not
 	Have a setting for top X teammates to be used in the team standings
   
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
@@ -36,12 +45,20 @@ EVENT STUFF
 		draw types
 X    	random order
 X    	staggered order for F3F
+		F3K event draw printing for each of the printouts
     	set number of groups
 X		make the printing of the draws use the current rounds and the draw rounds
 X		have draw view buttons to show draw even if not active
 X		When adding a round, default apply the draw and sort it by the draw order or group
 X			check for overlap when applying new draw
-    
+
+	For F3K events
+		stats for Quick turnaround tasks
+		stats for making maxes on maxable rounds
+		Maybe stats for MOM percentage
+		graph on pilot page
+		Ability to do reflights
+		
 	Flyoff capability
 		Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
 	
@@ -54,7 +71,10 @@ X			check for overlap when applying new draw
 			to the round edits
   		
 	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
-  
+
+PILOTS STUFF
+	Add best times for different event types (i.e. best F3F times, best F3B speeds, best F3B distances)
+	
 SERIES STUFF
 	print series pilot detail view
 	
