@@ -1627,27 +1627,13 @@ function event_round_save() {
 	foreach($result as $eprf){
 		$event_pilot_round_id=$eprf['event_pilot_round_id'];
 		$flight_type_id=$eprf['flight_type_id'];
+		$event_pilot_round_flight_group=$eprf['event_pilot_round_flight_group'];
+		$event_pilot_round_flight_reflight=$eprf['event_pilot_round_flight_reflight'];
 		$event_pilot_round_flight_id=$eprf['event_pilot_round_flight_id'];
-		$eprfs[$event_pilot_round_id][$flight_type_id]=$eprf['event_pilot_round_flight_id'];
+		$eprfs[$event_pilot_round_id][$flight_type_id][$event_pilot_round_flight_group]=$eprf['event_pilot_round_flight_id'];
 		$eprfs_actual[$event_pilot_round_flight_id]=1;
 	}
-	
-	# Lets do a query to get existing sub flights so we don't have to do it in the loop
-	$subs=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event_pilot_round_flight_sub eprfs
-		LEFT JOIN event_pilot_round_flight eprf ON eprf.event_pilot_round_flight_id=eprfs.event_pilot_round_flight_id
-		LEFT JOIN event_pilot_round epr ON epr.event_pilot_round_id=eprf.event_pilot_round_id
-		WHERE epr.event_round_id=:event_round_id
-	");
-	$result=db_exec($stmt,array("event_round_id"=>$event_round_id));
-	foreach($result as $eprfs){
-		$event_pilot_round_flight_id=$eprfs['event_pilot_round_flight_id'];
-		$num=$eprfs['event_pilot_round_flight_sub_num'];
-		$subs[$event_pilot_round_flight_id][$num]=$eprfs['event_pilot_round_flight_sub_id'];
-	}
-	
+		
 	# Now step through each one and save the flight record
 	foreach($data as $event_pilot_round_flight_id=>$p){
 		foreach($p as $event_pilot_id=>$f){
@@ -1670,11 +1656,23 @@ function event_round_save() {
 				if($event_pilot_round_flight_id==0){
 					# This record is a new one (maybe)
 					# Lets check if one already exists from the auto save feature
-					if(isset($eprfs[$event_pilot_round_id][$flight_type_id])){
-						$event_pilot_round_flight_id_actual=$eprfs[$event_pilot_round_id][$flight_type_id];
+					$stmt=db_prep("
+						SELECT *
+						FROM event_pilot_round_flight erf
+						WHERE erf.event_pilot_round_id=:event_pilot_round_id
+							AND erf.flight_type_id=:flight_type_id
+					");
+					$result=db_exec($stmt,array(
+						"event_pilot_round_id"=>$event_pilot_round_id,
+						"flight_type_id"=>$flight_type_id
+					));
+					if(isset($result[0])){
+						$event_pilot_round_flight_id_actual=$result[0]['event_pilot_round_flight_id'];
 					}else{
 						$event_pilot_round_flight_id_actual=0;
 					}
+					
+					
 				}else{
 					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
 				}
@@ -1761,19 +1759,20 @@ function event_round_save() {
 					# There are sub flights, so lets save them
 					foreach($v['sub'] as $num=>$t){
 						# Lets see if one exists already
-						#$stmt=db_prep("
-						#	SELECT *
-						#	FROM event_pilot_round_flight_sub erfs
-						#	WHERE erfs.event_pilot_round_flight_id=:event_pilot_round_flight_id
-						#		AND erfs.event_pilot_round_flight_sub_num=:num
-						#");
-						#$result=db_exec($stmt,array(
-						#	"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
-						#	"num"=>$num
-						#));
-						#if(isset($result[0])){
-						if(isset($subs[$event_pilot_round_flight_id_actual][$num])){
-							$event_pilot_round_flight_sub_id=$subs[$event_pilot_round_flight_id_actual][$num];
+						$stmt=db_prep("
+							SELECT *
+							FROM event_pilot_round_flight_sub erfs
+							WHERE erfs.event_pilot_round_flight_id=:event_pilot_round_flight_id
+								AND erfs.event_pilot_round_flight_sub_num=:num
+						");
+						$result=db_exec($stmt,array(
+							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
+							"num"=>$num
+						));
+						if(isset($result[0])){
+						#if(isset($subs[$event_pilot_round_flight_id_actual][$num])){
+						#	$event_pilot_round_flight_sub_id=$subs[$event_pilot_round_flight_id_actual][$num];
+							$event_pilot_round_flight_sub_id=$result[0]['event_pilot_round_flight_sub_id'];
 						}else{
 							$event_pilot_round_flight_sub_id=0;
 						}
