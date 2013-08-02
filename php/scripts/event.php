@@ -3155,6 +3155,8 @@ function event_import_save() {
 		$flight_type_id=$ft['flight_type_id'];
 		break;
 	}
+	# Reset the event object
+	$event=new Event($event_id);
 
 	# OK, now that we have all the pilots and event pilot ids, lets create the rounds and data
 	foreach($import as $line=>$i){
@@ -3294,7 +3296,11 @@ function event_import_save() {
 			}
 		}
 	}
-	$event->get_rounds();
+	# Reset the event again
+	$event=new Event($event_id);
+	$event->get_rounds(); # This will do the recalc of all of the rounds
+	$event->get_rounds(); # This refreshes the rounds for the totals
+	
 	$event->calculate_event_totals();
 	$event->event_save_totals();
 	

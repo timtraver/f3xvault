@@ -1356,7 +1356,7 @@ class Event {
 					}
 				}
 			}
-		sub_trace();
+			sub_trace();
 		
 			# Lets clear all of the flights for all of the pilots of their flight dropped status
 			$stmt=db_prep("
