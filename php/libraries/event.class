@@ -123,192 +123,6 @@ class Event {
 		$this->options=$options;
 		return;
 	}
-	function get_rounds_old(){
-		sub_trace();
-		if(isset($_REQUEST['sort_by'])){
-			$sort_by=$_REQUEST['sort_by'];
-		}else{
-			$sort_by='';
-		}
-		switch($sort_by){
-			case 'entry_order':
-				$sort_string='ORDER BY ep.event_pilot_entry_order';
-				break;
-			case 'team':
-				$sort_string='ORDER BY ep.event_pilot_team,p.pilot_first_name';
-				break;
-			case 'flight_order':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
-				break;
-			case 'group_alphabetical_first':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
-				break;
-			case 'group_alphabetical_last':
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,p.pilot_last_name,p.pilot_first_name';
-				break;
-			case 'alphabetical_first':
-				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
-				break;
-			case 'alphabetical_last':
-				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
-				break;
-			case 'round_rank':
-			default:
-				$sort_string='ORDER BY erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
-				break;
-		}
-				
-		# Now lets get the rounds for this event
-		$stmt=db_prep("
-			SELECT *
-			FROM event_round er
-			WHERE er.event_id=:event_id
-				AND er.event_round_status=1
-			ORDER BY ABS(er.event_round_number)
-		");
-		$results=db_exec($stmt,array("event_id"=>$this->event_id));
-		$rounds=array();
-		# Step through each round and get pilot flights
-		foreach($results as $key=>$round){
-			$event_round_number=$round['event_round_number'];
-			$rounds[$event_round_number]=$round;
-		}
-		$this->rounds=$rounds;
-		
-		# Now lets get the flights for the round
-		foreach($this->rounds as $key=>$round){
-			$event_round_number=$round['event_round_number'];
-			$rounds[$event_round_number]=$round;
-
-			foreach($this->flight_types as $flight_type_id=>$ft){
-
-				# If its an f3k round, then only include the chosen flight type
-				if(preg_match("/f3k/",$ft['flight_type_code']) && $ft['flight_type_id']!=$round['flight_type_id']){
-					continue;
-				}
-				# Lets get the event round score status to include for this round
-				$stmt=db_prep("
-					SELECT *
-					FROM event_round_flight
-					WHERE event_round_id=:event_round_id
-						AND flight_type_id=:flight_type_id
-				");
-				$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$ft['flight_type_id']));
-				if(isset($result[0])){
-					$ft['event_round_flight_score']=$result[0]['event_round_flight_score'];
-				}else{
-					$ft['event_round_flight_score']=0;
-				}
-				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
-				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=array();
-				$this->rounds[$event_round_number]['reflights'][$flight_type_id]=$ft;
-				$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots']=array();
-				
-				# Lets get the pilots for this particular flight
-				$stmt=db_prep("
-					SELECT erf.*,epr.*
-					FROM event_pilot_round_flight erf
-					LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
-					LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
-					LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-					WHERE epr.event_round_id=:event_round_id
-						AND erf.flight_type_id=:flight_type_id
-						AND erf.event_pilot_round_flight_status=1
-						AND ep.event_pilot_status=1
-					$sort_string
-				");
-				$results=db_exec($stmt,array("event_round_id"=>$round['event_round_id'],"flight_type_id"=>$flight_type_id));
-				foreach($results as $flight){
-					$event_pilot_id=$flight['event_pilot_id'];
-					# Set the decimal accuracy for the flight seconds
-					$flight['event_pilot_round_flight_seconds']=sprintf('%02.'.$ft['accuracy'].'f',$flight['event_pilot_round_flight_seconds']);
-					if($flight['event_pilot_round_flight_reflight']==1){
-						$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
-					}else{
-						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=$flight;
-					}
-					# Lets get the sub flights if there are any
-					if($ft['flight_type_sub_flights']!=0){
-						$stmt=db_prep("
-							SELECT *
-							FROM event_pilot_round_flight_sub
-							WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
-						");
-						$results2=db_exec($stmt,array("event_pilot_round_flight_id"=>$flight['event_pilot_round_flight_id']));
-						foreach($results2 as $r){
-							$num=$r['event_pilot_round_flight_sub_num'];
-							$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=$r;
-						}
-					}
-				}
-				# Now add any pilots that dont have a flight
-				foreach($this->pilots as $event_pilot_id=>$p){
-					if(!isset($this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
-						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=array("event_pilot_round_flight_id"=>0);
-					}
-				}
-			}
-		}
-		
-		# Lets recalculate any rounds if we need to
-		# Lets see if this is the owner of the event or a person allowed to recalculate rounds
-		# This will cut down on the system recalculating rounds when someone is just viewing while rounds are being entered
-		global $user;
-		$try_recalc=0;
-		if($user['user_admin']==1 || $this->info['pilot_id']==$user['pilot_id']){
-			$try_recalc=1;
-		}
-		if($try_recalc==0){
-			# Lets see if there are other users that have permissions that could recalc this event
-			$stmt=db_prep("
-				SELECT *
-				FROM event_user
-				WHERE event_id=:event_id
-					AND event_user_status=1
-			");
-			$results=db_exec($stmt,array("event_id"=>$this->event_id));
-			foreach($results as $u){
-				if($user['pilot_id']==$u['pilot_id']){
-					$try_recalc=1;
-				}
-			}
-		}
-		if($try_recalc){
-			$stmt=db_prep("
-				SELECT *
-				FROM event_round er
-				WHERE er.event_id=:event_id
-					AND er.event_round_status=1
-					AND er.event_round_needs_calc=1
-				ORDER BY ABS(er.event_round_number)
-			");
-			$needed_recalc=0;
-			$results=db_exec($stmt,array("event_id"=>$this->event_id));
-			foreach($results as $key=>$round){
-				if($round['event_round_needs_calc']==1){
-					$this->calculate_round($round['event_round_number']);
-					$needed_recalc=1;
-					# turn off the recalc for that round
-					$stmt=db_prep("
-						UPDATE event_round
-						SET event_round_needs_calc=0
-						WHERE event_round_id=:event_round_id
-					");
-					$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
-				}
-			}
-			if($needed_recalc==1){
-				# It needed some rounds recalculated, so lets re-do the rounds
-				$this->get_rounds();
-				$this->calculate_event_totals();	
-				$this->event_save_totals();
-				$this->get_pilots();
-				return;
-			}
-		}
-		sub_trace();
-		return;
-	}
 	function get_rounds(){
 		sub_trace();
 		if(isset($_REQUEST['sort_by'])){
@@ -467,7 +281,7 @@ class Event {
 		
 		# Now lets do a big query to get the sub flights all in one shot
 		$stmt=db_prep("
-			SELECT er.event_round_number,eprf.flight_type_id,ep.event_pilot_id,epr.event_pilot_round_id,eprs.*
+			SELECT er.event_round_number,eprf.flight_type_id,ep.event_pilot_id,epr.event_pilot_round_id,eprf.event_pilot_round_flight_reflight,eprs.*
 			FROM event_pilot_round_flight_sub eprs
 			LEFT JOIN event_pilot_round_flight eprf ON eprs.event_pilot_round_flight_id=eprf.event_pilot_round_flight_id
 			LEFT JOIN event_pilot_round epr ON epr.event_pilot_round_id=eprf.event_pilot_round_id
@@ -484,12 +298,21 @@ class Event {
 			$flight_type_id=$r['flight_type_id'];
 			$event_pilot_id=$r['event_pilot_id'];
 			$num=$r['event_pilot_round_flight_sub_num'];
-			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=array(
-				"event_pilot_round_flight_sub_id"=>$r['event_pilot_round_flight_sub_id'],
-				"event_pilot_round_flight_id"=>$r['event_pilot_round_flight_id'],
-				"event_pilot_round_flight_sub_num"=>$r['event_pilot_round_flight_sub_num'],
-				"event_pilot_round_flight_sub_val"=>$r['event_pilot_round_flight_sub_val']
-			);
+			if($r['event_pilot_round_flight_reflight']==1){
+				$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=array(
+					"event_pilot_round_flight_sub_id"=>$r['event_pilot_round_flight_sub_id'],
+					"event_pilot_round_flight_id"=>$r['event_pilot_round_flight_id'],
+					"event_pilot_round_flight_sub_num"=>$r['event_pilot_round_flight_sub_num'],
+					"event_pilot_round_flight_sub_val"=>$r['event_pilot_round_flight_sub_val']
+				);
+			}else{
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=array(
+					"event_pilot_round_flight_sub_id"=>$r['event_pilot_round_flight_sub_id'],
+					"event_pilot_round_flight_id"=>$r['event_pilot_round_flight_id'],
+					"event_pilot_round_flight_sub_num"=>$r['event_pilot_round_flight_sub_num'],
+					"event_pilot_round_flight_sub_val"=>$r['event_pilot_round_flight_sub_val']
+				);
+			}
 		}
 		
 		# Now add any pilots that dont have a flight
@@ -1667,7 +1490,6 @@ class Event {
 		$this->draws=$draws;
 		return;
 	}
-	
 	function get_running_totals(){
 		# Function to figure out the running totals for each round
 		if(count($this->totals['pilots'])==0){
@@ -1754,6 +1576,5 @@ class Event {
 		}
 		return;
 	}
-	
 }
 ?>

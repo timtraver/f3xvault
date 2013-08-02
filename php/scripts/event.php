@@ -608,18 +608,7 @@ function event_pilot_edit() {
 	$pilot_id=intval($_REQUEST['pilot_id']);
 	$pilot_name=$_REQUEST['pilot_name'];
 
-	$event=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event e
-		LEFT JOIN location l ON e.location_id=l.location_id
-		LEFT JOIN state s ON l.state_id=s.state_id
-		LEFT JOIN country c ON c.country_id=l.country_id
-		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-		WHERE e.event_id=:event_id
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	$event=$result[0];
+	$event=new Event($event_id);
 	$smarty->assign("event",$event);
 
 	# Check to see if the pilot already exists in this event
@@ -709,7 +698,7 @@ function event_pilot_edit() {
 			$name=preg_split("/\s/",$pilot_name,2);
 			$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
 			$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
-			$pilot['state_id']=$event['state_id'];
+			$pilot['state_id']=$event->info['state_id'];
 		}
 	}
 	# If its a new pilot, lets set the entry order
@@ -748,8 +737,7 @@ function event_pilot_edit() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 
-	$teams=get_event_teams($event_id);
-	$smarty->assign("teams",$teams);
+	$smarty->assign("teams",$event->teams);
 	$smarty->assign("event_id",$event_id);
 
 	$maintpl=find_template("event_pilot_edit.tpl");
@@ -1041,21 +1029,6 @@ function event_pilot_remove() {
 	log_action($event_pilot_id);
 	user_message("Pilot removed from event.");
 	return event_view();
-}
-function get_event_teams($event_id){
-	# Function to get the unique teams in an event
-	$stmt=db_prep("
-		SELECT DISTINCT(ep.event_pilot_team)
-		FROM event_pilot ep
-		LEFT JOIN event e ON ep.event_id=e.event_id
-		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-		WHERE ep.event_pilot_team !=''
-			AND e.event_id=:event_id
-			AND ep.event_pilot_status=1
-	");
-	$names=db_exec($stmt,array("event_id"=>$event_id));
-	
-	return $names;
 }
 function check_event_permission($event_id){
 	global $user;
@@ -1574,6 +1547,33 @@ function event_round_save() {
 				}
 			}
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub'][$sub]=$value;
+		}elseif(preg_match("/^pilot_reflight_sub_flight_(\d+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
+			$sub=$match[1];
+			$event_pilot_round_flight_id=$match[2];
+			$event_pilot_id=$match[3];
+			$flight_type_id=$match[4];
+			# Now lets massage the value to make sure its entered in colon notation, or insert the colons
+			$value=convert_string_to_colon($value);
+			# Lets check to see if this sub flight has a max set up and change it if it does
+			if($flight_type['flight_type_sub_flights_max_time']!=0){
+				$seconds=convert_colon_to_seconds($value);
+				if($seconds>$flight_type['flight_type_sub_flights_max_time']){
+					$seconds=$flight_type['flight_type_sub_flights_max_time'];
+					$value=convert_seconds_to_colon($seconds);
+				}
+			}
+			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub'][$sub]=$value;
+			$data[$event_pilot_round_flight_id]['reflight']=1;
+		}elseif(preg_match("/^pilot_reflight_(\S+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
+			$field=$match[1];
+			$event_pilot_round_flight_id=$match[2];
+			$event_pilot_id=$match[3];
+			$flight_type_id=$match[4];
+			if($value=='on'){
+				$value=1;
+			}
+			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
+			$data[$event_pilot_round_flight_id]['reflight']=1;
 		}elseif(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
 			$field=$match[1];
 			$event_pilot_round_flight_id=$match[2];
@@ -1656,12 +1656,22 @@ function event_round_save() {
 				if($event_pilot_round_flight_id==0){
 					# This record is a new one (maybe)
 					# Lets check if one already exists from the auto save feature
-					$stmt=db_prep("
-						SELECT *
-						FROM event_pilot_round_flight erf
-						WHERE erf.event_pilot_round_id=:event_pilot_round_id
-							AND erf.flight_type_id=:flight_type_id
-					");
+					if($p['reflight']==1){
+						$stmt=db_prep("
+							SELECT *
+							FROM event_pilot_round_flight erf
+							WHERE erf.event_pilot_round_id=:event_pilot_round_id
+								AND erf.flight_type_id=:flight_type_id
+								AND erf.event_pilot_round_flight_reflight=1
+						");
+					}else{
+						$stmt=db_prep("
+							SELECT *
+							FROM event_pilot_round_flight erf
+							WHERE erf.event_pilot_round_id=:event_pilot_round_id
+								AND erf.flight_type_id=:flight_type_id
+						");
+					}
 					$result=db_exec($stmt,array(
 						"event_pilot_round_id"=>$event_pilot_round_id,
 						"flight_type_id"=>$flight_type_id
@@ -1671,11 +1681,10 @@ function event_round_save() {
 					}else{
 						$event_pilot_round_flight_id_actual=0;
 					}
-					
-					
 				}else{
 					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
 				}
+				
 				# Lets see if the values are DNS or DNF and set the parameters
 				$dns=0;
 				$dnf=0;
@@ -3306,6 +3315,5 @@ function event_import_save() {
 	
 	return event_view();
 }
-
 
 ?>
