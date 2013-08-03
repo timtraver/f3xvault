@@ -118,7 +118,7 @@ function change_pilot(){ldelim}
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_pilot_save">
-<input type="hidden" name="event_id" value="{$event.event_id}">
+<input type="hidden" name="event_id" value="{$event_id}">
 <input type="hidden" name="event_pilot_id" value="{$pilot.event_pilot_id}">
 <input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
 <input type="hidden" name="plane_id" value="{$pilot.plane_id}">
@@ -129,7 +129,7 @@ function change_pilot(){ldelim}
 <tr>
 	<th align="right" nowrap>Event</th>
 	<td colspan="2">
-		{$event.event_name|escape}
+		{$event->info.event_name|escape}
 	</td>
 </tr>
 <tr>
@@ -283,7 +283,7 @@ function change_pilot(){ldelim}
 <input type="hidden" name="plane_name" value="">
 <input type="hidden" name="from_action" value="event">
 <input type="hidden" name="from_function" value="event_pilot_edit">
-<input type="hidden" name="from_event_id" value="{$event.event_id}">
+<input type="hidden" name="from_event_id" value="{$event_id}">
 <input type="hidden" name="from_event_pilot_id" value="{$pilot.event_pilot_id}">
 <input type="hidden" name="from_pilot_id" value="{$pilot.pilot_id}">
 <input type="hidden" name="from_pilot_first_name" value="">
