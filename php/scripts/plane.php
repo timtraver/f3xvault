@@ -131,6 +131,7 @@ function plane_list() {
 		$stmt=db_prep("
 			SELECT *
 			FROM plane p
+			LEFT JOIN country c ON p.country_id=c.country_id
 			$joind
 			WHERE 1
 			$extrad

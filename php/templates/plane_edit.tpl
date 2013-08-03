@@ -162,6 +162,7 @@ function calc_area(){ldelim}
 	<th>Manufactured In</th>
 	<td>
 		<select name="country_id">
+		<option value="0">Select A Country</option>
 		{foreach $countries as $country}
 			<option value="{$country.country_id}" {if $country.country_id==$plane.country_id}SELECTED{/if}>{$country.country_name}</option>
 		{/foreach}

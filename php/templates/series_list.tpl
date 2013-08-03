@@ -80,8 +80,14 @@
 		<a href="?action=series&function=series_view&series_id={$s.series_id|escape}">{$s.series_name|escape}</a>
 	</td>
 	<td>{$s.series_area|escape}</td>
-	<td>{$s.state_name|escape}</td>
-	<td>{$s.country_name|escape}</td>
+	<td>
+		{if $s.state_name}<img src="/images/flags/states/16/{$s.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} 
+		{$s.state_name|escape}
+	</td>
+	<td>
+		{if $s.country_code}<img src="/images/flags/countries-iso/shiny/16/{$s.country_code|escape}.png" style="vertical-align: middle;">{/if}
+		{$s.country_name|escape}
+	</td>
 	<td>{$s.series_total_events|escape}</td>
 </tr>
 {/foreach}

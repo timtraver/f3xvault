@@ -10,7 +10,11 @@
 </tr>
 <tr>
 	<th>Pilot Location</th>
-	<td>{$pilot.pilot_city|escape}, {$pilot.state_name|escape} - {$pilot.country_name|escape}</td>
+	<td>
+		{$pilot.pilot_city|escape}, {$pilot.state_name|escape} - {$pilot.country_name|escape}
+		{if $pilot.country_code}<img src="/images/flags/countries-iso/shiny/24/{$pilot.country_code|escape}.png" style="vertical-align: middle;">{/if}
+		{if $pilot.state_name}<img src="/images/flags/states/24/{$pilot.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
+	</td>
 </tr>
 <tr>
 	<th>Pilot AMA Number</th>
@@ -64,7 +68,10 @@
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club">{$pc.club_name|escape}</a></td>
 		<td>{$pc.club_city|escape}</td>
-		<td>{$pc.state_name|escape}, {$pc.country_code|escape}</td>
+		<td>{$pc.state_name|escape}, {$pc.country_code|escape}
+			{if $pc.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pc.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			{if $pc.state_name}<img src="/images/flags/states/16/{$pc.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		</td>
 	</tr>
 	{/foreach}
 {else}
@@ -88,7 +95,10 @@
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name|escape}</a></td>
 		<td>{$pl.location_city|escape}</td>
-		<td>{$pl.state_name|escape}, {$pl.country_code|escape}</td>
+		<td>{$pl.state_name|escape}, {$pl.country_code|escape}
+			{if $pl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pl.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			{if $pl.state_name}<img src="/images/flags/states/16/{$pl.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		</td>
 		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 	</tr>
 	{/foreach}
@@ -116,8 +126,13 @@
 	<tr bgcolor="{cycle values="white,lightgray"}">
 		<td>{$pe.event_start_date|date_format:"Y-m-d"}</td>
 		<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name|escape}</a></td>
-		<td><a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name|escape}</a></td>
-		<td>{$pe.state_name|escape}, {$pe.country_code|escape}</td>
+		<td>
+			<a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name|escape}</a>
+		</td>
+		<td>{$pe.state_name|escape}, {$pe.country_code|escape}
+			{if $pe.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pe.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			{if $pe.state_name}<img src="/images/flags/states/16/{$pe.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		</td>
 		<td align="center">{$pe.event_pilot_position|escape}</td>
 		<td align="right">{$pe.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 	</tr>

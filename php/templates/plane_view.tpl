@@ -198,6 +198,7 @@ function calc_area(){ldelim}
 <tr>
 	<th align="left">Manufacturer Country</th>
 	<td>
+		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/24/{$plane.country_code|escape}.png" style="vertical-align: middle;">{/if}
 		{$plane.country_name|escape}
 	</td>
 </tr>

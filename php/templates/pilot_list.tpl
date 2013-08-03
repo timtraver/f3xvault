@@ -80,8 +80,14 @@
 		<a href="?action=pilot&function=pilot_view&pilot_id={$p.pilot_id|escape}">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
 	</td>
 	<td>{$p.pilot_city|escape}</td>
-	<td>{$p.state_name|escape}</td>
-	<td>{$p.country_name|escape}</td>
+	<td>
+		{if $p.state_name}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		{$p.state_name|escape}
+	</td>
+	<td>
+		{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;">{/if}
+		{$p.country_name|escape}
+	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">

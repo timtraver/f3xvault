@@ -80,7 +80,10 @@
 	{/foreach}
 	</td>
 	<td align="center">{if $plane.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
-	<td>{$plane.plane_manufacturer|escape}</td>
+	<td>
+		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/16/{$plane.country_code|escape}.png" style="vertical-align: middle;">{/if}
+		{$plane.plane_manufacturer|escape}
+	</td>
 	<td>{$plane.plane_year|escape}</td>
 	<td>{$plane.plane_wingspan|string_format:'%.1f'} {$plane.plane_wingspan_units|escape}</td>
 	<td>{$plane.plane_auw_from|escape} - {$plane.plane_auw_to|escape} {$plane.plane_auw_units|escape}</td>

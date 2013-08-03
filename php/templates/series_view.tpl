@@ -60,6 +60,8 @@ $(function() {
 			<th align="right">Location</th>
 			<td>
 			{$series->info.series_area|escape},{$series->info.state_code|escape} {$series->info.country_code|escape}
+			{if $series->info.country_code}<img src="/images/flags/countries-iso/shiny/24/{$series->info.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			{if $series->info.state_name}<img src="/images/flags/states/24/{$series->info.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
 			</td>
 		</tr>
 		<tr>
@@ -90,8 +92,14 @@ $(function() {
 				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name|escape}</a>
 			</td>
 			<td>{$e.location_name|escape}</td>
-			<td>{$e.state_name|escape}</td>
-			<td>{$e.country_name|escape}</td>
+			<td>
+				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+				{$e.state_name|escape}
+			</td>
+			<td>
+				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;">{/if}
+				{$e.country_name|escape}
+			</td>
 			<td nowrap>{$e.total_pilots|escape}</td>
 		</tr>
 		{$num=$num+1}

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-05-09 22:55:26
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-03 15:00:22
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1368158022,
+      1 => 1375567220,
       2 => 'file',
     ),
   ),
@@ -172,10 +172,17 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 	</td>
 	<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-	<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['location_name'], ENT_QUOTES, 'UTF-8', true);?>
+	<td><?php if ($_smarty_tpl->tpl_vars['event']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
+.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['country_name'];?>
+"><?php }?> 
+		<?php if ($_smarty_tpl->tpl_vars['event']->value['state_name']){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
+-Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['state_name'];?>
+"><?php }?> 
+		<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['location_name'], ENT_QUOTES, 'UTF-8', true);?>
 , <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['state_code'], ENT_QUOTES, 'UTF-8', true);?>
  - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
-</td>
+
+	</td>
 	<td align="center"><?php if ($_smarty_tpl->tpl_vars['event']->value['location_coordinates']!=''){?><a class="fancybox-map" href="https://maps.google.com/maps?q=<?php echo rawurlencode($_smarty_tpl->tpl_vars['event']->value['location_coordinates']);?>
 +(<?php echo $_smarty_tpl->tpl_vars['event']->value['location_name'];?>
 )&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a><?php }?></td>

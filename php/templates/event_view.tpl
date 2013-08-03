@@ -174,7 +174,7 @@ function check_permission() {ldelim}
 		<tr>
 			<th width="2%" align="left"></th>
 			<th width="10%" align="center">AMA#</th>
-			<th align="left">Pilot Name</th>
+			<th align="left" colspan="2">Pilot Name</th>
 			<th align="left">Pilot Class</th>
 			<th align="left">Pilot Plane</th>
 			<th align="left">Pilot Freq</th>
@@ -186,6 +186,10 @@ function check_permission() {ldelim}
 		<tr>
 			<td>{$num}</td>
 			<td align="center">{$p.pilot_ama|escape}</td>
+			<td>
+			{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_code}">{/if}
+			{if $p.state_name}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$p.state_name}">{/if} 
+			</td>
 			<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 			<td>{$p.class_description|escape}</td>
 			<td>{$p.plane_name|escape}</td>
@@ -305,7 +309,12 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank|escape}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			<td align="right" nowrap>
+				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
+				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" title="{$full_name}">{$full_name|truncate:20:"...":true:true}</a>
+				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
+				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+			</td>
 			{foreach $e.rounds as $r}
 				{$round_number=$r@key}
 				{if $round_number >= $start_round && $round_number <= $end_round}
@@ -468,7 +477,11 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			<td align="right" nowrap>
+				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a>
+				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
+				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+			</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
 				<td class="info" align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>

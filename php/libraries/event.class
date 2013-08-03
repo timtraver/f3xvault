@@ -68,6 +68,8 @@ class Event {
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 			LEFT JOIN class c ON ep.class_id=c.class_id
 			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+			LEFT JOIN country ct ON p.country_id=ct.country_id
+			LEFT JOIN state s ON p.state_id=s.state_id
 			WHERE ep.event_id=:event_id
 				AND ep.event_pilot_status=1
 			$sort_string
@@ -806,6 +808,10 @@ class Event {
 					if($r['event_round_flyoff']!=0){
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_code']=$this->pilots[$event_pilot_id]['country_code'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_name']=$this->pilots[$event_pilot_id]['country_name'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_code']=$this->pilots[$event_pilot_id]['state_code'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_name']=$this->pilots[$event_pilot_id]['state_name'];
 						
 						# This is a flyoff round, so lets add it to the flyoff totals instead
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
@@ -824,24 +830,30 @@ class Event {
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
 						
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties']+=$penalty;
 							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
 								# This means that this flight was not dropped, and the round is being scored
-								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
-								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties']+=$penalty;
-								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$sub-$penalty;
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$sub;
 							}else{
 								# This means that the round is being scored, but the flight was dropped
-								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties']+=$penalty;
-								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']-=$penalty;
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drop']+=$sub;
 							}
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']-=$penalty;
 						}
 					}else{
 						$subtotals[$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
 						$subtotals[$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+						$subtotals[$event_pilot_id]['country_code']=$this->pilots[$event_pilot_id]['country_code'];
+						$subtotals[$event_pilot_id]['country_name']=$this->pilots[$event_pilot_id]['country_name'];
+						$subtotals[$event_pilot_id]['state_code']=$this->pilots[$event_pilot_id]['state_code'];
+						$subtotals[$event_pilot_id]['state_name']=$this->pilots[$event_pilot_id]['state_name'];
 						
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
@@ -953,6 +965,8 @@ class Event {
 		}
 		arsort($scores);
 		$count=1;
+		$last_score=0;
+		$prelim_has_tie=0;
 		foreach($scores as $event_pilot_id=>$f){
 			$subtotals[$event_pilot_id]['overall_rank']=$count;
 			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
@@ -964,7 +978,19 @@ class Event {
 			}
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
+			if($last_score==$subtotals[$event_pilot_id]['total']){
+				$prelim_has_tie=1;
+				
+			}
+			$last_score=$subtotals[$event_pilot_id]['total'];
 		}
+		print "<!-- prelim_has_tie=$prelim_has_tie -->\n";
+		if($prelim_has_tie==1){
+			# The preliminaries have at least one tie that we need to figure out
+			
+			
+		}
+		
 		
 		# Lets see if the flyoff has a carryover score from the prelims and add those subtotals in before we determine rank
 		$carry=0;
@@ -1003,6 +1029,8 @@ class Event {
 			}
 			arsort($scores);
 			$count=1;
+			$last_score=0;
+			$flyoff_has_tie=0;
 			foreach($scores as $event_pilot_id=>$f){
 				if($f==0 && $at_least_one_score==1){
 					# This pilot has no scores, so lets not show them
@@ -1019,7 +1047,12 @@ class Event {
 				$flyoff_totals[$flyoff_number]['total_rounds']=$flyoff_round_count[$flyoff_number];
 				$flyoff_totals[$flyoff_number]['pilots'][]=$flyoff_subtotals[$flyoff_number][$event_pilot_id];
 				$count++;
+				if($last_score==$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']){
+					$flyoff_has_tie=1;
+				}
+				$last_score=$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'];
 			}
+			print "<!-- flyoff_has_tie ($flyoff_number) =$flyoff_has_tie -->\n";
 		}
 
 		# Lets get the round drops
