@@ -37,13 +37,16 @@ function save_data(element) {ldelim}
 {rdelim}
 function check_ladder(element) {ldelim}
 	var numsubs={$flight_type_subs};
-	if(element.name.substring(6, 13)=='reflight'){ldelim}
+	var reflight=0;
+	if(element.name.substring(6, 14)=="reflight"){ldelim}
 		var subnum=element.name.charAt(26);
 		var subrest=element.name.substr(27);
+		reflight=1;
 	{rdelim}else{ldelim}
 		var subnum=element.name.charAt(17);
 		var subrest=element.name.substr(18);
 	{rdelim}
+	
 	if(subnum != '1'){ldelim}
 		return;
 	{rdelim}
@@ -62,16 +65,28 @@ function check_ladder(element) {ldelim}
 		if(j>i){ldelim}z=j{rdelim}
 		// Now lets step through the array and set the values to zero first
 		for(x=1;x<=numsubs;x++){ldelim}
-			var fieldstring = "pilot_sub_flight_" + x + subrest;
+			if(reflight==1){ldelim}
+				var fieldstring = "pilot_reflight_sub_flight_" + x + subrest;
+			{rdelim}else{ldelim}
+				var fieldstring = "pilot_sub_flight_" + x + subrest;
+			{rdelim}
 			document.main[fieldstring].value='';
 		{rdelim}
 		// Now lets populate up until the time that was entered
 		for(x=1;x<=z+1;x++){ldelim}
-			var fieldstring = "pilot_sub_flight_" + x + subrest;
+			if(reflight==1){ldelim}
+				var fieldstring = "pilot_reflight_sub_flight_" + x + subrest;
+			{rdelim}else{ldelim}
+				var fieldstring = "pilot_sub_flight_" + x + subrest;
+			{rdelim}
 			document.main[fieldstring].value=times[x-1];
 		{rdelim}
 		// Lets see if I can tab to the next row
-		var fieldstring = "pilot_sub_flight_" + numsubs + subrest;
+		if(reflight==1){ldelim}
+			var fieldstring = "pilot_reflight_sub_flight_" + numsubs + subrest;
+		{rdelim}else{ldelim}
+			var fieldstring = "pilot_sub_flight_" + numsubs + subrest;
+		{rdelim}
 		document.main[fieldstring].focus();
 	{rdelim}
 {rdelim}
