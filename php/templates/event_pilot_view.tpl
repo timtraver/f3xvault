@@ -133,7 +133,10 @@ $(function () {ldelim}
 	</div>
 
 		<br>
-		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
+		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+			{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/24/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
+			{if $event->pilots.$event_pilot_id.state_name}<img src="/images/flags/states/24/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-24.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left">Round</th>
