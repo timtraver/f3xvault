@@ -37,8 +37,13 @@ function save_data(element) {ldelim}
 {rdelim}
 function check_ladder(element) {ldelim}
 	var numsubs={$flight_type_subs};
-	var subnum=element.name.charAt(17);
-	var subrest=element.name.substr(18);
+	if(element.name.substring(6, 13)=='reflight'){ldelim}
+		var subnum=element.name.charAt(26);
+		var subrest=element.name.substr(27);
+	{rdelim}else{ldelim}
+		var subnum=element.name.charAt(17);
+		var subrest=element.name.substr(18);
+	{rdelim}
 	if(subnum != '1'){ldelim}
 		return;
 	{rdelim}
