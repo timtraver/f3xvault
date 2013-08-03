@@ -1585,18 +1585,24 @@ function event_round_save() {
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
+	print "<!-- \n";
+	print_r($data);
+	print "-->\n";
+	
 	# Lets total up the subflights to calculate the full flight time
 	if($flight_type['flight_type_sub_flights']!=0){
 		# It has sub flights
 		foreach($data as $event_pilot_round_flight_id=>$p){
 			foreach($p as $event_pilot_id=>$f){
-				foreach($f as $flight_type_id=>$v){
-					$tot=0;
-					foreach($v['sub'] as $num=>$t){
-						$tot=$tot+convert_colon_to_seconds($t);
+				if(is_array($f)){
+					foreach($f as $flight_type_id=>$v){
+						$tot=0;
+						foreach($v['sub'] as $num=>$t){
+							$tot=$tot+convert_colon_to_seconds($t);
+						}
+						$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min']=floor($tot/60);
+						$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec']=sprintf("%02d",fmod($tot,60));
 					}
-					$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min']=floor($tot/60);
-					$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec']=sprintf("%02d",fmod($tot,60));
 				}
 			}
 		}
@@ -1637,178 +1643,180 @@ function event_round_save() {
 	# Now step through each one and save the flight record
 	foreach($data as $event_pilot_round_flight_id=>$p){
 		foreach($p as $event_pilot_id=>$f){
-			foreach($f as $flight_type_id=>$v){
-
-				if(!isset($eprs[$event_pilot_id])){
-					# Event round doesn't exist, so lets create one
-					$stmt=db_prep("
-						INSERT INTO event_pilot_round
-						SET event_pilot_id=:event_pilot_id,
-							event_round_id=:event_round_id
-					");
-					$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
-					$event_pilot_round_id=$GLOBALS['last_insert_id'];
-				}else{
-					$event_pilot_round_id=$eprs[$event_pilot_id];
-				}
-
-				# Now lets check if this is a new one or not
-				if($event_pilot_round_flight_id==0){
-					# This record is a new one (maybe)
-					# Lets check if one already exists from the auto save feature
-					if($p['reflight']==1){
+			if(is_array($f)){
+				foreach($f as $flight_type_id=>$v){
+	
+					if(!isset($eprs[$event_pilot_id])){
+						# Event round doesn't exist, so lets create one
 						$stmt=db_prep("
-							SELECT *
-							FROM event_pilot_round_flight erf
-							WHERE erf.event_pilot_round_id=:event_pilot_round_id
-								AND erf.flight_type_id=:flight_type_id
-								AND erf.event_pilot_round_flight_reflight=1
+							INSERT INTO event_pilot_round
+							SET event_pilot_id=:event_pilot_id,
+								event_round_id=:event_round_id
 						");
+						$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"event_pilot_id"=>$event_pilot_id));
+						$event_pilot_round_id=$GLOBALS['last_insert_id'];
 					}else{
-						$stmt=db_prep("
-							SELECT *
-							FROM event_pilot_round_flight erf
-							WHERE erf.event_pilot_round_id=:event_pilot_round_id
-								AND erf.flight_type_id=:flight_type_id
-						");
+						$event_pilot_round_id=$eprs[$event_pilot_id];
 					}
-					$result=db_exec($stmt,array(
-						"event_pilot_round_id"=>$event_pilot_round_id,
-						"flight_type_id"=>$flight_type_id
-					));
-					if(isset($result[0])){
-						$event_pilot_round_flight_id_actual=$result[0]['event_pilot_round_flight_id'];
-					}else{
-						$event_pilot_round_flight_id_actual=0;
-					}
-				}else{
-					$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
-				}
-				
-				# Lets see if the values are DNS or DNF and set the parameters
-				$dns=0;
-				$dnf=0;
-				if(strtolower($v['sec'])=='dns'){
-					$dns=1;
-					$v['sec']=0;
-				}
-				if(strtolower($v['sec'])=='dnf'){
-					$dnf=1;
-					$v['sec']=0;
-				}
-				
-				# Lets see if this flight already exists
-				if(isset($eprfs_actual[$event_pilot_round_flight_id_actual])){
-					# There is already a record, so save this one
-					$stmt=db_prep("
-						UPDATE event_pilot_round_flight
-						SET event_pilot_round_flight_group=:event_pilot_round_flight_group,
-							event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
-							event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
-							event_pilot_round_flight_over=:event_pilot_round_flight_over,
-							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
-							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
-							event_pilot_round_flight_order=:event_pilot_round_flight_order,
-							event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
-							event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
-							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
-							event_pilot_round_flight_status=1
-						WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
-					");
-					$result2=db_exec($stmt,array(
-						"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
-						"event_pilot_round_flight_group"=>$v['group'],
-						"event_pilot_round_flight_minutes"=>$v['min'],
-						"event_pilot_round_flight_seconds"=>$v['sec'],
-						"event_pilot_round_flight_over"=>$v['over'],
-						"event_pilot_round_flight_laps"=>$v['laps'],
-						"event_pilot_round_flight_landing"=>$v['land'],
-						"event_pilot_round_flight_order"=>$v['order'],
-						"event_pilot_round_flight_dns"=>$dns,
-						"event_pilot_round_flight_dnf"=>$dnf,
-						"event_pilot_round_flight_penalty"=>$v['pen']
-					));
-				}else{
-					# There isn't a record, so lets create a new one
-					$stmt=db_prep("
-						INSERT INTO event_pilot_round_flight
-						SET event_pilot_round_id=:event_pilot_round_id,
-							flight_type_id=:flight_type_id,
-							event_pilot_round_flight_group=:event_pilot_round_flight_group,
-							event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
-							event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
-							event_pilot_round_flight_over=:event_pilot_round_flight_over,
-							event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
-							event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
-							event_pilot_round_flight_order=:event_pilot_round_flight_order,
-							event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
-							event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
-							event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
-							event_pilot_round_flight_status=1
-					");
-					$result2=db_exec($stmt,array(
-						"event_pilot_round_id"=>$event_pilot_round_id,
-						"flight_type_id"=>$flight_type_id,
-						"event_pilot_round_flight_group"=>$v['group'],
-						"event_pilot_round_flight_minutes"=>$v['min'],
-						"event_pilot_round_flight_seconds"=>$v['sec'],
-						"event_pilot_round_flight_over"=>$v['over'],
-						"event_pilot_round_flight_laps"=>$v['laps'],
-						"event_pilot_round_flight_landing"=>$v['land'],
-						"event_pilot_round_flight_order"=>$v['order'],
-						"event_pilot_round_flight_dns"=>$dns,
-						"event_pilot_round_flight_dnf"=>$dnf,
-						"event_pilot_round_flight_penalty"=>$v['pen']
-					));
-					$event_pilot_round_flight_id_actual=$GLOBALS['last_insert_id'];
-				}
-				
-				# lets save the sub flights now if there are any
-				if(isset($v['sub'])){
-					# There are sub flights, so lets save them
-					foreach($v['sub'] as $num=>$t){
-						# Lets see if one exists already
-						$stmt=db_prep("
-							SELECT *
-							FROM event_pilot_round_flight_sub erfs
-							WHERE erfs.event_pilot_round_flight_id=:event_pilot_round_flight_id
-								AND erfs.event_pilot_round_flight_sub_num=:num
-						");
+	
+					# Now lets check if this is a new one or not
+					if($event_pilot_round_flight_id==0){
+						# This record is a new one (maybe)
+						# Lets check if one already exists from the auto save feature
+						if($p['reflight']==1){
+							$stmt=db_prep("
+								SELECT *
+								FROM event_pilot_round_flight erf
+								WHERE erf.event_pilot_round_id=:event_pilot_round_id
+									AND erf.flight_type_id=:flight_type_id
+									AND erf.event_pilot_round_flight_reflight=1
+							");
+						}else{
+							$stmt=db_prep("
+								SELECT *
+								FROM event_pilot_round_flight erf
+								WHERE erf.event_pilot_round_id=:event_pilot_round_id
+									AND erf.flight_type_id=:flight_type_id
+							");
+						}
 						$result=db_exec($stmt,array(
-							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
-							"num"=>$num
+							"event_pilot_round_id"=>$event_pilot_round_id,
+							"flight_type_id"=>$flight_type_id
 						));
 						if(isset($result[0])){
-						#if(isset($subs[$event_pilot_round_flight_id_actual][$num])){
-						#	$event_pilot_round_flight_sub_id=$subs[$event_pilot_round_flight_id_actual][$num];
-							$event_pilot_round_flight_sub_id=$result[0]['event_pilot_round_flight_sub_id'];
+							$event_pilot_round_flight_id_actual=$result[0]['event_pilot_round_flight_id'];
 						}else{
-							$event_pilot_round_flight_sub_id=0;
+							$event_pilot_round_flight_id_actual=0;
 						}
-						if($event_pilot_round_flight_sub_id==0){
-							# Create a new record
+					}else{
+						$event_pilot_round_flight_id_actual=$event_pilot_round_flight_id;
+					}
+					
+					# Lets see if the values are DNS or DNF and set the parameters
+					$dns=0;
+					$dnf=0;
+					if(strtolower($v['sec'])=='dns'){
+						$dns=1;
+						$v['sec']=0;
+					}
+					if(strtolower($v['sec'])=='dnf'){
+						$dnf=1;
+						$v['sec']=0;
+					}
+					
+					# Lets see if this flight already exists
+					if(isset($eprfs_actual[$event_pilot_round_flight_id_actual])){
+						# There is already a record, so save this one
+						$stmt=db_prep("
+							UPDATE event_pilot_round_flight
+							SET event_pilot_round_flight_group=:event_pilot_round_flight_group,
+								event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
+								event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
+								event_pilot_round_flight_over=:event_pilot_round_flight_over,
+								event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
+								event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
+								event_pilot_round_flight_order=:event_pilot_round_flight_order,
+								event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
+								event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
+								event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
+								event_pilot_round_flight_status=1
+							WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+						");
+						$result2=db_exec($stmt,array(
+							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
+							"event_pilot_round_flight_group"=>$v['group'],
+							"event_pilot_round_flight_minutes"=>$v['min'],
+							"event_pilot_round_flight_seconds"=>$v['sec'],
+							"event_pilot_round_flight_over"=>$v['over'],
+							"event_pilot_round_flight_laps"=>$v['laps'],
+							"event_pilot_round_flight_landing"=>$v['land'],
+							"event_pilot_round_flight_order"=>$v['order'],
+							"event_pilot_round_flight_dns"=>$dns,
+							"event_pilot_round_flight_dnf"=>$dnf,
+							"event_pilot_round_flight_penalty"=>$v['pen']
+						));
+					}else{
+						# There isn't a record, so lets create a new one
+						$stmt=db_prep("
+							INSERT INTO event_pilot_round_flight
+							SET event_pilot_round_id=:event_pilot_round_id,
+								flight_type_id=:flight_type_id,
+								event_pilot_round_flight_group=:event_pilot_round_flight_group,
+								event_pilot_round_flight_minutes=:event_pilot_round_flight_minutes,
+								event_pilot_round_flight_seconds=:event_pilot_round_flight_seconds,
+								event_pilot_round_flight_over=:event_pilot_round_flight_over,
+								event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
+								event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
+								event_pilot_round_flight_order=:event_pilot_round_flight_order,
+								event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
+								event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
+								event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
+								event_pilot_round_flight_status=1
+						");
+						$result2=db_exec($stmt,array(
+							"event_pilot_round_id"=>$event_pilot_round_id,
+							"flight_type_id"=>$flight_type_id,
+							"event_pilot_round_flight_group"=>$v['group'],
+							"event_pilot_round_flight_minutes"=>$v['min'],
+							"event_pilot_round_flight_seconds"=>$v['sec'],
+							"event_pilot_round_flight_over"=>$v['over'],
+							"event_pilot_round_flight_laps"=>$v['laps'],
+							"event_pilot_round_flight_landing"=>$v['land'],
+							"event_pilot_round_flight_order"=>$v['order'],
+							"event_pilot_round_flight_dns"=>$dns,
+							"event_pilot_round_flight_dnf"=>$dnf,
+							"event_pilot_round_flight_penalty"=>$v['pen']
+						));
+						$event_pilot_round_flight_id_actual=$GLOBALS['last_insert_id'];
+					}
+					
+					# lets save the sub flights now if there are any
+					if(isset($v['sub'])){
+						# There are sub flights, so lets save them
+						foreach($v['sub'] as $num=>$t){
+							# Lets see if one exists already
 							$stmt=db_prep("
-								INSERT INTO event_pilot_round_flight_sub
-								SET event_pilot_round_flight_id=:event_pilot_round_flight_id,
-									event_pilot_round_flight_sub_num=:num,
-									event_pilot_round_flight_sub_val=:val
+								SELECT *
+								FROM event_pilot_round_flight_sub erfs
+								WHERE erfs.event_pilot_round_flight_id=:event_pilot_round_flight_id
+									AND erfs.event_pilot_round_flight_sub_num=:num
 							");
 							$result=db_exec($stmt,array(
 								"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
-								"num"=>$num,
-								"val"=>$t
+								"num"=>$num
 							));
-						}else{
-							# Save the existing record
-							$stmt=db_prep("
-								UPDATE event_pilot_round_flight_sub
-								SET event_pilot_round_flight_sub_val=:val
-								WHERE event_pilot_round_flight_sub_id=:event_pilot_round_flight_sub_id
-							");
-							$result=db_exec($stmt,array(
-								"event_pilot_round_flight_sub_id"=>$event_pilot_round_flight_sub_id,
-								"val"=>$t
-							));
+							if(isset($result[0])){
+							#if(isset($subs[$event_pilot_round_flight_id_actual][$num])){
+							#	$event_pilot_round_flight_sub_id=$subs[$event_pilot_round_flight_id_actual][$num];
+								$event_pilot_round_flight_sub_id=$result[0]['event_pilot_round_flight_sub_id'];
+							}else{
+								$event_pilot_round_flight_sub_id=0;
+							}
+							if($event_pilot_round_flight_sub_id==0){
+								# Create a new record
+								$stmt=db_prep("
+									INSERT INTO event_pilot_round_flight_sub
+									SET event_pilot_round_flight_id=:event_pilot_round_flight_id,
+										event_pilot_round_flight_sub_num=:num,
+										event_pilot_round_flight_sub_val=:val
+								");
+								$result=db_exec($stmt,array(
+									"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
+									"num"=>$num,
+									"val"=>$t
+								));
+							}else{
+								# Save the existing record
+								$stmt=db_prep("
+									UPDATE event_pilot_round_flight_sub
+									SET event_pilot_round_flight_sub_val=:val
+									WHERE event_pilot_round_flight_sub_id=:event_pilot_round_flight_sub_id
+								");
+								$result=db_exec($stmt,array(
+									"event_pilot_round_flight_sub_id"=>$event_pilot_round_flight_sub_id,
+									"val"=>$t
+								));
+							}
 						}
 					}
 				}
