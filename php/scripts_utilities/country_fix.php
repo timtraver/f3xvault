@@ -21,7 +21,7 @@ $countries=get_countries();
 foreach($countries as $c){
 	$country_id=$c['country_id'];
 	$country_name=ucwords(strtolower($c['country_name']));
-	$stmt=dp_prep("
+	$stmt=db_prep("
 		UPDATE country
 		SET country_name=:country_name
 		WHERE country_id=:country_id

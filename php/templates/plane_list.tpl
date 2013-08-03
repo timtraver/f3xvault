@@ -81,7 +81,7 @@
 	</td>
 	<td align="center">{if $plane.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
 	<td>
-		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/16/{$plane.country_code|escape}.png" style="vertical-align: middle;">{/if}
+		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/16/{$plane.country_code|escape}.png" style="vertical-align: middle;" title="{$plane.country_name}">{/if}
 		{$plane.plane_manufacturer|escape}
 	</td>
 	<td>{$plane.plane_year|escape}</td>
