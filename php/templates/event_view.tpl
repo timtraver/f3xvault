@@ -94,31 +94,6 @@ function check_permission() {ldelim}
 	{/if}
 {rdelim}
 </script>
-<div id="print_round" style="overflow: hidden;">
-		<form name="printround" method="POST" target="_blank">
-		<input type="hidden" name="action" value="event">
-		<input type="hidden" name="function" value="event_print_round">
-		<input type="hidden" name="event_id" value="{$event->info.event_id}">
-		<input type="hidden" name="use_print_header" value="1">
-		<div style="float: left;padding-right: 10px;">
-			Print Round From :
-			<select name="round_start_number">
-			{foreach $event->rounds as $r}
-			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
-			{/foreach}
-			</select>
-			To 
-			<select name="round_end_number">
-			{foreach $event->rounds as $r}
-			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
-			{/foreach}
-			</select><br>
-			<br>
-			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
-		</div>
-		<br style="clear:both" />
-		</form>
-</div>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -838,6 +813,33 @@ function check_permission() {ldelim}
 	
 </div>
 {/if}
+
+<div id="print_round" style="overflow: hidden;">
+		<form name="printround" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_round">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="use_print_header" value="1">
+		<div style="float: left;padding-right: 10px;">
+			Print Round From :
+			<select name="round_start_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select>
+			To 
+			<select name="round_end_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select><br>
+			<br>
+			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
+		</div>
+		<br style="clear:both" />
+		</form>
+</div>
+
 <script>
 	document.getElementById('pilot_name').focus();
 </script>

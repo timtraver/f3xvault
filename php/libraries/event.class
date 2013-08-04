@@ -165,7 +165,7 @@ class Event {
 				
 		# Now lets get the rounds for this event
 		$stmt=db_prep("
-			SELECT *
+			SELECT er.*,erf.*
 			FROM event_round er
 			LEFT JOIN event_round_flight erf ON er.event_round_id=erf.event_round_id
 			WHERE er.event_id=:event_id
@@ -177,23 +177,20 @@ class Event {
 		# Step through each round and set pilot flights
 		foreach($results as $key=>$round){
 			$event_round_number=$round['event_round_number'];
-			$rounds[$event_round_number]=array(
-				"event_round_id"=>$round['event_round_id'],
-				"event_id"=>$round['event_id'],
-				"event_round_number"=>$round['event_round_number'],
-				"flight_type_id"=>$round['flight_type_id'],
-				"event_round_time_choice"=>$round['event_round_time_choice'],
-				"event_round_score_status"=>$round['event_round_score_status'],
-				"event_round_needs_calc"=>$round['event_round_needs_calc'],
-				"event_round_flyoff"=>$round['event_round_flyoff'],
-				"event_round_status"=>$round['event_round_status']
-			);
 			$flight_type_id=$round['flight_type_id'];
+			$rounds[$event_round_number]['event_round_id']=$round['event_round_id'];
+			$rounds[$event_round_number]['event_id']=$round['event_id'];
+			$rounds[$event_round_number]['event_round_number']=$round['event_round_number'];
+			$rounds[$event_round_number]['flight_type_id']=$round['flight_type_id'];
+			$rounds[$event_round_number]['event_round_time_choice']=$round['event_round_time_choice'];
+			$rounds[$event_round_number]['event_round_score_status']=$round['event_round_score_status'];
+			$rounds[$event_round_number]['event_round_needs_calc']=$round['event_round_needs_calc'];
+			$rounds[$event_round_number]['event_round_flyoff']=$round['event_round_flyoff'];
+			$rounds[$event_round_number]['event_round_status']=$round['event_round_status'];
 			$rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
 			$rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
 			$rounds[$event_round_number]['reflights'][$flight_type_id]=$this->flight_types[$flight_type_id];
 			$rounds[$event_round_number]['reflights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
-			
 		}
 		$this->rounds=$rounds;
 		

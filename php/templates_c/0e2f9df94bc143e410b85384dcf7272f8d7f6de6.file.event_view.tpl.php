@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-03 14:34:53
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-03 22:49:20
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1375565687,
+      1 => 1375595356,
       2 => 'file',
     ),
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'permission' => 0,
     'event' => 0,
-    'r' => 0,
     'num' => 0,
     'p' => 0,
+    'r' => 0,
     'flyoff_rounds' => 0,
     'zero_rounds' => 0,
     'prelim_rounds' => 0,
@@ -163,48 +163,6 @@ function check_permission() {
 	<?php }?>
 }
 </script>
-<div id="print_round" style="overflow: hidden;">
-		<form name="printround" method="POST" target="_blank">
-		<input type="hidden" name="action" value="event">
-		<input type="hidden" name="function" value="event_print_round">
-		<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
-">
-		<input type="hidden" name="use_print_header" value="1">
-		<div style="float: left;padding-right: 10px;">
-			Print Round From :
-			<select name="round_start_number">
-			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
- $_smarty_tpl->tpl_vars['r']->iteration=0;
-foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
-$_smarty_tpl->tpl_vars['r']->_loop = true;
- $_smarty_tpl->tpl_vars['r']->iteration++;
-?>
-			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-</option>
-			<?php } ?>
-			</select>
-			To 
-			<select name="round_end_number">
-			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
- $_smarty_tpl->tpl_vars['r']->iteration=0;
-foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
-$_smarty_tpl->tpl_vars['r']->_loop = true;
- $_smarty_tpl->tpl_vars['r']->iteration++;
-?>
-			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
-</option>
-			<?php } ?>
-			</select><br>
-			<br>
-			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
-		</div>
-		<br style="clear:both" />
-		</form>
-</div>
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -1230,6 +1188,50 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 	
 </div>
 <?php }?>
+
+<div id="print_round" style="overflow: hidden;">
+		<form name="printround" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_round">
+		<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
+		<input type="hidden" name="use_print_header" value="1">
+		<div style="float: left;padding-right: 10px;">
+			Print Round From :
+			<select name="round_start_number">
+			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['r']->iteration=0;
+foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
+$_smarty_tpl->tpl_vars['r']->_loop = true;
+ $_smarty_tpl->tpl_vars['r']->iteration++;
+?>
+			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+</option>
+			<?php } ?>
+			</select>
+			To 
+			<select name="round_end_number">
+			<?php  $_smarty_tpl->tpl_vars['r'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['r']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->rounds; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['r']->iteration=0;
+foreach ($_from as $_smarty_tpl->tpl_vars['r']->key => $_smarty_tpl->tpl_vars['r']->value){
+$_smarty_tpl->tpl_vars['r']->_loop = true;
+ $_smarty_tpl->tpl_vars['r']->iteration++;
+?>
+			<option value="<?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+"><?php echo $_smarty_tpl->tpl_vars['r']->value['event_round_number'];?>
+</option>
+			<?php } ?>
+			</select><br>
+			<br>
+			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
+		</div>
+		<br style="clear:both" />
+		</form>
+</div>
+
 <script>
 	document.getElementById('pilot_name').focus();
 </script>
