@@ -81,7 +81,7 @@
 	</td>
 	<td>{$p.pilot_city|escape}</td>
 	<td>
-		{if $p.state_name}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		{if $p.state_name && $p.country_code=="US"}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
 		{$p.state_name|escape}
 	</td>
 	<td>

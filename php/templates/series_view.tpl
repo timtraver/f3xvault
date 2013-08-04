@@ -61,7 +61,7 @@ $(function() {
 			<td>
 			{$series->info.series_area|escape},{$series->info.state_code|escape} {$series->info.country_code|escape}
 			{if $series->info.country_code}<img src="/images/flags/countries-iso/shiny/24/{$series->info.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $series->info.state_name}<img src="/images/flags/states/24/{$series->info.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
+			{if $series->info.state_name && $series->info.country_code=="US"}<img src="/images/flags/states/24/{$series->info.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
 			</td>
 		</tr>
 		<tr>
@@ -93,7 +93,7 @@ $(function() {
 			</td>
 			<td>{$e.location_name|escape}</td>
 			<td>
-				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
 				{$e.state_name|escape}
 			</td>
 			<td>

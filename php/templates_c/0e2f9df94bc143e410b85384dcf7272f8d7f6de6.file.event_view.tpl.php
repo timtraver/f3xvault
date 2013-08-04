@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-03 22:49:20
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-04 00:23:14
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1375595356,
+      1 => 1375600988,
       2 => 'file',
     ),
   ),
@@ -257,7 +257,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<?php if ($_smarty_tpl->tpl_vars['p']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['country_code'];?>
 "><?php }?>
-			<?php if ($_smarty_tpl->tpl_vars['p']->value['state_name']){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
+			<?php if ($_smarty_tpl->tpl_vars['p']->value['state_name']&&$_smarty_tpl->tpl_vars['p']->value['country_code']=="US"){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
 -Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['state_name'];?>
 "><?php }?> 
 			</td>
@@ -431,7 +431,7 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 				<?php if ($_smarty_tpl->tpl_vars['e']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['e']->value['country_name'];?>
 "><?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['e']->value['state_name']){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
+				<?php if ($_smarty_tpl->tpl_vars['e']->value['state_name']&&$_smarty_tpl->tpl_vars['e']->value['country_code']=="US"){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
 -Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['e']->value['state_name'];?>
 "><?php }?>
 			</td>
@@ -680,7 +680,7 @@ $_smarty_tpl->tpl_vars['e']->_loop = true;
 				<?php if ($_smarty_tpl->tpl_vars['e']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['e']->value['country_name'];?>
 "><?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['e']->value['state_name']){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
+				<?php if ($_smarty_tpl->tpl_vars['e']->value['state_name']&&$_smarty_tpl->tpl_vars['e']->value['country_code']=="US"){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
 -Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['e']->value['state_name'];?>
 "><?php }?>
 			</td>

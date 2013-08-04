@@ -92,6 +92,8 @@ $(function() {
 			<th align="right">Location</th>
 			<td>
 			{$club.club_city|escape},{$club.state_code|escape} {$club.country_code|escape}
+			{if $club.country_code}<img src="/images/flags/countries-iso/shiny/16/{$club.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			{if $club.state_name && $club.country_code=="US"}<img src="/images/flags/states/16/{$club.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
 			</td>
 		</tr>
 		<tr>
@@ -125,8 +127,12 @@ $(function() {
 		<tr>
 			<td>{$cl.location_name|escape}</td>
 			<td>{$cl.location_city|escape}</td>
-			<td>{$cl.state_name|escape}</td>
-			<td>{$cl.country_name|escape}</td>
+			<td>{$cl.state_name|escape}
+				{if $cl.state_name && $cl.country_code=="US"}<img src="/images/flags/states/16/{$cl.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+			</td>
+			<td>{$cl.country_name|escape}
+				{if $cl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$cl.country_code|escape}.png" style="vertical-align: middle;">{/if}
+			</td>
 			<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 			<td nowrap>
 				<a href="/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"><img src="/images/del.gif"></a>

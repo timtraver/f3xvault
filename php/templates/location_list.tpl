@@ -90,7 +90,7 @@
 		<a href="?action=location&function=location_view&location_id={$location.location_id|escape}">{$location.location_name|escape}</a>
 	</td>
 	<td>{$location.location_city|escape}</td>
-	<td>{if $location.state_name}<img src="/images/flags/states/16/{$location.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} {$location.state_name|escape}</td>
+	<td>{if $location.state_name && $location.country_code=="US"}<img src="/images/flags/states/16/{$location.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} {$location.state_name|escape}</td>
 	<td>{if $location.country_code}<img src="/images/flags/countries-iso/shiny/16/{$location.country_code|escape}.png" style="vertical-align: middle;">{/if} {$location.country_name|escape}</td>
 	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 	<td><a href="?action=location&function=location_edit&location_id={$location.location_id|escape}" title="Edit This Location"><img src="images/icon_edit_small.gif" width="20"></a>

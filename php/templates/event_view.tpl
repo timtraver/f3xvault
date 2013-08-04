@@ -163,7 +163,7 @@ function check_permission() {ldelim}
 			<td align="center">{$p.pilot_ama|escape}</td>
 			<td>
 			{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_code}">{/if}
-			{if $p.state_name}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$p.state_name}">{/if} 
+			{if $p.state_name && $p.country_code=="US"}<img src="/images/flags/states/16/{$p.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$p.state_name}">{/if} 
 			</td>
 			<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
 			<td>{$p.class_description|escape}</td>
@@ -288,7 +288,7 @@ function check_permission() {ldelim}
 				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
 				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" title="{$full_name}">{$full_name|truncate:20:"...":true:true}</a>
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
-				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{$round_number=$r@key}
@@ -455,7 +455,7 @@ function check_permission() {ldelim}
 			<td align="right" nowrap>
 				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a>
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
-				{if $e.state_name}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
