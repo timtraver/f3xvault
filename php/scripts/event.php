@@ -609,8 +609,9 @@ function event_pilot_edit() {
 	$pilot_name=$_REQUEST['pilot_name'];
 
 	$event=new Event($event_id);
+	$event->get_teams();
 	$smarty->assign("event",$event);
-
+	
 	# Check to see if the pilot already exists in this event
 	$stmt=db_prep("
 		SELECT *
