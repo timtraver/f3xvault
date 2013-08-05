@@ -726,6 +726,7 @@ function event_pilot_edit() {
 		}else{
 			$pilot['event_pilot_entry_order']=$result[0]['max']+1;
 		}
+		$pilot['event_pilot_bib']=$pilot['event_pilot_entry_order'];
 	}
 	
 	# Lets set a default for the Channel
@@ -1603,9 +1604,6 @@ function event_round_save() {
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
-	print "<!-- \n";
-	print_r($data);
-	print "-->\n";
 	
 	# Lets total up the subflights to calculate the full flight time
 	if($flight_type['flight_type_sub_flights']!=0){
