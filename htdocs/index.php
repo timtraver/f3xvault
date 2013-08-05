@@ -129,6 +129,9 @@ if(isset($_REQUEST['trace']) || file_exists("{$GLOBALS['include_paths']['base']}
 	$trace_on=1;
 }
 
+# Set the default character set output to UTF-8
+header('Content-type: text/html; charset=utf-8');
+
 # export main template
 start_smarty();
 $smarty->assign("action",$action);
