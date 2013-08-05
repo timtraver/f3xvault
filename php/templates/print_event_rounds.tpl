@@ -28,7 +28,7 @@
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=7}
+			{$cols=8}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -38,7 +38,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th width="2%" align="left"></th>
+				<th width="2%" align="left" colspan="2"></th>
 				<th align="left">Pilot Name</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
@@ -75,7 +75,15 @@
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+				<td>
+					{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+						<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+					{/if}
+				</td>
+				<td nowrap>
+					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
+					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+				</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 					{else}
@@ -87,9 +95,9 @@
 								{$time_disabled=1}
 								{for $sub=1 to $ft.flight_type_sub_flights}
 									{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}
-										<span style="background-color: #9DCFF0;padding: 1px;">{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}</span>
+										<span style="background-color: white;display: inline-block;padding: 0px;margin: 1px;width: 35px;">{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}</span>
 									{else}
-										<span style="background-color: #9DCFF0;padding: 1px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span style="background-color: white;display: inline-block;padding: 0px;margin: 1px;width: 35px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 									{/if} 
 								{/for}
 								= 
@@ -134,9 +142,9 @@
 			{/foreach}
 			{/foreach}
 			{if $ft.flight_type_reflight==1}
-			{if $event->rounds.$round_number.reflights|count > 0}
+			{if $event->rounds.$round_number.reflights.$flight_type_id.pilots|count > 0}
 			<tr>
-				<th align="left" colspan="11">Reflights</th>
+				<th align="left" colspan="12">Reflights</th>
 			</tr>
 			{/if}
 			{foreach $event->rounds.$round_number.reflights as $f}
@@ -153,6 +161,11 @@
 				{/if}
 				<tr style="background-color: {$groupcolor};">
 					<td style="background-color: lightgrey;">{$num}</td>
+					<td>
+						{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+							<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+						{/if}
+					</td>
 					<td style="background-color: #9DCFF0;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					

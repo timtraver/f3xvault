@@ -14,9 +14,13 @@
 		</tr>
 		</table>
 
-		<h1 class="post-title entry-title" style="margin:0px;">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
+		<h2 class="post-title entry-title" style="margin:0px;">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+			{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/24/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
+			{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/24/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-24.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+		</h2>
+
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableprint">
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th width="2%" align="left">Round</th>
 			{if $event->info.event_type_code!='f3k'}
 			{$cols=0}
@@ -31,10 +35,9 @@
 				{$cols=7}
 			{/if}
 			<th colspan="{$cols}" align="center" nowrap>Round Data</th>
-			<th width="5%" nowrap>Total</th>
 		</tr>
 		{if $event->info.event_type_code!='f3k'}
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th width="2%" align="left"></th>
 			{foreach $event->flight_types as $ft}
 				{$cols=4}
@@ -44,13 +47,12 @@
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
 				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
 		
 		
 		{if $event->info.event_type_code!='f3k'}
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th width="2%" align="center"></th>
 			{foreach $event->flight_types as $ft}
 				{if $ft.flight_type_group}
@@ -70,10 +72,9 @@
 				<th align="center">Pen</th>
 				<th align="center">Rank</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 		</tr>
 		{else}
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th width="2%" align="center"></th>
 			<th align="center">Task</th>
 			<th align="center">Group</th>
@@ -82,7 +83,6 @@
 			<th align="center">Score</th>
 			<th align="center">Pen</th>
 			<th align="center">Rank</th>
-			<th width="5%" nowrap></th>
 			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
@@ -118,7 +118,7 @@
 						{/foreach}
 					{/if}
 
-					{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
+					{if $bgcolor=='lightgrey'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='lightgrey'}{/if}
 					{if $event->info.event_type_code=='f3k'}
 						<th width="5%" align="left" nowrap style="background-color: {$bgcolor};">
 							{$ft.flight_type_name|escape}
@@ -189,39 +189,32 @@
 						{/if}
 					</td>
 				{/foreach}
-				{foreach $event->totals.pilots as $p}
-					{if $p.event_pilot_id==$event_pilot_id}
-						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
-						{$round_total=$round_total-$round_pen}
-						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
-					{/if}
-				{/foreach}
 			</tr>
 		{/foreach}
 		</table>
 		
-		<h1 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
+		<h2 class="post-title entry-title">Pilot Totals for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h2>
 		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th>Overall Rank</th>
 			<td>{$event->pilots.$event_pilot_id.event_pilot_position}</td>
 		</tr>
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th>Total Points</th>
 			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:"%06.3f"}</td>
 		</tr>
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th>Event Percentage</th>
 			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
 		</tr>
 		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th>Total Distance Laps</th>
 			<td>{$event->pilots.$event_pilot_id.event_pilot_total_laps} (rank {$event->pilots.$event_pilot_id.event_pilot_lap_rank})</td>
 		</tr>
 		{/if}
 		{if $event->pilots.$event_pilot_id.event_pilot_average_speed>0}
-		<tr>
+		<tr bgcolor="lightgrey">
 			<th>Pilot Average Speed</th>
 			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:"%06.3f"} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
 		</tr>

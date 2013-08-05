@@ -14,6 +14,8 @@
 					<br>
 					<a href="?action=admin&function=admin_activity">Site Activity</a><br>
 					<br>
+					<a href="?action=location&function=location_calculate_records">Calculate Location Records</a><br>
+					<br>
 				</div>
 	</div>
 </div>

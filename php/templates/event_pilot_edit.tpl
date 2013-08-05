@@ -100,6 +100,7 @@ function copy_plane_values(){ldelim}
 	document.add_plane.from_class_id.value=document.main.class_id.value;
 	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
 	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;
+	document.add_plane.from_event_pilot_bib.value=document.main.event_pilot_bib.value;
 {rdelim}
 function change_pilot(){ldelim}
 	var pilot_search=document.getElementById('pilot_search');
@@ -213,6 +214,12 @@ function change_pilot(){ldelim}
 </tr>
 {/if}
 <tr>
+	<th align="right" nowrap>Event Pilot Bib Number</th>
+	<td colspan="2">
+		<input type="text" name="event_pilot_bib" size="2" value="{$pilot.event_pilot_bib|escape}"> Leave blank if not using bibs
+	</td>
+</tr>
+<tr>
 	<th align="right" nowrap>Pilot AMA #</th>
 	<td colspan="2">
 		<input type="text" name="pilot_ama" size="15" value="{$pilot.pilot_ama|escape}">
@@ -268,7 +275,7 @@ function change_pilot(){ldelim}
 {if $pilot.pilot_id==0}
 	document.main.pilot_city.focus();
 {else}
-	document.main.pilot_ama.focus();
+	document.main.event_pilot_bib.focus();
 {/if}
 </script>
 <form name="goback" method="POST">
@@ -297,6 +304,7 @@ function change_pilot(){ldelim}
 <input type="hidden" name="from_class_id" value="">
 <input type="hidden" name="from_event_pilot_freq" value="">
 <input type="hidden" name="from_event_pilot_team" value="">
+<input type="hidden" name="from_event_pilot_bib" value="">
 </form>
 
 </div>

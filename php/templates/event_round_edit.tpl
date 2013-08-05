@@ -334,7 +334,12 @@ function check_permission() {ldelim}
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+				<td nowrap>
+					{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+						<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+					{/if}
+					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+				</td>
 					{if $ft.flight_type_group}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 					{else}
@@ -415,7 +420,12 @@ function check_permission() {ldelim}
 				{/if}
 				<tr style="background-color: {$groupcolor};">
 					<td style="background-color: lightgrey;">{$num}</td>
-					<td style="background-color: white;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+					<td style="background-color: white;" nowrap>
+						{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+							<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+						{/if}
+						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					</td>
 						{if $ft.flight_type_group}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="1" style="width:10px;" name="pilot_reflight_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
 						{else}
@@ -487,6 +497,7 @@ function check_permission() {ldelim}
 <br>
 <input type="button" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
 <input type="button" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="block-button">
+<input type="button" value=" Print Round Detail " onClick="document.printround.submit();" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
 {if $event_round_id !=0 && $permission==1}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
@@ -523,6 +534,14 @@ function check_permission() {ldelim}
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_round_id" value="{$event_round_id}">
 <input type="hidden" name="sort_by" value="">
+</form>
+<form name="printround" method="POST" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_round">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+<input type="hidden" name="round_start_number" value="{$round_number|escape}">
+<input type="hidden" name="round_end_number" value="{$round_number|escape}">
 </form>
 
 <form name="goback" method="GET">

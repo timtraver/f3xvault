@@ -946,5 +946,58 @@ function location_map() {
 	$maintpl=find_template("location_map.tpl");
 	return $smarty->fetch($maintpl);
 }
+function location_calculate_records(){
+	# Function to look at all of the events and calculate and save the records
+	global $smarty;
+	
+	# Lets get all of the events so we can step through them
+	$stmt=db_prep("
+		SELECT e.event_name,e.event_start_date,e.event_type_id,l.location_id,l.location_name
+		FROM event e
+		LEFT JOIN location l ON e.location_id=l.location_id
+		WHERE e.event_status=1
+			AND e.event_type_id IN (1,2,3)
+	");
+	$results=db_exec($stmt,array());
+	foreach($results as $e){
+		# Ok, depending on the type of event, lets find the fastest time
+		switch($e.event_type_id){
+			case 1:
+				# This is an F3F event
+				$stmt=db_prep("
+					SELECT e.event_name,erf.event_pilot_round_flight_seconds,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,e.location_id
+					FROM event_pilot_round_flight erf
+					LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
+					LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+					LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+					LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+					LEFT JOIN event e ON ep.event_id=e.event_id
+					WHERE er.event_id=:event_id
+						AND er.event_round_status=1
+						AND erf.event_pilot_round_flight_status=1
+						AND ep.event_pilot_status=1
+						AND erf.event_pilot_round_flight_seconds!=0
+					ORDER BY erf.event_pilot_round_flight_seconds
+				");
 
+				
+
+
+
+			case 3:
+				
+		}
+		
+		
+		
+	}
+	
+	
+	#	SELECT eprf.event_pilot_round_flight_seconds,eprf.event_pilot_round_flight_laps,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,e.event_name
+	#$results=db_exec($stmt,array());
+	
+	$smarty->assign("results",$results);
+	$maintpl=find_template("admin_results.tpl");
+	return $smarty->fetch($maintpl);
+}
 ?>

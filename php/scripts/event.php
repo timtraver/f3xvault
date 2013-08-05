@@ -649,6 +649,7 @@ function event_pilot_edit() {
 			$pilot['class_id']=$_REQUEST['class_id'];
 			$pilot['event_pilot_freq']=$_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
+			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
 		}
@@ -672,6 +673,7 @@ function event_pilot_edit() {
 			$pilot['event_pilot_team']=$_REQUEST['event_pilot_team'];
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
+			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
 		}
 	}else{
 		# This will be a new pilot
@@ -693,11 +695,19 @@ function event_pilot_edit() {
 			$pilot['pilot_id']=$_REQUEST['pilot_id'];
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
+			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
 		}else{
 			# Lets set the name that was sent
-			$name=preg_split("/\s/",$pilot_name,2);
-			$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
-			$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+			# Lets first see if it has a comma if it was pasted as last, first
+			if(preg_match("/\,\s/",$pilot_name)){
+				$name=preg_split("/\,\s/",$pilot_name,2);
+				$pilot['pilot_first_name']=ucwords(strtolower($name[1]));
+				$pilot['pilot_last_name']=ucwords(strtolower($name[0]));
+			}else{
+				$name=preg_split("/\s/",$pilot_name,2);
+				$pilot['pilot_first_name']=ucwords(strtolower($name[0]));
+				$pilot['pilot_last_name']=ucwords(strtolower($name[1]));
+			}
 			$pilot['state_id']=$event->info['state_id'];
 		}
 	}
@@ -763,6 +773,7 @@ function event_pilot_save() {
 	$plane_id=intval($_REQUEST['plane_id']);
 	$from_confirm=intval($_REQUEST['from_confirm']);
 	$event_pilot_entry_order=intval($_REQUEST['event_pilot_entry_order']);
+	$event_pilot_bib=intval($_REQUEST['event_pilot_bib']);
 	
 	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
 	if($pilot_id==0){
@@ -799,6 +810,7 @@ function event_pilot_save() {
 				$smarty->assign("class_id",$class_id);
 				$smarty->assign("event_pilot_freq",$event_pilot_freq);
 				$smarty->assign("event_pilot_team",$event_pilot_team);
+				$smarty->assign("event_pilot_bib",$event_pilot_bib);
 				$smarty->assign("plane_id",$plane_id);
 				
 				# Lets add the state name and country name for good presentation
@@ -854,6 +866,7 @@ function event_pilot_save() {
 			SET pilot_id=:pilot_id,
 				class_id=:class_id,
 				event_pilot_entry_order=:event_pilot_entry_order,
+				event_pilot_bib=:event_pilot_bib,
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id
@@ -863,6 +876,7 @@ function event_pilot_save() {
 			"pilot_id"=>$pilot_id,
 			"class_id"=>$class_id,
 			"event_pilot_entry_order"=>$event_pilot_entry_order,
+			"event_pilot_bib"=>$event_pilot_bib,
 			"event_pilot_freq"=>$event_pilot_freq,
 			"event_pilot_team"=>$event_pilot_team,
 			"event_pilot_id"=>$event_pilot_id,
@@ -885,6 +899,7 @@ function event_pilot_save() {
 				SET pilot_id=:pilot_id,
 					class_id=:class_id,
 					event_pilot_entry_order=:event_pilot_entry_order,
+					event_pilot_bib=:event_pilot_bib,
 					event_pilot_freq=:event_pilot_freq,
 					event_pilot_team=:event_pilot_team,
 					plane_id=:plane_id,
@@ -895,6 +910,7 @@ function event_pilot_save() {
 				"pilot_id"=>$pilot_id,
 				"class_id"=>$class_id,
 				"event_pilot_entry_order"=>$event_pilot_entry_order,
+				"event_pilot_bib"=>$event_pilot_bib,
 				"event_pilot_freq"=>$event_pilot_freq,
 				"event_pilot_team"=>$event_pilot_team,
 				"plane_id"=>$plane_id,
@@ -908,6 +924,7 @@ function event_pilot_save() {
 				SET event_id=:event_id,
 					pilot_id=:pilot_id,
 					event_pilot_entry_order=:event_pilot_entry_order,
+					event_pilot_bib=:event_pilot_bib,
 					class_id=:class_id,
 					event_pilot_freq=:event_pilot_freq,
 					event_pilot_team=:event_pilot_team,
@@ -919,6 +936,7 @@ function event_pilot_save() {
 				"pilot_id"=>$pilot_id,
 				"class_id"=>$class_id,
 				"event_pilot_entry_order"=>$event_pilot_entry_order,
+				"event_pilot_bib"=>$event_pilot_bib,
 				"event_pilot_freq"=>$event_pilot_freq,
 				"event_pilot_team"=>$event_pilot_team,
 				"plane_id"=>$plane_id
@@ -3153,12 +3171,14 @@ function event_import_save() {
 					pilot_id=:pilot_id,
 					class_id=1,
 					event_pilot_entry_order=:event_pilot_entry_order,
+					event_pilot_bib=:event_pilot_bib,
 					event_pilot_status=1
 			");
 			$result2=db_exec($stmt,array(
 				"event_id"=>$event_id,
 				"pilot_id"=>$pilot_id,
-				"event_pilot_entry_order"=>$line
+				"event_pilot_entry_order"=>$line,
+				"event_pilot_bib"=>$line
 			));
 			$event_pilot_id=$GLOBALS['last_insert_id'];
 		}

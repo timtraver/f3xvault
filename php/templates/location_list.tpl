@@ -61,14 +61,14 @@
 <br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="6" style="text-align: left;">Locations (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
+	<th colspan="7" style="text-align: left;">Locations (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
 <tr style="background-color: lightgray;">
         <td align="left" colspan="3">
                 {if $startrecord>1}[<a href="?action=location&function=location_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=location&function=location_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="3">PerPage
+        <td align="right" colspan="4">PerPage
                 [<a href="?action=location&function=location_list&&perpage=25">25</a>]
                 [<a href="?action=location&function=location_list&&perpage=50">50</a>]
                 [<a href="?action=location&function=location_list&&perpage=100">100</a>]
@@ -77,12 +77,17 @@
         </td>
 </tr>
 <tr>
+	<th style="text-align: left;" colspan="5"></th>
+	<th style="text-align: center;" colspan="2">Records</th>
+</tr>
+<tr>
 	<th style="text-align: left;">Location Name</th>
 	<th style="text-align: left;">City</th>
 	<th style="text-align: left;">State</th>
 	<th style="text-align: left;">Country</th>
 	<th style="text-align: center;">Map Location</th>
-	<th style="text-align: left;">Action</th>
+	<th style="text-align: center;">Speed</th>
+	<th style="text-align: center;">Distance</th>
 </tr>
 {foreach $locations as $location}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
@@ -93,7 +98,24 @@
 	<td>{if $location.state_name && $location.country_code=="US"}<img src="/images/flags/states/16/{$location.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} {$location.state_name|escape}</td>
 	<td>{if $location.country_code}<img src="/images/flags/countries-iso/shiny/16/{$location.country_code|escape}.png" style="vertical-align: middle;">{/if} {$location.country_name|escape}</td>
 	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
-	<td><a href="?action=location&function=location_edit&location_id={$location.location_id|escape}" title="Edit This Location"><img src="images/icon_edit_small.gif" width="20"></a>
+	<td class="info">
+		{if $location.location_record_speed!=0}
+			{$location.location_record_speed|escape}s
+			<span>
+				{$location.pilot_first_name} {$location.pilot_first_name}<br>
+				{$location.event_name}
+			</span>
+		{/if}
+		
+	</td>
+	<td class="info">
+		{if $location.location_record_distance!=0}
+			{$location.location_record_distance|escape} laps
+			<span>
+				{$location.pilot_first_name} {$location.pilot_first_name}<br>
+				{$location.event_name}
+			</span>
+		{/if}
 	</td>
 </tr>
 {/foreach}
@@ -102,7 +124,7 @@
                 {if $startrecord>1}[<a href="?action=location&function=location_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=location&function=location_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
-        <td align="right" colspan="3">PerPage
+        <td align="right" colspan="4">PerPage
                 [<a href="?action=location&function=location_list&perpage=25">25</a>]
                 [<a href="?action=location&function=location_list&perpage=50">50</a>]
                 [<a href="?action=location&function=location_list&perpage=100">100</a>]

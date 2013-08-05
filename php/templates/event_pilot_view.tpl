@@ -135,7 +135,7 @@ $(function () {ldelim}
 		<br>
 		<h1 class="post-title entry-title">Pilot Round Detail for {$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 			{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/24/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-			{if $event->pilots.$event_pilot_id.state_name}<img src="/images/flags/states/24/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-24.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+			{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/24/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-24.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -153,7 +153,6 @@ $(function () {ldelim}
 				{$cols=7}
 			{/if}
 			<th colspan="{$cols}" align="center" nowrap>Round Data</th>
-			<th width="5%" nowrap>Total</th>
 		</tr>
 		{if $event->info.event_type_code!='f3k'}
 		<tr>
@@ -166,7 +165,6 @@ $(function () {ldelim}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
 				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
 		
@@ -192,7 +190,6 @@ $(function () {ldelim}
 				<th align="center">Pen</th>
 				<th align="center">Rank</th>
 			{/foreach}
-			<th width="5%" nowrap></th>
 		</tr>
 		{else}
 		<tr>
@@ -204,7 +201,6 @@ $(function () {ldelim}
 			<th align="center">Score</th>
 			<th align="center">Pen</th>
 			<th align="center">Rank</th>
-			<th width="5%" nowrap></th>
 		</tr>
 		{/if}
 		{$flyoff_label=0}
@@ -293,13 +289,6 @@ $(function () {ldelim}
 					<td align="center" nowrap style="background-color: {$bgcolor};">
 						{$values.event_pilot_round_flight_rank|escape}
 					</td>
-				{/foreach}
-				{foreach $event->totals.pilots as $p}
-					{if $p.event_pilot_id==$event_pilot_id}
-						{if $bgcolor=='white'}{$bgcolor='#9DCFF0'}{else}{$bgcolor='white'}{/if}
-						{$round_total=$round_total-$round_pen}
-						<td width="5%" align="right" nowrap style="background-color: {$bgcolor};">{$round_total|string_format:"%06.3f"}</td>
-					{/if}
 				{/foreach}
 			</tr>
 		{/foreach}

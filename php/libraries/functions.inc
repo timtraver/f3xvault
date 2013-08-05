@@ -716,6 +716,18 @@ function convert_string_to_colon($timestring){
 			$min=$min+1;
 		}
 		return sprintf("%d:%02d",$min,$sec);
+	}elseif(preg_match("/^(\d)$/",$timestring,$match)){
+		$min=0;
+		$sec=$match[1];
+		if($sec>=60){
+			$sec=$sec-60;
+			$min=$min+1;
+		}
+		# Pad the seconds if needed
+		if($sec<10){
+			$sec="0$sec";
+		}
+		return "$min:$sec";
 	}elseif(preg_match("/^(\d\d)$/",$timestring,$match)){
 		$min=0;
 		$sec=$match[1];
