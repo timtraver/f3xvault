@@ -13,6 +13,7 @@ class Event {
 	var $event_id;
 	var $info=array();
 	var $pilots=array();
+	var $planes=array();
 	var $rounds=array();
 	var $rounds_new=array();
 	var $totals=array();
@@ -83,6 +84,20 @@ class Event {
 				$this->classes[$class_id]=array("class_id"=>$pilot['class_id'],"class_description"=>$pilot['class_description']);
 			}
 		}
+		
+		$temp=array_msort($this->pilots,array('event_pilot_position'=>SORT_ASC));
+		$planes=array();
+		foreach($temp as $p){
+			$event_pilot_id=$p['event_pilot_id'];
+			if($p['plane_id']!=0){
+				# Lets add this to the list of planes
+				$plane_id=$p['plane_id'];
+				$planes[$plane_id]['total']++;
+				$planes[$plane_id]['name']=$p['plane_name'];
+				$planes[$plane_id]['pilots'][]=$event_pilot_id;
+			}
+		}
+		$this->planes=array_msort($planes,array('total'=>SORT_DESC));
 		sub_trace();
 		return;
 	}

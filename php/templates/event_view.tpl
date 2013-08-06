@@ -297,15 +297,18 @@ function check_permission() {ldelim}
 			</td>
 			<td align="right" nowrap>
 				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
-				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" title="{$full_name}">{$full_name|truncate:20:"...":true:true}</a>
+				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" title="{$full_name}" class="tooltip">{$full_name|truncate:20:"...":true:true}
+					{include file="event_view_pilot_main_popup.tpl"}
+				</a>
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
 				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{$round_number=$r@key}
 				{if $round_number >= $start_round && $round_number <= $end_round}
-				<td class="info" align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
+					<a href="" class="tooltip_score" onClick="return false;">
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -330,23 +333,8 @@ function check_permission() {ldelim}
 						{/if}
 					{if $drop==1}</font></del>{/if}
 					{* lets determine the content to show on popup *}
-						<span>
-							{$event_round_number=$r@key}
-							{foreach $event->rounds.$event_round_number.flights as $f}
-								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
-									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'distance'}
-									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'speed'}
-									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
-								{/if}
-							{/foreach}
-						</span>
+						{include file="event_view_score_popup.tpl"}
+					</a>
 					</div>
 				</td>
 				{/if}
@@ -355,14 +343,14 @@ function check_permission() {ldelim}
 			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
-			<td class="info" width="5%" nowrap align="right">
-				<div style="position:relative;">
+			<td width="5%" nowrap align="right">
+				<a href="" class="tooltip_score_left" onClick="return false;">
 					{$e.total|string_format:"%06.3f"}
 					<span>
-					Behind Prev : {$diff|string_format:"%06.3f"}<br>
-					Behind Lead : {$diff_to_lead|string_format:"%06.3f"}<br>
+					<b>Behind Prev</b> : {$diff|string_format:"%04.3f"}<br>
+					<b>Behind Lead</b> : {$diff_to_lead|string_format:"%04.3f"}<br>
 					</span>
-				</div>
+				</a>
 			</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
@@ -385,13 +373,15 @@ function check_permission() {ldelim}
 						{/foreach}
 					{/foreach}
 					{if $fast==1000}{$fast=0}{/if}
-					<th class="info" align="center">
+					<th align="center">
 						<div style="position:relative;">
+						<a href="" class="tooltip_score" onClick="return false;">
 						{$fast|escape}s
 						<span>
 							Fast Time : {$fast}s<br>
 							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
+						</a>
 						</div>
 					</th>
 				{/if}
@@ -472,8 +462,9 @@ function check_permission() {ldelim}
 			</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
-				<td class="info" align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+				<td align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
+					<a href="" class="tooltip_score" onClick="return false;">
 					{$dropval=0}
 					{$dropped=0}
 					{foreach $r.flights as $f}
@@ -492,23 +483,8 @@ function check_permission() {ldelim}
 						{/if}
 					{if $drop==1}</font></del>{/if}
 					{* lets determine the content to show on popup *}
-						<span>
-							{$event_round_number=$r@key}
-							{foreach $event->rounds.$event_round_number.flights as $f}
-								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
-									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'distance'}
-									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'speed'}
-									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
-								{/if}
-							{/foreach}
-						</span>
+						{include file="event_view_score_popup.tpl"}
+					</a>
 					</div>
 				</td>
 				{/if}
@@ -517,7 +493,15 @@ function check_permission() {ldelim}
 			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
 			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
-			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">
+				<a href="" class="tooltip_score_left" onClick="return false;">
+					{$e.total|string_format:"%06.3f"}
+					<span>
+					<b>Behind Prev</b> : {$diff|string_format:"%04.3f"}<br>
+					<b>Behind Lead</b> : {$diff_to_lead|string_format:"%04.3f"}<br>
+					</span>
+				</a>
+			</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
 		{/foreach}
@@ -539,15 +523,17 @@ function check_permission() {ldelim}
 					{/foreach}
 				{/foreach}
 				{if $fast==1000}{$fast=0}{/if}
-				<th class="info" align="center">
-					<div style="position:relative;">
-					{$fast}s
-					<span>
-						Fast Time : {$fast}s<br>
-						{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
-					</span>
-					</div>
-				</th>
+					<th align="center">
+						<div style="position:relative;">
+						<a href="" class="tooltip_score" onClick="return false;">
+						{$fast|escape}s
+						<span>
+							Fast Time : {$fast}s<br>
+							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
+						</span>
+						</a>
+						</div>
+					</th>
 			{/foreach}
 		</tr>
 		{/if}
@@ -596,11 +582,7 @@ function check_permission() {ldelim}
 					<tr style="background-color: {cycle values="#9DCFF0,white"};">
 						<td>{$rank}</td>
 						<td nowrap>
-							<a href="#" class="tooltip">
-							{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
-							{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
-							<span>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</span>
-							</a>
+							{include file="event_view_pilot_popup.tpl"}
 						</td>
 						<td>{$p.total|string_format:"%06.3f"}</td>
 					</tr>
@@ -633,11 +615,7 @@ function check_permission() {ldelim}
 			<tr>
 				<td></td>
 				<td>
-					<a href="#" class="tooltip">
-					{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
-					{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
-						<span>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</span>
-					</a>
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="right">{$p.total|string_format:"%06.3f"}</td>
 			</tr>
@@ -663,8 +641,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
@@ -688,8 +665,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
@@ -713,8 +689,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
@@ -728,8 +703,8 @@ function check_permission() {ldelim}
 {/if}
 
 <!-- Lets figure out if there are reports for speed or laps -->
-{if $lap_totals || $speed_averages || $top_landing}
-<h1 class="post-title">Statistics Reports
+{if $lap_totals || $speed_averages || $top_landing || $event->planes|count>0}
+<h1 class="post-title">Event Statistics
 <input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
 </h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
@@ -743,11 +718,11 @@ function check_permission() {ldelim}
 			<th>Laps</th>
 		</tr>
 		{foreach $lap_totals as $p}
+			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_lap_rank|escape}</td>
 				<td nowrap>
-					{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
-					{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_total_laps|escape}</td>
 			</tr>
@@ -770,8 +745,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
 			</tr>
@@ -783,29 +757,6 @@ function check_permission() {ldelim}
 	{/if}
 	
 	{if $speed_averages}
-	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
-		<h1 class="post-title">Average Speeds</h1>
-		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-			<th>Rank</th>
-			<th>Pilot</th>
-			<th>Avg</th>
-		</tr>
-		{foreach $speed_averages as $p}
-			{if $p.event_pilot_average_speed_rank!=0}
-			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$p.event_pilot_average_speed_rank}</td>
-				<td nowrap>
-					{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
-					{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
-				</td>
-				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
-			</tr>
-			{/if}
-		{/foreach}
-		</table>
-	</div>
-	
 		<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Top 20 Speed Runs</h1>
 		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
@@ -821,14 +772,35 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
+		<h1 class="post-title">Average Speeds</h1>
+		<table align="center" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg</th>
+		</tr>
+		{foreach $speed_averages as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			{if $p.event_pilot_average_speed_rank!=0}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$p.event_pilot_average_speed_rank}</td>
+				<td nowrap>
+					{include file="event_view_pilot_popup.tpl"}
+				</td>
+				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
+			</tr>
+			{/if}
 		{/foreach}
 		</table>
 	</div>
@@ -848,8 +820,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>
-					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" style="vertical-align: middle;" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td>{$p.average_landing|string_format:"%02.2f"}</td>
 			</tr>
@@ -859,7 +830,40 @@ function check_permission() {ldelim}
 		</table>
 	</div>
 	{/if}
-	
+
+	{if $event->planes|count>0}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
+		<h1 class="post-title">Plane Distribution</h1>
+		<table cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th></th>
+			<th>Pos</th>
+			<th>Plane</th>
+			<th>Total</th>
+		</tr>
+		{$rank=1}
+		{foreach $event->planes as $pl}
+		<tr style="background-color:#9DCFF0;">
+			<td>{$rank}</td>
+			<td nowrap colspan="2">{$pl.name}</td>
+			<td>{$pl.total}</td>
+		</tr>
+			{foreach $pl.pilots as $event_pilot_id}
+			<tr>
+				<td></td>
+				<td>{$event->pilots.$event_pilot_id.event_pilot_position|escape}</td>
+				<td>
+					{include file="event_view_pilot_popup.tpl"}
+				</td>
+				<td></td>
+			</tr>
+			{/foreach}
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+
 </div>
 {/if}
 

@@ -241,50 +241,181 @@ td.info:hover span,th.info:hover span { /*the span will display just on :hover s
   float: left;
   text-align: center;	
 }
+.pilot_bib_number_big {
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 1px;
+  padding-bottom: 3px;
+  padding-left: 1px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 26px;
+  color: white;
+  background-color: blue;
+  width: 32px;
+  height: 26px;
+  float: left;
+  text-align: center;	
+  text-vertical-align: center;
+  margin-top: 8px;
+}
 .inline_flag {
+	display: inline-block;
+	vertical-align: middle;
+}
+.inline_flag_top {
 	display: inline-block;
 	vertical-align: middle;
 }
 
 a.tooltip {
 	outline:none; 
-}
+	text-align: left;
+} 
 a.tooltip strong {
-	line-height:30px;
-}
+	line-height:36px;
+} 
 a.tooltip:hover {
 	text-decoration:none;
-}
+} 
 a.tooltip span { 
 	z-index:10;
 	display:none; 
 	padding:14px 20px; 
-	margin-top:60px; 
-	margin-left:-160px; 
+	margin-top:-30px; 
+	margin-left:28px; 
 	width:240px; 
 	line-height:16px; 
-}
+} 
 a.tooltip:hover span{ 
 	display:inline; 
 	position:absolute; 
-	border:2px solid #FFF; 
-	color:#EEE; 
-	background:#000 url(/images/css-tooltip-gradient-bg.png) repeat-x 0 0; 
-}
+	color:#111; 
+	border:1px solid #DCA; 
+	background:#fffAF0;
+} 
 .callout {
 	z-index:20;
 	position:absolute;
+	top:25px;
 	border:0;
-	top:-14px;
-	left:120px;
+	left:-12px;
 } 
-/*CSS3 extras*/
+/*CSS3 extras*/ 
 a.tooltip span { 
-	border-radius:2px; 
-	-moz-border-radius: 2px; 
-	-webkit-border-radius: 2px; 
-	-moz-box-shadow: 0px 0px 8px 4px #666; 
-	-webkit-box-shadow: 0px 0px 8px 4px #666; 
-	box-shadow: 0px 0px 8px 4px #666; 
-	opacity: 0.8;
+	border-radius:4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
 }
+
+a.tooltip_nc {
+	outline:none; 
+	color:black; 
+} 
+a.tooltip_nc strong {
+	line-height:36px;
+} 
+a.tooltip_nc:hover {
+	text-decoration:none;
+} 
+a.tooltip_nc span { 
+	z-index:10;
+	display:none; 
+	padding:14px 20px; 
+	margin-top:-30px; 
+	margin-left:28px; 
+	width:240px; 
+	line-height:16px; 
+} 
+a.tooltip_nc:hover span{ 
+	display:inline; 
+	position:absolute; 
+	color:#111; 
+	border:1px solid #DCA; 
+	background:#fffAF0;
+} 
+/*CSS3 extras*/ 
+a.tooltip_nc span { 
+	border-radius:4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
+}
+
+a.tooltip_score {
+	outline:none; 
+	color:black; 
+} 
+a.tooltip_score strong {
+	line-height:36px;
+} 
+a.tooltip_score:hover {
+	text-decoration:none;
+} 
+a.tooltip_score span { 
+	z-index:10;
+	display:none; 
+	padding:10px 10px; 
+	margin-top:-30px; 
+	margin-left:14px; 
+#	width:160px; 
+	line-height:16px; 
+} 
+a.tooltip_score:hover span{ 
+	display:inline; 
+	position:absolute; 
+	color:#111; 
+	border:1px solid #DCA; 
+	background:#fffAF0;
+} 
+/*CSS3 extras*/ 
+a.tooltip_score span { 
+	border-radius:4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
+}
+
+a.tooltip_score_left {
+	outline:none; 
+	color:black; 
+} 
+a.tooltip_score_left strong {
+	line-height:36px;
+} 
+a.tooltip_score:hover {
+	text-decoration:none;
+} 
+a.tooltip_score_left span { 
+	z-index:10;
+	display:none; 
+	padding:10px 10px; 
+	margin-top:30px; 
+	margin-left:-200px; 
+	width:140px; 
+	line-height:16px;
+	text-align: left;
+} 
+a.tooltip_score_left:hover span{ 
+	display:inline; 
+	position:absolute; 
+	color:#111; 
+	border:1px solid #DCA; 
+	background:#fffAF0;
+} 
+/*CSS3 extras*/ 
+a.tooltip_score_left span { 
+	border-radius:4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
+} 
