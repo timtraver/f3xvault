@@ -142,6 +142,9 @@ class Event {
 			case 'flight_order':
 				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
 				break;
+			case 'bib_order':
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_bib';
+				break;
 			case 'group_alphabetical_first':
 				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
 				break;

@@ -37,6 +37,8 @@ EVENT STUFF
 	Have an event pilot flag to count for team totals or not
 	Have a setting for top X teammates to be used in the team standings
   
+	In the contest ranking reports, don't show the rank if it is a tie with the previous one
+	
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
   
