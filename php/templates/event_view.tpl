@@ -596,8 +596,11 @@ function check_permission() {ldelim}
 					<tr style="background-color: {cycle values="#9DCFF0,white"};">
 						<td>{$rank}</td>
 						<td nowrap>
+							<a href="#" class="tooltip">
 							{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
 							{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+							<span>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</span>
+							</a>
 						</td>
 						<td>{$p.total|string_format:"%06.3f"}</td>
 					</tr>
@@ -630,8 +633,11 @@ function check_permission() {ldelim}
 			<tr>
 				<td></td>
 				<td>
+					<a href="#" class="tooltip">
 					{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
 					{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+						<span>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</span>
+					</a>
 				</td>
 				<td align="right">{$p.total|string_format:"%06.3f"}</td>
 			</tr>

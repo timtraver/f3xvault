@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-04 19:02:39
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-06 00:51:40
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1375668157,
+      1 => 1375775496,
       2 => 'file',
     ),
   ),
@@ -880,12 +880,17 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 						<td><?php echo $_smarty_tpl->tpl_vars['rank']->value;?>
 </td>
 						<td nowrap>
+							<a href="#" class="tooltip">
 							<?php if ($_smarty_tpl->tpl_vars['p']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['country_name'];?>
 "><?php }?>
 							<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
  <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 
+							<span><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
+</span>
+							</a>
 						</td>
 						<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
@@ -934,12 +939,17 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<tr>
 				<td></td>
 				<td>
+					<a href="#" class="tooltip">
 					<?php if ($_smarty_tpl->tpl_vars['p']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['country_name'];?>
 "><?php }?>
 					<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
  <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
 
+						<span><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
+ <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_last_name'], ENT_QUOTES, 'UTF-8', true);?>
+</span>
+					</a>
 				</td>
 				<td align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
