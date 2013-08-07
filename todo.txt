@@ -8,14 +8,13 @@ GENERAL
 	Create a "Using this site" kind of tutorial instructions
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
-	Separate print buttons for preliminaries and flyoffs
 =	Add blog menu item and set up simple wordpress blog
-	On Login screen make thefocus go to the login user
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 	Add a Competitions held here section
 	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
+	Show the add Location media button on location view
 	Speed records for F3F and F3B
 	Recent events
 	
@@ -32,13 +31,11 @@ PLANE STUFF
 EVENT STUFF
 	Allow the accuracy of calculations to be set for an event
 	
-	Don't allow the user to select the sort type until after the round is saved
+	Don't allow the uexiser to select the sort type until after the round is saved
 
 	Have an event pilot flag to count for team totals or not
 	Have a setting for top X teammates to be used in the team standings
   
-	In the contest ranking reports, don't show the rank if it is a tie with the previous one
-	
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
   
@@ -61,7 +58,6 @@ X			check for overlap when applying new draw
 		graph on pilot page
 		
 	When Tied, figure out position from drops
-	Show drop values in flyoff rounds that have drops
 	In position chart, show another one for flyoff rounds
 		
 	Flyoff capability
@@ -91,6 +87,9 @@ MOBILE STUFF
 
 COMPLETED
  
+X	On Login screen make the focus go to the login user
+X	Show drop values in flyoff rounds that have drops
+X	In the contest ranking reports, don't show the rank if it is a tie with the previous one
 X	Add Pilot Event Number for contests that might have bibs
 X		Add this number to the classification screen
 X			to the event pilot list

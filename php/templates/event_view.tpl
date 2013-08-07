@@ -636,16 +636,22 @@ function check_permission() {ldelim}
 			<th>Score</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $duration_rank as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.event_pilot_round_flight_score!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
+			{$oldscore=$p.event_pilot_round_flight_score}
 		{/foreach}
 		</table>
 	</div>
@@ -660,16 +666,22 @@ function check_permission() {ldelim}
 			<th>Score</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $distance_rank as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.event_pilot_round_flight_score!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
+			{$oldscore=$p.event_pilot_round_flight_score}
 		{/foreach}
 		</table>
 	</div>
@@ -684,16 +696,22 @@ function check_permission() {ldelim}
 			<th>Score</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $speed_rank as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.event_pilot_round_flight_score!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
 			</tr>
 			{$rank=$rank+1}
+			{$oldscore=$p.event_pilot_round_flight_score}
 		{/foreach}
 		</table>
 	</div>
@@ -717,15 +735,21 @@ function check_permission() {ldelim}
 			<th>Pilot</th>
 			<th>Laps</th>
 		</tr>
+		{$oldscore=0}
 		{foreach $lap_totals as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$p.event_pilot_lap_rank|escape}</td>
+				<td>
+					{if $p.event_pilot_total_laps!=$oldscore}
+						{$p.event_pilot_lap_rank|escape}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_total_laps|escape}</td>
 			</tr>
+			{$oldscore=$p.event_pilot_total_laps}
 		{/foreach}
 		</table>
 	</div>
@@ -740,10 +764,15 @@ function check_permission() {ldelim}
 			<th>Laps</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $distance_laps as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.event_pilot_round_flight_laps!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
@@ -751,6 +780,7 @@ function check_permission() {ldelim}
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
+			{$oldscore=$p.event_pilot_round_flight_laps}
 		{/foreach}
 		</table>
 	</div>
@@ -767,10 +797,15 @@ function check_permission() {ldelim}
 			<th>Round</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $speed_times as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.event_pilot_round_flight_seconds!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
@@ -779,6 +814,7 @@ function check_permission() {ldelim}
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
+			{$oldscore=$p.event_pilot_round_flight_seconds}
 		{/foreach}
 		</table>
 	</div>
@@ -790,17 +826,23 @@ function check_permission() {ldelim}
 			<th>Pilot</th>
 			<th>Avg</th>
 		</tr>
+		{$oldscore=0}
 		{foreach $speed_averages as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			{if $p.event_pilot_average_speed_rank!=0}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$p.event_pilot_average_speed_rank}</td>
+				<td>
+					{if $p.event_pilot_average_speed!=$oldscore}
+						{$p.event_pilot_average_speed_rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
 			</tr>
 			{/if}
+			{$oldscore=$p.event_pilot_average_speed}
 		{/foreach}
 		</table>
 	</div>
@@ -815,10 +857,15 @@ function check_permission() {ldelim}
 			<th>Avg</th>
 		</tr>
 		{$rank=1}
+		{$oldscore=0}
 		{foreach $top_landing as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
-				<td>{$rank}</td>
+				<td>
+					{if $p.average_landing!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
@@ -826,6 +873,7 @@ function check_permission() {ldelim}
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
+			{$oldscore=$p.average_landing}
 		{/foreach}
 		</table>
 	</div>

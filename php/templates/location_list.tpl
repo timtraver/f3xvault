@@ -98,23 +98,30 @@
 	<td>{if $location.state_name && $location.country_code=="US"}<img src="/images/flags/states/16/{$location.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} {$location.state_name|escape}</td>
 	<td>{if $location.country_code}<img src="/images/flags/countries-iso/shiny/16/{$location.country_code|escape}.png" style="vertical-align: middle;">{/if} {$location.country_name|escape}</td>
 	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
-	<td class="info">
+	<td align="center">
 		{if $location.location_record_speed!=0}
+			<a href="" class="tooltip_score_left" onClick="return false;">
 			{$location.location_record_speed|escape}s
 			<span>
-				{$location.pilot_first_name} {$location.pilot_first_name}<br>
-				{$location.event_name}
+				{if $location.country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.country_code|escape}.png" class="inline_flag" title="{$location.country_code}">{/if}
+				<strong>{$location.pilot_first_name} {$location.pilot_last_name}</strong><br>
+				{$location.event_name}<br>
+				{$location.event_start_date|date_format}
 			</span>
+			</a>
 		{/if}
-		
 	</td>
-	<td class="info">
+	<td align="center">
 		{if $location.location_record_distance!=0}
+			<a href="" class="tooltip_score_left" onClick="return false;">
 			{$location.location_record_distance|escape} laps
 			<span>
-				{$location.pilot_first_name} {$location.pilot_first_name}<br>
-				{$location.event_name}
+				{if $location.country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.country_code|escape}.png" class="inline_flag" title="{$location.country_code}">{/if}
+				<strong>{$location.pilot_first_name} {$location.pilot_last_name}</strong><br>
+				{$location.event_name}<br>
+				{$location.event_start_date|date_format}
 			</span>
+			</a>
 		{/if}
 	</td>
 </tr>

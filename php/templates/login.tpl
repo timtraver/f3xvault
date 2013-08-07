@@ -39,7 +39,9 @@
 Don't have a login? <a href="?action=register">Register Here</a>
 </form>
 </center>
-
+<script>
+	document.login.login.focus();
+</script>
 
 	</div>
 </div>

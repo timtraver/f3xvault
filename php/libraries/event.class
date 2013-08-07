@@ -22,6 +22,10 @@ class Event {
 	var $classes=array();
 	var $flight_types=array();
 	var $draws=array();
+	var $event_record_speed;
+	var $event_record_speed_event_pilot_id;
+	var $event_record_distance;
+	var $event_record_distance_event_pilot_id;
 	
 	function Event($event_id){
 		# Initialization of the class
@@ -1152,6 +1156,23 @@ class Event {
 		
 		$this->flyoff_totals= $flyoff_totals;
 		sub_trace();
+		
+		# Lets set the top speed for the contest for easy retrieval by the other sections
+		$speeds=$this->get_top_speeds();
+		$temp=current($speeds);
+		# Lets determine the accuracy from the event_options
+		$accuracy=0;
+		foreach($this->options as $o){
+			if($o['event_type_option_code']=='f3b_speed_accuracy' || $o['event_type_option_code']=='f3f_speed_accuracy'){
+				$accuracy=intval($o['event_option_value']);
+			}
+		}
+		$this->event_record_speed=round($temp['event_pilot_round_flight_seconds'],$accuracy);
+		$this->event_record_speed_event_pilot_id=$temp['event_pilot_id'];
+		$laps=$this->get_top_distance();
+		$temp2=current($laps);
+		$this->event_record_distance=$temp2['event_pilot_round_flight_laps'];
+		$this->event_record_distance_event_pilot_id=$temp2['event_pilot_id'];
 		return;
 	}
 	function event_save_totals(){
@@ -1343,6 +1364,53 @@ class Event {
 			));
 		}
 		sub_trace();
+		# Lets save the top speed and distances for the contest for easy retrieval by the other sections
+		$stmt=db_prep("
+			UPDATE event
+			SET event_record_speed=:event_record_speed,
+				event_record_speed_event_pilot_id=:event_record_speed_event_pilot_id,
+				event_record_distance=:event_record_distance,
+				event_record_distance_event_pilot_id=:event_record_distance_event_pilot_id
+			WHERE event_id=:event_id
+		");
+		$result=db_exec($stmt,array(
+			"event_record_speed"=>$this->event_record_speed,
+			"event_record_speed_event_pilot_id"=>$this->event_record_speed_event_pilot_id,
+			"event_record_distance"=>$this->event_record_distance,
+			"event_record_distance_event_pilot_id"=>$this->event_record_distance_event_pilot_id,
+			"event_id"=>$this->event_id
+		));
+		# Now lets see if the location values for records need to be updated
+		if($this->event_record_speed !=0 && ($this->event_record_speed<$this->info['location_record_speed'] || $this->info['location_record_speed']==0)  && $this->info['location_id']!=0){
+			# Lets update the location with the new top speed
+			$stmt=db_prep("
+				UPDATE location
+				SET location_record_speed=:event_record_speed,
+					location_record_speed_event_pilot_id=:event_record_speed_event_pilot_id
+				WHERE location_id=:location_id
+			");
+			$result=db_exec($stmt,array(
+				"event_record_speed"=>$this->event_record_speed,
+				"event_record_speed_event_pilot_id"=>$this->event_record_speed_event_pilot_id,
+				"location_id"=>$this->info['location_id']
+			));
+		
+		}
+		if($this->event_record_distance !=0 && ($this->event_record_distance<$this->info['location_record_distance'] || $this->info['location_record_distance']==0)  && $this->info['location_id']!=0){
+			# Lets update the location with the new top laps
+			$stmt=db_prep("
+				UPDATE location
+				SET location_record_distance=:event_record_distance,
+					location_record_distance_event_pilot_id=:event_record_distance_event_pilot_id
+				WHERE location_id=:location_id
+			");
+			$result=db_exec($stmt,array(
+				"event_record_distance"=>$this->event_record_distance,
+				"event_record_distance_event_pilot_id"=>$this->event_record_distance_event_pilot_id,
+				"location_id"=>$this->info['location_id']
+			));
+		
+		}
 		return;
 	}
 	function get_top_speeds(){

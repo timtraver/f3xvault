@@ -118,6 +118,9 @@ function location_list() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			LEFT JOIN event_pilot ep ON l.location_record_speed_event_pilot_id=ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN event e ON ep.event_id=e.event_id
 			$joind
 			WHERE l.$search_field $operator :search
 				$addcountry
@@ -133,6 +136,9 @@ function location_list() {
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
+			LEFT JOIN event_pilot ep ON l.location_record_speed_event_pilot_id=ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN event e ON ep.event_id=e.event_id
 			$joind
 			WHERE 1
 				$addcountry
