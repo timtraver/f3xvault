@@ -151,6 +151,9 @@ class Event {
 		}else{
 			$sort_by='';
 		}
+		if($this->event_id==NULL || $this->event_id==0){
+			return;
+		}
 		switch($sort_by){
 			case 'entry_order':
 				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_entry_order';
@@ -780,6 +783,11 @@ class Event {
 	}
 	function calculate_event_totals(){
 		# Function to calculate the subtotals and totals per pilot for an event
+		
+		if(count($this->rounds)==0){
+			return;
+		}
+		
 		$subtotals=array();
 		$totals=array();
 		$flyoff_totals=array();
@@ -1177,7 +1185,7 @@ class Event {
 	}
 	function event_save_totals(){
 		# Function to save the total values for the pilots
-		if(count($this->totals['pilots'])==0){
+		if(count($this->totals['pilots'])!=0){
 			$this->calculate_event_totals();
 		}
 		sub_trace();
