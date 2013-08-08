@@ -803,7 +803,7 @@ class Event {
 			
 			foreach($r['flights'] as $flight_type_id=>$f){
 				foreach($f['pilots'] as $event_pilot_id=>$p){
-					if($f['event_round_flight_score']==0 && preg_match("/f3b_/",$f['flight_type_code'])){
+					if($f['event_round_flight_score']==0 && preg_match("/f3b_/",$f['flight_type_code']) && !isset($subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score'])){
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']=0;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=0;
 						continue;
