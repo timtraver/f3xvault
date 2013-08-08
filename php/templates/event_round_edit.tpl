@@ -291,7 +291,7 @@ function check_permission() {ldelim}
 			<tr>
 				<th colspan="2">Round {$round_number|escape}</th>
 				<th colspan="{$cols}">
-					{$ft.flight_type_name|escape} {$flight_type_id}
+					{$ft.flight_type_name|escape}
 				</th>
 				<th>
 					Score <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>
