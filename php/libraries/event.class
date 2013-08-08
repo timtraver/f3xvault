@@ -1205,18 +1205,21 @@ class Event {
 			}
 
 			if($this->totals['round_drops']>0){
+				# Lets clear all of the flights for all of the pilots of their flight dropped status
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight eprf
+					LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+					LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+					SET eprf.event_pilot_round_flight_dropped=0
+					WHERE er.event_id=:event_id
+						AND er.event_round_status=1
+						AND er.event_round_flyoff=0
+				");
+				$result=db_exec($stmt,array("event_id"=>$this->event_id));
+			
 				foreach($temp_flights as $event_pilot_id=>$ft){
 					foreach($ft as $flight_type_id=>$r){
 						$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
-						# Lets clear all the db records of this pilots flights with this flight type as not dropped
-						$stmt=db_prep("
-							UPDATE event_pilot_round_flight
-							SET event_pilot_round_flight_dropped=0
-							WHERE event_pilot_round_id IN ( SELECT event_pilot_round_id FROM event_pilot_round WHERE event_pilot_id=:event_pilot_id)
-							AND flight_type_id=:flight_type_id
-						");
-						$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id,"event_pilot_id"=>$event_pilot_id));
-
 						# Now lets pick off the ones to mark as dropped
 						$drop=0;
 						foreach($temp2 as $round_number=>$f){
