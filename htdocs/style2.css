@@ -419,3 +419,11 @@ a.tooltip_score_left span {
 	-webkit-box-shadow: 5px 5px 8px #CCC; 
 	box-shadow: 5px 5px 8px #CCC; 
 } 
+.header_drop {
+	background: #1E90FF;
+	color: white;
+	padding-left: 4px;
+}
+.header_drop span:hover {
+	cursor: pointer;
+}

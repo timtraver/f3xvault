@@ -76,13 +76,23 @@ $(function() {
 	});
 });
 function toggle(element,tog) {
-	 if (document.getElementById(element).style.display == 'none') {
-	 	document.getElementById(element).style.display = 'block';
-	 	tog.innerHTML = '(<u>Hide Pilot List</u>)';
-	 } else {
-		 document.getElementById(element).style.display = 'none';
-		 tog.innerHTML = '(<u>Show Pilot List</u>)';
-	 }
+	var namestring="";
+	if (element=='pilots') {
+		namestring="Pilots";
+	}
+	if (element=="rankings") {
+		namestring="Rankings";
+	}
+	if(element=="stats") {
+		namestring="Statistics";
+	}
+	if (document.getElementById(element).style.display == 'none') {
+		document.getElementById(element).style.display = 'block';
+		tog.innerHTML = 'Hide ' + namestring;
+	} else {
+		document.getElementById(element).style.display = 'none';
+		tog.innerHTML = 'Show ' + namestring;
+	}
 }
 {/literal}
 function check_permission() {ldelim}
@@ -97,7 +107,8 @@ function check_permission() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">{$event->info.event_name|escape} <input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
+		<h1 class="post-title entry-title">{$event->info.event_name|escape}
+		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -134,13 +145,16 @@ function check_permission() {ldelim}
 		</tr>
 		{/if}
 		</table>
-		
+		</div>
 	</div>
-		<br>
-		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide Pilot List</u>)</span>
-			<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
+</div>
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
+	<div class="entry clearfix" style="vertical-align:top;">                
+		<h1 class="post-title entry-title header_drop">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} 
+			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('pilots',this);">Hide Pilots</span>
 		</h1>
-		<span id="pilots">
+		<span id="pilots" {if $event->rounds|count!=0}style="display: none;"{/if}>
+		<br>
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
@@ -544,8 +558,6 @@ function check_permission() {ldelim}
 		{/foreach}
 		<!--# End of flyoff rounds -->
 
-
-
 <br>
 <input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
@@ -554,14 +566,15 @@ function check_permission() {ldelim}
 {if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 {/if}
-	</div>
 </div>
-
+</div>
 {if $event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank}
-<h1 class="post-title">Contest Ranking Reports
-<input type="button" value=" Print Event Rankings " onClick="print_rank.submit();" class="block-button">
-</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
+	<div class="entry clearfix" style="vertical-align:top;">                
+		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
+			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('rankings',this);">Show Rankings</span>
+		</h1>
+	<span id="rankings" style="display: none;">
 	{if $event->classes|count > 1}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
 		<h1 class="post-title">Class Rankings</h1>
@@ -716,16 +729,20 @@ function check_permission() {ldelim}
 		</table>
 	</div>
 	{/if}
-	
+	<br>
+		<input type="button" value=" Print Event Rankings " onClick="print_rank.submit();" class="block-button">
+	</span>
+	</div>
 </div>
 {/if}
-
 <!-- Lets figure out if there are reports for speed or laps -->
 {if $lap_totals || $speed_averages || $top_landing || $event->planes|count>0}
-<h1 class="post-title">Event Statistics
-<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
-</h1>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
+	<div class="entry clearfix" style="vertical-align:top;">                
+		<h1 class="post-title entry-title header_drop">Event Statistics
+			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('stats',this);">Show Statistics</span>
+		</h1>
+	<span id="stats" style="display: none;">
 	{if $lap_totals}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
 		<h1 class="post-title">Total Distance Laps</h1>
@@ -911,7 +928,9 @@ function check_permission() {ldelim}
 		</table>
 	</div>
 	{/if}
-
+	<br>
+	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
+	</div>
 </div>
 {/if}
 
@@ -952,11 +971,6 @@ function check_permission() {ldelim}
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
-<form name="event_draw" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_delete" method="POST">
@@ -1006,6 +1020,11 @@ function check_permission() {ldelim}
 {if $event->rounds}
 <script>
 	 document.getElementById('pilots').style.display = 'none';
-	 document.getElementById('viewtoggle').innerHTML = '(<u>Show Pilot List</u>)';
+	 document.getElementById('viewtoggle').innerHTML = 'Show Pilots';
+</script>
+{else}
+<script>
+	 document.getElementById('pilots').style.display = 'block';
+	 document.getElementById('viewtoggle').innerHTML = 'Hide Pilots';
 </script>
 {/if}

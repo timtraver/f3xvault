@@ -31,9 +31,8 @@ PLANE STUFF
 EVENT STUFF
 	Allow the accuracy of calculations to be set for an event
 	
-	Don't allow the uexiser to select the sort type until after the round is saved
+	Don't allow the user to select the sort type until after the round is saved
 
-	Have an event pilot flag to count for team totals or not
 	Have a setting for top X teammates to be used in the team standings
   
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports

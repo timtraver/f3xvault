@@ -340,6 +340,10 @@ function check_event(){
 		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
 			<input type="button" value=" Import Event " class="block-button" onClick="document.import.submit();">
 		{/if}
+		{if $event->info.event_id!=0}
+			<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="event_draw.submit();">
+		{/if}
+		
 	</th>
 </tr>
 </table>
@@ -512,6 +516,13 @@ function check_event(){
 <input type="hidden" name="from_series_id" value="">
 <input type="hidden" name="from_series_name" value="">
 </form>
+
+<form name="event_draw" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+
 
 </div>
 </div>
