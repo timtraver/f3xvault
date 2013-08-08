@@ -15,7 +15,6 @@ class Event {
 	var $pilots=array();
 	var $planes=array();
 	var $rounds=array();
-	var $rounds_new=array();
 	var $totals=array();
 	var $flyoff_totals=array();
 	var $options=array();
@@ -195,7 +194,7 @@ class Event {
 			LEFT JOIN event_round_flight erf ON er.event_round_id=erf.event_round_id
 			WHERE er.event_id=:event_id
 				AND er.event_round_status=1
-			ORDER BY ABS(er.event_round_number)
+			ORDER BY ABS(er.event_round_number),erf.flight_type_id ASC
 		");
 		$results=db_exec($stmt,array("event_id"=>$this->event_id));
 		$rounds=array();
