@@ -166,7 +166,10 @@
 							<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 						{/if}
 					</td>
-					<td style="background-color: #9DCFF0;" nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
+					<td style="background-color: #9DCFF0;" nowrap>
+						{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
+						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+					</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 						{else}

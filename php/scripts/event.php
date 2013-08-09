@@ -1328,8 +1328,11 @@ function event_round_edit() {
 	
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
-	
-	$maintpl=find_template("event_round_edit.tpl");
+	if($permission==1){
+		$maintpl=find_template("event_round_edit.tpl");
+	}else{
+		$maintpl=find_template("event_round_view.tpl");
+	}
 	return $smarty->fetch($maintpl);
 }
 function event_round_save() {

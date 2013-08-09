@@ -171,7 +171,7 @@ function check_permission() {ldelim}
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Settings - {$event->info.event_name|escape}</h1>
+		<h1 class="post-title entry-title">Event - {$event->info.event_name|escape}</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
