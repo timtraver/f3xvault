@@ -923,6 +923,19 @@ class Event {
 					}
 				}
 			}
+			# Lets determine the round rank from the subtotal entries
+			# Lets first create an easier array to sort
+			$tempranks=array();
+			foreach($subtotals as $event_pilot_id=>$temp){
+				$tempranks[$event_pilot_id]=$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score'];
+			}
+			arsort($tempranks);
+			#print_r($tempranks);
+			$count=1;
+			foreach($tempranks as $event_pilot_id=>$tr){
+				$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$count;
+				$count++;
+			}
 		}
 		
 		# Step through each of the subtotals and make sure there are rounds that may not be completed
