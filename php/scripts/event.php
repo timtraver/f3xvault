@@ -1251,6 +1251,8 @@ function event_param_save() {
 	}	
 	# Now lets recalculate and save the event info because the parameters may have changed
 	$e=new Event($event_id);
+	$e->get_rounds();
+	$e->calculate_event_totals();
 	$e->event_save_totals();
 	
 	log_action($event_id);

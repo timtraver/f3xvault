@@ -165,14 +165,14 @@
 							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 								{$values.event_pilot_round_flight_raw_score|escape}
 							{else}
-								{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+								{$values.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 							{/if}
 						{/if}
 					</td>
 					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $r.flights.$flight_type_id.event_round_flight_score==1}
 							{if $values.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
-							{$values.event_pilot_round_flight_score|string_format:"%06.3f"}
+							{$values.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}
 							{if $values.event_pilot_round_flight_dropped==1}</font></del>{/if}
 							{$round_total=$round_total+$values.event_pilot_round_flight_score}
 						{/if}
@@ -201,11 +201,11 @@
 		</tr>
 		<tr bgcolor="lightgrey">
 			<th>Total Points</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:"%06.3f"}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:$event->event_calc_accuracy_string}</td>
 		</tr>
 		<tr bgcolor="lightgrey">
 			<th>Event Percentage</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string} %</td>
 		</tr>
 		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr bgcolor="lightgrey">
@@ -216,7 +216,7 @@
 		{if $event->pilots.$event_pilot_id.event_pilot_average_speed>0}
 		<tr bgcolor="lightgrey">
 			<th>Pilot Average Speed</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:"%06.3f"} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:$event->event_calc_accuracy_string} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
 		</tr>
 		{/if}
 		</table>

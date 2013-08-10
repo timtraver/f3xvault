@@ -61,7 +61,7 @@ $(function () {ldelim}
 					{$flight_type_id = $ft@key}
 					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
 						{$fast=($values.event_pilot_round_flight_score*$values.event_pilot_round_flight_seconds)/1000}
-						[{$round},{$fast|string_format:"%03.2f"}]{if !$r@last},{/if}
+						[{$round},{$fast|string_format:$event->event_calc_accuracy_string}]{if !$r@last},{/if}
 				{/foreach}
 			{/foreach}
 				]
@@ -92,7 +92,7 @@ $(function () {ldelim}
 					{$flight_type_id = $ft@key}
 					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
 						{$lost=1000 - $values.event_pilot_round_flight_score}
-						[{$round},{$lost|string_format:"%03.2f"}]{if !$r@last},{/if}
+						[{$round},{$lost|string_format:$event->event_calc_accuracy_string}]{if !$r@last},{/if}
 				{/foreach}
 			{/foreach}
 				]
@@ -273,12 +273,12 @@ $(function () {ldelim}
 						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 							{$values.event_pilot_round_flight_raw_score|escape}
 						{else}
-							{$values.event_pilot_round_flight_raw_score|string_format:"%02.0f"}
+							{$values.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 						{/if}
 					</td>
 					<td align="right" nowrap style="background-color: {$bgcolor};">
 						{if $values.event_pilot_round_flight_dropped==1}<del><font color="red">{/if}
-						{$values.event_pilot_round_flight_score|string_format:"%06.3f"}
+						{$values.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}
 						{if $values.event_pilot_round_flight_dropped==1}</font></del>{/if}
 						{$round_total=$round_total+$values.event_pilot_round_flight_score}
 					</td>
@@ -312,11 +312,11 @@ $(function () {ldelim}
 		</tr>
 		<tr>
 			<th>Total Points</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:"%06.3f"}</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_score|string_format:$event->event_calc_accuracy_string}</td>
 		</tr>
 		<tr>
 			<th>Event Percentage</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:"%06.3f"} %</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string} %</td>
 		</tr>
 		{if $event->pilots.$event_pilot_id.event_pilot_total_laps>0}
 		<tr>
@@ -327,7 +327,7 @@ $(function () {ldelim}
 		{if $event->pilots.$event_pilot_id.event_pilot_average_speed>0}
 		<tr>
 			<th>Pilot Average Speed</th>
-			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:"%06.3f"} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
+			<td>{$event->pilots.$event_pilot_id.event_pilot_average_speed|string_format:$event->event_calc_accuracy_string} (rank {$event->pilots.$event_pilot_id.event_pilot_average_speed_rank})</td>
 		</tr>
 		{/if}
 		</table>

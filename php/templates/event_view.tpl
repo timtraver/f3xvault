@@ -342,7 +342,7 @@ function check_permission() {ldelim}
 							{elseif $r.event_pilot_round_flight_dnf==1}
 								<font color="red">DNF</font>
 							{else}
-								{$r.event_pilot_round_total_score|string_format:"%06.3f"}
+								{$r.event_pilot_round_total_score|string_format:$event->event_calc_accuracy_string}
 							{/if}
 						{/if}
 					{if $drop==1}</font></del>{/if}
@@ -354,19 +354,19 @@ function check_permission() {ldelim}
 				{/if}
 			{/foreach}
 			<td></td>
-			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
+			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:$event->event_calc_accuracy_string}</td>
+			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:$event->event_calc_accuracy_string}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
 			<td width="5%" nowrap align="right">
 				<a href="" class="tooltip_score_left" onClick="return false;">
-					{$e.total|string_format:"%06.3f"}
+					{$e.total|string_format:$event->event_calc_accuracy_string}
 					<span>
-					<b>Behind Prev</b> : {$diff|string_format:"%04.3f"}<br>
-					<b>Behind Lead</b> : {$diff_to_lead|string_format:"%04.3f"}<br>
+					<b>Behind Prev</b> : {$diff|string_format:$event->event_calc_accuracy_string}<br>
+					<b>Behind Lead</b> : {$diff_to_lead|string_format:$event->event_calc_accuracy_string}<br>
 					</span>
 				</a>
 			</td>
-			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
+			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}%</td>
 		</tr>
 		{$previous=$e.total}
 		{/foreach}
@@ -493,7 +493,7 @@ function check_permission() {ldelim}
 						{if $r.event_pilot_round_total_score==1000}
 							1000
 						{else}
-							{$r.event_pilot_round_total_score|string_format:"%06.3f"}
+							{$r.event_pilot_round_total_score|string_format:$event->event_calc_accuracy_string}
 						{/if}
 					{if $drop==1}</font></del>{/if}
 					{* lets determine the content to show on popup *}
@@ -504,19 +504,19 @@ function check_permission() {ldelim}
 				{/if}
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
+			<td width="5%" nowrap align="right">{$e.subtotal|string_format:$event->event_calc_accuracy_string}</td>
+			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:$event->event_calc_accuracy_string}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
 			<td width="5%" nowrap align="right">
 				<a href="" class="tooltip_score_left" onClick="return false;">
-					{$e.total|string_format:"%06.3f"}
+					{$e.total|string_format:$event->event_calc_accuracy_string}
 					<span>
-					<b>Behind Prev</b> : {$diff|string_format:"%04.3f"}<br>
-					<b>Behind Lead</b> : {$diff_to_lead|string_format:"%04.3f"}<br>
+					<b>Behind Prev</b> : {$diff|string_format:$event->event_calc_accuracy_string}<br>
+					<b>Behind Lead</b> : {$diff_to_lead|string_format:$event->event_calc_accuracy_string}<br>
 					</span>
 				</a>
 			</td>
-			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
+			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}%</td>
 		</tr>
 		{/foreach}
 		{if $event->info.event_type_code=='f3f'}
@@ -597,7 +597,7 @@ function check_permission() {ldelim}
 						<td nowrap>
 							{include file="event_view_pilot_popup.tpl"}
 						</td>
-						<td>{$p.total|string_format:"%06.3f"}</td>
+						<td>{$p.total|string_format:$event->event_calc_accuracy_string}</td>
 					</tr>
 					{$rank=$rank+1}
 					{/if}
@@ -620,7 +620,7 @@ function check_permission() {ldelim}
 		<tr style="background-color:#9DCFF0;">
 			<td>{$t.rank}</td>
 			<td nowrap>{$t.team_name|escape}</td>
-			<td>{$t.total|string_format:"%06.3f"}</td>
+			<td>{$t.total|string_format:$event->event_calc_accuracy_string}</td>
 		</tr>
 			{foreach $event->totals.pilots as $p}
 			{$event_pilot_id=$p.event_pilot_id}
@@ -630,7 +630,7 @@ function check_permission() {ldelim}
 				<td>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td align="right">{$p.total|string_format:"%06.3f"}</td>
+				<td align="right">{$p.total|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{/if}
 			{/foreach}
@@ -661,7 +661,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_round_flight_score}
@@ -691,7 +691,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_round_flight_score}
@@ -721,7 +721,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_round_flight_score}
@@ -856,7 +856,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
+				<td>{$p.event_pilot_average_speed|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{/if}
 			{$oldscore=$p.event_pilot_average_speed}
@@ -886,7 +886,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td>{$p.average_landing|string_format:"%02.2f"}</td>
+				<td>{$p.average_landing|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}

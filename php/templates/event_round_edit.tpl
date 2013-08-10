@@ -382,12 +382,12 @@ function check_permission() {ldelim}
 						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
+						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 						{/if}
 					</td>
 					<td align="right" nowrap>
 					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
-					{$p.event_pilot_round_flight_score}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+					{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
 					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 					</td>
 					<td align="center" nowrap>
@@ -468,12 +468,12 @@ function check_permission() {ldelim}
 							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 							{$p.event_pilot_round_flight_raw_score}
 							{else}
-							{$p.event_pilot_round_flight_raw_score|string_format:"%02.3f"}
+							{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 							{/if}
 						</td>
 						<td align="right" nowrap>
 						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
-						{$p.event_pilot_round_flight_score}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+						{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
 						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 						</td>
 						<td align="center" nowrap>

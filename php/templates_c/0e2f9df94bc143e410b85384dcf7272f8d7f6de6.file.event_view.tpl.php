@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-08 01:40:13
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 02:11:45
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1375951198,
+      1 => 1376125900,
       2 => 'file',
     ),
   ),
@@ -501,7 +501,7 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 							<?php }elseif($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_flight_dnf']==1){?>
 								<font color="red">DNF</font>
 							<?php }else{ ?>
-								<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
+								<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
 
 							<?php }?>
 						<?php }?>
@@ -515,25 +515,25 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 				<?php }?>
 			<?php } ?>
 			<td></td>
-			<td class="info" width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
+			<td class="info" width="5%" nowrap align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
 </td>
-			<td width="5%" align="right" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['drop']!=0){?><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['drop']);?>
+			<td width="5%" align="right" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['drop']!=0){?><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['drop']);?>
 <?php }?></td>
 			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['e']->value['penalties'], ENT_QUOTES, 'UTF-8', true);?>
 <?php }?></td>
 			<td width="5%" nowrap align="right">
 				<a href="" class="tooltip_score_left" onClick="return false;">
-					<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
+					<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['total']);?>
 
 					<span>
-					<b>Behind Prev</b> : <?php echo sprintf("%04.3f",$_smarty_tpl->tpl_vars['diff']->value);?>
+					<b>Behind Prev</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff']->value);?>
 <br>
-					<b>Behind Lead</b> : <?php echo sprintf("%04.3f",$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
+					<b>Behind Lead</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
 <br>
 					</span>
 				</a>
 			</td>
-			<td width="5%" nowrap align="right"><?php echo sprintf("%03.2f",$_smarty_tpl->tpl_vars['e']->value['event_pilot_total_percentage']);?>
+			<td width="5%" nowrap align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['event_pilot_total_percentage']);?>
 %</td>
 		</tr>
 		<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable($_smarty_tpl->tpl_vars['e']->value['total'], null, 0);?>
@@ -727,7 +727,7 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 						<?php if ($_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']==1000){?>
 							1000
 						<?php }else{ ?>
-							<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
+							<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['r']->value['event_pilot_round_total_score']);?>
 
 						<?php }?>
 					<?php if ($_smarty_tpl->tpl_vars['drop']->value==1){?></font></del><?php }?>
@@ -740,25 +740,25 @@ $_smarty_tpl->tpl_vars['f']->_loop = true;
 				<?php }?>
 			<?php } ?>
 			<td></td>
-			<td width="5%" nowrap align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
+			<td width="5%" nowrap align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['subtotal']);?>
 </td>
-			<td width="5%" align="right" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['drop']!=0){?><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['drop']);?>
+			<td width="5%" align="right" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['drop']!=0){?><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['drop']);?>
 <?php }?></td>
 			<td width="5%" align="center" nowrap><?php if ($_smarty_tpl->tpl_vars['e']->value['penalties']!=0){?><?php echo $_smarty_tpl->tpl_vars['e']->value['penalties'];?>
 <?php }?></td>
 			<td width="5%" nowrap align="right">
 				<a href="" class="tooltip_score_left" onClick="return false;">
-					<?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['e']->value['total']);?>
+					<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['total']);?>
 
 					<span>
-					<b>Behind Prev</b> : <?php echo sprintf("%04.3f",$_smarty_tpl->tpl_vars['diff']->value);?>
+					<b>Behind Prev</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff']->value);?>
 <br>
-					<b>Behind Lead</b> : <?php echo sprintf("%04.3f",$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
+					<b>Behind Lead</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
 <br>
 					</span>
 				</a>
 			</td>
-			<td width="5%" nowrap align="right"><?php echo sprintf("%03.2f",$_smarty_tpl->tpl_vars['e']->value['event_pilot_total_percentage']);?>
+			<td width="5%" nowrap align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['e']->value['event_pilot_total_percentage']);?>
 %</td>
 		</tr>
 		<?php } ?>
@@ -870,7 +870,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 							<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 						</td>
-						<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
+						<td><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
 					</tr>
 					<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
@@ -904,7 +904,7 @@ $_smarty_tpl->tpl_vars['t']->_loop = true;
 </td>
 			<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['t']->value['team_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['t']->value['total']);?>
+			<td><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['t']->value['total']);?>
 </td>
 		</tr>
 			<?php  $_smarty_tpl->tpl_vars['p'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['p']->_loop = false;
@@ -920,7 +920,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td align="right"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['total']);?>
+				<td align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['total']);?>
 </td>
 			</tr>
 			<?php }?>
@@ -959,7 +959,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
+				<td align="center"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
 			</tr>
 			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
@@ -997,7 +997,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
+				<td align="center"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
 			</tr>
 			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
@@ -1035,7 +1035,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td align="center"><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
+				<td align="center"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['event_pilot_round_flight_score']);?>
 </td>
 			</tr>
 			<?php $_smarty_tpl->tpl_vars['rank'] = new Smarty_variable($_smarty_tpl->tpl_vars['rank']->value+1, null, 0);?>
@@ -1203,7 +1203,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td><?php echo sprintf("%06.3f",$_smarty_tpl->tpl_vars['p']->value['event_pilot_average_speed']);?>
+				<td><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['event_pilot_average_speed']);?>
 </td>
 			</tr>
 			<?php }?>
@@ -1241,7 +1241,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td><?php echo sprintf("%02.2f",$_smarty_tpl->tpl_vars['p']->value['average_landing']);?>
+				<td><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['average_landing']);?>
 </td>
 			</tr>
 			<?php if ($_smarty_tpl->tpl_vars['rank']->value==20){?><?php break 1?><?php }?>

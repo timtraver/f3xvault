@@ -31,20 +31,32 @@ This is just a short list of some of the things already on my suggestion and tod
 			<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Create flying draw order for All disciplines</li>
 			<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-			<li>Printouts for flight orders and groups</li>
-			<li>Possibly print to PDF format for easier printing</li>
+			<li>Printouts for flight orders and groups <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Possibly print to PDF format for easier printing <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Email link to results for event participants</li>
-			<li>Full Mobile version for tablets and smartphones</li>
+			<li>Full Mobile version for tablets and smartphones <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Show statistics for F3K events (quick turnaround times, etc)</li>
+			<li>Resove ties by going back to dropped rounds for event rank</li>
+			<li>Create ability to set event calculation accuracy</li>
 		</ul>
 	<li>Location Database</li>
 		<ul>
 			<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Add Map waypoints</li>
+			<li>Recent Event List at that location</li>
 		</ul>
 	<li>Plane Database</li>
 		<ul>
 			<li>Add plane setups to allow pilots to show setup info</li>
 			<li>Plane Reviews</li>
 			<li>Plane links to build logs</li>
+			<li>Plane Speed and Distance Records</li>
+			<li>Pilots Flying Model</li>
+		</ul>
+	<li>Pilots Area</li>
+		<ul>
+			<li>Show your own Personal Records for F3F, F3B</li>
+			<li>Pilots Flying Model</li>
 		</ul>
 	<li>Series</li>
 		<ul>
@@ -61,7 +73,7 @@ This is just a short list of some of the things already on my suggestion and tod
 	<li>General</li>
 		<ul>
 			<li>Create a "Using this site" kind of tutorial instructions</li>
-			<li>Create a mobile version of the site to be able to view locations, planes, and events</li>
+			<li>Create a mobile version of the site to be able to view locations, planes, and events <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Mobile score entry by end user</li>
 		</ul>
 	<li>Wish List</li>
