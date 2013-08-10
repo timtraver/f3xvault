@@ -388,15 +388,14 @@ function check_permission() {ldelim}
 					{/foreach}
 					{if $fast==1000}{$fast=0}{/if}
 					<th align="center">
-						<div style="position:relative;">
 						<a href="" class="tooltip_score" onClick="return false;">
 						{$fast|escape}s
 						<span>
+							<img class="callout" src="/images/callout.gif">
 							Fast Time : {$fast}s<br>
 							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</a>
-						</div>
 					</th>
 				{/if}
 			{/foreach}
@@ -538,15 +537,14 @@ function check_permission() {ldelim}
 				{/foreach}
 				{if $fast==1000}{$fast=0}{/if}
 					<th align="center">
-						<div style="position:relative;">
 						<a href="" class="tooltip_score" onClick="return false;">
+						<img class="callout" src="/images/callout.gif">
 						{$fast|escape}s
 						<span>
 							Fast Time : {$fast}s<br>
 							{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
 						</span>
 						</a>
-						</div>
 					</th>
 			{/foreach}
 		</tr>
