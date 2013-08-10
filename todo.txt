@@ -29,7 +29,6 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
-	Fix bug to determine your overall round rank in F3B (in worlds)
 	F3B individual pilot graphs for speed, duration, and distance
 	Allow the accuracy of calculations to be set for an event
 	
@@ -89,6 +88,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Fix bug to determine your overall round rank in F3B (in worlds)
 X	On Login screen make the focus go to the login user
 X	Show drop values in flyoff rounds that have drops
 X	In the contest ranking reports, don't show the rank if it is a tie with the previous one

@@ -1419,7 +1419,7 @@ class Event {
 			));
 		
 		}
-		if($this->event_record_distance !=0 && ($this->event_record_distance<$this->info['location_record_distance'] || $this->info['location_record_distance']==0)  && $this->info['location_id']!=0){
+		if($this->event_record_distance !=0 && ($this->event_record_distance>$this->info['location_record_distance'] || $this->info['location_record_distance']==0)  && $this->info['location_id']!=0){
 			# Lets update the location with the new top laps
 			$stmt=db_prep("
 				UPDATE location

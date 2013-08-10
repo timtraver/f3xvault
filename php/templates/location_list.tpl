@@ -100,26 +100,28 @@
 	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 	<td align="center">
 		{if $location.location_record_speed!=0}
-			<a href="" class="tooltip_score_left" onClick="return false;">
+			<a href="?action=event&function=event_view&event_id={$location.pilot_speed_event_id}" class="tooltip_score_left">
 			{$location.location_record_speed|escape}s
 			<span>
-				{if $location.country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.country_code|escape}.png" class="inline_flag" title="{$location.country_code}">{/if}
-				<strong>{$location.pilot_first_name} {$location.pilot_last_name}</strong><br>
-				{$location.event_name}<br>
-				{$location.event_start_date|date_format}
+				{if $location.pilot_speed_country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.pilot_speed_country_code|escape}.png" class="inline_flag" title="{$location.pilot_speed_country_code}">{/if}
+				<strong>{$location.pilot_speed_first_name} {$location.pilot_speed_last_name}</strong><br>
+				{if $location.pilot_speed_event_type_code=="f3f"}F3F{else}F3B{/if} Speed Record<br>
+				{$location.pilot_speed_event_name}<br>
+				{$location.pilot_speed_event_start_date|date_format}
 			</span>
 			</a>
 		{/if}
 	</td>
 	<td align="center">
 		{if $location.location_record_distance!=0}
-			<a href="" class="tooltip_score_left" onClick="return false;">
+			<a href="?action=event&function=event_view&event_id={$location.pilot_laps_event_id}" class="tooltip_score_left">
 			{$location.location_record_distance|escape} laps
 			<span>
-				{if $location.country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.country_code|escape}.png" class="inline_flag" title="{$location.country_code}">{/if}
-				<strong>{$location.pilot_first_name} {$location.pilot_last_name}</strong><br>
-				{$location.event_name}<br>
-				{$location.event_start_date|date_format}
+				{if $location.pilot_laps_country_code}<img src="/images/flags/countries-iso/shiny/32/{$location.pilot_laps_country_code|escape}.png" class="inline_flag" title="{$location.pilot_laps_country_code}">{/if}
+				<strong>{$location.pilot_laps_first_name} {$location.pilot_laps_last_name}</strong><br>
+				{if $location.pilot_distance_event_type_code=="f3f"}F3F{else}F3B{/if} Distance Record<br>
+				{$location.pilot_laps_event_name}<br>
+				{$location.pilot_laps_event_start_date|date_format}
 			</span>
 			</a>
 		{/if}

@@ -114,13 +114,40 @@ function location_list() {
 	$locations=array();
 	if($search!='%%' && $search!=''){
 		$stmt=db_prep("
-			SELECT *
+			SELECT l.*,c.*,s.*,
+					cs.country_name as pilot_speed_country_name,
+					cs.country_code as pilot_speed_country_code,
+					es.event_name as pilot_speed_event_name,
+					es.event_id as pilot_speed_event_id,
+					es.event_start_date as pilot_speed_event_start_date,
+					est.event_type_code as pilot_speed_event_type_code,
+					ps.pilot_first_name as pilot_speed_first_name,
+					ps.pilot_last_name as pilot_speed_last_name,
+					
+					cl.country_name as pilot_laps_country_name,
+					cl.country_code as pilot_laps_country_code,
+					el.event_name as pilot_laps_event_name,
+					el.event_id as pilot_laps_event_id,
+					el.event_start_date as pilot_laps_event_start_date,
+					elt.event_type_code as pilot_laps_event_type_code,
+					pl.pilot_first_name as pilot_laps_first_name,
+					pl.pilot_last_name as pilot_laps_last_name
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
-			LEFT JOIN event_pilot ep ON l.location_record_speed_event_pilot_id=ep.event_pilot_id
-			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			LEFT JOIN event e ON ep.event_id=e.event_id
+			
+			LEFT JOIN event_pilot eps ON l.location_record_speed_event_pilot_id=eps.event_pilot_id
+			LEFT JOIN pilot ps ON eps.pilot_id=ps.pilot_id
+			LEFT JOIN country cs ON ps.country_id=cs.country_id
+			LEFT JOIN event es ON eps.event_id=es.event_id
+			LEFT JOIN event_type est ON es.event_type_id=est.event_type_id
+			
+			LEFT JOIN event_pilot epl ON l.location_record_distance_event_pilot_id=epl.event_pilot_id
+			LEFT JOIN pilot pl ON epl.pilot_id=pl.pilot_id
+			LEFT JOIN country cl ON pl.country_id=cl.country_id
+			LEFT JOIN event el ON epl.event_id=el.event_id
+			LEFT JOIN event_type elt ON el.event_type_id=elt.event_type_id
+
 			$joind
 			WHERE l.$search_field $operator :search
 				$addcountry
@@ -132,13 +159,39 @@ function location_list() {
 	}else{
 		# Get all locations for search
 		$stmt=db_prep("
-			SELECT *
+			SELECT l.*,c.*,s.*,
+					cs.country_name as pilot_speed_country_name,
+					cs.country_code as pilot_speed_country_code,
+					es.event_name as pilot_speed_event_name,
+					es.event_id as pilot_speed_event_id,
+					es.event_start_date as pilot_speed_event_start_date,
+					est.event_type_code as pilot_speed_event_type_code,
+					ps.pilot_first_name as pilot_speed_first_name,
+					ps.pilot_last_name as pilot_speed_last_name,
+					
+					cl.country_name as pilot_laps_country_name,
+					cl.country_code as pilot_laps_country_code,
+					el.event_name as pilot_laps_event_name,
+					el.event_id as pilot_laps_event_id,
+					el.event_start_date as pilot_laps_event_start_date,
+					elt.event_type_code as pilot_laps_event_type_code,
+					pl.pilot_first_name as pilot_laps_first_name,
+					pl.pilot_last_name as pilot_laps_last_name
 			FROM location l
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
-			LEFT JOIN event_pilot ep ON l.location_record_speed_event_pilot_id=ep.event_pilot_id
-			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			LEFT JOIN event e ON ep.event_id=e.event_id
+			
+			LEFT JOIN event_pilot eps ON l.location_record_speed_event_pilot_id=eps.event_pilot_id
+			LEFT JOIN pilot ps ON eps.pilot_id=ps.pilot_id
+			LEFT JOIN country cs ON ps.country_id=cs.country_id
+			LEFT JOIN event es ON eps.event_id=es.event_id
+			LEFT JOIN event_type est ON es.event_type_id=est.event_type_id
+			
+			LEFT JOIN event_pilot epl ON l.location_record_distance_event_pilot_id=epl.event_pilot_id
+			LEFT JOIN pilot pl ON epl.pilot_id=pl.pilot_id
+			LEFT JOIN country cl ON pl.country_id=cl.country_id
+			LEFT JOIN event el ON epl.event_id=el.event_id
+			LEFT JOIN event_type elt ON el.event_type_id=elt.event_type_id
 			$joind
 			WHERE 1
 				$addcountry
