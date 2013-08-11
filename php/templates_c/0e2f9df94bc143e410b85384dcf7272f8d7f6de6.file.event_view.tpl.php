@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 02:11:45
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 20:38:47
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1376125900,
+      1 => 1376165802,
       2 => 'file',
     ),
   ),
@@ -570,11 +570,11 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 					<?php } ?>
 					<?php if ($_smarty_tpl->tpl_vars['fast']->value==1000){?><?php $_smarty_tpl->tpl_vars['fast'] = new Smarty_variable(0, null, 0);?><?php }?>
 					<th align="center">
-						<div style="position:relative;">
 						<a href="" class="tooltip_score" onClick="return false;">
 						<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['fast']->value, ENT_QUOTES, 'UTF-8', true);?>
 s
 						<span>
+							<img class="callout" src="/images/callout.gif">
 							Fast Time : <?php echo $_smarty_tpl->tpl_vars['fast']->value;?>
 s<br>
 							<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['fast_id']->value]['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
@@ -582,7 +582,6 @@ s<br>
 
 						</span>
 						</a>
-						</div>
 					</th>
 				<?php }?>
 			<?php } ?>
@@ -795,8 +794,8 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 				<?php } ?>
 				<?php if ($_smarty_tpl->tpl_vars['fast']->value==1000){?><?php $_smarty_tpl->tpl_vars['fast'] = new Smarty_variable(0, null, 0);?><?php }?>
 					<th align="center">
-						<div style="position:relative;">
 						<a href="" class="tooltip_score" onClick="return false;">
+						<img class="callout" src="/images/callout.gif">
 						<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['fast']->value, ENT_QUOTES, 'UTF-8', true);?>
 s
 						<span>
@@ -807,7 +806,6 @@ s<br>
 
 						</span>
 						</a>
-						</div>
 					</th>
 			<?php } ?>
 		</tr>

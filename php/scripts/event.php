@@ -569,6 +569,7 @@ function event_save() {
 		user_message("Updated Base Event Info!");
 		# Lets save the totals in case some drops were changed or something
 		$e=new Event($event_id);
+		$e->get_rounds();
 		$e->event_save_totals();
 	}
 	log_action($event_id);
