@@ -30,6 +30,7 @@ function calc_groups(){ldelim}
 	{rdelim}else{ldelim}
 		var num_groups=parseInt(document.getElementById("groups_np").value);
 	{rdelim}
+	document.getElementById("event_draw_number_groups").value=num_groups;
 	var num_pilots={$event->pilots|count};
 	var per_group=Math.floor(num_pilots/num_groups);
 	var left_over=num_pilots%num_groups;
@@ -83,13 +84,13 @@ function calc_groups(){ldelim}
 <tr>
 	<th width="10%" nowrap>Round Start</th>
 	<td>
-		<input type="text" name="event_draw_round_from" size="2" value="{$draw.event_draw_round_from}" onChange="set_changed();">
+		<input type="text" name="event_draw_round_from" size="2" value="{$draw.event_draw_round_from}" onChange="set_changed();" autocomplete="off">
 	</td>
 </tr>
 <tr>
 	<th width="10%" nowrap>Round Finish</th>
 	<td>
-		<input type="text" name="event_draw_round_to" size="2" value="{$draw.event_draw_round_to}" onChange="set_changed();">
+		<input type="text" name="event_draw_round_to" size="2" value="{$draw.event_draw_round_to}" onChange="set_changed();" autocomplete="off">
 	</td>
 </tr>
 <tr>
@@ -125,24 +126,24 @@ function calc_groups(){ldelim}
 		There are currently <b>{$event->pilots|count}</b> Pilots in this event{if $event->teams|count > 0} on {$event->teams|count} teams{/if}.<br>
 		<span id="no_protection">
 			Using  
-			<select id="groups_np" name="groups" onChange="calc_groups();">
+			<select id="groups_np" name="groups" onChange="set_changed();calc_groups();">
 			{for $x=$min_groups_np;$x<=$max_groups_np;$x++}
-			<option value="{$x}">{$x}</option>
+			<option value="{$x}"{if $draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
 			{/for}
 			</select>
 			Flight Groups{if $event->teams|count > 0} with No Team Protection{/if} will result in<br>
 		</span>
 		<span id="with_protection" style="display:none;">
 			Using  
-			<select id="groups_p" name="groups" onChange="calc_groups();">
+			<select id="groups_p" name="groups" onChange="set_changed();calc_groups();">
 			{for $x=$min_groups_p;$x<=$max_groups_p;$x++}
-			<option value="{$x}">{$x}</option>
+			<option value="{$x}"{if $draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
 			{/for}
 			</select>
 			Flight Groups{if $event->teams|count > 0} with Team Protection{/if} will result in<br>
 		</span>
 		<br><p style="padding-left: 20px;"><span id="per_group"></span></p>
-		<input type="hidden" name="event_draw_number_groups" value="">
+		<input type="hidden" id="event_draw_number_groups" name="event_draw_number_groups" value="">
 	</td>
 </tr>
 

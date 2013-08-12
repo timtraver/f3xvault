@@ -17,6 +17,7 @@ class Draw {
 	var $teams=array();
 	var $rounds=array();
 	var $grow_only;
+	var $stats=array();
 	
 	function Draw($event_draw_id){
 		# Initialization of the class
@@ -341,5 +342,145 @@ class Draw {
 		}
 		return;
 	}
+	function create_group_rounds($recalc=0){
+		# Function to create the round array for an order type of group round
+		# We will create a random first round and then iterate through the rounds, adding stats along the way
+		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
+		
+		$round_from=$this->draw['event_draw_round_from'];
+		$round_to=$this->draw['event_draw_round_to'];
+		
+		# Lets turn off any rounds that are outside the range
+		$stmt=db_prep("
+			UPDATE event_draw_round
+			SET event_pilot_id=0,
+				event_draw_round_group='',
+				event_draw_round_status=0
+			WHERE event_draw_id=:event_draw_id
+				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+				
+		");
+		$result=db_exec($stmt,array(
+			"event_draw_id"=>$this->event_draw_id,
+			"round_from"=>$round_from,
+			"round_to"=>$round_to
+		));
+		
+		
+		# If they want to take the statistics from the previously applied rounds, then do that here
+		# (insert code for retrieval of stats from previous rounds)
+		$groups=$this->get_group_array();
+
+		$first_round=1;
+		for($round=$round_from;$round<=$round_to;$round++){
+			$round_ok=1;
+			
+			$this_round=array();
+			if($first_round==1){
+				# Lets make the first round a random draw taking into account the protection
+				do{
+					$pilots=$this->pilots;
+					$total_pilots=count($pilots);
+					$round_ok=1;
+					$this_round_attempt=array();
+					# Lets step through the group structure
+					foreach($groups as $group_num=>$number_group_pilots){
+						$this_group_array=array();
+						$this_group_teams=array();
+						for($x=1;$x<=$number_group_pilots;$x++){
+							$clear=0;
+							$y=0; # set value to make sure it doesn't continually loop
+							do{
+								$rand=mt_rand(0,$total_pilots);
+								if($this->draw['event_draw_team_protection']==1){
+									# This draw has team protection, so lets see if this choice is already on a team in this group
+									$test=array_slice($pilots,$rand-1,1);
+									if(!in_array($test[0]['event_pilot_team'],$this_group_teams)){
+										$clear=1;
+									}else{
+										$y++;
+										if($y>20){
+											# This means that we've done this loop more than 20 times with no success so we might be in a loop
+											# Try again by resetting the x var
+											break;
+										}
+									}
+								}else{
+									$clear=1;
+								}
+							} while($clear==0);
+							if($y>20){
+								# We didn't get the group ok, so lets start the group over
+								$round_ok=0;
+								print "breaking out of loop, cause we couldn't get a pilot chosen that had protection<br>\n";
+								break(2);
+							}
+							# This is where we got a good group, so lets set it and continue
+							$temp_pilot=array_splice($pilots,$rand-1,1);
+							$this_group_array[]=$temp_pilot[0];
+							$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
+							$total_pilots--;
+						}
+						$this_round_attempt[$group_num]=$this_group_array;					
+					}
+					if($round_ok==1){
+						$this_round[$round]=$this_round_attempt;
+					}
+				} while($round_ok==0);
+				
+				$first_round=0;
+				
+				foreach($this_round as $temp_round=>$r){
+					print "Round #$temp_round<br>\n";
+					foreach($r as $temp_group=>$g){
+						print "\tGroup #$temp_group<br>\n";
+						foreach($g as $key=>$p){
+							#print_r($p);
+							print "\t\t{$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
+						}
+					}
+				}
+				
+				
+			}else{
+				# This is a subsequent round, so we will be taking in the stats in addition to random to create it
+			
+			
+			
+			}
+			
+		}
+		return;
+	}
+	
+	function add_round_to_stats($round){
+	
+	
+	}
+	function get_group_array(){
+		# Function to determine the number of groups and members in each group from the settings
+		$num_pilots=count($this->pilots);
+		$num_groups=$this->draw['event_draw_number_groups'];
+		$per_group=floor($num_pilots/$num_groups);
+		$left_over=$num_pilots % $num_groups;
+		
+		$groups=array();
+		if($left_over==0){
+			for($x=1;$x<=$num_groups;$x++){
+				$groups[$x]=$per_group;
+			}
+		}else{
+			# Set the number of groups at the higher value first
+			for($x=1;$x<=($left_over);$x++){
+				$groups[$x]=$per_group+1;
+			}
+			for($x=$x;$x<=$num_groups;$x++){
+				$groups[$x]=$per_group;
+			}
+		}
+		return $groups;
+	}
+	
+	
 }
 ?>

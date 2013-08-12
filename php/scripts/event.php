@@ -2444,11 +2444,11 @@ function event_draw_edit() {
 	}
 	arsort($teams);
 	$max_on_team=array_shift($teams);
-	if($num_teams>$max_on_team){
-		$min_groups_p=$num_teams;
-	}else{
+	#if($num_teams>$max_on_team){
+	#	$min_groups_p=$num_teams;
+	#}else{
 		$min_groups_p=$max_on_team;
-	}
+	#}
 	$max_groups_p=floor(count($e->pilots)/2);
 	
 #	print "number of teams=$num_teams<br>\n";
