@@ -976,7 +976,6 @@ function location_map() {
 		FROM ( SELECT DISTINCT country_id FROM location) l
 		LEFT JOIN country c ON c.country_id=l.country_id
 		WHERE c.country_id!=0
-			AND l.location_coordinates IS NOT NULL
 	");
 	$countries=db_exec($stmt,array());
 	# Get only states that we have locations for
@@ -985,7 +984,6 @@ function location_map() {
 		FROM ( SELECT DISTINCT state_id FROM location) l
 		LEFT JOIN state s ON s.state_id=l.state_id
 		WHERE s.state_id!=0
-			AND l.location_coordinates IS NOT NULL
 	");
 	$states=db_exec($stmt,array());
 	
