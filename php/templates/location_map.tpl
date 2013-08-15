@@ -23,7 +23,7 @@ function initialize(){ldelim}
 				map: map
 			{rdelim});
 			var infowindow = new google.maps.InfoWindow({ldelim}
-				content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id}">{$l.location_name|escape}</a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:'url'}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id}">View Site Details</a></center></div>'
+				content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id}">{$l.location_name|escape}</a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:"url"}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id}">View Site Details</a></center></div>'
 			{rdelim});
 			makeInfoWindowEvent(map, infowindow, marker);
 			markers.push(marker);

@@ -206,6 +206,8 @@
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: left;">State/Country</th>
+	<th style="text-align: left;">Position</th>
+	<th style="text-align: left;">Percentage</th>
 </tr>
 {if $pilot_events}
 	{foreach $pilot_events as $pe}
@@ -217,6 +219,8 @@
 			{if $pe.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pe.country_code|escape}.png" style="vertical-align: middle;">{/if}
 			{if $pe.state_name && $pe.country_code=="US"}<img src="/images/flags/states/16/{$pe.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
 		</td>
+		<td align="center">{$pe.event_pilot_position|escape}</td>
+		<td align="right">{$pe.event_pilot_total_percentage|string_format:"%03.2f"}%</td>
 	</tr>
 	{/foreach}
 {else}

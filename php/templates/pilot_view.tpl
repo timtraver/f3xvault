@@ -118,8 +118,8 @@
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: left;">State/Country</th>
-	<th style="text-align: left;">Finishing Position</th>
-	<th style="text-align: left;">Finishing Percentage</th>
+	<th style="text-align: left;">Position</th>
+	<th style="text-align: left;">Percentage</th>
 </tr>
 {if $pilot_events}
 	{foreach $pilot_events as $pe}
