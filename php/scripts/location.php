@@ -943,7 +943,8 @@ function location_map() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			$joind
-			WHERE l.$search_field $operator :search
+			WHERE l.location_coordinates IS NOT NULL
+				AND l.$search_field $operator :search
 				$addcountry
 				$addstate
 				$extrad
@@ -958,7 +959,7 @@ function location_map() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			$joind
-			WHERE 1
+			WHERE l.location_coordinates is not null
 				$addcountry
 				$addstate
 				$extrad
