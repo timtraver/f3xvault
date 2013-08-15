@@ -787,26 +787,34 @@ function convert_coordinates($string){
 		return $string;
 	}
 	
-	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s(\S+)\"*\S*/",$latstring,$match)){
+	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s*(\S+)\"*\s*(\S*)/",$latstring,$match)){
 		$degrees=$match[1];
 		$minutes=$match[2];
 		$seconds=floatval($match[3]);
+		$direction=strtolower($match[4]);
 		$latdec=($minutes/60) + ($seconds/3600);
 		if($degrees<0){
 			$lat=$degrees-$latdec;
 		}else{
 			$lat=$degrees+$latdec;
+			if($direction=='s'){
+				$lat=-$lat;
+			}
 		}
 	}
-	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s(\S+)\"*\S*/",$lonstring,$match)){
+	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s*(\S+)\"*\s*(\S)*/",$lonstring,$match)){
 		$degrees=$match[1];
 		$minutes=$match[2];
 		$seconds=floatval($match[3]);
+		$direction=strtolower($match[4]);
 		$londec=($minutes/60) + ($seconds/3600);
 		if($degrees<0){
 			$lon=$degrees-$londec;
 		}else{
 			$lon=$degrees+$londec;
+			if($direction=='w'){
+				$lon=-$lon;
+			}
 		}
 	}
 	return "$lat,$lon";
