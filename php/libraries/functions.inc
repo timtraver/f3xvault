@@ -787,7 +787,7 @@ function convert_coordinates($string){
 		return $string;
 	}
 	
-	if(preg_match("/^([\+\-]\d+)\°\s(\d+)\'\s(\S+)\"*/",$latstring,$match)){
+	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s(\S+)\"*\S*/",$latstring,$match)){
 		$degrees=$match[1];
 		$minutes=$match[2];
 		$seconds=floatval($match[3]);
@@ -798,7 +798,7 @@ function convert_coordinates($string){
 			$lat=$degrees+$latdec;
 		}
 	}
-	if(preg_match("/^([\+\-]\d+)\°\s(\d+)\'\s(\S+)\"*/",$lonstring,$match)){
+	if(preg_match("/^([\+\-]*\d+)\°\s*(\d+)\'\s(\S+)\"*\S*/",$lonstring,$match)){
 		$degrees=$match[1];
 		$minutes=$match[2];
 		$seconds=floatval($match[3]);
