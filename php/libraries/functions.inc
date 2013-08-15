@@ -776,4 +776,39 @@ function sub_trace(){
 	}
 	return;
 }
+function convert_coordinates($string){
+	# Function to convert lat and long string to decimal degrees if needed
+	# lets first split the string by the comma
+	$latlong=preg_split("/\,/",$string);
+	$latstring=trim($latlong[0]);
+	$lonstring=trim($latlong[1]);
+	
+	if(!preg_match("/\°/",$string)){
+		return $string;
+	}
+	
+	if(preg_match("/^([\+\-]\d+)\°\s(\d+)\'\s(\S+)\"*/",$latstring,$match)){
+		$degrees=$match[1];
+		$minutes=$match[2];
+		$seconds=floatval($match[3]);
+		$latdec=($minutes/60) + ($seconds/3600);
+		if($degrees<0){
+			$lat=$degrees-$latdec;
+		}else{
+			$lat=$degrees+$latdec;
+		}
+	}
+	if(preg_match("/^([\+\-]\d+)\°\s(\d+)\'\s(\S+)\"*/",$lonstring,$match)){
+		$degrees=$match[1];
+		$minutes=$match[2];
+		$seconds=floatval($match[3]);
+		$londec=($minutes/60) + ($seconds/3600);
+		if($degrees<0){
+			$lon=$degrees-$londec;
+		}else{
+			$lon=$degrees+$londec;
+		}
+	}
+	return "$lat,$lon";
+}
 ?>

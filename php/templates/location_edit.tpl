@@ -47,7 +47,7 @@
 </tr>
 <tr>
 	<th>Map Coordinates</th>
-	<td><input type="text" size="30" name="location_coordinates" value="{$location.location_coordinates|escape:'quotes'}"></td>
+	<td><input type="text" size="50" name="location_coordinates" value="{$location.location_coordinates}"></td>
 </tr>
 <tr>
 	<th>Local RC Club</th>

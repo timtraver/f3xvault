@@ -493,7 +493,7 @@ function location_save() {
 		$location['state_id']=0;
 	}
 	if(isset($_REQUEST['location_coordinates'])){
-		$location['location_coordinates']=$_REQUEST['location_coordinates'];
+		$location['location_coordinates']=convert_coordinates($_REQUEST['location_coordinates']);
 	}else{
 		$location['location_coordinates']='';
 	}
