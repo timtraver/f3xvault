@@ -17,7 +17,7 @@ function initialize(){ldelim}
 	var markers = [];
 	{foreach $locations as $l}
 		{if $l.location_coordinates!=''}
-			latlong=new google.maps.LatLng('{$l.location_coordinates|escape:"url"}');
+			latlong=new google.maps.LatLng({$l.location_coordinates});
 			var marker=new google.maps.Marker({ldelim}
 				position: latlong,
 				map: map
