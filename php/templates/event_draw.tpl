@@ -44,7 +44,7 @@
 	<br>
 	<h2 style="color:red;">Under Construction...</h2>
 <h1 class="post-title entry-title">Draws
-		<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
+		<input type="button" value=" Back To Event Edit " onClick="goback.submit();" class="block-button">
 </h1>
 	
 <form name="main" method="POST">
@@ -86,7 +86,7 @@
 					{$ft.flight_type_name}
 				{/if}
 			</th>
-			<td colspan="4">No draws created</td>
+			<td colspan="6">No draws created</td>
 		</tr>
 	{else}	
 		{foreach $event->draws as $d}
@@ -195,7 +195,7 @@
 
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 

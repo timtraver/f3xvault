@@ -24,8 +24,9 @@ class Draw {
 		$this->event_draw_id=$event_draw_id;
 		$stmt=db_prep("
 			SELECT *
-			FROM event_draw
-			WHERE event_draw_id=:event_draw_id
+			FROM event_draw ed
+			LEFT JOIN flight_type ft ON ed.flight_type_id=ft.flight_type_id
+			WHERE ed.event_draw_id=:event_draw_id
 		");
 		$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
 		$this->draw=$result[0];
@@ -36,7 +37,7 @@ class Draw {
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
 		$stmt=db_prep("
-			SELECT *
+			SELECT ep.event_pilot_id,ep.event_pilot_team,p.pilot_first_name,p.pilot_last_name
 			FROM event_pilot ep
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 			WHERE ep.event_id=:event_id
@@ -350,112 +351,387 @@ class Draw {
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
 		
-		# Lets turn off any rounds that are outside the range
-		$stmt=db_prep("
-			UPDATE event_draw_round
-			SET event_pilot_id=0,
-				event_draw_round_group='',
-				event_draw_round_status=0
-			WHERE event_draw_id=:event_draw_id
-				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
-				
-		");
-		$result=db_exec($stmt,array(
-			"event_draw_id"=>$this->event_draw_id,
-			"round_from"=>$round_from,
-			"round_to"=>$round_to
-		));
+		# Number of iterations to do
+		$iterations=100;
+		$draws=array();
 		
+		for($i=1;$i<=$iterations;$i++){
 		
-		# If they want to take the statistics from the previously applied rounds, then do that here
-		# (insert code for retrieval of stats from previous rounds)
-		$groups=$this->get_group_array();
-
-		$first_round=1;
-		for($round=$round_from;$round<=$round_to;$round++){
-			$round_ok=1;
+			$rounds=array();
+			$this->initialize_stats();
+	
+			# If they want to take the statistics from the previously applied rounds, then do that here
+			# (insert code for retrieval of stats from previous rounds)
+			$groups=$this->get_group_array();
 			
-			$this_round=array();
-			if($first_round==1){
-				# Lets make the first round a random draw taking into account the protection
-				do{
-					$pilots=$this->pilots;
-					$total_pilots=count($pilots);
-					$round_ok=1;
-					$this_round_attempt=array();
-					# Lets step through the group structure
-					foreach($groups as $group_num=>$number_group_pilots){
-						$this_group_array=array();
-						$this_group_teams=array();
-						for($x=1;$x<=$number_group_pilots;$x++){
-							$clear=0;
-							$y=0; # set value to make sure it doesn't continually loop
-							do{
-								$rand=mt_rand(0,$total_pilots);
-								if($this->draw['event_draw_team_protection']==1){
-									# This draw has team protection, so lets see if this choice is already on a team in this group
-									$test=array_slice($pilots,$rand-1,1);
-									if(!in_array($test[0]['event_pilot_team'],$this_group_teams)){
-										$clear=1;
+			$first_round=1;
+			for($round=$round_from;$round<=$round_to;$round++){
+				$round_ok=1;
+	
+				# Set the temporary stats array
+				$temp_stats=$this->stats;				
+				$this_round=array(); # Initialize the round array for this round
+				if($first_round==1){
+					# Lets make the first round a random draw taking into account the protection
+					do{
+						$pilots=$this->pilots;
+						$total_pilots=count($pilots);
+						$round_ok=1;
+						$this_round_attempt=array();
+						# Lets step through the group structure
+						foreach($groups as $group_num=>$number_group_pilots){
+							$this_group_array=array();
+							$this_group_teams=array();
+							for($x=1;$x<=$number_group_pilots;$x++){
+								$clear=0;
+								$y=0; # set value to make sure it doesn't continually loop
+								do{
+									$rand=mt_rand(0,$total_pilots);
+									if($this->draw['event_draw_team_protection']==1){
+										# This draw has team protection, so lets see if this choice is already on a team in this group
+										$test=array_slice($pilots,$rand-1,1);
+										if(!in_array($test[0]['event_pilot_team'],$this_group_teams)){
+											$clear=1;
+										}else{
+											$y++;
+											if($y>20){
+												# This means that we've done this loop more than 20 times with no success so we might be in a loop
+												# Try again by resetting the x var
+												break;
+											}
+										}
 									}else{
-										$y++;
-										if($y>20){
-											# This means that we've done this loop more than 20 times with no success so we might be in a loop
-											# Try again by resetting the x var
+										$clear=1;
+									}
+								} while($clear==0);
+								if($y>20){
+									# We didn't get the group ok, so lets start the group over
+									$round_ok=0;
+									#print "breaking out of loop, cause we couldn't get a pilot chosen that had protection<br>\n";
+									break(2);
+								}
+								# This is where we got a good group, so lets set it and continue
+								$temp_pilot=array_splice($pilots,$rand-1,1);
+								$this_group_array[]=$temp_pilot[0];
+								$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
+								$total_pilots--;
+							}
+							$this_round_attempt[$group_num]=$this_group_array;					
+						}
+						if($round_ok==1){
+							$this_round=$this_round_attempt;
+						}
+					} while($round_ok==0);
+					$first_round=0;
+					
+					
+						#print "Round #$round<br>\n";
+						#foreach($this_round as $temp_group=>$g){
+						#	print "\tGroup #$temp_group<br>\n";
+						#	foreach($g as $key=>$p){
+						#		print "\t\t{$p['event_pilot_id']} {$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
+						#	}
+						#}
+					
+					
+				}else{
+					# This is a subsequent round, so we will be taking in the stats into account to create it
+					do{
+						$pilots=$this->pilots;
+
+						$total_pilots=count($pilots);
+						$round_ok=1;
+						$this_round_attempt=array();
+						# Lets step through the group structure
+						foreach($groups as $group_num=>$number_group_pilots){
+							$this_group_array=array();
+							$this_group_teams=array();
+							$first_in_group=1;
+							$last_event_pilot_id=0;
+							for($x=1;$x<=$number_group_pilots;$x++){
+								if($first_in_group==1){
+									# Go ahead and just get a random pilot from the whole list
+									$rand=mt_rand(0,$total_pilots);
+									$first_in_group=0;
+									$temp_pilot=array_slice($pilots,$rand-1,1);
+									$this_group_array[]=$temp_pilot[0];
+									$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
+									$last_event_pilot_id=$temp_pilot[0]['event_pilot_id'];
+									#print "First one in group \n";
+									#print "{$temp_pilot[0]['pilot_first_name']} {$temp_pilot[0]['pilot_last_name']}\n";
+									#print "last_event_pilot_id=$last_event_pilot_id\n";
+									unset($pilots[$last_event_pilot_id]);
+								}else{									
+									#print "Next one in group \n";
+									$temp_stats2=$temp_stats[$last_event_pilot_id];
+									asort($temp_stats2);
+									#print "Current stats for pilot $last_event_pilot_id\n";
+									#print_r($temp_stats2);
+									
+									# Lets step through and look at each of the pilots with the lowest values and see about their pairings with the others in the group too
+									# Lets create a list of sums to see how adding the next pilot compares to the ones already in the group
+									
+									# Create another temp array holding the current pilots in the group
+									$temp_sums=array();
+									$temp_array3=array();
+									foreach($this_group_array as $key=>$p){
+										$temp_array3[]=$p['event_pilot_id'];
+									}
+									# Now lets look through each of our choices for the next pilot and add up the total flights they've already had with the existing group pilots
+									$temp_sum=array();
+									foreach($temp_stats2 as $epid2=>$value){
+										$sum=0;
+										foreach($temp_array3 as $key=>$epid){
+											$sum+=$temp_stats[$epid][$epid2];
+										}
+										$temp_sums[$epid2]=$sum;
+									}
+									asort($temp_sums);
+									#print_r($temp_sums);
+									
+									# The first one in this array that is still available is the one we should use
+									foreach($temp_sums as $epid=>$value){
+										if(isset($pilots[$epid])){
+											if($this->draw['event_draw_team_protection']==1){
+												# This draw has team protection, so lets see if this choice is already on a team in this group
+												if(in_array($pilots[$epid]['event_pilot_team'],$this_group_teams)){
+													#print "Skipped because they are on the same team\n";
+													continue;
+												}
+											}
+											# If we made it here, then the epid is good
+											$this_group_array[]=$pilots[$epid];
+											$this_group_teams[]=$pilots[$epid]['event_pilot_team'];
+											#print "pilot : {$pilots[$epid]['pilot_first_name']} {$pilots[$epid]['pilot_last_name']}\n";
+											unset($pilots[$epid]);
+											# Lets update the temp stats with these new pairings
+											foreach($this_group_array as $key=>$p2){
+												$event_pilot_id2=$p2['event_pilot_id'];
+												if($epid==$event_pilot_id2){
+													continue;
+												}
+												$temp_stats[$epid][$event_pilot_id2]++;
+												$temp_stats[$event_pilot_id2][$epid]++;
+											}
+											$last_event_pilot_id=$epid;
 											break;
 										}
 									}
-								}else{
-									$clear=1;
+									
 								}
-							} while($clear==0);
-							if($y>20){
-								# We didn't get the group ok, so lets start the group over
-								$round_ok=0;
-								print "breaking out of loop, cause we couldn't get a pilot chosen that had protection<br>\n";
-								break(2);
+								# This is where we got a good group, so lets set it and continue
+								$total_pilots--;
 							}
-							# This is where we got a good group, so lets set it and continue
-							$temp_pilot=array_splice($pilots,$rand-1,1);
-							$this_group_array[]=$temp_pilot[0];
-							$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
-							$total_pilots--;
+							$this_round_attempt[$group_num]=$this_group_array;
 						}
-						$this_round_attempt[$group_num]=$this_group_array;					
-					}
-					if($round_ok==1){
-						$this_round[$round]=$this_round_attempt;
-					}
-				} while($round_ok==0);
-				
-				$first_round=0;
-				
-				foreach($this_round as $temp_round=>$r){
-					print "Round #$temp_round<br>\n";
-					foreach($r as $temp_group=>$g){
-						print "\tGroup #$temp_group<br>\n";
-						foreach($g as $key=>$p){
-							#print_r($p);
-							print "\t\t{$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
+						if($round_ok==1){
+							$this_round=$this_round_attempt;
 						}
-					}
+					} while($round_ok==0);
+					
+						#print "Round #$round<br>\n";
+						#foreach($this_round as $temp_group=>$g){
+						#	print "\tGroup #$temp_group<br>\n";
+						#	foreach($g as $key=>$p){
+						#		#print_r($p);
+						#		print "\t\t{$p['event_pilot_id']} {$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
+						#	}
+						#}
+					
+					
 				}
+				$this->add_round_to_stats($this_round);
 				
-				
-			}else{
-				# This is a subsequent round, so we will be taking in the stats in addition to random to create it
-			
-			
-			
+				# lets now set the round
+				$rounds[$round]=$this_round;
 			}
 			
+			$draws[$i]['rounds']=$rounds;
+			
+			#print "Stats for this draw iteration :\n";
+			#print_r($this->stats);
+			# Lets calculate the totals of the stats for this round
+			$stat_totals=array();
+			$already=array();
+			foreach($this->stats as $epid=>$p){
+				foreach($p as $epid2=>$value){
+					if(!in_array($epid2,$already)){
+						$stat_totals[$value]++;	
+					}
+				}
+				$already[]=$epid;
+			}
+			
+			# Now lets calculate the mean of the meetings
+			$samples=0;
+			$total=0;
+			$totals_array=array();
+			foreach($stat_totals as $key=>$value){
+				$samples+=$value;
+				$total+=($value*$key);
+				for($x=1;$x<=$value;$x++){
+					$totals_array[]=$key;
+				}
+			}
+			$mean=$total/$samples;
+			#print "Total Samples : $samples\n";
+			#print "Total Value : $total\n";
+			#print "Mean Value : $mean\n";
+			
+			# Lets calculate the standard deviation now
+			$sd=$this->sd($totals_array);
+			#print "Standard Deviation = $sd\n";
+
+			$draws[$i]['mean']=$mean;
+			$draws[$i]['sd']=$sd;
+			$draws[$i]['totals']=$stat_totals;
+			
+
+			#print_r($stat_totals);
+			
+			
+			
+			
+		} # End of iterations loop
+		
+		foreach($draws as $i=>$d){
+			print "Iteration #$i\n";
+			print "\tMean   : {$d['mean']}\n";
+			print "\tSD     : {$d['sd']}\n";
+			print "\tTotals : \n";
+			print_r($d['totals']);
 		}
+				
+		# Lets quickly find out which iteration of the draw we want to use
+		$draws=array_msort($draws,array('sd'=>SORT_ASC));
+		
+		foreach($draws as $i=>$d){
+			$draw_picked=$d;
+			break;
+		}
+		
+		print "The chosen iteration is $i with a standard deviation of {$draw_picked['sd']}\n";
+		
+		 
+		
+		# ok, now that we have that many iterations of the draw, lets save the one that we want to use
+		
+		# Lets turn off any rounds that are outside the range
+		#$stmt=db_prep("
+		#	UPDATE event_draw_round
+		#	SET event_pilot_id=0,
+		#		event_draw_round_group='',
+		#		event_draw_round_status=0
+		#	WHERE event_draw_id=:event_draw_id
+		#		AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+		#		
+		#");
+		#$result=db_exec($stmt,array(
+		#	"event_draw_id"=>$this->event_draw_id,
+		#	"round_from"=>$round_from,
+		#	"round_to"=>$round_to
+		#));
+		
+		# Lets figure out what the group type and lane/buzzer/landing values to use
+		switch($this->draw['flight_type_code']){
+			case 'f3b_distance':
+				$group_type='numeric';
+				$lane_type='alpha';
+				break;
+			case 'f3b_duration':
+			case 'f3j_duration':
+			case 'td_duration':
+				$group_type='alpha';
+				$lane_type='numeric';
+				break;
+			default:
+				if(preg_match("/^f3k\_/",$this->draw['flight_type_code'])){
+					$group_type='alpha';
+					$lane_type='none';
+				}else{
+					$group_type='alpha';
+					$lane_type='numeric';
+				}
+		}
+		
+		# Ok, lets save these rounds to the draw
+		#foreach($draws as $round_num=>$p){
+		#	if($group_type=='numeric'){
+		#		$event_draw_round_group=1;
+		#	}else{
+		#		$event_draw_round_group='A';
+		#	}
+		#	
+		#	if($lane_type=='numeric'){
+		#		$group_start=1;
+		#	}elseif($lane_type=='alpha'){
+		#		$group_start='A';
+		#	}else{
+		#		$lane_start='';
+		#	}
+		#	
+			# Make a new record
+			#$stmt=db_prep("
+			#	INSERT INTO event_draw_round
+			#	SET event_draw_id=:event_draw_id,
+			#		event_draw_round_number=:event_draw_round_number,
+			#		event_pilot_id=:event_pilot_id,
+			#		event_draw_round_group='',
+			#		event_draw_round_order=:x,
+			#		event_draw_round_status=1
+			#");
+			#$result=db_exec($stmt,array(
+			#	"event_draw_id"=>$this->event_draw_id,
+			#	"event_draw_round_number"=>$round,
+			#	"event_pilot_id"=>$o['event_pilot_id'],
+			#	"x"=>$x
+			#));		
+		#}
+		
 		return;
+	}
+	function sd_square($x, $mean){
+		return pow($x - $mean,2);
+	}
+	function sd($array) {
+		// square root of sum of squares devided by N-1
+		return sqrt(array_sum(array_map(array($this,"sd_square"), $array, array_fill(0,count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
 	}
 	
 	function add_round_to_stats($round){
-	
-	
+		# Function to add a rounds pairings to the stats db
+		foreach($round as $group_num=>$pilots){
+			foreach($pilots as $key=>$p){
+				$event_pilot_id=$p['event_pilot_id'];
+				foreach($pilots as $key2=>$p2){
+					$event_pilot_id2=$p2['event_pilot_id'];
+					if($event_pilot_id==$event_pilot_id2){
+						continue;
+					}
+					$this->stats[$event_pilot_id][$event_pilot_id2]++;
+				}
+			}
+		}
+		# Now sort it so that the lower numbers are at the top
+		
+		return;
+	}
+	function initialize_stats(){
+		# Lets create the initial stats array
+		$this->stats=array();
+		foreach($this->pilots as $event_pilot_id=>$pilot){
+			foreach($this->pilots as $event_pilot_id2=>$pilot2){
+				if($event_pilot_id==$event_pilot_id2){
+					continue;
+				}
+				if($this->draw['event_draw_team_protection']==1 && $pilot['event_pilot_team']==$pilot2['event_pilot_team']){
+					continue;
+				}
+				$this->stats[$event_pilot_id][$event_pilot_id2]=0;
+			}
+			#arsort($this->stats[$event_pilot_id][$event_pilot_id2]);
+		}
+		return;	
 	}
 	function get_group_array(){
 		# Function to determine the number of groups and members in each group from the settings
