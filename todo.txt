@@ -5,17 +5,17 @@ Todo list for f3xvault project
 GENERAL
     
 =	Send welcome email once registered and save it as their first message
-	Create a "Using this site" kind of tutorial instructions
+	Create a "Using this site" kind of tutorial instructions with free screen recorder! ;)
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
+	Fix flags for names of states with spaces in them
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 	Add a Competitions held here section
 	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
 	Show the add Location media button on location view
-	Speed records for F3F and F3B
 	Recent events
 	
 PLANE STUFF
@@ -30,7 +30,6 @@ PLANE STUFF
 	
 EVENT STUFF
 	F3B individual pilot graphs for speed, duration, and distance
-	Allow the accuracy of calculations to be set for an event
 	
 	Don't allow the user to select the sort type until after the round is saved
 
@@ -40,13 +39,15 @@ EVENT STUFF
 		and when adding new flyoff rounds, only those pilots are shown.
   
 	Draw
-		Move the draw buttons to the event settings area
 		ability to create F3B distance orders before hand
 		draw types
 X    	random order
 X    	staggered order for F3F
 		F3K event draw printing for each of the printouts
-    	set number of groups
+		Allow the F3K round types to be set with the draw
+		When adding a round, if F3K, set the round type too if there was one that was set
+		
+X    	set number of groups
 X		make the printing of the draws use the current rounds and the draw rounds
 X		have draw view buttons to show draw even if not active
 X		When adding a round, default apply the draw and sort it by the draw order or group
@@ -88,6 +89,9 @@ MOBILE STUFF
 
 COMPLETED
  
+X		Move the draw buttons to the event settings area
+X	Allow the accuracy of calculations to be set for an event
+X	Speed records for F3F and F3B
 X	Fix bug to determine your overall round rank in F3B (in worlds)
 X	On Login screen make the focus go to the login user
 X	Show drop values in flyoff rounds that have drops

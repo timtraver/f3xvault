@@ -60,7 +60,7 @@
 	<th width="15%" nowrap>Draw Type</th>
 	<th width="10%" nowrap>Round From</th>
 	<th width="10%" nowrap>Round To</th>
-	<th nowrap>Statistics</th>
+	<th nowrap>View</th>
 	<th width="40%" nowrap>Action</th>
 </tr>
 
@@ -107,9 +107,9 @@
 			<td align="center">{if $d.event_draw_type=="random"}Random{elseif $d.event_draw_type=='random_step'}Random With Step{elseif $d.event_draw_type=='group'}Group{/if}</td>
 			<td align="center">{$d.event_draw_round_from}</td>
 			<td align="center">{$d.event_draw_round_to}</td>
-			<td align="center">
+			<td align="center" nowrap>
 				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
-					View Statistics
+				<input type="button" value="View Stats" class="button" style="float:left;" onClick="location.href='?action=event&function=event_draw_stats&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
 				{/if}
 				<input type="button" value="View Draw" class="button" onClick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');">
 			</td>

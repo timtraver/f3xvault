@@ -18,6 +18,7 @@ class Draw {
 	var $rounds=array();
 	var $grow_only;
 	var $stats=array();
+	var $stat_totals=array();
 	
 	function Draw($event_draw_id){
 		# Initialization of the class
@@ -32,6 +33,7 @@ class Draw {
 		$this->draw=$result[0];
 		$this->event_id=$this->draw['event_id'];
 		$this->get_pilots();
+		$this->get_rounds();
 		$this->grow_only=0;
 	}
 	function get_pilots(){
@@ -66,6 +68,26 @@ class Draw {
 		");
 		$names=db_exec($stmt,array("event_id"=>$this->event_id));
 		$this->teams=$names;
+		return;
+	}
+	function get_rounds(){
+		# Function to get the saved rounds for this draw
+		$rounds=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_draw_round 
+			WHERE event_draw_id=:event_draw_id
+				AND event_draw_round_status=1
+			ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_lane,event_draw_round_order
+		");
+		$results=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
+		foreach($results as $round){
+			$round_number=$round['event_draw_round_number'];
+			$event_pilot_id=$round['event_pilot_id'];
+			$group=$round['event_draw_round_group'];
+			$rounds[$round_number][$group]['pilots'][$event_pilot_id]=$round;
+		}
+		$this->rounds=$rounds;
 		return;
 	}
 	function create_random_rounds($recalc=0){
@@ -524,6 +546,16 @@ class Draw {
 							}
 							$this_round_attempt[$group_num]=$this_group_array;
 						}
+						# Check to see if this round has the appropriate number of pilots
+						$pilot_count=0;
+						foreach($this_round_attempt as $group=>$g){
+							foreach($g as $key=>$p){
+								$pilot_count++;
+							}
+						}
+						if($pilot_count!=count($this->pilots)){
+							$round_ok=0;
+						}
 						if($round_ok==1){
 							$this_round=$this_round_attempt;
 						}
@@ -594,13 +626,13 @@ class Draw {
 			
 		} # End of iterations loop
 		
-		foreach($draws as $i=>$d){
-			print "Iteration #$i\n";
-			print "\tMean   : {$d['mean']}\n";
-			print "\tSD     : {$d['sd']}\n";
-			print "\tTotals : \n";
-			print_r($d['totals']);
-		}
+#		foreach($draws as $i=>$d){
+#			print "Iteration #$i\n";
+#			print "\tMean   : {$d['mean']}\n";
+#			print "\tSD     : {$d['sd']}\n";
+#			print "\tTotals : \n";
+#			print_r($d['totals']);
+#		}
 				
 		# Lets quickly find out which iteration of the draw we want to use
 		$draws=array_msort($draws,array('sd'=>SORT_ASC));
@@ -614,7 +646,7 @@ class Draw {
 		
 		 
 		
-		# ok, now that we have that many iterations of the draw, lets save the one that we want to use
+		# ok, now that we have that many iterations of the draw, lets save the one that we chose
 		
 		# Lets turn off any rounds that are outside the range
 		#$stmt=db_prep("
@@ -654,39 +686,46 @@ class Draw {
 				}
 		}
 		
+		$group_labels=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+		#print_r($draw_picked);
+		
 		# Ok, lets save these rounds to the draw
-		#foreach($draws as $round_num=>$p){
-		#	if($group_type=='numeric'){
-		#		$event_draw_round_group=1;
-		#	}else{
-		#		$event_draw_round_group='A';
-		#	}
-		#	
-		#	if($lane_type=='numeric'){
-		#		$group_start=1;
-		#	}elseif($lane_type=='alpha'){
-		#		$group_start='A';
-		#	}else{
-		#		$lane_start='';
-		#	}
-		#	
-			# Make a new record
-			#$stmt=db_prep("
-			#	INSERT INTO event_draw_round
-			#	SET event_draw_id=:event_draw_id,
-			#		event_draw_round_number=:event_draw_round_number,
-			#		event_pilot_id=:event_pilot_id,
-			#		event_draw_round_group='',
-			#		event_draw_round_order=:x,
-			#		event_draw_round_status=1
-			#");
-			#$result=db_exec($stmt,array(
-			#	"event_draw_id"=>$this->event_draw_id,
-			#	"event_draw_round_number"=>$round,
-			#	"event_pilot_id"=>$o['event_pilot_id'],
-			#	"x"=>$x
-			#));		
-		#}
+		foreach($draw_picked['rounds'] as $round_num=>$r){
+			foreach($r as $group=>$g){
+				if($group_type=='numeric'){
+					$event_draw_round_group=$group;
+				}else{
+					$event_draw_round_group=$group_labels[$group-1];
+				}
+				$lane=1;
+				foreach($g as $key=>$p){
+					if($lane_type=='numeric'){
+						$lane=$key+1;
+					}elseif($lane_type=='alpha'){
+						$lane=$group_labels[$key];
+					}else{
+						$lane='';
+					}
+					# Make a new record
+					$stmt=db_prep("
+						INSERT INTO event_draw_round
+						SET event_draw_id=:event_draw_id,
+							event_draw_round_number=:event_draw_round_number,
+							event_pilot_id=:event_pilot_id,
+							event_draw_round_group=:event_draw_round_group,
+							event_draw_round_lane=:event_draw_round_lane,
+							event_draw_round_status=1
+					");
+					$result=db_exec($stmt,array(
+						"event_draw_id"=>$this->event_draw_id,
+						"event_draw_round_number"=>$round_num,
+						"event_pilot_id"=>$p['event_pilot_id'],
+						"event_draw_round_group"=>$event_draw_round_group,
+						"event_draw_round_lane"=>$lane
+					));
+				}
+			}
+		}
 		
 		return;
 	}
@@ -711,9 +750,7 @@ class Draw {
 					$this->stats[$event_pilot_id][$event_pilot_id2]++;
 				}
 			}
-		}
-		# Now sort it so that the lower numbers are at the top
-		
+		}		
 		return;
 	}
 	function initialize_stats(){
@@ -731,6 +768,56 @@ class Draw {
 			}
 			#arsort($this->stats[$event_pilot_id][$event_pilot_id2]);
 		}
+		return;	
+	}
+	function get_stats(){
+		# Lets step through the current rounds and fill up the stats array
+		foreach($this->rounds as $round=>$r){
+			foreach($r as $group=>$g){
+				foreach($g['pilots'] as $event_pilot_id=>$p){
+					foreach($g['pilots'] as $event_pilot_id2=>$p2){
+						if($event_pilot_id==$event_pilot_id2){
+							continue;
+						}
+						$this->stats[$event_pilot_id][$event_pilot_id2]++;
+					}
+				}
+			}
+		}
+		
+		# Now get the stat totals too
+		# Lets calculate the totals of the stats for this round
+		$stat_totals=array();
+		$already=array();
+		foreach($this->stats as $epid=>$p){
+			foreach($p as $epid2=>$value){
+				if(!in_array($epid2,$already)){
+					$stat_totals[$value]++;	
+				}
+			}
+			$already[]=$epid;
+		}
+		krsort($stat_totals);
+		
+		# Now lets calculate the mean of the meetings
+		$samples=0;
+		$total=0;
+		$totals_array=array();
+		foreach($stat_totals as $key=>$value){
+			$samples+=$value;
+			$total+=($value*$key);
+			for($x=1;$x<=$value;$x++){
+				$totals_array[]=$key;
+			}
+		}
+		$mean=$total/$samples;
+			
+		# Lets calculate the standard deviation now
+		$sd=$this->sd($totals_array);
+
+		$this->stat_totals['mean']=$mean;
+		$this->stat_totals['sd']=$sd;
+		$this->stat_totals['totals']=$stat_totals;
 		return;	
 	}
 	function get_group_array(){

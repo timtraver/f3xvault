@@ -2797,7 +2797,7 @@ function event_draw_print() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
-	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$print_flight_type_id=intval($_REQUEST['flight_type_id']);
 	$print_round_from=intval($_REQUEST['print_round_from']);
 	$print_round_to=intval($_REQUEST['print_round_to']);
 	$print_type=$_REQUEST['print_type'];
@@ -2860,6 +2860,7 @@ function event_draw_print() {
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 								
 								}
@@ -2871,12 +2872,10 @@ function event_draw_print() {
 		}
 	}
 
-
-
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);
 	$smarty->assign("print_format",$print_format);
-	$smarty->assign("flight_type_id",$flight_type_id);
+	$smarty->assign("flight_type_id",$print_flight_type_id);
 	$smarty->assign("event",$e);
 	
 	
@@ -2944,7 +2943,7 @@ function event_draw_view() {
 		FROM event_draw_round 
 		WHERE event_draw_id=:event_draw_id
 			AND event_draw_round_status=1
-		ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_order
+		ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_lane,event_draw_round_order
 	");
 	$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 	foreach($rounds as $round){
@@ -2969,10 +2968,12 @@ function event_draw_view() {
 						$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
 						$e->rounds[$event_round_number]['event_round_status']=1;
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+						# Lets try and sort them so they are easier to look at
 						foreach($v['pilots'] as $event_pilot_id=>$p){
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 						}
 					}
@@ -3347,6 +3348,38 @@ function event_import_save() {
 	$event->event_save_totals();
 	
 	return event_view();
+}
+function event_draw_stats() {
+	global $smarty;
+
+	include_library("draw.class");
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
+
+	if($event_draw_id==0){
+		user_message("Must have a proper event id to perform this action.",1);
+		return event_draw();
+	}
+
+	$d=new Draw($event_draw_id);
+	$d->get_teams();
+	$d->initialize_stats();
+	$d->get_stats();
+	print_r($d->stat_totals);
+	
+	$num_teams=count($d->teams);
+
+	$smarty->assign("event",$e);
+	$smarty->assign("draw",$draw);
+	$smarty->assign("event_id",$event_id);
+	$smarty->assign("event_draw_id",$event_draw_id);
+	$smarty->assign("ft",$ft);
+	$smarty->assign("stats",$d->stats);
+	
+	$maintpl=find_template("event_draw_stats.tpl");
+	return $smarty->fetch($maintpl);
 }
 
 ?>

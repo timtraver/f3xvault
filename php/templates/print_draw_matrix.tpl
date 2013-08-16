@@ -31,6 +31,14 @@
 						<td>Order</td>
 					{/if}
 					<td>Pilot</td>
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
+						<td>Spot</td>
+					{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+						<td>Lane</td>
+					{/if}
+					
 				</tr>
 				{$oldgroup='1000'}
 				{$bottom=0}
@@ -55,6 +63,12 @@
 							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
 						{/if}
 						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+						<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+					{/if}
 					</tr>
 					{$oldgroup=$p.event_pilot_round_flight_group}
 					{$bottom=0}
