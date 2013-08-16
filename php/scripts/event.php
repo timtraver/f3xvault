@@ -3371,8 +3371,7 @@ function event_draw_stats() {
 	
 	$num_teams=count($d->teams);
 
-	$smarty->assign("event",$e);
-	$smarty->assign("draw",$draw);
+	$smarty->assign("d",$d);
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("ft",$ft);

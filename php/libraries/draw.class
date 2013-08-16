@@ -27,6 +27,8 @@ class Draw {
 			SELECT *
 			FROM event_draw ed
 			LEFT JOIN flight_type ft ON ed.flight_type_id=ft.flight_type_id
+			LEFT JOIN event e ON ed.event_id=e.event_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
 			WHERE ed.event_draw_id=:event_draw_id
 		");
 		$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
