@@ -20,6 +20,15 @@ function calc_wingspan(){ldelim}
 	{rdelim}
 	document.getElementById('wingspan').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
+function calc_aspect(){ldelim}
+	var length={$plane.plane_wingspan};
+	var width={$plane.plane_root_chord_length};
+	var calc_aspect=0;
+	if(width!=0 && length!=0){ldelim}
+		calc_aspect = length / width;
+	{rdelim}
+	document.getElementById('aspect').innerHTML = calc_aspect.toFixed(2);
+{rdelim}
 function calc_length(){ldelim}
 	var current_units = '{$plane.plane_length_units}';
 	var current_value = {$plane.plane_length};
@@ -147,6 +156,19 @@ function calc_area(){ldelim}
 	</td>
 </tr>
 <tr>
+	<th align="left">Plane Root Chord Length</th>
+	<td>
+		{$plane.plane_root_chord_length|string_format:'%.1f'} {$plane.plane_wingspan_units|escape}
+		<span id="length"></span>		
+	</td>
+</tr>
+<tr>
+	<th align="left">Plane Aspect Ratio</th>
+	<td bgcolor="lightgrey">
+		<span id="aspect"></span>
+	</td>
+</tr>
+<tr>
 	<th align="left">Plane AUW Range (Empty)</th>
 	<td>
 		{$plane.plane_auw_from|string_format:'%.1f'} To {$plane.plane_auw_to|string_format:'%.1f'} {$plane.plane_auw_units|escape}
@@ -256,6 +278,7 @@ function calc_area(){ldelim}
 </table>
 <script type="text/javascript">
 	calc_wingspan();
+	calc_aspect();
 	calc_length();
 	calc_auw();
 	calc_area();

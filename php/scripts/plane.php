@@ -469,6 +469,11 @@ function plane_save() {
 	}else{
 		$plane['plane_length_units']='';
 	}
+	if(isset($_REQUEST['plane_root_chord_length'])){
+		$plane['plane_root_chord_length']=$_REQUEST['plane_root_chord_length'];
+	}else{
+		$plane['plane_root_chord_length']=0;
+	}
 	if(isset($_REQUEST['plane_auw_from'])){
 		$plane['plane_auw_from']=$_REQUEST['plane_auw_from'];
 	}else{
@@ -536,6 +541,7 @@ function plane_save() {
 				plane_wingspan_units=:plane_wingspan_units,
 				plane_length=:plane_length,
 				plane_length_units=:plane_length_units,
+				plane_root_chord_length=:plane_root_chord_length,
 				plane_wing_area=:plane_wing_area,
 				plane_tail_area=:plane_tail_area,
 				plane_wing_area_units=:plane_wing_area_units,
@@ -561,6 +567,7 @@ function plane_save() {
 				plane_wingspan_units=:plane_wingspan_units,
 				plane_length=:plane_length,
 				plane_length_units=:plane_length_units,
+				plane_root_chord_length=:plane_root_chord_length,
 				plane_wing_area=:plane_wing_area,
 				plane_tail_area=:plane_tail_area,
 				plane_wing_area_units=:plane_wing_area_units,

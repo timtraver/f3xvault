@@ -375,6 +375,23 @@ class Draw {
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
 		
+		if($recalc==0){
+			# this means that we don't change the saved draw values
+			# So lets get the saved values, and check to see if we need to add more	
+			
+		}else{
+			# This means to force the whole thing to be recalculated
+			
+			
+			
+			
+		
+		}
+		
+		
+		
+		
+		
 		# Number of iterations to do
 		$iterations=100;
 		$draws=array();
@@ -562,17 +579,6 @@ class Draw {
 							$this_round=$this_round_attempt;
 						}
 					} while($round_ok==0);
-					
-						#print "Round #$round<br>\n";
-						#foreach($this_round as $temp_group=>$g){
-						#	print "\tGroup #$temp_group<br>\n";
-						#	foreach($g as $key=>$p){
-						#		#print_r($p);
-						#		print "\t\t{$p['event_pilot_id']} {$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
-						#	}
-						#}
-					
-					
 				}
 				$this->add_round_to_stats($this_round);
 				
@@ -644,27 +650,43 @@ class Draw {
 			break;
 		}
 		
-		print "The chosen iteration is $i with a standard deviation of {$draw_picked['sd']}\n";
+		#print "The chosen iteration is $i with a standard deviation of {$draw_picked['sd']}\n";
 		
 		 
 		
 		# ok, now that we have that many iterations of the draw, lets save the one that we chose
 		
-		# Lets turn off any rounds that are outside the range
-		#$stmt=db_prep("
-		#	UPDATE event_draw_round
-		#	SET event_pilot_id=0,
-		#		event_draw_round_group='',
-		#		event_draw_round_status=0
-		#	WHERE event_draw_id=:event_draw_id
-		#		AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
-		#		
-		#");
-		#$result=db_exec($stmt,array(
-		#	"event_draw_id"=>$this->event_draw_id,
-		#	"round_from"=>$round_from,
-		#	"round_to"=>$round_to
-		#));
+		if($recalc==1){
+			# Lets turn off any saved rounds
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round_from"=>$round_from,
+				"round_to"=>$round_to
+			));
+		}else{
+			# Lets turn off any rounds that are out of the current bounds
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+					AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round_from"=>$round_from,
+				"round_to"=>$round_to
+			));
+		}
+		
 		
 		# Lets figure out what the group type and lane/buzzer/landing values to use
 		switch($this->draw['flight_type_code']){
@@ -788,7 +810,7 @@ class Draw {
 		}
 		
 		# Now get the stat totals too
-		# Lets calculate the totals of the stats for this round
+		# Lets calculate the totals of the stats for this draw
 		$stat_totals=array();
 		$already=array();
 		foreach($this->stats as $epid=>$p){
@@ -800,6 +822,14 @@ class Draw {
 			$already[]=$epid;
 		}
 		krsort($stat_totals);
+		
+		# Get the max
+		$max=0;
+		foreach($stat_totals as $key=>$value){
+			if($value>$max){
+				$max=$value;
+			}
+		}
 		
 		# Now lets calculate the mean of the meetings
 		$samples=0;
@@ -817,6 +847,7 @@ class Draw {
 		# Lets calculate the standard deviation now
 		$sd=$this->sd($totals_array);
 
+		$this->stat_totals['max_instances']=$max;
 		$this->stat_totals['mean']=$mean;
 		$this->stat_totals['sd']=$sd;
 		$this->stat_totals['totals']=$stat_totals;

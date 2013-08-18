@@ -3367,8 +3367,12 @@ function event_draw_stats() {
 	$d->get_teams();
 	$d->initialize_stats();
 	$d->get_stats();
-	print_r($d->stat_totals);
 	
+	$groups=$d->get_group_array();
+	$group_totals=array();
+	foreach($groups as $g){
+		$group_totals[$g]++;
+	}
 	$num_teams=count($d->teams);
 
 	$smarty->assign("d",$d);
@@ -3376,6 +3380,8 @@ function event_draw_stats() {
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("ft",$ft);
 	$smarty->assign("stats",$d->stats);
+	$smarty->assign("stat_totals",$d->stat_totals);
+	$smarty->assign("group_totals",$group_totals);
 	
 	$maintpl=find_template("event_draw_stats.tpl");
 	return $smarty->fetch($maintpl);

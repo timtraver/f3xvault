@@ -98,7 +98,7 @@ function calc_groups(){ldelim}
 	<td>
 	<select name="event_draw_type" onChange="set_changed();check_draw_step();">
 	{if $ft.flight_type_group==1}
-		<option value="group" {if $draw.event_draw_type=="group"}SELECTED{/if}>Standard Modified Random Group Draw</option>
+		<option value="group" {if $draw.event_draw_type=="group"}SELECTED{/if}>Standard Random Group Draw with Frequency Weighting</option>
 	{else}
 		<option value="random" {if $draw.event_draw_type=="random"}SELECTED{/if}>Random Order Draw Every Round</option>
 		<option value="random_step" {if $draw.event_draw_type=="random_step"}SELECTED{/if}>Random Order First Round With Stepped Progression</option>

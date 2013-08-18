@@ -19,6 +19,8 @@ function calc_wingspan(){ldelim}
 		calc_units = 'in';
 	{rdelim}
 	document.getElementById('wingspan').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	document.getElementById('chord_units').innerHTML = current_units;
+	calc_aspect();
 {rdelim}
 function calc_length(){ldelim}
 	var current_units = document.main.plane_length_units.value;
@@ -34,6 +36,16 @@ function calc_length(){ldelim}
 		calc_units = 'in';
 	{rdelim}
 	document.getElementById('length').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
+	calc_aspect();
+{rdelim}
+function calc_aspect(){ldelim}
+	var length=document.main.plane_wingspan.value;
+	var width=document.main.plane_root_chord_length.value;
+	var calc_aspect=0;
+	if(width!=0 && length!=0){ldelim}
+		calc_aspect = length / width;
+	{rdelim}
+	document.getElementById('aspect').innerHTML = calc_aspect.toFixed(2);
 {rdelim}
 function calc_auw(){ldelim}
 	var current_units = document.main.plane_auw_units.value;
@@ -118,6 +130,19 @@ function calc_area(){ldelim}
 	</td>
 </tr>
 <tr>
+	<th>Plane Root Chord Length</th>
+	<td>
+		<input type="text" size="10" name="plane_root_chord_length" value="{$plane.plane_root_chord_length|string_format:'%.1f'}" onChange="calc_wingspan();">
+		<span id="chord_units"></span>
+	</td>
+</tr>
+<tr>
+	<th>Plane Aspect Ratio</th>
+	<td bgcolor="lightgrey">
+		<span id="aspect"></span>		
+	</td>
+</tr>
+<tr>
 	<th>Plane AUW Range (Empty)</th>
 	<td>
 		<input type="text" size="10" name="plane_auw_from" value="{$plane.plane_auw_from|string_format:'%.1f'}" onChange="calc_auw();">
@@ -150,7 +175,7 @@ function calc_area(){ldelim}
 </tr>
 <tr>
 	<th>Plane Total Area</th>
-	<td>
+	<td bgcolor="lightgrey">
 		<span id="totalarea"></span>		
 	</td>
 </tr>
