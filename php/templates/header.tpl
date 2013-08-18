@@ -27,9 +27,10 @@
 					closeEffect : 'none',
 					helpers : {
 						title	: { type : 'inside'},
-						media : {},
+						media   : {},
 						buttons	: {}
-					}
+					},
+					margin      : [20, 60, 20, 60]
 				});
 				$('.fancybox-map').fancybox({
 					openEffect  : 'none',
