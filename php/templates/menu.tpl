@@ -20,6 +20,7 @@
            			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=event&function=event_view&event_id={$fsession.current_event_id}">View Last Event</a></li>
 					{/if}
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=series&country_id=0&state_id=0&search=">Series Browse</a></li>
+					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=records&country_id=0&page=1&perpage=20">F3F and F3B Records</a></li>
 				</ul>
 			</li>
 			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='pilots'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_pilots"><strong>Pilot Profiles</strong></a>

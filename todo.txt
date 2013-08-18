@@ -20,9 +20,6 @@ LOCATION STUFF
 	
 PLANE STUFF
 	Add layup types as a function to the planes
-	Add Root chord width and AR calculation to plane db
-	Speed records for F3F and F3B (top 5 and a link to bigger list)
-	Lap count records for F3B (top 5 and a link to bigger list)
 	Pilots Flying Model
 	Recent events
 	Build log links!
@@ -89,6 +86,9 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Speed records for F3F and F3B (top 5 and a link to bigger list)
+X	Lap count records for F3B (top 5 and a link to bigger list)
+X	Add Root chord width and AR calculation to plane db
 X		Move the draw buttons to the event settings area
 X	Allow the accuracy of calculations to be set for an event
 X	Speed records for F3F and F3B
