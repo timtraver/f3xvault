@@ -15,6 +15,7 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function="records_list";
 }
 
+$need_login=array();
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
 		# The user is not logged in, so send the feature template
@@ -22,19 +23,7 @@ if(check_user_function($function)){
 		$maintpl=find_template("feature_requires_login.tpl");
 		$actionoutput=$smarty->fetch($maintpl);
 	}else{
-		# Now check to see if they have permission to edit this club
-		if(isset($_REQUEST['club_id']) && $_REQUEST['club_id']!=0){
-			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_club_permission($_REQUEST['club_id']))){
-				# They are allowed
-				eval("\$actionoutput=$function();");
-			}else{
-				# They aren't allowed
-				user_message("I'm sorry, but you do not have permission to edit this club. Please contact the club creator for access.",1);
-				$actionoutput=club_view();
-			}
-		}else{
-			eval("\$actionoutput=$function();");
-		}
+		eval("\$actionoutput=$function();");
 	}
 }else{
 	 $actionoutput= show_no_permission();
