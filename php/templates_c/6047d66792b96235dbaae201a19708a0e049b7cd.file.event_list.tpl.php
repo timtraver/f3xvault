@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-04 00:16:33
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-18 15:08:36
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1375600591,
+      1 => 1376863373,
       2 => 'file',
     ),
   ),
@@ -45,6 +45,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
 if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
+if (!is_callable('smarty_modifier_replace')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.replace.php';
 ?><div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Browse F3X Event List</h1>
@@ -175,7 +176,7 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 	<td><?php if ($_smarty_tpl->tpl_vars['event']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['country_name'];?>
 "><?php }?> 
-		<?php if ($_smarty_tpl->tpl_vars['event']->value['state_name']&&$_smarty_tpl->tpl_vars['event']->value['country_id']==226){?><img src="/images/flags/states/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['state_name'], ENT_QUOTES, 'UTF-8', true);?>
+		<?php if ($_smarty_tpl->tpl_vars['event']->value['state_name']&&$_smarty_tpl->tpl_vars['event']->value['country_id']==226){?><img src="/images/flags/states/16/<?php echo smarty_modifier_replace($_smarty_tpl->tpl_vars['event']->value['state_name'],' ','-');?>
 -Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['state_name'];?>
 "><?php }?> 
 		<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['location_name'], ENT_QUOTES, 'UTF-8', true);?>

@@ -1,8 +1,9 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Draw</h1>
-		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
+		<h1 class="post-title entry-title">Event Draws for {$event->info.event_name|escape}
+				<input type="button" value=" Back To Event Edit " onClick="goback.submit();" class="block-button">
+		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
@@ -43,10 +44,8 @@
 	
 	<br>
 	<h2 style="color:red;">Under Construction...</h2>
-<h1 class="post-title entry-title">Draws
-		<input type="button" value=" Back To Event Edit " onClick="goback.submit();" class="block-button">
-</h1>
-	
+<h1 class="post-title entry-title">Draws</h1>
+
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw_edit">
@@ -63,9 +62,6 @@
 	<th nowrap>View</th>
 	<th width="40%" nowrap>Action</th>
 </tr>
-
-
-
 {$f3k_first=0}
 {foreach $event->flight_types as $ft}
 	{if $f3k_first!=0}
@@ -94,7 +90,13 @@
 				{continue}
 			{/if}
 			<tr>
-			<th width="20%" nowrap>{$ft.flight_type_name}</th>
+			<th width="20%" nowrap>
+				{if $event->info.event_type_code=='f3k'}
+					F3K
+				{else}
+					{$ft.flight_type_name}
+				{/if}
+			</th>
 			{if $d.event_draw_active}
 				<td align="center" bgcolor="#9DCFF0">
 					Active
@@ -142,8 +144,8 @@
 </tr>
 </table>
 </form>
-
-<h1 class="post-title entry-title">Printing Draws</h1>
+<br>
+<h1 class="post-title entry-title">Printing Active Draws</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 {$f3k_first=0}
 {foreach $event->flight_types as $ft}

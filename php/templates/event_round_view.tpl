@@ -165,7 +165,7 @@
 						<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 					{/if}
 					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-					{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+					{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
 					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 				</td>
 					{if $ft.flight_type_group}
@@ -253,7 +253,7 @@
 							<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 						{/if}
 						{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
-						{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|escape}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+						{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
 						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 					</td>
 						{if $ft.flight_type_group}

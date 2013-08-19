@@ -290,7 +290,7 @@ function calc_area(){ldelim}
 
 
 <h1 class="post-title entry-title">Plane Media</h1>
-{if !$user.user_id}Log In To Add Media{/if}
+<input type="button" name="media" value="Add New Plane Media" onClick="add_media.submit()" class="block-button" {if $plane.plane_id==0}disabled="disabled" style=""{/if}>
 {foreach $media as $m}
 	{if $m.plane_media_type == 'picture'}
 		<a href="{$m.plane_media_url}" rel="gallery" class="fancybox-button" title="{$m.pilot_first_name|escape}, {$m.pilot_city|escape} {$m.state_code|escape} - {$m.plane_media_caption|escape}"><img src="/images/icons/picture.png" style="border-style: none;"></a>
@@ -324,6 +324,11 @@ function calc_area(){ldelim}
 <form name="plane_edit" method="GET">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_edit">
+<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+</form>
+<form name="add_media" method="GET">
+<input type="hidden" name="action" value="plane">
+<input type="hidden" name="function" value="plane_media_edit">
 <input type="hidden" name="plane_id" value="{$plane.plane_id}">
 </form>
 

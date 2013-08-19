@@ -16,8 +16,10 @@ class Draw {
 	var $pilots=array();
 	var $teams=array();
 	var $rounds=array();
+	var $round_flight_types=array();
 	var $grow_only;
 	var $stats=array();
+	var $existing_stats=array();
 	var $stat_totals=array();
 	
 	function Draw($event_draw_id){
@@ -36,6 +38,7 @@ class Draw {
 		$this->event_id=$this->draw['event_id'];
 		$this->get_pilots();
 		$this->get_rounds();
+		$this->get_round_flight_types();
 		$this->grow_only=0;
 	}
 	function get_pilots(){
@@ -90,6 +93,24 @@ class Draw {
 			$rounds[$round_number][$group]['pilots'][$event_pilot_id]=$round;
 		}
 		$this->rounds=$rounds;
+		return;
+	}
+	function get_round_flight_types(){
+		# Function to get the round flight types for this draw
+		$round_types=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_draw_round_flight
+			WHERE event_draw_id=:event_draw_id
+				AND event_draw_round_flight_status=1
+			ORDER BY event_draw_round_number
+		");
+		$results=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
+		foreach($results as $round){
+			$round_number=$round['event_draw_round_number'];
+			$round_types[$round_number]=$round;
+		}
+		$this->round_flight_types=$round_types;
 		return;
 	}
 	function create_random_rounds($recalc=0){
@@ -375,22 +396,63 @@ class Draw {
 		$round_from=$this->draw['event_draw_round_from'];
 		$round_to=$this->draw['event_draw_round_to'];
 		
+		$calculate_rounds=0;
 		if($recalc==0){
 			# this means that we don't change the saved draw values
-			# So lets get the saved values, and check to see if we need to add more	
+			# Lets turn off any rounds that are out of the current bounds
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+					AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id,
+				"round_from"=>$round_from,
+				"round_to"=>$round_to
+			));
+			# So lets get the saved values, and check to see if we need to add more
+			# Get the rounds again now that we've removed the ones that we don't want
+			$this->get_rounds();
+			# Get the last round to see what rounds we might need to add
+			$max_round_number=0;
+			foreach($this->rounds as $round_number=>$r){
+				if($round_number>$max_round_number){
+					$max_round_number=$round_number;
+				}
+			}
 			
+			# ok, now we have the max round number of the rounds that already exist.
+			# Lets see if there are rounds to make
+			if($round_to>$max_round_number){
+				$calculate_rounds=1;
+				$round_from=$max_round_number+1;
+				$this->get_stats();
+				$this->existing_stats=$this->stats;
+			}
 		}else{
 			# This means to force the whole thing to be recalculated
-			
-			
-			
-			
-		
+			# Lets turn off any saved rounds
+			$stmt=db_prep("
+				UPDATE event_draw_round
+				SET event_pilot_id=0,
+					event_draw_round_group='',
+					event_draw_round_status=0
+				WHERE event_draw_id=:event_draw_id
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$this->event_draw_id
+			));
+			$calculate_rounds=1;
 		}
+		if($calculate_rounds==0){
+			# This means that we don't need to calculate any rounds, so lets return
+			return;
+		}	
 		
-		
-		
-		
+		# If it got here, then it means that we need to go ahead and build rounds
 		
 		# Number of iterations to do
 		$iterations=100;
@@ -400,7 +462,10 @@ class Draw {
 		
 			$rounds=array();
 			$this->initialize_stats();
-	
+			if(count($this->existing_stats)!=0){
+				$this->stats=$this->existing_stats;
+			}
+			
 			# If they want to take the statistics from the previously applied rounds, then do that here
 			# (insert code for retrieval of stats from previous rounds)
 			$groups=$this->get_group_array();
@@ -448,7 +513,6 @@ class Draw {
 								if($y>20){
 									# We didn't get the group ok, so lets start the group over
 									$round_ok=0;
-									#print "breaking out of loop, cause we couldn't get a pilot chosen that had protection<br>\n";
 									break(2);
 								}
 								# This is where we got a good group, so lets set it and continue
@@ -464,17 +528,6 @@ class Draw {
 						}
 					} while($round_ok==0);
 					$first_round=0;
-					
-					
-						#print "Round #$round<br>\n";
-						#foreach($this_round as $temp_group=>$g){
-						#	print "\tGroup #$temp_group<br>\n";
-						#	foreach($g as $key=>$p){
-						#		print "\t\t{$p['event_pilot_id']} {$p['event_pilot_team']} - {$p['pilot_first_name']} {$p['pilot_last_name']}<br>\n";
-						#	}
-						#}
-					
-					
 				}else{
 					# This is a subsequent round, so we will be taking in the stats into account to create it
 					do{
@@ -498,16 +551,10 @@ class Draw {
 									$this_group_array[]=$temp_pilot[0];
 									$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
 									$last_event_pilot_id=$temp_pilot[0]['event_pilot_id'];
-									#print "First one in group \n";
-									#print "{$temp_pilot[0]['pilot_first_name']} {$temp_pilot[0]['pilot_last_name']}\n";
-									#print "last_event_pilot_id=$last_event_pilot_id\n";
 									unset($pilots[$last_event_pilot_id]);
 								}else{									
-									#print "Next one in group \n";
 									$temp_stats2=$temp_stats[$last_event_pilot_id];
 									asort($temp_stats2);
-									#print "Current stats for pilot $last_event_pilot_id\n";
-									#print_r($temp_stats2);
 									
 									# Lets step through and look at each of the pilots with the lowest values and see about their pairings with the others in the group too
 									# Lets create a list of sums to see how adding the next pilot compares to the ones already in the group
@@ -528,7 +575,6 @@ class Draw {
 										$temp_sums[$epid2]=$sum;
 									}
 									asort($temp_sums);
-									#print_r($temp_sums);
 									
 									# The first one in this array that is still available is the one we should use
 									foreach($temp_sums as $epid=>$value){
@@ -536,14 +582,12 @@ class Draw {
 											if($this->draw['event_draw_team_protection']==1){
 												# This draw has team protection, so lets see if this choice is already on a team in this group
 												if(in_array($pilots[$epid]['event_pilot_team'],$this_group_teams)){
-													#print "Skipped because they are on the same team\n";
 													continue;
 												}
 											}
 											# If we made it here, then the epid is good
 											$this_group_array[]=$pilots[$epid];
 											$this_group_teams[]=$pilots[$epid]['event_pilot_team'];
-											#print "pilot : {$pilots[$epid]['pilot_first_name']} {$pilots[$epid]['pilot_last_name']}\n";
 											unset($pilots[$epid]);
 											# Lets update the temp stats with these new pairings
 											foreach($this_group_array as $key=>$p2){
@@ -588,8 +632,6 @@ class Draw {
 			
 			$draws[$i]['rounds']=$rounds;
 			
-			#print "Stats for this draw iteration :\n";
-			#print_r($this->stats);
 			# Lets calculate the totals of the stats for this round
 			$stat_totals=array();
 			$already=array();
@@ -614,80 +656,24 @@ class Draw {
 				}
 			}
 			$mean=$total/$samples;
-			#print "Total Samples : $samples\n";
-			#print "Total Value : $total\n";
-			#print "Mean Value : $mean\n";
-			
+
 			# Lets calculate the standard deviation now
 			$sd=$this->sd($totals_array);
-			#print "Standard Deviation = $sd\n";
 
 			$draws[$i]['mean']=$mean;
 			$draws[$i]['sd']=$sd;
 			$draws[$i]['totals']=$stat_totals;
 			
-
-			#print_r($stat_totals);
-			
-			
-			
-			
 		} # End of iterations loop
 		
-#		foreach($draws as $i=>$d){
-#			print "Iteration #$i\n";
-#			print "\tMean   : {$d['mean']}\n";
-#			print "\tSD     : {$d['sd']}\n";
-#			print "\tTotals : \n";
-#			print_r($d['totals']);
-#		}
-				
 		# Lets quickly find out which iteration of the draw we want to use
 		$draws=array_msort($draws,array('sd'=>SORT_ASC));
-		
 		foreach($draws as $i=>$d){
 			$draw_picked=$d;
 			break;
 		}
-		
-		#print "The chosen iteration is $i with a standard deviation of {$draw_picked['sd']}\n";
-		
-		 
-		
+
 		# ok, now that we have that many iterations of the draw, lets save the one that we chose
-		
-		if($recalc==1){
-			# Lets turn off any saved rounds
-			$stmt=db_prep("
-				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
-			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round_from"=>$round_from,
-				"round_to"=>$round_to
-			));
-		}else{
-			# Lets turn off any rounds that are out of the current bounds
-			$stmt=db_prep("
-				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
-					AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
-			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round_from"=>$round_from,
-				"round_to"=>$round_to
-			));
-		}
-		
-		
 		# Lets figure out what the group type and lane/buzzer/landing values to use
 		switch($this->draw['flight_type_code']){
 			case 'f3b_distance':
@@ -709,9 +695,7 @@ class Draw {
 					$lane_type='numeric';
 				}
 		}
-		
 		$group_labels=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-		#print_r($draw_picked);
 		
 		# Ok, lets save these rounds to the draw
 		foreach($draw_picked['rounds'] as $round_num=>$r){
@@ -750,7 +734,6 @@ class Draw {
 				}
 			}
 		}
-		
 		return;
 	}
 	function sd_square($x, $mean){

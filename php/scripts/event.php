@@ -2414,15 +2414,9 @@ function event_draw_edit() {
 
 	$draw=array();
 	if($event_draw_id!=0){
-		# Get draw info
-		$stmt=db_prep("
-			SELECT *
-			FROM event_draw
-			WHERE event_draw_id=:event_draw_id
-		");
-		$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
-		$draw=$result[0];
-	}	
+		include_library('draw.class');
+		$draw=new Draw($event_draw_id);
+	}
 	# Get flight type info
 	$ft=array();
 	$stmt=db_prep("
@@ -2444,19 +2438,8 @@ function event_draw_edit() {
 	}
 	arsort($teams);
 	$max_on_team=array_shift($teams);
-	#if($num_teams>$max_on_team){
-	#	$min_groups_p=$num_teams;
-	#}else{
-		$min_groups_p=$max_on_team;
-	#}
+	$min_groups_p=$max_on_team;
 	$max_groups_p=floor(count($e->pilots)/2);
-	
-#	print "number of teams=$num_teams<br>\n";
-#	print "min groups with protection=$min_groups_p<br>\n";
-#	print "max groups with protection=$max_groups_p<br>\n";
-#	
-#	print "min groups no protection=$min_groups_np<br>\n";
-#	print "max groups no protection=$max_groups_np<br>\n";
 	
 
 	$smarty->assign("event",$e);
@@ -2469,9 +2452,6 @@ function event_draw_edit() {
 	$smarty->assign("min_groups_np",$min_groups_np);
 	$smarty->assign("max_groups_np",$max_groups_np);
 
-
-
-	
 	$maintpl=find_template("event_draw_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -2488,6 +2468,8 @@ function event_draw_save(){
 	$event_draw_step_size=intval($_REQUEST['event_draw_step_size']);
 	$event_draw_changed=intval($_REQUEST['event_draw_changed']);
 
+	$original_event_draw_id=$event_draw_id;
+	
 	$event_draw_team_protection=0;
 	if(isset($_REQUEST['event_draw_team_protection']) && $_REQUEST['event_draw_team_protection']=='on'){
 		$event_draw_team_protection=1;
@@ -2500,6 +2482,7 @@ function event_draw_save(){
 	if(isset($_REQUEST['recalc']) && $_REQUEST['recalc']=='recalc'){
 		$recalc=1;
 	}
+	
 	# Get flight type info
 	$ft=array();
 	$stmt=db_prep("
@@ -2581,6 +2564,75 @@ function event_draw_save(){
 				# This is an group task
 				$draw->create_group_rounds($recalc);
 				break;
+		}
+	}
+	
+	# We need to save the event_draw_round_flight_type values now
+	# First wipe all of the statuses
+	$stmt=db_prep("
+		UPDATE event_draw_round_flight
+		SET event_draw_round_flight_status=0
+		WHERE event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array(
+		"event_draw_id"=>$event_draw_id
+	));
+	# Now lets step through the input variables
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^round_flight_type_(\d+)$/",$key,$match)){
+			$round_number=$match[1];
+			# ok, lets see if this one exists already to update it
+			$stmt=db_prep("
+				SELECT *
+				FROM event_draw_round_flight
+				WHERE event_draw_id=:event_draw_id
+					AND event_draw_round_number=:event_draw_round_number
+			");
+			$result=db_exec($stmt,array(
+				"event_draw_id"=>$event_draw_id,
+				"event_draw_round_number"=>$round_number
+			));
+			if(isset($result[0])){
+				$id=$result[0]['event_draw_round_flight_id'];
+				# This record exists, so lets update it
+				$stmt=db_prep("
+					UPDATE event_draw_round_flight
+					SET flight_type_id=:flight_type_id,
+						event_draw_round_flight_status=1
+					WHERE event_draw_round_flight_id=:event_draw_round_flight_id
+				");
+				$result=db_exec($stmt,array(
+					"event_draw_round_flight_id"=>$id,
+					"flight_type_id"=>$value
+				));
+			}else{
+				# This record doesnt exist, so lets create a new one
+				$stmt=db_prep("
+					INSERT INTO event_draw_round_flight
+					SET event_draw_id=:event_draw_id,
+						event_draw_round_number=:event_draw_round_number,
+						flight_type_id=:flight_type_id,
+						event_draw_round_flight_status=1
+				");
+				$result=db_exec($stmt,array(
+					"event_draw_id"=>$event_draw_id,
+					"event_draw_round_number"=>$round_number,
+					"flight_type_id"=>$value
+				));
+			}
+		}
+	}
+
+	user_message("Saved Event Draw.");
+	# If its the first save of a f3k draw, then return to the edit with the new draw
+	# To allow them to set the original round types
+	if($original_event_draw_id==0){
+		$e=new Event($event_id);
+		if($e->info['event_type_code']=='f3k'){
+			# If this is the first save of an f3k event draw
+			$_REQUEST['event_draw_id']=$event_draw_id;
+			user_message("You can set the original f3k round choices if you wish now.");
+			return event_draw_edit();
 		}
 	}
 	return event_draw();
@@ -2922,7 +2974,7 @@ function event_draw_view() {
 	$template="print_draw_matrix.tpl";
 	$title="Draw Matrix";
 	$sort_by='flight_order';
-	
+		
 	# Lets get the draw info
 	$draw=array();
 	$stmt=db_prep("
@@ -2952,6 +3004,21 @@ function event_draw_view() {
 		$draw['rounds']['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
 	}
 	
+	# Lets get the draw round flight types if there are any
+	$draw_round_flight_types=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw_round_flight
+		WHERE event_draw_id=:event_draw_id
+			AND event_draw_round_flight_status=1
+		ORDER BY event_draw_round_number
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	foreach($result as $round){
+		$round_number=$round['event_draw_round_number'];
+		$draw_round_flight_types[$round_number]=$round['flight_type_id'];
+	}
+	
 	$e=new Event($event_id);
 	$e->get_teams();
 	
@@ -2967,6 +3034,11 @@ function event_draw_view() {
 						# Lets create the round info
 						$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
 						$e->rounds[$event_round_number]['event_round_status']=1;
+						if($e->info['event_type_code']=='f3k'){
+							$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$round_num];
+						}else{
+							$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+						}
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
 						# Lets try and sort them so they are easier to look at
 						foreach($v['pilots'] as $event_pilot_id=>$p){

@@ -124,7 +124,7 @@
 				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
 				{$full_name}
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
-				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{$round_number=$r@key}
@@ -285,7 +285,7 @@
 			<td align="right" nowrap>
 				{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
-				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}

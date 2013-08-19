@@ -114,7 +114,7 @@ $(function () {ldelim}
 	</td>
 </tr>
 <tr>
-	<th align="right">Average # of Meetings</th>
+	<th align="right">Average # of Pilot-Pilot Meetings</th>
 	<td>{$stat_totals.mean|string_format:"%0.3f"}</td>
 </tr>
 <tr>
@@ -126,6 +126,41 @@ $(function () {ldelim}
 	<td>	
 		<br>
 		<div id="chart_div" style="height: 300px; width: 600px;"></div>
+	</td>
+</tr>
+<tr>
+	<th nowrap align="right" valign="top">Matchup Details<br>(Mouse over for details)</th>
+	<td>
+		{foreach $d->pilots as $p}
+			{$event_pilot_id=$p@key}
+			<a href="" class="tooltip_stat">{$p.pilot_first_name} {$p.pilot_last_name}
+				<span>
+				<img class="callout_stat" src="/images/callout.gif">
+				<strong>{$p.pilot_first_name} {$p.pilot_last_name}</strong> - {$p.event_pilot_team}
+				<table>
+				<tr>
+					<th>Pilot</th>
+					<th>Team</th>
+					<th>Meetings</th>
+				</tr>
+				{foreach $stats.$event_pilot_id as $s}
+					{$event_pilot_id2=$s@key}
+					<tr>
+						<td align="right" nowrap>
+							{$d->pilots.$event_pilot_id2.pilot_first_name} {$d->pilots.$event_pilot_id2.pilot_last_name}
+						</td>
+						<td align="right" nowrap>
+							{$d->pilots.$event_pilot_id2.event_pilot_team}
+						</td>
+						<td align="center">
+							{$s}
+						</td>
+					</tr>
+				{/foreach}
+				</table>
+				</span>
+			</a><br>
+		{/foreach}
 	</td>
 </tr>
 

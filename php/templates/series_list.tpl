@@ -81,7 +81,7 @@
 	</td>
 	<td>{$s.series_area|escape}</td>
 	<td>
-		{if $s.state_name && $s.country_code=="US"}<img src="/images/flags/states/16/{$s.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if} 
+		{if $s.state_name && $s.country_code=="US"}<img src="/images/flags/states/16/{$s.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if} 
 		{$s.state_name|escape}
 	</td>
 	<td>

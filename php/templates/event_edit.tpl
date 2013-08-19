@@ -251,7 +251,9 @@ function check_event(){
 
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">F3X Event Edit</h1>
+		<h1 class="post-title entry-title">F3X Event Edit
+			<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
+		</h1>
 		<div class="entry-content clearfix">
 
 <h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
@@ -335,7 +337,6 @@ function check_event(){
 </tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="button" value=" Back To Event {if $event->info.event_id!=0}View{else}List{/if} " onClick="goback.submit();" class="block-button">
 		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
 		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
 			<input type="button" value=" Import Event " class="block-button" onClick="document.import.submit();">

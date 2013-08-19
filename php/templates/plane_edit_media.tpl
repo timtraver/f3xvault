@@ -70,7 +70,7 @@
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="plane">
-<input type="hidden" name="function" value="plane_edit">
+<input type="hidden" name="function" value="plane_view">
 <input type="hidden" name="plane_id" value="{$plane_id}">
 </form>
 

@@ -92,7 +92,7 @@
 	</td>
 	<td>{$event.event_type_name|escape}</td>
 	<td>{if $event.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event.country_code|escape}.png" style="vertical-align: middle;" title="{$event.country_name}">{/if} 
-		{if $event.state_name && $event.country_id==226}<img src="/images/flags/states/16/{$event.state_name|escape}-Flag-16.png" style="vertical-align: middle;" title="{$event.state_name}">{/if} 
+		{if $event.state_name && $event.country_id==226}<img src="/images/flags/states/16/{$event.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;" title="{$event.state_name}">{/if} 
 		{$event.location_name|escape}, {$event.state_code|escape} - {$event.country_code|escape}
 	</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>

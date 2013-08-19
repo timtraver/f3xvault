@@ -13,7 +13,7 @@
 	<td>
 		{$pilot.pilot_city|escape}, {$pilot.state_name|escape} - {$pilot.country_name|escape}
 		{if $pilot.country_code}<img src="/images/flags/countries-iso/shiny/24/{$pilot.country_code|escape}.png" style="vertical-align: middle;">{/if}
-		{if $pilot.state_name && $pilot.country_code=="US"}<img src="/images/flags/states/24/{$pilot.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
+		{if $pilot.state_name && $pilot.country_code=="US"}<img src="/images/flags/states/24/{$pilot.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">{/if}
 	</td>
 </tr>
 <tr>
@@ -70,7 +70,7 @@
 		<td>{$pc.club_city|escape}</td>
 		<td>{$pc.state_name|escape}, {$pc.country_code|escape}
 			{if $pc.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pc.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $pc.state_name && $pc.country_code=="US"}<img src="/images/flags/states/16/{$pc.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+			{if $pc.state_name && $pc.country_code=="US"}<img src="/images/flags/states/16/{$pc.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 		</td>
 	</tr>
 	{/foreach}
@@ -97,7 +97,7 @@
 		<td>{$pl.location_city|escape}</td>
 		<td>{$pl.state_name|escape}, {$pl.country_code|escape}
 			{if $pl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pl.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $pl.state_name && $pl.country_code=="US"}<img src="/images/flags/states/16/{$pl.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+			{if $pl.state_name && $pl.country_code=="US"}<img src="/images/flags/states/16/{$pl.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 		</td>
 		<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 	</tr>
@@ -109,6 +109,77 @@
 {/if}
 </table>
 <br>
+
+{if $f3f_records}
+<h1 class="post-title entry-title">Pilot Top F3F Speeds</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Event Date</th>
+	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Location</th>
+	<th style="text-align: left;">Speed</th>
+</tr>
+{foreach $f3f_records as $f}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+		<td>
+			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
+			<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+			{$f.country_code|escape}
+		</td>
+		<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
+	</tr>
+{/foreach}
+</table>
+{/if}
+
+{if $f3b_records}
+<h1 class="post-title entry-title">Pilot Top F3B Speeds</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Event Date</th>
+	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Location</th>
+	<th style="text-align: left;">Speed</th>
+</tr>
+{foreach $f3b_records as $f}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+		<td>
+			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
+			<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+			{$f.country_code|escape}
+		</td>
+		<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
+	</tr>
+{/foreach}
+</table>
+{/if}
+{if $f3b_dist}
+<h1 class="post-title entry-title">Pilot Top F3B Distance Runs</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Event Date</th>
+	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Location</th>
+	<th style="text-align: left;">Laps</th>
+</tr>
+{foreach $f3b_dist as $f}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+		<td>
+			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
+			<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+			{$f.country_code|escape}
+		</td>
+		<td align="right"><b>{$f.event_pilot_round_flight_laps}</b></td>
+	</tr>
+{/foreach}
+</table>
+{/if}
 
 
 <h1 class="post-title entry-title">Pilot F3X Events</h1>
@@ -131,7 +202,7 @@
 		</td>
 		<td>{$pe.state_name|escape}, {$pe.country_code|escape}
 			{if $pe.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pe.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $pe.state_name && $pe.country_code=="US"}<img src="/images/flags/states/16/{$pe.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+			{if $pe.state_name && $pe.country_code=="US"}<img src="/images/flags/states/16/{$pe.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 		</td>
 		<td align="center">{$pe.event_pilot_position|escape}</td>
 		<td align="right">{$pe.event_pilot_total_percentage|string_format:"%03.2f"}%</td>

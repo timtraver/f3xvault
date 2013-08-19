@@ -427,3 +427,47 @@ a.tooltip_score_left span {
 .header_drop span:hover {
 	cursor: pointer;
 }
+
+a.tooltip_stat {
+	outline:none; 
+	text-align: left;
+} 
+a.tooltip_stat strong {
+	line-height:36px;
+} 
+a.tooltip_stat:hover {
+	text-decoration:none;
+} 
+a.tooltip_stat span { 
+	z-index:10;
+	display:none; 
+	padding:14px 20px; 
+	margin-top:-160px; 
+	margin-left:28px; 
+	width:280px; 
+	line-height:16px; 
+} 
+a.tooltip_stat:hover span{ 
+	display:inline; 
+	position:absolute; 
+	color:#111; 
+	border:1px solid #DCA; 
+	background:#fffAF0;
+} 
+.callout_stat {
+	z-index:20;
+	position:absolute;
+	top:155px;
+	border:0;
+	left:-12px;
+} 
+/*CSS3 extras*/ 
+a.tooltip_stat span { 
+	border-radius:4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
+}
+

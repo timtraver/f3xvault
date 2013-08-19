@@ -93,7 +93,7 @@ $(function() {
 			<td>
 			{$club.club_city|escape},{$club.state_code|escape} {$club.country_code|escape}
 			{if $club.country_code}<img src="/images/flags/countries-iso/shiny/16/{$club.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $club.state_name && $club.country_code=="US"}<img src="/images/flags/states/16/{$club.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+			{if $club.state_name && $club.country_code=="US"}<img src="/images/flags/states/16/{$club.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 			</td>
 		</tr>
 		<tr>
@@ -128,7 +128,7 @@ $(function() {
 			<td>{$cl.location_name|escape}</td>
 			<td>{$cl.location_city|escape}</td>
 			<td>{$cl.state_name|escape}
-				{if $cl.state_name && $cl.country_code=="US"}<img src="/images/flags/states/16/{$cl.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+				{if $cl.state_name && $cl.country_code=="US"}<img src="/images/flags/states/16/{$cl.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 			</td>
 			<td>{$cl.country_name|escape}
 				{if $cl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$cl.country_code|escape}.png" style="vertical-align: middle;">{/if}

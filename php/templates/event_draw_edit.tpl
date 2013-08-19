@@ -3,6 +3,28 @@ var changed=0;
 function set_changed(){ldelim}
 	changed=1;
 	document.main.event_draw_changed.value=1;
+	check_changed();
+{rdelim}
+function check_changed(){ldelim}
+	{if $event_draw_id!=0}
+		{if $ft.flight_type_group==1}
+			{if $event->teams|count > 0}
+				var original_protect={$draw->draw.event_draw_team_protection};
+			{/if}
+			var original_groups={$draw->draw.event_draw_number_groups};
+			if({if $event->teams|count > 0}(original_protect==1 && document.main.event_draw_team_protection.checked==false)
+				|| (original_protect==0 && document.main.event_draw_team_protection.checked==true)
+				|| {/if}(original_groups!=document.main.event_draw_number_groups.value)
+			){ldelim}
+				document.getElementById("radio_recalc").checked=true;
+			{rdelim}
+		{else}
+			var original_separation={$draw->draw.event_draw_team_separation};
+			if(original_separation==1 && document.main.event_draw_team_separation.checked==false){ldelim}
+				document.getElementById("radio_recalc").checked=true;
+			{rdelim}
+		{/if}
+	{/if}
 {rdelim}
 function check_draw_step(){ldelim}
 	if(document.main.event_draw_type.value=="random_step"){ldelim}
@@ -84,29 +106,29 @@ function calc_groups(){ldelim}
 <tr>
 	<th width="10%" nowrap>Round Start</th>
 	<td>
-		<input type="text" name="event_draw_round_from" size="2" value="{$draw.event_draw_round_from}" onChange="set_changed();" autocomplete="off">
+		<input type="text" name="event_draw_round_from" size="2" value="{$draw->draw.event_draw_round_from}" onChange="set_changed();" autocomplete="off">
 	</td>
 </tr>
 <tr>
 	<th width="10%" nowrap>Round Finish</th>
 	<td>
-		<input type="text" name="event_draw_round_to" size="2" value="{$draw.event_draw_round_to}" onChange="set_changed();" autocomplete="off">
+		<input type="text" name="event_draw_round_to" size="2" value="{$draw->draw.event_draw_round_to}" onChange="set_changed();" autocomplete="off">
 	</td>
 </tr>
 <tr>
 	<th nowrap>Draw Type</th>
 	<td>
-	<select name="event_draw_type" onChange="set_changed();check_draw_step();">
+	<select name="event_draw_type" onChange="check_draw_step();set_changed();">
 	{if $ft.flight_type_group==1}
-		<option value="group" {if $draw.event_draw_type=="group"}SELECTED{/if}>Standard Random Group Draw with Frequency Weighting</option>
+		<option value="group" {if $draw->event_draw_type=="group"}SELECTED{/if}>Standard Random Group Draw with Frequency Weighting</option>
 	{else}
-		<option value="random" {if $draw.event_draw_type=="random"}SELECTED{/if}>Random Order Draw Every Round</option>
-		<option value="random_step" {if $draw.event_draw_type=="random_step"}SELECTED{/if}>Random Order First Round With Stepped Progression</option>
+		<option value="random" {if $draw->event_draw_type=="random"}SELECTED{/if}>Random Order Draw Every Round</option>
+		<option value="random_step" {if $draw->event_draw_type=="random_step"}SELECTED{/if}>Random Order First Round With Stepped Progression</option>
 	{/if}
 	</select>
 	{if $ft.flight_type_group!=1}
-		<span id="draw_step" style="{if $draw.event_draw_type=="random_step"}display:block;{else}display:none;{/if}">
-			Step Size <input type="text" name="event_draw_step_size" size="2" value="{$draw.event_draw_step_size}" onChange="set_changed();">  This is the number of pilots to skip every round.
+		<span id="draw_step" style="{if $draw->draw.event_draw_type=="random_step"}display:block;{else}display:none;{/if}">
+			Step Size <input type="text" name="event_draw_step_size" size="2" value="{$draw->draw.event_draw_step_size}" onChange="set_changed();">  This is the number of pilots to skip every round.
 		</span>
 	{/if}
 	</td>
@@ -116,7 +138,7 @@ function calc_groups(){ldelim}
 <tr>
 	<th nowrap>Team Protection</th>
 	<td>
-		<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other.
+		<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw->draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other.
 	</td>
 </tr>
 {/if}
@@ -126,18 +148,18 @@ function calc_groups(){ldelim}
 		There are currently <b>{$event->pilots|count}</b> Pilots in this event{if $event->teams|count > 0} on {$event->teams|count} teams{/if}.<br>
 		<span id="no_protection">
 			Using  
-			<select id="groups_np" name="groups" onChange="set_changed();calc_groups();">
+			<select id="groups_np" name="groups" onChange="calc_groups();set_changed();">
 			{for $x=$min_groups_np;$x<=$max_groups_np;$x++}
-			<option value="{$x}"{if $draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
+			<option value="{$x}"{if $draw->draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
 			{/for}
 			</select>
 			Flight Groups{if $event->teams|count > 0} with No Team Protection{/if} will result in<br>
 		</span>
 		<span id="with_protection" style="display:none;">
 			Using  
-			<select id="groups_p" name="groups" onChange="set_changed();calc_groups();">
+			<select id="groups_p" name="groups" onChange="calc_groups();set_changed();">
 			{for $x=$min_groups_p;$x<=$max_groups_p;$x++}
-			<option value="{$x}"{if $draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
+			<option value="{$x}"{if $draw->draw.event_draw_number_groups==$x} SELECTED{/if}>{$x}</option>
 			{/for}
 			</select>
 			Flight Groups{if $event->teams|count > 0} with Team Protection{/if} will result in<br>
@@ -151,7 +173,7 @@ function calc_groups(){ldelim}
 <tr>
 	<th nowrap>Team Separation</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_separation"{if $draw.event_draw_team_separation==1} CHECKED{/if} onChange="set_changed();"> This will make sure team pilots are separated by at least one pilot.
+		<input type="checkbox" name="event_draw_team_separation"{if $draw->draw.event_draw_team_separation==1} CHECKED{/if} onChange="set_changed();"> This will make sure team pilots are separated by at least one pilot.
 	</td>
 </tr>
 {/if}
@@ -159,12 +181,38 @@ function calc_groups(){ldelim}
 <tr>
 	<th nowrap>Save Parameters</th>
 	<td>
-		<input type="radio" name="recalc" value="grow" onChange="set_changed();" CHECKED> Grow or shrink rounds keeping existing rounds intact<br>
-		<input type="radio" name="recalc" value="recalc" onChange="set_changed();"> Recalculate draw with new draw values
+		<input type="radio" id="radio_grow" name="recalc" value="grow" onChange="set_changed();" CHECKED> Grow or shrink rounds keeping existing rounds intact<br>
+		<input type="radio" id="radio_recalc" name="recalc" value="recalc" onChange="set_changed();"> Recalculate draw with new draw values
 	</td>
 </tr>
 {else}
 <input type="hidden" name="recalc" value="recalc">
+{/if}
+{if $event_draw_id!=0 && $event->info.event_type_code=='f3k'}
+<tr>
+	<th nowrap>F3K Draw Round Flight Types</th>
+	<td>
+		<table>
+		<tr>
+			<th>Round</th><th>F3K Flight Type</th>
+		</tr>
+		{foreach $draw->rounds as $r}
+			{$round_number=$r@key}
+			<tr>
+				<th>{$round_number}</th>
+				<td>
+					<select name="round_flight_type_{$round_number}">
+					<option value="0">Choose a flight type</option>
+					{foreach $event->flight_types as $ft}
+						<option value="{$ft.flight_type_id}"{if $ft.flight_type_id==$draw->round_flight_types.$round_number.flight_type_id} SELECTED{/if}>{$ft.flight_type_name}</option>
+					{/foreach}
+					</select>
+				</td>
+			</tr>
+		{/foreach}
+		</table>
+	</td>
+</tr>
 {/if}
 <tr>
 	<td colspan="2">

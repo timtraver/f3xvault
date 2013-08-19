@@ -15,7 +15,7 @@
 		<table cellspacing="2">
 		<tr>
 			{foreach $event->rounds as $r}
-			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || $r.flights.$flight_type_id.event_round_flight_score==0}
+			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 				{continue}
 			{/if}
 			{$bgcolor=''}
@@ -24,6 +24,12 @@
 				<tr bgcolor="lightgray">
 					<td {if $print_format=="html"}colspan="2"{/if}>Round {$r.event_round_number}</td>
 				</tr>
+				{if $event->info.event_type_code=='f3k'}
+					{$ftid=$r.flight_type_id}
+					<tr bgcolor="white">
+						<td {if $print_format=="html"}colspan="2"{/if}>{$event->flight_types.$ftid.flight_type_name_short}</td>
+					</tr>
+				{/if}
 				<tr bgcolor="lightgray">
 					{if $event->flight_types.$flight_type_id.flight_type_group}
 						<td width="30">Group</td>

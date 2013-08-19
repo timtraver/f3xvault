@@ -81,7 +81,7 @@
 	</td>
 	<td>{$c.club_city|escape}</td>
 	<td>{$c.state_name|escape}
-		{if $c.state_name && $c.country_code=="US"}<img src="/images/flags/states/16/{$c.state_name|escape}-Flag-16.png" style="vertical-align: middle;">{/if}
+		{if $c.state_name && $c.country_code=="US"}<img src="/images/flags/states/16/{$c.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 	</td>
 	<td>{$c.country_name|escape}
 		{if $c.country_code}<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;">{/if}

@@ -15,7 +15,7 @@
 	<td>
 		{$location.location_city|escape} - {$location.state_code|escape}, {$location.country_code|escape}
 		{if $location.country_code}<img src="/images/flags/countries-iso/shiny/24/{$location.country_code|escape}.png" style="vertical-align: middle;">{/if}
-		{if $location.state_name && $location.country_code=="US"}<img src="/images/flags/states/24/{$location.state_name|escape}-Flag-24.png" style="vertical-align: middle;">{/if}
+		{if $location.state_name && $location.country_code=="US"}<img src="/images/flags/states/24/{$location.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">{/if}
 	</td>
 	<td rowspan="4" align="center">
 	{if $media[$rand]}

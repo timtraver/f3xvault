@@ -9,17 +9,15 @@ GENERAL
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
-	Fix flags for names of states with spaces in them
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 	Add a Competitions held here section
-	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
-	Show the add Location media button on location view
 	Recent events
 	
 PLANE STUFF
 	Add layup types as a function to the planes
+	Add plane records for F3F, F3B speed and Distance
 	Pilots Flying Model
 	Recent events
 	Build log links!
@@ -34,14 +32,14 @@ EVENT STUFF
   
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
-  
+
 	Draw
 		ability to create F3B distance orders before hand
 		draw types
 X    	random order
 X    	staggered order for F3F
 		F3K event draw printing for each of the printouts
-		Allow the F3K round types to be set with the draw
+X		Allow the F3K round types to be set with the draw
 		When adding a round, if F3K, set the round type too if there was one that was set
 		
 X    	set number of groups
@@ -67,7 +65,6 @@ X			check for overlap when applying new draw
 	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
 
 PILOTS STUFF
-	Add best times for different event types (i.e. best F3F times, best F3B speeds, best F3B distances)
 	
 SERIES STUFF
 	print series pilot detail view
@@ -86,6 +83,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Fix flags for names of states with spaces in them
+X	Add best times for different event types (i.e. best F3F times, best F3B speeds, best F3B distances)
+X	Show the add Plane media button on plane view
+X	Show the add Location media button on location view
+X	Fix videos in window to allow you to use the buttons on the video stuff and not just go to the next video with every click
 X	Speed records for F3F and F3B (top 5 and a link to bigger list)
 X	Lap count records for F3B (top 5 and a link to bigger list)
 X	Add Root chord width and AR calculation to plane db
