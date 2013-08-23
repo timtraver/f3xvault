@@ -34,7 +34,14 @@ EVENT STUFF
 		and when adding new flyoff rounds, only those pilots are shown.
 
 	Draw
+		ability to print all three draw matrices on one page for f3b
 		ability to create F3B distance orders before hand
+		Possible ability to have the speed round be the inverse order of the standings
+		
+		When adding a new round, having the groups right in the F3B Duration and Distance from Draw
+		
+		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
+		
 		draw types
 X    	random order
 X    	staggered order for F3F

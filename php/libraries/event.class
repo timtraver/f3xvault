@@ -27,6 +27,7 @@ class Event {
 	var $event_record_distance_event_pilot_id;
 	var $event_calc_accuracy;
 	var $event_calc_accuracy_string;
+	var $f3k_flight_type_id;
 	
 	function Event($event_id){
 		# Initialization of the class
@@ -432,36 +433,82 @@ class Event {
 		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
 		$pilots=array();
 		$this->get_draws();
+		
 		foreach($this->draws as $event_draw_id=>$d){
 			if($d['event_draw_active']!=1){
 				continue;
 			}
-			foreach($d['flights'] as $flight_type_id=>$f){
-				if(!isset($f[$event_round_number])){
-					continue;
+			
+			if($this->info['event_type_code']=='f3k'){
+				# If this is an F3K event, then lets determine which flight type id this round is
+				$stmt=db_prep("
+					SELECT *
+					FROM event_draw_round_flight
+					WHERE event_draw_id=:event_draw_id
+						AND event_draw_round_number=:event_round_number
+						AND event_draw_round_flight_status=1
+				");
+				$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id,"event_round_number"=>$event_round_number));
+				if(isset($result[0])){
+					$flight_type_id=$result[0]['flight_type_id'];
+				}else{
+					$flight_type_id=0;
 				}
-				foreach($f[$event_round_number]['pilots'] as $event_pilot_id=>$p){
-					$pilots[$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
-					$pilots[$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
-					$pilots[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
-					$pilots[$event_pilot_id]['event_pilot_round_flight_id']=0;
+				$this->f3k_flight_type_id=$flight_type_id;
+				print "flight_type_id=$flight_type_id<br>\n";
+				#print_r($d['flights'][$flight_type_id][$event_round_number]['pilots']);
+				
+				foreach($d['flights'][$flight_type_id][$event_round_number]['pilots'] as $event_pilot_id=>$p){
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
+				}
+				# Insert any pilots that didn't exist
+				foreach($this->pilots as $event_pilot_id=>$p){
+					# Catch the straglers if they weren't in the draw
+					if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+						$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+					}
+				}
+				#print_r($pilots);
+				# Now lets make a new round in the rounds array so that the round edit screen shows properly
+				$this->rounds[$event_round_number]['event_round_id']=0;
+				$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$this->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+			}else{
+				foreach($d['flights'] as $flight_type_id=>$f){
+					if(!isset($f[$event_round_number])){
+						continue;
+					}
+					foreach($f[$event_round_number]['pilots'] as $event_pilot_id=>$p){
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
+					}
+				}
+				# Insert any pilots that didn't exist
+				foreach($this->pilots as $event_pilot_id=>$p){
+					foreach($p as $flight_type_id=>$f){
+						# Catch the straglers if they weren't in the draw
+						if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+							$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+						}
+					}
+				}
+				# Now lets make a new round in the rounds array so that the round edit screen shows properly
+				foreach($this->flight_types as $flight_type_id=>$ft){
+					$this->rounds[$event_round_number]['event_round_id']=0;
+					$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
 				}
 			}
 		}
 		
-		# Now lets make a new round in the rounds array so that the round edit screen shows properly
-		foreach($this->pilots as $event_pilot_id=>$p){
-			# Catch the straglers if they weren't in the draw
-			if(!isset($pilots[$event_pilot_id])){
-				$pilots[$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
-			}
-		}
-		foreach($this->flight_types as $flight_type_id=>$ft){
-			$this->rounds[$event_round_number]['event_round_id']=0;
-			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
-			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
-			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots;
-		}
 		# Set the flyoff round default
 		if($_REQUEST['flyoff_round']==1){
 			$this->rounds[$event_round_number]['event_round_flyoff']=1;

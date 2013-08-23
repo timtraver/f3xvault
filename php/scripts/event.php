@@ -1276,7 +1276,8 @@ function event_round_edit() {
 	$event=new Event($event_id);
 	$event->get_rounds();
 
-	$flight_types=$event->flight_types;	
+	$flight_types=$event->flight_types;
+	
 	# Now lets look at the rounds to see which is the next round # to add if its a new one
 	$round=array();
 	if($event_round_id==0){
@@ -1306,6 +1307,12 @@ function event_round_edit() {
 		# Now Lets fill out the round info with default stuff from what type of event this is
 		# We actually need to fill in the default round data for an empty round
 		$event->get_new_round($round_number);
+		if($event->info['event_type_code']=='f3k'){
+			$flight_type_id=$event->f3k_flight_type_id;
+			$new_flight_types=$flight_types[$flight_type_id];
+			$flight_types=array();
+			$flight_types[$flight_type_id]=$new_flight_types;
+		}
 		# Lets set the round to be scored or not depending on the zero choice
 		if($zero_round){
 			$event->rounds[$round_number]['event_round_score_status']=0;
