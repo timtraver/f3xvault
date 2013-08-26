@@ -342,7 +342,10 @@ function check_permission() {ldelim}
 					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 				</td>
 					{if $ft.flight_type_group}
-						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
+						<td align="center" nowrap>
+							<input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);">
+							<input type="hidden" name="pilot_lane_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_lane|escape}">
+						</td>					
 					{else}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 					{/if}

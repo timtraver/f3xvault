@@ -1746,6 +1746,7 @@ function event_round_save() {
 								event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 								event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 								event_pilot_round_flight_order=:event_pilot_round_flight_order,
+								event_pilot_round_flight_lane=:event_pilot_round_flight_lane,
 								event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
 								event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
 								event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
@@ -1761,6 +1762,7 @@ function event_round_save() {
 							"event_pilot_round_flight_laps"=>$v['laps'],
 							"event_pilot_round_flight_landing"=>$v['land'],
 							"event_pilot_round_flight_order"=>$v['order'],
+							"event_pilot_round_flight_lane"=>$v['lane'],
 							"event_pilot_round_flight_dns"=>$dns,
 							"event_pilot_round_flight_dnf"=>$dnf,
 							"event_pilot_round_flight_penalty"=>$v['pen']
@@ -1778,6 +1780,7 @@ function event_round_save() {
 								event_pilot_round_flight_laps=:event_pilot_round_flight_laps,
 								event_pilot_round_flight_landing=:event_pilot_round_flight_landing,
 								event_pilot_round_flight_order=:event_pilot_round_flight_order,
+								event_pilot_round_flight_lane=:event_pilot_round_flight_lane,
 								event_pilot_round_flight_dns=:event_pilot_round_flight_dns,
 								event_pilot_round_flight_dnf=:event_pilot_round_flight_dnf,
 								event_pilot_round_flight_penalty=:event_pilot_round_flight_penalty,
@@ -1793,6 +1796,7 @@ function event_round_save() {
 							"event_pilot_round_flight_laps"=>$v['laps'],
 							"event_pilot_round_flight_landing"=>$v['land'],
 							"event_pilot_round_flight_order"=>$v['order'],
+							"event_pilot_round_flight_lane"=>$v['lane'],
 							"event_pilot_round_flight_dns"=>$dns,
 							"event_pilot_round_flight_dnf"=>$dnf,
 							"event_pilot_round_flight_penalty"=>$v['pen']
@@ -2890,7 +2894,7 @@ function event_draw_print() {
 			$template="print_draw_matrix.tpl";
 			$title="Draw Matrix";
 			$orientation="P";
-			$sort_by='flight_order';
+			$sort_by='draw';
 			break;
 	}
 	$_REQUEST['sort_by']=$sort_by;
@@ -3002,7 +3006,7 @@ function event_draw_view() {
 		FROM event_draw_round 
 		WHERE event_draw_id=:event_draw_id
 			AND event_draw_round_status=1
-		ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_lane,event_draw_round_order
+		ORDER BY event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane,event_draw_round_order
 	");
 	$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 	foreach($rounds as $round){

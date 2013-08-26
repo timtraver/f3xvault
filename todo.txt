@@ -29,31 +29,19 @@ EVENT STUFF
 	Don't allow the user to select the sort type until after the round is saved
 
 	Have a setting for top X teammates to be used in the team standings
-  
+	Mark a competitor to be available to the draw
+	
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
 	Draw
 		ability to print all three draw matrices on one page for f3b
-		ability to create F3B distance orders before hand
 		Possible ability to have the speed round be the inverse order of the standings
-		
-		When adding a new round, having the groups right in the F3B Duration and Distance from Draw
-		
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
-		
-		draw types
-X    	random order
-X    	staggered order for F3F
+		When printing pilot cards, put lane/spot id on them
+		When printing CD Recording sheet, put lane/spot on them
+		When printing Matrix table, properly highlight the lines, whether by teams or just alternate
 		F3K event draw printing for each of the printouts
-X		Allow the F3K round types to be set with the draw
-		When adding a round, if F3K, set the round type too if there was one that was set
-		
-X    	set number of groups
-X		make the printing of the draws use the current rounds and the draw rounds
-X		have draw view buttons to show draw even if not active
-X		When adding a round, default apply the draw and sort it by the draw order or group
-X			check for overlap when applying new draw
 
 	For F3K events
 		stats for Quick turnaround tasks
@@ -90,6 +78,18 @@ MOBILE STUFF
 
 COMPLETED
  
+X		Allow the F3K round types to be set with the draw
+X		When adding a round, if F3K, set the round type too if there was one that was set
+X    	set number of groups
+X		make the printing of the draws use the current rounds and the draw rounds
+X		have draw view buttons to show draw even if not active
+X		When adding a round, default apply the draw and sort it by the draw order or group
+X			check for overlap when applying new draw
+X		draw types
+X    	random order
+X    	staggered order for F3F
+X		When adding a new round, having the groups right in the F3B Duration and Distance from Draw
+X		ability to create F3B distance orders before hand
 X	Fix flags for names of states with spaces in them
 X	Add best times for different event types (i.e. best F3F times, best F3B speeds, best F3B distances)
 X	Show the add Plane media button on plane view

@@ -199,6 +199,9 @@ class Event {
 			case 'alphabetical_last':
 				$sort_string='ORDER BY er.event_round_number,p.pilot_last_name,p.pilot_first_name';
 				break;
+			case 'draw':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_lane,erf.event_pilot_round_flight_order';
+				break;
 			case 'round_rank':
 			default:
 				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
@@ -274,6 +277,7 @@ class Event {
 					"event_pilot_round_flight_rank"=>$flight['event_pilot_round_flight_rank'],
 					"event_pilot_round_flight_dropped"=>$flight['event_pilot_round_flight_dropped'],
 					"event_pilot_round_flight_order"=>$flight['event_pilot_round_flight_order'],
+					"event_pilot_round_flight_lane"=>$flight['event_pilot_round_flight_lane'],
 					"event_pilot_round_flight_dns"=>$flight['event_pilot_round_flight_dns'],
 					"event_pilot_round_flight_dnf"=>$flight['event_pilot_round_flight_dnf'],
 					"event_pilot_round_flight_reflight"=>$flight['event_pilot_round_flight_reflight'],
@@ -304,6 +308,7 @@ class Event {
 					"event_pilot_round_flight_rank"=>$flight['event_pilot_round_flight_rank'],
 					"event_pilot_round_flight_dropped"=>$flight['event_pilot_round_flight_dropped'],
 					"event_pilot_round_flight_order"=>$flight['event_pilot_round_flight_order'],
+					"event_pilot_round_flight_lane"=>$flight['event_pilot_round_flight_lane'],
 					"event_pilot_round_flight_dns"=>$flight['event_pilot_round_flight_dns'],
 					"event_pilot_round_flight_dnf"=>$flight['event_pilot_round_flight_dnf'],
 					"event_pilot_round_flight_reflight"=>$flight['event_pilot_round_flight_reflight'],
@@ -455,12 +460,11 @@ class Event {
 					$flight_type_id=0;
 				}
 				$this->f3k_flight_type_id=$flight_type_id;
-				print "flight_type_id=$flight_type_id<br>\n";
-				#print_r($d['flights'][$flight_type_id][$event_round_number]['pilots']);
 				
 				foreach($d['flights'][$flight_type_id][$event_round_number]['pilots'] as $event_pilot_id=>$p){
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
 				}
@@ -486,6 +490,7 @@ class Event {
 					foreach($f[$event_round_number]['pilots'] as $event_pilot_id=>$p){
 						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
 						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
 						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
 						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
 					}
@@ -1674,6 +1679,24 @@ class Event {
 	function get_draws(){
 		# Now lets get the draws that have been created for this event
 		$draws=array();
+		
+		# Lets first make an array of round types for this event and its draws
+		$round_types=array();
+		$stmt=db_prep("
+			SELECT *,edrf.flight_type_id
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+			WHERE ed.event_id=:event_id
+				AND edrf.event_draw_round_flight_status=1
+				AND ed.event_draw_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $key=>$r){
+			$round_number=$r['event_draw_round_number'];
+			$event_draw_id=$r['event_draw_id'];
+			$round_types[$event_draw_id][$round_number]=$r['flight_type_id'];
+		}
+		
 		$stmt=db_prep("
 			SELECT *
 			FROM event_draw ed
@@ -1681,6 +1704,7 @@ class Event {
 			AND event_draw_status=1
 		");
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		
 		# Now lets step through each of the draws and get the draw rounds
 		foreach($result as $draw){
 			$event_draw_id=$draw['event_draw_id'];
@@ -1688,14 +1712,17 @@ class Event {
 			$flight_type_id=$draw['flight_type_id'];
 			$stmt=db_prep("
 				SELECT *
-				FROM event_draw_round 
-				WHERE event_draw_id=:event_draw_id
-					AND event_draw_round_status=1
-				ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_lane,event_draw_round_order
+				FROM event_draw_round edr
+				WHERE edr.event_draw_id=:event_draw_id
+					AND edr.event_draw_round_status=1
+				ORDER BY edr.event_draw_round_number,edr.event_draw_round_group,edr.event_draw_round_lane,edr.event_draw_round_order
 			");
 			$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
 			foreach($rounds as $round){
 				$round_number=$round['event_draw_round_number'];
+				if(isset($round_types[$event_draw_id][$round_number])){
+					$flight_type_id=$round_types[$event_draw_id][$round_number];
+				}
 				$event_pilot_id=$round['event_pilot_id'];
 				$draws[$event_draw_id]['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
 			}
