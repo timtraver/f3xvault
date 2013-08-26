@@ -202,7 +202,7 @@ function check_permission() {ldelim}
 
 
 		{$perpage=8}
-		{* Lets figure out how many flyoff and zero  rounds there are *}
+		{* Lets figure out how many flyoff and zero rounds there are *}
 		{$flyoff_rounds=0}
 		{$zero_rounds=0}
 		{foreach $event->rounds as $r}
@@ -402,7 +402,7 @@ function check_permission() {ldelim}
 		</table>
 		{$start_round=$end_round+1}
 		{$end_round=$start_round+$perpage - 1}
-		{if $end_round>$prelim_rounds}
+		{if $end_round>=$prelim_rounds}
 			{$end_round=$prelim_rounds - $zero_rounds}
 		{/if}
 		{if $page_num!=$pages || $flyoff_rounds!=0}
