@@ -108,7 +108,7 @@ function check_permission() {ldelim}
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">{$event->info.event_name|escape}
-		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
+			<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -145,6 +145,8 @@ function check_permission() {ldelim}
 		</tr>
 		{/if}
 		</table>
+		<br>
+		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		</div>
 	</div>
 </div>
@@ -555,7 +557,6 @@ function check_permission() {ldelim}
 		<!--# End of flyoff rounds -->
 
 <br>
-<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 <input type="button" value=" Print Overall Classification " onClick="print_overall.submit();" class="block-button">
 <input id="printround" type="button" value=" Print Round Detail " onClick="$('#print_round').dialog('open');" class="block-button">
 <input type="button" value=" View Position Chart " onClick="chart.submit();" class="block-button">

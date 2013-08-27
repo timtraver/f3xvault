@@ -13,6 +13,9 @@
 		</table>
 		{$num_rounds_printed=0}
 		{foreach $event->rounds as $r}
+		{if $event->info.event_type_code=="f3k"}
+			{$flight_type_id=$r.flight_type_id}
+		{/if}
 		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 			{continue}
 		{/if}
@@ -40,8 +43,20 @@
 				<th width="60">Order</th>
 			{/if}
 			<th width="200" align="left">Pilot</th>
+			
+			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
+				<th>Spot</th>
+			{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+				<th>Lane</th>
+			{/if}
+
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
 				<th width="100">Time</th>
+			{/if}
+			{if $event->info.event_type_code=="f3j"}
+				<th width="20">Over</th>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<th width="100">Landing</th>
@@ -71,8 +86,20 @@
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
 			{/if}
 			<td align="left" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+
+			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+			}
+				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+			{/if}
+
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
 				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+			{/if}
+			{if $event->info.event_type_code=="f3j"}
+				<th width="20" style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}"><input type="checkbox" name="box"></th>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
@@ -92,8 +119,18 @@
 			<td align="center">{if $var==1}Reflights{/if}</td>
 			<td align="center" style="border-bottom: 1px solid black;">&nbsp;</td>
 			<td align="left" style="border-bottom: 1px solid black;">&nbsp;</td>
+			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+			}
+				<td align="center" style="border-bottom: 1px solid black;">&nbsp;</td>
+			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_seconds}
 				<td style="border: 1px solid black;">&nbsp;</td>
+			{/if}
+			{if $event->info.event_type_code=="f3j"}
+				<th width="20"><input type="checkbox" name="box"></th>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<td style="border: 1px solid black;">&nbsp;</td>

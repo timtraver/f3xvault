@@ -34,14 +34,12 @@ EVENT STUFF
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
+	Time accuracy on TD flights issue
+
 	Draw
 		ability to print all three draw matrices on one page for f3b
 		Possible ability to have the speed round be the inverse order of the standings
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
-		When printing pilot cards, put lane/spot id on them
-		When printing CD Recording sheet, put lane/spot on them
-		When printing Matrix table, properly highlight the lines, whether by teams or just alternate
-		F3K event draw printing for each of the printouts
 
 	For F3K events
 		stats for Quick turnaround tasks
@@ -78,6 +76,10 @@ MOBILE STUFF
 
 COMPLETED
  
+X		When printing pilot cards, put lane/spot id on them
+X		When printing CD Recording sheet, put lane/spot on them
+X		When printing Matrix table, properly highlight the lines, whether by teams or just alternate
+X		F3K event draw printing for each of the printouts
 X		Allow the F3K round types to be set with the draw
 X		When adding a round, if F3K, set the round type too if there was one that was set
 X    	set number of groups

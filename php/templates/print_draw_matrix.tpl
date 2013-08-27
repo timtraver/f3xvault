@@ -11,12 +11,15 @@
 			</td>
 		</tr>
 		</table>
-		<h2 class="post-title entry-title" style="margin:0px;">Draw Matrix - {$event->flight_types.$flight_type_id.flight_type_name} (Rounds {$print_round_from} - {$print_round_to})</h2>
+		<h2 class="post-title entry-title" style="margin:0px;">Draw Matrix - {if $event->info.event_type_code!="f3k"}{$event->flight_types.$flight_type_id.flight_type_name} {/if}(Rounds {$print_round_from} - {$print_round_to})</h2>
 		<table cellspacing="2">
 		<tr>
 			{foreach $event->rounds as $r}
 			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 				{continue}
+			{/if}
+			{if $event->info.event_type_code=="f3k"}
+				{$flight_type_id=$r.flight_type_id}
 			{/if}
 			{$bgcolor=''}
 			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 

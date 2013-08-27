@@ -2898,7 +2898,28 @@ function event_draw_print() {
 			break;
 	}
 	$_REQUEST['sort_by']=$sort_by;
+
+
 	
+	# Lets get the draw round flight types if there are any
+	$draw_round_flight_types=array();
+	$stmt=db_prep("
+		SELECT *,edrf.flight_type_id
+		FROM event_draw_round_flight edrf
+		LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+		WHERE ed.event_id=:event_id
+			AND ed.event_draw_status=1
+			AND edrf.event_draw_round_flight_status=1
+		ORDER BY ed.event_draw_id,edrf.event_draw_round_number
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	foreach($result as $round){
+		$event_draw_id=$round['event_draw_id'];
+		$round_number=$round['event_draw_round_number'];
+		$draw_round_flight_types[$event_draw_id][$round_number]=$round['flight_type_id'];
+	}
+
+
 	$e=new Event($event_id);
 	$e->get_teams();
 	$e->get_rounds();
@@ -2910,6 +2931,7 @@ function event_draw_print() {
 		if(!isset($e->rounds[$event_round_number])){
 			# Lets create the event round and enough info from the draw to print
 			foreach($e->draws as $d){
+				$event_draw_id=$d['event_draw_id'];
 				if($d['event_draw_active']==1){
 					#Step through the draw rounds and see if one exists for this round
 					foreach($d['flights'] as $flight_type_id=>$f){
@@ -2918,6 +2940,11 @@ function event_draw_print() {
 								# Lets create the round info
 								$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
 								$e->rounds[$event_round_number]['event_round_status']=1;
+								if($e->info['event_type_code']=='f3k'){
+									$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_draw_id][$round_num];
+								}else{
+									$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+								}
 								$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
 								foreach($v['pilots'] as $event_pilot_id=>$p){
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
@@ -3047,6 +3074,7 @@ function event_draw_view() {
 						$e->rounds[$event_round_number]['event_round_status']=1;
 						if($e->info['event_type_code']=='f3k'){
 							$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$round_num];
+							$flight_type_id=$draw_round_flight_types[$round_num];
 						}else{
 							$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
 						}
