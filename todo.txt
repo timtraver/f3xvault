@@ -34,8 +34,6 @@ EVENT STUFF
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
-	Time accuracy on TD flights issue
-
 	Draw
 		ability to print all three draw matrices on one page for f3b
 		Possible ability to have the speed round be the inverse order of the standings
@@ -76,6 +74,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Time accuracy on TD flights issue
 X		When printing pilot cards, put lane/spot id on them
 X		When printing CD Recording sheet, put lane/spot on them
 X		When printing Matrix table, properly highlight the lines, whether by teams or just alternate

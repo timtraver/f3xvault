@@ -42,8 +42,6 @@
 		
 	</div>
 	
-	<br>
-	<h2 style="color:red;">Under Construction...</h2>
 <h1 class="post-title entry-title">Draws</h1>
 
 <form name="main" method="POST">

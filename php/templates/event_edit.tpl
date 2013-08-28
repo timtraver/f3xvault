@@ -342,7 +342,7 @@ function check_event(){
 			<input type="button" value=" Import Event " class="block-button" onClick="document.import.submit();">
 		{/if}
 		{if $event->info.event_id!=0}
-			<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="event_draw.submit();">
+			<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
 		{/if}
 		
 	</th>
