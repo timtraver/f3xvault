@@ -80,7 +80,6 @@ function calc_groups(){ldelim}
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                	
 	<br>
-	<h2 style="color:red;">Under Construction...</h2>
 <h1 class="post-title entry-title">Draw {if $event_draw_id==0}Create{else}Edit{/if}
 		<input type="button" value=" Back To Event Draws " onClick="goback.submit();" class="block-button">
 </h1>
