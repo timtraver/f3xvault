@@ -29,7 +29,7 @@ This is just a short list of some of the things already on my suggestion and tod
 		<ul>
 			<li>Reflights<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-			<li>Create flying draw order for All disciplines</li>
+			<li>Create flying draw order for All disciplines<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Printouts for flight orders and groups <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Possibly print to PDF format for easier printing <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
@@ -37,7 +37,7 @@ This is just a short list of some of the things already on my suggestion and tod
 			<li>Full Mobile version for tablets and smartphones <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Show statistics for F3K events (quick turnaround times, etc)</li>
 			<li>Resove ties by going back to dropped rounds for event rank</li>
-			<li>Create ability to set event calculation accuracy</li>
+			<li>Create ability to set event calculation accuracy<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Location Database</li>
 		<ul>
