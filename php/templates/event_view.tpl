@@ -242,7 +242,7 @@ function check_permission() {ldelim}
 			{if $page_num==1}
 				{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}{/if}" class="block-button">{/if}
 				{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}{/if}" class="block-button">{/if}
-				<input type="button" value=" Add Round " onClick="if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}" class="block-button">
+				<input type="button" value=" Add Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}{/if}" class="block-button">
 			{/if}
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">

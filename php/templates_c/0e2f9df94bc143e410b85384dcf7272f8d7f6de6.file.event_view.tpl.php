@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-26 23:20:04
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-28 01:43:20
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1377584399,
+      1 => 1377679394,
       2 => 'file',
     ),
   ),
@@ -361,9 +361,9 @@ $_smarty_tpl->tpl_vars['page_num']->first = $_smarty_tpl->tpl_vars['page_num']->
 -<?php echo $_smarty_tpl->tpl_vars['end_round']->value;?>
 ) <?php }?> Overall Classification
 			<?php if ($_smarty_tpl->tpl_vars['page_num']->value==1){?>
-				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_flyoff']==1){?><input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}" class="block-button"><?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}" class="block-button"><?php }?>
-				<input type="button" value=" Add Round " onClick="if(check_permission()){document.event_add_round.submit();}" class="block-button">
+				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_flyoff']==1){?><input type="button" value=" Add Flyoff Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
+				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
+				<input type="button" value=" Add Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.submit();}<?php }?>" class="block-button">
 			<?php }?>
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
