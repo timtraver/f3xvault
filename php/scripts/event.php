@@ -2866,6 +2866,11 @@ function event_draw_print() {
 	$print_type=$_REQUEST['print_type'];
 	$print_format=$_REQUEST['print_format'];
 
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->get_draws();
+
 	$template='';
 	$title='';
 	$orientation='P';
@@ -2878,7 +2883,11 @@ function event_draw_print() {
 			$sort_by='flight_order';
 			break;
 		case "pilot":
-			$template="print_draw_pilot_recording.tpl";
+			if($e->info['event_type_code']=='f3k'){
+				$template="print_draw_pilot_recording_f3k.tpl";
+			}else{
+				$template="print_draw_pilot_recording.tpl";
+			}
 			$title="Pilot Score Recording Sheets";
 			$orientation="L";
 			$sort_by='alphabetical_first';
@@ -2898,7 +2907,6 @@ function event_draw_print() {
 			break;
 	}
 	$_REQUEST['sort_by']=$sort_by;
-
 
 	
 	# Lets get the draw round flight types if there are any
@@ -2920,10 +2928,6 @@ function event_draw_print() {
 	}
 
 
-	$e=new Event($event_id);
-	$e->get_teams();
-	$e->get_rounds();
-	$e->get_draws();
 
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
