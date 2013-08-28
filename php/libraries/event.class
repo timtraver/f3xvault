@@ -852,7 +852,6 @@ class Event {
 		if(count($this->rounds)==0){
 			return;
 		}
-		
 		$subtotals=array();
 		$totals=array();
 		$flyoff_totals=array();
