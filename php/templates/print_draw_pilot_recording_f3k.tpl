@@ -53,7 +53,7 @@
 					<table cellspacing="3" cellpadding="2">
 					<tr>
 						{for $i=1 to $num_subs}
-						<td width="60" height="40" style="border: 1px solid black;">&nbsp</td>
+						<td width="60" height="40" style="border: 1px solid black;"> &nbsp</td>
 						{/for}
 					</tr>
 					</table>
@@ -61,11 +61,11 @@
 				</tr>
 				<tr>
 					<th height="20" align="right" nowrap>Pilot Sig</th>
-					<td height="20" colspan="2" style="border: 1px solid black;">&nbsp;</td>
+					<td height="20" colspan="2" style="border: 1px solid black;"> &nbsp;</td>
 				</tr>
 				<tr>
 					<th height="20" align="right" nowrap>Timer Sig</th>
-					<td height="20" colspan="2"style="border: 1px solid black;">&nbsp;</td>
+					<td height="20" colspan="2"style="border: 1px solid black;"> &nbsp;</td>
 				</tr>
 				</table>
 

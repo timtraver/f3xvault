@@ -338,13 +338,15 @@ function check_event(){
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
-		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
-			<input type="button" value=" Import Event " class="block-button" onClick="document.import.submit();">
-		{/if}
 		{if $event->info.event_id!=0}
 			<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
 		{/if}
-		
+		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
+			<input type="button" value=" Import F3F Event " class="block-button" onClick="document.import_f3f.submit();">
+		{/if}
+		{if $event->info.event_id!=0}
+			<input type="button" value=" Import F3K Rounds " class="block-button" onClick="document.import_f3k.submit();">
+		{/if}
 	</th>
 </tr>
 </table>
@@ -407,7 +409,6 @@ function check_event(){
 		<input type="submit" value=" Add This User " class="block-button">
 	</th>
 </tr>
-
 </table>
 </form>
 {/if}
@@ -420,9 +421,14 @@ function check_event(){
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 {/if}
 </form>
-<form name="import" method="POST">
+<form name="import_f3f" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_import">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="import_f3k" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_import_f3k">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="create_new_location" method="POST">
