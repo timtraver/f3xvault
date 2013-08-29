@@ -145,6 +145,7 @@ function my_user_show() {
 			LEFT JOIN country c on c.country_id=l.country_id
 			WHERE ep.pilot_id=:pilot_id
 				AND ep.event_pilot_status=1
+				AND e.event_status=1
 			ORDER BY e.event_start_date desc
 		");
 		$pilot_events=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
