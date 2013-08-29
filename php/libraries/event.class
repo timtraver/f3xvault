@@ -560,6 +560,49 @@ class Event {
 						$r['accuracy']=$o['event_option_value'];
 					}
 				}
+				# if this is an f3k type, then lets set the subs array
+				if($type=='f3k'){
+					$subs=array();
+					switch($r['flight_type_code']){
+						case 'f3k_a':
+							$subs=array("5:00");
+							break;
+						case 'f3k_b':
+							$subs=array("4:00","4:00");
+							break;
+						case 'f3k_c':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_c4':
+							$subs=array("3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_c5':
+							$subs=array("3:00","3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_d':
+							$subs=array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
+							break;
+						case 'f3k_e':
+							$subs=array("Pilot","Nominated");
+							break;
+						case 'f3k_f':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_g':
+							$subs=array("2:00","2:00","2:00","2:00","2:00");
+							break;
+						case 'f3k_h':
+							$subs=array("1:00","2:00","3:00","4:00");
+							break;
+						case 'f3k_i':
+							$subs=array("3:20","3:20","3:20");
+							break;
+						case 'f3k_j':
+							$subs=array("3:00","3:00","3:00");
+							break;
+					}
+					$r['subs']=$subs;
+				}
 				$this->flight_types[$id]=$r;
 			}
 		}

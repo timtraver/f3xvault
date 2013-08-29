@@ -52,13 +52,13 @@
 <input type="hidden" name="flight_type_id" value="0">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
-	<th width="15%" nowrap>Flight Type</th>
-	<th width="10%" nowrap>Status</th>
-	<th width="15%" nowrap>Draw Type</th>
+	<th width="10%" nowrap>Flight Type</th>
+	<th width="5%" nowrap>Status</th>
+	<th width="10%" nowrap>Draw Type</th>
 	<th width="10%" nowrap>Round From</th>
 	<th width="10%" nowrap>Round To</th>
-	<th nowrap>View</th>
-	<th width="40%" nowrap>Action</th>
+	<th width="20%"  nowrap>View</th>
+	<th width="25%" nowrap>Action</th>
 </tr>
 {$f3k_first=0}
 {foreach $event->flight_types as $ft}
@@ -88,7 +88,7 @@
 				{continue}
 			{/if}
 			<tr>
-			<th width="20%" nowrap>
+			<th nowrap>
 				{if $event->info.event_type_code=='f3k'}
 					F3K
 				{else}
@@ -111,7 +111,7 @@
 				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
 				<input type="button" value="View Stats" class="button" style="float:left;" onClick="location.href='?action=event&function=event_draw_stats&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
 				{/if}
-				<input type="button" value="View Draw" class="button" onClick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');">
+				<input type="button" value="View Draw" class="button" style="float:left;" onClick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');">
 			</td>
 			<td nowrap>
 				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
