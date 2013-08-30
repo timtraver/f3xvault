@@ -10,7 +10,7 @@
 					<br>
 					<a href="?action=admin&function=admin_plane">Plane Attributes Admin</a><br>
 					<br>
-					<a href="?action=admin&function=admin_user">User Admin</a><br>
+					<a href="?action=admin&function=admin_user_list">User Admin</a><br>
 					<br>
 					<a href="?action=admin&function=admin_activity">Site Activity</a><br>
 					<br>

@@ -652,5 +652,479 @@ function admin_activity() {
 	$maintpl=find_template("admin_activity.tpl");
 	return $smarty->fetch($maintpl);
 }
+function admin_user_list() {
+	global $smarty;
+
+	$country_id=0;
+	$state_id=0;
+	if(isset($_REQUEST['country_id'])){
+		$country_id=intval($_REQUEST['country_id']);
+		$GLOBALS['fsession']['country_id']=$country_id;
+	}elseif(isset($GLOBALS['fsession']['country_id'])){
+		$country_id=$GLOBALS['fsession']['country_id'];
+	}
+	if(isset($_REQUEST['state_id'])){
+		$state_id=intval($_REQUEST['state_id']);
+		$GLOBALS['fsession']['state_id']=$state_id;
+	}elseif(isset($GLOBALS['fsession']['state_id'])){
+		$state_id=$GLOBALS['fsession']['state_id'];
+	}
+
+	$search='';
+	if(isset($_REQUEST['search']) ){
+		$search=$_REQUEST['search'];
+		$search_operator=$_REQUEST['search_operator'];
+		$GLOBALS['fsession']['search']=$_REQUEST['search'];
+		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
+	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
+		$search=$GLOBALS['fsession']['search'];
+		$search_operator=$GLOBALS['fsession']['search_operator'];
+	}
+	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
+		$search_field_entry=$_REQUEST['search_field'];
+	}elseif(isset($GLOBALS['fsession']['search_field'])){
+		$search_field_entry=$GLOBALS['fsession']['search_field'];
+	}
+	switch($search_field_entry){
+		case 'pilot_first_name':
+			$search_field='pilot_first_name';
+			break;
+		case 'pilot_last_name':
+			$search_field='pilot_last_name';
+			break;
+		case 'pilot_city':
+			$search_field='pilot_city';
+			break;
+		default:
+			$search_field='pilot_first_name';
+			break;
+	}
+	if($search=='' || $search=='%%'){
+		$search_field='pilot_first_name';
+	}
+	$GLOBALS['fsession']['search_field']=$search_field;
+	
+	switch($search_operator){
+		case 'contains':
+			$operator='LIKE';
+			$search="%$search%";
+			break;
+		case 'exactly':
+			$operator="=";
+			break;
+		default:
+			$operator="LIKE";
+	}
+
+	$addcountry='';
+	if($country_id!=0){
+		$addcountry.=" AND p.country_id=$country_id ";
+	}
+	$addstate='';
+	if($state_id!=0){
+		$addstate.=" AND p.state_id=$state_id ";
+	}
+
+	$pilots=array();
+	if($search!='%%' && $search!=''){
+		$stmt=db_prep("
+			SELECT *,p.pilot_id
+			FROM pilot p
+			LEFT JOIN user u ON p.user_id=u.user_id
+			LEFT JOIN state s ON p.state_id=s.state_id
+			LEFT JOIN country c ON p.country_id=c.country_id
+			WHERE p.$search_field $operator :search
+				$addcountry
+				$addstate
+			ORDER BY p.pilot_first_name
+		");
+		$pilots=db_exec($stmt,array("search"=>$search));
+	}else{
+		# Get all pilots for search
+		$stmt=db_prep("
+			SELECT *,p.pilot_id
+			FROM pilot p
+			LEFT JOIN user u ON p.user_id=u.user_id
+			LEFT JOIN state s ON p.state_id=s.state_id
+			LEFT JOIN country c ON p.country_id=c.country_id
+			WHERE 1
+				$addcountry
+				$addstate
+			ORDER BY p.pilot_first_name
+		");
+		$pilots=db_exec($stmt,array());
+	}
+	
+	# Get only countries that we have pilots for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT country_id FROM pilot) p
+		LEFT JOIN country c ON c.country_id=p.country_id
+		WHERE c.country_id!=0
+		ORDER BY c.country_order
+	");
+	$countries=db_exec($stmt,array());
+	# Get only states that we have locations for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT state_id FROM pilot) p
+		LEFT JOIN state s ON s.state_id=p.state_id
+		WHERE s.state_id!=0
+		ORDER BY s.state_order
+	");
+	$states=db_exec($stmt,array());
+	
+	$pilots=show_pages($pilots,50);
+	
+	$smarty->assign("pilots",$pilots);
+	$smarty->assign("countries",$countries);
+	$smarty->assign("states",$states);
+
+	$smarty->assign("search",$GLOBALS['fsession']['search']);
+	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
+	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
+	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
+	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
+
+	$maintpl=find_template("admin_user_list.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_user_view() {
+	global $user;
+	global $smarty;
+	
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	
+	$pilot=array();
+	$pilot_planes=array();
+	$pilot_clubs=array();
+	$pilot_locations=array();
+	$pilot_events=array();
+	
+	if($pilot_id!=0){
+		# Get the current users pilot info
+		$stmt=db_prep("
+			SELECT *,p.pilot_id
+			FROM pilot p
+			LEFT JOIN user u ON p.pilot_id=u.pilot_id
+			LEFT JOIN state s ON p.state_id=s.state_id
+			LEFT JOIN country c ON p.country_id=c.country_id
+			WHERE p.pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		
+		if(!isset($result[0])){
+			user_message("A pilot with that id does not exist.",1);
+			return pilot_list();
+		}else{
+			$pilot=$result[0];
+			
+			# Get the planes that this pilot has
+			$stmt=db_prep("
+				SELECT *
+				FROM pilot_plane pp
+				LEFT JOIN plane p ON p.plane_id=pp.plane_id
+				LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
+				WHERE pp.pilot_id=:pilot_id
+					AND pp.pilot_plane_status=1
+			");
+			$pilot_planes=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+			foreach($pilot_planes as $key=>$plane){
+				$disciplines=array();
+				# Lets get the plane types
+				$stmt=db_prep("
+					SELECT *
+					FROM plane_discipline pd
+					LEFT JOIN discipline d ON pd.discipline_id=d.discipline_id
+					WHERE pd.plane_id=:plane_id
+					ORDER BY d.discipline_order
+				");
+				$disciplines=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+				$pilot_planes[$key]['disciplines']=$disciplines;
+			}
+			
+			# Get the pilots clubs
+			$stmt=db_prep("
+				SELECT *
+				FROM club_pilot cp
+				LEFT JOIN club cl ON cp.club_id=cl.club_id
+				LEFT JOIN state s on s.state_id=cl.state_id
+				LEFT JOIN country c on cl.country_id=c.country_id
+				WHERE cp.pilot_id=:pilot_id
+					AND cp.club_pilot_status=1
+			");
+			$pilot_clubs=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));		
+
+			# Get the pilots favorite locations
+			$stmt=db_prep("
+				SELECT *
+				FROM pilot_location pl
+				LEFT JOIN location l ON l.location_id=pl.location_id
+				LEFT JOIN state s on s.state_id=l.state_id
+				LEFT JOIN country c on c.country_id=l.country_id
+				WHERE pl.pilot_id=:pilot_id
+					AND pl.pilot_location_status=1
+			");
+			$pilot_locations=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+			
+			# Get the pilots events
+			$stmt=db_prep("
+				SELECT *
+				FROM event_pilot ep
+				LEFT JOIN event e ON ep.event_id=e.event_id
+				LEFT JOIN location l ON e.location_id=l.location_id
+				LEFT JOIN state s on s.state_id=l.state_id
+				LEFT JOIN country c on c.country_id=l.country_id
+				WHERE ep.pilot_id=:pilot_id
+					AND ep.event_pilot_status=1
+					AND e.event_status=1
+				ORDER BY event_start_date DESC
+			");
+			$pilot_events=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		}
+	}
+	
+	$smarty->assign("pilot",$pilot);
+	$smarty->assign("pilot_id",$pilot_id);
+	$smarty->assign("pilot_planes",$pilot_planes);
+	$smarty->assign("pilot_locations",$pilot_locations);
+	$smarty->assign("pilot_events",$pilot_events);
+	$smarty->assign("pilot_clubs",$pilot_clubs);
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+	
+	$maintpl=find_template("admin_user_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_user_compare() {
+	global $smarty;
+	global $user;
+
+	# Lets get each of the pilots selected and show a summary
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/pilot_(\d+)/",$key,$match)){
+			$id=$match[1];
+			$pilots[$id]=array();
+		}
+	}
+	# Now we've got the list of pilots, so lets get their summaries
+	foreach($pilots as $pilot_id=>$p){
+		$stmt=db_prep("
+			SELECT *,p.pilot_id
+			FROM pilot p
+			LEFT JOIN user u on p.pilot_id=u.pilot_id
+			WHERE p.pilot_id=:pilot_id
+		");
+		$pilot=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		
+		$pilot_planes=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM pilot_plane pp
+			LEFT JOIN plane p ON p.plane_id=pp.plane_id
+			LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
+			WHERE pp.pilot_id=:pilot_id
+				AND pp.pilot_plane_status=1
+		");
+		$pilot_planes=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		# Get the pilots clubs
+		$pilot_clubs=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM club_pilot cp
+			LEFT JOIN club cl ON cp.club_id=cl.club_id
+			LEFT JOIN state s on s.state_id=cl.state_id
+			LEFT JOIN country c on cl.country_id=c.country_id
+			WHERE cp.pilot_id=:pilot_id
+				AND cp.club_pilot_status=1
+		");
+		$pilot_clubs=db_exec($stmt,array("pilot_id"=>$pilot_id));
+
+		# Get the pilots favorite locations
+		$pilot_locations=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM pilot_location pl
+			LEFT JOIN location l ON l.location_id=pl.location_id
+			LEFT JOIN state s on s.state_id=l.state_id
+			LEFT JOIN country c on c.country_id=l.country_id
+			WHERE pl.pilot_id=:pilot_id
+				AND pl.pilot_location_status=1
+		");
+		$pilot_locations=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		# Get the pilots events
+		$pilot_events=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN location l ON e.location_id=l.location_id
+			LEFT JOIN state s on s.state_id=l.state_id
+			LEFT JOIN country c on c.country_id=l.country_id
+			WHERE ep.pilot_id=:pilot_id
+				AND ep.event_pilot_status=1
+				AND e.event_status=1
+			ORDER BY event_start_date DESC
+		");
+		$pilot_events=db_exec($stmt,array("pilot_id"=>$pilot_id));
+		
+		$pilots[$pilot_id]=$pilot[0];
+		$pilots[$pilot_id]['pilot_planes']=$pilot_planes;
+		$pilots[$pilot_id]['pilot_clubs']=$pilot_clubs;
+		$pilots[$pilot_id]['pilot_locations']=$pilot_locations;
+		$pilots[$pilot_id]['pilot_events']=$pilot_events;
+		
+	}
+
+	$smarty->assign("pilots",$pilots);
+
+	$maintpl=find_template("admin_user_compare.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_user_merge() {
+	# Function to merge the pilots into the selected primary pilot
+	global $smarty;
+
+	# Lets get each of the pilots selected and show a summary
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/pilot_(\d+)/",$key,$match)){
+			$id=$match[1];
+			$pilots[$id]=array();
+		}
+	}
+	# now lets get which ID was selected as the primary
+	$primary_id=$_REQUEST['make_primary'];
+	
+	# OK, lets step through the pilots and change everything to the primary ID
+	foreach($pilots as $pilot_id=>$p){
+		if($pilot_id==$primary_id){
+			continue;
+		}
+		# OK, lets move the planes
+		$stmt=db_prep("
+			UPDATE pilot_plane
+			SET pilot_id=:primary_id
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"pilot_id"=>$pilot_id));
+		# OK, lets move the clubs
+		$stmt=db_prep("
+			UPDATE club_pilot
+			SET pilot_id=:primary_id
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"pilot_id"=>$pilot_id));
+		# OK, lets move the locations
+		$stmt=db_prep("
+			UPDATE pilot_location
+			SET pilot_id=:primary_id
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"pilot_id"=>$pilot_id));
+		# OK, lets move the events
+		$stmt=db_prep("
+			UPDATE event_pilot
+			SET pilot_id=:primary_id
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"pilot_id"=>$pilot_id));
+		
+		# And finally delete that older pilot
+		$stmt=db_prep("
+			DELETE FROM pilot
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("pilot_id"=>$pilot_id));
+	}
+
+	user_message("Merged selected pilots into pilot id $primary_id");
+	return admin_user_list();
+}
+function admin_user_save() {
+	# Function to merge the pilots into the selected primary pilot
+	global $smarty;
+
+	$pilot_id=$_REQUEST['pilot_id'];
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
+	$pilot_email=$_REQUEST['pilot_email'];
+
+	if($pilot_id==0){
+		# Lets save the pilot
+		$stmt=db_prep("
+			INSERT INTO pilot
+			SET user_id=0,
+				pilot_first_name=:pilot_first_name,
+				pilot_last_name=:pilot_last_name,
+				pilot_email=:pilot_email,
+				pilot_ama=:pilot_ama,
+				pilot_fai=:pilot_fai,
+				pilot_city=:pilot_city,
+				state_id=:state_id,
+				country_id=:country_id
+		");
+		$result=db_exec($stmt,array(
+			"pilot_first_name"=>$pilot_first_name,
+			"pilot_last_name"=>$pilot_last_name,
+			"pilot_email"=>$pilot_email,
+			"pilot_ama"=>$pilot_ama,
+			"pilot_fai"=>$pilot_fai,
+			"pilot_city"=>$pilot_city,
+			"state_id"=>$state_id,
+			"country_id"=>$country_id
+		));
+	}else{
+		# Save the current one
+		$stmt=db_prep("
+			UPDATE pilot
+			SET pilot_first_name=:pilot_first_name,
+				pilot_last_name=:pilot_last_name,
+				pilot_email=:pilot_email,
+				pilot_ama=:pilot_ama,
+				pilot_fai=:pilot_fai,
+				pilot_city=:pilot_city,
+				state_id=:state_id,
+				country_id=:country_id
+			WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array(
+			"pilot_first_name"=>$pilot_first_name,
+			"pilot_last_name"=>$pilot_last_name,
+			"pilot_email"=>$pilot_email,
+			"pilot_ama"=>$pilot_ama,
+			"pilot_fai"=>$pilot_fai,
+			"pilot_city"=>$pilot_city,
+			"state_id"=>$state_id,
+			"country_id"=>$country_id,
+			"pilot_id"=>$pilot_id
+		));
+	}
+
+	user_message("Saved Pilot Info");
+	return admin_user_list();
+}
+function admin_user_delete() {
+	# Function to delete the pilot
+	global $smarty;
+
+	$pilot_id=$_REQUEST['pilot_id'];
+	# Delete the pilot
+	$stmt=db_prep("
+		DELETE FROM pilot
+		WHERE pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"pilot_id"=>$pilot_id
+	));
+
+	user_message("Deleted Pilot");
+	return admin_user_list();
+}
+
 
 ?>
