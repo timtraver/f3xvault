@@ -3238,8 +3238,8 @@ function event_import_save() {
 		if($i['pilot_id']==0){
 			# Lets split it up into the first name and last name
 			$words=preg_split("/\s+/",$i['pilot_original'],2);
-			$first_name=$words[0];
-			$last_name=$words[1];
+			$first_name=trim($words[0]);
+			$last_name=trim($words[1]);
 			
 			# Lets create this pilot
 			$stmt=db_prep("
@@ -3554,8 +3554,8 @@ function event_import_f3k() {
 			$q = '%'.$q.'%';
 			# lets get the first name and last name out of it
 			$words=preg_split("/\s+/",$pilot_entered,2);
-			$first_name=$words[0];
-			$last_name=$words[1];
+			$first_name=trim($words[0]);
+			$last_name=trim($words[1]);
 			$q2='%'.$last_name.' '.$first_name.'%';
 			# Do search
 			$found_pilots=array();
