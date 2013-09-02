@@ -32,6 +32,7 @@
 	<th style="text-align: left;"></th>
 	<th style="text-align: left;">Event Date</th>
 	<th style="text-align: left;">Pilot</th>
+	<th style="text-align: left;">Plane</th>
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Location</th>
 	<th style="text-align: left;">Speed</th>
@@ -50,6 +51,7 @@
 			{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
 			<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
 		</td>
+		<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
 		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
 		<td>
 			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
@@ -66,7 +68,7 @@
                 {if $page>1}[<a href="?action=records&function=records_list&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
                 [<a href="?action=records&function=records_list&page={$page+1}">Next Page &gt;&gt</a>]
         </td>
-        <td align="right" colspan="3">PerPage
+        <td align="right" colspan="4">PerPage
                 [<a href="?action=records&function=records_list&perpage=20">20</a>]
                 [<a href="?action=records&function=records_list&perpage=40">40</a>]
                 [<a href="?action=records&function=records_list&perpage=60">60</a>]
@@ -82,6 +84,7 @@
 	<th style="text-align: left;"></th>
 	<th style="text-align: left;">Event Date</th>
 	<th style="text-align: left;">Pilot</th>
+	<th style="text-align: left;">Plane</th>
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Location</th>
 	<th style="text-align: left;">Speed</th>
@@ -100,6 +103,7 @@
 			{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
 			<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
 		</td>
+		<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
 		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
 		<td>
 			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
@@ -116,7 +120,7 @@
                 {if $page>1}[<a href="?action=records&function=records_list&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
                 [<a href="?action=records&function=records_list&page={$page+1}">Next Page &gt;&gt</a>]
         </td>
-        <td align="right" colspan="3">PerPage
+        <td align="right" colspan="4">PerPage
                 [<a href="?action=records&function=records_list&perpage=20">20</a>]
                 [<a href="?action=records&function=records_list&perpage=40">40</a>]
                 [<a href="?action=records&function=records_list&perpage=60">60</a>]
@@ -131,6 +135,7 @@
 	<th style="text-align: left;"></th>
 	<th style="text-align: left;">Event Date</th>
 	<th style="text-align: left;">Pilot</th>
+	<th style="text-align: left;">Plane</th>
 	<th style="text-align: left;">Event Name</th>
 	<th style="text-align: left;">Location</th>
 	<th style="text-align: left;">Laps</th>
@@ -149,6 +154,7 @@
 			{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
 			<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
 		</td>
+		<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
 		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
 		<td>
 			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
@@ -165,7 +171,7 @@
                 {if $page>1}[<a href="?action=records&function=records_list&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
                 [<a href="?action=records&function=records_list&page={$page+1}">Next Page &gt;&gt</a>]
         </td>
-        <td align="right" colspan="3">PerPage
+        <td align="right" colspan="4">PerPage
                 [<a href="?action=records&function=records_list&perpage=20">20</a>]
                 [<a href="?action=records&function=records_list&perpage=40">40</a>]
                 [<a href="?action=records&function=records_list&perpage=60">60</a>]

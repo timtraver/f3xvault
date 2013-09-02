@@ -12,14 +12,10 @@ GENERAL
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
-	Add a Competitions held here section
-	Recent events
 	
 PLANE STUFF
 	Add layup types as a function to the planes
-	Add plane records for F3F, F3B speed and Distance
 	Pilots Flying Model
-	Recent events
 	Build log links!
 	Setup links!
 	
@@ -74,6 +70,8 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Add plane records for F3F, F3B speed and Distance
+X	Recent events at locations
 X	Time accuracy on TD flights issue
 X		When printing pilot cards, put lane/spot id on them
 X		When printing CD Recording sheet, put lane/spot on them

@@ -420,7 +420,86 @@ function plane_view() {
 		ORDER BY pc.plane_comment_date DESC
 	");
 	$comments=db_exec($stmt,array("plane_id"=>$plane_id));
-	
+
+	# Lets get the plane records to show
+	$f3f_records=array();
+	$f3b_records=array();
+	$f3b_distance=array();
+	# Lets get the top speeds in F3F across all of the events
+	$stmt=db_prep("
+		SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
+		FROM event_pilot_round_flight eprf
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
+		LEFT JOIN country pc ON p.country_id=pc.country_id
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN country c ON l.country_id=c.country_id
+		WHERE eprf.event_pilot_round_flight_status=1
+			AND ep.event_pilot_status=1
+			AND e.event_status=1
+			AND e.event_type_id=1
+			AND eprf.event_pilot_round_flight_seconds!=0
+			AND pl.plane_id=:plane_id
+		ORDER BY eprf.event_pilot_round_flight_seconds
+	");
+	$f3f_records=db_exec($stmt,array("plane_id"=>$plane_id));
+
+	$stmt=db_prep("
+		SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
+		FROM event_pilot_round_flight eprf
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
+		LEFT JOIN country pc ON p.country_id=pc.country_id
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN country c ON l.country_id=c.country_id
+		WHERE eprf.event_pilot_round_flight_status=1
+			AND ep.event_pilot_status=1
+			AND e.event_status=1
+			AND (e.event_type_id=2 OR e.event_type_id=3)
+			AND eprf.flight_type_id=3
+			AND eprf.event_pilot_round_flight_seconds!=0
+			AND pl.plane_id=:plane_id
+		ORDER BY eprf.event_pilot_round_flight_seconds
+	");
+	$f3b_records=db_exec($stmt,array("plane_id"=>$plane_id));
+
+	# Lets get the top 20 distance runs in F3B across all of the events
+	$stmt=db_prep("
+		SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
+		FROM event_pilot_round_flight eprf
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
+		LEFT JOIN country pc ON p.country_id=pc.country_id
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN location l ON e.location_id=l.location_id
+		LEFT JOIN country c ON l.country_id=c.country_id
+		WHERE eprf.event_pilot_round_flight_status=1
+			AND ep.event_pilot_status=1
+			AND e.event_status=1
+			AND e.event_type_id=2
+			AND eprf.flight_type_id=2
+			AND eprf.event_pilot_round_flight_laps!=0
+			AND pl.plane_id=:plane_id
+		ORDER BY eprf.event_pilot_round_flight_laps DESC
+	");
+	$f3b_distance=db_exec($stmt,array("plane_id"=>$plane_id));
+
+	$f3f_records=show_pages($f3f_records,20);
+	$f3b_records=show_pages($f3b_records,20);
+	$f3b_distance=show_pages($f3b_distance,20);
+
+	$smarty->assign("f3f_records",$f3f_records);
+	$smarty->assign("f3b_records",$f3b_records);
+	$smarty->assign("f3b_distance",$f3b_distance);
+
 	$smarty->assign("plane",$plane);
 	$smarty->assign("media",$media);
 	$smarty->assign("rand",$rand);

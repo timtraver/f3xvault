@@ -140,6 +140,45 @@
 </form>
 
 </div>
+
+<br>
+<h1 class="post-title entry-title">Recent Competitions At This Location</h1>
+<table width="100%" cellpadding="2" cellspacing="1">
+<tr>
+	<th style="text-align: left;">Event Date</th>
+	<th style="text-align: left;">Event Name</th>
+	<th style="text-align: left;">Event Type</th>
+	<th style="text-align: left;">Pilots</th>
+</tr>
+{if $events}
+	{foreach $events as $e}
+	<tr bgcolor="{cycle values="white,lightgray"}">
+		<td>{$e.event_start_date|date_format:"Y-m-d"}</td>
+		<td><a href="?action=event&function=event_view&event_id={$e.event_id}" title="View This Event">{$e.event_name|escape}</a></td>
+		<td align="left">{$e.event_type_name|escape}</td>
+		<td align="left">{$e.total_pilots}</td>
+	</tr>
+	{/foreach}
+	<tr style="background-color: lightgray;">
+        <td align="left" colspan="2">
+                {if $page>1}[<a href="?action=location&function=location_view&location_id={$location.location_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
+                [<a href="?action=location&function=location_view&location_id={$location.location_id}&page={$page+1}">Next Page &gt;&gt</a>]
+        </td>
+        <td align="right" colspan="2">PerPage
+                [<a href="?action=location&function=location_view&location_id={$location.location_id}&perpage=20">20</a>]
+                [<a href="?action=location&function=location_view&location_id={$location.location_id}&perpage=40">40</a>]
+                [<a href="?action=location&function=location_view&location_id={$location.location_id}&perpage=60">60</a>]
+                [<a href="?action=location&function=location_view&location_id={$location.location_id}&page=1">First Page</a>]
+        </td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="4">We currently do not have any competition events in the system for this location.</td>
+	</tr>
+{/if}
+</table>
+<br>
+
 </div>
 </div>
 

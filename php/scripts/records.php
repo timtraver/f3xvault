@@ -86,12 +86,17 @@ function records_list() {
 	$limit_start=$start_record-1;
 	$limit_end=$perpage;
 	
+	$f3f_records=array();
+	$f3b_records=array();
+	$f3b_distance=array();
+	
 	# Lets get the top speeds in F3F across all of the events
 	$stmt=db_prep("
 		SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
 		FROM event_pilot_round_flight eprf
 		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
 		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
 		LEFT JOIN country pc ON p.country_id=pc.country_id
 		LEFT JOIN event e ON ep.event_id=e.event_id
@@ -115,6 +120,7 @@ function records_list() {
 		FROM event_pilot_round_flight eprf
 		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
 		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
 		LEFT JOIN country pc ON p.country_id=pc.country_id
 		LEFT JOIN event e ON ep.event_id=e.event_id
@@ -138,6 +144,7 @@ function records_list() {
 		FROM event_pilot_round_flight eprf
 		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
 		LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+		LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
 		LEFT JOIN pilot p on ep.pilot_id=p.pilot_id
 		LEFT JOIN country pc ON p.country_id=pc.country_id
 		LEFT JOIN event e ON ep.event_id=e.event_id

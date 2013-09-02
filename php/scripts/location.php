@@ -447,6 +447,21 @@ function location_view() {
 	");
 	$disciplines=db_exec($stmt,array("location_id"=>$location_id));
 
+	# Lets get the events locations
+	$events=array();
+	$stmt=db_prep("
+		SELECT *,count(event_pilot_id) as total_pilots
+		FROM event e
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		LEFT JOIN event_pilot ep ON e.event_id=ep.event_id
+		WHERE e.location_id=:location_id
+			AND ep.event_pilot_status=1
+		GROUP by e.event_id
+		ORDER BY e.event_start_date DESC
+	");
+	$events=db_exec($stmt,array("location_id"=>$location_id));
+	$events=show_pages($events,20);
+	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);
 	$smarty->assign("rand",$rand);
@@ -454,6 +469,7 @@ function location_view() {
 	$smarty->assign("comments",$comments);
 	$smarty->assign("comments_num",count($comments));
 	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("events",$events);
 
 	$maintpl=find_template("location_view.tpl");
 	return $smarty->fetch($maintpl);
