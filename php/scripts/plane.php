@@ -493,8 +493,22 @@ function plane_view() {
 	$f3b_distance=db_exec($stmt,array("plane_id"=>$plane_id));
 
 	$f3f_records=show_pages($f3f_records,20);
+	# Now lets save the page info for when we do the next 2 arrays
+	$temp_totalpages=$smarty->getTemplateVars('totalpages');
+	$temp_startrecord=$smarty->getTemplateVars('startrecord');
+	$temp_endrecord=$smarty->getTemplateVars('endrecord');
+	$temp_page=$smarty->getTemplateVars('page');
+	
 	$f3b_records=show_pages($f3b_records,20);
 	$f3b_distance=show_pages($f3b_distance,20);
+
+	# Now lets reset the page values if needed
+	if($smarty->getTemplateVars('page')==0){
+		$smarty->assign("totalpages",$temp_totalpages);	
+		$smarty->assign("startrecord",$temp_startrecord);	
+		$smarty->assign("endrecord",$temp_endrecord);	
+		$smarty->assign("page",$temp_page);	
+	}
 
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);

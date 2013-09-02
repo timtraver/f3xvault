@@ -237,7 +237,6 @@ function show_pages($records,$defaultperpage=10){
         if($page==0){
                 $page=1;
         }
-
         if(isset($_REQUEST['perpage'])){
                 $perpage=$_REQUEST['perpage'];
                 if($perpage!='all'){
