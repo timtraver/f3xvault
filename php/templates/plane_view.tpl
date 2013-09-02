@@ -22,10 +22,13 @@ function calc_wingspan(){ldelim}
 {rdelim}
 function calc_aspect(){ldelim}
 	var length={$plane.plane_wingspan};
-	var width={$plane.plane_root_chord_length};
+	var area={$plane.plane_wing_area};
+	if('{$plane.plane_wing_area_units}'=='dm2'){ldelim}
+		area=area*100;
+	{rdelim}
 	var calc_aspect=0;
-	if(width!=0 && length!=0){ldelim}
-		calc_aspect = length / width;
+	if(area!=0 && length!=0){ldelim}
+		calc_aspect = (length*length) / area;
 	{rdelim}
 	document.getElementById('aspect').innerHTML = calc_aspect.toFixed(2);
 {rdelim}

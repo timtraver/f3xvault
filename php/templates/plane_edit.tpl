@@ -39,6 +39,18 @@ function calc_length(){ldelim}
 	calc_aspect();
 {rdelim}
 function calc_aspect(){ldelim}
+	var length={$plane.plane_wingspan};
+	var area={$plane.plane_wing_area};
+	if(document.main.plane_area_units.value=='dm2'){ldelim}
+		area=area*100;
+	{rdelim}
+	var calc_aspect=0;
+	if(area!=0 && length!=0){ldelim}
+		calc_aspect = (length*length) / area;
+	{rdelim}
+	document.getElementById('aspect').innerHTML = calc_aspect.toFixed(2);
+{rdelim}
+function calc_aspect(){ldelim}
 	var length=document.main.plane_wingspan.value;
 	var width=document.main.plane_root_chord_length.value;
 	var calc_aspect=0;
