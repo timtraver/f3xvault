@@ -176,7 +176,13 @@ function check_permission() {ldelim}
 		{foreach $event->pilots as $p}
 		<tr>
 			<td>{$num}</td>
-			<td align="center">{$p.pilot_ama|escape}</td>
+			<td align="center">
+				{if $p.pilot_fai}
+					{$p.pilot_fai|escape}
+				{else}
+					{$p.pilot_ama|escape}
+				{/if}
+			</td>
 			<td width="10" nowrap>
 				{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" class="inline_flag" title="{$p.country_code}">{/if}
 			</td>
