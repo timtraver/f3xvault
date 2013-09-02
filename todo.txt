@@ -20,6 +20,10 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
+	Make F3J able to choose time, because some round can be 15 min instead of 10 min
+	
+	Make sure f3kimport button doens't show up for anything but f3k
+	
 	F3B individual pilot graphs for speed, duration, and distance
 	
 	Don't allow the user to select the sort type until after the round is saved
