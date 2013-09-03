@@ -936,12 +936,6 @@ function location_map() {
 	if($state_id!=0){
 		$addstate.=" AND l.state_id=$state_id ";
 	}
-#print "addcountry=$addcountry<br>\n";
-#print "addstate=$addstate<br>\n";
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
 
 	# Add search options for discipline
 	$joind='';
@@ -959,7 +953,7 @@ function location_map() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			$joind
-			WHERE l.location_coordinates IS NOT NULL
+			WHERE (l.location_coordinates IS NOT NULL AND l.location_coordinates!='')
 				AND l.$search_field $operator :search
 				$addcountry
 				$addstate
@@ -975,7 +969,7 @@ function location_map() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			$joind
-			WHERE l.location_coordinates is not null
+			WHERE (l.location_coordinates IS NOT NULL AND l.location_coordinates!='')
 				$addcountry
 				$addstate
 				$extrad
@@ -986,10 +980,10 @@ function location_map() {
 	
 #print_r($locations);
 	
-	# Get only countries that we have locations for
+	# Get only countries that we have locations and location coordinates for
 	$stmt=db_prep("
 		SELECT *
-		FROM ( SELECT DISTINCT country_id FROM location) l
+		FROM ( SELECT DISTINCT country_id FROM location WHERE (location_coordinates IS NOT NULL AND location_coordinates!='') ) l
 		LEFT JOIN country c ON c.country_id=l.country_id
 		WHERE c.country_id!=0
 	");
@@ -997,14 +991,12 @@ function location_map() {
 	# Get only states that we have locations for
 	$stmt=db_prep("
 		SELECT *
-		FROM ( SELECT DISTINCT state_id FROM location) l
+		FROM ( SELECT DISTINCT state_id FROM location WHERE (location_coordinates IS NOT NULL AND location_coordinates!='') ) l
 		LEFT JOIN state s ON s.state_id=l.state_id
 		WHERE s.state_id!=0
 	");
 	$states=db_exec($stmt,array());
 	
-	$locations=show_pages($locations,25);
-
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
 	
