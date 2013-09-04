@@ -514,6 +514,32 @@ class Event {
 			}
 		}
 		
+		# ok, that was if they had any draws available, so lets check to see if we need to add pilots after that
+		if($this->info['event_type_code']=='f3k'){
+			$flight_type_id=$this->f3k_flight_type_id;
+			foreach($this->pilots as $event_pilot_id=>$p){
+				if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+					$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+				}
+			}
+			$this->rounds[$event_round_number]['event_round_id']=0;
+			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+		}else{
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				foreach($this->pilots as $event_pilot_id=>$p){
+					if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+						$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+					}
+				}
+				$this->rounds[$event_round_number]['event_round_id']=0;
+				$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+			}
+		}
+		
 		# Set the flyoff round default
 		if($_REQUEST['flyoff_round']==1){
 			$this->rounds[$event_round_number]['event_round_flyoff']=1;
