@@ -285,6 +285,7 @@ function check_permission() {ldelim}
 				{continue}
 			{/if}
 			{$cols=4}
+			{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group==1}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -302,6 +303,9 @@ function check_permission() {ldelim}
 				<th align="left">Pilot Name</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
+					{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group}
+						<th align="center">Order</th>
+					{/if}
 				{else}
 					<th align="center">Order</th>
 				{/if}
@@ -345,8 +349,9 @@ function check_permission() {ldelim}
 						<td align="center" nowrap>
 							<input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);">
 							<input type="hidden" name="pilot_lane_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_lane|escape}">
-						</td>					
-					{else}
+						</td>
+					{/if}
+					{if $ft.flight_type_code=='f3f_speed' || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
@@ -431,8 +436,9 @@ function check_permission() {ldelim}
 						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 					</td>
 						{if $ft.flight_type_group}
-							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_reflight_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>					
-						{else}
+							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_reflight_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>
+						{/if}				
+						{if $ft.flight_type_code=='f3f_speed' || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:20px;" name="pilot_reflight_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 						{/if}
 						{if $ft.flight_type_minutes || $ft.flight_type_seconds}

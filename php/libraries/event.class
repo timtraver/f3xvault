@@ -577,6 +577,7 @@ class Event {
 			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
 				$id=$r['flight_type_id'];
 				# Lets step through each of the options and set the accuracy for this flight type
+				# And whether or not an F3F event has groups
 				$code=$r['flight_type_code'];
 				foreach($this->options as $o){
 					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
@@ -584,6 +585,9 @@ class Event {
 					}
 					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3f_use_groups/",$o['event_type_option_code'])){
+						$r['flight_type_group']=$o['event_option_value'];
 					}
 				}
 				# if this is an f3k type, then lets set the subs array
