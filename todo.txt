@@ -10,6 +10,12 @@ GENERAL
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
 	
+IMPORTING EVENTS
+	Check import of F3F events, because one of Espens didn't work
+	Make import allow for numbers using commas instead of decimals
+	Make import parameter so that they can choose the field delimiter
+	Make it so that you can choose some of the import fields
+	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
 	
@@ -33,6 +39,7 @@ EVENT STUFF
 		and when adding new flyoff rounds, only those pilots are shown.
 
 	Draw
+		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother)
 		ability to print all three draw matrices on one page for f3b
 		Possible ability to have the speed round be the inverse order of the standings
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
@@ -72,6 +79,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Add menu item to create new event from menu
 X	Make sure f3kimport button doens't show up for anything but f3k
 X	Add plane records for F3F, F3B speed and Distance
 X	Recent events at locations
