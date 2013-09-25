@@ -3538,6 +3538,8 @@ function event_import_f3k() {
 		foreach($rawlines as $r){
 			$templine=trim($r);
 			$line_array=explode(",",$templine);
+			# trim each field
+			array_walk($line_array, create_function('&$val', '$val = trim($val);'));
 			$lines[]=array("fields"=>$line_array);
 			if(count($line_array)!=$should_have){
 				$ok=0;
