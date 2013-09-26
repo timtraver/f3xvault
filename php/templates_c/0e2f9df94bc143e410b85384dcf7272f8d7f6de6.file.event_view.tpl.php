@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-09-25 20:55:13
+<?php /* Smarty version Smarty-3.1.11, created on 2013-09-25 22:29:50
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1378190549,
+      1 => 1380173369,
       2 => 'file',
     ),
   ),
@@ -176,13 +176,13 @@ function check_permission() {
 }
 </script>
 
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
+<div class="page type-page status-publish hentry clearfix post nodate" id="1">
+	<div class="entry clearfix" id="2">                
 		<h1 class="post-title entry-title"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value->info['event_name'], ENT_QUOTES, 'UTF-8', true);?>
 
 			<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 		</h1>
-		<div class="entry-content clearfix">
+		<div class="entry-content clearfix" id="3">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Event Dates</th>
@@ -234,11 +234,11 @@ function check_permission() {
 		</table>
 		<br>
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){document.event_edit.submit();}" class="block-button">
-		</div>
-	</div>
-</div>
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+		</div><!-- end of 3 -->
+	</div><!-- end of 2 -->
+</div><!-- end of 1 -->
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="4">
+	<div class="entry clearfix" style="vertical-align:top;" id="5">                
 		<h1 class="post-title entry-title header_drop">Event Pilots <?php if ($_smarty_tpl->tpl_vars['event']->value->pilots){?>(<?php echo count($_smarty_tpl->tpl_vars['event']->value->pilots);?>
 )<?php }?> 
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('pilots',this);">Hide Pilots</span>
@@ -829,11 +829,11 @@ s<br>
 <?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&$_smarty_tpl->tpl_vars['user']->value['user_id']==$_smarty_tpl->tpl_vars['event']->value->info['user_id']||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1){?>
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 <?php }?>
-</div>
-</div>
+</div><!-- end of 5 -->
+</div><!-- end of 4 -->
 <?php if (count($_smarty_tpl->tpl_vars['event']->value->classes)>1||$_smarty_tpl->tpl_vars['event']->value->totals['teams']||$_smarty_tpl->tpl_vars['duration_rank']->value||$_smarty_tpl->tpl_vars['speed_rank']->value){?>
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="6">
+	<div class="entry clearfix" style="vertical-align:top;" id="7">                
 		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('rankings',this);">Show Rankings</span>
 		</h1>
@@ -1049,13 +1049,13 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 	<br>
 		<input type="button" value=" Print Event Rankings " onClick="print_rank.submit();" class="block-button">
 	</span>
-	</div>
-</div>
+	</div><!-- end of 7 -->
+</div><!-- end of 6 -->
 <?php }?>
 <!-- Lets figure out if there are reports for speed or laps -->
 <?php if ($_smarty_tpl->tpl_vars['lap_totals']->value||$_smarty_tpl->tpl_vars['speed_averages']->value||$_smarty_tpl->tpl_vars['top_landing']->value||count($_smarty_tpl->tpl_vars['event']->value->planes)>0){?>
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="8">
+	<div class="entry clearfix" style="vertical-align:top;" id="9">                
 		<h1 class="post-title entry-title header_drop">Event Statistics
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('stats',this);">Show Statistics</span>
 		</h1>
@@ -1301,8 +1301,8 @@ $_smarty_tpl->tpl_vars['event_pilot_id']->_loop = true;
 	<?php }?>
 	<br>
 	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
-	</div>
-</div>
+	</div><!-- end of 9 -->
+</div><!-- end of 8 -->
 <?php }?>
 
 <div id="print_round" style="overflow: hidden;">
@@ -1423,4 +1423,6 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 	 document.getElementById('pilots').style.display = 'block';
 	 document.getElementById('viewtoggle').innerHTML = 'Hide Pilots';
 </script>
-<?php }?><?php }} ?>
+<?php }?>
+
+<?php }} ?>

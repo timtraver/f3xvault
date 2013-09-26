@@ -105,12 +105,12 @@ function check_permission() {ldelim}
 {rdelim}
 </script>
 
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
+<div class="page type-page status-publish hentry clearfix post nodate" id="1">
+	<div class="entry clearfix" id="2">                
 		<h1 class="post-title entry-title">{$event->info.event_name|escape}
 			<input type="button" value=" Back To Event List " onClick="goback.submit();" class="block-button">
 		</h1>
-		<div class="entry-content clearfix">
+		<div class="entry-content clearfix" id="3">
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Event Dates</th>
@@ -147,11 +147,11 @@ function check_permission() {ldelim}
 		</table>
 		<br>
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
-		</div>
-	</div>
-</div>
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+		</div><!-- end of 3 -->
+	</div><!-- end of 2 -->
+</div><!-- end of 1 -->
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="4">
+	<div class="entry clearfix" style="vertical-align:top;" id="5">                
 		<h1 class="post-title entry-title header_drop">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} 
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('pilots',this);">Hide Pilots</span>
 		</h1>
@@ -568,11 +568,11 @@ function check_permission() {ldelim}
 {if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 <input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
 {/if}
-</div>
-</div>
+</div><!-- end of 5 -->
+</div><!-- end of 4 -->
 {if $event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank}
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="6">
+	<div class="entry clearfix" style="vertical-align:top;" id="7">                
 		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('rankings',this);">Show Rankings</span>
 		</h1>
@@ -734,13 +734,13 @@ function check_permission() {ldelim}
 	<br>
 		<input type="button" value=" Print Event Rankings " onClick="print_rank.submit();" class="block-button">
 	</span>
-	</div>
-</div>
+	</div><!-- end of 7 -->
+</div><!-- end of 6 -->
 {/if}
 <!-- Lets figure out if there are reports for speed or laps -->
 {if $lap_totals || $speed_averages || $top_landing || $event->planes|count>0}
-<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;">
-	<div class="entry clearfix" style="vertical-align:top;">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="8">
+	<div class="entry clearfix" style="vertical-align:top;" id="9">                
 		<h1 class="post-title entry-title header_drop">Event Statistics
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('stats',this);">Show Statistics</span>
 		</h1>
@@ -932,8 +932,8 @@ function check_permission() {ldelim}
 	{/if}
 	<br>
 	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
-	</div>
-</div>
+	</div><!-- end of 9 -->
+</div><!-- end of 8 -->
 {/if}
 
 <div id="print_round" style="overflow: hidden;">
@@ -1030,3 +1030,4 @@ function check_permission() {ldelim}
 	 document.getElementById('viewtoggle').innerHTML = 'Hide Pilots';
 </script>
 {/if}
+
