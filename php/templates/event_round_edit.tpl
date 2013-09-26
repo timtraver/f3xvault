@@ -6,12 +6,9 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
-{$flight_type_code=''}
-{$flight_type_subs=0}
-{foreach $event->rounds.$round_number.flights as $f}
-	{$flight_type_code=$f.flight_type_code}
-	{$flight_type_subs=$f.flight_type_sub_flights}
-{/foreach}
+{$flight_type_id=$event->rounds.$round_number.flight_type_id}
+{$flight_type_code=$flight_types.$flight_type_id.flight_type_code}
+{$flight_type_subs=$flight_types.$flight_type_id.flight_type_sub_flights}
 function save_data(element) {ldelim}
 	var event_round_score_status=document.main.elements["event_round_score_status"].checked ? 1 : 0;
 	{if $permission==1}
@@ -158,6 +155,8 @@ $(function() {ldelim}
 	});
 });
 {/literal}
+</script>
+<script>
 function check_permission() {ldelim}
 	{if $permission!=1}
 		alert('Sorry, but you do not have permission to edit this event. Contact the event owner if you need access to edit this event.');
@@ -275,6 +274,10 @@ function check_permission() {ldelim}
 			<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 		{/if}
 		<br>
+		
+		{if $event->info.event_type_code=='f3k' && $event_round_id==0}
+		</form>
+		{else}
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -502,7 +505,6 @@ function check_permission() {ldelim}
 			{/if}
 		{/foreach}
 		</table>
-
 		</form>
 <br>
 <input type="button" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
@@ -513,6 +515,9 @@ function check_permission() {ldelim}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 {/if}
 
+</div>
+
+{if $flight_types.$flight_type_id.flight_type_reflight==1}
 <div id="add_reflight" style="display: hidden;overflow: hidden;">
 		<form name="reflight" method="POST">
 		<input type="hidden" name="action" value="event">
@@ -534,9 +539,9 @@ function check_permission() {ldelim}
 		<br style="clear:both" />
 		</form>
 </div>
+{/if}
 
-
-</div>
+		{/if}
 
 <form name="sort_round" method="GET">
 <input type="hidden" name="action" value="event">

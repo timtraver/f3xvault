@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-28 01:43:20
+<?php /* Smarty version Smarty-3.1.11, created on 2013-09-25 20:55:13
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1377679394,
+      1 => 1378190549,
       2 => 'file',
     ),
   ),
@@ -66,9 +66,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_511ca3850d27c4_25618471')) {function content_511ca3850d27c4_25618471($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
-if (!is_callable('smarty_modifier_replace')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.replace.php';
 if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
 if (!is_callable('smarty_modifier_truncate')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.truncate.php';
+if (!is_callable('smarty_modifier_replace')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.replace.php';
 ?><script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
@@ -269,14 +269,18 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<tr>
 			<td><?php echo $_smarty_tpl->tpl_vars['num']->value;?>
 </td>
-			<td align="center"><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_ama'], ENT_QUOTES, 'UTF-8', true);?>
-</td>
+			<td align="center">
+				<?php if ($_smarty_tpl->tpl_vars['p']->value['pilot_fai']){?>
+					<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_fai'], ENT_QUOTES, 'UTF-8', true);?>
+
+				<?php }else{ ?>
+					<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_ama'], ENT_QUOTES, 'UTF-8', true);?>
+
+				<?php }?>
+			</td>
 			<td width="10" nowrap>
 				<?php if ($_smarty_tpl->tpl_vars['p']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" class="inline_flag" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['country_code'];?>
-"><?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['p']->value['state_name']&&$_smarty_tpl->tpl_vars['p']->value['country_code']=="US"){?><img src="/images/flags/states/16/<?php echo smarty_modifier_replace($_smarty_tpl->tpl_vars['p']->value['state_name'],' ','-');?>
--Flag-16.png" class="inline_flag" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['state_name'];?>
 "><?php }?>
 			</td>
 			<td>

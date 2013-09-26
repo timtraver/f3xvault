@@ -1308,10 +1308,12 @@ function event_round_edit() {
 		# We actually need to fill in the default round data for an empty round
 		$event->get_new_round($round_number);
 		if($event->info['event_type_code']=='f3k'){
-			$flight_type_id=$event->f3k_flight_type_id;
-			$new_flight_types=$flight_types[$flight_type_id];
-			$flight_types=array();
-			$flight_types[$flight_type_id]=$new_flight_types;
+			if($event->f3k_flight_type_id!=0){
+				$flight_type_id=$event->f3k_flight_type_id;
+				$new_flight_types=$flight_types[$flight_type_id];
+				$flight_types=array();
+				$flight_types[$flight_type_id]=$new_flight_types;
+			}
 		}
 		# Lets set the round to be scored or not depending on the zero choice
 		if($zero_round){
@@ -1556,6 +1558,16 @@ function event_round_save() {
 					}
 				}
 			}
+		}
+		# If there was a change of flight type, then lets update the flights
+		if($flight_type_id!=$ftype_id){
+			$stmt=db_prep("
+				UPDATE event_round_flight
+				SET flight_type_id=:flight_type_id,
+					event_round_flight_score=1
+				WHERE event_round_id=:event_round_id
+			");
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
 		}
 	}
 	sub_trace();
