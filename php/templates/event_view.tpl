@@ -576,6 +576,7 @@ function check_permission() {ldelim}
 		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('rankings',this);">Show Rankings</span>
 		</h1>
+		<br>
 	<span id="rankings" style="display: none;">
 	{if $event->classes|count > 1}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
@@ -744,6 +745,7 @@ function check_permission() {ldelim}
 		<h1 class="post-title entry-title header_drop">Event Statistics
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('stats',this);">Show Statistics</span>
 		</h1>
+		<br>
 	<span id="stats" style="display: none;">
 	{if $lap_totals}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
