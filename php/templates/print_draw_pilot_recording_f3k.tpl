@@ -26,7 +26,13 @@
 				</tr>
 				<tr>
 					<th width="80" height="20" align="right" nowrap bgcolor="lightgrey">Pilot</th>
-					<td height="20"><b>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</b></td>
+					<td height="20">
+						{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
+							<div class="pilot_bib_number_print">{$p.event_pilot_bib}</div>
+							&nbsp;
+						{/if}
+						<b>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</b>
+					</td>
 					<th width="80" height="20" align="right" nowrap bgcolor="lightgrey">Flight Group</th>
 					<td height="20" align="center">
 						<font size="+1"><b>{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}</b></font>

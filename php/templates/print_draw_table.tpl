@@ -42,7 +42,13 @@
 			{/if}
 		{/if}
 		<tr bgcolor="{$bgcolor}">
-			<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+			<td nowrap>
+				{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
+					<div class="pilot_bib_number_print">{$p.event_pilot_bib}</div>
+					&nbsp;
+				{/if}
+				{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+			</td>
 			<td>{$p.event_pilot_team|escape}</td>
 			{foreach $event->rounds as $r}
 				{if $event->info.event_type_code=="f3k"}
