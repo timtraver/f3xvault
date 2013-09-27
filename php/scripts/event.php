@@ -3154,10 +3154,27 @@ function event_import() {
 	# If the file is imported, lets get the content
 	$lines=array();
 	if($imported){
-		$rawlines=file($import_file);
+		$field_separator=$_REQUEST['field_separator'];
+		$decimal_type=$_REQUEST['decimal_type'];
+        $rawfile=file_get_contents($import_file);
+        if(preg_match("/\r\n/",$rawfile)){
+                # This file has a carriage return and line feed
+                $rawlines=explode("\r\n",$rawfile);
+        }elseif(preg_match("/\r/",$rawfile)){
+                # This file only has a carriage return
+                $rawlines=explode("\r",$rawfile);
+        }
 		foreach($rawlines as $r){
 			$templine=trim($r);
-			$line_array=explode(",",$templine);
+			if($r=='' || preg_match("/^\s+$/",$r)){
+				continue;
+			}
+			$line_array=explode($field_separator,$templine);
+			# Lets convert the commas into periods now
+			foreach($line_array as $key=>$la){
+				$temp=preg_replace("/\,/",'.',$la);
+				$line_array[$key]=$temp;
+			}
 			# Lets see what the columns are
 			$lines[]=$line_array;
 		}

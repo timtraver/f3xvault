@@ -9,6 +9,7 @@
 {$flight_type_id=$event->rounds.$round_number.flight_type_id}
 {$flight_type_code=$flight_types.$flight_type_id.flight_type_code}
 {$flight_type_subs=$flight_types.$flight_type_id.flight_type_sub_flights}
+{if $flight_type_subs==''}{$flight_type_subs=0}{/if}
 function save_data(element) {ldelim}
 	var event_round_score_status=document.main.elements["event_round_score_status"].checked ? 1 : 0;
 	{if $permission==1}
@@ -275,7 +276,7 @@ function check_permission() {ldelim}
 		{/if}
 		<br>
 		
-		{if $event->info.event_type_code=='f3k' && $event_round_id==0}
+		{if $event->info.event_type_code=='f3k' && $event_round_id==0 && !$event->rounds.$round_number.flights.$flight_type_id.pilots}
 		</form>
 		{else}
 		

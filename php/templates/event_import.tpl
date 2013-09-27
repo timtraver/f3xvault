@@ -71,6 +71,20 @@
 		</td>
 	</tr>
 	<tr>
+		<th>Import Field Separator</th>
+		<td>
+			<input type="radio" name="field_separator" value="," CHECKED> Comma or 
+			<input type="radio" name="field_separator" value=";"> Semicolon 
+		</td>
+	</tr>
+	<tr>
+		<th>Decimal Type</th>
+		<td>
+			<input type="radio" name="decimal_type" value="." CHECKED> Period or 
+			<input type="radio" name="decimal_type" value=","> Comma 
+		</td>
+	</tr>
+	<tr>
 		<td colspan="2">
 			<input type="button" value=" Back To Event Edit " class="block-button" onClick="goback.submit();">
 			<input type="submit" value=" Submit Initial Import File " class="block-button">
