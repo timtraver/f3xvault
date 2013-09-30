@@ -9,11 +9,9 @@ GENERAL
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
+	Take the password anti save protection off the site
 	
 IMPORTING EVENTS
-\	Check import of F3F events, because one of Espens didn't work
-	Make import allow for numbers using commas instead of decimals
-	Make import parameter so that they can choose the field delimiter
 	Make it so that you can choose some of the import fields
 	
 LOCATION STUFF
@@ -26,8 +24,18 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
-	Make F3J able to choose time, because some round can be 15 min instead of 10 min
+	Full registration system to allow pilots to sign up
+		Settings for registration period opening and closing
+		Options for payment (i.e. paypal or check)
+		UI for users when they sign up to choose a team
+		Ability for registered users to log back in and change their registered team
 		
+X	Make F3J able to choose time, because some round can be 15 min instead of 10 min
+	Make a system to do drops on different times for f3j
+	
+	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
+	System to choose at random the reflight pilots	
+	
 	F3B individual pilot graphs for speed, duration, and distance
 	
 	Don't allow the user to select the sort type until after the round is saved
@@ -79,6 +87,9 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Check import of F3F events, because one of Espens didn't work
+X	Make import allow for numbers using commas instead of decimals
+X	Make import parameter so that they can choose the field delimiter
 X	Add menu item to create new event from menu
 X	Make sure f3kimport button doens't show up for anything but f3k
 X	Add plane records for F3F, F3B speed and Distance

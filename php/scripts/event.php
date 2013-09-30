@@ -1315,6 +1315,9 @@ function event_round_edit() {
 				$flight_types[$flight_type_id]=$new_flight_types;
 			}
 		}
+		if($event->info['event_type_code']=='f3j'){
+			$event->rounds[$round_number]['event_round_time_choice']=10;
+		}
 		# Lets set the round to be scored or not depending on the zero choice
 		if($zero_round){
 			$event->rounds[$round_number]['event_round_score_status']=0;

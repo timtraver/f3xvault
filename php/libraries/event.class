@@ -807,6 +807,7 @@ class Event {
 						}
 						break;
 					case 'td_duration':
+					case 'f3j_duration':
 						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60*$second_value;
 						if($raw>$round_max_seconds){
 							$raw=$round_max_seconds-abs($round_max_seconds-$raw);
