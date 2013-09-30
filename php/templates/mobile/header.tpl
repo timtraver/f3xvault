@@ -3,7 +3,7 @@
 	<head>
 		<title>F3X Vault</title>
 		<!--Declare page as mobile friendly --> 
-		<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0"/>
+		<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=5.0"/>
 		<!-- Declare page as iDevice WebApp friendly -->
 		<meta name="apple-mobile-web-app-capable" content="yes"/>
 		<!-- iDevice WebApp Splash Screen, Regular Icon, iPhone, iPad, iPod Retina Icons -->
