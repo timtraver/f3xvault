@@ -1617,6 +1617,8 @@ function event_round_save() {
 			if($value=='on'){
 				$value=1;
 			}
+			# Replace commas with periods
+			$value=preg_replace("/,/",'.',$value);
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 			$data[$event_pilot_round_flight_id]['reflight']=1;
 		}elseif(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
@@ -1627,6 +1629,7 @@ function event_round_save() {
 			if($value=='on'){
 				$value=1;
 			}
+			$value=preg_replace("/,/",'.',$value);
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
@@ -2177,6 +2180,7 @@ function save_individual_flight(){
 		if($field_value=='on'){
 			$field_value=1;
 		}
+		$field_value=preg_replace("/,/",'.',$field_value);
 	}
 
 	# Lets determine if we need to create a new event round record first

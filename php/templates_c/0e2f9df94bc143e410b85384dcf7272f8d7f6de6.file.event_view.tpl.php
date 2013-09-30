@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-09-25 22:29:50
+<?php /* Smarty version Smarty-3.1.11, created on 2013-09-29 22:05:29
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1380173369,
+      1 => 1380517480,
       2 => 'file',
     ),
   ),
@@ -837,6 +837,7 @@ s<br>
 		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('rankings',this);">Show Rankings</span>
 		</h1>
+		<br>
 	<span id="rankings" style="display: none;">
 	<?php if (count($_smarty_tpl->tpl_vars['event']->value->classes)>1){?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
@@ -1059,6 +1060,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 		<h1 class="post-title entry-title header_drop">Event Statistics
 			<span id="viewtoggle" style="float: right;font-size: 22px;vertical-align: middle;padding-right: 4px;" onClick="toggle('stats',this);">Show Statistics</span>
 		</h1>
+		<br>
 	<span id="stats" style="display: none;">
 	<?php if ($_smarty_tpl->tpl_vars['lap_totals']->value){?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;">                
