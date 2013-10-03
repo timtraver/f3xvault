@@ -2885,11 +2885,6 @@ function event_draw_print() {
 	$print_type=$_REQUEST['print_type'];
 	$print_format=$_REQUEST['print_format'];
 
-	$e=new Event($event_id);
-	$e->get_teams();
-	$e->get_rounds();
-	$e->get_draws();
-
 	$template='';
 	$title='';
 	$orientation='P';
@@ -2917,6 +2912,12 @@ function event_draw_print() {
 			$orientation="P";
 			$sort_by='team';
 			break;
+		case "f3b_table":
+			$template="print_draw_f3b_table.tpl";
+			$title="Draw Table";
+			$orientation="P";
+			$sort_by='team';
+			break;
 		case "matrix":
 		default :
 			$template="print_draw_matrix.tpl";
@@ -2926,6 +2927,11 @@ function event_draw_print() {
 			break;
 	}
 	$_REQUEST['sort_by']=$sort_by;
+	
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->get_draws();
 
 	
 	# Lets get the draw round flight types if there are any

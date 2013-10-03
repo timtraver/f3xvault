@@ -1,6 +1,8 @@
 templates_c
 .DS_Store
 /php/libraries/query_errors.log
+/php/libraries/sessionlog.txt
 query_errors.log
 /debug
-/htdocs/images/location_images/2006/
+/htdocs/images/
+/htdocs/test2.html

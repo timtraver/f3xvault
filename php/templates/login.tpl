@@ -4,7 +4,7 @@
 <h1 class="post-title entry-title">F3X Vault User Login</h1>
 <br \>
 <center>
-<form name="login" method="POST" autocomplete="off">
+<form name="login" method="POST">
 <input type="hidden" name="action" value="main">
 <input type="hidden" name="function" value="user_login">
 <table width="30%" cellpadding="2" cellspacing="1">
@@ -26,7 +26,7 @@
 	<tr>
 		<th valign="top">Password</th>
 		<td>
-			<input type="password" name="password" size="30" class="text" autocomplete="off"><br>
+			<input type="password" name="password" size="30" class="text"><br>
 			<a href="?action=main&function=forgot">Forgot your password?</a>
 		</td>
 	</tr>

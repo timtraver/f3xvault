@@ -9,7 +9,6 @@ GENERAL
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
-	Take the password anti save protection off the site
 	
 IMPORTING EVENTS
 	Make it so that you can choose some of the import fields
@@ -30,13 +29,10 @@ EVENT STUFF
 		UI for users when they sign up to choose a team
 		Ability for registered users to log back in and change their registered team
 		
-X	Make F3J able to choose time, because some round can be 15 min instead of 10 min
 	Make a system to do drops on different times for f3j
 	
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 	System to choose at random the reflight pilots	
-	
-	F3B individual pilot graphs for speed, duration, and distance
 	
 	Don't allow the user to select the sort type until after the round is saved
 
@@ -48,15 +44,14 @@ X	Make F3J able to choose time, because some round can be 15 min instead of 10 m
 
 	Draw
 		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother)
-		ability to print all three draw matrices on one page for f3b
 		Possible ability to have the speed round be the inverse order of the standings
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
-
+		When applying draw, ask if they want to overwrite existing or just new rounds
+		
 	For F3K events
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
 		Maybe stats for MOM percentage
-		graph on pilot page
 		
 	When Tied, figure out position from drops
 	In position chart, show another one for flyoff rounds
@@ -87,6 +82,11 @@ MOBILE STUFF
 
 COMPLETED
  
+X		graph on f3k pilot page
+X		ability to print all three draw matrices on one page for f3b
+X	Make F3J able to choose time, because some round can be 15 min instead of 10 min
+X	Take the password anti save protection off the site
+X	F3B individual pilot graphs for speed, duration, and distance
 X	Check import of F3F events, because one of Espens didn't work
 X	Make import allow for numbers using commas instead of decimals
 X	Make import parameter so that they can choose the field delimiter

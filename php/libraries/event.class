@@ -67,6 +67,9 @@ class Event {
 			case 'alphabetical_last':
 				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
 				break;
+			case 'team':
+				$sort_string='ORDER BY ep.event_pilot_team';
+				break;
 			case 'flight_order':
 			case 'round_rank':
 			case 'entry_order':
