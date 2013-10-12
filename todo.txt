@@ -23,6 +23,9 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
+	Calendar System
+		Full integrated calendar system to show upcoming events using google's calendar api
+		Create calendar events as different colors for the different types
 	Full registration system to allow pilots to sign up
 		Settings for registration period opening and closing
 		Options for payment (i.e. paypal or check)
@@ -67,9 +70,10 @@ PILOTS STUFF
 	
 SERIES STUFF
 	print series pilot detail view
+	Different scoring possibilities (position based instead of score based)
 	
 OTHER STUFF
-	Put a "Send This Pilot a Message" button on the pilot view screen
+	Put a "Send This Pilot a Message" button on the pilot view screen if that pilot has an account or an email address on file
 	Add Events and Series to club view screen
  
 MOBILE STUFF
