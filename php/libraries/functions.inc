@@ -417,7 +417,7 @@ function logsession($string){
 function create_fsession($path,$host){
         $time=microtime();
         $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
-        setcookie('fsid',$cookie_string,0,$path,$host,FALSE,TRUE);
+        setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
         $GLOBALS['fsid']=$cookie_string;
         # Create the session record in the database
         $stmt=db_prep("

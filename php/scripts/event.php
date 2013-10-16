@@ -359,6 +359,8 @@ function event_view() {
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 	
+	log_action($event_id);
+	
 	# Save the current event id in the fsession for mobile ease of use
 	$GLOBALS['fsession']['current_event_id']=$event_id;
 	
