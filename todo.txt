@@ -86,6 +86,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Edit Pilot info
 X		graph on f3k pilot page
 X		ability to print all three draw matrices on one page for f3b
 X	Make F3J able to choose time, because some round can be 15 min instead of 10 min

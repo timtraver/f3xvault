@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-18 15:08:36
+<?php /* Smarty version Smarty-3.1.11, created on 2013-10-21 14:25:13
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1376863373,
+      1 => 1382390711,
       2 => 'file',
     ),
   ),
@@ -43,8 +43,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
-if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
+<?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
 if (!is_callable('smarty_modifier_replace')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.replace.php';
 ?><div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -127,6 +126,11 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 </table>
 </form>
 <br>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightblue;float:left;text-align:center;">Future Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightgreen;float:left;text-align:center;">Current Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
+
+<br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
 	<th colspan="7" style="text-align: left;">Events (records <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['startrecord']->value, ENT_QUOTES, 'UTF-8', true);?>
@@ -162,8 +166,7 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 foreach ($_from as $_smarty_tpl->tpl_vars['event']->key => $_smarty_tpl->tpl_vars['event']->value){
 $_smarty_tpl->tpl_vars['event']->_loop = true;
 ?>
-<tr bgcolor="<?php echo smarty_function_cycle(array('values'=>"#FFFFFF,#E8E8E8"),$_smarty_tpl);?>
-">
+<tr style="background:<?php if ($_smarty_tpl->tpl_vars['event']->value['time_status']==2){?>lightblue<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==1){?>lightgreen<?php }else{ ?>white<?php }?>;">
 	<td><?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_start_date'],"%Y-%m-%d");?>
 </td>
 	<td>

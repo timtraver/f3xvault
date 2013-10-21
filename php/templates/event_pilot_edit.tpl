@@ -107,6 +107,8 @@ function change_pilot(){ldelim}
 	pilot_search.style.display = "inline";
 	var change_pilot_button=document.getElementById('change_pilot_button');
 	change_pilot_button.style.display = "none";
+	var change_pilot_info_button=document.getElementById('change_pilot_info_button');
+	change_pilot_info_button.style.display = "none";
 	var pilot_message=document.getElementById('pilot_message');
 	pilot_message.style.display = "inline";
 {rdelim}
@@ -123,6 +125,7 @@ function change_pilot(){ldelim}
 <input type="hidden" name="event_pilot_id" value="{$pilot.event_pilot_id}">
 <input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
 <input type="hidden" name="plane_id" value="{$pilot.plane_id}">
+<input type="hidden" name="event_pilot_edit" value="1">
 <table width="100%" cellpadding="2" cellspacing="2" class="tableborder">
 <tr>
 	<th colspan="3">Event Pilot Information</th>
@@ -204,6 +207,7 @@ function change_pilot(){ldelim}
 			<span id="pilot_message" style="font-style: italic;color: grey;display: none;">Start typing to search pilots</span>
 		</span>
 		<input type="button" id="change_pilot_button" value=" Change Pilot " class="button" onClick="change_pilot();">
+		<input type="button" id="change_pilot_info_button" value=" Edit Pilot Info " class="button" onClick="edit_pilot.submit();">
 	</td>
 </tr>
 <tr>
@@ -305,6 +309,12 @@ function change_pilot(){ldelim}
 <input type="hidden" name="from_event_pilot_freq" value="">
 <input type="hidden" name="from_event_pilot_team" value="">
 <input type="hidden" name="from_event_pilot_bib" value="">
+</form>
+<form name="edit_pilot" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_pilot_edit_pilot">
+<input type="hidden" name="event_id" value="{$event_id}">
+<input type="hidden" name="event_pilot_id" value="{$pilot.event_pilot_id}">
 </form>
 
 </div>

@@ -265,6 +265,19 @@ function event_list() {
 	
 	$events=show_pages($events,25);
 
+	# Lets set a flag to show if this event is happening now, or is in the future
+	$now=time();
+	foreach($events as $key=>$e){
+		$event_from=strtotime($e['event_start_date']);
+		$event_to=strtotime($e['event_end_date'])+86359;
+		if($event_from <$now && $event_to>$now){
+			$events[$key]['time_status']=1;
+		}elseif($event_from>$now){
+			$events[$key]['time_status']=2;
+		}else{
+			$events[$key]['time_status']=0;
+		}
+	}
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
 	
@@ -272,6 +285,7 @@ function event_list() {
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("now",time());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
@@ -611,25 +625,29 @@ function event_pilot_edit() {
 	$pilot_id=intval($_REQUEST['pilot_id']);
 	$pilot_name=$_REQUEST['pilot_name'];
 
+	$event_pilot_edit=$_REQUEST['event_pilot_edit'];
+
 	$event=new Event($event_id);
 	$event->get_teams();
 	$smarty->assign("event",$event);
-	
-	# Check to see if the pilot already exists in this event
-	$stmt=db_prep("
-		SELECT *
-		FROM event_pilot ep
-		WHERE ep.event_id=:event_id
-			AND ep.pilot_id=:pilot_id
-			AND ep.event_pilot_status=1
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
-	if(isset($result[0])){
-		# The record already exists, so lets see if it has its status to 1 or not
-		user_message("The Pilot you have chosen to add is already in this event.",1);
-		return event_view();
-	}
 
+	if($event_pilot_edit==0){
+		# If this is not a return edit to this event pilot
+		# Check to see if the pilot already exists in this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			WHERE ep.event_id=:event_id
+				AND ep.pilot_id=:pilot_id
+				AND ep.event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		if(isset($result[0])){
+			# The record already exists, so lets see if it has its status to 1 or not
+			user_message("The Pilot you have chosen to add is already in this event.",1);
+			return event_view();
+		}
+	}
 	$pilot=array();
 
 	# If the event_pilot_id is zero and the pilot_id is zero, then we are making a new pilot
@@ -1024,6 +1042,78 @@ function event_pilot_save() {
 	log_action($event_pilot_id);
 	user_message("Updated event pilot info.");
 	return event_view();
+}
+function event_pilot_edit_pilot() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+
+	$event=new Event($event_id);
+	$event->get_teams();
+	$smarty->assign("event",$event);
+
+	$pilot=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	$pilot=$result[0];
+	
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+
+	$smarty->assign("pilot",$pilot);
+	$smarty->assign("event_id",$event_id);
+	$smarty->assign("event_pilot_id",$event_pilot_id);
+
+	$maintpl=find_template("event_pilot_edit_pilot.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_pilot_save_pilot() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
+	$pilot_email=$_REQUEST['pilot_email'];
+
+	# OK, lets save the pilot changes and go back to the event pilot edit
+	$stmt=db_prep("
+		UPDATE pilot
+		SET pilot_first_name=:pilot_first_name,
+			pilot_last_name=:pilot_last_name,
+			pilot_city=:pilot_city,
+			state_id=:state_id,
+			country_id=:country_id,
+			pilot_email=:pilot_email,
+			pilot_ama=:pilot_ama,
+			pilot_fai=:pilot_fai
+			WHERE pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"pilot_first_name"=>$pilot_first_name,
+		"pilot_last_name"=>$pilot_last_name,
+		"pilot_city"=>$pilot_city,
+		"state_id"=>$state_id,
+		"country_id"=>$country_id,
+		"pilot_email"=>$pilot_email,
+		"pilot_ama"=>$pilot_ama,
+		"pilot_fai"=>$pilot_fai,
+		"pilot_id"=>$pilot_id
+	));
+	user_message("Updated Pilot Info");
+	return event_pilot_edit();
 }
 function event_pilot_remove() {
 	global $smarty;

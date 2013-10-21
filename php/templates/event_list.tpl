@@ -60,6 +60,11 @@
 </table>
 </form>
 <br>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightblue;float:left;text-align:center;">Future Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightgreen;float:left;text-align:center;">Current Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
+
+<br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
 	<th colspan="7" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
@@ -85,7 +90,7 @@
 	<th style="text-align: center;">Map</th>
 </tr>
 {foreach $events as $event}
-<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
+<tr style="background:{if $event.time_status==2}lightblue{elseif $event.time_status==1}lightgreen{else}white{/if};">
 	<td>{$event.event_start_date|date_format:"%Y-%m-%d"}</td>
 	<td>
 		<a href="?action=event&function=event_view&event_id={$event.event_id|escape}">{$event.event_name|escape}</a>
