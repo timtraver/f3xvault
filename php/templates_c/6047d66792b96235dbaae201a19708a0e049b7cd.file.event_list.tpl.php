@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-10-21 14:25:13
+<?php /* Smarty version Smarty-3.1.11, created on 2013-10-21 15:26:38
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1382390711,
+      1 => 1382394393,
       2 => 'file',
     ),
   ),
@@ -128,6 +128,7 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 <br>
 <div style="border-style:solid;border-width:1px;width:110px;background:lightblue;float:left;text-align:center;">Future Event</div>
 <div style="border-style:solid;border-width:1px;width:110px;background:lightgreen;float:left;text-align:center;">Current Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:#C8F7C8;float:left;text-align:center;">Recent Event</div>
 <div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
 
 <br>
@@ -166,7 +167,7 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 foreach ($_from as $_smarty_tpl->tpl_vars['event']->key => $_smarty_tpl->tpl_vars['event']->value){
 $_smarty_tpl->tpl_vars['event']->_loop = true;
 ?>
-<tr style="background:<?php if ($_smarty_tpl->tpl_vars['event']->value['time_status']==2){?>lightblue<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==1){?>lightgreen<?php }else{ ?>white<?php }?>;">
+<tr style="background:<?php if ($_smarty_tpl->tpl_vars['event']->value['time_status']==2){?>lightblue<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==1){?>lightgreen<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==0){?>#C8F7C8<?php }else{ ?>white<?php }?>;">
 	<td><?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_start_date'],"%Y-%m-%d");?>
 </td>
 	<td>

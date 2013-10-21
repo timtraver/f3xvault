@@ -270,12 +270,14 @@ function event_list() {
 	foreach($events as $key=>$e){
 		$event_from=strtotime($e['event_start_date']);
 		$event_to=strtotime($e['event_end_date'])+86359;
-		if($event_from <$now && $event_to>$now){
-			$events[$key]['time_status']=1;
-		}elseif($event_from>$now){
+		if($event_from>$now){
 			$events[$key]['time_status']=2;
-		}else{
+		}elseif($event_from <$now && $event_to>$now){
+			$events[$key]['time_status']=1;
+		}elseif($now>$event_to && $now-$event_to<604800){
 			$events[$key]['time_status']=0;
+		}else{
+			$events[$key]['time_status']=-1;
 		}
 	}
 	# Lets reset the discipline for the top bar if needed
