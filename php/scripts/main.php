@@ -123,7 +123,7 @@ function main_feedback_save() {
 	global $smarty;
 	global $user;
 	
-	$from_email=$_REQUEST['email_address'];
+	$email_address=$_REQUEST['email_address'];
 	$feedback_string=$_REQUEST['feedback_string'];
 	# Get admin user id
 	$stmt=db_prep("
