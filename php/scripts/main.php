@@ -123,6 +123,7 @@ function main_feedback_save() {
 	global $smarty;
 	global $user;
 	
+	$from_email=$_REQUEST['email_address'];
 	$feedback_string=$_REQUEST['feedback_string'];
 	# Get admin user id
 	$stmt=db_prep("
@@ -153,6 +154,7 @@ function main_feedback_save() {
 	
 	$data=$user;
 	$data['feedback_string']=$feedback_string;
+	$data['email_address']=$email_address;
 	
 	send_email('feedback',array('timtraver@gmail.com'),$data);
 	user_message("Thank You for your comments and suggestions!");

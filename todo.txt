@@ -32,12 +32,12 @@ EVENT STUFF
 		UI for users when they sign up to choose a team
 		Ability for registered users to log back in and change their registered team
 		
+	For F3J, make flyoff rounds 15 minute rounds
 	Make a system to do drops on different times for f3j
 	
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
-	System to choose at random the reflight pilots	
+	System to choose at random the reflight pilots to fill out a group
 	
-	Don't allow the user to select the sort type until after the round is saved
 
 	Have a setting for top X teammates to be used in the team standings
 	Mark a competitor to be available to the draw
@@ -86,6 +86,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	Don't allow the user to select the sort type until after the round is saved
 X	When deleting a round in between rounds, it gets rid of all the other rounds...
 X	Edit Pilot info
 X		graph on f3k pilot page

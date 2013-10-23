@@ -219,7 +219,7 @@ function save_registration(){
 	$_REQUEST['function']='';
 	
 	log_action($user['user_id']);
-	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process!");
+	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process! (Check any spam folders just in case)");
 	
 	send_registration_email($user['user_id']);
 	$user=array();
