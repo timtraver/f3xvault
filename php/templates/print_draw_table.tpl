@@ -13,7 +13,7 @@
 		</table>
 		{$bgcolor="lightgray"}
 		{$oldteam="nada"}
-		<h2 class="post-title entry-title">Pilot Matrix List - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
+		<h2 class="post-title entry-title">Pilot Matrix List{if $event->info.event_type_code!="f3k"} - {$event->flight_types.$flight_type_id.flight_type_name}{/if}</h2>		
 		<table width="550" cellpadding="3" cellspacing="1" style="border: 1px solid black;">
 		<tr bgcolor="lightgray">
 			<th width="250" colspan="2"></th>

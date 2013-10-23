@@ -271,7 +271,7 @@ function check_permission() {ldelim}
 		<br>
 		<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
 		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-		{if $event_round_id !=0 && $permission==1}
+		{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 			<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 		{/if}
 		<br>
@@ -308,10 +308,10 @@ function check_permission() {ldelim}
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
 					{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group}
-						<th align="center">Order</th>
+						<th align="center">Flight Order</th>
 					{/if}
 				{else}
-					<th align="center">Order</th>
+					<th align="center">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
@@ -512,7 +512,7 @@ function check_permission() {ldelim}
 <input type="button" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="block-button">
 <input type="button" value=" Print Round Detail " onClick="document.printround.submit();" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-{if $event_round_id !=0 && $permission==1}
+{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 {/if}
 

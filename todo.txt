@@ -86,6 +86,7 @@ MOBILE STUFF
 
 COMPLETED
  
+X	When deleting a round in between rounds, it gets rid of all the other rounds...
 X	Edit Pilot info
 X		graph on f3k pilot page
 X		ability to print all three draw matrices on one page for f3b

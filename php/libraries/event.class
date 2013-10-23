@@ -229,6 +229,7 @@ class Event {
 			$rounds[$event_round_number]['event_round_id']=$round['event_round_id'];
 			$rounds[$event_round_number]['event_id']=$round['event_id'];
 			$rounds[$event_round_number]['event_round_number']=$round['event_round_number'];
+			$rounds[$event_round_number]['last_round']=0;
 			$rounds[$event_round_number]['flight_type_id']=$round['flight_type_id'];
 			$rounds[$event_round_number]['event_round_time_choice']=$round['event_round_time_choice'];
 			$rounds[$event_round_number]['event_round_score_status']=$round['event_round_score_status'];
@@ -240,6 +241,7 @@ class Event {
 			$rounds[$event_round_number]['reflights'][$flight_type_id]=$this->flight_types[$flight_type_id];
 			$rounds[$event_round_number]['reflights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
 		}
+		$rounds[$event_round_number]['last_round']=1;
 		$this->rounds=$rounds;
 		
 		# Lets get all of the flights for each round in one query and then step through them
