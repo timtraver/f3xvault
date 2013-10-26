@@ -928,7 +928,7 @@ class Event {
 	function calculate_event_totals(){
 		# Function to calculate the subtotals and totals per pilot for an event
 		
-		if(count($this->rounds)==0){
+		if(count($this->rounds)==0 || count($this->pilots)==0){
 			return;
 		}
 		$subtotals=array();
