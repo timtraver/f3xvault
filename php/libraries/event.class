@@ -241,7 +241,9 @@ class Event {
 			$rounds[$event_round_number]['reflights'][$flight_type_id]=$this->flight_types[$flight_type_id];
 			$rounds[$event_round_number]['reflights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
 		}
-		$rounds[$event_round_number]['last_round']=1;
+		if(count($rounds)!=0){
+			$rounds[$event_round_number]['last_round']=1;
+		}
 		$this->rounds=$rounds;
 		
 		# Lets get all of the flights for each round in one query and then step through them
