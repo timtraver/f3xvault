@@ -19,7 +19,7 @@
 					<td><a href="?action=admin&function=admin_email_edit&email_id={$e.email_id}">{$e.email_subject}</a></td>
 					<td>
 					<input type="button" value="Send Email To All" class="button"
-					 onClick="document.sendmail_all.email_name.value={$e.email_name};document.sendmail_all.submit();">
+					 onClick="document.sendmail_all.email_name.value='{$e.email_name}';document.sendmail_all.submit();">
 					<input type="button" value="Send Email Test" class="button"
 					 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail_one.email_to.value=sendto;document.sendmail_one.email_name.value='{$e.email_name}';if(sendto!=null) document.sendmail_one.submit();">
 					</td>
