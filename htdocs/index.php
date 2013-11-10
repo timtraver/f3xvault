@@ -21,6 +21,7 @@ global $device;
 global $trace;
 global $trace_on;
 global $start_time;
+global $system_flags;
 
 $start_time=microtime(true);
 
@@ -66,6 +67,9 @@ if($device=='phone'){
 	$GLOBALS['include_paths']['templates']="{$GLOBALS['include_paths']['base']}/php/templates/mobile";
 	$GLOBALS['template_dir']=$GLOBALS['include_paths']['templates'];
 }
+
+# Load system flags
+get_global_flags();
 
 # Main control
 
@@ -144,6 +148,10 @@ $smarty->assign("user",$user);
 $smarty->assign("function",$_REQUEST['function']);
 $smarty->assign("disc",$disc);
 $smarty->assign("device",$device);
+# Put system flags into smarty for templates
+foreach($GLOBALS['system_flags'] as $flags){
+	$smarty->assign($flags['system_flag_name'],$flags['system_flag_value']);
+}
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
         include("{$GLOBALS['scripts_dir']}/$action.php");

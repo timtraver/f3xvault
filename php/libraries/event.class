@@ -18,6 +18,7 @@ class Event {
 	var $totals=array();
 	var $flyoff_totals=array();
 	var $options=array();
+	var $reg_options=array();
 	var $classes=array();
 	var $flight_types=array();
 	var $draws=array();
@@ -42,12 +43,14 @@ class Event {
 			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
 			LEFT JOIN series se ON e.series_id=se.series_id
 			LEFT JOIN club cl ON e.club_id=cl.club_id
+			LEFT JOIN currency cu ON e.currency_id=cu.currency_id
 			WHERE e.event_id=:event_id
 		");
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
 		$this->info=$result[0];
 		
 		$this->get_options();
+		$this->get_reg_options();
 		$this->get_pilots();
 		$this->get_flight_types();
 		
@@ -163,7 +166,23 @@ class Event {
 		}
 		return $value;
 	}
-	
+	function get_reg_options(){
+		# Now lets get the event registration options
+		$reg_options=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_reg_param erp
+			WHERE erp.event_id=:event_id
+			AND erp.event_reg_param_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $r){
+			$event_reg_param_id=$r['event_reg_param_id'];
+			$reg_options[$event_reg_param_id]=$r;
+		}
+		$this->reg_options=$reg_options;
+		return;
+	}
 	function get_rounds(){
 		sub_trace();
 		if(isset($_REQUEST['sort_by'])){

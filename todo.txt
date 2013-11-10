@@ -3,7 +3,7 @@ Todo list for f3xvault project
 = before launch
 
 GENERAL
-    
+    Make a PayPal donate button
 =	Send welcome email once registered and save it as their first message
 	Create a "Using this site" kind of tutorial instructions with free screen recorder! ;)
 	Create a "send location" link to a buddy
@@ -23,21 +23,18 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
+	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
 	Calendar System
 		Full integrated calendar system to show upcoming events using google's calendar api
 		Create calendar events as different colors for the different types
-	Full registration system to allow pilots to sign up
-		Settings for registration period opening and closing
-		Options for payment (i.e. paypal or check)
-		UI for users when they sign up to choose a team
-		Ability for registered users to log back in and change their registered team
-		
+	Registration Email creation
+	
+	
 	For F3J, make flyoff rounds 15 minute rounds
 	Make a system to do drops on different times for f3j
 	
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 	System to choose at random the reflight pilots to fill out a group
-	
 
 	Have a setting for top X teammates to be used in the team standings
 	Mark a competitor to be available to the draw
@@ -85,7 +82,15 @@ MOBILE STUFF
 
 
 COMPLETED
- 
+X	Full registration system to allow pilots to sign up
+X		Settings for registration period opening and closing
+X		Options for payment (i.e. paypal or check)
+X		UI for users when they sign up to choose a team
+X		Ability for registered users to log back in and change their registered team
+X		After Registration, send email with full event info
+X		Have registration parameters in the event_pilot edit screens so the CD can see what they requested, and set if they paid
+X	Registration reports to show who has paid and the registered totals
+
 X	Don't allow the user to select the sort type until after the round is saved
 X	When deleting a round in between rounds, it gets rid of all the other rounds...
 X	Edit Pilot info

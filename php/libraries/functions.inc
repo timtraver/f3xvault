@@ -818,4 +818,31 @@ function convert_coordinates($string){
 	}
 	return "$lat,$lon";
 }
+function get_global_flags(){
+	global $system_flags;
+
+	# Get the system flags to include in the global space
+	$system_flags=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM system_flag
+	");
+	$result=db_exec($stmt,array());
+	foreach($result as $r){
+		$name=$r['system_flag_name'];
+		$system_flags[$name]=$r;
+	}
+	return;
+}
+function get_currencies(){
+	# Function to get currency list
+	$stmt=db_prep("
+		SELECT *
+		FROM currency
+		ORDER BY currency_order
+	");
+	$currencies=db_exec($stmt,array());
+	return $currencies;
+}
+
 ?>

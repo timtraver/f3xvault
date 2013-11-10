@@ -112,6 +112,29 @@ function change_pilot(){ldelim}
 	var pilot_message=document.getElementById('pilot_message');
 	pilot_message.style.display = "inline";
 {rdelim}
+function calc_totals(){ldelim}
+	var total=0;
+{foreach $event->reg_options as $r}
+	{if $r.event_reg_param_mandatory==1}
+		var qty_{$r.event_reg_param_id} = 1;
+	{else}
+		var qty_{$r.event_reg_param_id} = 0;
+		{if $r.event_reg_param_qty_flag!=1}
+			if(document.main.event_reg_param_{$r.event_reg_param_id}_qty.checked==true){ldelim}
+				var qty_{$r.event_reg_param_id} = 1;
+			{rdelim}
+		{else}
+			var qty_{$r.event_reg_param_id} = document.main.event_reg_param_{$r.event_reg_param_id}_qty.value;
+		{/if}
+	{/if}
+	var id_{$r.event_reg_param_id} = document.getElementById('extended_{$r.event_reg_param_id}');
+	var temp_extended=qty_{$r.event_reg_param_id}*{$r.event_reg_param_cost};
+	id_{$r.event_reg_param_id}.innerHTML = '{$event->info.currency_html}'+temp_extended.toFixed(2);
+	total=total + temp_extended;
+{/foreach}
+	var id_total=document.getElementById('total');
+	id_total.innerHTML = '{$event->info.currency_html}'+total.toFixed(2);
+{rdelim}
 </script>
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -273,7 +296,88 @@ function change_pilot(){ldelim}
 	</th>
 </tr>
 </table>
+
+{if $event->reg_options}
+<h1 class="post-title entry-title">Registration Values</h1>
+
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th width="20%">Name</th>
+	<th width="10%"> Qty</th>
+	<th width="10%">Cost Per Unit</th>
+	<th align="right" width="10%">Extended</th>
+</tr>
+{foreach $event->reg_options as $r}
+{$reg_id=$r.event_reg_param_id}
+<tr>
+	<td align="right">
+		{$r.event_reg_param_name} - <a href="" class="tooltip" onClick="return false;">(detail description)
+		<span>
+		<img class="callout" src="/images/callout.gif">
+		<strong>Registration Item Detail</strong><br>
+		<table>
+		<tr>
+			<td>{$r.event_reg_param_description}</td>
+		</tr>
+		</table>
+		</span>
+		</a>
+	</td>
+	<td align="center">
+		{if $r.event_reg_param_mandatory==1}
+		1<input type="hidden" name="event_reg_param_{$r.event_reg_param_id}_qty" value="1">
+		{elseif $r.event_reg_param_qty_flag==1}
+			<input type="text" size="1" name="event_reg_param_{$r.event_reg_param_id}_qty" value="{$params.$reg_id.event_pilot_reg_qty}" onChange="calc_totals();">
+		{else}
+			<input type="checkbox" name="event_reg_param_{$r.event_reg_param_id}_qty"{if $params.$reg_id.event_pilot_reg_qty==1} CHECKED{/if} onChange="calc_totals();">
+		{/if}
+	</td>
+	<td align="right">
+		{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
+	</td>
+	<td align="right">
+		<span id="extended_{$r.event_reg_param_id}"></span>
+	</td>
+</tr>
+{/foreach}
+<tr>
+	<th align="right" colspan="3">Total Registration Fee ({$event->info.event_reg_pay_units})</th>
+	<th align="right" width="10%">
+		<span id="total"></span>
+	</th>
+</tr>
+<tr>
+	<th align="right" colspan="3">Current Status</th>
+	<th align="right" width="10%">
+	{if $pilot.event_pilot_paid_flag==1}
+	<font color="green"><b>PAID</b></font>
+	{else}
+	<font color="red"><b>DUE</b></font>
+	{/if}
+	</th>
+</tr>
+<tr>
+	<th align="right" colspan="3">Set Status</th>
+	<th align="right" width="10%">
+	<select name="event_pilot_paid_flag">
+	<option value="0"{if $pilot.event_pilot_paid_flag==0} SELECTED{/if}>DUE</option>
+	<option value="1"{if $pilot.event_pilot_paid_flag==1} SELECTED{/if}>PAID</option>
+	</th>
+</tr>
+<tr>
+	<th colspan="4" style="text-align: center;">
+		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
+	</th>
+</tr>
+</table>
+{/if}
 </form>
+<script>
+calc_totals();
+</script>
+
+
+
 
 <script>
 {if $pilot.pilot_id==0}

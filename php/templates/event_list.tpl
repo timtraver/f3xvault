@@ -68,10 +68,10 @@
 <br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="7" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
+	<th colspan="6" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
@@ -89,23 +89,42 @@
 	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: center;">Map</th>
+	<th style="text-align: center;">Status</th>
 </tr>
 {foreach $events as $event}
 <tr style="background:{if $event.time_status==2}lightblue{elseif $event.time_status==1}lightgreen{elseif $event.time_status==0}#C8F7C8{else}white{/if};">
-	<td>{$event.event_start_date|date_format:"%Y-%m-%d"}</td>
+	<td nowrap>{$event.event_start_date|date_format:"%Y-%m-%d"}</td>
 	<td>
 		<a href="?action=event&function=event_view&event_id={$event.event_id|escape}">{$event.event_name|escape}</a>
 	</td>
-	<td>{$event.event_type_name|escape}</td>
-	<td>{if $event.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event.country_code|escape}.png" style="vertical-align: middle;" title="{$event.country_name}">{/if} 
+	<td nowrap>{$event.event_type_name|escape}</td>
+	<td nowrap>{if $event.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event.country_code|escape}.png" style="vertical-align: middle;" title="{$event.country_name}">{/if} 
 		{if $event.state_name && $event.country_id==226}<img src="/images/flags/states/16/{$event.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;" title="{$event.state_name}">{/if} 
-		{$event.location_name|escape}, {$event.state_code|escape} - {$event.country_code|escape}
+		{$event.location_name|escape}
 	</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
+	<td nowrap>
+		{if $event.event_reg_flag==1 && ($event.time_status!=-1 && $event.time_status!=0)}
+			{if $event.event_reg_status==0 || 
+				($event->pilots|count>=$event.event_reg_max && $event.event_reg_max!=0) ||
+				$event_reg_passed==1
+			}
+				<font color="red"><b>Registration Closed</b></font>
+			{else}
+				<font color="green"><b>Registration Open</b></font>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="?action=event&function=event_register&event_id={$event.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
+				Register Me Now!
+				</a>
+			{/if}
+		{else}
+		Completed
+		{/if}
+	</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
@@ -118,7 +137,7 @@
         </td>
 </tr>
 <tr>
-	<td colspan="7" align="center">
+	<td colspan="6" align="center">
 		<br>
 		<input type="button" value=" Create New Event " onclick="{if $user.user_id!=0}newevent.submit();{else}alert('You must be registered and logged in to create a new event.');{/if}" class="block-button">
 	</td>

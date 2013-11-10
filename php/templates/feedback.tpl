@@ -36,8 +36,8 @@ This is just a short list of some of the things already on my suggestion and tod
 
 	<li>Event Management</li>
 		<ul>
-			<li>Full signup system for event registration</li>
-			<li>Payment methods for registration</li>
+			<li>Full signup system for event registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Payment methods for registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Calander system to see upcoming events</li>
 		</ul>
 	<li>Event Scoring</li>

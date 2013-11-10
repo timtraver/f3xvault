@@ -136,6 +136,7 @@ function message_edit() {
 	}else{
 		if(isset($_REQUEST['to_user_id'])){
 			$user_message['to_user_id']=$_REQUEST['to_user_id'];
+			$user_message['to']=get_user_info($_REQUEST['to_user_id']);
 		}
 		if(isset($_REQUEST['user_message_subject'])){
 			$user_message['user_message_subject']=$_REQUEST['user_message_subject'];

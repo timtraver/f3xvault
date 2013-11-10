@@ -58,19 +58,19 @@
 				</tr>
 				<tr>
 					<th width="80" align="right" nowrap bgcolor="lightgrey">Flight Time</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" bgcolor="lightgrey">Landing</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" nowrap>Pilot Sig</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" nowrap>Timer Sig</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				</table>
 

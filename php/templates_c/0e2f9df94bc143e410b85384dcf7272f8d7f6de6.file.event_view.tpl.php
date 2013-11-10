@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-09-29 22:05:29
+<?php /* Smarty version Smarty-3.1.11, created on 2013-11-09 17:01:17
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1380517480,
+      1 => 1384045250,
       2 => 'file',
     ),
   ),
@@ -21,6 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'permission' => 0,
     'event' => 0,
+    'event_reg_passed' => 0,
+    'user' => 0,
+    'registered' => 0,
     'num' => 0,
     'p' => 0,
     'r' => 0,
@@ -49,7 +52,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'fast_id' => 0,
     'flyoff_number' => 0,
     't' => 0,
-    'user' => 0,
     'duration_rank' => 0,
     'speed_rank' => 0,
     'c' => 0,
@@ -188,8 +190,8 @@ function check_permission() {
 			<th width="20%" align="right">Event Dates</th>
 			<td>
 			<?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value->info['event_start_date'],"%Y-%m-%d");?>
- to <?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value->info['event_end_date'],"%Y-%m-%d");?>
-
+<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_end_date']!=$_smarty_tpl->tpl_vars['event']->value->info['event_start_date']){?> to <?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value->info['event_end_date'],"%Y-%m-%d");?>
+<?php }?>
 			</td>
 			<th align="right">Location</th>
 			<td>
@@ -231,9 +233,37 @@ function check_permission() {
 			</td>
 		</tr>
 		<?php }?>
+		<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_reg_flag']==1){?>
+		<tr>
+			<th align="right">Registration Status</th>
+			<td colspan="3">
+				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_reg_status']==0||(count($_smarty_tpl->tpl_vars['event']->value->pilots)>=$_smarty_tpl->tpl_vars['event']->value->info['event_reg_max']&&$_smarty_tpl->tpl_vars['event']->value->info['event_reg_max']!=0)||$_smarty_tpl->tpl_vars['event_reg_passed']->value==1){?>
+					<font color="red"><b>Registration Currently Closed</b></font>
+				<?php }else{ ?>
+					<font color="green"><b>Registration Currently Open</b></font>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="?action=event&function=event_register&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+"<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']==0){?> onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"<?php }?>>
+					<?php if ($_smarty_tpl->tpl_vars['registered']->value==1){?>
+					You Are Registered! Update Your Registration Info
+					<?php }else{ ?>
+					Register Me Now!
+					<?php }?>
+					</a>
+				<?php }?>
+			</td>
+		<?php }?>
 		</table>
 		<br>
+		<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)){?>
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){document.event_edit.submit();}" class="block-button">
+		<?php }?>
+		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
+		<?php if (($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)&&$_smarty_tpl->tpl_vars['event']->value->info['event_reg_status']==1){?>
+		<input type="button" class="button" value=" Registration Report " style="float:right;" onclick="if(check_permission()){registration_report.submit();}">
+		<?php }?>
+
+
 		</div><!-- end of 3 -->
 	</div><!-- end of 2 -->
 </div><!-- end of 1 -->
@@ -245,10 +275,12 @@ function check_permission() {
 		</h1>
 		<span id="pilots" <?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)!=0){?>style="display: none;"<?php }?>>
 		<br>
+		<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)){?>
 		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();}">
 		<input type="text" id="pilot_name" name="pilot_name" size="40">
 		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
+		<?php }?>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
@@ -258,6 +290,9 @@ function check_permission() {
 			<th align="left">Pilot Plane</th>
 			<th align="left">Pilot Freq</th>
 			<th align="left">Event Team</th>
+			<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_reg_flag']==1){?>
+			<th align="left" align="right">Reg Status</th>
+			<?php }?>
 			<th align="left" width="4%"></th>
 		</tr>
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable(1, null, 0);?>
@@ -300,14 +335,25 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 </td>
 			<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['event_pilot_team'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
+			<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_reg_flag']==1){?>
+				<td align="right">
+					<?php if ($_smarty_tpl->tpl_vars['p']->value['event_pilot_paid_flag']==1){?>
+					<font color="green">PAID</font>
+					<?php }else{ ?>
+					<font color="red">DUE</font>
+					<?php }?>
+				</td>
+			<?php }?>
 			<td nowrap>
 				<a href="/?action=event&function=event_pilot_edit&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_id'];?>
 " title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
-				<a href="/?action=event&function=event_pilot_remove&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+				<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)){?>		
+					<a href="/?action=event&function=event_pilot_remove&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 &event_pilot_id=<?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_id'];?>
 " title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['p']->value['pilot_first_name'], ENT_QUOTES, 'UTF-8', true);?>
  from the event?');"><img width="14px" src="/images/del.gif"></a>
+				<?php }?>
 			</td>
 		</tr>
 		<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable($_smarty_tpl->tpl_vars['num']->value+1, null, 0);?>
@@ -365,9 +411,11 @@ $_smarty_tpl->tpl_vars['page_num']->first = $_smarty_tpl->tpl_vars['page_num']->
 -<?php echo $_smarty_tpl->tpl_vars['end_round']->value;?>
 ) <?php }?> Overall Classification
 			<?php if ($_smarty_tpl->tpl_vars['page_num']->value==1){?>
-				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_flyoff']==1){?><input type="button" value=" Add Flyoff Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
-				<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
-				<input type="button" value=" Add Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.submit();}<?php }?>" class="block-button">
+				<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0&&($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)){?>		
+					<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_flyoff']==1){?><input type="button" value=" Add Flyoff Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
+					<?php if ($_smarty_tpl->tpl_vars['event']->value->info['event_type_zero_round']==1){?><input type="button" value=" Add Zero Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.zero_round.value=1; document.event_add_round.submit();}<?php }?>" class="block-button"><?php }?>
+					<input type="button" value=" Add Round " onClick="<?php if (count($_smarty_tpl->tpl_vars['event']->value->pilots)==0){?>alert('You must enter pilots before you add a round.');<?php }else{ ?>if(check_permission()){document.event_add_round.submit();}<?php }?>" class="block-button">
+				<?php }?>
 			<?php }?>
 		</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
@@ -831,7 +879,7 @@ s<br>
 <?php }?>
 </div><!-- end of 5 -->
 </div><!-- end of 4 -->
-<?php if (count($_smarty_tpl->tpl_vars['event']->value->classes)>1||$_smarty_tpl->tpl_vars['event']->value->totals['teams']||$_smarty_tpl->tpl_vars['duration_rank']->value||$_smarty_tpl->tpl_vars['speed_rank']->value){?>
+<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>0&&(count($_smarty_tpl->tpl_vars['event']->value->classes)>1||$_smarty_tpl->tpl_vars['event']->value->totals['teams']||$_smarty_tpl->tpl_vars['duration_rank']->value||$_smarty_tpl->tpl_vars['speed_rank']->value)){?>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="6">
 	<div class="entry clearfix" style="vertical-align:top;" id="7">                
 		<h1 class="post-title entry-title header_drop">Contest Ranking Reports
@@ -1054,7 +1102,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 </div><!-- end of 6 -->
 <?php }?>
 <!-- Lets figure out if there are reports for speed or laps -->
-<?php if ($_smarty_tpl->tpl_vars['lap_totals']->value||$_smarty_tpl->tpl_vars['speed_averages']->value||$_smarty_tpl->tpl_vars['top_landing']->value||count($_smarty_tpl->tpl_vars['event']->value->planes)>0){?>
+<?php if (count($_smarty_tpl->tpl_vars['event']->value->rounds)>0&&($_smarty_tpl->tpl_vars['lap_totals']->value||$_smarty_tpl->tpl_vars['speed_averages']->value||$_smarty_tpl->tpl_vars['top_landing']->value||count($_smarty_tpl->tpl_vars['event']->value->planes)>0)){?>
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="8">
 	<div class="entry clearfix" style="vertical-align:top;" id="9">                
 		<h1 class="post-title entry-title header_drop">Event Statistics
@@ -1364,6 +1412,12 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 <input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 </form>
+<form name="event_view_info" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view_info">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
+</form>
 <form name="event_delete" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_delete">
@@ -1414,6 +1468,12 @@ $_smarty_tpl->tpl_vars['r']->_loop = true;
 <input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
 ">
 <input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="registration_report" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_registration_report">
+<input type="hidden" name="event_id" value="<?php echo $_smarty_tpl->tpl_vars['event']->value->info['event_id'];?>
+">
 </form>
 <?php if ($_smarty_tpl->tpl_vars['event']->value->rounds){?>
 <script>
