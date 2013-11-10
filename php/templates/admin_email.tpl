@@ -17,7 +17,12 @@
 					<td>{$e.email_name}</td>
 					<td>{$e.email_from_name} {$e.email_from_address}</td>
 					<td><a href="?action=admin&function=admin_email_edit&email_id={$e.email_id}">{$e.email_subject}</a></td>
-					<td><input type="button" value="Send Email Test" class="button" onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail_{$e.email_id}.email_to.value=sendto;if(sendto!=null) document.sendmail_{$e.email_id}.submit();"></td>
+					<td>
+					<input type="button" value="Send Email To All" class="button"
+					 onClick="document.sendmail_all.email_name.value={$e.email_name};document.sendmail_all.submit();">
+					<input type="button" value="Send Email Test" class="button"
+					 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail.email_to.value=sendto;document.sendmail.email_name.value={$e.email_name};if(sendto!=null) document.sendmail.submit();">
+					</td>
 				</tr>
 				{/foreach}
 				<tr>
@@ -42,11 +47,14 @@
 <input type="hidden" name="email_id" value="0">
 </form>
 
-{foreach $emails as $e}
-<form name="sendmail_{$e.email_id}" method="POST">
+<form name="sendmail" method="POST">
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_email_send_test">
 <input type="hidden" name="email_name" value="{$e.email_name}">
 <input type="hidden" name="email_to" value="">
 </form>
-{/foreach}
+<form name="sendmail_all" method="POST">
+<input type="hidden" name="action" value="admin">
+<input type="hidden" name="function" value="admin_email_send_all">
+<input type="hidden" name="email_name" value="{$e.email_name}">
+</form>

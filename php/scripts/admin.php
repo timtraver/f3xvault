@@ -189,6 +189,28 @@ function admin_email_send_test() {
 	user_message("Sent test email to $email_to.");
 	return admin_email();
 }
+function admin_email_send_all() {
+	# Send the test email
+
+	$email_name=$_REQUEST['email_name'];
+	$data=array();
+
+	# Get all users
+	$stmt=db_prep("
+		SELECT *
+		FROM user
+		WHERE user_status=1
+			AND user_activated=1
+	");
+	$users=db_exec($stmt,array());
+	foreach($users as $u){
+		$email_to=$u['user_email'];
+		send_email($email_name,array($email_to),$data);
+	}
+	
+	user_message("Sent email to all users.");
+	return admin_email();
+}
 function admin_email_del_image() {
 	global $smarty;
 	global $user;
