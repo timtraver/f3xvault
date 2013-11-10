@@ -21,7 +21,7 @@
 					<input type="button" value="Send Email To All" class="button"
 					 onClick="document.sendmail_all.email_name.value={$e.email_name};document.sendmail_all.submit();">
 					<input type="button" value="Send Email Test" class="button"
-					 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail.email_to.value=sendto;document.sendmail.email_name.value={$e.email_name};if(sendto!=null) document.sendmail.submit();">
+					 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail_one.email_to.value=sendto;document.sendmail_one.email_name.value='{$e.email_name}';if(sendto!=null) document.sendmail_one.submit();">
 					</td>
 				</tr>
 				{/foreach}
@@ -47,7 +47,7 @@
 <input type="hidden" name="email_id" value="0">
 </form>
 
-<form name="sendmail" method="POST">
+<form name="sendmail_one" method="POST">
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_email_send_test">
 <input type="hidden" name="email_name" value="{$e.email_name}">
