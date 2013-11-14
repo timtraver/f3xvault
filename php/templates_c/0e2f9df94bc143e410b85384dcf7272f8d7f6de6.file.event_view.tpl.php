@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-11-09 17:01:17
+<?php /* Smarty version Smarty-3.1.11, created on 2013-11-13 23:54:38
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1384045250,
+      1 => 1384415670,
       2 => 'file',
     ),
   ),
@@ -56,6 +56,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'speed_rank' => 0,
     'c' => 0,
     'rank' => 0,
+    'o' => 0,
+    'count' => 0,
     'oldscore' => 0,
     'distance_rank' => 0,
     'lap_totals' => 0,
@@ -318,7 +320,7 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 .png" class="inline_flag" title="<?php echo $_smarty_tpl->tpl_vars['p']->value['country_code'];?>
 "><?php }?>
 			</td>
-			<td>
+			<td<?php if ($_smarty_tpl->tpl_vars['p']->value['event_pilot_draw_status']==0){?> bgcolor="lightgrey"<?php }?>>
 				<?php if ($_smarty_tpl->tpl_vars['p']->value['event_pilot_bib']!=''&&$_smarty_tpl->tpl_vars['p']->value['event_pilot_bib']!=0){?>
 					<div class="pilot_bib_number"><?php echo $_smarty_tpl->tpl_vars['p']->value['event_pilot_bib'];?>
 </div>
@@ -933,6 +935,16 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 	</div>
 	<?php }?>
 	<?php if ($_smarty_tpl->tpl_vars['event']->value->totals['teams']){?>
+	<?php $_smarty_tpl->tpl_vars['count'] = new Smarty_variable(0, null, 0);?>
+	<?php  $_smarty_tpl->tpl_vars['o'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['o']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['event']->value->options; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['o']->key => $_smarty_tpl->tpl_vars['o']->value){
+$_smarty_tpl->tpl_vars['o']->_loop = true;
+?>
+		<?php if ($_smarty_tpl->tpl_vars['o']->value['event_type_option_code']=='team_total_pilots'){?>
+			<?php $_smarty_tpl->tpl_vars['count'] = new Smarty_variable($_smarty_tpl->tpl_vars['o']->value['event_option_value'], null, 0);?>
+		<?php }?>
+	<?php } ?>
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;">                
 		<h1 class="post-title">Team Rankings</h1>
 		<table cellpadding="2" cellspacing="1" class="tableborder">
@@ -941,6 +953,9 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<th>Team</th>
 			<th>Total</th>
 		</tr>
+		<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable(0, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['diff_to_lead'] = new Smarty_variable(0, null, 0);?>
+		<?php $_smarty_tpl->tpl_vars['diff'] = new Smarty_variable(0, null, 0);?>
 		<?php  $_smarty_tpl->tpl_vars['t'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['t']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['event']->value->totals['teams']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
  $_smarty_tpl->tpl_vars['t']->total= $_smarty_tpl->_count($_from);
@@ -950,14 +965,31 @@ $_smarty_tpl->tpl_vars['t']->_loop = true;
  $_smarty_tpl->tpl_vars['t']->iteration++;
  $_smarty_tpl->tpl_vars['t']->last = $_smarty_tpl->tpl_vars['t']->iteration === $_smarty_tpl->tpl_vars['t']->total;
 ?>
+		<?php if ($_smarty_tpl->tpl_vars['t']->value['total']>$_smarty_tpl->tpl_vars['previous']->value){?>
+			<?php $_smarty_tpl->tpl_vars['previous'] = new Smarty_variable($_smarty_tpl->tpl_vars['t']->value['total'], null, 0);?>
+		<?php }else{ ?>
+			<?php $_smarty_tpl->tpl_vars['diff'] = new Smarty_variable($_smarty_tpl->tpl_vars['previous']->value-$_smarty_tpl->tpl_vars['t']->value['total'], null, 0);?>
+			<?php $_smarty_tpl->tpl_vars['diff_to_lead'] = new Smarty_variable($_smarty_tpl->tpl_vars['diff_to_lead']->value+$_smarty_tpl->tpl_vars['diff']->value, null, 0);?>
+		<?php }?>
 		<tr style="background-color:#9DCFF0;">
 			<td><?php echo $_smarty_tpl->tpl_vars['t']->value['rank'];?>
 </td>
 			<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['t']->value['team_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-			<td><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['t']->value['total']);?>
-</td>
+			<td>
+				<a href="" class="tooltip_score_left" onClick="return false;">
+				<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['t']->value['total']);?>
+
+					<span>
+						<b>Behind Prev</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff']->value);?>
+<br>
+						<b>Behind Lead</b> : <?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['diff_to_lead']->value);?>
+<br>
+					</span>
+				</a>
+			</td>
 		</tr>
+			<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable(1, null, 0);?>
 			<?php  $_smarty_tpl->tpl_vars['p'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['p']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['event']->value->totals['pilots']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['p']->key => $_smarty_tpl->tpl_vars['p']->value){
@@ -966,14 +998,18 @@ $_smarty_tpl->tpl_vars['p']->_loop = true;
 			<?php $_smarty_tpl->tpl_vars['event_pilot_id'] = new Smarty_variable($_smarty_tpl->tpl_vars['p']->value['event_pilot_id'], null, 0);?>
 			<?php if ($_smarty_tpl->tpl_vars['event']->value->pilots[$_smarty_tpl->tpl_vars['event_pilot_id']->value]['event_pilot_team']==$_smarty_tpl->tpl_vars['t']->value['team_name']){?>
 			<tr>
-				<td></td>
+				<td><?php if ($_smarty_tpl->tpl_vars['count']->value>0&&$_smarty_tpl->tpl_vars['num']->value>$_smarty_tpl->tpl_vars['count']->value){?><img src="/images/icons/exclamation.png"><?php }?></td>
 				<td>
 					<?php echo $_smarty_tpl->getSubTemplate ("event_view_pilot_popup.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
 				</td>
-				<td align="right"><?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['total']);?>
-</td>
+				<td align="right">
+						<?php echo sprintf($_smarty_tpl->tpl_vars['event']->value->event_calc_accuracy_string,$_smarty_tpl->tpl_vars['p']->value['total']);?>
+
+				</td>
+				</a>
 			</tr>
+			<?php $_smarty_tpl->tpl_vars['num'] = new Smarty_variable($_smarty_tpl->tpl_vars['num']->value+1, null, 0);?>
 			<?php }?>
 			<?php } ?>
 		<?php } ?>

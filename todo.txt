@@ -3,7 +3,6 @@ Todo list for f3xvault project
 = before launch
 
 GENERAL
-    Make a PayPal donate button
 =	Send welcome email once registered and save it as their first message
 	Create a "Using this site" kind of tutorial instructions with free screen recorder! ;)
 	Create a "send location" link to a buddy
@@ -23,12 +22,13 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
+	Make it so that TD events can set values for each second. Take away that second value at the event level and put it at the round level.
+	
 	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
 	Calendar System
 		Full integrated calendar system to show upcoming events using google's calendar api
 		Create calendar events as different colors for the different types
 	Registration Email creation
-	
 	
 	For F3J, make flyoff rounds 15 minute rounds
 	Make a system to do drops on different times for f3j
@@ -36,9 +36,6 @@ EVENT STUFF
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 	System to choose at random the reflight pilots to fill out a group
 
-	Have a setting for top X teammates to be used in the team standings
-	Mark a competitor to be available to the draw
-	
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
@@ -78,10 +75,12 @@ MOBILE STUFF
 	Change code for mobile maps to show correctly
 	Ability to expand with the fingers
 	Change the menu icon, or include some kind of popup so they know where it is
-	
 
 
 COMPLETED
+X	Mark a competitor to be available to the draw and the system for the draw to use only the active pilots
+X	Have a setting for top X teammates to be used in the team standings
+X    Make a PayPal donate button
 X	Full registration system to allow pilots to sign up
 X		Settings for registration period opening and closing
 X		Options for payment (i.e. paypal or check)

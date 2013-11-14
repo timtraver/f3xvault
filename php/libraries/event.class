@@ -1323,11 +1323,18 @@ class Event {
 		}
 		
 		# lets get the team totals now
+		# lets first check to see how many team members are supposed to count
+		$team_count=$this->find_option_value('team_total_pilots');
+		if($team_count==''){
+			$team_count=0;
+		}
+		$team_counted=array();
 		foreach($totals as $p){
 			$event_pilot_id=$p['event_pilot_id'];
 			$team_name=$this->pilots[$event_pilot_id]['event_pilot_team'];
-			if($team_name!=''){
+			if($team_name!='' && ($team_count==0 || $team_counted[$team_name]<$team_count)){
 				$teams[$team_name]+=$p['total'];
+				$team_counted[$team_name]++;
 			}
 		}
 		if(count($teams)>0){

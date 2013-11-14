@@ -101,6 +101,7 @@ function copy_plane_values(){ldelim}
 	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
 	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;
 	document.add_plane.from_event_pilot_bib.value=document.main.event_pilot_bib.value;
+	document.add_plane.from_event_pilot_draw_status.value=document.main.event_pilot_draw_status.value;
 {rdelim}
 function change_pilot(){ldelim}
 	var pilot_search=document.getElementById('pilot_search');
@@ -290,6 +291,13 @@ function calc_totals(){ldelim}
 	</td>
 </tr>
 <tr>
+	<th align="right" nowrap>Event Pilot Draw Status</th>
+	<td colspan="2">
+		<input type="radio" value="1" name="event_pilot_draw_status"{if $pilot.event_pilot_draw_status==1} CHECKED{/if}> On
+		<input type="radio" value="0" name="event_pilot_draw_status"{if $pilot.event_pilot_draw_status==0} CHECKED{/if}> Off
+	</td>
+</tr>
+<tr>
 	<th valign="center" colspan="3">
 	<input type="button" value=" Cancel " class="button" onClick="goback.submit();">
 	<input type="submit" value=" Save Event Pilot Info " class="button">
@@ -413,6 +421,7 @@ calc_totals();
 <input type="hidden" name="from_event_pilot_freq" value="">
 <input type="hidden" name="from_event_pilot_team" value="">
 <input type="hidden" name="from_event_pilot_bib" value="">
+<input type="hidden" name="from_event_pilot_draw_status" value="">
 </form>
 <form name="edit_pilot" method="POST">
 <input type="hidden" name="action" value="event">

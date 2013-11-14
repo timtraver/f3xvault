@@ -971,6 +971,7 @@ function event_register_save() {
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id,
+				event_pilot_draw_status=1,
 				event_pilot_status=1
 		");
 		$result2=db_exec($stmt,array(
@@ -1219,6 +1220,7 @@ function event_pilot_edit() {
 			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
+			$pilot['event_pilot_draw_status']=$_REQUEST['event_pilot_draw_status'];
 		}
 	}elseif($pilot_id!=0){
 		# They have chosen a pilot from the drop down list, so lets get that info
@@ -1263,6 +1265,7 @@ function event_pilot_edit() {
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
 			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
+			$pilot['event_pilot_draw_status']=$_REQUEST['event_pilot_draw_status'];
 		}else{
 			# Lets set the name that was sent
 			# Lets first see if it has a comma if it was pasted as last, first
@@ -1294,6 +1297,7 @@ function event_pilot_edit() {
 			$pilot['event_pilot_entry_order']=$result[0]['max']+1;
 		}
 		$pilot['event_pilot_bib']=$pilot['event_pilot_entry_order'];
+		$pilot['event_pilot_draw_status']=1;
 	}
 	
 	# Lets set a default for the Channel
@@ -1363,6 +1367,7 @@ function event_pilot_save() {
 	$event_pilot_entry_order=intval($_REQUEST['event_pilot_entry_order']);
 	$event_pilot_bib=intval($_REQUEST['event_pilot_bib']);
 	$event_pilot_paid_flag=intval($_REQUEST['event_pilot_paid_flag']);
+	$event_pilot_draw_status=intval($_REQUEST['event_pilot_draw_status']);
 
 	# Now lets get the existing additional values
 	$params=array();
@@ -1410,6 +1415,7 @@ function event_pilot_save() {
 				$smarty->assign("event_pilot_freq",$event_pilot_freq);
 				$smarty->assign("event_pilot_team",$event_pilot_team);
 				$smarty->assign("event_pilot_bib",$event_pilot_bib);
+				$smarty->assign("event_pilot_draw_status",$event_pilot_draw_status);
 				$smarty->assign("plane_id",$plane_id);
 				
 				# Lets add the state name and country name for good presentation
@@ -1468,7 +1474,8 @@ function event_pilot_save() {
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id,
-				event_pilot_paid_flag=:event_pilot_paid_flag
+				event_pilot_paid_flag=:event_pilot_paid_flag,
+				event_pilot_draw_status=:event_pilot_draw_status
 				WHERE event_pilot_id=:event_pilot_id
 		");
 		$result=db_exec($stmt,array(
@@ -1480,7 +1487,8 @@ function event_pilot_save() {
 			"event_pilot_team"=>$event_pilot_team,
 			"event_pilot_id"=>$event_pilot_id,
 			"plane_id"=>$plane_id,
-			"event_pilot_paid_flag"=>$event_pilot_paid_flag
+			"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+			"event_pilot_draw_status"=>$event_pilot_draw_status
 		));
 	}else{
 		# We need to create a new event pilot id
@@ -1504,6 +1512,7 @@ function event_pilot_save() {
 					event_pilot_team=:event_pilot_team,
 					plane_id=:plane_id,
 					event_pilot_paid_flag=:event_pilot_paid_flag,
+					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
 				WHERE event_pilot_id=:event_pilot_id
 			");
@@ -1516,6 +1525,7 @@ function event_pilot_save() {
 				"event_pilot_team"=>$event_pilot_team,
 				"plane_id"=>$plane_id,
 				"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+				"event_pilot_draw_status"=>$event_pilot_draw_status,
 				"event_pilot_id"=>$result[0]['event_pilot_id']
 			));
 			$event_pilot_id=$result[0]['event_pilot_id'];
@@ -1532,6 +1542,7 @@ function event_pilot_save() {
 					event_pilot_team=:event_pilot_team,
 					plane_id=:plane_id,
 					event_pilot_paid_flag=:event_pilot_paid_flag,
+					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
 			");
 			$result2=db_exec($stmt,array(
@@ -1543,7 +1554,8 @@ function event_pilot_save() {
 				"event_pilot_freq"=>$event_pilot_freq,
 				"event_pilot_team"=>$event_pilot_team,
 				"plane_id"=>$plane_id,
-				"event_pilot_paid_flag"=>$event_pilot_paid_flag
+				"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+				"event_pilot_draw_status"=>$event_pilot_draw_status
 			));
 			$event_pilot_id=$GLOBALS['last_insert_id'];
 		}
@@ -2768,6 +2780,24 @@ function event_print_overall() {
 	$maintpl=find_template("print_event_overall.tpl");
 	return $smarty->fetch($maintpl);
 }
+function event_print_rank() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_edit();
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+	$e->calculate_event_totals();
+
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template("print_event_rankings.tpl");
+	return $smarty->fetch($maintpl);
+}
 function event_print_round() {
 	global $smarty;
 
@@ -3185,23 +3215,37 @@ function event_draw_edit() {
 	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
 	$ft=$result[0];
 
-	$num_teams=count($e->teams);
+	$draw_pilots=array();
+	$draw_teams=array();
+	foreach($e->pilots as $p){
+		if($p['event_pilot_draw_status']==1){
+			$draw_pilots[]=$p;
+			$team=$p['event_pilot_team'];
+			if(!in_array($team,$draw_teams)){
+				$draw_teams[]=$team;
+			}
+		}
+	}
+
+	$num_teams=count($draw_teams);
 	$min_groups_np=2;
-	$max_groups_np=floor(count($e->pilots)/2);
+	$max_groups_np=floor(count($draw_pilots)/2);
 	
 	# Lets determine the largest team
-	foreach($e->pilots as $p){
+	foreach($draw_pilots as $p){
 		$team_name=$p['event_pilot_team'];
 		$teams[$team_name]++;
 	}
 	arsort($teams);
 	$max_on_team=array_shift($teams);
 	$min_groups_p=$max_on_team;
-	$max_groups_p=floor(count($e->pilots)/2);
+	$max_groups_p=floor(count($draw_pilots)/2);
 	
 
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
+	$smarty->assign("draw_pilots",$draw_pilots);
+	$smarty->assign("draw_teams",$draw_teams);
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("ft",$ft);
