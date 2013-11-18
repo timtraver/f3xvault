@@ -230,7 +230,7 @@ function check_permission() {ldelim}
 			</th>
 			<td>
 				{if $event->info.event_type_time_choice==1}
-					<input type="text" size="5" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
+					<input type="text" size="2" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
 				{else}
 					<input type="hidden" name="event_round_time_choice" value="0">
 				{/if}
@@ -240,8 +240,8 @@ function check_permission() {ldelim}
 			{/if}
 		</tr>
 		<tr>
-			<th nowrap>Event Round Sort By</th>
-			<td>
+			<th nowrap{if $event->info.event_type_code=='td'} rowspan="2"{/if}>Event Round Sort By</th>
+			<td{if $event->info.event_type_code=='td'} rowspan="2"{/if}>
 				<select name="sort_by" onChange="document.sort_round.sort_by.value=document.main.sort_by.value; sort_round.submit();">
 				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
 				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
@@ -254,11 +254,22 @@ function check_permission() {ldelim}
 				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alphabetical Order - Last Name</option>
 				</select>
 			</td>
+			{if $event->info.event_type_code=='td'}
+				<th nowrap>Round Scoring Points</th>
+				<td>
+					<input type="text" size="2" name="event_round_score_second" value="{$event->rounds.$round_number.event_round_score_second}"> Points Per Second
+				</td>
+		</tr>
+		<tr>
+			{/if}
+			
 			<th nowrap>Include This Round In Final Results</th>
 			<td align="left">
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
+		
+		
 		{if $event->info.event_type_flyoff==1}
 		<tr>
 			<th nowrap>Flyoff Number</th>
@@ -394,7 +405,7 @@ function check_permission() {ldelim}
 						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
+						{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
 						{/if}
 					</td>
 					<td align="right" nowrap>

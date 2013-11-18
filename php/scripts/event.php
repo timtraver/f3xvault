@@ -2064,6 +2064,7 @@ function event_round_edit() {
 		}else{
 			$event->rounds[$round_number]['event_round_score_status']=1;
 		}
+		$event->rounds[$round_number]['event_round_score_second']=1;
 	}else{
 		# Step through and get the round number from the event_round_id
 		foreach($event->rounds as $event_round_number=>$data){
@@ -2107,6 +2108,11 @@ function event_round_save() {
 		$event_round_score_status=1;
 	}else{
 		$event_round_score_status=0;
+	}
+	if(isset($_REQUEST['event_round_score_second']) && ($_REQUEST['event_round_score_second']!='')){
+		$event_round_score_second=$_REQUEST['event_round_score_second'];
+	}else{
+		$event_round_score_second=1;
 	}
 	$new_round=0;
 	if($event_round_id==0){
@@ -2194,6 +2200,7 @@ function event_round_save() {
 					flight_type_id=:flight_type_id,
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
+					event_round_score_second=:event_round_score_second,
 					event_round_needs_calc=0,
 					event_round_flyoff=:event_round_flyoff,
 					event_round_status=1
@@ -2204,7 +2211,8 @@ function event_round_save() {
 				"flight_type_id"=>$flight_type_id,
 				"event_round_time_choice"=>$event_round_time_choice,
 				"event_round_flyoff"=>$event_round_flyoff,
-				"event_round_score_status"=>$event_round_score_status
+				"event_round_score_status"=>$event_round_score_status,
+				"event_round_score_second"=>$event_round_score_second
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
 			$_REQUEST['event_round_id']=$event_round_id;
@@ -2216,6 +2224,7 @@ function event_round_save() {
 			SET flight_type_id=:flight_type_id,
 				event_round_time_choice=:event_round_time_choice,
 				event_round_score_status=:event_round_score_status,
+					event_round_score_second=:event_round_score_second,
 				event_round_flyoff=:event_round_flyoff,
 				event_round_needs_calc=0
 			WHERE event_round_id=:event_round_id
@@ -2224,6 +2233,7 @@ function event_round_save() {
 			"flight_type_id"=>$flight_type_id,
 			"event_round_time_choice"=>$event_round_time_choice,
 			"event_round_score_status"=>$event_round_score_status,
+			"event_round_score_second"=>$event_round_score_second,
 			"event_round_flyoff"=>$event_round_flyoff,
 			"event_round_id"=>$event_round_id
 		));
