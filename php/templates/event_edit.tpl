@@ -282,7 +282,7 @@ function reg_check(){
 <input type="hidden" name="event_cd" value="{$event->info.event_cd|escape}">
 <input type="hidden" name="series_id" value="{$event->info.series_id}">
 <input type="hidden" name="club_id" value="{$event->info.club_id}">
-{if $event->info.event_id!=0}
+{if $event->info.event_id==0}
 <input type="hidden" name="event_reg_flag" value="0">
 <input type="hidden" name="event_notes" value="">
 {/if}
