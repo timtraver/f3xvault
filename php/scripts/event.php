@@ -265,6 +265,21 @@ function event_list() {
 	
 	$events=show_pages($events,25);
 
+	# Lets set a flag to show if this event is happening now, or is in the future
+	$now=time();
+	foreach($events as $key=>$e){
+		$event_from=strtotime($e['event_start_date']);
+		$event_to=strtotime($e['event_end_date'])+86359;
+		if($event_from>$now){
+			$events[$key]['time_status']=2;
+		}elseif($event_from <$now && $event_to>$now){
+			$events[$key]['time_status']=1;
+		}elseif($now>$event_to && $now-$event_to<604800){
+			$events[$key]['time_status']=0;
+		}else{
+			$events[$key]['time_status']=-1;
+		}
+	}
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
 	
@@ -272,6 +287,7 @@ function event_list() {
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("now",time());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
 	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
@@ -359,6 +375,18 @@ function event_view() {
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 	
+	# Lets determine if the user is already registered as a pilot in this event
+	$pilot_id=$GLOBALS['user']['pilot_id'];
+	$registered=0;
+	foreach($e->pilots as $p){
+		if($p['pilot_id']==$pilot_id){
+			$registered=1;
+		}
+	}
+	$smarty->assign("registered",$registered);
+
+	log_action($event_id);
+	
 	# Save the current event id in the fsession for mobile ease of use
 	$GLOBALS['fsession']['current_event_id']=$event_id;
 	
@@ -413,6 +441,12 @@ function event_edit() {
 		}
 		$e->info['event_start_date']=$starttime;
 		$e->info['event_end_date']=$endtime;
+		if(isset($_REQUEST['event_reg_flag'])){
+			$e->info['event_reg_flag']=$_REQUEST['event_reg_flag'];
+		}
+		if(isset($_REQUEST['event_notes'])){
+			$e->info['event_notes']=$_REQUEST['event_notes'];
+		}
 	}else{
 		# Lets only replace the id's of the things that could have been added new
 		if(isset($_REQUEST['location_name'])){
@@ -461,6 +495,17 @@ function event_edit() {
 	$event_users=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("event_users",$event_users);
 	
+	# Get classes to choose to be available for this event
+	$stmt=db_prep("
+		SELECT *,c.class_id
+		FROM class c
+		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		ORDER BY c.class_view_order
+	");
+	$classes=db_exec($stmt,array());
+	$smarty->assign("classes",$classes);
+	
+	
 	$smarty->assign("event_types",$event_types);
 	$smarty->assign("event",$e);
 
@@ -484,6 +529,17 @@ function event_save() {
 	$series_id=intval($_REQUEST['series_id']);
 	$club_id=intval($_REQUEST['club_id']);
 	$event_view_status=intval($_REQUEST['event_view_status']);
+	$event_reg_flag=intval($_REQUEST['event_reg_flag']);
+	$event_notes=$_REQUEST['event_notes'];
+
+	# Get the checkboxes for each class type
+	$classes=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/class\_(\d+)$/",$key,$match)){
+			$id=$match[1];
+			$classes[$id]=1;
+		}
+	}
 
 	if($event_id==0){
 		$stmt=db_prep("
@@ -498,6 +554,8 @@ function event_save() {
 				series_id=:series_id,
 				club_id=:club_id,
 				event_view_status=:event_view_status,
+				event_reg_flag=:event_reg_flag,
+				event_notes=:event_notes,
 				event_status=1
 		");
 		$result=db_exec($stmt,array(
@@ -510,7 +568,9 @@ function event_save() {
 			"event_cd"=>$event_cd,
 			"series_id"=>$series_id,
 			"club_id"=>$club_id,
-			"event_view_status"=>$event_view_status
+			"event_view_status"=>$event_view_status,
+			"event_reg_flag"=>$event_reg_flag,
+			"event_notes"=>$event_notes
 		));
 
 		user_message("Added your New Event!");
@@ -551,7 +611,9 @@ function event_save() {
 				event_cd=:event_cd,
 				series_id=:series_id,
 				club_id=:club_id,
-				event_view_status=:event_view_status
+				event_view_status=:event_view_status,
+				event_reg_flag=:event_reg_flag,
+				event_notes=:event_notes
 			WHERE event_id=:event_id
 		");
 		$result=db_exec($stmt,array(
@@ -564,6 +626,8 @@ function event_save() {
 			"series_id"=>$series_id,
 			"club_id"=>$club_id,
 			"event_view_status"=>$event_view_status,
+			"event_reg_flag"=>$event_reg_flag,
+			"event_notes"=>$event_notes,
 			"event_id"=>$event_id
 		));
 		user_message("Updated Base Event Info!");
@@ -572,9 +636,507 @@ function event_save() {
 		$e->get_rounds();
 		$e->event_save_totals();
 	}
+	
+	# If there were class choices, lets save them
+	$stmt=db_prep("
+		UPDATE event_class
+		SET event_class_status=0
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array(
+		"event_id"=>$event_id
+	));
+	if($classes){
+		foreach($classes as $id=>$value){
+			$stmt=db_prep("
+				SELECT *
+				FROM event_class
+				WHERE event_id=:event_id
+					AND class_id=:class_id
+			");
+			$result=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"class_id"=>$id
+			));
+			if(isset($result[0])){
+				# This one already exists, so just turn it on
+				$stmt=db_prep("
+					UPDATE event_class
+					SET event_class_status=1
+					WHERE event_class_id=:event_class_id
+				");
+				$result=db_exec($stmt,array(
+					"event_class_id"=>$result[0]['event_class_id']
+				));
+			}else{
+				# We need to create a new one
+				$stmt=db_prep("
+					INSERT INTO event_class
+					SET event_id=:event_id,
+						class_id=:class_id,
+						event_class_status=1
+				");
+				$result=db_exec($stmt,array(
+					"event_id"=>$event_id,
+					"class_id"=>$id
+				));
+			}
+		}
+	}
+	
 	log_action($event_id);
 	return event_edit();
 }
+function event_reg_edit() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	
+	$smarty->assign("event",$e);
+	$smarty->assign("currencies",get_currencies());
+	$maintpl=find_template("event_reg_edit.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_reg_save() {
+	# Save the registration parameters
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	$event_reg_status=intval($_REQUEST['event_reg_status']);
+	$event_reg_date=$_REQUEST['event_reg_dateYear']."-".$_REQUEST['event_reg_dateMonth']."-".$_REQUEST['event_reg_dateDay'];
+	$event_reg_max=intval($_REQUEST['event_reg_max']);
+	$event_reg_pay_flag=0;
+	if(isset($_REQUEST['event_reg_pay_flag']) && $_REQUEST['event_reg_pay_flag']=='on'){
+		$event_reg_pay_flag=1;
+	}
+	$currency_id=$_REQUEST['currency_id'];
+	$event_reg_paypal_address=$_REQUEST['event_reg_paypal_address'];
+	$event_reg_add_name=$_REQUEST['event_reg_add_name'];
+	# Now lets get the existing additional values
+	$params=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/reg\_param\_(\d+)\_(\S+)$/",$key,$match)){
+			$reg_id=$match[1];
+			$reg_type=$match[2];
+			$params[$reg_id][$reg_type]=$value;
+		}
+	}
+
+	# OK, lets save the main reg parameters
+	$stmt=db_prep("
+		UPDATE event
+		SET event_reg_status=:event_reg_status,
+			event_reg_date=:event_reg_date,
+			event_reg_max=:event_reg_max,
+			event_reg_pay_flag=:event_reg_pay_flag,
+			currency_id=:currency_id,
+			event_reg_paypal_address=:event_reg_paypal_address
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array(
+		"event_reg_status"=>$event_reg_status,
+		"event_reg_date"=>$event_reg_date,
+		"event_reg_max"=>$event_reg_max,
+		"event_reg_pay_flag"=>$event_reg_pay_flag,
+		"currency_id"=>$currency_id,
+		"event_reg_paypal_address"=>$event_reg_paypal_address,
+		"event_id"=>$event_id
+	));
+	
+	# Now lets save each of the reg values
+	foreach($params as $event_reg_param_id=>$p){
+		if(!isset($p['qty'])){
+			$p['qty']=0;
+		}else{
+			$p['qty']=1;
+		}
+		if(!isset($p['man'])){
+			$p['man']=0;
+		}else{
+			$p['man']=1;
+		}
+		$stmt=db_prep("
+			UPDATE event_reg_param
+			SET event_reg_param_name=:event_reg_param_name,
+				event_reg_param_description=:event_reg_param_description,
+				event_reg_param_qty_flag=:event_reg_param_qty_flag,
+				event_reg_param_cost=:event_reg_param_cost,
+				event_reg_param_mandatory=:event_reg_param_mandatory
+			WHERE event_reg_param_id=:event_reg_param_id
+		");
+		$result=db_exec($stmt,array(
+			"event_reg_param_name"=>$p['name'],
+			"event_reg_param_description"=>$p['desc'],
+			"event_reg_param_qty_flag"=>$p['qty'],
+			"event_reg_param_cost"=>$p['cost'],
+			"event_reg_param_mandatory"=>$p['man'],
+			"event_reg_param_id"=>$event_reg_param_id
+		));
+	}
+	user_message("Event Registration Parameters saved.");
+	# Lets create a new one if they added one
+	if($event_reg_add_name!='0'){
+		# Add a new one
+		$stmt=db_prep("
+			INSERT INTO event_reg_param
+			SET event_id=:event_id,
+				event_reg_param_name=:event_reg_param_name,
+				event_reg_param_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_id"=>$event_id,
+			"event_reg_param_name"=>$event_reg_add_name
+		));
+		user_message("Event Registration Parameter added.");
+	}
+	return event_reg_edit();
+}
+function event_reg_del() {
+	# Save the registration parameters
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	$event_reg_param_id=intval($_REQUEST['event_reg_param_id']);
+
+	# OK, lets save the main reg parameters
+	$stmt=db_prep("
+		UPDATE event_reg_param
+		SET event_reg_param_status=0
+		WHERE event_reg_param_id=:event_reg_param_id
+	");
+	$result=db_exec($stmt,array(
+		"event_reg_param_id"=>$event_reg_param_id
+	));
+	user_message("Deleted Registration Value.");
+	return event_reg_edit();
+}
+function event_view_info() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	
+	$smarty->assign("event",$e);
+
+	# Lets get CD info
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot p
+		LEFT JOIN country c ON p.country_id=c.country_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		WHERE p.pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array("pilot_id"=>$e->info['event_cd']));
+	$cd=$result[0];
+	$smarty->assign("cd",$cd);
+	
+	$maintpl=find_template("event_view_info.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_register() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$e=new Event($event_id);
+	$e->get_teams();
+	$smarty->assign("event",$e);
+	
+	# Lets check to see if they are already registered
+	foreach($e->pilots as $p){
+		if($p['pilot_id']==$GLOBALS['user']['pilot_id']){
+			user_message("You are already Registered for this event! You can update your registration parameters here.");
+			$event_pilot_id=$p['event_pilot_id'];
+			break;
+		}
+	}
+	
+	# Get classes to choose to be available for this event
+	$stmt=db_prep("
+		SELECT *,c.class_id
+		FROM class c
+		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		ORDER BY c.class_view_order
+	");
+	$classes=db_exec($stmt,array());
+	$smarty->assign("classes",$classes);
+
+	$smarty->assign("teams",$e->teams);
+	
+	$event_pilot=array();
+	if($event_pilot_id!=0){
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN plane p ON ep.plane_id=p.plane_id
+			WHERE event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+		$event_pilot=$result[0];
+	}else{
+		$event_pilot['event_pilot_freq']='2.4GHz';
+	}
+	$smarty->assign("event_pilot",$event_pilot);
+		
+	$params=array();
+	if($event_pilot_id!=0){
+		# Lets get their reg params
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_pilot_reg_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id
+		));
+		foreach($result as $r){
+			$id=$r['event_reg_param_id'];
+			$params[$id]=$r;
+		}
+	}
+	$smarty->assign("params",$params);
+	
+	$maintpl=find_template("event_register.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_register_save() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
+	$class_id=intval($_REQUEST['class_id']);
+	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
+	$event_pilot_team=$_REQUEST['event_pilot_team'];
+	$plane_id=intval($_REQUEST['plane_id']);
+
+	# Now lets get the existing additional values
+	$params=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/reg\_param\_(\d+)\_(\S+)$/",$key,$match)){
+			$reg_id=$match[1];
+			$reg_type=$match[2];
+			$params[$reg_id][$reg_type]=$value;
+		}
+	}
+	
+	if($event_pilot_id!=0){		
+		# Lets save this existing event pilot registration
+		$stmt=db_prep("
+			UPDATE event_pilot
+			SET class_id=:class_id,
+				event_pilot_freq=:event_pilot_freq,
+				event_pilot_team=:event_pilot_team,
+				plane_id=:plane_id
+				WHERE event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array(
+			"class_id"=>$class_id,
+			"event_pilot_freq"=>$event_pilot_freq,
+			"event_pilot_team"=>$event_pilot_team,
+			"event_pilot_id"=>$event_pilot_id,
+			"plane_id"=>$plane_id
+		));
+		user_message("Registration info updated.");
+	}else{
+		# If its a new pilot, lets set the entry order
+		# Lets see what the next increment in the order is
+		$stmt=db_prep("
+			SELECT MAX(event_pilot_entry_order) as max
+			FROM event_pilot
+			WHERE event_id=:event_id
+			AND event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		if($result[0]['max']=='NULL' || $result[0]['max']==0){
+			$event_pilot_entry_order=1;
+		}else{
+			$event_pilot_entry_order=$result[0]['max']+1;
+		}
+		$event_pilot_bib=$event_pilot_entry_order;
+
+		# We need to create a new event pilot id
+		$stmt=db_prep("
+			INSERT INTO event_pilot
+			SET event_id=:event_id,
+				pilot_id=:pilot_id,
+				event_pilot_entry_order=:event_pilot_entry_order,
+				event_pilot_bib=:event_pilot_bib,
+				class_id=:class_id,
+				event_pilot_freq=:event_pilot_freq,
+				event_pilot_team=:event_pilot_team,
+				plane_id=:plane_id,
+				event_pilot_draw_status=1,
+				event_pilot_status=1
+		");
+		$result2=db_exec($stmt,array(
+			"event_id"=>$event_id,
+			"pilot_id"=>$GLOBALS['user']['pilot_id'],
+			"class_id"=>$class_id,
+			"event_pilot_entry_order"=>$event_pilot_entry_order,
+			"event_pilot_bib"=>$event_pilot_bib,
+			"event_pilot_freq"=>$event_pilot_freq,
+			"event_pilot_team"=>$event_pilot_team,
+			"plane_id"=>$plane_id
+		));
+		$event_pilot_id=$GLOBALS['last_insert_id'];
+		user_message("You Have Successfully Registered for this event!");
+	}
+	
+	# Lets update the pilot registration parameters now
+	# Lets first wipe all of the parameters clean because there are possible checkboxes
+	$stmt=db_prep("
+		UPDATE event_pilot_reg
+		SET event_pilot_reg_status=0
+		WHERE event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"event_pilot_id"=>$event_pilot_id
+	));
+	foreach($params as $reg_id=>$r){
+		$qty=$r['qty'];
+		if($qty=='on'){
+			$qty=1;
+		}
+		# Lets see if one exists with this reg type then
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_reg_param_id=:event_reg_param_id
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id,
+			"event_reg_param_id"=>$reg_id
+		));
+		if(isset($result[0])){
+			# One already exists, so update it
+			$stmt=db_prep("
+				UPDATE event_pilot_reg
+				SET event_pilot_reg_status=1,
+					event_pilot_reg_qty=:qty
+				WHERE event_pilot_reg_id=:event_pilot_reg_id
+			");
+			$result=db_exec($stmt,array(
+				"qty"=>$qty,
+				"event_pilot_reg_id"=>$result[0]['event_pilot_reg_id']
+			));
+		}else{
+			# Need to create a new one
+			$stmt=db_prep("
+				INSERT INTO event_pilot_reg
+				SET event_pilot_id=:event_pilot_id,
+					event_reg_param_id=:reg_id,
+					event_pilot_reg_qty=:qty,
+					event_pilot_reg_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_pilot_id"=>$event_pilot_id,
+				"reg_id"=>$reg_id,
+				"qty"=>$qty
+			));
+		}
+	}
+	
+	# Lets see if we need to update the pilot's ama or fai number
+	if($pilot_ama!=$GLOBALS['user']['pilot_ama'] || $pilot_fai!=$GLOBALS['user']['pilot_fai']){
+		# lets update the pilot record
+		$stmt=db_prep("
+			UPDATE pilot
+			SET pilot_ama=:pilot_ama,
+				pilot_fai=:pilot_fai
+				WHERE pilot_id=:pilot_id
+		");
+		$result=db_exec($stmt,array("pilot_ama"=>$pilot_ama,"pilot_fai"=>$pilot_fai,"pilot_id"=>$GLOBALS['user']['pilot_id']));
+	}
+	
+	# Lets see if this pilot has a plane in his my planes area already
+	if($plane_id!=0){
+		$stmt=db_prep("
+			SELECT *
+			FROM pilot_plane
+			WHERE pilot_id=:pilot_id
+			AND plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("pilot_id"=>$GLOBALS['user']['pilot_id'],"plane_id"=>$plane_id));
+		if(!isset($result[0])){
+			# Doesn't have one of these planes in their quiver, so lets put one in
+			$stmt=db_prep("
+				INSERT INTO pilot_plane
+				SET pilot_id=:pilot_id,
+					plane_id=:plane_id,
+					pilot_plane_color='',
+					pilot_plane_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"pilot_id"=>$GLOBALS['user']['pilot_id'],
+				"plane_id"=>$plane_id
+			));
+		}
+	}
+	# Lets see if this pilot has a location in his my locations area already
+	# Get the event info
+	$e=new Event($event_id);
+	
+	if($e->info['location_id']!=0){
+		$stmt=db_prep("
+			SELECT *
+			FROM pilot_location
+			WHERE pilot_id=:pilot_id
+			AND location_id=:location_id
+		");
+		$result=db_exec($stmt,array("pilot_id"=>$GLOBALS['user']['pilot_id'],"location_id"=>$e->info['location_id']));
+		if(!isset($result[0])){
+			# Doesn't have one of these locations, so lets put one in
+			$stmt=db_prep("
+				INSERT INTO pilot_location
+				SET pilot_id=:pilot_id,
+					location_id=:location_id,
+					pilot_location_status=1
+			");
+			$result2=db_exec($stmt,array(
+				"pilot_id"=>$GLOBALS['user']['pilot_id'],
+				"location_id"=>$e->info['location_id']
+			));
+		}
+	}
+	
+	log_action($event_pilot_id);
+	
+	# Send reg email to pilot and CD with additional reg values
+	$params=array();
+	# Lets get their reg params
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot_reg
+		WHERE event_pilot_id=:event_pilot_id
+			AND event_pilot_reg_status=1
+	");
+	$result=db_exec($stmt,array(
+		"event_pilot_id"=>$event_pilot_id
+	));
+	foreach($result as $r){
+		$id=$r['event_reg_param_id'];
+		$params[$id]=$r;
+	}
+	$data['params']=$params;
+	$data['info']=$event->info;
+	$data['pilots']=$event->pilots;
+	$data['reg_options']=$event->reg_options;
+	
+	if($GLOBALS['user']['user_email']!=''){
+		send_email('registration',$GLOBALS['user']['user_email'],$data);
+	}
+	
+	return event_register();
+}
+
+
 function event_delete() {
 	global $smarty;
 	global $user;
@@ -609,25 +1171,29 @@ function event_pilot_edit() {
 	$pilot_id=intval($_REQUEST['pilot_id']);
 	$pilot_name=$_REQUEST['pilot_name'];
 
+	$event_pilot_edit=$_REQUEST['event_pilot_edit'];
+
 	$event=new Event($event_id);
 	$event->get_teams();
 	$smarty->assign("event",$event);
-	
-	# Check to see if the pilot already exists in this event
-	$stmt=db_prep("
-		SELECT *
-		FROM event_pilot ep
-		WHERE ep.event_id=:event_id
-			AND ep.pilot_id=:pilot_id
-			AND ep.event_pilot_status=1
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
-	if(isset($result[0])){
-		# The record already exists, so lets see if it has its status to 1 or not
-		user_message("The Pilot you have chosen to add is already in this event.",1);
-		return event_view();
-	}
 
+	if($event_pilot_edit==0){
+		# If this is not a return edit to this event pilot
+		# Check to see if the pilot already exists in this event
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			WHERE ep.event_id=:event_id
+				AND ep.pilot_id=:pilot_id
+				AND ep.event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id,"pilot_id"=>$pilot_id));
+		if(isset($result[0])){
+			# The record already exists, so lets see if it has its status to 1 or not
+			user_message("The Pilot you have chosen to add is already in this event.",1);
+			return event_view();
+		}
+	}
 	$pilot=array();
 
 	# If the event_pilot_id is zero and the pilot_id is zero, then we are making a new pilot
@@ -654,6 +1220,7 @@ function event_pilot_edit() {
 			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
+			$pilot['event_pilot_draw_status']=$_REQUEST['event_pilot_draw_status'];
 		}
 	}elseif($pilot_id!=0){
 		# They have chosen a pilot from the drop down list, so lets get that info
@@ -698,6 +1265,7 @@ function event_pilot_edit() {
 			$pilot['plane_id']=$_REQUEST['plane_id'];
 			$pilot['plane_name']=$_REQUEST['plane_name'];
 			$pilot['event_pilot_bib']=$_REQUEST['event_pilot_bib'];
+			$pilot['event_pilot_draw_status']=$_REQUEST['event_pilot_draw_status'];
 		}else{
 			# Lets set the name that was sent
 			# Lets first see if it has a comma if it was pasted as last, first
@@ -729,6 +1297,7 @@ function event_pilot_edit() {
 			$pilot['event_pilot_entry_order']=$result[0]['max']+1;
 		}
 		$pilot['event_pilot_bib']=$pilot['event_pilot_entry_order'];
+		$pilot['event_pilot_draw_status']=1;
 	}
 	
 	# Lets set a default for the Channel
@@ -737,12 +1306,12 @@ function event_pilot_edit() {
 	}
 	$smarty->assign("pilot",$pilot);
 	
-	# Lets get the classes
+	# Get classes to choose to be available for this event
 	$stmt=db_prep("
-		SELECT *
-		FROM class
-		WHERE 1
-		ORDER BY class_view_order
+		SELECT *,c.class_id
+		FROM class c
+		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		ORDER BY c.class_view_order
 	");
 	$classes=db_exec($stmt,array());
 	$smarty->assign("classes",$classes);
@@ -752,6 +1321,26 @@ function event_pilot_edit() {
 
 	$smarty->assign("teams",$event->teams);
 	$smarty->assign("event_id",$event_id);
+	
+	# Get the event reg parameters for this pilot
+	$params=array();
+	if($event_pilot_id!=0){
+		# Lets get their reg params
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_pilot_reg_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id
+		));
+		foreach($result as $r){
+			$id=$r['event_reg_param_id'];
+			$params[$id]=$r;
+		}
+	}
+	$smarty->assign("params",$params);
 
 	$maintpl=find_template("event_pilot_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -777,6 +1366,18 @@ function event_pilot_save() {
 	$from_confirm=intval($_REQUEST['from_confirm']);
 	$event_pilot_entry_order=intval($_REQUEST['event_pilot_entry_order']);
 	$event_pilot_bib=intval($_REQUEST['event_pilot_bib']);
+	$event_pilot_paid_flag=intval($_REQUEST['event_pilot_paid_flag']);
+	$event_pilot_draw_status=intval($_REQUEST['event_pilot_draw_status']);
+
+	# Now lets get the existing additional values
+	$params=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/reg\_param\_(\d+)\_(\S+)$/",$key,$match)){
+			$reg_id=$match[1];
+			$reg_type=$match[2];
+			$params[$reg_id][$reg_type]=$value;
+		}
+	}
 	
 	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
 	if($pilot_id==0){
@@ -814,6 +1415,7 @@ function event_pilot_save() {
 				$smarty->assign("event_pilot_freq",$event_pilot_freq);
 				$smarty->assign("event_pilot_team",$event_pilot_team);
 				$smarty->assign("event_pilot_bib",$event_pilot_bib);
+				$smarty->assign("event_pilot_draw_status",$event_pilot_draw_status);
 				$smarty->assign("plane_id",$plane_id);
 				
 				# Lets add the state name and country name for good presentation
@@ -860,7 +1462,6 @@ function event_pilot_save() {
 		$pilot_id=$GLOBALS['last_insert_id'];
 		user_message("Created new pilot $pilot_first_name $pilot_last_name.");
 	}
-
 	
 	if($event_pilot_id!=0){		
 		# Lets save this existing event pilot
@@ -872,7 +1473,9 @@ function event_pilot_save() {
 				event_pilot_bib=:event_pilot_bib,
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
-				plane_id=:plane_id
+				plane_id=:plane_id,
+				event_pilot_paid_flag=:event_pilot_paid_flag,
+				event_pilot_draw_status=:event_pilot_draw_status
 				WHERE event_pilot_id=:event_pilot_id
 		");
 		$result=db_exec($stmt,array(
@@ -883,7 +1486,9 @@ function event_pilot_save() {
 			"event_pilot_freq"=>$event_pilot_freq,
 			"event_pilot_team"=>$event_pilot_team,
 			"event_pilot_id"=>$event_pilot_id,
-			"plane_id"=>$plane_id
+			"plane_id"=>$plane_id,
+			"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+			"event_pilot_draw_status"=>$event_pilot_draw_status
 		));
 	}else{
 		# We need to create a new event pilot id
@@ -906,6 +1511,8 @@ function event_pilot_save() {
 					event_pilot_freq=:event_pilot_freq,
 					event_pilot_team=:event_pilot_team,
 					plane_id=:plane_id,
+					event_pilot_paid_flag=:event_pilot_paid_flag,
+					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
 				WHERE event_pilot_id=:event_pilot_id
 			");
@@ -917,6 +1524,8 @@ function event_pilot_save() {
 				"event_pilot_freq"=>$event_pilot_freq,
 				"event_pilot_team"=>$event_pilot_team,
 				"plane_id"=>$plane_id,
+				"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+				"event_pilot_draw_status"=>$event_pilot_draw_status,
 				"event_pilot_id"=>$result[0]['event_pilot_id']
 			));
 			$event_pilot_id=$result[0]['event_pilot_id'];
@@ -932,6 +1541,8 @@ function event_pilot_save() {
 					event_pilot_freq=:event_pilot_freq,
 					event_pilot_team=:event_pilot_team,
 					plane_id=:plane_id,
+					event_pilot_paid_flag=:event_pilot_paid_flag,
+					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
 			");
 			$result2=db_exec($stmt,array(
@@ -942,7 +1553,9 @@ function event_pilot_save() {
 				"event_pilot_bib"=>$event_pilot_bib,
 				"event_pilot_freq"=>$event_pilot_freq,
 				"event_pilot_team"=>$event_pilot_team,
-				"plane_id"=>$plane_id
+				"plane_id"=>$plane_id,
+				"event_pilot_paid_flag"=>$event_pilot_paid_flag,
+				"event_pilot_draw_status"=>$event_pilot_draw_status
 			));
 			$event_pilot_id=$GLOBALS['last_insert_id'];
 		}
@@ -1019,9 +1632,136 @@ function event_pilot_save() {
 		}
 	}
 	
+	# Lets update the pilot registration parameters now
+	# Lets first wipe all of the parameters clean because there are possible checkboxes
+	$stmt=db_prep("
+		UPDATE event_pilot_reg
+		SET event_pilot_reg_status=0
+		WHERE event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"event_pilot_id"=>$event_pilot_id
+	));
+	foreach($params as $reg_id=>$r){
+		$qty=$r['qty'];
+		if($qty=='on'){
+			$qty=1;
+		}
+		# Lets see if one exists with this reg type then
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_reg_param_id=:event_reg_param_id
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id,
+			"event_reg_param_id"=>$reg_id
+		));
+		if(isset($result[0])){
+			# One already exists, so update it
+			$stmt=db_prep("
+				UPDATE event_pilot_reg
+				SET event_pilot_reg_status=1,
+					event_pilot_reg_qty=:qty
+				WHERE event_pilot_reg_id=:event_pilot_reg_id
+			");
+			$result=db_exec($stmt,array(
+				"qty"=>$qty,
+				"event_pilot_reg_id"=>$result[0]['event_pilot_reg_id']
+			));
+		}else{
+			# Need to create a new one
+			$stmt=db_prep("
+				INSERT INTO event_pilot_reg
+				SET event_pilot_id=:event_pilot_id,
+					event_reg_param_id=:reg_id,
+					event_pilot_reg_qty=:qty,
+					event_pilot_reg_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_pilot_id"=>$event_pilot_id,
+				"reg_id"=>$reg_id,
+				"qty"=>$qty
+			));
+		}
+	}
+	
 	log_action($event_pilot_id);
 	user_message("Updated event pilot info.");
 	return event_view();
+}
+function event_pilot_edit_pilot() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+
+	$event=new Event($event_id);
+	$event->get_teams();
+	$smarty->assign("event",$event);
+
+	$pilot=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot ep
+		LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+		WHERE ep.event_pilot_id=:event_pilot_id
+	");
+	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+	$pilot=$result[0];
+	
+	$smarty->assign("states",get_states());
+	$smarty->assign("countries",get_countries());
+
+	$smarty->assign("pilot",$pilot);
+	$smarty->assign("event_id",$event_id);
+	$smarty->assign("event_pilot_id",$event_pilot_id);
+
+	$maintpl=find_template("event_pilot_edit_pilot.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_pilot_save_pilot() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	$pilot_first_name=$_REQUEST['pilot_first_name'];
+	$pilot_last_name=$_REQUEST['pilot_last_name'];
+	$pilot_city=$_REQUEST['pilot_city'];
+	$state_id=intval($_REQUEST['state_id']);
+	$country_id=intval($_REQUEST['country_id']);
+	$pilot_ama=$_REQUEST['pilot_ama'];
+	$pilot_fai=$_REQUEST['pilot_fai'];
+	$pilot_email=$_REQUEST['pilot_email'];
+
+	# OK, lets save the pilot changes and go back to the event pilot edit
+	$stmt=db_prep("
+		UPDATE pilot
+		SET pilot_first_name=:pilot_first_name,
+			pilot_last_name=:pilot_last_name,
+			pilot_city=:pilot_city,
+			state_id=:state_id,
+			country_id=:country_id,
+			pilot_email=:pilot_email,
+			pilot_ama=:pilot_ama,
+			pilot_fai=:pilot_fai
+			WHERE pilot_id=:pilot_id
+	");
+	$result=db_exec($stmt,array(
+		"pilot_first_name"=>$pilot_first_name,
+		"pilot_last_name"=>$pilot_last_name,
+		"pilot_city"=>$pilot_city,
+		"state_id"=>$state_id,
+		"country_id"=>$country_id,
+		"pilot_email"=>$pilot_email,
+		"pilot_ama"=>$pilot_ama,
+		"pilot_fai"=>$pilot_fai,
+		"pilot_id"=>$pilot_id
+	));
+	user_message("Updated Pilot Info");
+	return event_pilot_edit();
 }
 function event_pilot_remove() {
 	global $smarty;
@@ -1308,10 +2048,15 @@ function event_round_edit() {
 		# We actually need to fill in the default round data for an empty round
 		$event->get_new_round($round_number);
 		if($event->info['event_type_code']=='f3k'){
-			$flight_type_id=$event->f3k_flight_type_id;
-			$new_flight_types=$flight_types[$flight_type_id];
-			$flight_types=array();
-			$flight_types[$flight_type_id]=$new_flight_types;
+			if($event->f3k_flight_type_id!=0){
+				$flight_type_id=$event->f3k_flight_type_id;
+				$new_flight_types=$flight_types[$flight_type_id];
+				$flight_types=array();
+				$flight_types[$flight_type_id]=$new_flight_types;
+			}
+		}
+		if($event->info['event_type_code']=='f3j'){
+			$event->rounds[$round_number]['event_round_time_choice']=10;
 		}
 		# Lets set the round to be scored or not depending on the zero choice
 		if($zero_round){
@@ -1319,6 +2064,7 @@ function event_round_edit() {
 		}else{
 			$event->rounds[$round_number]['event_round_score_status']=1;
 		}
+		$event->rounds[$round_number]['event_round_score_second']=1;
 	}else{
 		# Step through and get the round number from the event_round_id
 		foreach($event->rounds as $event_round_number=>$data){
@@ -1362,6 +2108,11 @@ function event_round_save() {
 		$event_round_score_status=1;
 	}else{
 		$event_round_score_status=0;
+	}
+	if(isset($_REQUEST['event_round_score_second']) && ($_REQUEST['event_round_score_second']!='')){
+		$event_round_score_second=$_REQUEST['event_round_score_second'];
+	}else{
+		$event_round_score_second=1;
 	}
 	$new_round=0;
 	if($event_round_id==0){
@@ -1449,6 +2200,7 @@ function event_round_save() {
 					flight_type_id=:flight_type_id,
 					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
+					event_round_score_second=:event_round_score_second,
 					event_round_needs_calc=0,
 					event_round_flyoff=:event_round_flyoff,
 					event_round_status=1
@@ -1459,7 +2211,8 @@ function event_round_save() {
 				"flight_type_id"=>$flight_type_id,
 				"event_round_time_choice"=>$event_round_time_choice,
 				"event_round_flyoff"=>$event_round_flyoff,
-				"event_round_score_status"=>$event_round_score_status
+				"event_round_score_status"=>$event_round_score_status,
+				"event_round_score_second"=>$event_round_score_second
 			));
 			$event_round_id=$GLOBALS['last_insert_id'];
 			$_REQUEST['event_round_id']=$event_round_id;
@@ -1471,6 +2224,7 @@ function event_round_save() {
 			SET flight_type_id=:flight_type_id,
 				event_round_time_choice=:event_round_time_choice,
 				event_round_score_status=:event_round_score_status,
+					event_round_score_second=:event_round_score_second,
 				event_round_flyoff=:event_round_flyoff,
 				event_round_needs_calc=0
 			WHERE event_round_id=:event_round_id
@@ -1479,6 +2233,7 @@ function event_round_save() {
 			"flight_type_id"=>$flight_type_id,
 			"event_round_time_choice"=>$event_round_time_choice,
 			"event_round_score_status"=>$event_round_score_status,
+			"event_round_score_second"=>$event_round_score_second,
 			"event_round_flyoff"=>$event_round_flyoff,
 			"event_round_id"=>$event_round_id
 		));
@@ -1557,6 +2312,16 @@ function event_round_save() {
 				}
 			}
 		}
+		# If there was a change of flight type, then lets update the flights
+		if($flight_type_id!=$ftype_id){
+			$stmt=db_prep("
+				UPDATE event_round_flight
+				SET flight_type_id=:flight_type_id,
+					event_round_flight_score=1
+				WHERE event_round_id=:event_round_id
+			");
+			$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"flight_type_id"=>$flight_type_id));
+		}
 	}
 	sub_trace();
 
@@ -1605,6 +2370,8 @@ function event_round_save() {
 			if($value=='on'){
 				$value=1;
 			}
+			# Replace commas with periods
+			$value=preg_replace("/,/",'.',$value);
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 			$data[$event_pilot_round_flight_id]['reflight']=1;
 		}elseif(preg_match("/^pilot_(\S+)\_(\d+)\_(\d+)\_(\d+)$/",$key,$match)){
@@ -1615,6 +2382,7 @@ function event_round_save() {
 			if($value=='on'){
 				$value=1;
 			}
+			$value=preg_replace("/,/",'.',$value);
 			$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id][$field]=$value;
 		}
 	}
@@ -2022,6 +2790,24 @@ function event_print_overall() {
 	$maintpl=find_template("print_event_overall.tpl");
 	return $smarty->fetch($maintpl);
 }
+function event_print_rank() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_edit();
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+	$e->calculate_event_totals();
+
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template("print_event_rankings.tpl");
+	return $smarty->fetch($maintpl);
+}
 function event_print_round() {
 	global $smarty;
 
@@ -2165,6 +2951,7 @@ function save_individual_flight(){
 		if($field_value=='on'){
 			$field_value=1;
 		}
+		$field_value=preg_replace("/,/",'.',$field_value);
 	}
 
 	# Lets determine if we need to create a new event round record first
@@ -2438,23 +3225,37 @@ function event_draw_edit() {
 	$result=db_exec($stmt,array("flight_type_id"=>$flight_type_id));
 	$ft=$result[0];
 
-	$num_teams=count($e->teams);
+	$draw_pilots=array();
+	$draw_teams=array();
+	foreach($e->pilots as $p){
+		if($p['event_pilot_draw_status']==1){
+			$draw_pilots[]=$p;
+			$team=$p['event_pilot_team'];
+			if(!in_array($team,$draw_teams)){
+				$draw_teams[]=$team;
+			}
+		}
+	}
+
+	$num_teams=count($draw_teams);
 	$min_groups_np=2;
-	$max_groups_np=floor(count($e->pilots)/2);
+	$max_groups_np=floor(count($draw_pilots)/2);
 	
 	# Lets determine the largest team
-	foreach($e->pilots as $p){
+	foreach($draw_pilots as $p){
 		$team_name=$p['event_pilot_team'];
 		$teams[$team_name]++;
 	}
 	arsort($teams);
 	$max_on_team=array_shift($teams);
 	$min_groups_p=$max_on_team;
-	$max_groups_p=floor(count($e->pilots)/2);
+	$max_groups_p=floor(count($draw_pilots)/2);
 	
 
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
+	$smarty->assign("draw_pilots",$draw_pilots);
+	$smarty->assign("draw_teams",$draw_teams);
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("ft",$ft);
@@ -2866,11 +3667,6 @@ function event_draw_print() {
 	$print_type=$_REQUEST['print_type'];
 	$print_format=$_REQUEST['print_format'];
 
-	$e=new Event($event_id);
-	$e->get_teams();
-	$e->get_rounds();
-	$e->get_draws();
-
 	$template='';
 	$title='';
 	$orientation='P';
@@ -2898,6 +3694,12 @@ function event_draw_print() {
 			$orientation="P";
 			$sort_by='team';
 			break;
+		case "f3b_table":
+			$template="print_draw_f3b_table.tpl";
+			$title="Draw Table";
+			$orientation="P";
+			$sort_by='team';
+			break;
 		case "matrix":
 		default :
 			$template="print_draw_matrix.tpl";
@@ -2907,6 +3709,11 @@ function event_draw_print() {
 			break;
 	}
 	$_REQUEST['sort_by']=$sort_by;
+	
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->get_draws();
 
 	
 	# Lets get the draw round flight types if there are any
@@ -3142,10 +3949,27 @@ function event_import() {
 	# If the file is imported, lets get the content
 	$lines=array();
 	if($imported){
-		$rawlines=file($import_file);
+		$field_separator=$_REQUEST['field_separator'];
+		$decimal_type=$_REQUEST['decimal_type'];
+        $rawfile=file_get_contents($import_file);
+        if(preg_match("/\r\n/",$rawfile)){
+                # This file has a carriage return and line feed
+                $rawlines=explode("\r\n",$rawfile);
+        }elseif(preg_match("/\r/",$rawfile)){
+                # This file only has a carriage return
+                $rawlines=explode("\r",$rawfile);
+        }
 		foreach($rawlines as $r){
 			$templine=trim($r);
-			$line_array=explode(",",$templine);
+			if($r=='' || preg_match("/^\s+$/",$r)){
+				continue;
+			}
+			$line_array=explode($field_separator,$templine);
+			# Lets convert the commas into periods now
+			foreach($line_array as $key=>$la){
+				$temp=preg_replace("/\,/",'.',$la);
+				$line_array[$key]=$temp;
+			}
 			# Lets see what the columns are
 			$lines[]=$line_array;
 		}
@@ -3538,6 +4362,8 @@ function event_import_f3k() {
 		foreach($rawlines as $r){
 			$templine=trim($r);
 			$line_array=explode(",",$templine);
+			# trim each field
+			array_walk($line_array, create_function('&$val', '$val = trim($val);'));
 			$lines[]=array("fields"=>$line_array);
 			if(count($line_array)!=$should_have){
 				$ok=0;
@@ -3922,6 +4748,46 @@ function event_import_f3k_save() {
 	$event->event_save_totals();
 	
 	return event_view();
+}
+function event_registration_report() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	$e->get_teams();
+	$smarty->assign("event",$e);
+	
+	# lets first get all of the event params
+	$reg_options=$e->reg_options;
+
+	# lets get the pilot registration info
+	$pilot_reg_options=array();
+	foreach($e->pilots as $event_pilot_id=>$p){
+		# Lets get their reg params
+		$stmt=db_prep("
+			SELECT *	
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_pilot_reg_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$p['event_pilot_id']
+		));
+		foreach($result as $r){
+			$id=$r['event_reg_param_id'];
+			$pilot_reg_options[$event_pilot_id][$id]=$r;
+			$reg_options[$id]['qty']+=$r['event_pilot_reg_qty'];
+		}
+	}
+	$smarty->assign("pilot_reg_options",$pilot_reg_options);
+	$smarty->assign("reg_options",$reg_options);
+	
+	if(isset($_REQUEST['use_print_header'])){
+		$maintpl=find_template("event_register_report_print.tpl");
+	}else{
+		$maintpl=find_template("event_register_report.tpl");
+	}
+	return $smarty->fetch($maintpl);
 }
 
 ?>

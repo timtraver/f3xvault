@@ -179,6 +179,8 @@ function copy_location_values(){
 	document.create_new_location.from_series_name.value=document.main.series_name.value;
 	document.create_new_location.from_club_id.value=document.main.club_id.value;
 	document.create_new_location.from_club_name.value=document.main.club_name.value;
+	document.create_new_location.from_event_reg_flag.value=document.main.event_reg_flag.value;
+	document.create_new_location.from_event_notes.value=document.main.event_notes.value;
 }
 function copy_series_values(){
 	document.create_new_series.series_name.value=document.main.series_name.value;
@@ -196,6 +198,8 @@ function copy_series_values(){
 	document.create_new_series.from_event_cd_name.value=document.main.event_cd_name.value;
 	document.create_new_series.from_club_id.value=document.main.club_id.value;
 	document.create_new_series.from_club_name.value=document.main.club_name.value;
+	document.create_new_series.from_event_reg_flag.value=document.main.event_reg_flag.value;
+	document.create_new_series.from_event_notes.value=document.main.event_notes.value;
 }
 function copy_club_values(){
 	document.create_new_club.club_name.value=document.main.club_name.value;
@@ -213,6 +217,8 @@ function copy_club_values(){
 	document.create_new_club.from_event_cd_name.value=document.main.event_cd_name.value;
 	document.create_new_club.from_series_id.value=document.main.series_id.value;
 	document.create_new_club.from_series_name.value=document.main.series_name.value;
+	document.create_new_club.from_event_reg_flag.value=document.main.event_reg_flag.value;
+	document.create_new_club.from_event_notes.value=document.main.event_notes.value;
 }
 function copy_cd_values(){
 	document.create_new_cd.pilot_name.value=document.main.event_cd_name.value;
@@ -230,6 +236,8 @@ function copy_cd_values(){
 	document.create_new_cd.from_event_type_id.value=document.main.event_type_id.value;
 	document.create_new_cd.from_series_id.value=document.main.series_id.value;
 	document.create_new_cd.from_series_name.value=document.main.series_name.value;
+	document.create_new_cd.from_event_reg_flag.value=document.main.event_reg_flag.value;
+	document.create_new_cd.from_event_notes.value=document.main.event_notes.value;
 }
 function check_event(){
 	if(document.main.location_id.value==0 || document.main.location_id.value==''){
@@ -246,6 +254,15 @@ function check_event(){
 	}
 	return true;
 }
+function reg_check(){
+	var reg=document.getElementById('reg_button');
+	if(document.main.event_reg_flag.value==1){
+		reg.style.display="inline";
+	}else{
+		reg.style.display="none";
+	}
+	return;
+}
 </script>
 {/literal}
 
@@ -256,7 +273,7 @@ function check_event(){
 		</h1>
 		<div class="entry-content clearfix">
 
-<h1 class="post-title entry-title">Edit Basic Event Parameters</h1>
+<h1 class="post-title entry-title">Basic Event Parameters</h1>
 <form name="main" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_save">
@@ -335,25 +352,43 @@ function check_event(){
 	</select>
 	</td>
 </tr>
+{if $event->info.event_id!=0}
+<tr>
+	<th>Registration Status</th>
+	<td>
+	
+	<select name="event_reg_flag" onChange="reg_check();">
+		<option value="0" {if $event->info.event_reg_flag==0}SELECTED{/if}>Pilots Are Not Allowed to Register for this Event</option>
+		<option value="1" {if $event->info.event_reg_flag==1}SELECTED{/if}>Pilots Are Allowed to Register for this Event</option>
+	</select>
+		<input type="button" id="reg_button" class="button" value=" Registration Parameters " style="float:right;" onclick="reg_params.submit();">
+	</td>
+</tr>
+<tr>
+	<th valign="top">Event Notes</th>
+	<td>
+	<textarea cols="70" rows="4" name="event_notes">{$event->info.event_notes}</textarea>
+	</td>
+</tr>
+<tr>
+	<th valign="top">Allowed Classes</th>
+	<td>
+		{foreach $classes as $c}
+			<input type="checkbox" name="class_{$c.class_id}" {if $c.event_class_status==1}CHECKED{/if}> {$c.class_description}<br>
+		{/foreach}
+	</td>
+</tr>
+{/if}
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
-		{if $event->info.event_id!=0}
-			<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
-		{/if}
-		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
-			<input type="button" value=" Import F3F Event " class="block-button" onClick="document.import_f3f.submit();">
-		{/if}
-		{if $event->info.event_id!=0 && $event->info.event_type_code=='f3k'}
-			<input type="button" value=" Import F3K Rounds " class="block-button" onClick="document.import_f3k.submit();">
-		{/if}
 	</th>
 </tr>
 </table>
 </form>
 
 {if $event->info.event_id!=0}
-<h1 class="post-title entry-title">Edit Advanced Event Parameters</h1>
+<h1 class="post-title entry-title">Advanced Event Parameters</h1>
 <form name="event_options" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_param_save">
@@ -377,13 +412,20 @@ function check_event(){
 <tr>
 	<th colspan="2">
 		<input type="submit" value=" Save These Event Parameters " class="block-button">
+		<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
+		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
+			<input type="button" value=" Import F3F Event " class="block-button" onClick="document.import_f3f.submit();">
+		{/if}
+		{if $event->info.event_type_code=='f3k'}
+			<input type="button" value=" Import F3K Rounds " class="block-button" onClick="document.import_f3k.submit();">
+		{/if}
 	</th>
 </tr>
 
 </table>
 </form>
 
-<h1 class="post-title entry-title">Edit Event Access</h1>
+<h1 class="post-title entry-title">Event Admin Access</h1>
 <form name="event_user_add" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_user_save">
@@ -419,6 +461,9 @@ function check_event(){
 {else}
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<script>
+reg_check();
+</script>
 {/if}
 </form>
 <form name="import_f3f" method="POST">
@@ -453,6 +498,8 @@ function check_event(){
 <input type="hidden" name="from_series_name" value="">
 <input type="hidden" name="from_club_id" value="">
 <input type="hidden" name="from_club_name" value="">
+<input type="hidden" name="from_event_reg_flag" value="">
+<input type="hidden" name="from_event_notes" value="">
 </form>
 <form name="create_new_series" method="POST">
 <input type="hidden" name="action" value="series">
@@ -476,6 +523,8 @@ function check_event(){
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_club_id" value="">
 <input type="hidden" name="from_club_name" value="">
+<input type="hidden" name="from_event_reg_flag" value="">
+<input type="hidden" name="from_event_notes" value="">
 </form>
 <form name="create_new_club" method="POST">
 <input type="hidden" name="action" value="club">
@@ -499,6 +548,8 @@ function check_event(){
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_series_id" value="">
 <input type="hidden" name="from_series_name" value="">
+<input type="hidden" name="from_event_reg_flag" value="">
+<input type="hidden" name="from_event_notes" value="">
 </form>
 <form name="create_new_cd" method="POST">
 <input type="hidden" name="action" value="pilot">
@@ -522,11 +573,18 @@ function check_event(){
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_series_id" value="">
 <input type="hidden" name="from_series_name" value="">
+<input type="hidden" name="from_event_reg_flag" value="">
+<input type="hidden" name="from_event_notes" value="">
 </form>
 
 <form name="event_draw" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="reg_params" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_reg_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 

@@ -6,12 +6,10 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
-{$flight_type_code=''}
-{$flight_type_subs=0}
-{foreach $event->rounds.$round_number.flights as $f}
-	{$flight_type_code=$f.flight_type_code}
-	{$flight_type_subs=$f.flight_type_sub_flights}
-{/foreach}
+{$flight_type_id=$event->rounds.$round_number.flight_type_id}
+{$flight_type_code=$flight_types.$flight_type_id.flight_type_code}
+{$flight_type_subs=$flight_types.$flight_type_id.flight_type_sub_flights}
+{if $flight_type_subs==''}{$flight_type_subs=0}{/if}
 function save_data(element) {ldelim}
 	var event_round_score_status=document.main.elements["event_round_score_status"].checked ? 1 : 0;
 	{if $permission==1}
@@ -158,6 +156,8 @@ $(function() {ldelim}
 	});
 });
 {/literal}
+</script>
+<script>
 function check_permission() {ldelim}
 	{if $permission!=1}
 		alert('Sorry, but you do not have permission to edit this event. Contact the event owner if you need access to edit this event.');
@@ -230,7 +230,7 @@ function check_permission() {ldelim}
 			</th>
 			<td>
 				{if $event->info.event_type_time_choice==1}
-					<input type="text" size="5" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
+					<input type="text" size="2" name="event_round_time_choice" value="{$event->rounds.$round_number.event_round_time_choice}"> Minutes
 				{else}
 					<input type="hidden" name="event_round_time_choice" value="0">
 				{/if}
@@ -240,8 +240,8 @@ function check_permission() {ldelim}
 			{/if}
 		</tr>
 		<tr>
-			<th nowrap>Event Round Sort By</th>
-			<td>
+			<th nowrap{if $event->info.event_type_code=='td'} rowspan="2"{/if}>Event Round Sort By</th>
+			<td{if $event->info.event_type_code=='td'} rowspan="2"{/if}>
 				<select name="sort_by" onChange="document.sort_round.sort_by.value=document.main.sort_by.value; sort_round.submit();">
 				<option value="round_rank"{if $sort_by=='round_rank'} SELECTED{/if}>Round Rank</option>
 				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
@@ -254,11 +254,22 @@ function check_permission() {ldelim}
 				<option value="alphabetical_last"{if $sort_by=='alphabetical_last'} SELECTED{/if}>Alphabetical Order - Last Name</option>
 				</select>
 			</td>
+			{if $event->info.event_type_code=='td'}
+				<th nowrap>Round Scoring Points</th>
+				<td>
+					<input type="text" size="2" name="event_round_score_second" value="{$event->rounds.$round_number.event_round_score_second}"> Points Per Second
+				</td>
+		</tr>
+		<tr>
+			{/if}
+			
 			<th nowrap>Include This Round In Final Results</th>
 			<td align="left">
 				<input type="checkbox" name="event_round_score_status"{if $event->rounds.$round_number.event_round_score_status==1} CHECKED{/if}>
 			</td>
 		</tr>
+		
+		
 		{if $event->info.event_type_flyoff==1}
 		<tr>
 			<th nowrap>Flyoff Number</th>
@@ -271,10 +282,14 @@ function check_permission() {ldelim}
 		<br>
 		<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
 		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-		{if $event_round_id !=0 && $permission==1}
+		{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 			<input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 		{/if}
 		<br>
+		
+		{if $event->info.event_type_code=='f3k' && $event_round_id==0 && !$event->rounds.$round_number.flights.$flight_type_id.pilots}
+		</form>
+		{else}
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
@@ -304,10 +319,10 @@ function check_permission() {ldelim}
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
 					{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group}
-						<th align="center">Order</th>
+						<th align="center">Flight Order</th>
 					{/if}
 				{else}
-					<th align="center">Order</th>
+					<th align="center">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
@@ -390,7 +405,7 @@ function check_permission() {ldelim}
 						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
+						{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
 						{/if}
 					</td>
 					<td align="right" nowrap>
@@ -502,17 +517,19 @@ function check_permission() {ldelim}
 			{/if}
 		{/foreach}
 		</table>
-
 		</form>
 <br>
 <input type="button" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="block-button">
 <input type="button" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="block-button">
 <input type="button" value=" Print Round Detail " onClick="document.printround.submit();" class="block-button">
 <input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-{if $event_round_id !=0 && $permission==1}
+{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 <input type="button" value=" Delete This Round " class="block-button" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 {/if}
 
+</div>
+
+{if $flight_types.$flight_type_id.flight_type_reflight==1}
 <div id="add_reflight" style="display: hidden;overflow: hidden;">
 		<form name="reflight" method="POST">
 		<input type="hidden" name="action" value="event">
@@ -534,9 +551,9 @@ function check_permission() {ldelim}
 		<br style="clear:both" />
 		</form>
 </div>
+{/if}
 
-
-</div>
+		{/if}
 
 <form name="sort_round" method="GET">
 <input type="hidden" name="action" value="event">

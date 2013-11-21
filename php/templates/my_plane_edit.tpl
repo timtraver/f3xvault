@@ -101,8 +101,8 @@ My Plane
 	<td>
 		<input type="text" size="10" name="pilot_plane_auw" value="{$pilot_plane.pilot_plane_auw|string_format:'%.1f'}">
 		<select name="pilot_plane_auw_units">
-		<option value="oz" {if $plane.pilot_plane_auw_units=="oz"}SELECTED{/if}>Ounces</option>
-		<option value="gr" {if $plane.pilot_plane_auw_units=="gr"}SELECTED{/if}>Grams</option>
+		<option value="oz" {if $pilot_plane.pilot_plane_auw_units=="oz"}SELECTED{/if}>Ounces</option>
+		<option value="gr" {if $pilot_plane.pilot_plane_auw_units=="gr"}SELECTED{/if}>Grams</option>
 		</select>
 	</td>
 </tr>

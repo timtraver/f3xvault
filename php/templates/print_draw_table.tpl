@@ -13,11 +13,21 @@
 		</table>
 		{$bgcolor="lightgray"}
 		{$oldteam="nada"}
-		<h2 class="post-title entry-title">Pilot Matrix List - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
+		<h2 class="post-title entry-title">Pilot Matrix List{if $event->info.event_type_code!="f3k"} - {$event->flight_types.$flight_type_id.flight_type_name}{/if}</h2>		
 		<table width="550" cellpadding="3" cellspacing="1" style="border: 1px solid black;">
 		<tr bgcolor="lightgray">
 			<th width="250" colspan="2"></th>
-			<th colspan="{$event->rounds|count}">Event Round/Group</th>
+			<th colspan="{$event->rounds|count}">Event Round / Group
+			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
+				/ Spot
+			{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+				/ Lane
+			{else}
+				/ Order
+			{/if}
+			</th>
 		</tr>
 		<tr bgcolor="lightgray">
 			<th width="150">Pilot</th>
@@ -42,7 +52,13 @@
 			{/if}
 		{/if}
 		<tr bgcolor="{$bgcolor}">
-			<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
+			<td nowrap>
+				{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
+					<div class="pilot_bib_number_print">{$p.event_pilot_bib}</div>
+					&nbsp;
+				{/if}
+				{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+			</td>
 			<td>{$p.event_pilot_team|escape}</td>
 			{foreach $event->rounds as $r}
 				{if $event->info.event_type_code=="f3k"}
@@ -54,7 +70,10 @@
 				{/if}
 				<td align="center">
 				{if $event->flight_types.$flight_type_id.flight_type_group==1}
-					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}
+					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}{/if}
 				{else}
 					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_order}
 				{/if}

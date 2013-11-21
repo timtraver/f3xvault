@@ -26,7 +26,13 @@
 				</tr>
 				<tr>
 					<th width="80" align="right" nowrap bgcolor="lightgrey">Pilot</th>
-					<td colspan="3"><b>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</b></td>
+					<td colspan="3">
+						{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
+							<div class="pilot_bib_number_print">{$p.event_pilot_bib}</div>
+							&nbsp;
+						{/if}
+						<b>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</b>
+					</td>
 				</tr>
 				<tr>
 					<th width="80" align="right" nowrap bgcolor="lightgrey">Flight Group</th>
@@ -52,19 +58,19 @@
 				</tr>
 				<tr>
 					<th width="80" align="right" nowrap bgcolor="lightgrey">Flight Time</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" bgcolor="lightgrey">Landing</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" nowrap>Pilot Sig</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
 					<th align="right" nowrap>Timer Sig</th>
-					<td  colspan="3"style="border: 1px solid black;">&nbsp;</td>
+					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				</table>
 

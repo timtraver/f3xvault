@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-18 15:08:36
+<?php /* Smarty version Smarty-3.1.11, created on 2013-11-06 21:14:06
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1376863373,
+      1 => 1383801243,
       2 => 'file',
     ),
   ),
@@ -39,12 +39,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'totalpages' => 0,
     'events' => 0,
     'event' => 0,
+    'event_reg_passed' => 0,
     'user' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_function_cycle')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\function.cycle.php';
-if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
+<?php if ($_valid && !is_callable('content_511ca2948cf284_23831098')) {function content_511ca2948cf284_23831098($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_date_format')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.date_format.php';
 if (!is_callable('smarty_modifier_replace')) include 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\libraries\\smarty\\libs\\plugins\\modifier.replace.php';
 ?><div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -127,15 +127,21 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 </table>
 </form>
 <br>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightblue;float:left;text-align:center;">Future Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:lightgreen;float:left;text-align:center;">Current Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:#C8F7C8;float:left;text-align:center;">Recent Event</div>
+<div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
+
+<br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="7" style="text-align: left;">Events (records <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['startrecord']->value, ENT_QUOTES, 'UTF-8', true);?>
+	<th colspan="6" style="text-align: left;">Events (records <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['startrecord']->value, ENT_QUOTES, 'UTF-8', true);?>
  - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['endrecord']->value, ENT_QUOTES, 'UTF-8', true);?>
  of <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['totalrecords']->value, ENT_QUOTES, 'UTF-8', true);?>
 )</th>
 </tr>
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
                 <?php if ($_smarty_tpl->tpl_vars['startrecord']->value>1){?>[<a href="?action=event&function=event_list&page=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['prevpage']->value, ENT_QUOTES, 'UTF-8', true);?>
 "> &lt;&lt; Prev Page</a>]<?php }?>
                 <?php if ($_smarty_tpl->tpl_vars['endrecord']->value<$_smarty_tpl->tpl_vars['totalrecords']->value){?>[<a href="?action=event&function=event_list&page=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['nextpage']->value, ENT_QUOTES, 'UTF-8', true);?>
@@ -156,41 +162,55 @@ $_smarty_tpl->tpl_vars['state']->_loop = true;
 	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: center;">Map</th>
+	<th style="text-align: center;">Status</th>
 </tr>
 <?php  $_smarty_tpl->tpl_vars['event'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['event']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['events']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['event']->key => $_smarty_tpl->tpl_vars['event']->value){
 $_smarty_tpl->tpl_vars['event']->_loop = true;
 ?>
-<tr bgcolor="<?php echo smarty_function_cycle(array('values'=>"#FFFFFF,#E8E8E8"),$_smarty_tpl);?>
-">
-	<td><?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_start_date'],"%Y-%m-%d");?>
+<tr style="background:<?php if ($_smarty_tpl->tpl_vars['event']->value['time_status']==2){?>lightblue<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==1){?>lightgreen<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==0){?>#C8F7C8<?php }else{ ?>white<?php }?>;">
+	<td nowrap><?php echo smarty_modifier_date_format($_smarty_tpl->tpl_vars['event']->value['event_start_date'],"%Y-%m-%d");?>
 </td>
 	<td>
 		<a href="?action=event&function=event_view&event_id=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_id'], ENT_QUOTES, 'UTF-8', true);?>
 "><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_name'], ENT_QUOTES, 'UTF-8', true);?>
 </a>
 	</td>
-	<td><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_type_name'], ENT_QUOTES, 'UTF-8', true);?>
+	<td nowrap><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['event_type_name'], ENT_QUOTES, 'UTF-8', true);?>
 </td>
-	<td><?php if ($_smarty_tpl->tpl_vars['event']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
+	<td nowrap><?php if ($_smarty_tpl->tpl_vars['event']->value['country_code']){?><img src="/images/flags/countries-iso/shiny/16/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 .png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['country_name'];?>
 "><?php }?> 
 		<?php if ($_smarty_tpl->tpl_vars['event']->value['state_name']&&$_smarty_tpl->tpl_vars['event']->value['country_id']==226){?><img src="/images/flags/states/16/<?php echo smarty_modifier_replace($_smarty_tpl->tpl_vars['event']->value['state_name'],' ','-');?>
 -Flag-16.png" style="vertical-align: middle;" title="<?php echo $_smarty_tpl->tpl_vars['event']->value['state_name'];?>
 "><?php }?> 
 		<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['location_name'], ENT_QUOTES, 'UTF-8', true);?>
-, <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['state_code'], ENT_QUOTES, 'UTF-8', true);?>
- - <?php echo htmlspecialchars($_smarty_tpl->tpl_vars['event']->value['country_code'], ENT_QUOTES, 'UTF-8', true);?>
 
 	</td>
 	<td align="center"><?php if ($_smarty_tpl->tpl_vars['event']->value['location_coordinates']!=''){?><a class="fancybox-map" href="https://maps.google.com/maps?q=<?php echo rawurlencode($_smarty_tpl->tpl_vars['event']->value['location_coordinates']);?>
 +(<?php echo $_smarty_tpl->tpl_vars['event']->value['location_name'];?>
 )&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a><?php }?></td>
+	<td nowrap>
+		<?php if ($_smarty_tpl->tpl_vars['event']->value['event_reg_flag']==1&&($_smarty_tpl->tpl_vars['event']->value['time_status']!=-1&&$_smarty_tpl->tpl_vars['event']->value['time_status']!=0)){?>
+			<?php if ($_smarty_tpl->tpl_vars['event']->value['event_reg_status']==0||(count($_smarty_tpl->tpl_vars['event']->value->pilots)>=$_smarty_tpl->tpl_vars['event']->value['event_reg_max']&&$_smarty_tpl->tpl_vars['event']->value['event_reg_max']!=0)||$_smarty_tpl->tpl_vars['event_reg_passed']->value==1){?>
+				<font color="red"><b>Registration Closed</b></font>
+			<?php }else{ ?>
+				<font color="green"><b>Registration Open</b></font>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="?action=event&function=event_register&event_id=<?php echo $_smarty_tpl->tpl_vars['event']->value['event_id'];?>
+"<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']==0){?> onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"<?php }?>>
+				Register Me Now!
+				</a>
+			<?php }?>
+		<?php }else{ ?>
+		Completed
+		<?php }?>
+	</td>
 </tr>
 <?php } ?>
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
                 <?php if ($_smarty_tpl->tpl_vars['startrecord']->value>1){?>[<a href="?action=event&function=event_list&page=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['prevpage']->value, ENT_QUOTES, 'UTF-8', true);?>
 "> &lt;&lt; Prev Page</a>]<?php }?>
                 <?php if ($_smarty_tpl->tpl_vars['endrecord']->value<$_smarty_tpl->tpl_vars['totalrecords']->value){?>[<a href="?action=event&function=event_list&page=<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['nextpage']->value, ENT_QUOTES, 'UTF-8', true);?>
@@ -206,7 +226,7 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
         </td>
 </tr>
 <tr>
-	<td colspan="7" align="center">
+	<td colspan="6" align="center">
 		<br>
 		<input type="button" value=" Create New Event " onclick="<?php if ($_smarty_tpl->tpl_vars['user']->value['user_id']!=0){?>newevent.submit();<?php }else{ ?>alert('You must be registered and logged in to create a new event.');<?php }?>" class="block-button">
 	</td>

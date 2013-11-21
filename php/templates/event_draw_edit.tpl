@@ -53,7 +53,7 @@ function calc_groups(){ldelim}
 		var num_groups=parseInt(document.getElementById("groups_np").value);
 	{rdelim}
 	document.getElementById("event_draw_number_groups").value=num_groups;
-	var num_pilots={$event->pilots|count};
+	var num_pilots={$draw_pilots|count};
 	var per_group=Math.floor(num_pilots/num_groups);
 	var left_over=num_pilots%num_groups;
 	if(left_over==0){ldelim}
@@ -144,7 +144,7 @@ function calc_groups(){ldelim}
 <tr>
 	<th nowrap valign="top">Desired Number of Flight Groups</th>
 	<td>
-		There are currently <b>{$event->pilots|count}</b> Pilots in this event{if $event->teams|count > 0} on {$event->teams|count} teams{/if}.<br>
+		There are currently <b>{$draw_pilots|count}</b> Active Pilots in this event{if $draw_teams|count > 0} on {$draw_teams|count} teams{/if}.<br>
 		<span id="no_protection">
 			Using  
 			<select id="groups_np" name="groups" onChange="calc_groups();set_changed();">

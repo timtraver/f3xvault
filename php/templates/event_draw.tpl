@@ -117,7 +117,7 @@
 				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
 				<input type="button" value="Edit" class="button" onClick="location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
 				<input type="button" value="UnApply" class="button" onClick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
-				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the current and future rounds?')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
+				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
 			</td>
 			</tr>
 		{/foreach}
@@ -170,7 +170,7 @@
 		To
 		<select name="print_round_to">
 		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-		<option value="{$i}">{$i}</option>
+		<option value="{$i}" SELECTED>{$i}</option>
 		{/for}
 		</select>
 		<select name="print_format">
@@ -190,6 +190,37 @@
 	{$f3k_first=1}
 {/if}
 {/foreach}
+{if $event->info.event_type_code=='f3b'}
+<form name="print_f3b_combined" method="POST" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw_print">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+<input type="hidden" name="print_type" value="">
+<input type="hidden" name="use_print_header" value="1">
+<tr>
+	<th width="10%" nowrap>F3B Combined</th>
+	<td style="padding-top:10px;">
+		Rounds
+		<select name="print_round_from">
+		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+		<option value="{$i}">{$i}</option>
+		{/for}
+		</select>
+		To
+		<select name="print_round_to">
+		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+		<option value="{$i}" SELECTED>{$i}</option>
+		{/for}
+		</select>
+		<select name="print_format">
+		<option value="html">HTML</option>
+		<option value="pdf">PDF</option>
+		</select>
+		<input type="button" value=" Draw Table " onClick="document.print_f3b_combined.print_type.value='f3b_table';submit();" class="block-button">
+	</td>
+</tr>
+{/if}
 </table>
 </form>
 

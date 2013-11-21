@@ -3,12 +3,14 @@ Todo list for f3xvault project
 = before launch
 
 GENERAL
-    
 =	Send welcome email once registered and save it as their first message
 	Create a "Using this site" kind of tutorial instructions with free screen recorder! ;)
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 =	Add blog menu item and set up simple wordpress blog
+	
+IMPORTING EVENTS
+	Make it so that you can choose some of the import fields
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
@@ -20,28 +22,31 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
-	Make F3J able to choose time, because some round can be 15 min instead of 10 min
-		
-	F3B individual pilot graphs for speed, duration, and distance
+	Calendar System
+		Full integrated calendar system to show upcoming events using google's calendar api
+		Create calendar events as different colors for the different types
+	Registration Email creation
+	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
 	
-	Don't allow the user to select the sort type until after the round is saved
+	For F3J, make flyoff rounds 15 minute rounds
+	Make a system to do drops on different times for f3j
+	
+	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
+	System to choose at random the reflight pilots to fill out a group
 
-	Have a setting for top X teammates to be used in the team standings
-	Mark a competitor to be available to the draw
-	
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
 	Draw
-		ability to print all three draw matrices on one page for f3b
+		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother)
 		Possible ability to have the speed round be the inverse order of the standings
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
-
+		When applying draw, ask if they want to overwrite existing or just new rounds
+		
 	For F3K events
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
 		Maybe stats for MOM percentage
-		graph on pilot page
 		
 	When Tied, figure out position from drops
 	In position chart, show another one for flyoff rounds
@@ -57,9 +62,10 @@ PILOTS STUFF
 	
 SERIES STUFF
 	print series pilot detail view
+	Different scoring possibilities (position based instead of score based)
 	
 OTHER STUFF
-	Put a "Send This Pilot a Message" button on the pilot view screen
+	Put a "Send This Pilot a Message" button on the pilot view screen if that pilot has an account or an email address on file
 	Add Events and Series to club view screen
  
 MOBILE STUFF
@@ -67,11 +73,36 @@ MOBILE STUFF
 	Change code for mobile maps to show correctly
 	Ability to expand with the fingers
 	Change the menu icon, or include some kind of popup so they know where it is
-	
 
 
 COMPLETED
- 
+X	Make ability to normalize rounds or not in a competition
+X	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
+X	Make it so that TD events can set values for each second. Take away that second value at the event level and put it at the round level.
+X	Mark a competitor to be available to the draw and the system for the draw to use only the active pilots
+X	Have a setting for top X teammates to be used in the team standings
+X    Make a PayPal donate button
+X	Full registration system to allow pilots to sign up
+X		Settings for registration period opening and closing
+X		Options for payment (i.e. paypal or check)
+X		UI for users when they sign up to choose a team
+X		Ability for registered users to log back in and change their registered team
+X		After Registration, send email with full event info
+X		Have registration parameters in the event_pilot edit screens so the CD can see what they requested, and set if they paid
+X	Registration reports to show who has paid and the registered totals
+
+X	Don't allow the user to select the sort type until after the round is saved
+X	When deleting a round in between rounds, it gets rid of all the other rounds...
+X	Edit Pilot info
+X		graph on f3k pilot page
+X		ability to print all three draw matrices on one page for f3b
+X	Make F3J able to choose time, because some round can be 15 min instead of 10 min
+X	Take the password anti save protection off the site
+X	F3B individual pilot graphs for speed, duration, and distance
+X	Check import of F3F events, because one of Espens didn't work
+X	Make import allow for numbers using commas instead of decimals
+X	Make import parameter so that they can choose the field delimiter
+X	Add menu item to create new event from menu
 X	Make sure f3kimport button doens't show up for anything but f3k
 X	Add plane records for F3F, F3B speed and Distance
 X	Recent events at locations

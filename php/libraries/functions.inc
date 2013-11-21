@@ -417,7 +417,7 @@ function logsession($string){
 function create_fsession($path,$host){
         $time=microtime();
         $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
-        setcookie('fsid',$cookie_string,0,$path,$host,FALSE,TRUE);
+        setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
         $GLOBALS['fsid']=$cookie_string;
         # Create the session record in the database
         $stmt=db_prep("
@@ -818,4 +818,31 @@ function convert_coordinates($string){
 	}
 	return "$lat,$lon";
 }
+function get_global_flags(){
+	global $system_flags;
+
+	# Get the system flags to include in the global space
+	$system_flags=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM system_flag
+	");
+	$result=db_exec($stmt,array());
+	foreach($result as $r){
+		$name=$r['system_flag_name'];
+		$system_flags[$name]=$r;
+	}
+	return;
+}
+function get_currencies(){
+	# Function to get currency list
+	$stmt=db_prep("
+		SELECT *
+		FROM currency
+		ORDER BY currency_order
+	");
+	$currencies=db_exec($stmt,array());
+	return $currencies;
+}
+
 ?>

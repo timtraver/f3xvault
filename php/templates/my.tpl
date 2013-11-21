@@ -150,7 +150,7 @@
 	{/foreach}
 {else}
 	<tr>
-		<td colspan="4">You currently has no club affiliations.</td>
+		<td colspan="4">You currently have no club affiliations.</td>
 	</tr>
 {/if}
 </table>

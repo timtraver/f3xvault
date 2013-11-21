@@ -46,7 +46,7 @@
 					{if $event->flight_types.$flight_type_id.flight_type_group}
 						<td width="30">Group</td>
 					{else}
-						<td>Order</td>
+						<td>&nbsp;#&nbsp;</td>
 					{/if}
 					<td>Pilot</td>
 					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
@@ -80,7 +80,13 @@
 						{else}
 							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
 						{/if}
-						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</td>
+						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+							{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+								<div class="pilot_bib_number_print">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+								&nbsp;
+							{/if}
+							{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}
+						</td>
 					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
@@ -94,7 +100,7 @@
 				</table>
 			</td>
 			{$total_rounds_shown=$total_rounds_shown+1}
-			{if $r@iteration is div by 5}
+			{if $r@iteration is div by 4}
 				</tr>
 				<tr>
 			{/if}

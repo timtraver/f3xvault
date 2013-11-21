@@ -42,12 +42,13 @@ class Draw {
 		$this->grow_only=0;
 	}
 	function get_pilots(){
-		# Now lets get the pilots assigned to this event
+		# Now lets get the pilots assigned to this event, and that have the draw status on
 		$stmt=db_prep("
 			SELECT ep.event_pilot_id,ep.event_pilot_team,p.pilot_first_name,p.pilot_last_name
 			FROM event_pilot ep
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 			WHERE ep.event_id=:event_id
+				AND ep.event_pilot_draw_status=1
 				AND ep.event_pilot_status=1
 		");
 		$results=db_exec($stmt,array("event_id"=>$this->event_id));
@@ -69,6 +70,7 @@ class Draw {
 			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
 			WHERE ep.event_pilot_team !=''
 				AND e.event_id=:event_id
+				AND ep.event_pilot_draw_status=1
 				AND ep.event_pilot_status=1
 		");
 		$names=db_exec($stmt,array("event_id"=>$this->event_id));
