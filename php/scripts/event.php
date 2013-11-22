@@ -499,10 +499,10 @@ function event_edit() {
 	$stmt=db_prep("
 		SELECT *,c.class_id
 		FROM class c
-		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		LEFT JOIN event_class ec ON c.class_id=ec.class_id AND ec.event_id=:event_id
 		ORDER BY c.class_view_order
 	");
-	$classes=db_exec($stmt,array());
+	$classes=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("classes",$classes);
 	
 	
