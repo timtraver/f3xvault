@@ -529,7 +529,6 @@ function check_permission() {ldelim}
 
 </div>
 
-{if $flight_types.$flight_type_id.flight_type_reflight==1}
 <div id="add_reflight" style="display: hidden;overflow: hidden;">
 		<form name="reflight" method="POST">
 		<input type="hidden" name="action" value="event">
@@ -551,7 +550,6 @@ function check_permission() {ldelim}
 		<br style="clear:both" />
 		</form>
 </div>
-{/if}
 
 		{/if}
 
