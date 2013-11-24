@@ -499,10 +499,10 @@ function event_edit() {
 	$stmt=db_prep("
 		SELECT *,c.class_id
 		FROM class c
-		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		LEFT JOIN event_class ec ON c.class_id=ec.class_id AND ec.event_id=:event_id
 		ORDER BY c.class_view_order
 	");
-	$classes=db_exec($stmt,array());
+	$classes=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("classes",$classes);
 	
 	
@@ -1309,11 +1309,12 @@ function event_pilot_edit() {
 	# Get classes to choose to be available for this event
 	$stmt=db_prep("
 		SELECT *,c.class_id
-		FROM class c
-		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		FROM event_class ec
+		LEFT JOIN class c ON ec.class_id=c.class_id
+		WHERE ec.event_id=:event_id
 		ORDER BY c.class_view_order
 	");
-	$classes=db_exec($stmt,array());
+	$classes=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("classes",$classes);
 
 	$smarty->assign("states",get_states());

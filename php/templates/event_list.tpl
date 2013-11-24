@@ -118,7 +118,13 @@
 				</a>
 			{/if}
 		{else}
-		Completed
+			{if $event.time_status==2}
+			Scheduled
+			{elseif $event.time_status==1}
+			In Progress
+			{else}
+			Completed
+			{/if}
 		{/if}
 	</td>
 </tr>
