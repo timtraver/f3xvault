@@ -2308,13 +2308,13 @@ function event_round_save() {
 								flight_type_id=:ftype_id,
 								event_round_flight_score=1
 						");
-						$result2=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
+						$result3=db_exec($stmt,array("event_round_id"=>$event_round_id,"ftype_id"=>$ftype_id));
 					}
 				}
 			}
 		}
 		# If there was a change of flight type, then lets update the flights
-		if($flight_type_id!=$ftype_id){
+		if($flight_type_id!=$ftype_id && $flight_type_id!=0){
 			$stmt=db_prep("
 				UPDATE event_round_flight
 				SET flight_type_id=:flight_type_id,
