@@ -1113,24 +1113,22 @@ function event_register_save() {
 	# Lets get their reg params
 	$stmt=db_prep("
 		SELECT *
-		FROM event_pilot_reg
-		WHERE event_pilot_id=:event_pilot_id
-			AND event_pilot_reg_status=1
+		FROM event_pilot_reg epr
+		LEFT JOIN event_reg_param erp ON epr.event_reg_param_id=erp.event_reg_param_id
+		WHERE epr.event_pilot_id=:event_pilot_id
+			AND epr.event_pilot_reg_status=1
 	");
 	$result=db_exec($stmt,array(
 		"event_pilot_id"=>$event_pilot_id
 	));
-	foreach($result as $r){
-		$id=$r['event_reg_param_id'];
-		$params[$id]=$r;
-	}
-	$data['params']=$params;
+
+	$data['user']=$GLOBALS['user'];
+	$data['reg']=$result;
 	$data['info']=$event->info;
 	$data['pilots']=$event->pilots;
-	$data['reg_options']=$event->reg_options;
 	
 	if($GLOBALS['user']['user_email']!=''){
-		send_email('registration',$GLOBALS['user']['user_email'],$data);
+		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
 	}
 	
 	return event_register();
