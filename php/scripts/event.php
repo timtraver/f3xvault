@@ -2055,7 +2055,11 @@ function event_round_edit() {
 			}
 		}
 		if($event->info['event_type_code']=='f3j'){
-			$event->rounds[$round_number]['event_round_time_choice']=10;
+			if($flyoff_round){
+				$event->rounds[$round_number]['event_round_time_choice']=15;
+			}else{
+				$event->rounds[$round_number]['event_round_time_choice']=10;
+			}
 		}
 		# Lets set the round to be scored or not depending on the zero choice
 		if($zero_round){
