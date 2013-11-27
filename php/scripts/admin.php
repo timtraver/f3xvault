@@ -186,7 +186,17 @@ function admin_email_send_test() {
 		case "event_registration_confirm":
 			include_library("event.class");
 			$e=new Event(261);
-			$data['event']=$e;
+			$data['pilot_first_name']='Tim';
+			$data['event_name']='Cal Valley Open';
+			$data['location_id']=2010;
+			$data['location_name']='Cal Valley';
+			$data['location_city']='Cal Valley';
+			$data['state_name']='CA';
+			$data['location_coordinates']='35.326852, -119.997129';
+			$data['event_start_date']='2013-11-23';
+			$data['event_end_date']='2013-11-24';
+			$data['event_type_name']='F3B Multi Task Contest';
+			$data['event_notes']='This is the Notes area';
 			$data['cd']=array(
 				"pilot_first_name"=>"Aaron",
 				"pilot_last_name"=>"Valdes",
