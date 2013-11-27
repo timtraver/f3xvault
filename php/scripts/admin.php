@@ -184,6 +184,7 @@ function admin_email_send_test() {
 			$data['temp_url']='testbobbysdomain.mivamerchant.net';
 			break;
 		case "event_registration_confirm":
+			include_library("event.class");
 			$e=new Event(261);
 			$data['event']=$e;
 			$data['cd']=array(
