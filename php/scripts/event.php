@@ -1124,8 +1124,8 @@ function event_register_save() {
 
 	$data['user']=$GLOBALS['user'];
 	$data['reg']=$result;
-	$data['info']=$event->info;
-	$data['pilots']=$event->pilots;
+	$data['info']=$e->info;
+	$data['pilots']=$e->pilots;
 	
 	if($GLOBALS['user']['user_email']!=''){
 		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
