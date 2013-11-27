@@ -183,6 +183,15 @@ function admin_email_send_test() {
 			$data['domain']='testbobbysdomain.com';
 			$data['temp_url']='testbobbysdomain.mivamerchant.net';
 			break;
+		case "event_registration_confirm":
+			$e=new Event(261);
+			$data['event']=$e;
+			$data['cd']=array(
+				"pilot_first_name"=>"Aaron",
+				"pilot_last_name"=>"Valdes",
+				"pilot_city"=>"Paso Robles"
+			);
+			break;
 	}
 	send_email($email_name,array($email_to),$data);
 
