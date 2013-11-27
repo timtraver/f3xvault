@@ -201,7 +201,7 @@ Currency is in {$event->info.currency_name}s
 </tr>
 {/foreach}
 <tr>
-	<th align="right" colspan="3">Total Registration Fee ({$event->info.event_reg_pay_units})</th>
+	<th align="right" colspan="3">Total Registration Fee ({$event->info.currency_name})</th>
 	<th align="right" width="10%">
 		<span id="total"></span>
 	</th>
