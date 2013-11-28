@@ -115,9 +115,36 @@ function check_permission() {ldelim}
 			</td>
 		</tr>
 		{/if}
+		{if $event->info.event_reg_flag==1}
+		<tr>
+			<th align="right">Registration Status</th>
+			<td>
+				{if $event->info.event_reg_status==0 || 
+					($event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max!=0) ||
+					$event_reg_passed==1
+				}
+					<font color="red"><b>Registration Currently Closed</b></font>
+				{else}
+					<font color="green"><b>Registration Currently Open</b></font>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
+					{if $registered==1}
+					You Are Registered! Update Your Registration Info
+					{else}
+					Register Me Now!
+					{/if}
+					</a>
+				{/if}
+			</td>
+		{/if}
 		</table>
-		<input type="button" value=" Edit Event Parameters " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
-		<input type="button" class="button" value=" Event Draw " style="float:right;" onclick="event_draw.submit();">
+		
+		{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}
+		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
+		{/if}
+		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
+		
+		
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide</u>)</span>
@@ -150,9 +177,6 @@ function check_permission() {ldelim}
 		{/foreach}
 		</table>
 		</span>
-
-
-
 
 
 	{if $event->totals}
@@ -799,9 +823,9 @@ function check_permission() {ldelim}
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
-<form name="event_draw" method="POST">
+<form name="event_view_info" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="function" value="event_view_info">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_delete" method="POST">
