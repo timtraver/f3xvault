@@ -22,7 +22,7 @@
 					</th>
 				</tr>
 				<tr bgcolor="lightgrey">
-					<th colspan="4">{$event->flight_types.$flight_type_id.flight_type_name} - Round {$event_round_number}</th>
+					<th colspan="4">Round {$event_round_number} - {$event->flight_types.$flight_type_id.flight_type_name}</th>
 				</tr>
 				<tr>
 					<th width="80" align="right" nowrap bgcolor="lightgrey">Pilot</th>

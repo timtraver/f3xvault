@@ -3674,6 +3674,7 @@ function event_draw_print() {
 	$title='';
 	$orientation='P';
 	$sort_by='';
+	$e=new Event($event_id);
 	switch($print_type){
 		case "cd":
 			$template="print_draw_cd.tpl";

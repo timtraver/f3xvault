@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-11-06 21:14:06
+<?php /* Smarty version Smarty-3.1.11, created on 2013-12-02 00:18:06
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10686511ca294719b70-86772250%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6047d66792b96235dbaae201a19708a0e049b7cd' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_list.tpl',
-      1 => 1383801243,
+      1 => 1385103764,
       2 => 'file',
     ),
   ),
@@ -204,7 +204,13 @@ $_smarty_tpl->tpl_vars['event']->_loop = true;
 				</a>
 			<?php }?>
 		<?php }else{ ?>
-		Completed
+			<?php if ($_smarty_tpl->tpl_vars['event']->value['time_status']==2){?>
+			Scheduled
+			<?php }elseif($_smarty_tpl->tpl_vars['event']->value['time_status']==1){?>
+			In Progress
+			<?php }else{ ?>
+			Completed
+			<?php }?>
 		<?php }?>
 	</td>
 </tr>

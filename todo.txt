@@ -76,6 +76,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Fix F3K print pilot sheets bug
 X	Make ability to normalize rounds or not in a competition
 X	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
 X	Make it so that TD events can set values for each second. Take away that second value at the event level and put it at the round level.
