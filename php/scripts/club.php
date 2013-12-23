@@ -21,7 +21,11 @@ $need_login=array(
 	"club_user_save",
 	"club_user_delete",
 	"club_location_add",
-	"club_location_remove"
+	"club_location_remove",
+	"club_location_remove",
+	"club_pilot_quick_add",
+	"club_save_pilot_quick_add",
+	"club_pilot_remove"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
