@@ -86,9 +86,10 @@
 	<th width="5%">Mandatory</th>
 	<th width="20%">Name</th>
 	<th>Full Description (For Details if necessary)</th>
-	<th width="10%">Allow Qty</th>
-	<th width="10%">Cost Per Unit</th>
-	<th width="1%"></th>
+	<th width="5%">Allow<br>Qty</th>
+	<th width="8%">Cost Per<br>Unit</th>
+	<th width="20%">Choice List</th>
+	<th width="5%"></th>
 </tr>
 {if $event->reg_options}
 {foreach $event->reg_options as $r}
@@ -97,16 +98,20 @@
 		<input type="checkbox" name="reg_param_{$r.event_reg_param_id}_man"{if $r.event_reg_param_mandatory==1} CHECKED{/if}>
 	</th>
 	<th valign="top">
-		<input type="text" name="reg_param_{$r.event_reg_param_id}_name" size="40" value="{$r.event_reg_param_name}">
+		<input type="text" name="reg_param_{$r.event_reg_param_id}_name" size="30" value="{$r.event_reg_param_name}">
 	</th>
 	<th>
-		<textarea name="reg_param_{$r.event_reg_param_id}_desc" cols="40" rows="2">{$r.event_reg_param_description}</textarea>
+		<textarea name="reg_param_{$r.event_reg_param_id}_desc" cols="30" rows="2">{$r.event_reg_param_description}</textarea>
 	</th>
 	<th>
 		<input type="checkbox" name="reg_param_{$r.event_reg_param_id}_qty"{if $r.event_reg_param_qty_flag==1} CHECKED{/if}>
 	</th>
 	<th>
-		<input type="text" name="reg_param_{$r.event_reg_param_id}_cost" size="6" value="{$r.event_reg_param_cost}">
+		<input type="text" name="reg_param_{$r.event_reg_param_id}_cost" size="4" value="{$r.event_reg_param_cost}">
+	</th>
+	<th align="right">
+		Name<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_name" size="15" value="{$r.event_reg_param_choice_name}"><br>
+		Values<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_values" size="15" value="{$r.event_reg_param_choice_values}">
 	</th>
 	<th>
 		<a title="Delete" href="?action=event&function=event_reg_del&event_id={$event->info.event_id}&event_reg_param_id={$r.event_reg_param_id}"><img src="/images/del.gif"></a>

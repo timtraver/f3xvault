@@ -763,7 +763,9 @@ function event_reg_save() {
 				event_reg_param_description=:event_reg_param_description,
 				event_reg_param_qty_flag=:event_reg_param_qty_flag,
 				event_reg_param_cost=:event_reg_param_cost,
-				event_reg_param_mandatory=:event_reg_param_mandatory
+				event_reg_param_mandatory=:event_reg_param_mandatory,
+				event_reg_param_choice_name=:event_reg_param_choice_name,
+				event_reg_param_choice_values=:event_reg_param_choice_values
 			WHERE event_reg_param_id=:event_reg_param_id
 		");
 		$result=db_exec($stmt,array(
@@ -772,6 +774,8 @@ function event_reg_save() {
 			"event_reg_param_qty_flag"=>$p['qty'],
 			"event_reg_param_cost"=>$p['cost'],
 			"event_reg_param_mandatory"=>$p['man'],
+			"event_reg_param_choice_name"=>$p['choice_name'],
+			"event_reg_param_choice_values"=>$p['choice_values'],
 			"event_reg_param_id"=>$event_reg_param_id
 		));
 	}
@@ -895,10 +899,23 @@ function event_register() {
 		));
 		foreach($result as $r){
 			$id=$r['event_reg_param_id'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				$values=array();
+				$values=explode(',',$r['event_pilot_reg_choice_value']);
+				$r['event_pilot_reg_choice_values']=$values;
+			}
 			$params[$id]=$r;
 		}
 	}
 	$smarty->assign("params",$params);
+	# Lets see if there are any sizes and set a flag so we can change the view
+	$has_sizes=0;
+	foreach($e->reg_options as $p){
+		if($p['event_reg_param_choice_name']!=''){
+			$has_sizes=1;
+		}
+	}
+	$smarty->assign("has_sizes",$has_sizes);
 	
 	$maintpl=find_template("event_register.tpl");
 	return $smarty->fetch($maintpl);
@@ -914,6 +931,7 @@ function event_register_save() {
 	$event_pilot_freq=$_REQUEST['event_pilot_freq'];
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
 	$plane_id=intval($_REQUEST['plane_id']);
+	$event_pilot_reg_note=$_REQUEST['event_pilot_reg_note'];
 
 	# Now lets get the existing additional values
 	$params=array();
@@ -921,18 +939,25 @@ function event_register_save() {
 		if(preg_match("/reg\_param\_(\d+)\_(\S+)$/",$key,$match)){
 			$reg_id=$match[1];
 			$reg_type=$match[2];
-			$params[$reg_id][$reg_type]=$value;
+			if(preg_match("/^(\S+)\_(\d*)/",$reg_type,$match2)){
+				$reg_type=$match2[1];
+				$params[$reg_id][$reg_type]=$params[$reg_id][$reg_type].",".$value;
+				# Lets get rid of the first comma if necessary
+				$params[$reg_id][$reg_type]=preg_replace("/^\,/",'',$params[$reg_id][$reg_type]);
+			}else{
+				$params[$reg_id][$reg_type]=$value;
+			}
 		}
 	}
-	
-	if($event_pilot_id!=0){		
+	if($event_pilot_id!=0){
 		# Lets save this existing event pilot registration
 		$stmt=db_prep("
 			UPDATE event_pilot
 			SET class_id=:class_id,
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
-				plane_id=:plane_id
+				plane_id=:plane_id,
+				event_pilot_reg_note=:event_pilot_reg_note
 				WHERE event_pilot_id=:event_pilot_id
 		");
 		$result=db_exec($stmt,array(
@@ -940,7 +965,8 @@ function event_register_save() {
 			"event_pilot_freq"=>$event_pilot_freq,
 			"event_pilot_team"=>$event_pilot_team,
 			"event_pilot_id"=>$event_pilot_id,
-			"plane_id"=>$plane_id
+			"plane_id"=>$plane_id,
+			"event_pilot_reg_note"=>$event_pilot_reg_note
 		));
 		user_message("Registration info updated.");
 	}else{
@@ -971,6 +997,7 @@ function event_register_save() {
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id,
+				event_pilot_reg_note=:event_pilot_reg_note
 				event_pilot_draw_status=1,
 				event_pilot_status=1
 		");
@@ -982,7 +1009,8 @@ function event_register_save() {
 			"event_pilot_bib"=>$event_pilot_bib,
 			"event_pilot_freq"=>$event_pilot_freq,
 			"event_pilot_team"=>$event_pilot_team,
-			"plane_id"=>$plane_id
+			"plane_id"=>$plane_id,
+			"event_pilot_reg_note"=>$event_pilot_reg_note
 		));
 		$event_pilot_id=$GLOBALS['last_insert_id'];
 		user_message("You Have Successfully Registered for this event!");
@@ -1019,11 +1047,13 @@ function event_register_save() {
 			$stmt=db_prep("
 				UPDATE event_pilot_reg
 				SET event_pilot_reg_status=1,
-					event_pilot_reg_qty=:qty
+					event_pilot_reg_qty=:qty,
+					event_pilot_reg_choice_value=:choice_value
 				WHERE event_pilot_reg_id=:event_pilot_reg_id
 			");
 			$result=db_exec($stmt,array(
 				"qty"=>$qty,
+				"choice_value"=>$r['choice_value'],
 				"event_pilot_reg_id"=>$result[0]['event_pilot_reg_id']
 			));
 		}else{
@@ -1033,12 +1063,14 @@ function event_register_save() {
 				SET event_pilot_id=:event_pilot_id,
 					event_reg_param_id=:reg_id,
 					event_pilot_reg_qty=:qty,
+					event_pilot_reg_choice_value=:choice_value,
 					event_pilot_reg_status=1
 			");
 			$result=db_exec($stmt,array(
 				"event_pilot_id"=>$event_pilot_id,
 				"reg_id"=>$reg_id,
-				"qty"=>$qty
+				"qty"=>$qty,
+				"choice_value"=>$r['choice_value'],
 			));
 		}
 	}
@@ -4779,8 +4811,18 @@ function event_registration_report() {
 		));
 		foreach($result as $r){
 			$id=$r['event_reg_param_id'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				$values=array();
+				$values=explode(',',$r['event_pilot_reg_choice_value']);
+				$r['event_pilot_reg_choice_values']=$values;
+			}
 			$pilot_reg_options[$event_pilot_id][$id]=$r;
 			$reg_options[$id]['qty']+=$r['event_pilot_reg_qty'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				foreach($values as $v){
+					$reg_options[$id]['values'][$v]['qty']++;
+				}
+			}
 		}
 	}
 	$smarty->assign("pilot_reg_options",$pilot_reg_options);

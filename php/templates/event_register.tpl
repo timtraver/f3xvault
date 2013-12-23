@@ -149,7 +149,12 @@ function calc_totals(){ldelim}
 		<input type="button" value=" + New Plane " class="button" onClick="copy_plane_values(); add_plane.submit();">
 	</td>
 </tr>
-
+<tr>
+	<th align="right" nowrap>Event Registration Notes</th>
+	<td colspan="2">
+		<textarea name="event_pilot_reg_note" cols="60" rows="2">{$event_pilot.event_pilot_reg_note|escape}</textarea>
+	</td>
+</tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
@@ -160,17 +165,21 @@ function calc_totals(){ldelim}
 {if $event->reg_options}
 <h1 class="post-title entry-title">Additional Registration Values</h1>
 Currency is in {$event->info.currency_name}s
+{if $has_sizes}{$cols=5}{else}{$cols=4}{/if}
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th width="20%">Name</th>
 	<th width="10%"> Qty</th>
+	{if $has_sizes}
+	<th width="20%">Parameter Choice</th>
+	{/if}
 	<th width="10%">Cost Per Unit</th>
 	<th align="right" width="10%">Extended</th>
 </tr>
 {foreach $event->reg_options as $r}
 {$reg_id=$r.event_reg_param_id}
 <tr>
-	<td align="right">
+	<td align="right" valign="top">
 		{$r.event_reg_param_name} - <a href="" class="tooltip" onClick="return false;">(detail description)
 		<span>
 		<img class="callout" src="/images/callout.gif">
@@ -183,7 +192,7 @@ Currency is in {$event->info.currency_name}s
 		</span>
 		</a>
 	</td>
-	<td align="center">
+	<td align="center" valign="top">
 		{if $r.event_reg_param_mandatory==1}
 		1<input type="hidden" name="event_reg_param_{$r.event_reg_param_id}_qty" value="1">
 		{elseif $r.event_reg_param_qty_flag==1}
@@ -192,22 +201,35 @@ Currency is in {$event->info.currency_name}s
 			<input type="checkbox" name="event_reg_param_{$r.event_reg_param_id}_qty"{if $params.$reg_id.event_pilot_reg_qty==1} CHECKED{/if} onChange="calc_totals();">
 		{/if}
 	</td>
-	<td align="right">
+	{if $has_sizes}
+	<td align="right" valign="top">
+		{if $r.event_reg_param_choice_name!=''}
+		{for $x=0 to $params.$reg_id.event_pilot_reg_qty-1}
+			<select name="event_reg_param_{$r.event_reg_param_id}_choice_value_{$x}">
+			{foreach $r.choices as $c}
+			<option value="{$c}"{if $params.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
+			{/foreach}
+			</select>
+		{/for}
+		{/if}
+	</td>
+	{/if}
+	<td align="right" valign="top">
 		{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
 	</td>
-	<td align="right">
+	<td align="right" valign="top">
 		<span id="extended_{$r.event_reg_param_id}"></span>
 	</td>
 </tr>
 {/foreach}
 <tr>
-	<th align="right" colspan="3">Total Registration Fee ({$event->info.currency_name})</th>
+	<th align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</th>
 	<th align="right" width="10%">
 		<span id="total"></span>
 	</th>
 </tr>
 <tr>
-	<th align="right" colspan="3">Status</th>
+	<th align="right" colspan="{$cols-1}">Status</th>
 	<th align="right" width="10%">
 	{if $event_pilot.event_pilot_paid_flag==1}
 	<font color="green"><b>PAID</b></font>
@@ -218,13 +240,13 @@ Currency is in {$event->info.currency_name}s
 </tr>
 {if $event->info.event_reg_paypal_address!=''}
 <tr>
-	<th colspan="4">
+	<th colspan="{$cols}">
 		<input type="button" value=" Pay With Paypal Account Now " class="block-button" onClick="calc_totals();paypal.submit();">
 	</th>
 </tr>
 {/if}
 <tr>
-	<th colspan="4">
+	<th colspan="{$cols}">
 		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
 	</th>
 </tr>

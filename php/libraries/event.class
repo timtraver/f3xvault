@@ -178,6 +178,16 @@ class Event {
 		$result=db_exec($stmt,array("event_id"=>$this->event_id));
 		foreach($result as $r){
 			$event_reg_param_id=$r['event_reg_param_id'];
+			if($r['event_reg_param_choice_name']!=''){
+				# Make an array of the choice list values
+				$choices=array();
+				$choices[]='Select '.$r['event_reg_param_choice_name'];
+				$list=explode(',',$r['event_reg_param_choice_values']);
+				foreach($list as $l){
+					$choices[]=trim($l);
+				}
+				$r['choices']=$choices;
+			}
 			$reg_options[$event_reg_param_id]=$r;
 		}
 		$this->reg_options=$reg_options;

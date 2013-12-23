@@ -40,6 +40,8 @@ EVENT STUFF
 		Possible ability to have the speed round be the inverse order of the standings
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
 		
+	Sign up for text alerts about this event
+	
 	For F3K events
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
@@ -55,6 +57,7 @@ EVENT STUFF
   
 	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
 
+	
 PILOTS STUFF
 	
 SERIES STUFF
@@ -73,6 +76,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Pilot registration popup types for things like t-shirt sizes in addition to mandatory flag...
 X	Registration Email creation
 X	For F3J, make flyoff rounds 15 minute rounds
 X	Fix F3K print pilot sheets bug
