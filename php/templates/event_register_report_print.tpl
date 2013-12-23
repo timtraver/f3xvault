@@ -49,7 +49,7 @@
 				{/if}
 				{if $r.event_pilot_reg_choice_value!=''}
 					{foreach $r.event_pilot_reg_choice_values as $v}
-						&nbsp;&nbsp&nbsp;{$v}{if !$v@last}<br>{/if}
+						&nbsp;&nbsp&nbsp;{$v}<br>
 					{/foreach}
 				{/if}
 			{/foreach}
