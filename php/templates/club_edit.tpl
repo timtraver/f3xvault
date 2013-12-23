@@ -124,7 +124,7 @@ $(function() {
 <tr>
 	<td>{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
 	<td width="2%">
-		<a href="?action=club&function=club_user_delete&club_id={$club.club_id}&club_user_id={$u.club_user_id}"><img src="/images/del.gif"></a></td>
+		<a href="?action=club&function=club_user_delete&club_id={$club.club_id}&club_user_id={$u.club_user_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}><img src="/images/del.gif"></a></td>
 </tr>
 {/foreach}
 <tr>

@@ -27,7 +27,11 @@ EVENT STUFF
 		Create calendar events as different colors for the different types
 	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
 	
+<<<<<<< HEAD
 	Make a system to do drops on different times for f3j?
+=======
+	Make a system to do drops on different times for f3j
+>>>>>>> a9336779cf7bf299a7efd9bf6176f3718cdaaf1c
 	
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 	System to choose at random the reflight pilots to fill out a group
@@ -38,8 +42,9 @@ EVENT STUFF
 	Draw
 		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother) ?
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
-		When applying draw, ask if they want to overwrite existing or just new rounds
 		
+	Sign up for text alerts about this event
+	
 	For F3K events
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
@@ -55,6 +60,7 @@ EVENT STUFF
   
 	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
 
+	
 PILOTS STUFF
 	
 SERIES STUFF
@@ -73,8 +79,15 @@ MOBILE STUFF
 
 
 COMPLETED
+<<<<<<< HEAD
 X	For F3J, make flyoff rounds 15 minute rounds
 X	Registration Email creation
+=======
+X	Pilot registration popup types for things like t-shirt sizes in addition to mandatory flag...
+X	Registration Email creation
+X	For F3J, make flyoff rounds 15 minute rounds
+X	Fix F3K print pilot sheets bug
+>>>>>>> a9336779cf7bf299a7efd9bf6176f3718cdaaf1c
 X	Make ability to normalize rounds or not in a competition
 X	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
 X	Make it so that TD events can set values for each second. Take away that second value at the event level and put it at the round level.

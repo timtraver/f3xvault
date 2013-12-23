@@ -44,11 +44,16 @@
 		<td valign="top">{$p.class_description|escape}</td>
 		<td valign="top">
 			{foreach $pilot_reg_options.$event_pilot_id as $r}
-			{$event_reg_param_id=$r.event_reg_param_id}
-			{$total=$total+($r.event_pilot_reg_qty*$reg_options.$event_reg_param_id.event_reg_param_cost)}
-			{if $r.event_pilot_reg_qty!=0}
-			{$r.event_pilot_reg_qty} - {$reg_options.$event_reg_param_id.event_reg_param_name}<br>
-			{/if}
+				{$event_reg_param_id=$r.event_reg_param_id}
+				{$total=$total+($r.event_pilot_reg_qty*$reg_options.$event_reg_param_id.event_reg_param_cost)}
+				{if $r.event_pilot_reg_qty!=0}
+					{$r.event_pilot_reg_qty} - {$reg_options.$event_reg_param_id.event_reg_param_name}<br>
+				{/if}
+				{if $r.event_pilot_reg_choice_value!=''}
+					{foreach $r.event_pilot_reg_choice_values as $v}
+						&nbsp;&nbsp&nbsp;{$v}{if !$v@last}<br>{/if}
+					{/foreach}
+				{/if}
 			{/foreach}
 		</td>
 		<td valign="top">{$p.event_pilot_team|escape}</td>
@@ -70,6 +75,13 @@
 		</td>
 	</tr>
 	{assign var=num value=$num+1}
+	{if $p.event_pilot_reg_note!=''}
+	<tr>
+		<td colspan="3">&nbsp;</td>
+		<td><font color="red">NOTES</font></td>
+		<td colspan="5"><font color="red">{$p.event_pilot_reg_note}</font></td>
+	</tr>
+	{/if}
 {/foreach}
 </table>
 
@@ -83,7 +95,8 @@
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th width="20%">Name</th>
-	<th width="10%"> Qty</th>
+	<th width="10%">Qty</th>
+	<th width="10%">Choice Values</th>
 	<th width="10%">Cost Per Unit</th>
 	<th align="right" width="10%">Extended</th>
 </tr>
@@ -91,16 +104,21 @@
 {foreach $reg_options as $r}
 {$reg_id=$r.event_reg_param_id}
 <tr>
-	<td align="right">
+	<td align="right" valign="top">
 		{$r.event_reg_param_name}
 	</td>
-	<td align="center">
+	<td align="center" valign="top">
 		{$r.qty}
 	</td>
-	<td align="right">
+	<td align="left" valign="top">
+		{foreach $r.values as $v}
+			{$v.qty} - {$v@key}<br>
+		{/foreach}
+	</td>
+	<td align="right" valign="top">
 		{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
 	</td>
-	<td align="right">
+	<td align="right" valign="top">
 		{$ext=$r.qty*$r.event_reg_param_cost}
 		{$event->info.currency_html}{$ext|string_format:"%.2f"}
 	</td>
@@ -108,7 +126,7 @@
 {$total_collected=$total_collected+$ext}
 {/foreach}
 <tr>
-	<th align="right" colspan="3">Total Registration Fee ({$event->info.currency_name})</th>
+	<th align="right" colspan="4">Total Registration Fee ({$event->info.currency_name})</th>
 	<th align="right" width="10%">
 		{$event->info.currency_html}{$total_collected|string_format:"%.2f"}
 	</th>
