@@ -997,7 +997,7 @@ function event_register_save() {
 				event_pilot_freq=:event_pilot_freq,
 				event_pilot_team=:event_pilot_team,
 				plane_id=:plane_id,
-				event_pilot_reg_note=:event_pilot_reg_note
+				event_pilot_reg_note=:event_pilot_reg_note,
 				event_pilot_draw_status=1,
 				event_pilot_status=1
 		");
