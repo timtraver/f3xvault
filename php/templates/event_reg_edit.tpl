@@ -118,6 +118,11 @@
 	</th>
 </tr>
 {/foreach}
+<tr>
+	<th colspan="6" style="text-align: center;">
+		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
+	</th>
+</tr>
 {else}
 <tr>
 	<td colspan="6">

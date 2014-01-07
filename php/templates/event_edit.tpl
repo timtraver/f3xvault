@@ -385,7 +385,7 @@ function reg_check(){
 {/if}
 <tr>
 	<th colspan="3" style="text-align: center;">
-		<input type="submit" value=" Save This Event " class="block-button" onClick="return check_event();">
+		<input type="submit" value=" Save This Event Info " class="block-button" onClick="return check_event();">
 	</th>
 </tr>
 </table>
