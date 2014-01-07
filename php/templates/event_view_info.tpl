@@ -84,7 +84,22 @@
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		{foreach $event->reg_options as $r}
 		<tr{if $r.event_reg_param_mandatory==1} style="background:lightgrey;"{/if}>
-			<td>{$r.event_reg_param_name}</td>
+			<td>
+				{$r.event_reg_param_name} 
+				<a href="" class="tooltip" onClick="return false;">(detail description)
+					<span>
+						<img class="callout" src="/images/callout.gif">
+						<strong>Registration Item Detail</strong><br>
+						<table>
+						<tr>
+							<td>{$r.event_reg_param_description}</td>
+						</tr>
+						</table>
+					</span>
+				</a>
+			
+			
+			</td>
 			<td width="5%" align="right">{if $r.event_reg_param_units=="US Dollars"}{$r.event_reg_param_cost|string_format:"$%.2f"}
 				{elseif $r.event_reg_param_units=="Euros"}{$r.event_reg_param_cost|string_format:"€%.2f"}
 				{else}{$r.event_reg_param_cost|string_format:"%.2f"}
@@ -106,7 +121,7 @@
 <tr>
 	<th valign="top">Event Notes</th>
 	<td>
-		<pre>{$event->info.event_notes|escape}</pre>
+		<div style="white-space: pre-wrap;">{$event->info.event_notes|escape}</div>
 	</td>
 </tr>
 <tr>

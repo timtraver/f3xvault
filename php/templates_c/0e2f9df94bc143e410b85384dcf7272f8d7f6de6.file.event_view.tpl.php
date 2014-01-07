@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-11-13 23:54:38
+<?php /* Smarty version Smarty-3.1.11, created on 2014-01-06 21:35:15
          compiled from "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\templates\event_view.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:32280511ca384f1fcf3-21943121%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0e2f9df94bc143e410b85384dcf7272f8d7f6de6' => 
     array (
       0 => 'C:\\Program Files (x86)\\Apache Software Foundation\\Apache2.2\\php\\templates\\event_view.tpl',
-      1 => 1384415670,
+      1 => 1387788204,
       2 => 'file',
     ),
   ),
@@ -261,7 +261,7 @@ function check_permission() {
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){document.event_edit.submit();}" class="block-button">
 		<?php }?>
 		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
-		<?php if (($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)&&$_smarty_tpl->tpl_vars['event']->value->info['event_reg_status']==1){?>
+		<?php if (($_smarty_tpl->tpl_vars['permission']->value==1||$_smarty_tpl->tpl_vars['user']->value['user_admin']==1)&&$_smarty_tpl->tpl_vars['event']->value->info['event_reg_status']!=0){?>
 		<input type="button" class="button" value=" Registration Report " style="float:right;" onclick="if(check_permission()){registration_report.submit();}">
 		<?php }?>
 
