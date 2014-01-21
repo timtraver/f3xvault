@@ -23,11 +23,7 @@ global $session_expiration;
 global $logsessions;
 global $device;
 
-if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
-	$base = 'C:/Program Files (x86)/Apache Software Foundation/Apache2.2';
-}else{
-	$base = '/shared/links/r/c/v/a/rcvault.com/site';
-}
+$base = '/shared/links/f/3/x/v/f3xvault.com/site';
 
 $base_webroot = "$base/htdocs";
 $base_plane_media = "/images/pilot_plane_images";
@@ -48,7 +44,6 @@ $template_dir=$include_paths['templates'];
 $compile_dir=$include_paths['templates_c'];
 $scripts_dir=$include_paths['scripts'];
 
-$session_expiration=3600;
 $logsessions=0;
 
 # Functions to include libraries and modules
