@@ -80,6 +80,27 @@ function calc_totals(){ldelim}
 	document.paypal.amount.value = total.toFixed(2);
 	{/if}
 {rdelim}
+function check_event(){ldelim}
+	var all_selected=1;
+	var temp_value='';
+	{foreach $event->reg_options as $r}
+		{$reg_id=$r.event_reg_param_id}
+		{if $r.event_reg_param_choice_name!=''}
+			{for $x=0 to $params.$reg_id.event_pilot_reg_qty-1}
+				temp_value=document.main.event_reg_param_{$r.event_reg_param_id}_choice_value_{$x}.value;
+				if(temp_value.indexOf("Select") !=-1){ldelim}
+					all_selected=0;
+				{rdelim}
+			{/for}
+		{/if}
+	{/foreach}
+	if(all_selected){ldelim}
+		return 1;
+	{rdelim}else{ldelim}
+		alert("Please make selections for all of your parameter choices.");
+		return 0;
+	{rdelim}	
+{rdelim}
 </script>
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
@@ -247,7 +268,7 @@ Currency is in {$event->info.currency_name}s
 {/if}
 <tr>
 	<th colspan="{$cols}">
-		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
+		<input type="button" value=" Save Registration Parameters " class="block-button" onClick="return check_event() && main.submit();">
 	</th>
 </tr>
 </table>
