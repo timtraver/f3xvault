@@ -357,78 +357,72 @@ function user_message($message,$error=0){
         }
 }
 function start_fsession(){
-        global $fsession;
-        global $fsid;
+	global $fsession;
+	global $fsid;
 
-		$fsession=array();
-        if(isset($_COOKIE['fsid'])){
-                $fsid=$_COOKIE['fsid'];
-        }else{
-                $fsid='';
-        }
-        logsession("Starting Session : ".$GLOBALS['fsid']);
-        if($fsid){
-                logsession("Reading Existing Session : ".$GLOBALS['fsid']);
-                $stmt=db_prep("
-                        SELECT *
-                        FROM session
-                        WHERE session_hash=:fsid
-                        AND session_status=1
-                ");
-                $result=db_exec($stmt,array("fsid"=>$fsid));
-                if(isset($result[0])){
-                        $session=$result[0];
-                }else{
-                        $fsid='';
-                        return;
-                }
-                # OK, now read the session data and populate the fsession array
-                $data=explode("\n",$session['session_data']);
-                foreach($data as $key=>$value){
-                        $line_array=explode("=",$value);
-                        $id=$line_array[0];
-                        $id_value=rtrim($line_array[1]);
-                        if($id!=''){
-                                $fsession[$id]=$id_value;
-                        }
-                }
-                # Check the last time it was modified to expire the session if needed
-                #$now=time();
-                #$last_time=strtotime($session['session_last']);
-                #if(($now-$last_time)>$GLOBALS['session_expiration']){
-                #        # Set the variable for expired
-                #        $fsession['session_expired']=1;
-                #        unset($fsession['auth']);
-                #}
-                logsession("Session : ".print_r($session,TRUE));
-        }else{
-        	create_fsession("/",$_SERVER['HTTP_HOST']);
-        }
+	$fsession=array();
+	if(isset($_COOKIE['fsid'])){
+		$fsid=$_COOKIE['fsid'];
+	}else{
+		$fsid='';
+	}
+	logsession("Starting Session : ".$GLOBALS['fsid']);
+	if($fsid){
+		logsession("Reading Existing Session : ".$GLOBALS['fsid']);
+		$stmt=db_prep("
+			SELECT *
+			FROM session
+			WHERE session_hash=:fsid
+			AND session_status=1
+		");
+		$result=db_exec($stmt,array("fsid"=>$fsid));
+		if(isset($result[0])){
+			$session=$result[0];
+		}else{
+			$fsid='';
+			return;
+		}
+		# OK, now read the session data and populate the fsession array
+		$data=explode("\n",$session['session_data']);
+		foreach($data as $key=>$value){
+			$line_array=explode("=",$value);
+			$id=$line_array[0];
+			$id_value=rtrim($line_array[1]);
+			if($id!=''){
+				$fsession[$id]=$id_value;
+			}
+		}
+		logsession("Session : ".print_r($session,TRUE));
+    }else{
+    	create_fsession("/",$_SERVER['HTTP_HOST']);
+    }
 }
 function logsession($string){
-        global $logsessions;
-        if($logsessions==1){
-                $handle=fopen("{$GLOBALS['include_paths']['libraries']}/sessionlog.txt","a");
-                fwrite($handle,"$string\n");
-                fclose($handle);
-        }
-        return;
+	global $logsessions;
+	if($logsessions==1){
+		$handle=fopen("{$GLOBALS['include_paths']['libraries']}/sessionlog.txt","a");
+		fwrite($handle,"$string\n");
+		fclose($handle);
+	}
+	return;
 }
 function create_fsession($path,$host){
-        $time=microtime();
-        $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
-        setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
-        $GLOBALS['fsid']=$cookie_string;
-        # Create the session record in the database
-        $stmt=db_prep("
-                INSERT INTO session
-                SET session_hash=:fsid,
-                        session_start=now(),
-                        session_last=now(),
-                        session_status=1
-        ");
-        $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
-        logsession("Created New Session : ".$GLOBALS['fsid']);
+	# Lets take off the www from the host name so we set them on all the same domain
+	$host=preg_replace("/^www\./", "", $host);
+	$time=microtime();
+    $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
+    setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
+    $GLOBALS['fsid']=$cookie_string;
+    # Create the session record in the database
+    $stmt=db_prep("
+		INSERT INTO session
+		SET session_hash=:fsid,
+			session_start=now(),
+			session_last=now(),
+			session_status=1
+    ");
+    $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
+    logsession("Created New Session : ".$GLOBALS['fsid']);
 }
 function save_fsession(){
         global $fsession;
