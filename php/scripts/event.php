@@ -861,13 +861,14 @@ function event_register() {
 	# Get classes to choose to be available for this event
 	$stmt=db_prep("
 		SELECT *,c.class_id
-		FROM class c
-		LEFT JOIN event_class ec ON c.class_id=ec.class_id
+		FROM event_class ec
+		LEFT JOIN class c ON ec.class_id=c.class_id
+		WHERE ec.event_id=:event_id
 		ORDER BY c.class_view_order
 	");
-	$classes=db_exec($stmt,array());
+	$classes=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("classes",$classes);
-
+	
 	$smarty->assign("teams",$e->teams);
 	
 	$event_pilot=array();
@@ -1070,7 +1071,7 @@ function event_register_save() {
 				"event_pilot_id"=>$event_pilot_id,
 				"reg_id"=>$reg_id,
 				"qty"=>$qty,
-				"choice_value"=>$r['choice_value'],
+				"choice_value"=>$r['choice_value']
 			));
 		}
 	}
@@ -1368,10 +1369,24 @@ function event_pilot_edit() {
 		));
 		foreach($result as $r){
 			$id=$r['event_reg_param_id'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				$values=array();
+				$values=explode(',',$r['event_pilot_reg_choice_value']);
+				$r['event_pilot_reg_choice_values']=$values;
+			}
 			$params[$id]=$r;
 		}
 	}
 	$smarty->assign("params",$params);
+	
+	# Lets see if there are any sizes and set a flag so we can change the view
+	$has_sizes=0;
+	foreach($event->reg_options as $p){
+		if($p['event_reg_param_choice_name']!=''){
+			$has_sizes=1;
+		}
+	}
+	$smarty->assign("has_sizes",$has_sizes);
 
 	$maintpl=find_template("event_pilot_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -1406,10 +1421,17 @@ function event_pilot_save() {
 		if(preg_match("/reg\_param\_(\d+)\_(\S+)$/",$key,$match)){
 			$reg_id=$match[1];
 			$reg_type=$match[2];
-			$params[$reg_id][$reg_type]=$value;
+			if(preg_match("/^(\S+)\_(\d*)/",$reg_type,$match2)){
+				$reg_type=$match2[1];
+				$params[$reg_id][$reg_type]=$params[$reg_id][$reg_type].",".$value;
+				# Lets get rid of the first comma if necessary
+				$params[$reg_id][$reg_type]=preg_replace("/^\,/",'',$params[$reg_id][$reg_type]);
+			}else{
+				$params[$reg_id][$reg_type]=$value;
+			}
 		}
 	}
-	
+
 	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
 	if($pilot_id==0){
 		# This means that we need to add a new pilot
@@ -1694,11 +1716,13 @@ function event_pilot_save() {
 			$stmt=db_prep("
 				UPDATE event_pilot_reg
 				SET event_pilot_reg_status=1,
-					event_pilot_reg_qty=:qty
+					event_pilot_reg_qty=:qty,
+					event_pilot_reg_choice_value=:choice_value
 				WHERE event_pilot_reg_id=:event_pilot_reg_id
 			");
 			$result=db_exec($stmt,array(
 				"qty"=>$qty,
+				"choice_value"=>$r['choice_value'],
 				"event_pilot_reg_id"=>$result[0]['event_pilot_reg_id']
 			));
 		}else{
@@ -1708,16 +1732,18 @@ function event_pilot_save() {
 				SET event_pilot_id=:event_pilot_id,
 					event_reg_param_id=:reg_id,
 					event_pilot_reg_qty=:qty,
+					event_pilot_reg_choice_value=:choice_value,
 					event_pilot_reg_status=1
 			");
 			$result=db_exec($stmt,array(
 				"event_pilot_id"=>$event_pilot_id,
 				"reg_id"=>$reg_id,
-				"qty"=>$qty
+				"qty"=>$qty,
+				"choice_value"=>$r['choice_value']
 			));
 		}
 	}
-	
+
 	log_action($event_pilot_id);
 	user_message("Updated event pilot info.");
 	return event_view();

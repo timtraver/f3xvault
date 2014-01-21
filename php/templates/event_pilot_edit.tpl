@@ -307,11 +307,15 @@ function calc_totals(){ldelim}
 
 {if $event->reg_options}
 <h1 class="post-title entry-title">Registration Values</h1>
+{if $has_sizes}{$cols=5}{else}{$cols=4}{/if}
 
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th width="20%">Name</th>
 	<th width="10%"> Qty</th>
+	{if $has_sizes}
+	<th width="20%">Parameter Choice</th>
+	{/if}
 	<th width="10%">Cost Per Unit</th>
 	<th align="right" width="10%">Extended</th>
 </tr>
@@ -340,6 +344,19 @@ function calc_totals(){ldelim}
 			<input type="checkbox" name="event_reg_param_{$r.event_reg_param_id}_qty"{if $params.$reg_id.event_pilot_reg_qty==1} CHECKED{/if} onChange="calc_totals();">
 		{/if}
 	</td>
+	{if $has_sizes}
+	<td align="right" valign="top">
+		{if $r.event_reg_param_choice_name!=''}
+		{for $x=0 to $params.$reg_id.event_pilot_reg_qty-1}
+			<select name="event_reg_param_{$r.event_reg_param_id}_choice_value_{$x}">
+			{foreach $r.choices as $c}
+			<option value="{$c}"{if $params.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
+			{/foreach}
+			</select>
+		{/for}
+		{/if}
+	</td>
+	{/if}
 	<td align="right">
 		{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
 	</td>
@@ -349,13 +366,13 @@ function calc_totals(){ldelim}
 </tr>
 {/foreach}
 <tr>
-	<th align="right" colspan="3">Total Registration Fee ({$event->info.event_reg_pay_units})</th>
+	<th align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</th>
 	<th align="right" width="10%">
 		<span id="total"></span>
 	</th>
 </tr>
 <tr>
-	<th align="right" colspan="3">Current Status</th>
+	<th align="right" colspan="{$cols-1}">Status</th>
 	<th align="right" width="10%">
 	{if $pilot.event_pilot_paid_flag==1}
 	<font color="green"><b>PAID</b></font>
@@ -365,7 +382,7 @@ function calc_totals(){ldelim}
 	</th>
 </tr>
 <tr>
-	<th align="right" colspan="3">Set Status</th>
+	<th align="right" colspan="{$cols-1}">Set Status</th>
 	<th align="right" width="10%">
 	<select name="event_pilot_paid_flag">
 	<option value="0"{if $pilot.event_pilot_paid_flag==0} SELECTED{/if}>DUE</option>
@@ -373,7 +390,7 @@ function calc_totals(){ldelim}
 	</th>
 </tr>
 <tr>
-	<th colspan="4" style="text-align: center;">
+	<th colspan="{$cols}" style="text-align: center;">
 		<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
 	</th>
 </tr>
