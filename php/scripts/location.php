@@ -420,7 +420,7 @@ function location_view() {
 		do {
 			$rand=array_rand($media);
 			$count++;
-		}while($media[$rand]['location_media_type']!='picture' || $count>10);
+		}while($media[$rand]['location_media_type']!='picture' && $count<10);
 	}else{
 		$rand=0;
 	}
