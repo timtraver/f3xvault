@@ -263,7 +263,7 @@ Currency is in {$event->info.currency_name}s
 	{/if}
 	</th>
 </tr>
-{if $event->info.event_reg_paypal_address!=''}
+{if $event->info.event_reg_paypal_address!='' && $go_to_paypal!=1}
 <tr>
 	<th colspan="{$cols}">
 		<input type="button" value=" Pay With Paypal Account Now " class="block-button" onClick="calc_totals();document.main.go_to_paypal.value=1;main.submit();">
