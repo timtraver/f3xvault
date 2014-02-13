@@ -126,7 +126,7 @@ if (strcmp ($res, "VERIFIED") == 0) {
 		WHERE event_pilot_id=:event_pilot_id
 	");
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
-	if(is_set($result[0])){
+	if(isset($result[0])){
 		$event_pilot=$result[0];
 	}
 	
