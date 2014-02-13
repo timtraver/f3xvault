@@ -19,7 +19,7 @@ include_library('functions.inc');
 define("DEBUG", 1);
 
 // Set to 0 once you're ready to go live
-define("USE_SANDBOX", 1);
+define("USE_SANDBOX", 0);
 
 
 define("LOG_FILE", "./ipn.log");
@@ -89,8 +89,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
 // of the certificate as shown below. Ensure the file is readable by the webserver.
 // This is mandatory for some environments.
 
-//$cert = __DIR__ . "./cacert.pem";
-//curl_setopt($ch, CURLOPT_CAINFO, $cert);
+$cert = $GLOBALS['include_paths']['libraries']."/cacert.pem";
+curl_setopt($ch, CURLOPT_CAINFO, $cert);
 
 $res = curl_exec($ch);
 if (curl_errno($ch) != 0) // cURL error
