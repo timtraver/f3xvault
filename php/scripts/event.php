@@ -1524,7 +1524,7 @@ function event_pilot_save() {
 		user_message("Created new pilot $pilot_first_name $pilot_last_name.");
 	}
 	
-	if($event_pilot_id!=0){		
+	if($event_pilot_id!=0){
 		# Lets save this existing event pilot
 		$stmt=db_prep("
 			UPDATE event_pilot
