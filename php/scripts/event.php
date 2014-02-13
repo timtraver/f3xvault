@@ -845,6 +845,7 @@ function event_register() {
 
 	$event_id=intval($_REQUEST['event_id']);
 	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+	$go_to_paypal=$_REQUEST['go_to_paypal'];
 	$e=new Event($event_id);
 	$e->get_teams();
 	$smarty->assign("event",$e);
@@ -888,12 +889,14 @@ function event_register() {
 		
 	$params=array();
 	if($event_pilot_id!=0){
+		$total=0;
 		# Lets get their reg params
 		$stmt=db_prep("
 			SELECT *
-			FROM event_pilot_reg
-			WHERE event_pilot_id=:event_pilot_id
-				AND event_pilot_reg_status=1
+			FROM event_pilot_reg epr
+			LEFT JOIN event_reg_param erp ON epr.event_reg_param_id=erp.event_reg_param_id
+			WHERE epr.event_pilot_id=:event_pilot_id
+				AND epr.event_pilot_reg_status=1
 		");
 		$result=db_exec($stmt,array(
 			"event_pilot_id"=>$event_pilot_id
@@ -905,6 +908,7 @@ function event_register() {
 				$values=explode(',',$r['event_pilot_reg_choice_value']);
 				$r['event_pilot_reg_choice_values']=$values;
 			}
+			$total=$total+($r['event_pilot_reg_qty']*$r['event_reg_param_cost']);
 			$params[$id]=$r;
 		}
 	}
@@ -917,6 +921,12 @@ function event_register() {
 		}
 	}
 	$smarty->assign("has_sizes",$has_sizes);
+	
+	if($go_to_paypal==1){
+		# They must have saved it and are trying to pay with paypal, so send the paypal info
+		$smarty->assign("total",$total);
+		$smarty->assign("go_to_paypal",$go_to_paypal);
+	}
 	
 	$maintpl=find_template("event_register.tpl");
 	return $smarty->fetch($maintpl);
@@ -933,7 +943,6 @@ function event_register_save() {
 	$event_pilot_team=$_REQUEST['event_pilot_team'];
 	$plane_id=intval($_REQUEST['plane_id']);
 	$event_pilot_reg_note=$_REQUEST['event_pilot_reg_note'];
-	$go_to_paypal=$_REQUEST['go_to_paypal'];
 
 	# Now lets get the existing additional values
 	$params=array();
@@ -1164,46 +1173,8 @@ function event_register_save() {
 	if($GLOBALS['user']['user_email']!=''){
 		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
 	}
-	if($go_to_paypal==1){
-		return launch_paypal();	
-	}else{
-		return event_register();
-	}
+	return event_register();
 }
-function launch_paypal() {
-	global $smarty;
-	global $user;
-
-	$event_id=intval($_REQUEST['event_id']);
-	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
-	# Lets check to make sure that its the owner that is deleting it
-	$e=new Event($event_id);
-
-	log_action($event_id);
-
-	# Lets get their reg params
-	$stmt=db_prep("
-		SELECT *
-		FROM event_pilot_reg epr
-		LEFT JOIN event_reg_param erp ON epr.event_reg_param_id=erp.event_reg_param_id
-		WHERE epr.event_pilot_id=:event_pilot_id
-			AND epr.event_pilot_reg_status=1
-	");
-	$result=db_exec($stmt,array(
-		"event_pilot_id"=>$event_pilot_id
-	));
-	$total=0;
-	foreach($result as $r){
-		$total=$total+($r['event_pilot_reg_qty']*$r['event_reg_param_cost']);
-	}
-		
-	$smarty->assign("event",$e);
-	$smarty->assign("total",$total);
-	
-	$maintpl=find_template("event_reg_launch_paypal.tpl");
-	return $smarty->fetch($maintpl);
-}
-
 
 function event_delete() {
 	global $smarty;

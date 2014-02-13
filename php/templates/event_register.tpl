@@ -98,7 +98,9 @@ function check_event(){ldelim}
 		return 0;
 	{rdelim}	
 {rdelim}
+
 </script>
+
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event Registration for {$event->info.event_name}
@@ -281,6 +283,26 @@ calc_totals();
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+
+{if $go_to_paypal==1}
+<form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr" target="_blank">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="{$event->info.event_reg_paypal_address}">
+<input type="hidden" name="lc" value="{$event->info.country_code}">
+<input type="hidden" name="item_name" value="F3XVault Registration for {$event->info.event_name} for pilot {$user.user_first_name} {$user.user_last_name}">
+<input type="hidden" name="custom" value="{$event_pilot.event_pilot_id}">
+<input type="hidden" name="amount" value="{$total|string_format:"%.2f"}">
+<input type="hidden" name="currency_code" value="{$event->info.currency_code}">
+<input type="hidden" name="button_subtype" value="services">
+<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
+<input type="hidden" name="notify_url" value="http://www.f3xvault.com/paypal_ipn.php">
+</form>
+<script type="text/javascript">
+<!--
+        document.paypal.submit();
+-->
+</script>
+{/if}
 
 </div>
 </div>
