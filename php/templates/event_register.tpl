@@ -76,9 +76,6 @@ function calc_totals(){ldelim}
 {/foreach}
 	var id_total=document.getElementById('total');
 	id_total.innerHTML = '{$event->info.currency_html}'+total.toFixed(2);
-	{if $event->info.event_reg_paypal_address!=''}
-	document.paypal.amount.value = total.toFixed(2);
-	{/if}
 {rdelim}
 function check_event(){ldelim}
 	var all_selected=1;
@@ -116,6 +113,7 @@ function check_event(){ldelim}
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_pilot_id" value="{$event_pilot.event_pilot_id}">
 <input type="hidden" name="plane_id" value="{$event_pilot.plane_id}">
+<input type="hidden" name="go_to_paypal" value="0">
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th align="right" width="20%">Pilot</th>
@@ -262,7 +260,7 @@ Currency is in {$event->info.currency_name}s
 {if $event->info.event_reg_paypal_address!=''}
 <tr>
 	<th colspan="{$cols}">
-		<input type="button" value=" Pay With Paypal Account Now " class="block-button" onClick="calc_totals();paypal.submit();">
+		<input type="button" value=" Pay With Paypal Account Now " class="block-button" onClick="calc_totals();document.main.go_to_paypal.value=1;main.submit();">
 	</th>
 </tr>
 {/if}
@@ -283,18 +281,6 @@ calc_totals();
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
-{if $event->info.event_reg_paypal_address!=''}
-<form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr" target="_blank">
-<input name="cmd" type="hidden" value="_xclick">
-<input name="business" type="hidden" value="{$event->info.event_reg_paypal_address}">
-<input name="lc" type="hidden" value="{$event->info.country_code}">
-<input name="item_name" type="hidden" value="F3XVault Registration for {$event->info.event_name} for pilot {$user.user_first_name} {$user.user_last_name}">
-<input name="amount" type="hidden" value="">
-<input type="hidden" name="currency_code" value="{$event->info.currency_code}">
-<input type="hidden" name="button_subtype" value="services">
-<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
-</form>
-{/if}
 
 </div>
 </div>
