@@ -25,11 +25,7 @@ global $system_flags;
 
 $start_time=microtime(true);
 
-if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
-	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
-}else{
-	require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
-}
+require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
 
 $logsessions=1;
 
