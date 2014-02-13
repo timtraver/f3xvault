@@ -27,11 +27,7 @@ EVENT STUFF
 		Create calendar events as different colors for the different types
 	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
 	
-<<<<<<< HEAD
 	Make a system to do drops on different times for f3j?
-=======
-	Make a system to do drops on different times for f3j
->>>>>>> a9336779cf7bf299a7efd9bf6176f3718cdaaf1c
 	
 	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 	System to choose at random the reflight pilots to fill out a group
