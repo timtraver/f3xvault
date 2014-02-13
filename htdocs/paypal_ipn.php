@@ -152,7 +152,8 @@ if (strcmp ($res, "VERIFIED") == 0) {
 	//$txn_id = $_POST['txn_id'];
 	//$receiver_email = $_POST['receiver_email'];
 	//$payer_email = $_POST['payer_email'];
-	
+	error_log(date('[Y-m-d H:i e] '). "event_pilot_id: $event_pilot_id" . PHP_EOL, 3, LOG_FILE);
+	error_log(date('[Y-m-d H:i e] '). "checked_out: $checked_out" . PHP_EOL, 3, LOG_FILE);
 	if($checked_out==1 && isset($event_pilot['event_pilot_id'])){
 		# Change the event pilot to have a status of paid
 		$stmt=db_prep("
