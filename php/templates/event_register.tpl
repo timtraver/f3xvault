@@ -255,7 +255,11 @@ Currency is in {$event->info.currency_name}s
 	{if $event_pilot.event_pilot_paid_flag==1}
 	<font color="green"><b>PAID</b></font>
 	{else}
-	<font color="red"><b>DUE</b></font>
+		{if $go_to_paypal==1}
+		<font color="orange"><b>PENDING</b></font>
+		{else}
+		<font color="red"><b>DUE</b></font>
+		{/if}
 	{/if}
 	</th>
 </tr>
@@ -288,6 +292,7 @@ calc_totals();
 <form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr" target="_blank">
 <input type="hidden" name="cmd" value="_xclick">
 <input type="hidden" name="business" value="{$event->info.event_reg_paypal_address}">
+<input type="hidden" name="receiver_email" value="{$event->info.event_reg_paypal_address}">
 <input type="hidden" name="lc" value="{$event->info.country_code}">
 <input type="hidden" name="item_name" value="F3XVault Registration for {$event->info.event_name} for pilot {$user.user_first_name} {$user.user_last_name}">
 <input type="hidden" name="custom" value="{$event_pilot.event_pilot_id}">
