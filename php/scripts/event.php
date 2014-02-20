@@ -36,7 +36,8 @@ $need_login=array(
 	"event_round_save",
 	"event_round_delete",
 	"event_round_flight_delete",
-	"save_individual_flight"
+	"save_individual_flight",
+	"event_tasks_add_round"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
@@ -63,6 +64,43 @@ if(check_user_function($function)){
 	 $actionoutput= show_no_permission();
 }
 
+function check_event_permission($event_id){
+	global $user;
+	# Function to check to see if this user can edit this event
+	# First check if its an administrator
+	if($user['user_admin']){
+		return 1;
+	}
+	
+	# Get event info
+	$stmt=db_prep("
+		SELECT *
+		FROM event
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	$event=$result[0];
+
+	if($event['pilot_id']==$user['pilot_id']){
+		# This is the owner of the event, so of course he has access
+		return 1;
+	}
+	$allowed=0;
+	# Now lets get the other permissions
+	$stmt=db_prep("
+		SELECT *
+		FROM event_user
+		WHERE event_id=:event_id
+			AND event_user_status=1
+	");
+	$users=db_exec($stmt,array("event_id"=>$event_id));
+	foreach($users as $u){
+		if($user['pilot_id']==$u['pilot_id']){
+			$allowed=1;
+		}
+	}
+	return $allowed;
+}
 function event_list() {
 	global $smarty;
 	global $export;
@@ -687,6 +725,51 @@ function event_save() {
 	log_action($event_id);
 	return event_edit();
 }
+function event_delete() {
+	global $smarty;
+	global $user;
+
+	$event_id=intval($_REQUEST['event_id']);
+	# Lets check to make sure that its the owner that is deleting it
+	$e=new Event($event_id);
+	if($user['user_id']!=$e->info['user_id'] && $user['user_admin']!=1){
+		# This is not the owner, so don't delete it...
+		user_message("I'm sorry, but only the owner of the event can delete it.",1);
+		return event_list();
+	}
+	# Save the database record for this event to delete it
+	$stmt=db_prep("
+		UPDATE event
+		SET event_status=0
+		WHERE event_id=:event_id
+	");
+	$result=db_exec($stmt,array(
+		"event_id"=>$event_id
+	));
+	user_message("Removed Event!");
+
+	log_action($event_id);
+	return event_list();
+}
+function event_chart() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->calculate_event_totals();
+	$e->get_running_totals();
+	
+	$smarty->assign("event",$e);
+	$smarty->assign("event_id",$event_id);
+	
+	$maintpl=find_template("event_chart.tpl");
+	return $smarty->fetch($maintpl);
+}
+
+# Registration Routines
 function event_reg_edit() {
 	global $smarty;
 
@@ -1175,33 +1258,58 @@ function event_register_save() {
 	}
 	return event_register();
 }
-
-function event_delete() {
+function event_registration_report() {
 	global $smarty;
-	global $user;
 
 	$event_id=intval($_REQUEST['event_id']);
-	# Lets check to make sure that its the owner that is deleting it
 	$e=new Event($event_id);
-	if($user['user_id']!=$e->info['user_id'] && $user['user_admin']!=1){
-		# This is not the owner, so don't delete it...
-		user_message("I'm sorry, but only the owner of the event can delete it.",1);
-		return event_list();
-	}
-	# Save the database record for this event to delete it
-	$stmt=db_prep("
-		UPDATE event
-		SET event_status=0
-		WHERE event_id=:event_id
-	");
-	$result=db_exec($stmt,array(
-		"event_id"=>$event_id
-	));
-	user_message("Removed Event!");
+	$e->get_teams();
+	$smarty->assign("event",$e);
+	
+	# lets first get all of the event params
+	$reg_options=$e->reg_options;
 
-	log_action($event_id);
-	return event_list();
+	# lets get the pilot registration info
+	$pilot_reg_options=array();
+	foreach($e->pilots as $event_pilot_id=>$p){
+		# Lets get their reg params
+		$stmt=db_prep("
+			SELECT *	
+			FROM event_pilot_reg
+			WHERE event_pilot_id=:event_pilot_id
+				AND event_pilot_reg_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$p['event_pilot_id']
+		));
+		foreach($result as $r){
+			$id=$r['event_reg_param_id'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				$values=array();
+				$values=explode(',',$r['event_pilot_reg_choice_value']);
+				$r['event_pilot_reg_choice_values']=$values;
+			}
+			$pilot_reg_options[$event_pilot_id][$id]=$r;
+			$reg_options[$id]['qty']+=$r['event_pilot_reg_qty'];
+			if($r['event_pilot_reg_choice_value']!=''){
+				foreach($values as $v){
+					$reg_options[$id]['values'][$v]['qty']++;
+				}
+			}
+		}
+	}
+	$smarty->assign("pilot_reg_options",$pilot_reg_options);
+	$smarty->assign("reg_options",$reg_options);
+	
+	if(isset($_REQUEST['use_print_header'])){
+		$maintpl=find_template("event_register_report_print.tpl");
+	}else{
+		$maintpl=find_template("event_register_report.tpl");
+	}
+	return $smarty->fetch($maintpl);
 }
+
+# Event Pilot Routines
 function event_pilot_edit() {
 	global $smarty;
 
@@ -1856,43 +1964,6 @@ function event_pilot_remove() {
 	user_message("Pilot removed from event.");
 	return event_view();
 }
-function check_event_permission($event_id){
-	global $user;
-	# Function to check to see if this user can edit this event
-	# First check if its an administrator
-	if($user['user_admin']){
-		return 1;
-	}
-	
-	# Get event info
-	$stmt=db_prep("
-		SELECT *
-		FROM event
-		WHERE event_id=:event_id
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	$event=$result[0];
-
-	if($event['pilot_id']==$user['pilot_id']){
-		# This is the owner of the event, so of course he has access
-		return 1;
-	}
-	$allowed=0;
-	# Now lets get the other permissions
-	$stmt=db_prep("
-		SELECT *
-		FROM event_user
-		WHERE event_id=:event_id
-			AND event_user_status=1
-	");
-	$users=db_exec($stmt,array("event_id"=>$event_id));
-	foreach($users as $u){
-		if($user['pilot_id']==$u['pilot_id']){
-			$allowed=1;
-		}
-	}
-	return $allowed;
-}
 function event_user_save() {
 	global $smarty;
 	global $user;
@@ -2065,6 +2136,8 @@ function event_param_save() {
 	user_message("Event Parameters Saved.");
 	return event_edit();
 }
+
+# Event Round Routines
 function event_round_edit() {
 	global $smarty;
 	# Function to add or edit a round to an event
@@ -2115,9 +2188,9 @@ function event_round_edit() {
 		if($event->info['event_type_code']=='f3k'){
 			if($event->f3k_flight_type_id!=0){
 				$flight_type_id=$event->f3k_flight_type_id;
-				$new_flight_types=$flight_types[$flight_type_id];
-				$flight_types=array();
-				$flight_types[$flight_type_id]=$new_flight_types;
+#				$new_flight_types=$flight_types[$flight_type_id];
+#				$flight_types=array();
+#				$flight_types[$flight_type_id]=$new_flight_types;
 			}
 		}
 		if($event->info['event_type_code']=='f3j'){
@@ -2697,16 +2770,13 @@ function event_round_save() {
 	# OK, now lets call the routine to do the calculation for a single round
 	sub_trace();
 
-
 	# First, since we saved the data, reset the $event object
-	if(!$new_round){
-		$event=new Event($event_id);
-		$event->calculate_round($event_round_number);
-		# Now lets recalculate and save the event total info
-		# Refresh the round info
-		$event->get_rounds();
-		$event->event_save_totals();
-	}
+	$event=new Event($event_id);
+	$event->calculate_round($event_round_number);
+	# Now lets recalculate and save the event total info
+	# Refresh the round info
+	$event->get_rounds();
+	$event->event_save_totals();
 
 	log_action($event_round_id);
 
@@ -2839,158 +2909,6 @@ function event_pilot_rounds() {
 	$smarty->assign("event",$event);
 	
 	$maintpl=find_template("event_pilot_view.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_print_overall() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to print.");
-		return event_list();
-	}
-	
-	$e=new Event($event_id);
-	$e->get_rounds();
-	$e->calculate_event_totals();
-
-	$smarty->assign("event",$e);
-	
-	$maintpl=find_template("print_event_overall.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_print_rank() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to print.");
-		return event_edit();
-	}
-	
-	$e=new Event($event_id);
-	$e->get_rounds();
-	$e->calculate_event_totals();
-
-	$smarty->assign("event",$e);
-	
-	$maintpl=find_template("print_event_rankings.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_print_round() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to print.");
-		return event_list();
-	}
-	$round_from=$_REQUEST['round_start_number'];
-	$round_to=$_REQUEST['round_end_number'];
-	$one_per_page=0;
-	if(isset($_REQUEST['oneper']) && $_REQUEST['oneper']=='on'){
-		$one_per_page=1;
-	}
-	
-	$e=new Event($event_id);
-	$e->get_rounds();
-
-	$smarty->assign("event",$e);
-	$smarty->assign("round_from",$round_from);
-	$smarty->assign("round_to",$round_to);
-	$smarty->assign("one_per_page",$one_per_page);
-	
-	$maintpl=find_template("print_event_rounds.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_print_pilot() {
-	global $smarty;
-	# Function to view the rounds for a particular pilot
-	
-	$event_id=intval($_REQUEST['event_id']);
-	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
-
-	$event=new Event($event_id);
-	$event->get_rounds();
-	
-	$smarty->assign("event_pilot_id",$event_pilot_id);
-	$smarty->assign("event",$event);
-	
-	$maintpl=find_template("print_event_pilot_view.tpl");
-	return $smarty->fetch($maintpl);
-}
-function event_print_stats() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-	if($event_id==0){
-		user_message("That is not a proper event id to edit.");
-		return event_list();
-	}
-	
-	$e=new Event($event_id);
-	$e->get_rounds();
-
-	# Lets determine if we need a laps report and an average speed report
-	$laps=0;
-	$speed=0;
-	$landing=0;
-	$duration=0;
-	foreach($e->pilots as $p){
-		if($p['event_pilot_total_laps']!=0){
-			$laps=1;
-		}
-		if($p['event_pilot_average_speed']!=0){
-			$speed=1;
-		}
-	}
-	foreach($e->flight_types as $ft){
-		if($ft['flight_type_landing']==1){
-			$landing=1;
-		}
-		if($ft['flight_type_code']=='f3b_duration'){
-			$duration=1;
-		}
-	}
-	$lap_totals=array();
-	$speed_averages=array();
-	$speed_times=array();
-	if($laps){
-		# Lets sort the pilots by order of distance laps
-		$lap_totals=array_msort($e->pilots,array("event_pilot_lap_rank"=>SORT_ASC));
-		$smarty->assign("lap_totals",$lap_totals);
-		# Lets get the top distance list
-		$distance_laps=$e->get_top_distance();
-		$smarty->assign("distance_laps",$distance_laps);
-		# Lets get the distance ranking
-		$distance_rank=$e->get_distance_rank();
-		$smarty->assign("distance_rank",$distance_rank);
-	}
-	if($speed){
-		# Lets get the speed ranking
-		$speed_rank=$e->get_speed_rank();
-		$smarty->assign("speed_rank",$speed_rank);
-		# Lets sort the pilots by order of speed average
-		$speed_averages=array_msort($e->pilots,array("event_pilot_average_speed_rank"=>SORT_ASC));
-		$smarty->assign("speed_averages",$speed_averages);
-		# Lets get the top speed list
-		$speed_times=$e->get_top_speeds();
-		$smarty->assign("speed_times",$speed_times);
-	}
-	if($landing){
-		# Lets get the top landing accuracy list
-		$top_landing=$e->get_top_landing();
-		$smarty->assign("top_landing",$top_landing);
-	}
-	if($duration){
-		# Lets get the duration rank
-		$duration_rank=$e->get_duration_rank();
-		$smarty->assign("duration_rank",$duration_rank);
-	}
-	
-	$smarty->assign("event",$e);
-	
-	$maintpl=find_template("print_event_stats.tpl");
 	return $smarty->fetch($maintpl);
 }
 function save_individual_flight(){
@@ -3223,6 +3141,162 @@ function save_individual_flight(){
 	}
 	return;
 }
+
+# Print Routines
+function event_print_overall() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_list();
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+	$e->calculate_event_totals();
+
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template("print_event_overall.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_print_rank() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_edit();
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+	$e->calculate_event_totals();
+
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template("print_event_rankings.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_print_round() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to print.");
+		return event_list();
+	}
+	$round_from=$_REQUEST['round_start_number'];
+	$round_to=$_REQUEST['round_end_number'];
+	$one_per_page=0;
+	if(isset($_REQUEST['oneper']) && $_REQUEST['oneper']=='on'){
+		$one_per_page=1;
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+
+	$smarty->assign("event",$e);
+	$smarty->assign("round_from",$round_from);
+	$smarty->assign("round_to",$round_to);
+	$smarty->assign("one_per_page",$one_per_page);
+	
+	$maintpl=find_template("print_event_rounds.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_print_pilot() {
+	global $smarty;
+	# Function to view the rounds for a particular pilot
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
+
+	$event=new Event($event_id);
+	$event->get_rounds();
+	
+	$smarty->assign("event_pilot_id",$event_pilot_id);
+	$smarty->assign("event",$event);
+	
+	$maintpl=find_template("print_event_pilot_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_print_stats() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	if($event_id==0){
+		user_message("That is not a proper event id to edit.");
+		return event_list();
+	}
+	
+	$e=new Event($event_id);
+	$e->get_rounds();
+
+	# Lets determine if we need a laps report and an average speed report
+	$laps=0;
+	$speed=0;
+	$landing=0;
+	$duration=0;
+	foreach($e->pilots as $p){
+		if($p['event_pilot_total_laps']!=0){
+			$laps=1;
+		}
+		if($p['event_pilot_average_speed']!=0){
+			$speed=1;
+		}
+	}
+	foreach($e->flight_types as $ft){
+		if($ft['flight_type_landing']==1){
+			$landing=1;
+		}
+		if($ft['flight_type_code']=='f3b_duration'){
+			$duration=1;
+		}
+	}
+	$lap_totals=array();
+	$speed_averages=array();
+	$speed_times=array();
+	if($laps){
+		# Lets sort the pilots by order of distance laps
+		$lap_totals=array_msort($e->pilots,array("event_pilot_lap_rank"=>SORT_ASC));
+		$smarty->assign("lap_totals",$lap_totals);
+		# Lets get the top distance list
+		$distance_laps=$e->get_top_distance();
+		$smarty->assign("distance_laps",$distance_laps);
+		# Lets get the distance ranking
+		$distance_rank=$e->get_distance_rank();
+		$smarty->assign("distance_rank",$distance_rank);
+	}
+	if($speed){
+		# Lets get the speed ranking
+		$speed_rank=$e->get_speed_rank();
+		$smarty->assign("speed_rank",$speed_rank);
+		# Lets sort the pilots by order of speed average
+		$speed_averages=array_msort($e->pilots,array("event_pilot_average_speed_rank"=>SORT_ASC));
+		$smarty->assign("speed_averages",$speed_averages);
+		# Lets get the top speed list
+		$speed_times=$e->get_top_speeds();
+		$smarty->assign("speed_times",$speed_times);
+	}
+	if($landing){
+		# Lets get the top landing accuracy list
+		$top_landing=$e->get_top_landing();
+		$smarty->assign("top_landing",$top_landing);
+	}
+	if($duration){
+		# Lets get the duration rank
+		$duration_rank=$e->get_duration_rank();
+		$smarty->assign("duration_rank",$duration_rank);
+	}
+	
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template("print_event_stats.tpl");
+	return $smarty->fetch($maintpl);
+}
+
+# Draw Routines
 function event_draw() {
 	global $smarty;
 
@@ -3503,19 +3577,7 @@ function event_draw_save(){
 			}
 		}
 	}
-
 	user_message("Saved Event Draw.");
-	# If its the first save of a f3k draw, then return to the edit with the new draw
-	# To allow them to set the original round types
-	if($original_event_draw_id==0){
-		$e=new Event($event_id);
-		if($e->info['event_type_code']=='f3k'){
-			# If this is the first save of an f3k event draw
-			$_REQUEST['event_draw_id']=$event_draw_id;
-			user_message("You can set the original f3k round choices if you wish now.");
-			return event_draw_edit();
-		}
-	}
 	return event_draw();
 }
 function event_draw_apply(){
@@ -3785,26 +3847,30 @@ function event_draw_print() {
 	$e->get_rounds();
 	$e->get_draws();
 
-	
 	# Lets get the draw round flight types if there are any
 	$draw_round_flight_types=array();
-	$stmt=db_prep("
-		SELECT *,edrf.flight_type_id
-		FROM event_draw_round_flight edrf
-		LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
-		WHERE ed.event_id=:event_id
-			AND ed.event_draw_status=1
-			AND edrf.event_draw_round_flight_status=1
-		ORDER BY ed.event_draw_id,edrf.event_draw_round_number
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	foreach($result as $round){
-		$event_draw_id=$round['event_draw_id'];
-		$round_number=$round['event_draw_round_number'];
-		$draw_round_flight_types[$event_draw_id][$round_number]=$round['flight_type_id'];
+	if($e->info['event_type_code']=='f3k'){
+		# Lets set the round flight types from the task list
+		foreach($e->tasks as $round=>$t){
+			$draw_round_flight_types[$round]=$t['flight_type_id'];
+		}
+	}else{
+		$stmt=db_prep("
+			SELECT *,edrf.flight_type_id
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+			WHERE ed.event_id=:event_id
+				AND ed.event_draw_status=1
+				AND edrf.event_draw_round_flight_status=1
+			ORDER BY ed.event_draw_id,edrf.event_draw_round_number
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		foreach($result as $round){
+			$event_draw_id=$round['event_draw_id'];
+			$round_number=$round['event_draw_round_number'];
+			$draw_round_flight_types[$event_draw_id][$round_number]=$round['flight_type_id'];
+		}
 	}
-
-
 
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
@@ -3816,13 +3882,16 @@ function event_draw_print() {
 				if($d['event_draw_active']==1){
 					#Step through the draw rounds and see if one exists for this round
 					foreach($d['flights'] as $flight_type_id=>$f){
+						if($e->info['event_type_code']=='f3k'){
+							$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+						}
 						foreach($f as $round_num=>$v){
 							if($round_num==$event_round_number){
 								# Lets create the round info
 								$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
 								$e->rounds[$event_round_number]['event_round_status']=1;
 								if($e->info['event_type_code']=='f3k'){
-									$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_draw_id][$round_num];
+									$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$round_num];
 								}else{
 									$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
 								}
@@ -3923,23 +3992,14 @@ function event_draw_view() {
 		$draw['rounds']['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
 	}
 	
-	# Lets get the draw round flight types if there are any
-	$draw_round_flight_types=array();
-	$stmt=db_prep("
-		SELECT *
-		FROM event_draw_round_flight
-		WHERE event_draw_id=:event_draw_id
-			AND event_draw_round_flight_status=1
-		ORDER BY event_draw_round_number
-	");
-	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
-	foreach($result as $round){
-		$round_number=$round['event_draw_round_number'];
-		$draw_round_flight_types[$round_number]=$round['flight_type_id'];
-	}
-	
 	$e=new Event($event_id);
 	$e->get_teams();
+	
+	# Lets set the round flight types from the task list
+	$draw_round_flight_types=array();	
+	foreach($e->tasks as $round=>$t){
+		$draw_round_flight_types[$round]=$t['flight_type_id'];
+	}
 	
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
@@ -3983,23 +4043,45 @@ function event_draw_view() {
 	$maintpl=find_template($template);
 	return $smarty->fetch($maintpl);
 }
-function event_chart() {
+function event_draw_stats() {
 	global $smarty;
 
+	include_library("draw.class");
+	
 	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+	$flight_type_id=intval($_REQUEST['flight_type_id']);
 
-	$e=new Event($event_id);
-	$e->get_teams();
-	$e->get_rounds();
-	$e->calculate_event_totals();
-	$e->get_running_totals();
+	if($event_draw_id==0){
+		user_message("Must have a proper event id to perform this action.",1);
+		return event_draw();
+	}
+
+	$d=new Draw($event_draw_id);
+	$d->get_teams();
+	$d->initialize_stats();
+	$d->get_stats();
 	
-	$smarty->assign("event",$e);
+	$groups=$d->get_group_array();
+	$group_totals=array();
+	foreach($groups as $g){
+		$group_totals[$g]++;
+	}
+	$num_teams=count($d->teams);
+
+	$smarty->assign("d",$d);
 	$smarty->assign("event_id",$event_id);
+	$smarty->assign("event_draw_id",$event_draw_id);
+	$smarty->assign("ft",$ft);
+	$smarty->assign("stats",$d->stats);
+	$smarty->assign("stat_totals",$d->stat_totals);
+	$smarty->assign("group_totals",$group_totals);
 	
-	$maintpl=find_template("event_chart.tpl");
+	$maintpl=find_template("event_draw_stats.tpl");
 	return $smarty->fetch($maintpl);
 }
+
+# Import Routines
 function event_import() {
 	global $smarty;
 
@@ -4357,43 +4439,6 @@ function event_import_save() {
 	$event->event_save_totals();
 	
 	return event_view();
-}
-function event_draw_stats() {
-	global $smarty;
-
-	include_library("draw.class");
-	
-	$event_id=intval($_REQUEST['event_id']);
-	$event_draw_id=intval($_REQUEST['event_draw_id']);
-	$flight_type_id=intval($_REQUEST['flight_type_id']);
-
-	if($event_draw_id==0){
-		user_message("Must have a proper event id to perform this action.",1);
-		return event_draw();
-	}
-
-	$d=new Draw($event_draw_id);
-	$d->get_teams();
-	$d->initialize_stats();
-	$d->get_stats();
-	
-	$groups=$d->get_group_array();
-	$group_totals=array();
-	foreach($groups as $g){
-		$group_totals[$g]++;
-	}
-	$num_teams=count($d->teams);
-
-	$smarty->assign("d",$d);
-	$smarty->assign("event_id",$event_id);
-	$smarty->assign("event_draw_id",$event_draw_id);
-	$smarty->assign("ft",$ft);
-	$smarty->assign("stats",$d->stats);
-	$smarty->assign("stat_totals",$d->stat_totals);
-	$smarty->assign("group_totals",$group_totals);
-	
-	$maintpl=find_template("event_draw_stats.tpl");
-	return $smarty->fetch($maintpl);
 }
 function event_import_f3k() {
 	global $smarty;
@@ -4819,55 +4864,154 @@ function event_import_f3k_save() {
 	
 	return event_view();
 }
-function event_registration_report() {
+
+# Task Routines
+function event_tasks() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
 	$e=new Event($event_id);
-	$e->get_teams();
+	$e->get_tasks();
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
 	$smarty->assign("event",$e);
 	
-	# lets first get all of the event params
-	$reg_options=$e->reg_options;
-
-	# lets get the pilot registration info
-	$pilot_reg_options=array();
-	foreach($e->pilots as $event_pilot_id=>$p){
-		# Lets get their reg params
-		$stmt=db_prep("
-			SELECT *	
-			FROM event_pilot_reg
-			WHERE event_pilot_id=:event_pilot_id
-				AND event_pilot_reg_status=1
-		");
-		$result=db_exec($stmt,array(
-			"event_pilot_id"=>$p['event_pilot_id']
-		));
-		foreach($result as $r){
-			$id=$r['event_reg_param_id'];
-			if($r['event_pilot_reg_choice_value']!=''){
-				$values=array();
-				$values=explode(',',$r['event_pilot_reg_choice_value']);
-				$r['event_pilot_reg_choice_values']=$values;
-			}
-			$pilot_reg_options[$event_pilot_id][$id]=$r;
-			$reg_options[$id]['qty']+=$r['event_pilot_reg_qty'];
-			if($r['event_pilot_reg_choice_value']!=''){
-				foreach($values as $v){
-					$reg_options[$id]['values'][$v]['qty']++;
-				}
-			}
+	# Find last prelim round so we can show neat flyoff round numbers
+	foreach($e->tasks as $t){
+		if($t['event_task_round_type']=='prelim'){
+			$round=$t['event_task_round'];
 		}
 	}
-	$smarty->assign("pilot_reg_options",$pilot_reg_options);
-	$smarty->assign("reg_options",$reg_options);
+	$smarty->assign("last_prelim_round",$round);
 	
-	if(isset($_REQUEST['use_print_header'])){
-		$maintpl=find_template("event_register_report_print.tpl");
-	}else{
-		$maintpl=find_template("event_register_report.tpl");
-	}
+	$maintpl=find_template("event_tasks.tpl");
 	return $smarty->fetch($maintpl);
 }
+function event_tasks_save() {
+	global $smarty;
 
+	$event_id=intval($_REQUEST['event_id']);
+	$add_round=intval($_REQUEST['add_round']);
+	
+	$e=new Event($event_id);
+	$e->get_tasks();
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
+	# Lets get the entered rounds to save
+	$rounds=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/event_task_round_type_(\d*)/",$key,$match)){
+			$id=$match[1];
+			$rounds[$id]['event_task_round_type']=$value;
+		}
+		if(preg_match("/flight_type_id_(\d*)/",$key,$match)){
+			$id=$match[1];
+			$rounds[$id]['flight_type_id']=$value;
+		}
+	}
+
+	# Now Lets save the round tasks
+	foreach($rounds as $id=>$r){
+		$stmt=db_prep("
+			UPDATE event_task
+			SET event_task_round_type=:round_type,
+				flight_type_id=:flight_type_id
+			WHERE event_task_id=:event_task_id
+		");
+		$result=db_exec($stmt,array(
+			"round_type"=>$r['event_task_round_type'],
+			"flight_type_id"=>$r['flight_type_id'],
+			"event_task_id"=>$id
+		));
+	}
+	
+	# Lets see what round I should add and what type
+	if($add_round){
+		$round=0;
+		$round_type='prelim';
+		foreach($e->tasks as $t){
+			if($t['event_task_round']>$round){
+				$round=$t['event_task_round'];
+			}
+			if($t['event_task_round_type']!=$round_type){
+				$round_type=$t['event_task_round_type'];
+			}
+		}
+		$round++;
+		# Lets get the first flight_type_id
+		foreach($e->flight_types as $id=>$ft){
+			$flight_type_id=$id;
+			break;
+		}
+
+		# Now insert the record
+		$stmt=db_prep("
+			INSERT INTO event_task
+			SET event_id=:event_id,
+				event_task_round=:round,
+				event_task_round_type=:round_type,
+				flight_type_id=:flight_type_id,
+				event_task_status=1
+		");
+		$result=db_exec($stmt,array(
+			"event_id"=>$event_id,
+			"round"=>$round,
+			"round_type"=>$round_type,
+			"flight_type_id"=>$flight_type_id
+		));
+		if($round_type='prelim'){
+			user_message("Added Preliminary Round #$round.");
+		}else{
+			user_message("Added Flyoff Round #$round.");
+		}
+	}
+	user_message("Saved Tasks.");
+	return event_tasks();
+}
+function event_task_del() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_task_id=intval($_REQUEST['event_task_id']);
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
+	$stmt=db_prep("
+		UPDATE event_task
+		SET event_task_status=0
+		WHERE event_task_id=:event_task_id
+	");
+	$result=db_exec($stmt,array(
+		"event_task_id"=>$event_task_id
+	));
+	
+	user_message("Removed Task.");
+	return event_tasks();
+}
+function event_tasks_audio(){
+	global $smarty;
+	
+	
+#	$tpl=find_template("report_invoices_export.tpl");
+#	$content=$smarty->fetch($tpl);
+#	header("Pragma: public");
+#	header("Expires: 0");
+#	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+#	header("Content-Type: application/force-download");
+#	header("Content-Type: application/octet-stream");
+#	header("Content-Type: application/download");
+#	header("Content-Disposition: attachment; filename=invoice_report.csv;");
+#	header("Content-Transfer-Encoding: binary");
+#	header("Content-Length: ".strlen($content));
+
+#	print $content;
+#	exit;
+	return event_tasks();
+	
+}
 ?>

@@ -187,32 +187,6 @@ function calc_groups(){ldelim}
 {else}
 <input type="hidden" name="recalc" value="recalc">
 {/if}
-{if $event_draw_id!=0 && $event->info.event_type_code=='f3k'}
-<tr>
-	<th nowrap>F3K Draw Round Flight Types</th>
-	<td>
-		<table>
-		<tr>
-			<th>Round</th><th>F3K Flight Type</th>
-		</tr>
-		{foreach $draw->rounds as $r}
-			{$round_number=$r@key}
-			<tr>
-				<th>{$round_number}</th>
-				<td>
-					<select name="round_flight_type_{$round_number}">
-					<option value="0">Choose a flight type</option>
-					{foreach $event->flight_types as $ft}
-						<option value="{$ft.flight_type_id}"{if $ft.flight_type_id==$draw->round_flight_types.$round_number.flight_type_id} SELECTED{/if}>{$ft.flight_type_name}</option>
-					{/foreach}
-					</select>
-				</td>
-			</tr>
-		{/foreach}
-		</table>
-	</td>
-</tr>
-{/if}
 <tr>
 	<td colspan="2">
 		<input type="button" value=" {if $event_draw_id==0}Create{else}Save{/if} Draw " class="block-button" onClick="if(changed==1 && document.main.event_draw_id.value!=0){ldelim}confirm('You have changed the draw values. Are you sure you wish to save the draw?') && document.main.submit();{rdelim}else{ldelim}document.main.submit();{rdelim}">

@@ -64,6 +64,7 @@
 <div style="border-style:solid;border-width:1px;width:110px;background:lightgreen;float:left;text-align:center;">Current Event</div>
 <div style="border-style:solid;border-width:1px;width:110px;background:#C8F7C8;float:left;text-align:center;">Recent Event</div>
 <div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
+		<input type="button" value=" Create New Event " onclick="{if $user.user_id!=0}newevent.submit();{else}alert('You must be registered and logged in to create a new event.');{/if}" class="block-button">
 
 <br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">

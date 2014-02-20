@@ -386,6 +386,12 @@ function reg_check(){
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="submit" value=" Save This Event Info " class="block-button" onClick="return check_event();">
+		{if $event->info.event_id!=0}
+		<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
+		{/if}
+		{if $event->info.event_id!=0 && $event->info.event_type_code=='f3k'}
+		<input type="button" class="button" value=" Set Event Tasks " style="float:right;" onclick="event_tasks.submit();">
+		{/if}
 	</th>
 </tr>
 </table>
@@ -416,7 +422,6 @@ function reg_check(){
 <tr>
 	<th colspan="2">
 		<input type="submit" value=" Save These Event Parameters " class="block-button">
-		<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
 		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
 			<input type="button" value=" Import F3F Event " class="block-button" onClick="document.import_f3f.submit();">
 		{/if}
@@ -584,6 +589,11 @@ reg_check();
 <form name="event_draw" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_tasks" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_tasks">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="reg_params" method="POST">

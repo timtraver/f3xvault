@@ -35,9 +35,22 @@ EVENT STUFF
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
 
+	Drops
+		Make a way to add drop values and set the standards for each type of contest
+		
 	Draw
 		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother) ?
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
+		
+	Tasks
+X		WHen adding new round use data from task list
+X		Remove task list selection from draw stuff
+		Task list in event info email (edited in custom email settings)
+		
+	Audio Playlist Generation
+		Figure out how to buid local path to audio files for inclusion
+		Create audio file list
+		Create Audio files to run a contest
 		
 	Sign up for text alerts about this event
 	

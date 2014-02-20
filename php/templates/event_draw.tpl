@@ -41,7 +41,7 @@
 		</table>
 		
 	</div>
-	
+<br>
 <h1 class="post-title entry-title">Draws</h1>
 
 <form name="main" method="POST">
@@ -142,84 +142,92 @@
 </tr>
 </table>
 </form>
+
 <br>
 <h1 class="post-title entry-title">Printing Active Draws</h1>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 {$f3k_first=0}
-{foreach $event->flight_types as $ft}
-	{if $f3k_first!=0}
-		{continue}
-	{/if}
-{$flight_type_id=$ft.flight_type_id}
-<form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw_print">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
-<input type="hidden" name="print_type" value="">
-<input type="hidden" name="use_print_header" value="1">
-<tr>
-	<th width="10%" nowrap>{if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if}</th>
-	<td style="padding-top:10px;">
-		Rounds
-		<select name="print_round_from">
-		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-		<option value="{$i}">{$i}</option>
-		{/for}
-		</select>
-		To
-		<select name="print_round_to">
-		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-		<option value="{$i}" SELECTED>{$i}</option>
-		{/for}
-		</select>
-		<select name="print_format">
-		<option value="html">HTML</option>
-		<option value="pdf">PDF</option>
-		</select>
-		<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
-		{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
-		<input type="button" value=" Pilot Recording Sheets " onClick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();" class="block-button">
+{if $event->draws}
+	{foreach $event->flight_types as $ft}
+		{if $f3k_first!=0}
+			{continue}
 		{/if}
-		<input type="button" value=" Draw Table " onClick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();" class="block-button">
-		<input type="button" value=" Full Draw Matrix " onClick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();" class="block-button">
-	</td>
-</tr>
-</form>
-{if $event->info.event_type_code=='f3k'}
-	{$f3k_first=1}
-{/if}
-{/foreach}
-{if $event->info.event_type_code=='f3b'}
-<form name="print_f3b_combined" method="POST" target="_blank">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw_print">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
-<input type="hidden" name="print_type" value="">
-<input type="hidden" name="use_print_header" value="1">
-<tr>
-	<th width="10%" nowrap>F3B Combined</th>
-	<td style="padding-top:10px;">
-		Rounds
-		<select name="print_round_from">
-		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-		<option value="{$i}">{$i}</option>
-		{/for}
-		</select>
-		To
-		<select name="print_round_to">
-		{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-		<option value="{$i}" SELECTED>{$i}</option>
-		{/for}
-		</select>
-		<select name="print_format">
-		<option value="html">HTML</option>
-		<option value="pdf">PDF</option>
-		</select>
-		<input type="button" value=" Draw Table " onClick="document.print_f3b_combined.print_type.value='f3b_table';submit();" class="block-button">
-	</td>
-</tr>
+		{$flight_type_id=$ft.flight_type_id}
+		<form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_draw_print">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+		<input type="hidden" name="print_type" value="">
+		<input type="hidden" name="use_print_header" value="1">
+
+		<tr>
+			<th width="10%" nowrap>{if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if}</th>
+			<td style="padding-top:10px;">
+				Rounds
+				<select name="print_round_from">
+				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+				<option value="{$i}">{$i}</option>
+				{/for}
+				</select>
+				To
+				<select name="print_round_to">
+				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+				<option value="{$i}" SELECTED>{$i}</option>
+				{/for}
+				</select>
+				<select name="print_format">
+				<option value="html">HTML</option>
+				<option value="pdf">PDF</option>
+				</select>
+				<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
+				{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
+				<input type="button" value=" Pilot Recording Sheets " onClick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();" class="block-button">
+				{/if}
+				<input type="button" value=" Draw Table " onClick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();" class="block-button">
+				<input type="button" value=" Full Draw Matrix " onClick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();" class="block-button">
+			</td>
+		</tr>
+		</form>
+		{if $event->info.event_type_code=='f3k'}
+			{$f3k_first=1}
+		{/if}
+	{/foreach}
+	{if $event->info.event_type_code=='f3b'}
+		<form name="print_f3b_combined" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_draw_print">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+		<input type="hidden" name="print_type" value="">
+		<input type="hidden" name="use_print_header" value="1">
+		<tr>
+			<th width="10%" nowrap>F3B Combined</th>
+			<td style="padding-top:10px;">
+				Rounds
+				<select name="print_round_from">
+				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+				<option value="{$i}">{$i}</option>
+				{/for}
+				</select>
+				To
+				<select name="print_round_to">
+				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+				<option value="{$i}" SELECTED>{$i}</option>
+				{/for}
+				</select>
+				<select name="print_format">
+				<option value="html">HTML</option>
+				<option value="pdf">PDF</option>
+				</select>
+				<input type="button" value=" Draw Table " onClick="document.print_f3b_combined.print_type.value='f3b_table';submit();" class="block-button">
+			</td>
+		</tr>
+	{/if}
+{else} {* if no draws are active *}
+	<tr>
+		<th colspan="2" nowrap>There are no current active draws.</th>
+	</tr>
 {/if}
 </table>
 </form>

@@ -124,17 +124,38 @@
 		<div style="white-space: pre-wrap;">{$event->info.event_notes|escape}</div>
 	</td>
 </tr>
+{if $event->info.event_type_code=='f3k'}
 <tr>
-	<th valign="top">Event Draws</th>
+	<th valign="top">Event Tasks</th>
 	<td>
-		{if $event->draws}
-		
+		{if $event->tasks}
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<tr>
+			<th>Round Type</th>
+			<th>Round</th>
+			<th>Task</th>
+		</tr>
+		{foreach $event->tasks as $t}
+		{$ft=$t.flight_type_id}
+		<tr style="background:lightgrey;">
+			<td width="10%">
+				{if $t.event_task_round_type=='prelim'}Preliminary{else}Flyoff{/if}
+			</td>
+			<td width="5%" align="right">
+				{$t.event_task_round}
+			</td>
+			<td>
+				{$event->flight_types.$ft.flight_type_name}
+			</td>
+		</tr>
+		{/foreach}
+		</table>
 		{else}
-		<font color="red">Draws Not Yet Created</font>
+		<font color="red">Tasks Not Yet Determined</font>
 		{/if}
 	</td>
 </tr>
-
+{/if}
 </table>
 </form>
 
