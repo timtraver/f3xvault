@@ -387,7 +387,7 @@ function reg_check(){
 	<th colspan="3" style="text-align: center;">
 		<input type="submit" value=" Save This Event Info " class="block-button" onClick="return check_event();">
 		{if $event->info.event_id!=0}
-		<input type="button" class="button" value=" Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
+		<input type="button" class="button" value=" Manage Event Draws " style="float:right;" onclick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">
 		{/if}
 		{if $event->info.event_id!=0 && $event->info.event_type_code=='f3k'}
 		<input type="button" class="button" value=" Set Event Tasks " style="float:right;" onclick="event_tasks.submit();">

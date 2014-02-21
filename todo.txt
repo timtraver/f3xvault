@@ -25,7 +25,6 @@ EVENT STUFF
 	Calendar System
 		Full integrated calendar system to show upcoming events using google's calendar api
 		Create calendar events as different colors for the different types
-	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
 	
 	Make a system to do drops on different times for f3j?
 	
@@ -88,6 +87,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
 <<<<<<< HEAD
 X	For F3J, make flyoff rounds 15 minute rounds
 X	Registration Email creation

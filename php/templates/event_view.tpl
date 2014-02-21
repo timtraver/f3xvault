@@ -172,6 +172,9 @@ function check_permission() {ldelim}
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		{/if}
 		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
+		{if $active_draws}
+		<input type="button" value=" View Draws " onClick="document.event_view_draws.submit();" class="block-button">
+		{/if}
 		{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_status!=0}
 		<input type="button" class="button" value=" Registration Report " style="float:right;" onclick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">
 		{/if}
@@ -1056,6 +1059,11 @@ function check_permission() {ldelim}
 <form name="event_view_info" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view_info">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_view_draws" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view_draws">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_delete" method="POST">

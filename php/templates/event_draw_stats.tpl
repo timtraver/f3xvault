@@ -72,7 +72,7 @@ $(function () {ldelim}
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                	
 <h1 class="post-title entry-title">Draw Stats
-		<input type="button" value=" Back To Event Draws " onClick="goback.submit();" class="block-button">
+		<input type="button" value=" Back To Event {if $from_event_view==1}View{else}Draws{/if} " onClick="goback.submit();" class="block-button">
 </h1>
 	
 <form name="main" method="POST">
@@ -171,7 +171,7 @@ $(function () {ldelim}
 
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="function" value="{if $from_event_view==1}event_view_draws{else}event_draw{/if}">
 <input type="hidden" name="event_id" value="{$event_id}">
 </form>
 

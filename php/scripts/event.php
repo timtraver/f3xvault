@@ -347,6 +347,7 @@ function event_view() {
 	
 	$e=new Event($event_id);
 	$e->get_rounds();
+	$e->get_draws();
 	$e->calculate_event_totals();
 	
 	# Lets determine if we need a laps report and an average speed report
@@ -427,6 +428,15 @@ function event_view() {
 	
 	# Save the current event id in the fsession for mobile ease of use
 	$GLOBALS['fsession']['current_event_id']=$event_id;
+	
+	# Lets see if there are active draws
+	$active_draws=0;
+	foreach($e->draws as $d){
+		if($d['event_draw_active']==1){
+			$active_draws=1;
+		}
+	}
+	$smarty->assign("active_draws",$active_draws);
 	
 	$maintpl=find_template("event_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -4051,7 +4061,11 @@ function event_draw_stats() {
 	$event_id=intval($_REQUEST['event_id']);
 	$event_draw_id=intval($_REQUEST['event_draw_id']);
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
-
+	$from_event_view=0;
+	if(isset($_REQUEST['from_event_view'])){
+		$from_event_view=intval($_REQUEST['from_event_view']);
+	}
+	
 	if($event_draw_id==0){
 		user_message("Must have a proper event id to perform this action.",1);
 		return event_draw();
@@ -4076,8 +4090,58 @@ function event_draw_stats() {
 	$smarty->assign("stats",$d->stats);
 	$smarty->assign("stat_totals",$d->stat_totals);
 	$smarty->assign("group_totals",$group_totals);
+	$smarty->assign("from_event_view",$from_event_view);
 	
 	$maintpl=find_template("event_draw_stats.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_view_draws() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->get_draws();
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+	
+	$smarty->assign("event",$e);
+	
+	# Lets determine the round #'s to print for the draw from the existing rounds to the max on the draws
+	$print_rounds=array();
+
+	foreach($e->draws as $d){
+		if($d['event_draw_active']!=1){
+			continue;
+		}
+		$min=1;
+		$max=0;
+		if($d['event_draw_round_to']<$min){
+			$min=$d['event_draw_round_from'];
+		}
+		if($d['event_draw_round_to']>$max){
+			$max=$d['event_draw_round_to'];
+		}
+		$ft=$d['flight_type_id'];
+		$print_rounds[$ft]=array("min"=>$min,"max"=>$max);
+	}
+	# Now lets step through the rounds and see if its a different max
+	$num_rounds=count($e->rounds);
+	foreach($e->flight_types as $flight_type_id=>$ft){
+		if($print_rounds[$flight_type_id]['max']<count($e->rounds)){
+			$print_rounds[$flight_type_id]['max']=count($e->rounds);
+			$print_rounds[$flight_type_id]['min']=1;
+		}
+	}
+	
+	$smarty->assign("print_rounds",$print_rounds);
+	
+	$permission=check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+
+	$maintpl=find_template("event_draw_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 
