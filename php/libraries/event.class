@@ -62,6 +62,8 @@ class Event {
 		
 		sub_trace();
 	}
+	
+	# Retrieving routines
 	function get_pilots(){
 		# Now lets get the pilots assigned to this event
 		$sort_by=$_REQUEST['sort_by'];
@@ -193,6 +195,219 @@ class Event {
 			$reg_options[$event_reg_param_id]=$r;
 		}
 		$this->reg_options=$reg_options;
+		return;
+	}
+	function get_flight_types(){
+		# Function to get the flight types in this event
+		# Lets figure out the round type base on the event type
+		$this->flight_types=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM flight_type
+			ORDER BY flight_type_order
+		");
+		$result=db_exec($stmt,array());
+		$type=$this->info['event_type_code'];
+		foreach($result as $r){
+			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
+				$id=$r['flight_type_id'];
+				# Lets step through each of the options and set the accuracy for this flight type
+				# And whether or not an F3F event has groups
+				$code=$r['flight_type_code'];
+				foreach($this->options as $o){
+					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3f_use_groups/",$o['event_type_option_code'])){
+						$r['flight_type_group']=$o['event_option_value'];
+					}
+				}
+				$r['accuracy_string']="%.".$r['accuracy']."f";
+				# if this is an f3k type, then lets set the subs array
+				if($type=='f3k'){
+					$subs=array();
+					switch($r['flight_type_code']){
+						case 'f3k_a':
+							$subs=array("5:00");
+							break;
+						case 'f3k_b':
+							$subs=array("4:00","4:00");
+							break;
+						case 'f3k_c':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_c4':
+							$subs=array("3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_c5':
+							$subs=array("3:00","3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_d':
+							$subs=array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
+							break;
+						case 'f3k_e':
+							$subs=array("Pilot","Nominated");
+							break;
+						case 'f3k_f':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_g':
+							$subs=array("2:00","2:00","2:00","2:00","2:00");
+							break;
+						case 'f3k_h':
+							$subs=array("1:00","2:00","3:00","4:00");
+							break;
+						case 'f3k_i':
+							$subs=array("3:20","3:20","3:20");
+							break;
+						case 'f3k_j':
+							$subs=array("3:00","3:00","3:00");
+							break;
+					}
+					$r['subs']=$subs;
+				}
+				$this->flight_types[$id]=$r;
+			}
+		}
+		return;
+	}
+	function get_teams(){
+		# Function to get the unique teams in an event
+		$names=array();
+		$stmt=db_prep("
+			SELECT DISTINCT(ep.event_pilot_team)
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			WHERE ep.event_pilot_team !=''
+				AND e.event_id=:event_id
+				AND ep.event_pilot_status=1
+		");
+		$names=db_exec($stmt,array("event_id"=>$this->event_id));
+		$this->teams=$names;
+		return;
+	}
+	function get_draws(){
+		# Lets see if they chose a sort order
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
+		switch($sort_by){
+			case 'entry_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_entry_order';
+				break;
+			case 'team':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_team,p.pilot_first_name';
+				break;
+			case 'flight_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
+				break;
+			case 'bib_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_bib';
+				break;
+			case 'group_alphabetical_first':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'group_alphabetical_last':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'group_entry':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,ep.event_pilot_entry_order';
+				break;
+			case 'alphabetical_first':
+				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'draw':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_lane,edr.event_draw_round_order';
+				break;
+			case 'round_rank':
+			default:
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
+				break;
+		}
+		# Now lets get the draws that have been created for this event
+		$draws=array();
+		
+		# Lets first make an array of round types for this event and its draws
+		$round_types=array();
+		$stmt=db_prep("
+			SELECT *,edrf.flight_type_id
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+			WHERE ed.event_id=:event_id
+				AND edrf.event_draw_round_flight_status=1
+				AND ed.event_draw_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $key=>$r){
+			$round_number=$r['event_draw_round_number'];
+			$event_draw_id=$r['event_draw_id'];
+			$round_types[$event_draw_id][$round_number]=$r['flight_type_id'];
+		}
+				
+		$stmt=db_prep("
+			SELECT *
+			FROM event_draw ed
+			WHERE ed.event_id=:event_id
+			AND event_draw_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		
+		# Now lets step through each of the draws and get the draw rounds
+		foreach($result as $draw){
+			$event_draw_id=$draw['event_draw_id'];
+			$draws[$event_draw_id]=$draw;
+			$flight_type_id=$draw['flight_type_id'];
+			$stmt=db_prep("
+				SELECT *
+				FROM event_draw_round edr
+				LEFT JOIN event_pilot ep ON edr.event_pilot_id=ep.event_pilot_id
+				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+				WHERE edr.event_draw_id=:event_draw_id
+					AND edr.event_draw_round_status=1
+				$sort_string
+			");
+			$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+			foreach($rounds as $round){
+				$round_number=$round['event_draw_round_number'];
+				if($this->info['event_type_code']=='f3k'){
+					$flight_type_id=$this->tasks[$round_number]['flight_type_id'];
+				}elseif(isset($round_types[$event_draw_id][$round_number])){
+					$flight_type_id=$round_types[$event_draw_id][$round_number];
+				}
+				$event_pilot_id=$round['event_pilot_id'];
+				$draws[$event_draw_id]['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
+			}
+		}
+		$this->draws=$draws;
+		return;
+	}
+	function get_tasks(){
+		# Now lets get the tasks that have been created for this event
+		$tasks=array();
+		
+		# Lets first make an array of round types for this event and its draws		
+		$stmt=db_prep("
+			SELECT *
+			FROM event_task et
+			WHERE et.event_id=:event_id
+			AND event_task_status=1
+			ORDER BY event_task_round
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $r){
+			$round=$r['event_task_round'];
+			$tasks[$round]=$r;
+		}
+		$this->tasks=$tasks;
 		return;
 	}
 	function get_rounds(){
@@ -574,99 +789,8 @@ class Event {
 		}
 		return;
 	}
-	function get_teams(){
-		# Function to get the unique teams in an event
-		$names=array();
-		$stmt=db_prep("
-			SELECT DISTINCT(ep.event_pilot_team)
-			FROM event_pilot ep
-			LEFT JOIN event e ON ep.event_id=e.event_id
-			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			WHERE ep.event_pilot_team !=''
-				AND e.event_id=:event_id
-				AND ep.event_pilot_status=1
-		");
-		$names=db_exec($stmt,array("event_id"=>$this->event_id));
-		$this->teams=$names;
-		return;
-	}
-	function get_flight_types(){
-		# Function to get the flight types in this event
-		# Lets figure out the round type base on the event type
-		$this->flight_types=array();
-		$stmt=db_prep("
-			SELECT *
-			FROM flight_type
-			ORDER BY flight_type_order
-		");
-		$result=db_exec($stmt,array());
-		$type=$this->info['event_type_code'];
-		foreach($result as $r){
-			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
-				$id=$r['flight_type_id'];
-				# Lets step through each of the options and set the accuracy for this flight type
-				# And whether or not an F3F event has groups
-				$code=$r['flight_type_code'];
-				foreach($this->options as $o){
-					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
-						$r['accuracy']=$o['event_option_value'];
-					}
-					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
-						$r['accuracy']=$o['event_option_value'];
-					}
-					if(preg_match("/f3f_use_groups/",$o['event_type_option_code'])){
-						$r['flight_type_group']=$o['event_option_value'];
-					}
-				}
-				$r['accuracy_string']="%.".$r['accuracy']."f";
-				# if this is an f3k type, then lets set the subs array
-				if($type=='f3k'){
-					$subs=array();
-					switch($r['flight_type_code']){
-						case 'f3k_a':
-							$subs=array("5:00");
-							break;
-						case 'f3k_b':
-							$subs=array("4:00","4:00");
-							break;
-						case 'f3k_c':
-							$subs=array("3:00","3:00","3:00");
-							break;
-						case 'f3k_c4':
-							$subs=array("3:00","3:00","3:00","3:00");
-							break;
-						case 'f3k_c5':
-							$subs=array("3:00","3:00","3:00","3:00","3:00");
-							break;
-						case 'f3k_d':
-							$subs=array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
-							break;
-						case 'f3k_e':
-							$subs=array("Pilot","Nominated");
-							break;
-						case 'f3k_f':
-							$subs=array("3:00","3:00","3:00");
-							break;
-						case 'f3k_g':
-							$subs=array("2:00","2:00","2:00","2:00","2:00");
-							break;
-						case 'f3k_h':
-							$subs=array("1:00","2:00","3:00","4:00");
-							break;
-						case 'f3k_i':
-							$subs=array("3:20","3:20","3:20");
-							break;
-						case 'f3k_j':
-							$subs=array("3:00","3:00","3:00");
-							break;
-					}
-					$r['subs']=$subs;
-				}
-				$this->flight_types[$id]=$r;
-			}
-		}
-		return;
-	}
+	
+	# Calculation Routines
 	function calculate_round($event_round_number){
 		# Function to calculate the values in a round given the event round id
 		if(!isset($this->rounds[$event_round_number])){
@@ -963,7 +1087,6 @@ class Event {
 	}
 	function calculate_event_totals(){
 		# Function to calculate the subtotals and totals per pilot for an event
-		
 		if(count($this->rounds)==0 || count($this->pilots)==0){
 			return;
 		}
@@ -1053,6 +1176,7 @@ class Event {
 							}else{
 								# This means that the round is being scored, but the flight was dropped
 								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drop']+=$sub;
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'][]=$sub;
 							}
 							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']-=$penalty;
 						}
@@ -1100,6 +1224,7 @@ class Event {
 							}else{
 								# This means that the round is being scored, but the flight was dropped
 								$subtotals[$event_pilot_id]['drop']+=$sub;
+								$subtotals[$event_pilot_id]['drops'][]=$sub;
 							}
 							$subtotals[$event_pilot_id]['total']-=$penalty;
 						}
@@ -1118,6 +1243,33 @@ class Event {
 			foreach($tempranks as $event_pilot_id=>$tr){
 				$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$count;
 				$count++;
+			}
+		}
+		
+		# Lets sort each of the drop arrays 
+		foreach($subtotals as $event_pilot_id=>$temp){
+			# sort the dropped round totals
+			sort($subtotals[$event_pilot_id]['drops'],SORT_NUMERIC);
+		}
+		# Now lets make subtotals for each drop
+		foreach($subtotals as $event_pilot_id=>$temp){
+			foreach($temp['drops'] as $drop){
+				$subtotals[$event_pilot_id]['subtotals'][]=$drop;
+			}
+		}
+		# Lets sort each of the flyoff drop arrays
+		foreach($flyoff_subtotals as $flyoff_number=>$f){
+			foreach($f as $event_pilot_id=>$temp){
+				# sort the dropped round totals
+				sort($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'],SORT_NUMERIC);
+			}
+		}
+		# Now lets make subtotals for each drop in flyoffs
+		foreach($flyoff_subtotals as $flyoff_number=>$f){
+			foreach($f as $event_pilot_id=>$temp){
+				foreach($temp['drops'] as $drop){
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotals'][]=$drop;
+				}
 			}
 		}
 		
@@ -1180,15 +1332,28 @@ class Event {
 		$max_points=0;
 		foreach($subtotals as $event_pilot_id=>$t){
 			# Create an array of all of the scores
-			$scores[$event_pilot_id]=$t['total'];
+			$scores[$event_pilot_id]['drop_total']=$t['total'];
+			$d=1;
+			foreach($t['subtotals'] as $s){
+				$key='drop'.$d;
+				$scores[$event_pilot_id][$key]=$s;
+				$d++;
+			}
 			if($t['total']>$max_points){
 				$max_points=$t['total'];
 			}
+			$drops=count($t['subtotals']);
 		}
-		arsort($scores);
+		# Now lets build the msort array call string
+		$sort_cols=array('drop_total'=>SORT_DESC);
 		$count=1;
-		$last_score=0;
-		$prelim_has_tie=0;
+		for($count=1;$count<=$drops; $count++){
+			$string="drop".$count;
+			$sort_cols=array_merge($sort_cols,array("$string"=>SORT_DESC));
+		}
+		$scores=array_msort($scores,$sort_cols);
+		
+		$count=1;
 		foreach($scores as $event_pilot_id=>$f){
 			$subtotals[$event_pilot_id]['overall_rank']=$count;
 			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
@@ -1201,17 +1366,6 @@ class Event {
 			}
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
-			if($last_score==$subtotals[$event_pilot_id]['total']){
-				$prelim_has_tie=1;
-				
-			}
-			$last_score=$subtotals[$event_pilot_id]['total'];
-		}
-		print "<!-- prelim_has_tie=$prelim_has_tie -->\n";
-		if($prelim_has_tie==1){
-			# The preliminaries have at least one tie that we need to figure out
-			
-			
 		}
 		
 		
@@ -1238,19 +1392,35 @@ class Event {
 		# Now determine the overall flyoff rank
 		foreach($flyoff_subtotals as $flyoff_number=>$s){
 			$at_least_one_score=0;
+			
 			$scores=array();
 			$max_points=0;
 			foreach($s as $event_pilot_id=>$t){
 				# Create an array of all of the scores
-				$scores[$event_pilot_id]=$t['total'];
+				$scores[$event_pilot_id]['drop_total']=$t['total'];
+				$d=1;
+				foreach($t['subtotals'] as $s){
+					$key='drop'.$d;
+					$scores[$event_pilot_id][$key]=$s;
+					$d++;
+				}
 				if($t['total']>$max_points){
 					$max_points=$t['total'];
 				}
 				if($t['total']>0){
 					$at_least_one_score=1;
 				}
+				$drops=count($t['subtotals']);
 			}
-			arsort($scores);
+			# Now lets build the msort array call string
+			$sort_cols=array('drop_total'=>SORT_DESC);
+			$count=1;
+			for($count=1;$count<=$drops; $count++){
+				$string="drop".$count;
+				$sort_cols=array_merge($sort_cols,array("$string"=>SORT_DESC));
+			}
+			$scores=array_msort($scores,$sort_cols);
+
 			$count=1;
 			$last_score=0;
 			$flyoff_has_tie=0;
@@ -1629,6 +1799,8 @@ class Event {
 		}
 		return;
 	}
+
+	# Statistics Routines
 	function get_top_speeds(){
 		# Function to get the top speeds of the contest
 		if(count($this->rounds)==0){
@@ -1799,126 +1971,6 @@ class Event {
 		}		
 		$speed=array_msort($temp_speed,array("event_pilot_round_flight_score"=>SORT_DESC));
 		return $speed;
-	}
-	function get_draws(){
-		# Lets see if they chose a sort order
-		if(isset($_REQUEST['sort_by'])){
-			$sort_by=$_REQUEST['sort_by'];
-		}else{
-			$sort_by='';
-		}
-		switch($sort_by){
-			case 'entry_order':
-				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_entry_order';
-				break;
-			case 'team':
-				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_team,p.pilot_first_name';
-				break;
-			case 'flight_order':
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
-				break;
-			case 'bib_order':
-				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_bib';
-				break;
-			case 'group_alphabetical_first':
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_first_name,p.pilot_last_name';
-				break;
-			case 'group_alphabetical_last':
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_last_name,p.pilot_first_name';
-				break;
-			case 'group_entry':
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,ep.event_pilot_entry_order';
-				break;
-			case 'alphabetical_first':
-				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_first_name,p.pilot_last_name';
-				break;
-			case 'alphabetical_last':
-				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_last_name,p.pilot_first_name';
-				break;
-			case 'draw':
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_lane,edr.event_draw_round_order';
-				break;
-			case 'round_rank':
-			default:
-				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
-				break;
-		}
-		# Now lets get the draws that have been created for this event
-		$draws=array();
-		
-		# Lets first make an array of round types for this event and its draws
-		$round_types=array();
-		$stmt=db_prep("
-			SELECT *,edrf.flight_type_id
-			FROM event_draw_round_flight edrf
-			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
-			WHERE ed.event_id=:event_id
-				AND edrf.event_draw_round_flight_status=1
-				AND ed.event_draw_status=1
-		");
-		$result=db_exec($stmt,array("event_id"=>$this->event_id));
-		foreach($result as $key=>$r){
-			$round_number=$r['event_draw_round_number'];
-			$event_draw_id=$r['event_draw_id'];
-			$round_types[$event_draw_id][$round_number]=$r['flight_type_id'];
-		}
-				
-		$stmt=db_prep("
-			SELECT *
-			FROM event_draw ed
-			WHERE ed.event_id=:event_id
-			AND event_draw_status=1
-		");
-		$result=db_exec($stmt,array("event_id"=>$this->event_id));
-		
-		# Now lets step through each of the draws and get the draw rounds
-		foreach($result as $draw){
-			$event_draw_id=$draw['event_draw_id'];
-			$draws[$event_draw_id]=$draw;
-			$flight_type_id=$draw['flight_type_id'];
-			$stmt=db_prep("
-				SELECT *
-				FROM event_draw_round edr
-				LEFT JOIN event_pilot ep ON edr.event_pilot_id=ep.event_pilot_id
-				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-				WHERE edr.event_draw_id=:event_draw_id
-					AND edr.event_draw_round_status=1
-				$sort_string
-			");
-			$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
-			foreach($rounds as $round){
-				$round_number=$round['event_draw_round_number'];
-				if($this->info['event_type_code']=='f3k'){
-					$flight_type_id=$this->tasks[$round_number]['flight_type_id'];
-				}elseif(isset($round_types[$event_draw_id][$round_number])){
-					$flight_type_id=$round_types[$event_draw_id][$round_number];
-				}
-				$event_pilot_id=$round['event_pilot_id'];
-				$draws[$event_draw_id]['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
-			}
-		}
-		$this->draws=$draws;
-		return;
-	}
-	function get_tasks(){
-		# Now lets get the tasks that have been created for this event
-		$tasks=array();
-		
-		# Lets first make an array of round types for this event and its draws		
-		$stmt=db_prep("
-			SELECT *
-			FROM event_task et
-			WHERE et.event_id=:event_id
-			AND event_task_status=1
-			ORDER BY event_task_round
-		");
-		$result=db_exec($stmt,array("event_id"=>$this->event_id));
-		foreach($result as $r){
-			$round=$r['event_task_round'];
-			$tasks[$round]=$r;
-		}
-		$this->tasks=$tasks;
-		return;
 	}
 	function get_running_totals(){
 		# Function to figure out the running totals for each round

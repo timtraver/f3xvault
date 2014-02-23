@@ -42,8 +42,6 @@ EVENT STUFF
 		What happens when a new pilot is added after a draw has been created????? How does he get inserted?
 		
 	Tasks
-X		WHen adding new round use data from task list
-X		Remove task list selection from draw stuff
 		Task list in event info email (edited in custom email settings)
 		
 	Audio Playlist Generation
@@ -54,11 +52,11 @@ X		Remove task list selection from draw stuff
 	Sign up for text alerts about this event
 	
 	For F3K events
+		Make sure the max round times are enforced, and figure out odd ones like 1234
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
 		Maybe stats for MOM percentage
 		
-	When Tied, figure out position from drops
 	In position chart, show another one for flyoff rounds
 		
 	Flyoff capability
@@ -87,16 +85,14 @@ MOBILE STUFF
 
 
 COMPLETED
+X		WHen adding new round use data from task list
+X		Remove task list selection from draw stuff
+X	When Tied, figure out position from drops
 X	On event info screen, complete the draw stuff if a draw is ready, or have a link to it...
-<<<<<<< HEAD
-X	For F3J, make flyoff rounds 15 minute rounds
-X	Registration Email creation
-=======
 X	Pilot registration popup types for things like t-shirt sizes in addition to mandatory flag...
 X	Registration Email creation
 X	For F3J, make flyoff rounds 15 minute rounds
 X	Fix F3K print pilot sheets bug
->>>>>>> a9336779cf7bf299a7efd9bf6176f3718cdaaf1c
 X	Make ability to normalize rounds or not in a competition
 X	Fix raw score calc to be the same as the time calc decimals and only change it on the normalized calc
 X	Make it so that TD events can set values for each second. Take away that second value at the event level and put it at the round level.
@@ -111,7 +107,6 @@ X		Ability for registered users to log back in and change their registered team
 X		After Registration, send email with full event info
 X		Have registration parameters in the event_pilot edit screens so the CD can see what they requested, and set if they paid
 X	Registration reports to show who has paid and the registered totals
-
 X	Don't allow the user to select the sort type until after the round is saved
 X	When deleting a round in between rounds, it gets rid of all the other rounds...
 X	Edit Pilot info
