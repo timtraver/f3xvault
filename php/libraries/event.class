@@ -1425,7 +1425,7 @@ class Event {
 			$last_score=0;
 			$flyoff_has_tie=0;
 			foreach($scores as $event_pilot_id=>$f){
-				if($f==0 && $at_least_one_score==1){
+				if($f['drop_total']==0 && $at_least_one_score==1){
 					# This pilot has no scores, so lets not show them
 					continue;
 				}
