@@ -1,57 +1,5 @@
-<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.dialog.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
 {literal}
-$(function() {
-	$("#pilot_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-			document.event_pilot_add.pilot_id.value = ui.item.id;
-			var name=document.getElementById('pilot_name');
-			document.event_pilot_add.pilot_name.value=name.value;
-			event_pilot_add.submit();
-		},
-   		change: function( event, ui ) {
-   			var id=document.getElementById('pilot_name');
-   			if(id.value==''){
-				document.event_pilot_add.pilot_id.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading');
-			loading.style.display = "none";
-   			var mes=document.getElementById('search_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
-			}
-		}
-	});
-	$("#pilot_name").keyup(function(event) { 
-		if (event.keyCode == 13) { 
-			//For enter.
-			var name=document.getElementById('pilot_name');
-			document.event_pilot_add.pilot_name.value=name.value;
-			event_pilot_add.submit();
-        }
-    });
-});
 function toggle(element,tog) {
 	 if (document.getElementById(element).style.display == 'none') {
 	 	document.getElementById(element).style.display = 'block';
@@ -143,17 +91,13 @@ function check_permission() {ldelim}
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		{/if}
 		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
-		
-		
 	</div>
+
+	{if !$event->totals}
 		<br>
 		<h1 class="post-title entry-title">Event Pilots {if $event->pilots}({$event->pilots|count}){/if} <span id="viewtoggle" onClick="toggle('pilots',this);">(<u>Hide</u>)</span>
 		</h1>
 		<span id="pilots">
-		<input type="button" class="button" value=" Add New Pilot " style="float:right;" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}">
-		<input type="text" id="pilot_name" name="pilot_name" size="15">
-		    <img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		    <span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="2%" align="left"></th>
@@ -177,15 +121,186 @@ function check_permission() {ldelim}
 		{/foreach}
 		</table>
 		</span>
+	{/if}
+
+	{if $event->flyoff_totals}
+		<!--# Lets do the flyoff Leader Board -->
+		{foreach $event->flyoff_totals as $t}
+			{$flyoff_number=$t@key}
+
+			<h1 class="post-title entry-title">Flyoff #{$flyoff_number} Leader Board</h1>
+			<h4>After {$t.total_rounds} Rounds ({if $t.round_drops==0}No{else}{$t.round_drops}{/if} Drop{if $t.round_drops!=1}s{/if} In Effect)</h4>
+	
+			<table width="100%" cellpadding="2" cellspacing="2">
+			<tr>
+				<th width="2%" align="left"></th>
+				<th width="10%" align="left" nowrap>Pilot Name</th>
+				<th width="5%" nowrap>Sub</th>
+				<th width="5%" nowrap>Drop</th>
+				<th width="5%" nowrap>Pen</th>
+				<th width="5%" nowrap>Total</th>
+				<th width="5%" nowrap>Diff</th>
+			</tr>
+			{$previous=0}
+			{$diff_to_lead=0}
+			{$diff=0}
+			{foreach $t.pilots as $e}
+			{if $e.total>$previous}
+				{$previous=$e.total}
+			{else}
+				{$diff=$previous-$e.total}
+				{$diff_to_lead=$diff_to_lead+$diff}
+			{/if}
+			{$event_pilot_id=$e.event_pilot_id}
+			<tr style="background-color: {cycle values="#9DCFF0,white"};">
+				<td>{$e.overall_rank|escape}</td>
+				<td align="left" nowrap style="text-align:left;"><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+				<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%03.0f"}</td>
+				<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%03.0f"}{/if}</td>
+				<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
+				<td width="5%" nowrap align="right">{$e.total|string_format:"%03.0f"}</td>
+				<td width="5%" nowrap align="right"><font color="red">-{if $diff!=0}{$diff|string_format:"%3.0f"}{/if}</font></td>
+			</tr>
+			{$previous=$e.total}
+			{/foreach}
+			</table>
+		{/foreach}
+	{/if}
+
+	{if $event->flyoff_totals}
+		<!--# Now lets do the flyoff rounds -->
+		{foreach $event->flyoff_totals as $t}
+			{$flyoff_number=$t@key}
+		<h1 class="post-title entry-title">Flyoff #{$flyoff_number} Rounds ({$t.total_rounds})
+		</h1>
+		<table width="100%" cellpadding="2" cellspacing="2">
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap></th>
+			<th colspan="{$t.total_rounds + 1}" align="center" nowrap>
+				Completed Rounds ({if $t.round_drops==0}No{else}{$t.round_drops}{/if} Drop{if $t.round_drops!=1}s{/if} In Effect)
+			</th>
+		</tr>
+		<tr>
+			<th width="2%" align="left"></th>
+			<th width="10%" align="right" nowrap>Pilot Name</th>
+			{foreach $event->rounds as $r}
+				{if $r.event_round_flyoff!=$flyoff_number}
+					{continue}
+				{/if}
+				<th class="info" width="5%" align="center" nowrap>
+					<div style="position:relative;">
+					<span>
+						{$flight_type_id=$r.flight_type_id}
+						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
+							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
+						{else}
+							View Details of Round {$r.event_round_number|escape}
+						{/if}
+					</span>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}R {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+					</div>
+				</th>
+			{/foreach}
+			<th>&nbsp;</th>
+		</tr>
+		{foreach $t.pilots as $e}
+		{$event_pilot_id=$e.event_pilot_id}
+		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+			<td>{$e.overall_rank}</td>
+			<td align="right" nowrap style="text-align:left;"><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			{foreach $e.rounds as $r}
+				{if $r@iteration <=9}
+				<td class="info" align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+					<div style="position:relative;">
+					{$dropval=0}
+					{$dropped=0}
+					{foreach $r.flights as $f}
+						{if $f.event_pilot_round_flight_dropped}
+							{$dropval=$dropval+$f.event_pilot_round_total_score}
+							{$dropped=1}
+						{/if}
+					{/foreach}
+					{$drop=0}
+					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
+					{if $drop==1}<del><font color="red">{/if}
+						{if $r.event_pilot_round_total_score==1000}
+							1000
+						{else}
+							{$r.event_pilot_round_total_score|string_format:"%03.0f"}
+						{/if}
+					{if $drop==1}</font></del>{/if}
+					{* lets determine the content to show on popup *}
+						<span>
+							{$event_round_number=$r@key}
+							{foreach $event->rounds.$event_round_number.flights as $f}
+								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
+									{if $f.flight_type_code=='f3b_duration'}A - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'distance'}
+									{if $f.flight_type_code=='f3b_distance'}B - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
+								{/if}
+								{if $f.flight_type_code|strstr:'speed'}
+									{if $f.flight_type_code=='f3b_speed'}C - {/if}
+									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
+								{/if}
+							{/foreach}
+						</span>
+					</div>
+				</td>
+				{/if}
+			{/foreach}
+			<td></td>
+		</tr>
+		{/foreach}
+		{if $event->info.event_type_code=='f3f'}
+		<tr>
+			<th colspan="2" align="right">Round Fast Time</th>
+			{foreach $event->rounds as $r}
+				{if $r.event_round_flyoff!=$flyoff_number}
+					{continue}
+				{/if}
+				{$fast=1000}
+				{$fast_id=0}
+				{foreach $r.flights as $f}
+					{foreach $f.pilots as $p}
+						{if $p.event_pilot_round_flight_seconds<$fast && $p.event_pilot_round_flight_seconds!=0}
+							{$fast=$p.event_pilot_round_flight_seconds}
+							{$fast_id=$p.event_pilot_id}
+						{/if}
+					{/foreach}
+				{/foreach}
+				{if $fast==1000}{$fast=0}{/if}
+				<th class="info" align="center">
+					<div style="position:relative;">
+					{$fast}s
+					<span>
+						Fast Time : {$fast}s<br>
+						{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
+					</span>
+					</div>
+				</th>
+			{/foreach}
+		</tr>
+		{/if}
+		</table>
+		{if !$t@last}
+		<br style="page-break-after: always;">
+		{/if}
+		{/foreach}
+		<!--# End of flyoff rounds -->
+	{/if}
 
 
 	{if $event->totals}
-		<h1 class="post-title entry-title">Leader Board</h1>
+		<h1 class="post-title entry-title">{if $event->info.event_type_flyoff==1}Preliminary {/if}Leader Board</h1>
 		<h4>After {$event->totals.total_rounds} Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)</h4>
 
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
-			<td width="2%" align="left"></td>
+			<th width="2%" align="left"></th>
 			<th width="10%" align="left" nowrap>Pilot Name</th>
 			<th width="5%" nowrap>Sub</th>
 			<th width="5%" nowrap>Drop</th>
@@ -206,7 +321,7 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank|escape}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			<td align="left" nowrap style="text-align:left;"><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
 			<td class="info" width="5%" nowrap align="right">{$e.subtotal|string_format:"%03.0f"}</td>
 			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%03.0f"}{/if}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties|escape}{/if}</td>
@@ -217,10 +332,6 @@ function check_permission() {ldelim}
 		{/foreach}
 		</table>
 	{/if}
-
-
-
-
 
 
 		{$perpage=4}
@@ -258,15 +369,10 @@ function check_permission() {ldelim}
 		{if $page_num>1}
 			{$numrounds=$end_round-$start_round + 1}
 		{/if}
-		<h1 class="post-title entry-title">Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}</h1>
-			{if $page_num==1}
-				<input type="button" value=" Add Round " onClick="if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">
-				{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">{/if}
-				{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}" class="block-button" style="float:left;">{/if}
-			{/if}
+		<h1 class="post-title entry-title">{if $event->info.event_type_flyoff==1}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}</h1>
 		<table width="100%" cellpadding="2" cellspacing="2">
 		<tr>
-			<td width="2%" align="left"></td>
+			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{$numrounds+1}" align="center" nowrap>
 				Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
@@ -314,7 +420,7 @@ function check_permission() {ldelim}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank|escape}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
+			<td align="right" nowrap style="text-align:left;"><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
 			{foreach $e.rounds as $r}
 				{$round_number=$r@key}
 				{if $round_number >= $start_round && $round_number <= $end_round}
@@ -414,148 +520,9 @@ function check_permission() {ldelim}
 
 
 
-		<!--# Now lets do the flyoff rounds -->
-		{foreach $event->flyoff_totals as $t}
-			{$flyoff_number=$t@key}
-		<h1 class="post-title entry-title">Event Flyoff #{$flyoff_number} Rounds ({$t.total_rounds}) Overall Classification
-		</h1>
-		<table width="100%" cellpadding="2" cellspacing="2">
-		<tr>
-			<td width="2%" align="left"></td>
-			<th width="10%" align="right" nowrap></th>
-			<th colspan="{$t.total_rounds + 1}" align="center" nowrap>
-				Completed Rounds ({if $t.round_drops==0}No{else}{$t.round_drops}{/if} Drop{if $t.round_drops!=1}s{/if} In Effect)
-			</th>
-			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Drop</th>
-			<th width="5%" nowrap>Pen</th>
-			<th width="5%" nowrap>Total Score</th>
-		</tr>
-		<tr>
-			<th width="2%" align="left"></th>
-			<th width="10%" align="right" nowrap>Pilot Name</th>
-			{foreach $event->rounds as $r}
-				{if $r.event_round_flyoff!=$flyoff_number}
-					{continue}
-				{/if}
-				<th class="info" width="5%" align="center" nowrap>
-					<div style="position:relative;">
-					<span>
-						{$flight_type_id=$r.flight_type_id}
-						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-							View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
-						{else}
-							View Details of Round {$r.event_round_number|escape}
-						{/if}
-					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0}</del></font>{/if}</a>
-					</div>
-				</th>
-			{/foreach}
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-		</tr>
-		{foreach $t.pilots as $e}
-		{$event_pilot_id=$e.event_pilot_id}
-		<tr style="background-color: {cycle values="#9DCFF0,white"};">
-			<td>{$e.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a></td>
-			{foreach $e.rounds as $r}
-				{if $r@iteration <=9}
-				<td class="info" align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
-					<div style="position:relative;">
-					{$dropval=0}
-					{$dropped=0}
-					{foreach $r.flights as $f}
-						{if $f.event_pilot_round_flight_dropped}
-							{$dropval=$dropval+$f.event_pilot_round_total_score}
-							{$dropped=1}
-						{/if}
-					{/foreach}
-					{$drop=0}
-					{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
-					{if $drop==1}<del><font color="red">{/if}
-						{if $r.event_pilot_round_total_score==1000}
-							1000
-						{else}
-							{$r.event_pilot_round_total_score|string_format:"%06.3f"}
-						{/if}
-					{if $drop==1}</font></del>{/if}
-					{* lets determine the content to show on popup *}
-						<span>
-							{$event_round_number=$r@key}
-							{foreach $event->rounds.$event_round_number.flights as $f}
-								{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
-									{if $f.flight_type_code=='f3b_duration'}A - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'distance'}
-									{if $f.flight_type_code=='f3b_distance'}B - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_laps|escape} Laps<br>
-								{/if}
-								{if $f.flight_type_code|strstr:'speed'}
-									{if $f.flight_type_code=='f3b_speed'}C - {/if}
-									{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
-								{/if}
-							{/foreach}
-						</span>
-					</div>
-				</td>
-				{/if}
-			{/foreach}
-			<td></td>
-			<td width="5%" nowrap align="right">{$e.subtotal|string_format:"%06.3f"}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:"%06.3f"}{/if}</td>
-			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
-			<td width="5%" nowrap align="right">{$e.total|string_format:"%06.3f"}</td>
-		</tr>
-		{/foreach}
-		{if $event->info.event_type_code=='f3f'}
-		<tr>
-			<th colspan="2" align="right">Round Fast Time</th>
-			{foreach $event->rounds as $r}
-				{if $r.event_round_flyoff!=$flyoff_number}
-					{continue}
-				{/if}
-				{$fast=1000}
-				{$fast_id=0}
-				{foreach $r.flights as $f}
-					{foreach $f.pilots as $p}
-						{if $p.event_pilot_round_flight_seconds<$fast && $p.event_pilot_round_flight_seconds!=0}
-							{$fast=$p.event_pilot_round_flight_seconds}
-							{$fast_id=$p.event_pilot_id}
-						{/if}
-					{/foreach}
-				{/foreach}
-				{if $fast==1000}{$fast=0}{/if}
-				<th class="info" align="center">
-					<div style="position:relative;">
-					{$fast}s
-					<span>
-						Fast Time : {$fast}s<br>
-						{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
-					</span>
-					</div>
-				</th>
-			{/foreach}
-		</tr>
-		{/if}
-		</table>
-		{if !$t@last}
-		<br style="page-break-after: always;">
-		{/if}
-		{/foreach}
-		<!--# End of flyoff rounds -->
-
 
 
 <br>
-{if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
-<input type="button" value=" Delete Event " onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();" class="block-button" style="float:none;margin-right:auto;">
-{/if}
 	</div>
 </div>
 
@@ -582,7 +549,7 @@ function check_permission() {ldelim}
 					<tr style="background-color: {cycle values="#9DCFF0,white"};">
 						<td>{$rank}</td>
 						<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
-						<td>{$p.total|string_format:"%06.3f"}</td>
+						<td>{$p.total|string_format:"%06.2f"}</td>
 					</tr>
 					{$rank=$rank+1}
 					{/if}
@@ -605,7 +572,7 @@ function check_permission() {ldelim}
 		<tr style="background-color:#9DCFF0;">
 			<td>{$t.rank}</td>
 			<td nowrap>{$t.team_name|escape}</td>
-			<td>{$t.total|string_format:"%06.3f"}</td>
+			<td>{$t.total|string_format:"%06.2f"}</td>
 		</tr>
 			{foreach $event->totals.pilots as $p}
 			{$event_pilot_id=$p.event_pilot_id}
@@ -613,7 +580,7 @@ function check_permission() {ldelim}
 			<tr>
 				<td></td>
 				<td>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
-				<td align="right">{$p.total|string_format:"%06.3f"}</td>
+				<td align="right">{$p.total|string_format:"%06.2f"}</td>
 			</tr>
 			{/if}
 			{/foreach}
@@ -637,7 +604,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.2f"}</td>
 			</tr>
 			{$rank=$rank+1}
 		{/foreach}
@@ -659,7 +626,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.2f"}</td>
 			</tr>
 			{$rank=$rank+1}
 		{/foreach}
@@ -681,7 +648,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
-				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.3f"}</td>
+				<td align="center">{$p.event_pilot_round_flight_score|string_format:"%06.2f"}</td>
 			</tr>
 			{$rank=$rank+1}
 		{/foreach}
@@ -753,7 +720,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$p.event_pilot_average_speed_rank}</td>
 				<td nowrap>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</td>
-				<td>{$p.event_pilot_average_speed|string_format:"%06.3f"}</td>
+				<td>{$p.event_pilot_average_speed|string_format:"%06.2f"}</td>
 			</tr>
 			{/if}
 		{/foreach}
@@ -775,7 +742,7 @@ function check_permission() {ldelim}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>{$rank}</td>
 				<td nowrap>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</td>
-				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
+				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.2f"}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
@@ -810,9 +777,6 @@ function check_permission() {ldelim}
 	
 </div>
 {/if}
-<script>
-	document.getElementById('pilot_name').focus();
-</script>
 
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="event">
@@ -827,27 +791,6 @@ function check_permission() {ldelim}
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view_info">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
-<form name="event_delete" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_delete">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
-<form name="event_pilot_add" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_pilot_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="event_pilot_id" value="0">
-<input type="hidden" name="pilot_id" value="">
-<input type="hidden" name="pilot_name" value="">
-</form>
-<form name="event_add_round" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_round_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="event_round_id" value="0">
-<input type="hidden" name="zero_round" value="0">
-<input type="hidden" name="flyoff_round" value="0">
 </form>
 {if $event->rounds}
 <script>
