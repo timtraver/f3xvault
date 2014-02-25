@@ -81,10 +81,10 @@ MOBILE STUFF
 	Mobile score entry by end user
 	Change code for mobile maps to show correctly
 	Ability to expand with the fingers
-	Change the menu icon, or include some kind of popup so they know where it is
 
 
 COMPLETED
+X	Change the menu icon, or include some kind of popup so they know where it is
 X		WHen adding new round use data from task list
 X		Remove task list selection from draw stuff
 X	When Tied, figure out position from drops
