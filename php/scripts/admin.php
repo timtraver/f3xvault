@@ -160,7 +160,8 @@ function admin_email_send_test() {
 
 	$email_name=$_REQUEST['email_name'];
 	$email_to=$_REQUEST['email_to'];
-
+	$data=array();
+	
 	# Get some sample data to replace tokens in the email
 	switch($email_name){
 		case 'customer_confirmation':
