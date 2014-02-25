@@ -90,6 +90,9 @@ function check_permission() {ldelim}
 		{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}
 		<input type="button" value=" Event Settings " onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}" class="block-button">
 		{/if}
+		{if $active_draws}
+		<input type="button" value=" View Draws " onClick="document.event_view_draws.submit();" class="block-button">
+		{/if}
 		<input type="button" value=" View Full Event Info " onClick="document.event_view_info.submit();" class="block-button">
 	</div>
 
@@ -782,9 +785,9 @@ function check_permission() {ldelim}
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_list">
 </form>
-<form name="event_edit" method="POST">
+<form name="event_view_draws" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="function" value="event_view_draws">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_view_info" method="POST">
