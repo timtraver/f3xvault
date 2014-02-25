@@ -195,6 +195,118 @@ function calc_groups(){ldelim}
 </table>
 </form>
 
+{if $draw->rounds}
+<form name="draw_edit" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw_manual_save">
+<input type="hidden" name="event_draw_id" value="{$event_draw_id}">
+<input type="hidden" name="event_id" value="{$event_id}">
+
+	<br>
+<h1 class="post-title entry-title">Draw Manual Edit (Rounds {$draw->draw.event_draw_round_from} - {$draw->draw.event_draw_round_to})</h1>
+		<table cellspacing="2">
+		<tr>
+			{foreach $event->rounds as $r}
+			{$flight_type_id=$r.flight_type_id}
+			{$bgcolor=''}
+			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+				{$size=3}
+			{else}
+				{$size=2}
+			{/if}
+			
+			<td>
+				<table cellpadding="1" cellspacing="1" style="border: 1px solid black;font-size:12;">
+				<tr bgcolor="lightgray">
+					<td colspan="{$size}"><strong>Round {$r.event_round_number}</strong></td>
+				</tr>
+				{if $event->info.event_type_code=='f3k'}
+					{$ftid=$r.flight_type_id}
+					<tr bgcolor="white">
+						<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short}</td>
+					</tr>
+				{/if}
+				<tr bgcolor="lightgray">
+					{if $event->flight_types.$flight_type_id.flight_type_group}
+						<td width="30">Group</td>
+					{else}
+						<td>&nbsp;#&nbsp;</td>
+					{/if}
+					<td>Pilot</td>
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
+						<td>Spot</td>
+					{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+						<td>Lane</td>
+					{/if}
+					
+				</tr>
+				{$oldgroup='1000'}
+				{$bottom=0}
+				{foreach $r.flights.$flight_type_id.pilots as $p}
+					{$event_pilot_id=$p@key}
+					{if $oldgroup!=$p.event_pilot_round_flight_group}
+						{if $r.flights.$flight_type_id.flight_type_code=='f3b_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_speed'}
+							{$bgcolor="white"}
+						{else}
+							{if $bgcolor=='white'}
+								{$bgcolor='lightgray'}
+							{else}
+								{$bgcolor='white'}
+							{/if}
+							{$bottom=1}
+						{/if}
+					{/if}
+					<tr>
+						{if $event->flight_types.$flight_type_id.flight_type_group}
+							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+								<input type="text" size="1" name="draw_group_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_group}">
+							</td>
+						{else}
+							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+								<input type="text" size="1" name="draw_order_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_order}">
+							</td>
+						{/if}
+						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+							{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+								<div class="pilot_bib_number_print">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+								&nbsp;
+							{/if}
+							{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}
+						</td>
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
+						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+						<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+					{/if}
+					</tr>
+					{$oldgroup=$p.event_pilot_round_flight_group}
+					{$bottom=0}
+				{/foreach}
+				</table>
+			</td>
+			{$total_rounds_shown=$total_rounds_shown+1}
+			{if $r@iteration is div by 4}
+				</tr>
+				<tr>
+			{/if}
+			{/foreach}
+			</tr>
+			</table>
+		<input type="button" value=" Save Draw Edits " class="block-button" onClick="confirm('Are you sure you wish to save these draw edits?') && document.draw_edit.submit();">
+</form>
+{/if}
+
+
+
+
+
+
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw">

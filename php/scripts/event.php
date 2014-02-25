@@ -3405,6 +3405,70 @@ function event_draw_edit() {
 	$max_groups_p=floor(count($draw_pilots)/2);
 	
 
+	# Lets create the event round array so that we can showthe full draw for editing manually
+	# Now lets get the draw rounds
+	$drawrounds=array();
+	$sort_string='';
+	if($ft['flight_type_group']==1){
+		$sort_string='event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane';
+	}else{
+		$sort_string='event_draw_round_number,event_draw_round_order';
+	}
+	
+	# lets get all the entries for this draw, and only update the ones that dont match
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw_round 
+		WHERE event_draw_id=:event_draw_id
+			AND event_draw_round_status=1
+		ORDER BY $sort_string
+	");
+	$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	foreach($rounds as $round){
+		$round_number=$round['event_draw_round_number'];
+		$event_pilot_id=$round['event_pilot_id'];
+		$drawrounds['rounds']['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
+	}
+	# Lets set the round flight types from the task list
+	$draw_round_flight_types=array();	
+	foreach($e->tasks as $round=>$t){
+		$draw_round_flight_types[$round]=$t['flight_type_id'];
+	}
+
+	# Lets add the rounds that don't exist with the draw values for printing
+	# Step through any existing rounds and use those
+	for($event_round_number=$draw->draw['event_draw_round_from'];$event_round_number<=$draw->draw['event_draw_round_to'];$event_round_number++){
+		if(!isset($e->rounds[$event_round_number])){
+			# Lets create the event round and enough info from the draw to print
+			#Step through the draw rounds and see if one exists for this round
+			foreach($drawrounds['rounds']['flights'] as $flight_type_id=>$f){
+				foreach($f as $round_num=>$v){
+					if($round_num==$event_round_number){
+						# Lets create the round info
+						$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+						$e->rounds[$event_round_number]['event_round_status']=1;
+						if($e->info['event_type_code']=='f3k'){
+							$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$round_num];
+							$flight_type_id=$draw_round_flight_types[$round_num];
+						}else{
+							$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+						}
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+						# Lets try and sort them so they are easier to look at
+						foreach($v['pilots'] as $event_pilot_id=>$p){
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
+						}
+					}
+				}
+			}	
+		}
+	}
+
+
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
 	$smarty->assign("draw_pilots",$draw_pilots);
@@ -3487,6 +3551,7 @@ function event_draw_save(){
 				"event_draw_team_separation"=>$event_draw_team_separation
 			));
 			$event_draw_id=$GLOBALS['last_insert_id'];
+			$_REQEST['event_draw_id']=$event_draw_id;
 		}else{
 			# Save the existing one
 			$stmt=db_prep("
@@ -3588,7 +3653,7 @@ function event_draw_save(){
 		}
 	}
 	user_message("Saved Event Draw.");
-	return event_draw();
+	return event_draw_edit();
 }
 function event_draw_apply(){
 	global $smarty;
@@ -4143,6 +4208,136 @@ function event_view_draws() {
 
 	$maintpl=find_template("event_draw_view.tpl");
 	return $smarty->fetch($maintpl);
+}
+function event_draw_manual_save(){
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
+			
+	# ok, lets make the array of manual changes
+	$groups=array();
+	$orders=array();
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/draw\_group\_(\d+)\_(\d+)/",$key,$match)){
+			$round=$match[1];
+			$pilot=$match[2];
+			$groups[$round][$pilot]=$value;
+		}
+		if(preg_match("/draw\_order\_(\d+)\_(\d+)/",$key,$match)){
+			$round=$match[1];
+			$pilot=$match[2];
+			$orders[$round][$pilot]=$value;
+		}
+	}
+	
+	$sort_string='';
+	if(count($groups)>0){
+		$sort_string='event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane';
+	}else{
+		$sort_string='event_draw_round_number,event_draw_round_order';
+	}
+	
+	# lets get all the entries for this draw, and only update the ones that dont match
+	$drawrounds=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw_round 
+		WHERE event_draw_id=:event_draw_id
+			AND event_draw_round_status=1
+		ORDER BY $sort_string
+	");
+	$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	foreach($rounds as $round){
+		$round_number=$round['event_draw_round_number'];
+		$event_pilot_id=$round['event_pilot_id'];
+		$drawrounds[$round_number][$event_pilot_id]=$round;
+	}
+	$group_labels=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
+	# Now lets step through our entered round fields and see if any of them have changed
+	# For groups
+	$group_updated=array();
+	if(count($groups)>0){
+		foreach($groups as $round_number=>$r){
+			foreach($r as $event_pilot_id=>$group){
+				# Now lets see if its different from the original
+				if($group!=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_group']){
+					# This one has changed, so lets update it
+					$stmt=db_prep("
+						UPDATE event_draw_round
+						SET event_draw_round_group=:group
+						WHERE event_draw_round_id=:event_draw_round_id
+					");
+					$result=db_exec($stmt,array("group"=>strtoupper($group),"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']));
+					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_lane']!=''){
+						$group_updated[$round_number][$group]=$drawrounds[$round_number][$event_pilot_id];
+						#Add where they came from to get recalculated lanes as well
+						$oldgroup=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_group'];
+						$group_updated[$round_number][$oldgroup]=$drawrounds[$round_number][$event_pilot_id];
+					}
+				}
+			}
+		}
+		# Now lets go through the groups that were updated and update the lanes
+		foreach($group_updated as $round_number=>$g){
+			foreach($g as $group=>$round){
+				# Lets set the type of order value to alpha or numeric
+				if(preg_match("/\d/",$round['event_draw_round_lane'])){
+					$type='numeric';
+				}else{
+					$type='alpha';
+				}
+				# Lets get the pilots in that group
+				$stmt=db_prep("
+					SELECT *
+					FROM event_draw_round
+					WHERE event_draw_id=:event_draw_id
+						AND event_draw_round_number=:round
+						AND event_draw_round_group=:group
+						AND event_draw_round_status=1
+				");
+				$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id,"round"=>$round_number,"group"=>$group));
+				# Now lets update them
+				$count=1;
+				foreach($result as $row){
+					if($type=='numeric'){
+						$lane=$count;
+					}else{
+						$lane=$group_labels[$count-1];
+					}
+					$stmt=db_prep("
+						UPDATE event_draw_round
+						SET event_draw_round_lane=:lane
+						WHERE event_draw_round_id=:event_draw_round_id
+					");
+					$result=db_exec($stmt,array("lane"=>$lane,"event_draw_round_id"=>$row['event_draw_round_id']));
+					$count++;	
+				}
+			}
+		}
+	}
+	# For orders
+	if(count($orders)>0){
+		foreach($orders as $round_number=>$r){
+			foreach($r as $event_pilot_id=>$order){
+				# Now lets see if its different from the original
+				if($order!=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_order']){
+					# This one has changed, so lets update it
+					$stmt=db_prep("
+						UPDATE event_draw_round
+						SET event_draw_round_order=:order
+						WHERE event_draw_round_id=:event_draw_round_id
+					");
+					$result=db_exec($stmt,array("order"=>$order,"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']));
+				}
+			}
+		}
+	}
+	
+	
+	user_message("Saved Event Draw Manual Edits.");
+	return event_draw_edit();
 }
 
 # Import Routines
