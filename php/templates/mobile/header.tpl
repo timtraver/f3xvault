@@ -48,9 +48,9 @@
 
 	<div class="page-content">
     	<div class="header">
- 			<a href="#" class="show-sidebar"></a>
+ 			<a href="#" class="show-sidebar" style="color:white;vertical-align:middle;"><br><b>&nbsp;&nbsp;&nbsp;Menu</b></a>
     		<a href="#" class="hide-sidebar"></a>   
-     	   <p>F3XVault Mobile</p>
+     	   <p><b>F3XVault Mobile</b></p>
      	   <a href="?action=message" class="header-mail"></a>
   		</div>
     	<br><br><br>

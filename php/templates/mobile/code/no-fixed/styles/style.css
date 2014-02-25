@@ -298,10 +298,9 @@ h5{	font-weight:800; font-family:'Open Sans', sans-serif!important;}
 .show-sidebar{
 	position:absolute;
 	z-index:12;
-	background-image:url(../images/misc/menu-item/deploy-menu.png);
 	background-repeat:no-repeat;
 	background-position:13px 18px;
-	width:48px;
+	width:75px;
 	height:48px;
 	display:block;
 }
