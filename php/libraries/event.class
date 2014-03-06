@@ -1906,6 +1906,9 @@ class Event {
 					}
 					if($f['flight_type_landing']==1){
 						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
 							$temp_landing[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
 							$temp_landing[$event_pilot_id]['event_pilot_round_flight_landing']+=$p['event_pilot_round_flight_landing'];
 							$temp_landing[$event_pilot_id]['number_rounds']++;

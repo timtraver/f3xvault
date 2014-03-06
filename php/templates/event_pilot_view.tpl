@@ -183,6 +183,17 @@ $(function () {ldelim}
 					{/if}
 					{$flight_type_id = $ft@key}
 					{$values=$r.flights.$flight_type_id.pilots.$event_pilot_id}
+					{if $values.event_pilot_round_flight_reflight_dropped==1}
+						{foreach $r.reflights as $rf}
+							{if $rf@key!=$flight_type_id}{continue}{/if}
+							{foreach $rf.pilots as $rp}
+								{if $rp@key!=$event_pilot_id}{continue}{/if}
+								{if $rp.event_pilot_round_flight_reflight_dropped==0}
+									{$values=$rp}
+								{/if}
+							{/foreach}
+						{/foreach}
+					{/if}
 						[{$round},{$values.event_pilot_round_flight_score|escape}]{if !$r@last},{/if}
 				{/foreach}
 			{/foreach}
