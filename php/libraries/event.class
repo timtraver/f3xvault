@@ -1157,7 +1157,9 @@ class Event {
 						}
 						if($f['flight_type_laps']){
 							# Lets add the laps done for this pilot
-							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							if($p['event_pilot_round_flight_dropped']!=1 && $p['event_pilot_round_flight_reflight_dropped']!=1){
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							}
 						}
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
@@ -1165,7 +1167,7 @@ class Event {
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
-						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$sub;
 						
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
 							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
@@ -1205,7 +1207,9 @@ class Event {
 						
 						if($f['flight_type_laps']){
 							# Lets add the laps done for this pilot
-							$subtotals[$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							if($p['event_pilot_round_flight_dropped']!=1 && $p['event_pilot_round_flight_reflight_dropped']!=1){
+								$subtotals[$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							}
 						}
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
@@ -1213,7 +1217,7 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
-						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$sub;
 												
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
 							$subtotals[$event_pilot_id]['subtotal']+=$sub;
@@ -1312,19 +1316,6 @@ class Event {
 				$subtotals[$event_pilot_id]['event_pilot_average_speed_rank']=$count;
 				$count++;
 			}
-		}
-
-		# Lets determine the distance lap rank
-		$laps=array();
-		foreach($subtotals as $event_pilot_id=>$t){
-			# Create an array of all of the scores
-			$laps[$event_pilot_id]=$t['total_laps'];
-		}
-		arsort($laps);
-		$count=1;
-		foreach($laps as $event_pilot_id=>$p){
-			$subtotals[$event_pilot_id]['event_pilot_lap_rank']=$count;
-			$count++;
 		}
 
 		# Now determine the overall contest rank
@@ -1858,6 +1849,48 @@ class Event {
 		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
 		return $laps;
 	}
+	function get_total_distance(){
+		# Function to get the total distance laps in the contest per pilot
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_laps=array();
+		$laps=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_distance'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_laps[$event_pilot_id]['event_pilot_id']=$event_pilot_id;						
+							$temp_laps[$event_pilot_id]['event_pilot_round_flight_laps']+=$p['event_pilot_round_flight_laps'];						
+						}
+					}
+				}
+				foreach($r['reflights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_distance'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_laps[$event_pilot_id]['event_pilot_id']=$event_pilot_id;						
+							$temp_laps[$event_pilot_id]['event_pilot_round_flight_laps']+=$p['event_pilot_round_flight_laps'];						
+						}
+					}
+				}
+			}	
+		}
+		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
+		return $laps;
+	}
 	function get_top_landing(){
 		# Function to get the top landing averages of the contest
 		if(count($this->totals['pilots'])==0){
@@ -1903,11 +1936,26 @@ class Event {
 					}
 					if($f['flight_type_code']=='f3b_duration'){
 						foreach($f['pilots'] as $event_pilot_id=>$p){
-							if($p['event_pilot_round_flight_dropped']==1){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
 								continue;
 							}
 							$temp_duration[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
 							$temp_duration[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+						}
+					}
+				}
+				# Now step through the reflights and do the same
+				foreach($r['reflights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_duration'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_distance[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
 						}
 					}
 				}
@@ -1917,7 +1965,7 @@ class Event {
 		return $duration;
 	}
 	function get_distance_rank(){
-		# Function to get the speed ranking of the contest
+		# Function to get the distance ranking of the contest
 		if(count($this->totals['pilots'])==0){
 			$this->calculate_event_totals();
 		}
@@ -1931,7 +1979,22 @@ class Event {
 					}
 					if($f['flight_type_code']=='f3b_distance'){
 						foreach($f['pilots'] as $event_pilot_id=>$p){
-							if($p['event_pilot_round_flight_dropped']==1){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_distance[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+						}
+					}
+				}
+				# Now step through the reflights and do the same
+				foreach($r['reflights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_distance'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
 								continue;
 							}
 							$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;

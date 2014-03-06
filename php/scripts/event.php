@@ -379,7 +379,7 @@ function event_view() {
 	$speed_times=array();
 	if($laps){
 		# Lets sort the pilots by order of distance laps
-		$lap_totals=array_msort($e->pilots,array("event_pilot_lap_rank"=>SORT_ASC));
+		$lap_totals=$e->get_total_distance();
 		$smarty->assign("lap_totals",$lap_totals);
 		# Lets get the top distance list
 		$distance_laps=$e->get_top_distance();

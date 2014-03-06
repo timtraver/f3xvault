@@ -835,20 +835,22 @@ function check_permission() {ldelim}
 			<th>Pilot</th>
 			<th>Laps</th>
 		</tr>
+		{$rank=1}
 		{$oldscore=0}
 		{foreach $lap_totals as $p}
 			{$event_pilot_id=$p.event_pilot_id}
 			<tr style="background-color: {cycle values="#9DCFF0,white"};">
 				<td>
-					{if $p.event_pilot_total_laps!=$oldscore}
-						{$p.event_pilot_lap_rank|escape}
+					{if $p.event_pilot_round_flight_laps!=$oldscore}
+						{$rank}
 					{/if}
 				</td>
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td align="center">{$p.event_pilot_total_laps|escape}</td>
+				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
 			</tr>
+			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_total_laps}
 		{/foreach}
 		</table>
@@ -862,6 +864,7 @@ function check_permission() {ldelim}
 			<th>Rank</th>
 			<th>Pilot</th>
 			<th>Laps</th>
+			<th>Round</th>
 		</tr>
 		{$rank=1}
 		{$oldscore=0}
@@ -877,6 +880,7 @@ function check_permission() {ldelim}
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
+				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
