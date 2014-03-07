@@ -2233,7 +2233,7 @@ function event_round_edit() {
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("event",$event);
 	$smarty->assign("total_pilots",count($event->pilots));
-	
+		
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 	if($permission==1){

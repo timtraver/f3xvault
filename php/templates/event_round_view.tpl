@@ -1,3 +1,14 @@
+<script>
+function toggle(element,tog) {ldelim}
+         if (document.getElementById(element).style.display == 'none') {ldelim}
+                document.getElementById(element).style.display = 'table-row-group';
+                tog.innerHTML = '<img width="24" height="24" src="/images/arrow-down.png" style="vertical-align:middle;">';
+         {rdelim} else {ldelim}
+                 document.getElementById(element).style.display = 'none';
+                 tog.innerHTML = '<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;">';
+         {rdelim}
+{rdelim}
+</script>
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">Event - {$event->info.event_name|escape}</h1>
@@ -35,7 +46,17 @@
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="create_new_round" value="0">
 
-		<h1 class="post-title entry-title">Event Round {$round_number|escape}</h1>
+		<h1 class="post-title entry-title">Event Round 
+			{$prev=$round_number-1}
+			{$next=$round_number+1}
+			{if $event->rounds.$prev}
+			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$prev.event_round_id}"><img src="/images/arrow-left.png" style="vertical-align:text-bottom;"></a>
+			{/if}
+			{$round_number|escape}
+			{if $event->rounds.$next}
+			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$next.event_round_id}"><img src="/images/arrow-right.png" style="vertical-align:text-bottom;"></a>
+			{/if}
+		</h1>
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" nowrap>Event Round Type</th>
@@ -114,7 +135,12 @@
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			<tr>
-				<th colspan="2">Round {$round_number|escape}</th>
+				<th colspan="2" style="text-align:left;">
+					<span id="toggle_{$flight_type_id}" onClick="toggle('view_flight_type_{$flight_type_id}',this);">
+					<img width="24" height="24" src="/images/arrow-down.png" style="vertical-align:middle;"> 
+					</span>
+					Round {$round_number|escape}
+				</th>
 				<th colspan="{$cols}">
 					{$ft.flight_type_name|escape}
 				</th>
@@ -122,6 +148,7 @@
 					Score <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>
 				</th>
 			</tr>
+			<tbody id="view_flight_type_{$flight_type_id}" style="display: table-row-group;">
 			<tr>
 				<th width="2%" align="left"></th>
 				<th align="left">Pilot Name</th>
@@ -317,8 +344,8 @@
 				{$num=$num+1}
 				{/foreach}
 			{/foreach}
-			
 			{/if}
+			</tbody>
 		{/foreach}
 		</table>
 
