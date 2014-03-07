@@ -28,8 +28,12 @@ EVENT STUFF
 	
 	Make a system to do drops on different times for f3j?
 	
-	Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
-	System to choose at random the reflight pilots to fill out a group
+	Reflights
+		modify the reflight addition popup to be able to add multiple pilots of different types
+			and if the reflight is requested, then mark the other flight as auto dropped (RR) Requested reflight
+		Allow reflights to be put in an existing group and scored with that group
+		Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
+		System to choose at random the reflight pilots to fill out a group (maybe)
 
 	For flyoffs, maybe think of a way to more easily mark pilots as flyoff pilots so the flights don't get shown on the individual reports
 		and when adding new flyoff rounds, only those pilots are shown.
@@ -59,9 +63,6 @@ EVENT STUFF
 		
 	In position chart, show another one for flyoff rounds
 		
-	Flyoff capability
-		Save Flyoff total rounds too (i.e fix individual pilot reports with flyoffs)
-	
 	When event is completed, have a function to blast the link to the event to the event participants if members
   
 	When printing pilot detail report, print a list of the overall classification summary ranking too...maybe
