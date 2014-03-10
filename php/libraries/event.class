@@ -1167,7 +1167,7 @@ class Event {
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
-						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$sub;
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
 						
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
 							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
@@ -1217,7 +1217,7 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
-						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$sub;
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
 												
 						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
 							$subtotals[$event_pilot_id]['subtotal']+=$sub;
@@ -1640,7 +1640,6 @@ class Event {
 					AND er.event_round_flyoff=0
 			");
 			$result=db_exec($stmt,array("event_id"=>$this->event_id));
-		
 			foreach($temp_flights as $event_pilot_id=>$r){
 				$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
 				
