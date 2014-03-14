@@ -5273,4 +5273,93 @@ function event_tasks_audio(){
 	return event_tasks();
 	
 }
+function event_print_blank_task() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+
+	$e=new Event($event_id);
+	$e->get_teams();
+	$e->get_rounds();
+	$e->get_draws();
+	$e->get_tasks();
+	
+	if($e->info['event_type_code']=='f3k'){
+		$template="print_draw_pilot_recording_f3k_blank.tpl";
+	}else{
+		$template="print_draw_pilot_recording_blank.tpl";
+	}
+	$title="Pilot Score Recording Sheets";
+	$orientation="L";
+	$sort_by='alphabetical_first';
+	$_REQUEST['sort_by']=$sort_by;
+	
+	# Lets figure out how many rounds by the task list
+	$print_round_from=1;
+	$print_round_to=count($e->tasks);
+
+	# Lets get the draw round flight types if there are any
+	$draw_round_flight_types=array();
+	if($e->info['event_type_code']=='f3k'){
+		# Lets set the round flight types from the task list
+		foreach($e->tasks as $round=>$t){
+			$draw_round_flight_types[$round]=$t['flight_type_id'];
+		}
+	}else{
+		$stmt=db_prep("
+			SELECT *,edrf.flight_type_id
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+			WHERE ed.event_id=:event_id
+				AND ed.event_draw_status=1
+				AND edrf.event_draw_round_flight_status=1
+			ORDER BY ed.event_draw_id,edrf.event_draw_round_number
+		");
+		$result=db_exec($stmt,array("event_id"=>$event_id));
+		foreach($result as $round){
+			$event_draw_id=$round['event_draw_id'];
+			$round_number=$round['event_draw_round_number'];
+			$draw_round_flight_types[$event_draw_id][$round_number]=$round['flight_type_id'];
+		}
+	}
+
+	# Lets add the rounds that don't exist with the draw values for printing
+	# Step through any existing rounds and use those
+	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
+		if(!isset($e->rounds[$event_round_number])){
+			# Lets create the event round and enough info from the draw to print
+			#Step through the draw rounds and see if one exists for this round
+			if($e->info['event_type_code']=='f3k'){
+				$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+			}
+			# Lets create the round info
+			$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+			$e->rounds[$event_round_number]['event_round_status']=1;
+			if($e->info['event_type_code']=='f3k'){
+				$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_round_number];
+			}else{
+				$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+			}
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+			$event_pilot_id=10000;
+			$e->pilots[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+			$e->pilots[$event_pilot_id]['pilot_first_name']="________________";
+			
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']='';
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']='';
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']='';
+			$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
+		}
+	}
+
+	$smarty->assign("print_round_from",$print_round_from);
+	$smarty->assign("print_round_to",$print_round_to);
+	$smarty->assign("print_format",$print_format);
+	$smarty->assign("flight_type_id",$print_flight_type_id);
+	$smarty->assign("event",$e);
+	
+	$maintpl=find_template($template);
+	return $smarty->fetch($maintpl);
+}
 ?>
