@@ -517,7 +517,7 @@ function toggle(element,tog) {ldelim}
 							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
 							{$p.event_pilot_round_flight_raw_score}
 							{else}
-							{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
+							{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
 							{/if}
 						</td>
 						<td align="right" nowrap>
