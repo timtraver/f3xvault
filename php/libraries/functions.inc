@@ -662,7 +662,7 @@ function send_email($email_name,$email_to,$data){
 function log_action($id){
 	# This is a function to log the activity of the pilots as they cruise around
 	if(!$id){
-		$id=0;
+		return;
 	}
 	$stmt=db_prep("
 		INSERT INTO site_log
