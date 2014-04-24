@@ -65,12 +65,20 @@
 					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
-					<th align="right" nowrap>Pilot Sig</th>
+					<th align="right" bgcolor="lightgrey">Penalty</th>
 					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
 				</tr>
 				<tr>
-					<th align="right" nowrap>Timer Sig</th>
-					<td  colspan="3" style="border: 1px solid black;">&nbsp;</td>
+					<td colspan="4">
+						<table style="font-size:{if $print_format=="pdf"}8{else}12{/if};margin:0px;">
+						<tr>
+						<th bgcolor="lightgrey" height="20" align="right" nowrap>Pilot Sig</th>
+						<td height="20" width="80" style="border: 1px solid black;"> &nbsp;</td>
+						<th bgcolor="lightgrey" height="20" align="right" nowrap>Timer Sig</th>
+						<td height="20" width="80" style="border: 1px solid black;"> &nbsp;</td>
+						</tr>
+						</table>
+					</td>
 				</tr>
 				</table>
 

@@ -3653,7 +3653,7 @@ function event_draw_save(){
 		}
 	}
 	user_message("Saved Event Draw.");
-	return event_draw_edit();
+	return event_draw();
 }
 function event_draw_apply(){
 	global $smarty;
@@ -3946,7 +3946,6 @@ function event_draw_print() {
 			$draw_round_flight_types[$event_draw_id][$round_number]=$round['flight_type_id'];
 		}
 	}
-
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
 	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){

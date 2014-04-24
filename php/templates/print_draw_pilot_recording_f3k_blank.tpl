@@ -23,12 +23,12 @@
 					<th colspan="4"><font size="+1"><b>Round {$event_round_number}</b></font></th>
 				</tr>
 				<tr>
-					<th width="80" height="20" align="right" nowrap bgcolor="lightgrey">Pilot</th>
-					<td width="100" height="20">
+					<th width="50" height="30" align="center" nowrap bgcolor="lightgrey">Pilot</th>
+					<td width="100" height="30">
 						<b>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</b>
 					</td>
-					<th width="80" height="20" align="right" nowrap bgcolor="lightgrey">Flight Group</th>
-					<td height="20" align="center">
+					<th width="60" height="30" align="center" nowrap bgcolor="lightgrey">Group</th>
+					<td height="30" align="center">
 						<font size="+1"><b>{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}</b></font>
 					</td>
 				</tr>
@@ -60,12 +60,28 @@
 					</td>
 				</tr>
 				<tr>
-					<th height="20" align="right" nowrap>Pilot Sig</th>
-					<td height="20" colspan="2" style="border: 1px solid black;"> &nbsp;</td>
+					<th bgcolor="lightgrey" height="20" align="right" nowrap>
+						Penalty
+					</th>
+					<td>
+						<table>
+						<tr>
+						<td height="25" width="50" style="border: 1px solid black;"> &nbsp;</td>
+						</tr>
+						</table>
+					</td>
 				</tr>
 				<tr>
-					<th height="20" align="right" nowrap>Timer Sig</th>
-					<td height="20" colspan="2"style="border: 1px solid black;"> &nbsp;</td>
+					<td colspan="4">
+						<table style="font-size:{if $print_format=="pdf"}8{else}12{/if};margin:0px;">
+						<tr>
+						<th bgcolor="lightgrey" height="20" align="right" nowrap>Pilot Sig</th>
+						<td height="20" width="80" style="border: 1px solid black;"> &nbsp;</td>
+						<th bgcolor="lightgrey" height="20" align="right" nowrap>Timer Sig</th>
+						<td height="20" width="80" style="border: 1px solid black;"> &nbsp;</td>
+						</tr>
+						</table>
+					</td>
 				</tr>
 				</table>
 

@@ -1,6 +1,6 @@
 <html>
 <body>
-<form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr" target="_blank">
+<form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr">
 <input name="cmd" type="hidden" value="_xclick">
 <input name="business" type="hidden" value="{$event->info.event_reg_paypal_address}">
 <input name="lc" type="hidden" value="{$event->info.country_code}">

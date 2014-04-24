@@ -31,7 +31,6 @@ EVENT STUFF
 	Reflights
 		modify the reflight addition popup to be able to add multiple pilots of different types
 			and if the reflight is requested, then mark the other flight as auto dropped (RR) Requested reflight
-		Allow reflights to be put in an existing group and scored with that group
 		Reflight pilots have a flag that counts their times or not (so you can specify whether or not they get the better scores)
 		System to choose at random the reflight pilots to fill out a group (maybe)
 
@@ -85,6 +84,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X		Allow reflights to be put in an existing group and scored with that group
 X	Change the menu icon, or include some kind of popup so they know where it is
 X		WHen adding new round use data from task list
 X		Remove task list selection from draw stuff
