@@ -113,11 +113,11 @@ function series_list() {
 
 	$addcountry='';
 	if($country_id!=0){
-		$addcountry.=" AND cl.country_id=$country_id ";
+		$addcountry.=" AND c.country_id=$country_id ";
 	}
 	$addstate='';
 	if($state_id!=0){
-		$addstate.=" AND cl.state_id=$state_id ";
+		$addstate.=" AND s.state_id=$state_id ";
 	}
 
 	$series=array();
@@ -125,8 +125,8 @@ function series_list() {
 		$stmt=db_prep("
 			SELECT *
 			FROM series se
-			LEFT JOIN state s ON s.state_id=s.state_id
-			LEFT JOIN country c ON s.country_id=c.country_id
+			LEFT JOIN state s ON se.state_id=s.state_id
+			LEFT JOIN country c ON se.country_id=c.country_id
 			WHERE se.$search_field $operator :search
 				$addcountry
 				$addstate
