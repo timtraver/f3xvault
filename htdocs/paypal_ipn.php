@@ -137,7 +137,7 @@ if (strcmp ($res, "VERIFIED") == 0) {
 	}
 	// check that txn_id has not been previously processed
 	// check that receiver_email is your PayPal email
-	if($_POST['receiver_email']!=$event_pilot['event_reg_paypal_address']){
+	if(strtolower($_POST['receiver_email'])!=strtolower($event_pilot['event_reg_paypal_address'])){
 		$checked_out=0;
 	}
 	// check that payment_amount/payment_currency are correct
