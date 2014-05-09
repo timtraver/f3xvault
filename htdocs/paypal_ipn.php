@@ -115,8 +115,9 @@ if (curl_errno($ch) != 0) // cURL error
 
 // Inspect IPN validation result and act accordingly
 
-if (strcmp ($res, "VERIFIED") == 0) {
-	$event_pilot_id=$_POST['custom'];
+if (preg_match("/VERIFIED/",$res)) {
+ 	error_log(date('[Y-m-d H:i e] '). "POST Variables : ".print_r($_POST,true). PHP_EOL, 3, LOG_FILE);
+ 	$event_pilot_id=$_POST['custom'];
 	$event_pilot=array();
 	# Get the info of the event_pilot
 	$stmt=db_prep("
@@ -128,7 +129,9 @@ if (strcmp ($res, "VERIFIED") == 0) {
 	$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
 	if(isset($result[0])){
 		$event_pilot=$result[0];
-	}
+ 	}else{
+ 		error_log(date('[Y-m-d H:i e] '). "Did not find an event pilot with the value $event_pilot_id". PHP_EOL, 3, LOG_FILE);
+ 	}
 	
 	$checked_out=1;
 	// check whether the payment_status is Completed
