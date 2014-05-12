@@ -1644,7 +1644,7 @@ function event_pilot_save() {
 	
 	if($event_pilot_id!=0){
 		# Lets see if the paid status has changed
-		$stmt-db_prep("
+		$stmt=db_prep("
 			SELECT *
 			FROM event_pilot
 			WHERE event_pilot_id=:event_pilot_id
