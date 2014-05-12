@@ -1291,26 +1291,34 @@ class Event {
 		# Lets sort each of the drop arrays 
 		foreach($subtotals as $event_pilot_id=>$temp){
 			# sort the dropped round totals
-			sort($subtotals[$event_pilot_id]['drops'],SORT_NUMERIC);
+			if(is_array($subtotals[$event_pilot_id]['drops'])){
+				sort($subtotals[$event_pilot_id]['drops'],SORT_NUMERIC);
+			}
 		}
 		# Now lets make subtotals for each drop
 		foreach($subtotals as $event_pilot_id=>$temp){
-			foreach($temp['drops'] as $drop){
-				$subtotals[$event_pilot_id]['subtotals'][]=$drop;
+			if(is_array($temp['drops'])){
+				foreach($temp['drops'] as $drop){
+					$subtotals[$event_pilot_id]['subtotals'][]=$drop;
+				}
 			}
 		}
 		# Lets sort each of the flyoff drop arrays
 		foreach($flyoff_subtotals as $flyoff_number=>$f){
 			foreach($f as $event_pilot_id=>$temp){
 				# sort the dropped round totals
-				sort($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'],SORT_NUMERIC);
+				if(is_array($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'])){
+					sort($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'],SORT_NUMERIC);
+				}
 			}
 		}
 		# Now lets make subtotals for each drop in flyoffs
 		foreach($flyoff_subtotals as $flyoff_number=>$f){
 			foreach($f as $event_pilot_id=>$temp){
-				foreach($temp['drops'] as $drop){
-					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotals'][]=$drop;
+				if(is_array($temp['drops'])){
+					foreach($temp['drops'] as $drop){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotals'][]=$drop;
+					}
 				}
 			}
 		}
@@ -1428,10 +1436,12 @@ class Event {
 				# Create an array of all of the scores
 				$scores[$event_pilot_id]['drop_total']=$t['total'];
 				$d=1;
-				foreach($t['subtotals'] as $s){
-					$key='drop'.$d;
-					$scores[$event_pilot_id][$key]=$s;
-					$d++;
+				if(is_array($t['subtotals'])){
+					foreach($t['subtotals'] as $s){
+						$key='drop'.$d;
+						$scores[$event_pilot_id][$key]=$s;
+						$d++;
+					}
 				}
 				if($t['total']>$max_points){
 					$max_points=$t['total'];
