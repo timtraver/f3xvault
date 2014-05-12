@@ -1643,6 +1643,20 @@ function event_pilot_save() {
 	}
 	
 	if($event_pilot_id!=0){
+		# Lets see if the paid status has changed
+		$stmt-db_prep("
+			SELECT *
+			FROM event_pilot
+			WHERE event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+		$ep=$result[0];
+		$status=$ep['event_pilot_paid_flag'];
+		if($status!=$event_pilot_paid_flag){
+			$status_date=",event_pilot_paid_date=now()";
+		}else{
+			$status_date='';
+		}
 		# Lets save this existing event pilot
 		$stmt=db_prep("
 			UPDATE event_pilot
@@ -1655,7 +1669,8 @@ function event_pilot_save() {
 				plane_id=:plane_id,
 				event_pilot_paid_flag=:event_pilot_paid_flag,
 				event_pilot_draw_status=:event_pilot_draw_status
-				WHERE event_pilot_id=:event_pilot_id
+				$status_date
+			WHERE event_pilot_id=:event_pilot_id
 		");
 		$result=db_exec($stmt,array(
 			"pilot_id"=>$pilot_id,
@@ -1671,6 +1686,11 @@ function event_pilot_save() {
 		));
 	}else{
 		# We need to create a new event pilot id
+		if($event_pilot_paid_flag==1){
+			$status_date=",event_pilot_paid_date=now()";
+		}else{
+			$status_date='';
+		}
 		# Lets first see if there already is one to just turn on
 		$stmt=db_prep("
 			SELECT *
@@ -1693,6 +1713,7 @@ function event_pilot_save() {
 					event_pilot_paid_flag=:event_pilot_paid_flag,
 					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
+					$status_date
 				WHERE event_pilot_id=:event_pilot_id
 			");
 			$result2=db_exec($stmt,array(
@@ -1723,6 +1744,7 @@ function event_pilot_save() {
 					event_pilot_paid_flag=:event_pilot_paid_flag,
 					event_pilot_draw_status=:event_pilot_draw_status,
 					event_pilot_status=1
+					$status_date
 			");
 			$result2=db_exec($stmt,array(
 				"event_id"=>$event_id,

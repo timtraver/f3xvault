@@ -59,7 +59,7 @@
 			<td valign="top" align="right" style="border-style:thin;">
 				{$event->info.currency_html}{$total|string_format:"%.2f"}&nbsp;&nbsp;
 				{if $p.event_pilot_paid_flag==1}
-				<font color="green">PAID</font>
+				<font color="green">PAID ({$p.event_pilot_paid_date|date_format:"%D"})</font>
 				{else}
 				<font color="red">DUE</font>
 				{/if}
