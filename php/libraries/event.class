@@ -803,8 +803,10 @@ class Event {
 		$all=$this->rounds[$event_round_number]['flights'];
 		# Now lets add the reflights to that array so they are all in the same array before we send them to the calc
 		foreach($this->rounds[$event_round_number]['reflights'] as $flight_type_id=>$r){
-			foreach($r['pilots'] as $p){
-				$all[$flight_type_id]['pilots'][]=$p;
+			if(is_array($r)){
+				foreach($r['pilots'] as $p){
+					$all[$flight_type_id]['pilots'][]=$p;
+				}
 			}
 		}
 		$all_flights=$this->calculate_flights($event_round_number,$all);

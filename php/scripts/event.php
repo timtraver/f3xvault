@@ -2578,8 +2578,48 @@ function event_round_save() {
 				}
 			}
 		}
+		# Lets check for 1234 round to truncate properly the times
+		if($flight_type['flight_type_code']=='f3k_h'){
+			# Its a 1234 flight
+			# So we need to sort the times by max to min, then truncate to the max times
+			foreach($data as $event_pilot_round_flight_id=>$p){
+				foreach($p as $event_pilot_id=>$f){
+					if(is_array($f)){
+						foreach($f as $flight_type_id=>$v){
+							$tot=0;
+							$temp_sub=array();
+							foreach($v['sub'] as $num=>$t){
+								$temp_sub[]=convert_colon_to_seconds($t);
+							}
+							sort($temp_sub);
+							if($temp_sub[0]>60){
+								$temp_sub[0]=60;
+							}
+							if($temp_sub[1]>120){
+								$temp_sub[1]=120;
+							}
+							if($temp_sub[2]>180){
+								$temp_sub[2]=180;
+							}
+							if($temp_sub[3]>240){
+								$temp_sub[3]=240;
+							}					
+							$tot=$temp_sub[0]+$temp_sub[1]+$temp_sub[2]+$temp_sub[3];
+							
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['1']=convert_seconds_to_colon($temp_sub[0]);
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['2']=convert_seconds_to_colon($temp_sub[1]);
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['3']=convert_seconds_to_colon($temp_sub[2]);
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['4']=convert_seconds_to_colon($temp_sub[3]);
+							
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min']=floor($tot/60);
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec']=sprintf("%02d",fmod($tot,60));
+						}
+					}
+				}
+			}
+		}
 	}
-
+		
 	# Lets do a query to get existing event_pilot_round_id's so we don't have to do it in the loop
 	$eprs=array();
 	$stmt=db_prep("
