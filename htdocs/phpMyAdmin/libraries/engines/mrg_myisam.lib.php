@@ -1,8 +1,13 @@
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
+ * The MERGE storage engine
+ *
  * @package PhpMyAdmin-Engines
  */
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
  *
@@ -10,20 +15,21 @@
 require_once './libraries/engines/merge.lib.php';
 
 /**
+ * The MERGE storage engine
  *
  * @package PhpMyAdmin-Engines
  */
-class PMA_StorageEngine_mrg_myisam extends PMA_StorageEngine_merge
+class PMA_StorageEngine_MrgMyisam extends PMA_StorageEngine_Merge
 {
     /**
      * returns string with filename for the MySQL helppage
-     * about this storage engne
+     * about this storage engine
      *
-     * @return  string  mysql helppage filename
+     * @return string  mysql helppage filename
      */
-    function getMysqlHelpPage()
+    public function getMysqlHelpPage()
     {
-        return 'merge';
+        return 'merge-storage-engine';
     }
 }
 

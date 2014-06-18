@@ -6,6 +6,9 @@
  * @package PhpMyAdmin
  *
  */
+if (! defined('PHPMYADMIN')) {
+    exit;
+}
 
 /**
  * Format a string so it can be a string inside JavaScript code inside an
@@ -13,10 +16,10 @@
  * This function is used to displays a javascript confirmation box for
  * "DROP/DELETE/ALTER" queries.
  *
- * @param string   $a_string          the string to format
- * @param boolean  $add_backquotes    whether to add backquotes to the string or not
+ * @param string  $a_string       the string to format
+ * @param boolean $add_backquotes whether to add backquotes to the string or not
  *
- * @return  string   the formatted string
+ * @return string   the formatted string
  *
  * @access  public
  */
@@ -30,7 +33,7 @@ function PMA_jsFormat($a_string = '', $add_backquotes = true)
         $a_string = str_replace('#', '\\#', $a_string);
     }
 
-    return (($add_backquotes) ? PMA_backquote($a_string) : $a_string);
+    return (($add_backquotes) ? PMA_Util::backquote($a_string) : $a_string);
 } // end of the 'PMA_jsFormat()' function
 
 /**
@@ -41,19 +44,26 @@ function PMA_jsFormat($a_string = '', $add_backquotes = true)
  * We also remove NUL byte as some browsers (namely MSIE) ignore it and
  * inserting it anywhere inside </script would allow to bypass this check.
  *
- * @param string  $string the string to be escaped
- * @return  string  the escaped string
+ * @param string $string the string to be escaped
+ *
+ * @return string  the escaped string
  */
 function PMA_escapeJsString($string)
 {
-    return preg_replace('@</script@i', '</\' + \'script',
-                        strtr($string, array(
-                                "\000" => '',
-                                '\\' => '\\\\',
-                                '\'' => '\\\'',
-                                '"' => '\"',
-                                "\n" => '\n',
-                                "\r" => '\r')));
+    return preg_replace(
+        '@</script@i', '</\' + \'script',
+        strtr(
+            $string,
+            array(
+                "\000" => '',
+                '\\' => '\\\\',
+                '\'' => '\\\'',
+                '"' => '\"',
+                "\n" => '\n',
+                "\r" => '\r'
+            )
+        )
+    );
 }
 
 /**
@@ -61,21 +71,23 @@ function PMA_escapeJsString($string)
  *
  * @param string $value String to be formatted.
  *
- * @retrun string formatted value.
+ * @return string formatted value.
  */
 function PMA_formatJsVal($value)
 {
     if (is_bool($value)) {
         if ($value) {
             return 'true';
-        } else {
-            return 'false';
         }
-    } elseif (is_int($value)) {
-        return (int)$value;
-    } else {
-        return '"' . PMA_escapeJsString($value) . '"';
+
+        return 'false';
     }
+
+    if (is_int($value)) {
+        return (int)$value;
+    }
+
+    return '"' . PMA_escapeJsString($value) . '"';
 }
 
 /**
@@ -84,7 +96,8 @@ function PMA_formatJsVal($value)
  *
  * @param string $key    Name of value to set
  * @param mixed  $value  Value to set, can be either string or array of strings
- * @param bool   $escape Whether to escape value or keep it as it is (for inclusion of js code)
+ * @param bool   $escape Whether to escape value or keep it as it is
+ *                       (for inclusion of js code)
  *
  * @return string Javascript code.
  */
@@ -95,7 +108,7 @@ function PMA_getJsValue($key, $value, $escape = true)
         $result .= $value;
     } elseif (is_array($value)) {
         $result .= '[';
-        foreach ($value as $id => $val) {
+        foreach ($value as $val) {
             $result .= PMA_formatJsVal($val) . ",";
         }
         $result .= "];\n";
@@ -109,10 +122,10 @@ function PMA_getJsValue($key, $value, $escape = true)
  * Prints an javascript assignment with proper escaping of a value
  * and support for assigning array of strings.
  *
- * @param string $key Name of value to set
- * @param mixed $value Value to set, can be either string or array of strings
+ * @param string $key   Name of value to set
+ * @param mixed  $value Value to set, can be either string or array of strings
  *
- * @return nothing
+ * @return void
  */
 function PMA_printJsValue($key, $value)
 {

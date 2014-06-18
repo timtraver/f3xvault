@@ -14,7 +14,7 @@
  * phpMyAdmin default configuration, you can copy values from here to your
  * config.inc.php
  *
- * All directives are explained in Documentation.html
+ * All directives are explained in the documentation
  *
  * @package PhpMyAdmin
  */
@@ -62,6 +62,21 @@ $cfg['SuhosinDisableWarning'] = false;
 $cfg['McryptDisableWarning'] = false;
 
 /**
+ * Disable the default warning that is displayed if a diffrence between
+ * the MySQL library and server is detected.
+ *
+ * @global boolean $cfg['['ServerLibraryDifference_DisableWarning']']
+ */
+$cfg['ServerLibraryDifference_DisableWarning'] = false;
+
+/**
+ * Disable the default warning about MySQL reserved words in column names
+ *
+ * @global boolean $cfg['ReservedWordDisableWarning']
+ */
+$cfg['ReservedWordDisableWarning'] = false;
+
+/**
  * Show warning about incomplete translations on certain threshold.
  *
  * @global boolean $cfg['TranslationWarningThreshold']
@@ -69,8 +84,8 @@ $cfg['McryptDisableWarning'] = false;
 $cfg['TranslationWarningThreshold'] = 80;
 
 /**
- * Allows phpMyAdmin to be included from a document located on
- * another domain; setting this to true is a potential security hole
+ * Allows phpMyAdmin to be included from a other document in a frame;
+ * setting this to true is a potential security hole
  *
  * @global boolean $cfg['AllowThirdPartyFraming']
  */
@@ -131,18 +146,46 @@ $cfg['Servers'][$i]['socket'] = '';
 $cfg['Servers'][$i]['ssl'] = false;
 
 /**
+ * Path to the key file when using SSL for connecting to the MySQL server
+ *
+ * @global string $cfg['Servers'][$i]['ssl_key']
+ */
+$cfg['Servers'][$i]['ssl_key'] = null;
+
+/**
+ * Path to the cert file when using SSL for connecting to the MySQL server
+ *
+ * @global string $cfg['Servers'][$i]['ssl_cert']
+ */
+$cfg['Servers'][$i]['ssl_cert'] = null;
+
+/**
+ * Path to the CA file when using SSL for connecting to the MySQL server
+ *
+ * @global string $cfg['Servers'][$i]['ssl_ca']
+ */
+$cfg['Servers'][$i]['ssl_ca'] = null;
+
+/**
+ * Directory containing trusted SSL CA certificates in PEM format
+ *
+ * @global string $cfg['Servers'][$i]['ssl_ca_path']
+ */
+$cfg['Servers'][$i]['ssl_ca_path'] = null;
+
+/**
+ * List of allowable ciphers for SSL connections to the MySQL server
+ *
+ * @global string $cfg['Servers'][$i]['ssl_ciphers']
+ */
+$cfg['Servers'][$i]['ssl_ciphers'] = null;
+
+/**
  * How to connect to MySQL server ('tcp' or 'socket')
  *
  * @global string $cfg['Servers'][$i]['connect_type']
  */
 $cfg['Servers'][$i]['connect_type'] = 'tcp';
-
-/**
- * The PHP MySQL extension to use ('mysql' or 'mysqli')
- *
- * @global string $cfg['Servers'][$i]['extension']
- */
-$cfg['Servers'][$i]['extension'] = 'mysqli';
 
 /**
  * Use compressed protocol for the MySQL connection
@@ -159,6 +202,15 @@ $cfg['Servers'][$i]['compress'] = false;
  * @global string $cfg['Servers'][$i]['controlhost']
  */
 $cfg['Servers'][$i]['controlhost'] = '';
+
+/**
+ * MySQL control port. This permits to use a port different than the
+ * main port, for the phpMyAdmin configuration storage. If left empty,
+ * $cfg['Servers'][$i]['port'] is used instead.
+ *
+ * @global string $cfg['Servers'][$i]['controlport']
+ */
+$cfg['Servers'][$i]['controlport'] = '';
 
 /**
  * MySQL control user settings (this user must have read-only
@@ -250,8 +302,8 @@ $cfg['Servers'][$i]['LogoutURL'] = '';
 $cfg['Servers'][$i]['nopassword'] = false;
 
 /**
- * If set to a db-name, only this db is displayed in left frame
- * It may also be an array of db-names, where sorting order is relevant.
+ * If set to a db-name, only this db is displayed in navigation panel
+ * It may also be an array of db-names
  *
  * @global string $cfg['Servers'][$i]['only_db']
  */
@@ -285,7 +337,7 @@ $cfg['Servers'][$i]['pmadb'] = '';
 /**
  * Bookmark table
  *   - leave blank for no bookmark support
- *     SUGGESTED: 'pma_bookmark'
+ *     SUGGESTED: 'pma__bookmark'
  *
  * @global string $cfg['Servers'][$i]['bookmarktable']
  */
@@ -294,7 +346,7 @@ $cfg['Servers'][$i]['bookmarktable'] = '';
 /**
  * table to describe the relation between links (see doc)
  *   - leave blank for no relation-links support
- *     SUGGESTED: 'pma_relation'
+ *     SUGGESTED: 'pma__relation'
  *
  * @global string $cfg['Servers'][$i]['relation']
  */
@@ -303,7 +355,7 @@ $cfg['Servers'][$i]['relation'] = '';
 /**
  * table to describe the display fields
  *   - leave blank for no display fields support
- *     SUGGESTED: 'pma_table_info'
+ *     SUGGESTED: 'pma__table_info'
  *
  * @global string $cfg['Servers'][$i]['table_info']
  */
@@ -312,7 +364,7 @@ $cfg['Servers'][$i]['table_info'] = '';
 /**
  * table to describe the tables position for the PDF schema
  *   - leave blank for no PDF schema support
- *     SUGGESTED: 'pma_table_coords'
+ *     SUGGESTED: 'pma__table_coords'
  *
  * @global string $cfg['Servers'][$i]['table_coords']
  */
@@ -321,7 +373,7 @@ $cfg['Servers'][$i]['table_coords'] = '';
 /**
  * table to describe pages of relationpdf
  *   - leave blank if you don't want to use this
- *     SUGGESTED: 'pma_pdf_pages'
+ *     SUGGESTED: 'pma__pdf_pages'
  *
  * @global string $cfg['Servers'][$i]['pdf_pages']
  */
@@ -330,7 +382,7 @@ $cfg['Servers'][$i]['pdf_pages'] = '';
 /**
  * table to store column information
  *   - leave blank for no column comments/mime types
- *     SUGGESTED: 'pma_column_info'
+ *     SUGGESTED: 'pma__column_info'
  *
  * @global string $cfg['Servers'][$i]['column_info']
  */
@@ -339,7 +391,7 @@ $cfg['Servers'][$i]['column_info'] = '';
 /**
  * table to store SQL history
  *   - leave blank for no SQL query history
- *     SUGGESTED: 'pma_history'
+ *     SUGGESTED: 'pma__history'
  *
  * @global string $cfg['Servers'][$i]['history']
  */
@@ -348,7 +400,7 @@ $cfg['Servers'][$i]['history'] = '';
 /**
  * table to store the coordinates for Designer
  *   - leave blank for no Designer feature
- *     SUGGESTED: 'pma_designer_coords'
+ *     SUGGESTED: 'pma__designer_coords'
  *
  * @global string $cfg['Servers'][$i]['designer_coords']
  */
@@ -357,21 +409,28 @@ $cfg['Servers'][$i]['designer_coords'] = '';
 /**
  * table to store recently used tables
  *   - leave blank for no "persistent" recently used tables
- *     SUGGESTED: 'pma_recent'
+ *     SUGGESTED: 'pma__recent'
  */
 $cfg['Servers'][$i]['recent'] = '';
 
 /**
+ * table to store favorite tables
+ *   - leave blank for no favorite tables
+ *     SUGGESTED: 'pma__favorite'
+ */
+$cfg['Servers'][$i]['favorite'] = '';
+
+/**
  * table to store UI preferences for tables
  *   - leave blank for no "persistent" UI preferences
- *     SUGGESTED: 'pma_table_uiprefs'
+ *     SUGGESTED: 'pma__table_uiprefs'
  */
 $cfg['Servers'][$i]['table_uiprefs'] = '';
 
 /**
  * table to store SQL tracking
  *   - leave blank for no SQL tracking
- *     SUGGESTED: 'pma_tracking'
+ *     SUGGESTED: 'pma__tracking'
  *
  * @global string $cfg['Servers'][$i]['tracking']
  */
@@ -380,11 +439,47 @@ $cfg['Servers'][$i]['tracking'] = '';
 /**
  * table to store user preferences
  *   - leave blank to disable server storage
- *     SUGGESTED: 'pma_userconfig'
+ *     SUGGESTED: 'pma__userconfig'
  *
  * @global string $cfg['Servers'][$i]['userconfig']
  */
 $cfg['Servers'][$i]['userconfig'] = '';
+
+/**
+ * table to store users and their assignment to user groups
+ *   - leave blank to disable configurable menus feature
+ *     SUGGESTED: 'pma__users'
+ *
+ * @global string $cfg['Servers'][$i]['users']
+ */
+$cfg['Servers'][$i]['users'] = '';
+
+/**
+ * table to store allowed menu items for each user group
+ *   - leave blank to disable configurable menus feature
+ *     SUGGESTED: 'pma__usergroups'
+ *
+ * @global string $cfg['Servers'][$i]['usergroups']
+ */
+$cfg['Servers'][$i]['usergroups'] = '';
+
+/**
+ * table to store information about item hidden from navigation tree
+ *   - leave blank to disable hide/show navigation items feature
+ *     SUGGESTED: 'pma__navigationhiding'
+ *
+ * @global string $cfg['Servers'][$i]['navigationhiding']
+ */
+$cfg['Servers'][$i]['navigationhiding'] = '';
+
+/**
+ * table to store information about saved searches from query-by-example on a db
+ *   - leave blank to disable saved searches feature
+ *     SUGGESTED: 'pma__savedsearches'
+ *
+ * @global string $cfg['Servers'][$i]['savedsearches']
+ */
+$cfg['Servers'][$i]['savedsearches'] = '';
 
 /**
  * Maximum number of records saved in $cfg['Servers'][$i]['table_uiprefs'] table.
@@ -398,14 +493,6 @@ $cfg['Servers'][$i]['userconfig'] = '';
  * @global integer $cfg['Servers'][$i]['userconfig'] = '';
  */
 $cfg['Servers'][$i]['MaxTableUiprefs'] = 100;
-
-/**
- * set to false if you know that your pma_* tables are up to date.
- * This prevents compatibility checks and thereby increases performance.
- *
- * @global boolean $cfg['Servers'][$i]['verbose_check']
- */
-$cfg['Servers'][$i]['verbose_check'] = true;
 
 /**
  * whether to allow root login
@@ -436,49 +523,8 @@ $cfg['Servers'][$i]['AllowDeny']['order'] = '';
 $cfg['Servers'][$i]['AllowDeny']['rules'] = array();
 
 /**
- * Disable use of INFORMATION_SCHEMA. Is always 'true' for Drizzle.
- *
- * @see http://sf.net/support/tracker.php?aid=1849494
- * @see http://bugs.mysql.com/19588
- * @global boolean $cfg['Servers'][$i]['DisableIS']
- */
-$cfg['Servers'][$i]['DisableIS'] = true;
-
-/**
- * SQL command to fetch available databases
- *
- * by default most user will be fine with SHOW DATABASES,
- * for servers with a huge amount of databases it is possible to
- * define a command which executes faster but with less information
- *
- * especially when accessing database servers from ISPs changing this command
- * can result in a great speed improvement
- *
- * false will disable fetching databases from the server, only databases in
- * $cfg['Servers'][$i]['only_db'] will be displayed
- *
- * #user# will be replaced by current user
- *
- * examples:
- * 'SHOW DATABASES'
- * "SHOW DATABASES LIKE '#user#\_%'"
- * 'SELECT DISTINCT TABLE_SCHEMA FROM information_schema.SCHEMA_PRIVILEGES'
- * 'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA'
- * false
- *
- * @global array $cfg['Servers'][$i]['ShowDatabasesCommand']
- */
-$cfg['Servers'][$i]['ShowDatabasesCommand'] = 'SHOW DATABASES';
-
-/**
- * Whether to count tables when showing database list
- *
- * @global array $cfg['Servers'][$i]['CountTables']
- */
-$cfg['Servers'][$i]['CountTables'] = false;
-
-/**
- * Whether the tracking mechanism creates versions for tables and views automatically.
+ * Whether the tracking mechanism creates
+ * versions for tables and views automatically.
  *
  * @global bool $cfg['Servers'][$i]['tracking_version_auto_create']
  */
@@ -486,19 +532,20 @@ $cfg['Servers'][$i]['CountTables'] = false;
 $cfg['Servers'][$i]['tracking_version_auto_create'] = false;
 
 /**
- * Defines the list of statements the auto-creation uses for new versions.
+ * Defines the list of statements
+ * the auto-creation uses for new versions.
  *
  * @global string $cfg['Servers'][$i]['tracking_default_statements']
  */
 
-$cfg['Servers'][$i]['tracking_default_statements'] = 'CREATE TABLE,ALTER TABLE,DROP TABLE,RENAME TABLE,' .
-                                          'CREATE INDEX,DROP INDEX,' .
-                                          'INSERT,UPDATE,DELETE,TRUNCATE,REPLACE,' .
-                                          'CREATE VIEW,ALTER VIEW,DROP VIEW,' .
-                                          'CREATE DATABASE,ALTER DATABASE,DROP DATABASE';
+$cfg['Servers'][$i]['tracking_default_statements']
+    = 'CREATE TABLE,ALTER TABLE,DROP TABLE,RENAME TABLE,CREATE INDEX,' .
+      'DROP INDEX,INSERT,UPDATE,DELETE,TRUNCATE,REPLACE,CREATE VIEW,' .
+      'ALTER VIEW,DROP VIEW,CREATE DATABASE,ALTER DATABASE,DROP DATABASE';
 
 /**
- * Whether a DROP VIEW IF EXISTS statement will be added as first line to the log when creating a view.
+ * Whether a DROP VIEW IF EXISTS statement will be added
+ * as first line to the log when creating a view.
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_view']
  */
@@ -506,7 +553,8 @@ $cfg['Servers'][$i]['tracking_default_statements'] = 'CREATE TABLE,ALTER TABLE,D
 $cfg['Servers'][$i]['tracking_add_drop_view'] = true;
 
 /**
- * Whether a DROP TABLE IF EXISTS statement will be added as first line to the log when creating a table.
+ * Whether a DROP TABLE IF EXISTS statement will be added
+ * as first line to the log when creating a table.
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_table']
  */
@@ -514,12 +562,30 @@ $cfg['Servers'][$i]['tracking_add_drop_view'] = true;
 $cfg['Servers'][$i]['tracking_add_drop_table'] = true;
 
 /**
- * Whether a DROP DATABASE IF EXISTS statement will be added as first line to the log when creating a database.
+ * Whether a DROP DATABASE IF EXISTS statement will be added
+ * as first line to the log when creating a database.
  *
  * @global bool $cfg['Servers'][$i]['tracking_add_drop_database']
  */
 
 $cfg['Servers'][$i]['tracking_add_drop_database'] = true;
+
+/**
+ * Enables caching of TABLE STATUS outputs for specific databases on this server
+ * (in some cases TABLE STATUS can be very slow, so you may want to cache it).
+ * APC is used (if the PHP extension is available, if not, this setting is ignored
+ * silently). You have to provide StatusCacheLifetime.
+ *
+ * @global array $cfg['Servers'][$i]['StatusCacheDatabases']
+ */
+$cfg['Servers'][$i]['StatusCacheDatabases'] = array();
+
+/**
+ * Lifetime in seconds of the TABLE STATUS cache if StatusCacheDatabases is used
+ *
+ * @global integer $cfg['Servers'][$i]['StatusCacheLifetime']
+ */
+$cfg['Servers'][$i]['StatusCacheLifetime'] = 0;
 
 /**
  * Default server (0 = no default server)
@@ -537,22 +603,48 @@ $cfg['ServerDefault'] = 1;
 /*
  * Other core phpMyAdmin settings
  */
-/**
- * whether Ajax behavior is active
- *
- * @global boolean $cfg['AjaxEnable']
- */
-$cfg['AjaxEnable'] = true;
 
 /**
  * whether version check is active
  *
  * @global boolean $cfg['VersionCheck']
  */
-$cfg['VersionCheck'] = VERSION_CHECK_DEFAULT;
+if (defined('VERSION_CHECK_DEFAULT')) {
+    $cfg['VersionCheck'] = VERSION_CHECK_DEFAULT;
+} else {
+    $cfg['VersionCheck'] = true;
+}
 
 /**
- * maximum number of db's displayed in left frame and database list
+ * The url of the proxy to be used when retrieving the information about
+ * the latest version of phpMyAdmin or error reporting. You need this if
+ * the server where phpMyAdmin is installed does not have direct access to
+ * the internet.
+ * The format is: "hostname:portnumber"
+ *
+ * @global string $cfg['ProxyUrl']
+ */
+$cfg['ProxyUrl'] = "";
+
+/**
+ * The username for authenticating with the proxy. By default, no
+ * authentication is performed. If a username is supplied, Basic
+ * Authentication will be performed. No other types of authentication
+ * are currently supported.
+ *
+ * @global string $cfg['ProxyUser']
+ */
+$cfg['ProxyUser'] = "";
+
+/**
+ * The password for authenticating with the proxy.
+ *
+ * @global string $cfg['ProxyPass']
+ */
+$cfg['ProxyPass'] = "";
+
+/**
+ * maximum number of db's displayed in database list
  *
  * @global integer $cfg['MaxDbList']
  */
@@ -615,13 +707,13 @@ $cfg['ExecTimeLimit'] = 300;
 $cfg['SessionSavePath'] = '';
 
 /**
- * maximum allocated bytes ('0' for no limit)
+ * maximum allocated bytes ('-1' for no limit)
  * this is a string because '16M' is a valid value; we must put here
  * a string as the default value so that /setup accepts strings
  *
  * @global string $cfg['MemoryLimit']
  */
-$cfg['MemoryLimit'] = '0';
+$cfg['MemoryLimit'] = '-1';
 
 /**
  * mark used tables, make possible to show locked tables (since MySQL 3.23.30)
@@ -646,6 +738,13 @@ $cfg['ShowSQL'] = true;
 $cfg['RetainQueryBox'] = false;
 
 /**
+ * use CodeMirror syntax highlighting for editing SQL
+ *
+ * @global boolean $cfg['CodemirrorEnable']
+ */
+$cfg['CodemirrorEnable'] = true;
+
+/**
  * show a 'Drop database' link to normal users
  *
  * @global boolean $cfg['AllowUserDropDatabase']
@@ -654,7 +753,6 @@ $cfg['AllowUserDropDatabase'] = false;
 
 /**
  * confirm some commands that can result in loss of data
- * (see "need_confirm" in the parser)
  *
  * @global boolean $cfg['Confirm']
  */
@@ -705,21 +803,25 @@ $cfg['UseDbSearch'] = true;
 $cfg['IgnoreMultiSubmitErrors'] = false;
 
 /**
- * if set to true, PMA will show the affected rows of EACH statement on
- * multiple-statement queries. See the libraries/import.php file for
- * hard coded defaults on how many queries a statement may contain!
- *
- * @global boolean $cfg['VerboseMultiSubmit']
- */
-$cfg['VerboseMultiSubmit'] = true;
-
-/**
  * allow login to any user entered server in cookie based authentication
  *
  * @global boolean $cfg['AllowArbitraryServer']
  */
 $cfg['AllowArbitraryServer'] = false;
 
+/**
+ * if reCaptcha is enabled it needs public key to connect with the service
+ *
+ * @global string $cfg['CaptchaLoginPublicKey']
+ */
+$cfg['CaptchaLoginPublicKey'] = '';
+
+/**
+ * if reCaptcha is enabled it needs private key to connect with the service
+ *
+ * @global string $cfg['CaptchaLoginPrivateKey']
+ */
+$cfg['CaptchaLoginPrivateKey'] = '';
 
 /*******************************************************************************
  * Error handler configuration
@@ -740,139 +842,105 @@ $cfg['Error_Handler'] = array();
  */
 $cfg['Error_Handler']['display'] = false;
 
-/**
- * (NOT IMPLEMENTED YET)
- * where to log errors, false or empty to disable
- *
- * <code>
- * // EXAMPLE log to std PHP error log
- * $cfg['Error_Handler']['log'] = array(0);
- * // EXAMPLE mail errors
- * $cfg['Error_Handler']['log'] = array(1, 'admin@example.org');
- * // EXAMPLE append to specific file
- * $cfg['Error_Handler']['log'] = array(3, '/var/log/phpmyadmin_error.log');
- * </code>
- *
- * @see     http://php.net/error_log
- * @global  string $cfg['Error_Handler']['log']
- */
-//$cfg['Error_Handler']['log'] = false;
-
-/**
- * gather all errors in session to be displayed on a error reporting page
- * for viewing and/or sending to phpMyAdmin developer team
- *
- * @global boolean $cfg['Error_Handler']['gather']
- */
-$cfg['Error_Handler']['gather'] = false;
-
 
 /*******************************************************************************
- * Left frame setup
+ * Navigation panel setup
  */
 
 /**
- * use a select-based menu and display only the current tables in the left frame.
+ * maximum number of first level databases displayed in navigation panel
  *
- * @global boolean $cfg['LeftFrameLight']
+ * @global integer $cfg['FirstLevelNavigationItems']
  */
-$cfg['LeftFrameLight'] = true;
+$cfg['FirstLevelNavigationItems'] = 250;
+
+/**
+ * maximum number of items displayed in navigation panel
+ *
+ * @global integer $cfg['MaxNavigationItems']
+ */
+$cfg['MaxNavigationItems'] = 50;
 
 /**
  * turn the select-based light menu into a tree
  *
- * @global boolean $cfg['LeftFrameDBTree']
+ * @global boolean $cfg['NavigationTreeEnableGrouping']
  */
-$cfg['LeftFrameDBTree'] = true;
+$cfg['NavigationTreeEnableGrouping'] = true;
 
 /**
  * the separator to sub-tree the select-based light menu tree
  *
- * @global string $cfg['LeftFrameDBSeparator']
+ * @global string $cfg['NavigationTreeDbSeparator']
  */
-$cfg['LeftFrameDBSeparator'] = '_';
+$cfg['NavigationTreeDbSeparator'] = '_';
 
 /**
  * Which string will be used to generate table prefixes
  * to split/nest tables into multiple categories
  *
- * @global string $cfg['LeftFrameTableSeparator']
+ * @global string $cfg['NavigationTreeTableSeparator']
  */
-$cfg['LeftFrameTableSeparator']= '__';
+$cfg['NavigationTreeTableSeparator'] = '__';
 
 /**
- * How many sublevels should be displayed when splitting up tables by the above Separator
+ * How many sublevels should be displayed when splitting up tables
+ * by the above Separator
  *
- * @global integer $cfg['LeftFrameTableLevel']
+ * @global integer $cfg['NavigationTreeTableLevel']
  */
-$cfg['LeftFrameTableLevel'] = 1;
+$cfg['NavigationTreeTableLevel'] = 1;
 
 /**
- * display table comment as tooltip in left frame
+ * display logo at top of navigation panel
  *
- * @global boolean $cfg['ShowTooltip']
+ * @global boolean $cfg['NavigationDisplayLogo']
  */
-$cfg['ShowTooltip'] = true;
-
-/**
- * if ShowToolTip is enabled, this defines that table/db comments
- *
- * @global boolean $cfg['ShowTooltipAliasDB']
- */
-$cfg['ShowTooltipAliasDB'] = false;
-
-/**
- * are shown (in the left menu and db_structure) instead of table/db names.
- * Setting ShowTooltipAliasTB to 'nested' will only use the Aliases for nested
- * descriptors, not the table itself.
- *
- * @global boolean $cfg['ShowTooltipAliasTB']
- */
-$cfg['ShowTooltipAliasTB'] = false;
-
-/**
- * display logo at top of left frame
- *
- * @global boolean $cfg['LeftDisplayLogo']
- */
-$cfg['LeftDisplayLogo'] = true;
+$cfg['NavigationDisplayLogo'] = true;
 
 /**
  * where should logo link point to (can also contain an external URL)
  *
- * @global string $cfg['LeftLogoLink']
+ * @global string $cfg['NavigationLogoLink']
  */
-$cfg['LeftLogoLink'] = 'main.php';
+$cfg['NavigationLogoLink'] = 'index.php';
 
 /**
  * whether to open the linked page in the main window ('main') or
  * in a new window ('new')
  *
- * @global string $cfg['LeftLogoLinkWindow']
+ * @global string $cfg['NavigationLogoLinkWindow']
  */
-$cfg['LeftLogoLinkWindow'] = 'main';
+$cfg['NavigationLogoLinkWindow'] = 'main';
 
 /**
- * number of recently used tables displayed in the navigation frame
+ * number of recently used tables displayed in the navigation panel
  *
- * @global integer $cfg['LeftRecentTable']
+ * @global integer $cfg['NumRecentTables']
  */
-$cfg['LeftRecentTable'] = 10;
+$cfg['NumRecentTables'] = 10;
 
 /**
- * display a JavaScript table filter in the left frame
+ * number of favorite tables displayed in the navigation panel
+ *
+ * @global integer $cfg['NumFavoriteTables']
+ */
+$cfg['NumFavoriteTables'] = 10;
+
+/**
+ * display a JavaScript table filter in the navigation panel
  * when more then x tables are present
  *
- * @global boolean $cfg['LeftDisplayTableFilterMinimum']
+ * @global boolean $cfg['NavigationTreeDisplayItemFilterMinimum']
  */
-$cfg['LeftDisplayTableFilterMinimum'] = 30;
+$cfg['NavigationTreeDisplayItemFilterMinimum'] = 30;
 
 /**
- * display server choice at top of left frame
+ * display server choice at top of navigation panel
  *
- * @global boolean $cfg['LeftDisplayServers']
+ * @global boolean $cfg['NavigationDisplayServers']
  */
-$cfg['LeftDisplayServers'] = false;
+$cfg['NavigationDisplayServers'] = true;
 
 /**
  * server choice as links
@@ -882,11 +950,12 @@ $cfg['LeftDisplayServers'] = false;
 $cfg['DisplayServersList'] = false;
 
 /**
- * database choice in light as links
+ * display a JavaScript database filter in the navigation panel
+ * when more then x databases are present
  *
- * @global boolean $cfg['DisplayDatabasesList']
+ * @global boolean $cfg['NavigationTreeDisplayDbFilterMinimum']
  */
-$cfg['DisplayDatabasesList'] = 'auto';
+$cfg['NavigationTreeDisplayDbFilterMinimum'] = 30;
 
 /**
  * target of the navigation panel quick access icon
@@ -898,13 +967,19 @@ $cfg['DisplayDatabasesList'] = 'auto';
  * 'tbl_change.php' = insert row page
  * 'sql.php' = browse page
  *
- * @global string $cfg['LeftDefaultTabTable']
+ * @global string $cfg['NavigationTreeDefaultTabTable']
  */
-$cfg['LeftDefaultTabTable'] = 'tbl_structure.php';
+$cfg['NavigationTreeDefaultTabTable'] = 'tbl_structure.php';
 
+/**
+ * Disables the possibility of database expansion
+ *
+ * @global boolean $cfg['DisableDatabaseExpansion']
+ */
+$cfg['NavigationTreeDisableDatabaseExpansion'] = false;
 
 /*******************************************************************************
- * In the main frame, at startup...
+ * In the main panel, at startup...
  */
 
 /**
@@ -943,12 +1018,38 @@ $cfg['ShowChgPassword'] = true;
  */
 $cfg['ShowCreateDb'] = true;
 
-/**
- * suggest a new DB name if possible (false = keep empty)
- *
- * @global boolean $cfg['SuggestDBName']
+
+/*******************************************************************************
+ * Database structure
  */
-$cfg['SuggestDBName'] = true;
+
+/**
+ * show creation timestamp column in database structure (true|false)?
+ *
+ * @global boolean $cfg['ShowDbStructureCreation']
+ */
+$cfg['ShowDbStructureCreation'] = false;
+
+/**
+ * show last update timestamp column in database structure (true|false)?
+ *
+ * @global boolean $cfg['ShowDbStructureLastUpdate']
+ */
+$cfg['ShowDbStructureLastUpdate'] = false;
+
+/**
+ * show last check timestamp column in database structure (true|false)?
+ *
+ * @global boolean $cfg['ShowDbStructureLastCheck']
+ */
+$cfg['ShowDbStructureLastCheck'] = false;
+
+/**
+ * allow hide action columns to drop down menu in database structure (true|false)?
+ *
+ * @global boolean $cfg['HideStructureActions']
+ */
+$cfg['HideStructureActions'] = true;
 
 
 /*******************************************************************************
@@ -956,12 +1057,12 @@ $cfg['SuggestDBName'] = true;
  */
 
 /**
- * Use icons instead of text for the navigation bar buttons
- * and on right panel top menu (server db table) (true|false|'both')
+ * Use icons instead of text for the navigation bar buttons (table browse)
+ * ('text'|'icons'|'both')
  *
- * @global string $cfg['NavigationBarIconic']
+ * @global string $cfg['TableNavigationLinksMode']
  */
-$cfg['NavigationBarIconic'] = true;
+$cfg['TableNavigationLinksMode'] = 'icons';
 
 /**
  * Defines whether a user should be displayed a "show all (records)"
@@ -974,10 +1075,11 @@ $cfg['ShowAll'] = false;
 /**
  * Number of rows displayed when browsing a result set. If the result
  * set contains more rows, "Previous" and "Next".
+ * Possible values: 25,50,100,250,500
  *
  * @global integer $cfg['MaxRows']
  */
-$cfg['MaxRows'] = 30;
+$cfg['MaxRows'] = 25;
 
 /**
  * default for 'ORDER BY' clause (valid values are 'ASC', 'DESC' or 'SMART' -ie
@@ -995,6 +1097,26 @@ $cfg['Order'] = 'SMART';
  */
 $cfg['DisplayBinaryAsHex'] = true;
 
+/**
+ * grid editing: save edited cell(s) in browse-mode at once
+ *
+ * @global boolean $cfg['SaveCellsAtOnce']
+ */
+
+$cfg['SaveCellsAtOnce'] = false;
+
+/**
+ * grid editing: which action triggers it, or completely disable the feature
+ *
+ * Possible values:
+ * 'click'
+ * 'double-click'
+ * 'disabled'
+ *
+ * @global string $cfg['GridEditing']
+ */
+$cfg['GridEditing'] ='double-click';
+
 
 /*******************************************************************************
  * In edit mode...
@@ -1003,9 +1125,10 @@ $cfg['DisplayBinaryAsHex'] = true;
 /**
  * disallow editing of binary fields
  * valid values are:
- *   false  allow editing
- *   'blob' allow editing except for BLOB fields
- *   'all'  disallow editing
+ *   false    allow editing
+ *   'blob'   allow editing except for BLOB fields
+ *   'noblob' disallow editing except for BLOB fields
+ *   'all'    disallow editing
  *
  * @global string $cfg['ProtectBinary']
  */
@@ -1090,15 +1213,15 @@ $cfg['ZipDump'] = true;
 $cfg['GZipDump'] = true;
 
 /**
- * Allow for the use of bzip2 compression (requires bz2 extension)
+ * Allow for the use of bzip2 decompression (requires bz2 extension)
  *
  * @global boolean $cfg['BZipDump']
  */
 $cfg['BZipDump'] = true;
 
 /**
- * Will compress gzip/bzip2 exports on the fly without the need for much memory.
- * If you encounter problems with created gzip/bzip2 files disable this feature.
+ * Will compress gzip exports on the fly without the need for much memory.
+ * If you encounter problems with created gzip files disable this feature.
  *
  * @global boolean $cfg['CompressOnFly']
  */
@@ -1110,18 +1233,18 @@ $cfg['CompressOnFly'] = true;
  */
 
 /**
- * Use graphically less intense menu tabs
+ * How to display the menu tabs ('icons'|'text'|'both')
  *
- * @global boolean $cfg['LightTabs']
+ * @global boolean $cfg['TabsMode']
  */
-$cfg['LightTabs'] = false;
+$cfg['TabsMode'] = 'both';
 
 /**
- * Use icons instead of text for the table display of a database (true|false|'both')
+ * How to display various action links ('icons'|'text'|'both')
  *
- * @global boolean $cfg['PropertiesIconic']
+ * @global boolean $cfg['ActionLinksMode']
  */
-$cfg['PropertiesIconic'] = 'both';
+$cfg['ActionLinksMode'] = 'both';
 
 /**
  * How many columns should be used for table display of a database?
@@ -1133,17 +1256,16 @@ $cfg['PropertiesNumColumns'] = 1;
 
 /**
  * Possible values:
- * 'main.php' = the welcome page
+ * 'index.php' = the welcome page
  * (recommended for multiuser setups)
  * 'server_databases.php' = list of databases
  * 'server_status.php' = runtime information
  * 'server_variables.php' = MySQL server variables
  * 'server_privileges.php' = user management
- * 'server_processlist.php' = process list
  *
  * @global string $cfg['DefaultTabServer']
  */
-$cfg['DefaultTabServer'] = 'main.php';
+$cfg['DefaultTabServer'] = 'index.php';
 
 /**
  * Possible values:
@@ -1168,6 +1290,12 @@ $cfg['DefaultTabDatabase'] = 'db_structure.php';
  */
 $cfg['DefaultTabTable'] = 'sql.php';
 
+/**
+ * Whether to display image or text or both image and text in table row
+ * action segment. Value can be either of ``image``, ``text`` or ``both``.
+ */
+$cfg['RowActionType'] = 'both';
+
 /*******************************************************************************
  * Export defaults
  */
@@ -1188,7 +1316,7 @@ $cfg['Export']['format'] = 'sql';
 $cfg['Export']['method'] = 'quick';
 
 /**
- * none/zip/gzip/bzip2
+ * none/zip/gzip
  *
  * @global string $cfg['Export']['compression']
  */
@@ -1570,7 +1698,8 @@ $cfg['Export']['latex_structure_caption'] = 'strLatexStructure';
  *
  * @global string $cfg['Export']['latex_structure_continued_caption']
  */
-$cfg['Export']['latex_structure_continued_caption'] = 'strLatexStructure strLatexContinued';
+$cfg['Export']['latex_structure_continued_caption']
+    = 'strLatexStructure strLatexContinued';
 
 /**
  *
@@ -1610,6 +1739,20 @@ $cfg['Export']['mediawiki_structure_or_data'] = 'data';
 /**
  *
  *
+ * @global boolean $cfg['Export']['mediawiki_caption']
+ */
+
+$cfg['Export']['mediawiki_caption'] = true;
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['mediawiki_headers']
+ */
+$cfg['Export']['mediawiki_headers'] = true;
+
+/**
+ *
+ *
  * @global string $cfg['Export']['ods_structure_or_data']
  */
 $cfg['Export']['ods_structure_or_data'] = 'data';
@@ -1624,9 +1767,9 @@ $cfg['Export']['pdf_structure_or_data'] = 'data';
 /**
  *
  *
- * @global string $cfg['Export']['php_array_structure_or_data']
+ * @global string $cfg['Export']['phparray_structure_or_data']
  */
-$cfg['Export']['php_array_structure_or_data'] = 'data';
+$cfg['Export']['phparray_structure_or_data'] = 'data';
 
 /**
  *
@@ -1662,6 +1805,12 @@ $cfg['Export']['sql_include_comments'] = true;
  * @global boolean $cfg['Export']['sql_disable_fk']
  */
 $cfg['Export']['sql_disable_fk'] = false;
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['sql_views_as_tables']
+ */
+$cfg['Export']['sql_views_as_tables'] = false;
 
 /**
  *
@@ -1669,6 +1818,13 @@ $cfg['Export']['sql_disable_fk'] = false;
  * @global boolean $cfg['Export']['sql_use_transaction']
  */
 $cfg['Export']['sql_use_transaction'] = false;
+
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['sql_create_database']
+ */
+$cfg['Export']['sql_create_database'] = false;
 
 /**
  *
@@ -1703,6 +1859,27 @@ $cfg['Export']['sql_procedure_function'] = true;
 /**
  *
  *
+ * @global boolean $cfg['Export']['sql_create_table']
+ */
+$cfg['Export']['sql_create_table'] = true;
+
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['sql_create_view']
+ */
+$cfg['Export']['sql_create_view'] = true;
+
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['sql_create_trigger']
+ */
+$cfg['Export']['sql_create_trigger'] = true;
+
+/**
+ *
+ *
  * @global boolean $cfg['Export']['sql_auto_increment']
  */
 $cfg['Export']['sql_auto_increment'] = true;
@@ -1727,6 +1904,13 @@ $cfg['Export']['sql_dates'] = false;
  * @global boolean $cfg['Export']['sql_relation']
  */
 $cfg['Export']['sql_relation'] = false;
+
+/**
+ *
+ *
+ * @global boolean $cfg['Export']['sql_truncate']
+ */
+$cfg['Export']['sql_truncate'] = false;
 
 /**
  *
@@ -1769,13 +1953,6 @@ $cfg['Export']['sql_type'] = 'INSERT';
  * @global integer $cfg['Export']['sql_max_query_size']
  */
 $cfg['Export']['sql_max_query_size'] = 50000;
-
-/**
- *
- *
- * @global boolean $cfg['Export']['sql_comments']
- */
-$cfg['Export']['sql_comments'] = false;
 
 /**
  *
@@ -2083,31 +2260,6 @@ $cfg['Import']['xls_empty_rows'] = true;
  */
 $cfg['Import']['xlsx_col_names'] = false;
 
-/**
- * Link to the official MySQL documentation.
- * Be sure to include no trailing slash on the path.
- * See http://dev.mysql.com/doc/ for more information
- * about MySQL manuals and their types.
- *
- * @global string $cfg['MySQLManualBase']
- */
-$cfg['MySQLManualBase'] = 'http://dev.mysql.com/doc/refman';
-
-/**
- * Type of MySQL documentation:
- *   viewable   - "viewable online", current one used on MySQL website
- *   searchable - "Searchable, with user comments"
- *   chapters   - "HTML, one page per chapter"
- *   chapters_old - "HTML, one page per chapter", format used prior to MySQL 5.0 release
- *   big        - "HTML, all on one page"
- *   old        - old style used in phpMyAdmin 2.3.0 and sooner
- *   none       - do not show documentation links
- *
- * @global string $cfg['MySQLManualType']
- */
-$cfg['MySQLManualType'] = 'viewable';
-
-
 /*******************************************************************************
  * PDF options
  */
@@ -2163,6 +2315,7 @@ $cfg['FilterLanguages'] = '';
  *               recode)
  *      iconv  - use iconv or libiconv functions
  *      recode - use recode_string function
+ *      mb     - use mbstring extension
  *      none   - disable encoding conversion
  *
  * @global string $cfg['RecodingEngine']
@@ -2229,13 +2382,12 @@ $cfg['AvailableCharsets'] = array(
 
 /**
  * enable the left panel pointer
- * (used when LeftFrameLight is false)
  * see also LeftPointerColor
  * in layout.inc.php
  *
- * @global boolean $cfg['LeftPointerEnable']
+ * @global boolean $cfg['NavigationTreePointerEnable']
  */
-$cfg['LeftPointerEnable'] = true;
+$cfg['NavigationTreePointerEnable'] = true;
 
 /**
  * enable the browse pointer
@@ -2353,11 +2505,6 @@ $cfg['ShowBrowseComments'] = true;
 $cfg['ShowPropertyComments']= true;
 
 /**
- * save edited cell(s) in browse-mode at once.
- */
-$cfg['SaveCellsAtOnce'] = false;
-
-/**
  * shows table display direction.
  */
 $cfg['ShowDisplayDirection'] = false;
@@ -2371,7 +2518,7 @@ $cfg['RepeatCells'] = 100;
 
 /**
  * Set to true if Edit link should open the query to edit in the query window
- * (assuming JavaScript is enabled), and to false if we should edit in the right panel
+ * and to false if we should edit in the right panel
  *
  * @global boolean $cfg['EditInWindow']
  */
@@ -2426,14 +2573,14 @@ $cfg['BrowseMIME'] = true;
  *
  * @global integer $cfg['MaxExactCount']
  */
-$cfg['MaxExactCount'] = 20000;
+$cfg['MaxExactCount'] = 0;
 
 /**
  * Zero means that no row count is done for views; see the doc
  *
  * @global integer $cfg['MaxExactCountViews']
  */
-$cfg['MaxExactCountViews'] = 100000;
+$cfg['MaxExactCountViews'] = 0;
 
 /**
  * Sort table and database in natural order
@@ -2493,27 +2640,6 @@ $cfg['TitleServer'] = '@HTTP_HOST@ / @VSERVER@ | @PHPMYADMIN@';
  * @global string $cfg['TitleDefault']
  */
 $cfg['TitleDefault'] = '@HTTP_HOST@ | @PHPMYADMIN@';
-
-/**
- * show some icons for warning, error and information messages (true|false)?
- *
- * @global boolean $cfg['ErrorIconic']
- */
-$cfg['ErrorIconic'] = true;
-
-/**
- * show icons in list on main page and on menu tabs (true|false)?
- *
- * @global boolean $cfg['MainPageIconic']
- */
-$cfg['MainPageIconic'] = true;
-
-/**
- * show help button instead of Documentation text (true|false)?
- *
- * @global boolean $cfg['ReplaceHelpImg']
- */
-$cfg['ReplaceHelpImg'] = true;
 
 
 /*******************************************************************************
@@ -2600,13 +2726,6 @@ $cfg['SQLQuery']['Explain'] = true;
 $cfg['SQLQuery']['ShowAsPHP'] = true;
 
 /**
- * Validate a query (see $cfg['SQLValidator'] as well)
- *
- * @global boolean $cfg['SQLQuery']['Validate']
- */
-$cfg['SQLQuery']['Validate'] = false;
-
-/**
  * Refresh the results page
  *
  * @global boolean $cfg['SQLQuery']['Refresh']
@@ -2683,72 +2802,27 @@ $cfg['CheckConfigurationPermissions'] = true;
 $cfg['LinkLengthLimit'] = 1000;
 
 /**
+ * Additional string to allow in CSP headers.
+ */
+ $cfg['CSPAllow'] = '';
+
+/**
  * Disable the table maintenance mass operations, like optimizing or
  * repairing the selected tables of a database. An accidental execution
  * of such a maintenance task can enormously slow down a bigger database.
  */
 $cfg['DisableMultiTableMaintenance'] = false;
 
-/*******************************************************************************
- * SQL Parser Settings
- *
- * @global array $cfg['SQP']
- */
-$cfg['SQP'] = array();
-
 /**
- * Pretty-printing style to use on queries (html, text, none)
+ * Whether or not to query the user before sending the error report to
+ * the phpMyAdmin team when a JavaScript error occurs
  *
- * @global string $cfg['SQP']['fmtType']
- */
-$cfg['SQP']['fmtType'] = 'html';
-
-/**
- * Amount to indent each level (floats are valid)
+ * Available options
+ * (ask | always | never)
  *
- * @global integer $cfg['SQP']['fmtInd']
+ * @global string $cfg['SendErrorReports']
  */
-$cfg['SQP']['fmtInd'] = '1';
-
-/**
- * Units for indenting each level (CSS Types - {em, px, pt})
- *
- * @global string $cfg['SQP']['fmtIndUnit']
- */
-$cfg['SQP']['fmtIndUnit'] = 'em';
-
-
-/*******************************************************************************
- * If you wish to use the SQL Validator service, you should be aware of the
- * following:
- * All SQL statements are stored anonymously for statistical purposes.
- * Mimer SQL Validator, Copyright 2002 Upright Database Technology.
- * All rights reserved.
- *
- * @global array $cfg['SQLValidator']
- */
-$cfg['SQLValidator'] = array();
-
-/**
- * Make the SQL Validator available
- *
- * @global boolean $cfg['SQLValidator']['use']
- */
-$cfg['SQLValidator']['use'] = false;
-
-/**
- * If you have a custom username, specify it here (defaults to anonymous)
- *
- * @global string $cfg['SQLValidator']['username']
- */
-$cfg['SQLValidator']['username'] = '';
-
-/**
- * Password for username
- *
- * @global string $cfg['SQLValidator']['password']
- */
-$cfg['SQLValidator']['password'] = '';
+$cfg['SendErrorReports'] = 'ask';
 
 
 /*******************************************************************************
@@ -2765,156 +2839,30 @@ $cfg['DBG'] = array();
  */
 $cfg['DBG']['sql'] = false;
 
+/**
+ * Enable to let server present itself as demo server.
+ *
+ * @global boolean $cfg['DBG']['demo']
+ */
+$cfg['DBG']['demo'] = false;
+
 
 /*******************************************************************************
  * MySQL settings
  */
 
 /**
- * Column types;
- * VARCHAR, TINYINT, TEXT and DATE are listed first, based on estimated popularity
+ * Default functions for above defined groups
  *
- * This variable is filled in data_*.inc.php
- *
- * @global array $cfg['ColumnTypes']
+ * @global array $cfg['DefaultFunctions']
  */
-$cfg['ColumnTypes'] = array();
-
-/**
- * Attributes
- *
- * This variable is filled in data_*.inc.php
- *
- * @global array $cfg['AttributeTypes']
- */
-$cfg['AttributeTypes'] = array();
-
-
-if ($cfg['ShowFunctionFields']) {
-    /**
-     * Available functions
-     *
-     * This variable is filled in data_*.inc.php
-     *
-     * @global array $cfg['Functions']
-     */
-    $cfg['Functions'] = array();
-
-    /**
-     * Which column types will be mapped to which Group?
-     *
-     * This variable is filled in data_*.inc.php
-     *
-     * @global array $cfg['RestrictColumnTypes']
-     */
-    $cfg['RestrictColumnTypes'] = array();
-
-    /**
-     * Map above defined groups to any function
-     *
-     * This variable is filled in data_*.inc.php
-     *
-     * @global array $cfg['RestrictFunctions']
-     */
-    $cfg['RestrictFunctions'] = array();
-
-    /**
-     * Default functions for above defined groups
-     *
-     * @global array $cfg['DefaultFunctions']
-     */
-    $cfg['DefaultFunctions'] = array(
-        'FUNC_CHAR' => '',
-        'FUNC_DATE' => '',
-        'FUNC_NUMBER' => '',
-        'FUNC_SPATIAL' => 'GeomFromText',
-        'FUNC_UUID' => 'UUID',
-        'first_timestamp' => 'NOW',
-    );
-} // end if
-
-/**
- * Search operators
- *
- * @global array $cfg['NumOperators']
- */
-$cfg['NumOperators'] = array(
-   '=',
-   '>',
-   '>=',
-   '<',
-   '<=',
-   '!=',
-   'LIKE',
-   'NOT LIKE',
-   'IN (...)',
-   'NOT IN (...)',
-   'BETWEEN',
-   'NOT BETWEEN',
-);
-
-/**
- * Search operators
- *
- * @global array $cfg['TextOperators']
- */
-$cfg['TextOperators'] = array(
-   'LIKE',
-   'LIKE %...%',
-   'NOT LIKE',
-   '=',
-   '!=',
-   'REGEXP',
-   'REGEXP ^...$',
-   'NOT REGEXP',
-   "= ''",
-   "!= ''",
-   'IN (...)',
-   'NOT IN (...)',
-   'BETWEEN',
-   'NOT BETWEEN',
-);
-
-/**
- * Search operators
- *
- * @global array $cfg['EnumOperators']
- */
-$cfg['EnumOperators'] = array(
-   '=',
-   '!=',
-);
-
-/**
- * Search operators
- *
- * @global array $cfg['SetOperators']
- */
-$cfg['SetOperators'] = array(
-   'IN',
-   'NOT IN',
-);
-
-/**
- * Search operators
- *
- * @global array $cfg['NullOperators']
- */
-$cfg['NullOperators'] = array(
-   'IS NULL',
-   'IS NOT NULL',
-);
-
-/**
- * Search operators
- *
- * @global array $cfg['UnaryOperators']
- */
-$cfg['UnaryOperators'] = array(
-   'IS NULL' => 1,
-   'IS NOT NULL' => 1,
-   "= ''" => 1,
-   "!= ''" => 1
+$cfg['DefaultFunctions'] = array(
+    'FUNC_CHAR' => '',
+    'FUNC_DATE' => '',
+    'FUNC_NUMBER' => '',
+    'FUNC_SPATIAL' => 'GeomFromText',
+    'FUNC_UUID' => 'UUID',
+    'first_timestamp' => 'NOW',
 );
 
 /**

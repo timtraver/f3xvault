@@ -7,7 +7,7 @@
  * phpMyAdmin, it is not intended to be perfect code and look, only
  * shows how you can integrate this functionality in your application.
  *
- * @package PhpMyAdmin
+ * @package    PhpMyAdmin
  * @subpackage Example
  */
 
@@ -16,6 +16,8 @@ session_set_cookie_params(0, '/', '', 0);
 /* Create signon session */
 $session_name = 'SignonSession';
 session_name($session_name);
+// Uncomment and change the following line to match your $cfg['SessionSavePath']
+//session_save_path('/foobar');
 session_start();
 
 /* Was data posted? */
@@ -37,29 +39,33 @@ if (isset($_POST['user'])) {
     header('Content-Type: text/html; charset=utf-8');
     echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
     ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
-<head>
+    <!DOCTYPE HTML>
+    <html lang="en" dir="ltr">
+    <head>
     <link rel="icon" href="../favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <meta charset="utf-8" />
     <title>phpMyAdmin single signon example</title>
-</head>
-<body>
-<?php
-if (isset($_SESSION['PMA_single_signon_error_message'])) {
-    echo '<p class="error">' . $_SESSION['PMA_single_signon_error_message'] . '</p>';
-}
-?>
-<form action="signon.php" method="post">
-Username: <input type="text" name="user" /><br />
-Password: <input type="password" name="password" /><br />
-Host: (will use the one from config.inc.php by default) <input type="text" name="host" /><br />
-Port: (will use the one from config.inc.php by default) <input type="text" name="port" /><br />
-<input type="submit" />
-</form>
-</body>
-</html>
-<?php
+    </head>
+    <body>
+    <?php
+    if (isset($_SESSION['PMA_single_signon_error_message'])) {
+        echo '<p class="error">';
+        echo $_SESSION['PMA_single_signon_error_message'];
+        echo '</p>';
+    }
+    ?>
+    <form action="signon.php" method="post">
+    Username: <input type="text" name="user" /><br />
+    Password: <input type="password" name="password" /><br />
+    Host: (will use the one from config.inc.php by default)
+    <input type="text" name="host" /><br />
+    Port: (will use the one from config.inc.php by default)
+    <input type="text" name="port" /><br />
+    <input type="submit" />
+    </form>
+    </body>
+    </html>
+    <?php
 }
 ?>
