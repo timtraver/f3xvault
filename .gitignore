@@ -4,5 +4,4 @@ templates_c
 /php/libraries/sessionlog.txt
 query_errors.log
 /debug
-/htdocs/images/
 /htdocs/test2.html
