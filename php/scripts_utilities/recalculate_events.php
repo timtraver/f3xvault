@@ -20,7 +20,7 @@ include_library('event.class');
 $stmt=db_prep("
 	SELECT *
 	FROM event e
-	WHERE event_status=1
+	WHERE event_id=259
 	ORDER BY e.event_start_date
 ");
 $result=db_exec($stmt,array());
