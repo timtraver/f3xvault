@@ -14,6 +14,7 @@ IMPORTING EVENTS
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
+	Add code to validate GPS coordinates
 	
 PLANE STUFF
 	Add layup types as a function to the planes
@@ -46,6 +47,7 @@ EVENT STUFF
 		
 	Tasks
 		Task list in event info email (edited in custom email settings)
+		Ability to print pilot names when "Printing Blank Pilot Sheets"
 		
 	Audio Playlist Generation
 		Figure out how to buid local path to audio files for inclusion
@@ -55,7 +57,6 @@ EVENT STUFF
 	Sign up for text alerts about this event
 	
 	For F3K events
-		Make sure the max round times are enforced, and figure out odd ones like 1234
 		stats for Quick turnaround tasks
 		stats for making maxes on maxable rounds
 		Maybe stats for MOM percentage
@@ -84,6 +85,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X		Make sure the max round times are enforced, and figure out odd ones like 1234
 X		Allow reflights to be put in an existing group and scored with that group
 X	Change the menu icon, or include some kind of popup so they know where it is
 X		WHen adding new round use data from task list
