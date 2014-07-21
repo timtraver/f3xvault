@@ -100,11 +100,7 @@
 			
 			
 			</td>
-			<td width="5%" align="right">{if $r.event_reg_param_units=="US Dollars"}{$r.event_reg_param_cost|string_format:"$%.2f"}
-				{elseif $r.event_reg_param_units=="Euros"}{$r.event_reg_param_cost|string_format:"€%.2f"}
-				{else}{$r.event_reg_param_cost|string_format:"%.2f"}
-				{/if}
-			</td>
+			<td width="5%" align="right">{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}</td>
 			<td>{$r.event_reg_param_units}
 				{if $r.event_reg_param_qty_flag==1} Each{/if}
 			</td>
