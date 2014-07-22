@@ -2022,8 +2022,8 @@ function event_user_save() {
 		return event_edit();
 	}
 	
-	# Now lets check to see if this is the event owner, because only they can add an event user
-	if($event['pilot_id']!=$user['pilot_id']){
+	# Now lets check to see if this is the event owner, because only they can add an event user or the CD, or the admin
+	if($event['pilot_id']!=$user['pilot_id'] && $user['pilot_id']!=$event['event_cd'] && !$user['user_admin']){
 		user_message("You do not have access to give anyone else access. Only the event owner can do that.",1);
 		return event_edit();
 	}
