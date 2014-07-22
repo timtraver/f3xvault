@@ -839,4 +839,11 @@ function get_currencies(){
 	return $currencies;
 }
 
+function round_down($number,$precision){
+	$fig = (int) str_pad('1', $precision+1, '0');
+	$temp=floor($number * $fig) / $fig;
+#	print "precision=$precision,number=$number,fig=$fig,temp=$temp<br>\n";
+	return (floor($number * $fig) / $fig);
+}
+
 ?>
