@@ -96,7 +96,7 @@
 </form>
 
 <br>
-<h1 class="post-title entry-title">Audio Playlist Generation</h1>
+<h1 class="post-title entry-title">Audio Playlist Generation <font color="red">(Not Yet Implemented)</font></h1>
 <form name="audio" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_tasks_audio">
