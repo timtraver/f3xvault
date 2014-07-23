@@ -675,6 +675,635 @@ function admin_plane_cat_del() {
 	return admin_plane();
 }
 
+function admin_plane_list() {
+	global $smarty;
+
+	$discipline_id=0;
+	if(isset($_REQUEST['discipline_id'])){
+		$discipline_id=intval($_REQUEST['discipline_id']);
+		$GLOBALS['fsession']['discipline_id']=$discipline_id;
+	}elseif(isset($GLOBALS['fsession']['discipline_id'])){
+		$discipline_id=$GLOBALS['fsession']['discipline_id'];
+	}
+	$search='';
+	if(isset($_REQUEST['search']) ){
+		$search=$_REQUEST['search'];
+		$search_operator=$_REQUEST['search_operator'];
+		$GLOBALS['fsession']['search']=$_REQUEST['search'];
+		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
+	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
+		$search=$GLOBALS['fsession']['search'];
+		$search_operator=$GLOBALS['fsession']['search_operator'];
+	}
+	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
+		$search_field_entry=$_REQUEST['search_field'];
+	}elseif(isset($GLOBALS['fsession']['search_field'])){
+		$search_field_entry=$GLOBALS['fsession']['search_field'];
+	}
+	switch($search_field_entry){
+		case 'plane_manufacturer':
+			$search_field='plane_manufacturer';
+			break;
+		case 'plane_year':
+			$search_field='plane_year';
+			break;
+		case 'plane_wing_type':
+			$search_field='plane_wing_type';
+			break;
+		case 'plane_tail_type':
+			$search_field='plane_tail_type';
+			break;
+		default:
+			$search_field='plane_name';
+			break;
+	}
+	if($search=='' || $search=='%%'){
+		$search_field='plane_name';
+	}
+	$GLOBALS['fsession']['search_field']=$search_field;
+
+	# Get all plane types
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_type
+		ORDER BY plane_type_short_name
+	");
+	$plane_types=db_exec($stmt,array());
+	
+	switch($search_operator){
+		case 'contains':
+			$operator='LIKE';
+			$search="%$search%";
+			break;
+		case 'greater':
+			$operator=">=";
+			break;
+		case 'less':
+			$operator="<=";
+			break;
+		case 'exactly':
+			$operator="=";
+			break;
+		default:
+			$operator="LIKE";
+	}
+
+	# Add search options for discipline
+	$joind='';
+	$extrad='';
+	if($discipline_id!=0){
+		$joind='LEFT JOIN plane_discipline pd ON p.plane_id=pd.plane_id';
+		$extrad='AND pd.discipline_id='.$discipline_id.' AND pd.plane_discipline_status=1';
+	}
+
+	$planes=array();
+	$newplanes=array();
+	if($search!='%%' && $search!=''){
+		# Get all planes in this plane_type with the search criteria
+		$stmt=db_prep("
+			SELECT *
+			FROM plane p
+			$joind
+			WHERE $search_field $operator :search
+			$extrad
+			ORDER BY p.plane_name
+		");
+		$planes=db_exec($stmt,array("search"=>$search));
+	}else{
+		# Get all planes
+		$stmt=db_prep("
+			SELECT *
+			FROM plane p
+			LEFT JOIN country c ON p.country_id=c.country_id
+			$joind
+			WHERE 1
+			$extrad
+			ORDER BY p.plane_name
+		");
+		$planes=db_exec($stmt,array());
+	}
+	# Step through each plane to figure out if it has enough information
+	foreach($planes as $plane){
+		$total=0;
+		if($plane['plane_wingspan']!=''){$total++;}
+		if($plane['plane_length']!=0){$total++;}
+		if($plane['plane_wing_area']!=0){$total++;}
+		if($plane['plane_manufacturer']!=''){$total++;}
+		if($plane['plane_year']!=0){$total++;}
+		if($plane['plane_auw_from']!=0){$total++;}
+		if($plane['plane_website']!=''){$total++;}
+		if($plane['country_id']!=0){$total++;}
+		if($total>5){
+			$plane['plane_info']='good';
+		}else{
+			$plane['plane_info']='need';
+		}
+		$newplanes[]=$plane;
+	}
+	$planes=show_pages($newplanes,25);
+
+	foreach($planes as $key=>$plane){
+		# Lets get the plane types
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_discipline pd
+			LEFT JOIN discipline d ON pd.discipline_id=d.discipline_id
+			WHERE pd.plane_id=:plane_id
+			ORDER BY d.discipline_order
+		");
+		$disciplines=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+		$planes[$key]['disciplines']=$disciplines;
+	}
+
+	# Lets reset the discipline for the top bar if needed
+	set_disipline($discipline_id);
+
+	$smarty->assign("planes",$planes);
+	$smarty->assign("plane_types",$plane_types);
+	$smarty->assign("search",$GLOBALS['fsession']['search']);
+	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
+	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
+	$smarty->assign("disciplines",get_disciplines());
+
+	$maintpl=find_template("admin_plane_list.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_view() {
+	global $smarty;
+
+	if(isset($_REQUEST['plane_id'])){
+		$plane_id=$_REQUEST['plane_id'];
+	}else{
+		$plane_id=0;
+	}
+
+	$plane=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM plane p
+		LEFT JOIN plane_type pt ON pt.plane_type_id=p.plane_type_id
+		LEFT JOIN country c ON p.country_id=c.country_id
+		WHERE plane_id=:plane_id
+	");
+	$result=db_exec($stmt,array("plane_id"=>$plane_id));
+	$plane=$result[0];
+		
+	# Get all of the base plane attributes as well as the ones for this plane
+	$plane_attributes=array();
+	$stmt=db_prep("
+		SELECT *,pa.plane_att_id
+		FROM plane_att pa
+		LEFT JOIN plane_att_cat pc ON pc.plane_att_cat_id=pa.plane_att_cat_id
+		WHERE pa.plane_att_status=1
+		ORDER BY pc.plane_att_cat_order,pa.plane_att_order
+	");
+	$plane_attributes=db_exec($stmt,array());
+
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_att_value
+		WHERE plane_id=:plane_id
+			AND plane_att_value_status=1
+	");
+	$values=db_exec($stmt,array("plane_id"=>$plane_id));
+
+	# Step through each of the values and put those entries into the plane_attributes array
+	foreach ($plane_attributes as $key=>$att){
+		$id=$att['plane_att_id'];
+		foreach($values as $value){
+			if($value['plane_att_id']==$id){
+				$plane_attributes[$key]['plane_att_value_value']=$value['plane_att_value_value'];
+				$plane_attributes[$key]['plane_att_value_status']=$value['plane_att_value_status'];
+			}
+		}
+	}
+	
+	# Get disciplines to select for this plane
+	$disciplines=get_disciplines(0);
+	# Lets get the records that this plane has
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_discipline
+		WHERE plane_id=:plane_id
+			AND plane_discipline_status=1
+	");
+	$values=db_exec($stmt,array("plane_id"=>$plane_id));
+	# Step through each of the values and put those entries into the disciplines array
+	foreach ($disciplines as $key=>$disc){
+		$id=$disc['discipline_id'];
+		foreach($values as $value){
+			if($value['discipline_id']==$id){
+				$disciplines[$key]['discipline_selected']=1;
+			}
+		}
+	}
+	
+	# Get plane media records
+	$media=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM plane_media pm
+		WHERE pm.plane_id=:plane_id
+		AND pm.plane_media_status=1
+	");
+	$media=db_exec($stmt,array("plane_id"=>$plane_id));
+
+	$smarty->assign("plane",$plane);
+	$smarty->assign("plane_attributes",$plane_attributes);
+	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("countries",get_countries());
+	$smarty->assign("media",$media);
+
+	$maintpl=find_template("admin_plane_view.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_save() {
+	global $smarty;
+
+	$plane=array();
+	if(isset($_REQUEST['plane_id'])){
+		$plane['plane_id']=intval($_REQUEST['plane_id']);
+	}else{
+		$plane['plane_id']=0;
+	}
+	if(isset($_REQUEST['plane_name'])){
+		$plane['plane_name']=$_REQUEST['plane_name'];
+	}
+	if(isset($_REQUEST['plane_type_id'])){
+		$plane['plane_type_id']=$_REQUEST['plane_type_id'];
+	}else{
+		$plane['plane_type_id']=0;
+	}
+	if(isset($_REQUEST['plane_wingspan'])){
+		$plane['plane_wingspan']=$_REQUEST['plane_wingspan'];
+	}else{
+		$plane['plane_wingspan']=0;
+	}
+	if(isset($_REQUEST['plane_wingspan_units'])){
+		$plane['plane_wingspan_units']=$_REQUEST['plane_wingspan_units'];
+	}else{
+		$plane['plane_wingspan_units']='';
+	}
+	if(isset($_REQUEST['plane_length'])){
+		$plane['plane_length']=$_REQUEST['plane_length'];
+	}else{
+		$plane['plane_length']=0;
+	}
+	if(isset($_REQUEST['plane_length_units'])){
+		$plane['plane_length_units']=$_REQUEST['plane_length_units'];
+	}else{
+		$plane['plane_length_units']='';
+	}
+	if(isset($_REQUEST['plane_root_chord_length'])){
+		$plane['plane_root_chord_length']=$_REQUEST['plane_root_chord_length'];
+	}else{
+		$plane['plane_root_chord_length']=0;
+	}
+	if(isset($_REQUEST['plane_auw_from'])){
+		$plane['plane_auw_from']=$_REQUEST['plane_auw_from'];
+	}else{
+		$plane['plane_auw_from']=0;
+	}
+	if(isset($_REQUEST['plane_auw_units'])){
+		$plane['plane_auw_units']=$_REQUEST['plane_auw_units'];
+	}else{
+		$plane['plane_auw_units']='';
+	}
+	if(isset($_REQUEST['plane_auw_to'])){
+		$plane['plane_auw_to']=$_REQUEST['plane_auw_to'];
+	}else{
+		$plane['plane_auw_to']=0;
+	}
+	if(isset($_REQUEST['plane_wing_area'])){
+		$plane['plane_wing_area']=$_REQUEST['plane_wing_area'];
+	}else{
+		$plane['plane_wing_area']=0;
+	}
+	if(isset($_REQUEST['plane_tail_area'])){
+		$plane['plane_tail_area']=$_REQUEST['plane_tail_area'];
+	}else{
+		$plane['plane_tail_area']=0;
+	}
+	if(isset($_REQUEST['plane_wing_area_units'])){
+		$plane['plane_wing_area_units']=$_REQUEST['plane_wing_area_units'];
+	}else{
+		$plane['plane_wing_area_units']='';
+	}
+	if(isset($_REQUEST['plane_manufacturer'])){
+		$plane['plane_manufacturer']=$_REQUEST['plane_manufacturer'];
+	}else{
+		$plane['plane_manufacturer']='';
+	}
+	if(isset($_REQUEST['plane_year'])){
+		$plane['plane_year']=$_REQUEST['plane_year'];
+	}else{
+		$plane['plane_year']='';
+	}
+	if(isset($_REQUEST['plane_website'])){
+		$plane['plane_website']=$_REQUEST['plane_website'];
+	}else{
+		$plane['plane_website']='';
+	}
+	if(isset($_REQUEST['country_id'])){
+		$plane['country_id']=$_REQUEST['country_id'];
+	}else{
+		$plane['country_id']=0;
+	}
+
+	if($plane['plane_name']=='' || !preg_match("/\S/",$plane['plane_name'])){
+		user_message("You must enter a plane name in the Plane Name field.",1);
+		return admin_plane_view();
+	}
+
+	if($plane['plane_id']==0){
+		# Create a new plane record
+		unset($plane['plane_id']);
+		$stmt=db_prep("
+			INSERT INTO plane
+			SET plane_name=:plane_name,
+				plane_type_id=:plane_type_id,
+				plane_wingspan=:plane_wingspan,
+				plane_wingspan_units=:plane_wingspan_units,
+				plane_length=:plane_length,
+				plane_length_units=:plane_length_units,
+				plane_root_chord_length=:plane_root_chord_length,
+				plane_wing_area=:plane_wing_area,
+				plane_tail_area=:plane_tail_area,
+				plane_wing_area_units=:plane_wing_area_units,
+				plane_manufacturer=:plane_manufacturer,
+				plane_year=:plane_year,
+				plane_website=:plane_website,
+				plane_auw_from=:plane_auw_from,
+				plane_auw_units=:plane_auw_units,
+				plane_auw_to=:plane_auw_to,
+				country_id=:country_id
+		");
+		$result=db_exec($stmt,$plane);
+		# Set the old plane_id back for the rest of the routine
+		$plane['plane_id']=$GLOBALS['last_insert_id'];
+		$_REQUEST['plane_id']=$plane['plane_id'];
+	}else{
+		# Update the existing record
+		$stmt=db_prep("
+			UPDATE plane
+			SET plane_name=:plane_name,
+				plane_type_id=:plane_type_id,
+				plane_wingspan=:plane_wingspan,
+				plane_wingspan_units=:plane_wingspan_units,
+				plane_length=:plane_length,
+				plane_length_units=:plane_length_units,
+				plane_root_chord_length=:plane_root_chord_length,
+				plane_wing_area=:plane_wing_area,
+				plane_tail_area=:plane_tail_area,
+				plane_wing_area_units=:plane_wing_area_units,
+				plane_manufacturer=:plane_manufacturer,
+				plane_year=:plane_year,
+				plane_website=:plane_website,
+				plane_auw_from=:plane_auw_from,
+				plane_auw_units=:plane_auw_units,
+				plane_auw_to=:plane_auw_to,
+				country_id=:country_id
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,$plane);
+	}
+
+	# Now save the attributes that this plane has
+
+	# Lets clear out all of the attribute values that this plane has
+	$stmt=db_prep("
+		UPDATE plane_att_value
+		SET plane_att_value_status=0
+		WHERE plane_id=:plane_id
+	");
+	$result=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+	
+	# Now lets step through the attributes and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^plane_att_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_att_value pav
+			WHERE plane_id=:plane_id
+				AND plane_att_id=:plane_att_id
+		");
+		$result=db_exec($stmt,array("plane_att_id"=>$id,"plane_id"=>$plane['plane_id']));
+		if($result){
+			# There is already a record, so lets update it
+			$plane_att_value_id=$result[0]['plane_att_value_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE plane_att_value
+					SET plane_att_value_value=:value,
+						plane_att_value_status=1
+					WHERE plane_att_value_id=:plane_att_value_id
+				");
+				$result2=db_exec($stmt,array("value"=>$value,"plane_att_value_id"=>$plane_att_value_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO plane_att_value
+					SET plane_id=:plane_id,
+						plane_att_id=:plane_att_id,
+						plane_att_value_value=:value,
+						plane_att_value_status=1
+				");
+				$result2=db_exec($stmt,array("plane_id"=>$plane['plane_id'],"plane_att_id"=>$id,"value"=>$value));
+			}
+		}
+	}
+	# Lets clear out all of the discipline values that this plane has
+	$stmt=db_prep("
+		UPDATE plane_discipline
+		SET plane_discipline_status=0
+		WHERE plane_id=:plane_id
+	");
+	$result=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
+	
+	# Now lets step through the disciplines and see if they are turned on and add them or update them
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^disc_(\d+)/",$key,$match)){
+				$id=$match[1];
+				if($value=='On' || $value=='on'){
+					$value=1;
+				}
+		}else{
+			continue;
+		}
+
+		# ok, lets see if a record with that id exists
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_discipline
+			WHERE plane_id=:plane_id
+				AND discipline_id=:discipline_id
+		");
+		$result=db_exec($stmt,array("discipline_id"=>$id,"plane_id"=>$plane['plane_id']));
+		if($result){
+			# There is already a record, so lets update it
+			$plane_discipline_id=$result[0]['plane_discipline_id'];
+			# Only update it if the value is not null
+			if($value!=''){
+				$stmt=db_prep("
+					UPDATE plane_discipline
+					SET plane_discipline_status=1
+					WHERE plane_discipline_id=:plane_discipline_id
+				");
+				$result2=db_exec($stmt,array("plane_discipline_id"=>$plane_discipline_id));
+			}
+		}else{
+			# There is not a record so lets make one
+			if($value!=''){
+				$stmt=db_prep("
+					INSERT INTO plane_discipline
+					SET plane_id=:plane_id,
+						discipline_id=:discipline_id,
+						plane_discipline_status=1
+				");
+				$result2=db_exec($stmt,array("plane_id"=>$plane['plane_id'],"discipline_id"=>$id));
+			}
+		}
+	}
+	user_message("Plane Information Saved");
+	# Lets see if they came from somewhere else to add this plane
+	return admin_plane_view();
+}
+function admin_plane_compare() {
+	global $smarty;
+	global $user;
+
+	# Lets get each of the planes selected and show a summary
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/plane_(\d+)/",$key,$match)){
+			$id=$match[1];
+			$planes[$id]=array();
+		}
+	}
+	# Now we've got the list of planes, so lets get their summaries
+	foreach($planes as $plane_id=>$p){
+		$stmt=db_prep("
+			SELECT *,p.plane_id
+			FROM plane p
+			LEFT JOIN country c ON p.country_id=c.country_id
+			WHERE p.plane_id=:plane_id
+		");
+		$plane=db_exec($stmt,array("plane_id"=>$plane_id));
+		
+		# Get the attributes list
+		$plane_attributes=array();
+		$stmt=db_prep("
+			SELECT *,pa.plane_att_id
+			FROM plane_att pa
+			LEFT JOIN plane_att_cat pc ON pc.plane_att_cat_id=pa.plane_att_cat_id
+			WHERE pa.plane_att_status=1
+			ORDER BY pc.plane_att_cat_order,pa.plane_att_order
+		");
+		$plane_attributes=db_exec($stmt,array());
+	
+		$stmt=db_prep("
+			SELECT *
+			FROM plane_att_value
+			WHERE plane_id=:plane_id
+				AND plane_att_value_status=1
+		");
+		$values=db_exec($stmt,array("plane_id"=>$plane_id));
+	
+		# Step through each of the values and put those entries into the plane_attributes array
+		foreach ($plane_attributes as $key=>$att){
+			$id=$att['plane_att_id'];
+			foreach($values as $value){
+				if($value['plane_att_id']==$id){
+					$plane_attributes[$key]['plane_att_value_value']=$value['plane_att_value_value'];
+					$plane_attributes[$key]['plane_att_value_status']=$value['plane_att_value_status'];
+				}
+			}
+		}
+		
+		$planes[$plane_id]=$plane[0];
+		$planes[$plane_id]['plane_attributes']=$plane_attributes;		
+	}
+
+	$smarty->assign("planes",$planes);
+
+	$maintpl=find_template("admin_plane_compare.tpl");
+	return $smarty->fetch($maintpl);
+}
+function admin_plane_merge() {
+	# Function to merge the planes into the selected primary plane
+	global $smarty;
+
+	# Lets get each of the planes selected and show a summary
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/plane_(\d+)/",$key,$match)){
+			$id=$match[1];
+			$planes[$id]=array();
+		}
+	}
+	# now lets get which ID was selected as the primary
+	$primary_id=$_REQUEST['make_primary'];
+	
+	# OK, lets step through the planes and change everything to the primary ID
+	foreach($planes as $plane_id=>$p){
+		if($plane_id==$primary_id){
+			continue;
+		}
+		# OK, lets move the pilot planes
+		$stmt=db_prep("
+			UPDATE pilot_plane
+			SET plane_id=:primary_id
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"plane_id"=>$plane_id));
+		
+		# OK, lets move the plane comments
+		$stmt=db_prep("
+			UPDATE plane_comment
+			SET plane_id=:primary_id
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"plane_id"=>$plane_id));
+		
+		# OK, lets move the event_pilot_planes
+		$stmt=db_prep("
+			UPDATE event_pilot
+			SET plane_id=:primary_id
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"plane_id"=>$plane_id));
+		
+		# Move any media to new plane
+		$stmt=db_prep("
+			UPDATE plane_media
+			SET plane_id=:primary_id
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("primary_id"=>$primary_id,"plane_id"=>$plane_id));
+		
+		
+		# And finally delete that older plane
+		$stmt=db_prep("
+			DELETE FROM plane
+			WHERE plane_id=:plane_id
+		");
+		$result=db_exec($stmt,array("plane_id"=>$plane_id));
+	}
+
+	user_message("Merged selected pilots into plane id $primary_id");
+	return admin_plane_list();
+}
+
 function admin_activity() {
 	global $smarty;
 	global $user;
