@@ -515,7 +515,16 @@ function check_permission() {ldelim}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
+		{$previous=0}
+		{$diff_to_lead=0}
+		{$diff=0}
 		{foreach $t.pilots as $e}
+		{if $e.total>$previous}
+			{$previous=$e.total}
+		{else}
+			{$diff=$previous-$e.total}
+			{$diff_to_lead=$diff_to_lead+$diff}
+		{/if}
 		{$event_pilot_id=$e.event_pilot_id}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$e.overall_rank}</td>

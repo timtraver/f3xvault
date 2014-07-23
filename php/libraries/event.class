@@ -1400,8 +1400,7 @@ class Event {
 			if($max_points==0){
 				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=0;
 			}else{
-				$accuracy_string="%02.{$this->event_calc_accuracy}f";
-				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=sprintf($accuracy_string,($subtotals[$event_pilot_id]['total']/$max_points)*100);
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=round_down(($subtotals[$event_pilot_id]['total']/$max_points)*100,$this->event_calc_accuracy);
 			}
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;
@@ -1476,8 +1475,7 @@ class Event {
 				if($max_points==0){
 					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage']=0;
 				}else{
-					$accuracy_string="%02.{$this->event_calc_accuracy}f";
-					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage']=sprintf($accuracy_string,($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']/$max_points)*100);
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage']=round_down(($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']/$max_points)*100,$this->event_calc_accuracy);
 				}
 				$flyoff_totals[$flyoff_number]['total_rounds']=$flyoff_round_count[$flyoff_number];
 				$flyoff_totals[$flyoff_number]['pilots'][]=$flyoff_subtotals[$flyoff_number][$event_pilot_id];
