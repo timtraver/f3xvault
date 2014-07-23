@@ -664,6 +664,9 @@ function log_action($id){
 	if(!$id){
 		return;
 	}
+	if(!$GLOBALS['user']['user_id']){
+		return;
+	}
 	$stmt=db_prep("
 		INSERT INTO site_log
 		SET site_log_date=now(),
