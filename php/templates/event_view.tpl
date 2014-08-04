@@ -922,7 +922,7 @@ function check_permission() {ldelim}
 				<td nowrap>
 					{include file="event_view_pilot_popup.tpl"}
 				</td>
-				<td>{$p.event_pilot_round_flight_seconds|string_format:"%06.3f"}</td>
+				<td>{$p.event_pilot_round_flight_seconds|string_format:$p.accuracy_string}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
 			{if $rank==20}{break}{/if}

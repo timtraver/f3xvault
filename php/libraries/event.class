@@ -1867,7 +1867,8 @@ class Event {
 							$temp_speeds[]=array(
 								"event_pilot_id"=>$event_pilot_id,
 								"event_round_number"=>$event_round_number,
-								"event_pilot_round_flight_seconds"=>$p['event_pilot_round_flight_seconds']
+								"event_pilot_round_flight_seconds"=>$p['event_pilot_round_flight_seconds'],
+								"accuracy_string"=>$f['accuracy_string']
 							);
 						}
 					}
