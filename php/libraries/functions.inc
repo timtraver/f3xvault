@@ -843,10 +843,14 @@ function get_currencies(){
 }
 
 function round_down($number,$precision){
-	$fig = (int) str_pad('1', $precision+1, '0');
-	$temp=floor($number * $fig) / $fig;
-#	print "precision=$precision,number=$number,fig=$fig,temp=$temp<br>\n";
-	return (floor($number * $fig) / $fig);
+    $numberpart=explode(".",$number);
+    $numberpart[1]=substr_replace($numberpart[1],".",$precision,0);
+    if($numberpart[0]>=0){
+    	$numberpart[1]=floor($numberpart[1]);
+    }else{
+    	$numberpart[1]=ceil($numberpart[1]);
+    }
+	$ceil_number= array($numberpart[0],$numberpart[1]);
+	return implode(".",$ceil_number);
 }
-
 ?>
