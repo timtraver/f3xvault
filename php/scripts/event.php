@@ -3468,7 +3468,7 @@ function event_draw_edit() {
 	$max_groups_p=floor(count($draw_pilots)/2);
 	
 
-	# Lets create the event round array so that we can showthe full draw for editing manually
+	# Lets create the event round array so that we can show the full draw for editing manually
 	# Now lets get the draw rounds
 	$drawrounds=array();
 	$sort_string='';
@@ -3525,12 +3525,23 @@ function event_draw_edit() {
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
 							$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 						}
+						
+						# Now lets add any pilots that are considered active, but are not yet in a draw
+						foreach($draw_pilots as $dp){
+							$temp_event_pilot_id=$dp['event_pilot_id'];
+							if(!isset($e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$temp_event_pilot_id])){
+								# Lets set this pilot in the array as a blank
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$temp_event_pilot_id]['flight_type_id']=$flight_type_id;
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$temp_event_pilot_id]['event_pilot_round_flight_group']='';
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$temp_event_pilot_id]['event_pilot_round_flight_order']='';
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$temp_event_pilot_id]['event_pilot_round_flight_lane']='';
+							}
+						}
 					}
 				}
 			}	
 		}
 	}
-
 
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
@@ -4276,7 +4287,38 @@ function event_draw_manual_save(){
 
 	$event_id=intval($_REQUEST['event_id']);
 	$event_draw_id=intval($_REQUEST['event_draw_id']);
-			
+	
+	# Get general draw info
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw ed
+		LEFT JOIN flight_type ft ON ed.flight_type_id=ft.flight_type_id
+		WHERE ed.event_draw_id=:event_draw_id
+	");
+	$result=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+	$d=$result[0];
+	
+	switch($d['flight_type_code']){
+		case 'f3b_distance':
+			$group_type='numeric';
+			$lane_type='alpha';
+			break;
+		case 'f3b_duration':
+		case 'f3j_duration':
+		case 'td_duration':
+			$group_type='alpha';
+			$lane_type='numeric';
+			break;
+		default:
+			if(preg_match("/^f3k\_/",$this->draw['flight_type_code'])){
+				$group_type='alpha';
+				$lane_type='none';
+			}else{
+				$group_type='alpha';
+				$lane_type='numeric';
+			}
+	}
+
 	# ok, lets make the array of manual changes
 	$groups=array();
 	$orders=array();
@@ -4315,6 +4357,38 @@ function event_draw_manual_save(){
 		$event_pilot_id=$round['event_pilot_id'];
 		$drawrounds[$round_number][$event_pilot_id]=$round;
 	}
+	# Now lets add any missing pilots to this array
+	foreach($rounds as $round){
+		$round_number=$round['event_draw_round_number'];
+		foreach($groups[$round_number] as $event_pilot_id=>$p){
+			if(!isset($drawrounds[$round_number][$event_pilot_id])){
+				$drawrounds[$round_number][$event_pilot_id]=array(
+					"event_draw_round_id"=>0,
+					"event_draw_id"=>$round['event_draw_id'],
+					"event_draw_round_number"=>$round_number,
+					"event_pilot_id"=>$event_pilot_id,
+					"event_draw_round_group"=>'',
+					"event_draw_round_order"=>'',
+					"event_draw_round_lane"=>'',
+					"event_draw_round_status"=>1
+				);
+			}
+		}
+		foreach($orders[$round_number] as $event_pilot_id=>$p){
+			if(!isset($drawrounds[$round_number][$event_pilot_id])){
+				$drawrounds[$round_number][$event_pilot_id]=array(
+					"event_draw_round_id"=>0,
+					"event_draw_id"=>$round['event_draw_id'],
+					"event_draw_round_number"=>$round_number,
+					"event_pilot_id"=>$event_pilot_id,
+					"event_draw_round_group"=>'',
+					"event_draw_round_order"=>'',
+					"event_draw_round_lane"=>'',
+					"event_draw_round_status"=>1
+				);
+			}
+		}
+	}
 	$group_labels=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 
 	# Now lets step through our entered round fields and see if any of them have changed
@@ -4325,14 +4399,43 @@ function event_draw_manual_save(){
 			foreach($r as $event_pilot_id=>$group){
 				# Now lets see if its different from the original
 				if($group!=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_group']){
-					# This one has changed, so lets update it
-					$stmt=db_prep("
-						UPDATE event_draw_round
-						SET event_draw_round_group=:group
-						WHERE event_draw_round_id=:event_draw_round_id
-					");
-					$result=db_exec($stmt,array("group"=>strtoupper($group),"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']));
-					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_lane']!=''){
+					$created_new=0;
+					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']!=0){
+						# This one has changed, so lets update it
+						$stmt=db_prep("
+							UPDATE event_draw_round
+							SET event_draw_round_group=:group
+							WHERE event_draw_round_id=:event_draw_round_id
+						");
+						$result=db_exec($stmt,array(
+							"group"=>strtoupper($group),
+							"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']
+						));
+					}else{
+						# Create a new record
+						$stmt=db_prep("
+							INSERT INTO event_draw_round
+							SET event_draw_id=:event_draw_id,
+								event_draw_round_number=:event_draw_round_number,
+								event_pilot_id=:event_pilot_id,
+								event_draw_round_group=:event_draw_round_group,
+								event_draw_round_order=:event_draw_round_order,
+								event_draw_round_lane=:event_draw_round_lane,
+								event_draw_round_status=1
+						");
+						$result=db_exec($stmt,array(
+							"event_draw_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_id'],
+							"event_draw_round_number"=>$round_number,
+							"event_pilot_id"=>$event_pilot_id,
+							"event_draw_round_group"=>strtoupper($group),
+							"event_draw_round_order"=>'',
+							"event_draw_round_lane"=>''
+						));
+						$event_draw_round_id=$GLOBALS['last_insert_id'];
+						$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']=$event_draw_round_id;
+						$created_new=1;
+					}
+					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_lane']!='' || $created_new==1){
 						$group_updated[$round_number][$group]=$drawrounds[$round_number][$event_pilot_id];
 						#Add where they came from to get recalculated lanes as well
 						$oldgroup=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_group'];
@@ -4344,12 +4447,6 @@ function event_draw_manual_save(){
 		# Now lets go through the groups that were updated and update the lanes
 		foreach($group_updated as $round_number=>$g){
 			foreach($g as $group=>$round){
-				# Lets set the type of order value to alpha or numeric
-				if(preg_match("/\d/",$round['event_draw_round_lane'])){
-					$type='numeric';
-				}else{
-					$type='alpha';
-				}
 				# Lets get the pilots in that group
 				$stmt=db_prep("
 					SELECT *
@@ -4363,7 +4460,7 @@ function event_draw_manual_save(){
 				# Now lets update them
 				$count=1;
 				foreach($result as $row){
-					if($type=='numeric'){
+					if($lane_type=='numeric'){
 						$lane=$count;
 					}else{
 						$lane=$group_labels[$count-1];
@@ -4374,7 +4471,7 @@ function event_draw_manual_save(){
 						WHERE event_draw_round_id=:event_draw_round_id
 					");
 					$result=db_exec($stmt,array("lane"=>$lane,"event_draw_round_id"=>$row['event_draw_round_id']));
-					$count++;	
+					$count++;
 				}
 			}
 		}
@@ -4386,17 +4483,43 @@ function event_draw_manual_save(){
 				# Now lets see if its different from the original
 				if($order!=$drawrounds[$round_number][$event_pilot_id]['event_draw_round_order']){
 					# This one has changed, so lets update it
-					$stmt=db_prep("
-						UPDATE event_draw_round
-						SET event_draw_round_order=:order
-						WHERE event_draw_round_id=:event_draw_round_id
-					");
-					$result=db_exec($stmt,array("order"=>$order,"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']));
+					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']!=0){
+						$stmt=db_prep("
+							UPDATE event_draw_round
+							SET event_draw_round_order=:order
+							WHERE event_draw_round_id=:event_draw_round_id
+						");
+						$result=db_exec($stmt,array(
+							"order"=>$order,
+							"event_draw_round_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']
+						));
+					}else{
+						# Create a new record
+						$stmt=db_prep("
+							INSERT INTO event_draw_round
+							SET event_draw_id=:event_draw_id,
+								event_draw_round_number=:event_draw_round_number,
+								event_pilot_id=:event_pilot_id,
+								event_draw_round_group=:event_draw_round_group,
+								event_draw_round_order=:event_draw_round_order,
+								event_draw_round_lane=:event_draw_round_lane,
+								event_draw_round_status=1
+						");
+						$result=db_exec($stmt,array(
+							"event_draw_id"=>$drawrounds[$round_number][$event_pilot_id]['event_draw_id'],
+							"event_draw_round_number"=>$round_number,
+							"event_pilot_id"=>$event_pilot_id,
+							"event_draw_round_group"=>'',
+							"event_draw_round_order"=>$order,
+							"event_draw_round_lane"=>''
+						));
+						$event_draw_round_id=$GLOBALS['last_insert_id'];
+						$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']=$event_draw_round_id;
+					}
 				}
 			}
 		}
 	}
-	
 	
 	user_message("Saved Event Draw Manual Edits.");
 	return event_draw_edit();
