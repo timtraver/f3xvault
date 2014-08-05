@@ -83,6 +83,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Added "Current Event Standing" sort value
 X		Make a way to add drop values and set the standards for each type of contest
 X		Make sure the max round times are enforced, and figure out odd ones like 1234
 X		Allow reflights to be put in an existing group and scored with that group

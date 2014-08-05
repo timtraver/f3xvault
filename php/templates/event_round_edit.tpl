@@ -266,6 +266,7 @@ function toggle(element,tog) {ldelim}
 				<option value="entry_order"{if $sort_by=='entry_order'} SELECTED{/if}>Entry Order</option>
 				<option value="bib_order"{if $sort_by=='bib_order'} SELECTED{/if}>Bib Order</option>
 				<option value="flight_order"{if $sort_by=='flight_order'} SELECTED{/if}>Round Flight Order</option>
+				<option value="current_standing"{if $sort_by=='current_standing'} SELECTED{/if}>Current Event Standing</option>
 				<option value="group_alphabetical_first"{if $sort_by=='group_alphabetical_first'} SELECTED{/if}>Group, then Alphabetical Order - First Name</option>
 				<option value="group_alphabetical_last"{if $sort_by=='group_alphabetical_last'} SELECTED{/if}>Group, then Alphabetical Order - Last Name</option>
 				<option value="group_entry"{if $sort_by=='group_entry'} SELECTED{/if}>Group, then Entry Order</option>

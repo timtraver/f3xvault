@@ -424,6 +424,8 @@ class Event {
 			return;
 		}
 		switch($sort_by){
+			case 'current_standing':
+				break;
 			case 'entry_order':
 				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_entry_order';
 				break;
@@ -688,6 +690,21 @@ class Event {
 				return;
 			}
 		}
+		# Lets put them in current standing order if desired
+		if($sort_by == 'current_standing'){
+			$this->calculate_event_totals();
+			# ok, now lets step through each round and create a new rounds array
+			foreach($this->rounds as $event_round_number=>$r){
+				foreach($r['flights'] as $flight_type_id=>$ft){
+					$newpilots=array();
+					foreach($this->totals['pilots'] as $tp){
+						$total_event_pilot_id=$tp['event_pilot_id'];
+						$newpilots[$total_event_pilot_id]=$ft['pilots'][$total_event_pilot_id];
+					}
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$newpilots;
+				}
+			}
+		}
 		sub_trace();
 		return;
 	}
@@ -695,6 +712,12 @@ class Event {
 		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
 		$pilots=array();
 		$this->get_draws();
+
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
 		
 		foreach($this->draws as $event_draw_id=>$d){
 			if($d['event_draw_active']!=1){
@@ -789,6 +812,19 @@ class Event {
 		# Set the flyoff round default
 		if($_REQUEST['flyoff_round']==1 || $this->tasks[$event_round_number]['event_task_round_type']=='flyoff'){
 			$this->rounds[$event_round_number]['event_round_flyoff']=1;
+		}
+		# Lets put them in current standing order if desired
+		if($sort_by == 'current_standing'){
+			$this->calculate_event_totals();
+			# ok, now lets step through the round and create a new rounds array
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				$newpilots=array();
+				foreach($this->totals['pilots'] as $tp){
+					$total_event_pilot_id=$tp['event_pilot_id'];
+					$newpilots[$total_event_pilot_id]=$pilots[$flight_type_id];
+				}
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$newpilots;
+			}
 		}
 		return;
 	}
