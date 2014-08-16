@@ -4310,7 +4310,7 @@ function event_draw_manual_save(){
 			$lane_type='numeric';
 			break;
 		default:
-			if(preg_match("/^f3k\_/",$this->draw['flight_type_code'])){
+			if(preg_match("/^f3k\_/",$d['flight_type_code'])){
 				$group_type='alpha';
 				$lane_type='none';
 			}else{
