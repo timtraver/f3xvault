@@ -845,10 +845,14 @@ function get_currencies(){
 function round_down($number,$precision){
     $numberpart=explode(".",$number);
     $numberpart[1]=substr_replace($numberpart[1],".",$precision,0);
+    $padded='';
+	if(preg_match("/^(0+)/",$numberpart[1],$match)){
+    	$padded=$match[1];
+    }
     if($numberpart[0]>=0){
-    	$numberpart[1]=floor($numberpart[1]);
+    	$numberpart[1]=$padded.floor($numberpart[1]);
     }else{
-    	$numberpart[1]=ceil($numberpart[1]);
+    	$numberpart[1]=$padded.ceil($numberpart[1]);
     }
 	$ceil_number= array($numberpart[0],$numberpart[1]);
 	return implode(".",$ceil_number);
