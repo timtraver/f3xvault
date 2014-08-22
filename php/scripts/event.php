@@ -4564,6 +4564,7 @@ function event_import() {
 			# Lets convert the commas into periods now
 			foreach($line_array as $key=>$la){
 				$temp=preg_replace("/\,/",'.',$la);
+				$temp=preg_replace("/\"/",'',$temp);
 				$line_array[$key]=$temp;
 			}
 			# Lets see what the columns are
