@@ -1189,7 +1189,6 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=0;
 						continue;
 					}
-					
 					$sub=round_down($p['event_pilot_round_flight_score'],$this->event_calc_accuracy);
 					$penalty=$p['event_pilot_round_flight_penalty'];
 					# Lets step through each of the reflights and see if there is a higher score
@@ -1325,7 +1324,6 @@ class Event {
 				$count++;
 			}
 		}
-		
 		# Lets sort each of the drop arrays 
 		foreach($subtotals as $event_pilot_id=>$temp){
 			# sort the dropped round totals
@@ -1523,7 +1521,6 @@ class Event {
 			}
 			print "<!-- flyoff_has_tie ($flyoff_number) =$flyoff_has_tie -->\n";
 		}
-
 		# Lets get the round drops
 		foreach($this->options as $o){
 			if(preg_match("/\_drop\d/",$o['event_type_option_code']) && !preg_match("/flyoff\_drop/",$o['event_type_option_code'])){
@@ -1887,7 +1884,7 @@ class Event {
 		if(count($this->rounds)==0){
 			$this->get_rounds();
 		}
-		if(count($this->totals['pilots'])==0){
+		if(count($this->totals['pilots'])==0 && count($this->flyoff_totals)==0){
 			$this->calculate_event_totals();
 		}
 		$temp_speeds=array();
@@ -1916,7 +1913,7 @@ class Event {
 	}
 	function get_top_distance(){
 		# Function to get the top distance laps of the contest
-		if(count($this->totals['pilots'])==0){
+		if(count($this->totals['pilots'])==0 && count($this->flyoff_totals)==0){
 			$this->calculate_event_totals();
 		}
 		$temp_laps=array();
