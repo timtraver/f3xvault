@@ -155,15 +155,16 @@ function check_permission() {ldelim}
 					<font color="red"><b>Registration Currently Closed</b></font>
 				{else}
 					<font color="green"><b>Registration Currently Open</b></font>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
-					{if $registered==1}
-					You Are Registered! Update Your Registration Info
-					{else}
 					Register Me Now!
-					{/if}
 					</a>
 				{/if}
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					{if $registered==1}
+					<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
+					You Are Registered! Update Your Registration Info
+					</a>
+					{/if}
 			</td>
 		{/if}
 		</table>
