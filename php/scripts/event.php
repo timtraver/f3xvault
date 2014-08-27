@@ -303,6 +303,18 @@ function event_list() {
 	
 	$events=show_pages($events,25);
 
+	# Lets get the number of pilots for this event
+	foreach($events as $key=>$e){
+		$stmt=db_prep("
+			SELECT count(ep.event_pilot_id) as pilot_count
+			FROM event_pilot ep
+			WHERE ep.event_id=:event_id
+				AND ep.event_pilot_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$e['event_id']));
+		$events[$key]['pilot_count']=$result[0]['pilot_count'];
+	}
+
 	# Lets set a flag to show if this event is happening now, or is in the future
 	$now=time();
 	foreach($events as $key=>$e){

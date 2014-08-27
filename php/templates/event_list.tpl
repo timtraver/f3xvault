@@ -69,10 +69,10 @@
 <br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="6" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
+	<th colspan="7" style="text-align: left;">Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
+        <td align="left" colspan="4">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
@@ -90,6 +90,7 @@
 	<th style="text-align: left;">Event Type</th>
 	<th style="text-align: left;">Event Location</th>
 	<th style="text-align: center;">Map</th>
+	<th style="text-align: center;">Pilots</th>
 	<th style="text-align: center;">Status</th>
 </tr>
 {foreach $events as $event}
@@ -104,11 +105,13 @@
 		{$event.location_name|escape}
 	</td>
 	<td align="center">{if $event.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$event.location_coordinates|escape:'url'}+({$event.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
+	<td align="center">
+		{$event.pilot_count}
+	</td>
 	<td nowrap>
-		{if $event.event_reg_flag==1 && ($event.time_status!=-1 && $event.time_status!=0)}
+		{if $event.event_reg_flag==1 && $event.time_status!=-1 && $event.time_status!=0}
 			{if $event.event_reg_status==0 || 
-				($event->pilots|count>=$event.event_reg_max && $event.event_reg_max!=0) ||
-				$event_reg_passed==1
+				($event.pilot_count>=$event.event_reg_max && $event.event_reg_max!=0)
 			}
 				<font color="red"><b>Registration Closed</b></font>
 			{else}
@@ -131,7 +134,7 @@
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
+        <td align="left" colspan="4">
                 {if $startrecord>1}[<a href="?action=event&function=event_list&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
                 {if $endrecord<$totalrecords}[<a href="?action=event&function=event_list&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
         </td>
@@ -144,7 +147,7 @@
         </td>
 </tr>
 <tr>
-	<td colspan="6" align="center">
+	<td colspan="7" align="center">
 		<br>
 		<input type="button" value=" Create New Event " onclick="{if $user.user_id!=0}newevent.submit();{else}alert('You must be registered and logged in to create a new event.');{/if}" class="block-button">
 	</td>
