@@ -726,6 +726,7 @@ function check_permission() {ldelim}
 			{$num=$num+1}
 			{/if}
 			{/foreach}
+		{$previous=$t.total}
 		{/foreach}
 		</table>
 	</div>
