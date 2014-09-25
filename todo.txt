@@ -11,6 +11,11 @@ GENERAL
 	
 IMPORTING EVENTS
 	Make it so that you can choose some of the import fields
+	Ability to import F3F rounds one at a time, or completely overwrite existing rounds
+	
+EXPORTING
+	Ability to export pilot list
+	Ability to export draw
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
@@ -41,6 +46,7 @@ EVENT STUFF
 	Draw
 		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother) ?
 		F3B Combined Draw of the three tasks
+		Make the draw have a non consecutive group function so someone doesn't have to do back to back groups in successive rounds
 		
 	Tasks
 		Task list in event info email (edited in custom email settings)
@@ -82,6 +88,8 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Pilot point difference on summary screen
+X	Series screen sorted by most recent activity
 X		Add non existant pilots to the Edit Draw Functions
 X	Added "Current Event Standing" sort value
 X		Make a way to add drop values and set the standards for each type of contest

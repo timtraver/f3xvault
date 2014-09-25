@@ -139,8 +139,17 @@ $(function() {
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 		</tr>
+		{$previous=0}
+		{$diff_to_lead=0}
+		{$diff=0}
 		{foreach $series->totals.pilots as $p}
 		{$pilot_id=$p@key}
+		{if $p.total_score>$previous}
+			{$previous=$p.total_score}
+		{else}
+			{$diff=$previous-$p.total_score}
+			{$diff_to_lead=$diff_to_lead+$diff}
+		{/if}
 		<tr style="background-color: {cycle values="#9DCFF0,white"};">
 			<td>{$p.overall_rank}</td>
 			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
@@ -163,9 +172,18 @@ $(function() {
 				</td>
 			{/foreach}
 			<td></td>
-			<td width="5%" nowrap align="right">{$p.total_score|string_format:"%06.3f"}</td>
+			<td width="5%" nowrap align="right">
+				<a href="" class="tooltip_score_left" onClick="return false;">
+					{$p.total_score|string_format:"%06.3f"}
+					<span>
+						<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
+						<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
+					</span>
+				</a>
+			</td>
 			<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
 		</tr>
+		{$previous=$p.total_score}
 		{/foreach}
 		</table>
 

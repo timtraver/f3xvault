@@ -127,10 +127,12 @@ function series_list() {
 			FROM series se
 			LEFT JOIN state s ON se.state_id=s.state_id
 			LEFT JOIN country c ON se.country_id=c.country_id
+			LEFT JOIN event e ON se.series_id=e.series_id
 			WHERE se.$search_field $operator :search
 				$addcountry
 				$addstate
-			ORDER BY se.country_id,se.state_id,se.series_name desc
+			GROUP BY se.series_name
+			ORDER BY e.event_end_date DESC,se.country_id,se.state_id,se.series_name desc
 		");
 		$series=db_exec($stmt,array("search"=>$search));
 	}else{
@@ -140,10 +142,12 @@ function series_list() {
 			FROM series se
 			LEFT JOIN state s ON se.state_id=s.state_id
 			LEFT JOIN country c ON se.country_id=c.country_id
+			LEFT JOIN event e ON se.series_id=e.series_id
 			WHERE 1
 				$addcountry
 				$addstate
-			ORDER BY se.country_id,se.state_id,se.series_name desc
+			GROUP BY se.series_name
+			ORDER BY e.event_end_date DESC,se.country_id,se.state_id,se.series_name desc
 		");
 		$series=db_exec($stmt,array());
 	}

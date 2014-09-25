@@ -52,7 +52,7 @@
 <br>
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr class="table-row-heading-left">
-	<th colspan="6" style="text-align: left;">Event Series (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
+	<th colspan="6" style="text-align: left;">Event Series (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})  Sorted by most recent events in series</th>
 </tr>
 <tr style="background-color: lightgray;">
         <td align="left" colspan="3">
