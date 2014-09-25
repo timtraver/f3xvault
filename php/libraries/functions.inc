@@ -704,7 +704,12 @@ function convert_string_to_colon($timestring){
 		# Already in colon notation, so just return it
 		return $timestring;
 	}
-	if(preg_match("/^(\d+)(\d\d)$/",$timestring,$match)){
+	if(preg_match("/^(\d+)s$/",$timestring,$match)){
+		$fullsec=$match[1];
+		$min=floor($fullsec/60);
+		$sec=fmod($fullsec,60);
+		return sprintf("%d:%02d",$min,$sec);
+	}elseif(preg_match("/^(\d+)(\d\d)$/",$timestring,$match)){
 		$min=intval($match[1]);
 		$sec=$match[2];
 		if($sec>=60){
