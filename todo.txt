@@ -15,7 +15,7 @@ IMPORTING EVENTS
 	
 EXPORTING
 	Ability to export pilot list
-	Ability to export draw
+	Ability to export  complete draw
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
