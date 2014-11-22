@@ -88,11 +88,11 @@
 	
 		</td>
 	
-		{if $number is div by 12}
+		{if $number is div by 6}
 			</tr>
 			</table>
 			{if $print_format=='html'}
-				<div style="{if $number is div by 12}page-break-after: always;{/if}"></div>
+				<div style="{if $number is div by 6}page-break-after: always;{/if}"></div>
 			{/if}
 			<table>
 			<tr>
