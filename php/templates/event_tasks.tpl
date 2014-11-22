@@ -89,7 +89,8 @@
 	<td colspan="4" style="padding-top:10px;">
 		<input type="button" value=" Save Rounds " onClick="document.main.submit();" class="block-button">
 		<input type="button" value=" Add Round " onClick="document.main.add_round.value=1;document.main.submit();" class="block-button">
-		<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="block-button">
+		<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="block-button">
+		<input type="button" value=" Print Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="block-button">
 	</td>
 </tr>
 </table>
@@ -180,11 +181,19 @@ We can generate a contest play list to run the task announcements. Select from t
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+<form name="print_pilot_blank_tasks" method="POST" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_blank_task">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+<input type="hidden" name="blank" value="1">
+</form>
 <form name="print_pilot_tasks" method="POST" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_blank_task">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="use_print_header" value="1">
+<input type="hidden" name="blank" value="0">
 </form>
 
 </div>

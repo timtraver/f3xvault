@@ -5475,6 +5475,7 @@ function event_print_blank_task() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
+	$blank=intval($_REQUEST['blank']);
 
 	$e=new Event($event_id);
 	$e->get_teams();
@@ -5521,33 +5522,65 @@ function event_print_blank_task() {
 		}
 	}
 
-	# Lets add the rounds that don't exist with the draw values for printing
-	# Step through any existing rounds and use those
-	for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
-		if(!isset($e->rounds[$event_round_number])){
-			# Lets create the event round and enough info from the draw to print
-			#Step through the draw rounds and see if one exists for this round
-			if($e->info['event_type_code']=='f3k'){
-				$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+	if($blank==1){
+		# Lets add the rounds that don't exist with the draw values for printing
+		# Step through any existing rounds and use those
+		for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
+			if(!isset($e->rounds[$event_round_number])){
+				# Lets create the event round and enough info from the draw to print
+				#Step through the draw rounds and see if one exists for this round
+				if($e->info['event_type_code']=='f3k'){
+					$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+				}
+				# Lets create the round info
+				$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$e->rounds[$event_round_number]['event_round_status']=1;
+				if($e->info['event_type_code']=='f3k'){
+					$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_round_number];
+				}else{
+					$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+				}
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+				$e->pilots=array();
+				$event_pilot_id=10000;
+				$e->pilots[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+				$e->pilots[$event_pilot_id]['pilot_first_name']="";
+				
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']='';
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']='';
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']='';
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 			}
-			# Lets create the round info
-			$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
-			$e->rounds[$event_round_number]['event_round_status']=1;
-			if($e->info['event_type_code']=='f3k'){
-				$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_round_number];
-			}else{
-				$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+		}
+	}else{
+		# Lets do the same thing, except populate the rounds with the current pilot list
+		for($event_round_number=$print_round_from;$event_round_number<=$print_round_to;$event_round_number++){
+			if(!isset($e->rounds[$event_round_number])){
+				# Lets create the event round and enough info from the draw to print
+				#Step through the draw rounds and see if one exists for this round
+				if($e->info['event_type_code']=='f3k'){
+					$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+				}
+				# Lets create the round info
+				$e->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$e->rounds[$event_round_number]['event_round_status']=1;
+				if($e->info['event_type_code']=='f3k'){
+					$e->rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$event_round_number];
+				}else{
+					$e->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+				}
+				$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+				
+				# Add the current pilot list
+				foreach($e->pilots as $event_pilot_id=>$p){
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']='';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']='';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']='';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
+				}
 			}
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
-			$event_pilot_id=10000;
-			$e->pilots[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
-			$e->pilots[$event_pilot_id]['pilot_first_name']="________________";
-			
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']='';
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']='';
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']='';
-			$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
 		}
 	}
 
