@@ -1,4 +1,4 @@
-<table>
+<table style="position: relative;">
 <tr>
 	{$number=1}
 	{foreach $event->pilots as $p}
@@ -91,9 +91,7 @@
 		{if $number is div by 6}
 			</tr>
 			</table>
-			{if $print_format=='html'}
-				<div style="{if $number is div by 6}page-break-after: always;{/if}"></div>
-			{/if}
+			<div style="{if $number is div by 6}position: relative;page-break-after: always;page-break-inside: avoid;{/if}"></div>
 			<table>
 			<tr>
 		{else}

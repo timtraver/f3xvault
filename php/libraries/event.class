@@ -1435,7 +1435,7 @@ class Event {
 			if($max_points==0){
 				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=0;
 			}else{
-				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=round_down(($subtotals[$event_pilot_id]['total']/$max_points)*100,$this->event_calc_accuracy);
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=round(($subtotals[$event_pilot_id]['total']/$max_points)*100,3);
 			}
 			$totals[]=$subtotals[$event_pilot_id];
 			$count++;

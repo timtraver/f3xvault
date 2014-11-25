@@ -160,7 +160,7 @@ $(function() {
 						{$drop=$p.events.$event_id.dropped}
 						{if $drop==1}<del><font color="red">{/if}
 						{if $p.events.$event_id.event_score!=0}
-						{$p.events.$event_id.event_score|string_format:"%03.0f"}
+						{$p.events.$event_id.event_score|string_format:"%03.2f"}
 						{else}
 						0
 						{/if}
