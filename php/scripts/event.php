@@ -4537,6 +4537,102 @@ function event_draw_manual_save(){
 	return event_draw_edit();
 }
 
+# Export Routines
+function event_export() {
+	global $smarty;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event=new Event($event_id);
+
+	$smarty->assign("event",$event);
+	$maintpl=find_template("event_export.tpl");
+	return $smarty->fetch($maintpl);
+}
+function event_export_export() {
+	global $smarty;
+	
+	$event_id=intval($_REQUEST['event_id']);
+	$event=new Event($event_id);
+	$event->get_draws();
+	$export_format=$_REQUEST['export_format'];
+	$field_separator=$_REQUEST['field_separator'];
+
+	$smarty->assign("event",$event);
+	$smarty->assign("export_format",$export_format);
+	$smarty->assign("field_separator",$field_separator);
+	$smarty->assign("fs",$field_separator);
+	
+	# Lets make the draw array easier to use and add it to the pilot array
+	$draws=array();
+	foreach($event->draws as $draw_id=>$d){
+		if($d['event_draw_active']==0){
+			continue;
+		}
+		foreach($d['flights'] as $flight_type_id=>$f){
+			foreach($f as $round_number=>$r){
+				foreach($r['pilots'] as $event_pilot_id=>$p){
+					$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_group'];
+				}
+			}
+		}
+	}
+	# Make sure the values are sorted
+	$newdraws=array();
+	foreach($draws as $event_pilot_id=>$d){
+		ksort($d['draw']);
+		$newdraws[$event_pilot_id]['draw']=$d['draw'];
+	}
+	$draws=$newdraws;
+
+	$smarty->assign("draws",$draws);
+
+	$template='';
+	switch($event->info['event_type_code']){
+		case "f3b":
+			$template="event_export_f3b.tpl";
+			break;
+		case "f3b_speed":
+			$template="event_export_f3b.tpl";
+			break;
+		case "f3f":
+			$template="event_export_f3f.tpl";
+			break;
+		case "f3k":
+			$template="event_export_f3k.tpl";
+			break;
+		case "f3j":
+			$template="event_export_f3j.tpl";
+			break;
+		case "td":
+			$template="event_export_td.tpl";
+			break;
+	}
+
+	# Get the export content
+	$content_template=find_template($template);
+	$content=$smarty->fetch($content_template);
+
+	if($export_format=="csv_file"){
+		header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header("Content-Disposition: attachment; filename=event_export.csv;");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: ".strlen($content));
+        print $content;
+        exit;
+	}elseif($export_format=="csv_text"){
+		$smarty->assign("export_content",$content);
+		$maintpl=find_template("event_export.tpl");
+		return $smarty->fetch($maintpl);
+	}
+}
+
+
+
 # Import Routines
 function event_import() {
 	global $smarty;

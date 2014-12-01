@@ -392,6 +392,9 @@ function reg_check(){
 		{if $event->info.event_id!=0 && $event->info.event_type_code=='f3k'}
 		<input type="button" class="button" value=" Set Event Tasks " style="float:right;" onclick="event_tasks.submit();">
 		{/if}
+		{if $event->info.event_id!=0}
+		<input type="button" class="button" value=" Export Event Info " style="float:right;" onclick="event_export.submit();">
+		{/if}
 	</th>
 </tr>
 </table>
@@ -594,6 +597,11 @@ reg_check();
 <form name="event_tasks" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_tasks">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_export" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_export">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="reg_params" method="POST">
