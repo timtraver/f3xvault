@@ -51,7 +51,7 @@
 			<tr>
 				<td colspan="2">
 					<input type="button" value=" Back To Event Edit " class="block-button" onClick="goback.submit();">
-					<input type="submit" value=" Export Event " class="block-button">
+					<input type="button" value=" Export Event " class="block-button" onClick="document.main.submit();">
 				</td>
 			</tr>
 			</table>

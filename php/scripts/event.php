@@ -1,4 +1,4 @@
-	<?php
+<?php
 ############################################################################
 #       event.php
 #
@@ -4564,6 +4564,13 @@ function event_export_export() {
 	
 	# Lets make the draw array easier to use and add it to the pilot array
 	$draws=array();
+	
+	# Lets pre-populate it with the pilot list
+	foreach($event->pilots as $event_pilot_id=>$p){
+		$draws[$event_pilot_id]['draw']=array();
+	}
+	
+	# Now lets get the info from the draw
 	foreach($event->draws as $draw_id=>$d){
 		if($d['event_draw_active']==0){
 			continue;
@@ -4576,6 +4583,16 @@ function event_export_export() {
 			}
 		}
 	}
+	
+	# Now Step through the task list to make sure there are the full amount of tasks in the export
+	foreach($draws as $event_pilot_id=>$d){
+		foreach($event->tasks as $task_round=>$t){
+			if(!isset($draws[$event_pilot_id]['draw'][$task_round])){
+				$draws[$event_pilot_id]['draw'][$task_round]='';
+			}
+		}
+	}
+	
 	# Make sure the values are sorted
 	$newdraws=array();
 	foreach($draws as $event_pilot_id=>$d){
@@ -4620,7 +4637,7 @@ function event_export_export() {
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
         header("Content-Disposition: attachment; filename=event_export.csv;");
-        header("Content-Transfer-Encoding: binary");
+        header("Content-Transfer-Encoding: text");
         header("Content-Length: ".strlen($content));
         print $content;
         exit;
