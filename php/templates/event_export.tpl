@@ -32,7 +32,7 @@
 
 					{elseif $event->info.event_type_code=="f3f"}
 					{elseif $event->info.event_type_code=="f3k"}
-					Event Name, Event Location, Event Date From, Event Date To, Event CD, Event Type, Event Number of Rounds<br>
+					F3X Event ID,Event Name, Event Location, Event Date From, Event Date To, Event CD, Event Type, Event Number of Rounds<br>
 					Task Code Round 1, Task Code Round 2, Task Code Round 3, ... Task Code Round X<br>
 					F3X Pilot ID, Bib, First Name, Last Name, Class, AMA #, FAI #, Team, Group Round 1, Group Round 2, ... Group Round X<br>
 					{elseif $event->info.event_type_code=="f3j"}

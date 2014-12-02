@@ -1,4 +1,4 @@
-"{$event->info.event_name}"{$fs}"{$event->info.location_name}"{$fs}"{$event->info.event_start_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_end_date|date_format:"m/d/y"}"{$fs}"{$event->info.pilot_first_name} {$event->info.pilot_last_name}"{$fs}"{$event->info.event_type_name}"{$fs}{if $event->rounds|count>0}"{$event->rounds|count}"{else}"{$event->tasks|count}"{/if}
+"{$event->info.event_id}"{$fs}"{$event->info.event_name}"{$fs}"{$event->info.location_name}"{$fs}"{$event->info.event_start_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_end_date|date_format:"m/d/y"}"{$fs}"{$event->info.pilot_first_name} {$event->info.pilot_last_name}"{$fs}"{$event->info.event_type_name}"{$fs}{if $event->rounds|count>0}"{$event->rounds|count}"{else}"{$event->tasks|count}"{/if}
 
 {if $event->rounds|count>0}{foreach $event->rounds as $r}{/foreach}{else}{foreach $event->tasks as $t}{$flight_type_id=$t.flight_type_id}"{$event->flight_types.$flight_type_id.flight_type_code}"{if !$t@last}{$fs}{/if}{/foreach}{/if}
 
