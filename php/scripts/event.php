@@ -2191,6 +2191,7 @@ function event_round_edit() {
 	$event_round_id=intval($_REQUEST['event_round_id']);
 	$zero_round=intval($_REQUEST['zero_round']);
 	$flyoff_round=intval($_REQUEST['flyoff_round']);
+	$view_only=intval($_REQUEST['view_only']);
 	if(isset($_REQUEST['sort_by'])){
 		$sort_by=$_REQUEST['sort_by'];
 	}else{
@@ -2271,7 +2272,7 @@ function event_round_edit() {
 		
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
-	if($permission==1){
+	if($permission==1 && $view_only!=1){
 		$maintpl=find_template("event_round_edit.tpl");
 	}else{
 		$maintpl=find_template("event_round_view.tpl");

@@ -34,7 +34,7 @@
 		<br>
 		<h1 class="post-title entry-title">Pilot Round Detail for</h1>
 		<h1>{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		<tr>
 			<th width="2%" align="left">Round</th>
 			{if $event->info.event_type_code!='f3k'}

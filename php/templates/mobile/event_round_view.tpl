@@ -1,9 +1,9 @@
 <link href="style2.css" rel="stylesheet" type="text/css">
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="overflow: auto;">
+	<div class="entry clearfix" style="overflow: auto;">                
 		<h1 class="post-title entry-title">{$event->info.event_name|escape}</h1>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<div class="entry-content clearfix" style="overflow: auto;">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		<tr>
 			<th width="20%" align="right">Dates</th>
 			<td>
@@ -45,9 +45,10 @@
 		</table>
 		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
 
-	</div>
+		</div>
+		
 		<br>
-		<form name="main" method="POST">
+		<form name="main" method="POST" style="overflow:auto;">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_round_save">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
@@ -56,7 +57,7 @@
 		<input type="hidden" name="create_new_round" value="0">
 
 		<h1 class="post-title entry-title">Event Round {$round_number|escape} Detail</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		<tr>
 			<th width="20%" nowrap>Round Type</th>
 			<td>
@@ -122,7 +123,7 @@
 		<br>
 		
 		<h1 class="post-title entry-title">Round Flights</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		{$tabindex=2}
 		{foreach $flight_types as $ft}
 			{$flight_type_id=$ft.flight_type_id}
@@ -194,12 +195,7 @@
 						<td align="center" nowrap>
 							{if $ft.flight_type_sub_flights!=0}
 								{$time_disabled=1}
-								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;color:black;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
-									{$tabindex=$tabindex+1}
-								{/for}
-								= Total
-							{/if}
+								{for $sub=1 to $ft.flight_type_sub_flights}<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;color:black;display: inline-block;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}{$tabindex=$tabindex+1}{/for}= Total{/if}
 							{if $ft.flight_type_minutes}
 								{$p.event_pilot_round_flight_minutes|escape}m
 								{$tabindex=$tabindex+1}
@@ -209,7 +205,7 @@
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $ft.flight_type_over_penalty}
-								<input type="checkbox" tabindex="{$tabindex}" name="pilot_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if} onChange="save_data(this);">
+								<input type="checkbox" tabindex="{$tabindex}" name="pilot_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if} style="display: inline-block;" onChange="save_data(this);">
 								{$tabindex=$tabindex+1}
 							{/if}
 						</td>
@@ -274,7 +270,7 @@
 							{if $ft.flight_type_sub_flights!=0}
 								{$time_disabled=1}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;color: black;" name="pilot_reflight_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;color: black;display: inline-block;" name="pilot_reflight_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
@@ -288,7 +284,7 @@
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $ft.flight_type_over_penalty}
-								<input type="checkbox" tabindex="{$tabindex}" name="pilot_reflight_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if}>
+								<input type="checkbox" tabindex="{$tabindex}" name="pilot_reflight_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if} style="display: inline-block;">
 								{$tabindex=$tabindex+1}
 							{/if}
 						</td>
