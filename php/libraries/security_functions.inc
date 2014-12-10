@@ -67,11 +67,11 @@ function check_login () {
                 	$errorstring="User password is not correct. Please try again or use the forgot password link.";
 					return array($error,"$errorstring");
                 }
-                if($user['user_activated']==0){
-                        $error=2;
-                        $errorstring="You have not yet activated your user. Please look for the activation email to complete activation.";
-                        return array($error,"$errorstring");
-                }
+                #if($user['user_activated']==0){
+                #        $error=2;
+                #        $errorstring="You have not yet activated your user. Please look for the activation email to complete activation.";
+                #        return array($error,"$errorstring");
+                #}
         }else{
 				$error=2;
 				$errorstring="User does not currently have a login. Please register with us!";
