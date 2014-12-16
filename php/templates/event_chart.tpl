@@ -68,11 +68,13 @@ $(function () {ldelim}
 			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
-		{if $event->info.series_name || $event->info.club_name}
+		{if $event->series || $event->info.club_name}
 		<tr>
-			<th align="right">Part Of Series</th>
-			<td>
-			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name|escape}</a>
+			<th valign="top" align="right">Part Of Series</th>
+			<td valign="top">
+				{foreach $event->series as $s}
+				<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
+				{/foreach}
 			</td>
 			<th align="right">Club</th>
 			<td>

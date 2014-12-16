@@ -1,13 +1,13 @@
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
+<div class="page type-page status-publish hentry clearfix post nodate" style="overflow:auto;">
+	<div class="entry clearfix" style="overflow:auto;">                
 		<h1 class="post-title entry-title">Browse F3X Event Series</h1>
-		<div class="entry-content clearfix">
+		<div class="entry-content clearfix" style="overflow:auto;">
 
-<form name="searchform" method="POST">
+<form name="searchform" method="POST" style="overflow:auto;">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_list">
 
-<table width="80%">
+<table width="80%" style="overflow:auto;">
 <tr>
 	<th>Filter By Country</th>
 	<td>
@@ -50,7 +50,7 @@
 </table>
 </form>
 <br>
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 <tr class="table-row-heading-left">
 	<th colspan="6" style="text-align: left;">Event Series (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 </tr>

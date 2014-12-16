@@ -477,12 +477,6 @@ function event_edit() {
 		if(isset($_REQUEST['event_cd_name'])){
 			$e->info['event_cd_name']=$_REQUEST['event_cd_name'];
 		}
-		if(isset($_REQUEST['series_id'])){
-			$e->info['series_id']=$_REQUEST['series_id'];
-		}
-		if(isset($_REQUEST['series_name'])){
-			$e->info['series_name']=$_REQUEST['series_name'];
-		}
 		if(isset($_REQUEST['club_id'])){
 			$e->info['club_id']=$_REQUEST['club_id'];
 		}
@@ -514,12 +508,6 @@ function event_edit() {
 		}
 		if(isset($_REQUEST['location_id'])){
 			$e->info['location_id']=$_REQUEST['location_id'];
-		}
-		if(isset($_REQUEST['series_id'])){
-			$e->info['series_id']=$_REQUEST['series_id'];
-		}
-		if(isset($_REQUEST['series_name'])){
-			$e->info['series_name']=$_REQUEST['series_name'];
 		}
 		if(isset($_REQUEST['club_id'])){
 			$e->info['club_id']=$_REQUEST['club_id'];
@@ -565,7 +553,6 @@ function event_edit() {
 	$classes=db_exec($stmt,array("event_id"=>$event_id));
 	$smarty->assign("classes",$classes);
 	
-	
 	$smarty->assign("event_types",$event_types);
 	$smarty->assign("event",$e);
 
@@ -586,7 +573,6 @@ function event_save() {
 	$event_end_date=$_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
 	$event_type_id=intval($_REQUEST['event_type_id']);
 	$event_cd=intval($_REQUEST['event_cd']);
-	$series_id=intval($_REQUEST['series_id']);
 	$club_id=intval($_REQUEST['club_id']);
 	$event_view_status=intval($_REQUEST['event_view_status']);
 	$event_reg_flag=intval($_REQUEST['event_reg_flag']);
@@ -611,7 +597,6 @@ function event_save() {
 				event_end_date=:event_end_date,
 				event_type_id=:event_type_id,
 				event_cd=:event_cd,
-				series_id=:series_id,
 				club_id=:club_id,
 				event_view_status=:event_view_status,
 				event_reg_flag=:event_reg_flag,
@@ -626,7 +611,6 @@ function event_save() {
 			"event_end_date"=>$event_end_date,
 			"event_type_id"=>$event_type_id,
 			"event_cd"=>$event_cd,
-			"series_id"=>$series_id,
 			"club_id"=>$club_id,
 			"event_view_status"=>$event_view_status,
 			"event_reg_flag"=>$event_reg_flag,
@@ -669,7 +653,6 @@ function event_save() {
 				event_end_date=:event_end_date,
 				event_type_id=:event_type_id,
 				event_cd=:event_cd,
-				series_id=:series_id,
 				club_id=:club_id,
 				event_view_status=:event_view_status,
 				event_reg_flag=:event_reg_flag,
@@ -683,7 +666,6 @@ function event_save() {
 			"event_end_date"=>$event_end_date,
 			"event_type_id"=>$event_type_id,
 			"event_cd"=>$event_cd,
-			"series_id"=>$series_id,
 			"club_id"=>$club_id,
 			"event_view_status"=>$event_view_status,
 			"event_reg_flag"=>$event_reg_flag,
@@ -789,6 +771,76 @@ function event_chart() {
 	
 	$maintpl=find_template("event_chart.tpl");
 	return $smarty->fetch($maintpl);
+}
+function event_series_save() {
+	global $smarty;
+	global $user;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$series_id=intval($_REQUEST['series_id']);
+	
+	if($series_id){
+		# Look for a series record
+		$stmt=db_prep("
+			SELECT *
+			FROM event_series
+			WHERE event_id=:event_id
+				AND series_id=:series_id
+		");
+		$result=db_exec($stmt,array(
+			"event_id"=>$event_id,
+			"series_id"=>$series_id
+		));
+		if(isset($result[0])){
+			# Event series record exists, so lets update it
+			$event_series_id=$result[0]['event_series_id'];
+			$stmt=db_prep("
+				UPDATE event_series
+				SET event_series_status=1
+				WHERE event_series_id=:event_series_id
+			");
+			$result=db_exec($stmt,array(
+				"event_series_id"=>$event_series_id
+			));
+		}else{
+			$stmt=db_prep("
+				INSERT INTO event_series
+				SET event_id=:event_id,
+					series_id=:series_id,
+					event_series_multiple=1,
+					event_series_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_id"=>$event_id,
+				"series_id"=>$series_id
+			));
+		}
+		user_message("Event Series Added.");
+	}
+	log_action($event_id);
+	return event_edit();
+}
+function event_series_delete() {
+	global $smarty;
+	global $user;
+
+	$event_id=intval($_REQUEST['event_id']);
+	$event_series_id=intval($_REQUEST['event_series_id']);
+	
+	if($event_series_id){
+		# Turn off the event series record
+		$stmt=db_prep("
+			UPDATE event_series
+			SET event_series_status=0
+			WHERE event_series_id=:event_series_id
+		");
+		$result=db_exec($stmt,array(
+			"event_series_id"=>$event_series_id
+		));
+		user_message("Event Series Removed.");
+	}
+	log_action($event_id);
+	return event_edit();
 }
 
 # Registration Routines
