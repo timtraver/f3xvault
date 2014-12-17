@@ -259,6 +259,7 @@ function series_save() {
 	$series_id=intval($_REQUEST['series_id']);
 	$series_area=$_REQUEST['series_area'];
 	$series_url=$_REQUEST['series_url'];
+	$series_scoring_type=$_REQUEST['series_scoring_type'];
 
 	if($series_id==0){
 		$stmt=db_prep("
@@ -268,6 +269,7 @@ function series_save() {
 				series_area=:series_area,
 				state_id=:state_id,
 				country_id=:country_id,
+				series_scoring_type=:series_scoring_type,
 				series_url=:series_url
 		");
 		$result=db_exec($stmt,array(
@@ -276,6 +278,7 @@ function series_save() {
 			"series_area"=>$series_area,
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
+			"series_scoring_type"=>$series_scoring_type,
 			"series_url"=>$series_url
 		));
 
@@ -301,13 +304,14 @@ function series_save() {
 		");
 		$result=db_exec($stmt,array("series_id"=>$series_id,"series_option_type_id"=>$series_option_type_id));
 	}else{
-		# Save the database record for this club
+		# Save the database record for this series
 		$stmt=db_prep("
 			UPDATE series
 			SET series_name=:series_name,
 				series_area=:series_area,
 				state_id=:state_id,
 				country_id=:country_id,
+				series_scoring_type=:series_scoring_type,
 				series_url=:series_url
 			WHERE series_id=:series_id
 		");
@@ -317,6 +321,7 @@ function series_save() {
 			"state_id"=>$state_id,
 			"country_id"=>$country_id,
 			"series_url"=>$series_url,
+			"series_scoring_type"=>$series_scoring_type,
 			"series_id"=>$series_id
 		));
 		user_message("Updated Base Series Info!");
@@ -332,6 +337,26 @@ function series_save() {
 	}else{
 		return series_edit();
 	}
+}
+function series_save_multiples() {
+	global $smarty;
+	global $user;
+
+	$series_id=intval($_REQUEST['series_id']);
+	# Lets get the array to save the values
+	foreach($_REQUEST as $key=>$value){
+		if(preg_match("/^multiple\_(\d+)$/",$key,$match)){
+			$event_series_id=$match[1];
+			$stmt=db_prep("
+				UPDATE event_series
+				SET event_series_multiple=:multiple
+				WHERE event_series_id=:event_series_id
+			");
+			$result=db_exec($stmt,array("event_series_id"=>$event_series_id,"multiple"=>$value));
+		}
+	}
+	user_message("Saved series multiples.");
+	return series_view();
 }
 function series_param_save() {
 	global $smarty;
