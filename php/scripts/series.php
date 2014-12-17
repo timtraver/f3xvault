@@ -127,7 +127,8 @@ function series_list() {
 			FROM series se
 			LEFT JOIN state s ON se.state_id=s.state_id
 			LEFT JOIN country c ON se.country_id=c.country_id
-			LEFT JOIN event e ON se.series_id=e.series_id
+			LEFT JOIN event_series es ON se.series_id=es.series_id
+			LEFT JOIN event e ON es.event_id=e.event_id
 			WHERE se.$search_field $operator :search
 				$addcountry
 				$addstate
@@ -142,7 +143,8 @@ function series_list() {
 			FROM series se
 			LEFT JOIN state s ON se.state_id=s.state_id
 			LEFT JOIN country c ON se.country_id=c.country_id
-			LEFT JOIN event e ON se.series_id=e.series_id
+			LEFT JOIN event_series es ON se.series_id=es.series_id
+			LEFT JOIN event e ON es.event_id=e.event_id
 			WHERE 1
 				$addcountry
 				$addstate
