@@ -181,6 +181,9 @@ function check_permission() {ldelim}
 		{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_status!=0}
 		<input type="button" class="button" value=" Registration Report " style="float:right;" onclick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">
 		{/if}
+		{if $event->info.event_id!=0}
+		<input type="button" class="button" value=" Export Event Info " style="float:right;" onclick="event_export.submit();">
+		{/if}
 
 
 		</div><!-- end of 3 -->
@@ -1130,6 +1133,11 @@ function check_permission() {ldelim}
 <form name="registration_report" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_registration_report">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_export" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_export">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 {if $event->rounds}

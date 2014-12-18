@@ -14,8 +14,8 @@
 				<th width="10%">Export Format</th>
 				<td>
 					<select name="export_format">
-					<option value="csv_text"{if $export_format=="csv_text" || $export_format==""} SELECTED{/if}>CSV Text</option>
-					<option value="csv_file"{if $export_format=="csv_file"} SELECTED{/if}>CSV Saved File</option>
+					<option value="csv_file"{if $export_format=="csv_file" || $export_format==""} SELECTED{/if}>CSV Saved File</option>
+					<option value="csv_text"{if $export_format=="csv_text"} SELECTED{/if}>CSV Text</option>
 				</td>
 			</tr>
 			<tr>
@@ -23,21 +23,6 @@
 				<td>
 					<input type="radio" name="field_separator" value=","{if $field_separator=="," || $field_separator==""} CHECKED{/if}> Comma or 
 					<input type="radio" name="field_separator" value=";"{if $field_separator==";"} CHECKED{/if}> Semicolon 
-				</td>
-			</tr>
-			<tr>
-				<th>Event Export<br>Parameters Explained</th>
-				<td>
-					{if $event->info.event_type_code=="f3b" || $event->info.event_type_code=="f3b_speed"}
-
-					{elseif $event->info.event_type_code=="f3f"}
-					{elseif $event->info.event_type_code=="f3k"}
-					F3X Event ID,Event Name, Event Location, Event Date From, Event Date To, Event CD, Event Type, Event Number of Rounds<br>
-					Task Code Round 1, Task Code Round 2, Task Code Round 3, ... Task Code Round X<br>
-					F3X Pilot ID, Bib, First Name, Last Name, Class, AMA #, FAI #, Team, Group Round 1, Group Round 2, ... Group Round X<br>
-					{elseif $event->info.event_type_code=="f3j"}
-					{elseif $event->info.event_type_code=="td"}
-					{/if}
 				</td>
 			</tr>
 			{if $export_content}
