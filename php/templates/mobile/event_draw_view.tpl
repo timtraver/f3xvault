@@ -27,11 +27,13 @@
 			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape}
 			</td>
 		</tr>
-		{if $event->info.series_name || $event->info.club_name}
+		{if $event->series || $event->info.club_name}
 		<tr>
-			<th align="right">Series</th>
-			<td>
-			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name|escape}</a>
+			<th valign="top" align="right">Series</th>
+			<td valign="top" align="right">
+				{foreach $event->series as $s}
+				<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
+				{/foreach}
 			</td>
 		</tr>
 		<tr>

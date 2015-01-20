@@ -55,12 +55,14 @@ class Series {
 		# Get the event list for this series
 		$stmt=db_prep("
 			SELECT *
-			FROM event e
+			FROM event_series es
+			LEFT JOIN event e ON es.event_id=e.event_id
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.series_id=:series_id
+			WHERE es.series_id=:series_id
+				AND es.event_series_status=1
 				AND e.event_status=1
 			ORDER BY e.event_start_date
 		");
@@ -121,11 +123,34 @@ class Series {
 			}
 		}
 
+		switch($this->info['series_scoring_type']){
+			case 'standard':
+				$totals=$this->calculate_series_totals_standard($number_drops);
+				break;
+			case 'position':
+				$totals=$this->calculate_series_totals_position($number_drops);
+				break;
+			case 'teamusa':
+				$totals=$this->calculate_series_totals_teamusa($number_drops);
+				break;
+			default :
+				$totals=$this->calculate_series_totals_standard($number_drops);
+				break;
+		}
+		
+		$this->totals['total_events']=count($this->events);
+		$this->totals['round_drops']=$number_drops;
+		$this->totals['pilots'] = $totals;		
+		return;
+	}
+	function calculate_series_totals_standard($number_drops){
+		# Function to calculate the standard scores for pilots in series
 		$subtotals=array();
 		$totals=array();
 		foreach($this->events as $event_id=>$e){
+			$multiple=$e['event_series_multiple'];
 			foreach($e['pilots'] as $pilot_id=>$p){
-				$sub=$p['event_pilot_total_percentage']*10;
+				$sub=$p['event_pilot_total_percentage']*10*$multiple;
 				$subtotals[$pilot_id]['events'][$event_id]['event_score']=$sub;
 				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=$p['event_pilot_position'];
 				$subtotals[$pilot_id]['pilot_first_name']=$p['pilot_first_name'];
@@ -181,11 +206,153 @@ class Series {
 			$count++;
 		}
 		
+		return $totals;
+	}
+	function calculate_series_totals_position($number_drops){
+		# Function to calculate the standard scores for pilots in series
+		$subtotals=array();
+		$totals=array();
+		foreach($this->events as $event_id=>$e){
+			$multiple=$e['event_series_multiple'];
+			foreach($e['pilots'] as $pilot_id=>$p){
+				$sub=$p['event_pilot_position']*$multiple;
+				$subtotals[$pilot_id]['events'][$event_id]['event_score']=$sub;
+				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=$p['event_pilot_position'];
+				$subtotals[$pilot_id]['pilot_first_name']=$p['pilot_first_name'];
+				$subtotals[$pilot_id]['pilot_last_name']=$p['pilot_last_name'];
+				$subtotals[$pilot_id]['total_score']+=$sub;
+			}
+		}
+		# Lets give max points to anyone that didn't make an event
+		foreach($this->events as $event_id=>$e){
+			$max=count($e['pilots']);
+			foreach($subtotals as $pilot_id=>$p){
+				if($p['events'][$event_id]['event_score']==0){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score']=$max+1;
+					$subtotals[$pilot_id]['total_score']+=$max+1;
+				}
+			}
+		}
 		
-		$this->totals['total_events']=count($this->events);
-		$this->totals['round_drops']=$number_drops;
-		$this->totals['pilots'] = $totals;		
-		return;
+		# Lets create the array to figure out which to drop
+		$scores=array();
+		foreach($subtotals as $pilot_id=>$p){
+			foreach($this->events as $event_id=>$e){
+				$scores[$pilot_id][$event_id]=$p['events'][$event_id]['event_score'];
+			}
+		}
+		# Now lets step through each scores entry and sort it and set the ones to be dropped
+		foreach($scores as $pilot_id=>$s){
+			arsort($s);
+			# Now lets step through the drop number and set those rounds to be dropped
+			$drop=0;
+			foreach($s as $event_id=>$e){
+				if($drop<$number_drops){
+					# Set the drop flag for this event and subtract the score
+					$subtotals[$pilot_id]['events'][$event_id]['dropped']=1;
+					$subtotals[$pilot_id]['total_score']=$subtotals[$pilot_id]['total_score']-$e;
+					$drop++;
+				}
+			}
+		}
+
+		# Now determine the overall rank of the pilots
+		$scores=array();
+		$max_points=0;
+		foreach($subtotals as $pilot_id=>$t){
+			# Create an array of all of the scores
+			$scores[$pilot_id]=$t['total_score'];
+			if($t['total_score']>$max_points){
+				$max_points=$t['total_score'];
+			}
+		}
+		asort($scores);
+		$count=1;
+		foreach($scores as $pilot_id=>$t){
+			$subtotals[$pilot_id]['overall_rank']=$count;
+
+			# Lets calculate the percentage from the leader
+			if($max_points==0){
+				$subtotals[$pilot_id]['pilot_total_percentage']=0;
+			}else{
+				$subtotals[$pilot_id]['pilot_total_percentage']=sprintf("%02.3f",($subtotals[$pilot_id]['total_score']/$max_points)*100);
+			}
+			$totals[$pilot_id]=$subtotals[$pilot_id];
+			$count++;
+		}
+		
+		return $totals;
+	}
+	function calculate_series_totals_teamusa($number_drops){
+		# Function to calculate the standard scores for pilots in series
+		$subtotals=array();
+		$totals=array();
+		foreach($this->events as $event_id=>$e){
+			$total_pilots=count($e['pilots']);
+			$number=ceil($total_pilots*0.3);
+			$multiple=$e['event_series_multiple'];
+			foreach($e['pilots'] as $pilot_id=>$p){
+				if($p['event_pilot_position']<=$number){
+					$sub=1*$multiple;
+				}else{
+					$sub=0;
+				}
+				$subtotals[$pilot_id]['events'][$event_id]['event_score']=$sub;
+				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=$p['event_pilot_position'];
+				$subtotals[$pilot_id]['pilot_first_name']=$p['pilot_first_name'];
+				$subtotals[$pilot_id]['pilot_last_name']=$p['pilot_last_name'];
+				$subtotals[$pilot_id]['total_score']+=$sub;
+			}
+		}
+		
+		# Lets create the array to figure out which to drop
+		$scores=array();
+		foreach($subtotals as $pilot_id=>$p){
+			foreach($this->events as $event_id=>$e){
+				$scores[$pilot_id][$event_id]=$p['events'][$event_id]['event_score'];
+			}
+		}
+		# Now lets step through each scores entry and sort it and set the ones to be dropped
+		foreach($scores as $pilot_id=>$s){
+			arsort($s);
+			# Now lets step through the drop number and set those rounds to be dropped
+			$drop=0;
+			foreach($s as $event_id=>$e){
+				if($drop<$number_drops){
+					# Set the drop flag for this event and subtract the score
+					$subtotals[$pilot_id]['events'][$event_id]['dropped']=1;
+					$subtotals[$pilot_id]['total_score']=$subtotals[$pilot_id]['total_score']-$e;
+					$drop++;
+				}
+			}
+		}
+
+		# Now determine the overall rank of the pilots
+		$scores=array();
+		$max_points=0;
+		foreach($subtotals as $pilot_id=>$t){
+			# Create an array of all of the scores
+			$scores[$pilot_id]=$t['total_score'];
+			if($t['total_score']>$max_points){
+				$max_points=$t['total_score'];
+			}
+		}
+		arsort($scores);
+		$count=1;
+		foreach($scores as $pilot_id=>$t){
+			$subtotals[$pilot_id]['overall_rank']=$count;
+
+			# Lets calculate the percentage from the leader
+			if($max_points==0){
+				$subtotals[$pilot_id]['pilot_total_percentage']=0;
+			}else{
+				$subtotals[$pilot_id]['pilot_total_percentage']=sprintf("%02.3f",($subtotals[$pilot_id]['total_score']/$max_points)*100);
+			}
+			$totals[$pilot_id]=$subtotals[$pilot_id];
+			$count++;
+		}
+		
+		return $totals;
 	}
 }
 ?>

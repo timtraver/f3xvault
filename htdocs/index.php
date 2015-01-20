@@ -150,9 +150,9 @@ foreach($GLOBALS['system_flags'] as $flags){
 }
 
 if(file_exists("{$GLOBALS['scripts_dir']}/$action.php")){
-        include("{$GLOBALS['scripts_dir']}/$action.php");
+	include("{$GLOBALS['scripts_dir']}/$action.php");
 }else{
-        include("{$GLOBALS['scripts_dir']}/notyet.php");
+	include("{$GLOBALS['scripts_dir']}/notyet.php");
 }
 $unread=check_unread_messages();
 $smarty->assign("unread_messages",$unread);

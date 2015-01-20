@@ -40,11 +40,13 @@
 		{if $cd.user_id!=0}<a href="?action=message&function=message_edit&to_user_id={$cd.user_id}">Send Message</a>{/if}
 	</td>
 </tr>
-{if $event->info.series_name!=''}
+{if $event->series}
 <tr>
-	<th>Part of Series</th>
-	<td>
-		{$event->info.series_name}
+	<th valign="top">Part of Series</th>
+	<td valign="top">
+		{foreach $event->series as $s}
+			<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
+		{/foreach}
 	</td>
 </tr>
 {/if}

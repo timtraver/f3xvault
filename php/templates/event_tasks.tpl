@@ -26,14 +26,16 @@
 			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
 			</td>
 		</tr>
-		{if $event->info.series_name || $event->info.club_name}
+		{if $event->series || $event->info.club_name}
 		<tr>
-			<th align="right">Part Of Series</th>
-			<td>
-			<a href="?action=series&function=series_view&series_id={$event->info.series_id}">{$event->info.series_name|escape}</a>
+			<th valign="top" align="right">Part Of Series</th>
+			<td valign="top">
+				{foreach $event->series as $s}
+				<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
+				{/foreach}
 			</td>
-			<th align="right">Club</th>
-			<td>
+			<th valign="top" align="right">Club</th>
+			<td valign="top">
 			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name|escape}</a>
 			</td>
 		</tr>
@@ -89,7 +91,8 @@
 	<td colspan="4" style="padding-top:10px;">
 		<input type="button" value=" Save Rounds " onClick="document.main.submit();" class="block-button">
 		<input type="button" value=" Add Round " onClick="document.main.add_round.value=1;document.main.submit();" class="block-button">
-		<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="block-button">
+		<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="block-button">
+		<input type="button" value=" Print Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="block-button">
 	</td>
 </tr>
 </table>
@@ -180,11 +183,19 @@ We can generate a contest play list to run the task announcements. Select from t
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+<form name="print_pilot_blank_tasks" method="POST" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_blank_task">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+<input type="hidden" name="blank" value="1">
+</form>
 <form name="print_pilot_tasks" method="POST" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_blank_task">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="use_print_header" value="1">
+<input type="hidden" name="blank" value="0">
 </form>
 
 </div>

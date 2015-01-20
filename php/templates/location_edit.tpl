@@ -47,7 +47,9 @@
 </tr>
 <tr>
 	<th>Map Coordinates</th>
-	<td><input type="text" size="50" name="location_coordinates" value="{$location.location_coordinates}"></td>
+	<td><input type="text" size="50" name="location_coordinates" value="{$location.location_coordinates}"><br>
+		Must be in the format of Lattitude,Longitude (example: 33.781517,-117.197554)
+	</td>
 </tr>
 <tr>
 	<th>Local RC Club</th>

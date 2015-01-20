@@ -785,6 +785,8 @@ function convert_coordinates($string){
 	$lonstring=trim($latlong[1]);
 	
 	if(!preg_match("/\°/",$string)){
+		# Lets remove anything but numbers
+		$string=preg_replace("/[^\d\,\.\-\+]/", '', $string);
 		return $string;
 	}
 	

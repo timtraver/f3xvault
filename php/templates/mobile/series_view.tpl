@@ -44,12 +44,12 @@ $(function() {
 </script>
 {/literal}
 
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name|escape} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
+<div class="page type-page status-publish hentry clearfix post nodate" style="overflow:auto;">
+	<div class="entry clearfix" style="overflow:auto;">                
+		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name|escape}
 		</h1>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<div class="entry-content clearfix" style="overflow:auto;">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		<tr>
 			<th width="20%" align="right">Series Name</th>
 			<td>
@@ -71,7 +71,7 @@ $(function() {
 	</div>
 		<br>
 		<h1 class="post-title entry-title">Series Events</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 		<tr>
 			<th align="center">#</th>
 			<th align="left" width="10%">Date</th>
@@ -103,7 +103,7 @@ $(function() {
 		<br>
 		{$event_num=1}
 		<h1 class="post-title entry-title">Series Overall Classification</h1>
-		<table width="100%" cellpadding="2" cellspacing="2">
+		<table width="100%" cellpadding="2" cellspacing="2" style="overflow:auto;">
 		<tr>
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
@@ -157,9 +157,6 @@ $(function() {
 		</tr>
 		{/foreach}
 		</table>
-
-
-
 
 <br>
 

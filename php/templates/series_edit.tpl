@@ -90,12 +90,37 @@ $(function() {
 		<input type="text" size="60" name="series_url" value="{$series->info.series_url}">
 	</td>
 </tr>
+</table>
+<h1 class="post-title entry-title">Series Scoring Parameters</h1>
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th>Standard Scoring</th>
+	<td>
+		<input type="radio" name="series_scoring_type" value="standard"{if $series->info.series_scoring_type=='' || $series->info.series_scoring_type=='standard'} CHECKED{/if}>
+		This standard scoring uses the percentage of total points from each event, multiplied by 10 as the points for each event.
+	</td>
+</tr>
+<tr>
+	<th>Position Based</th>
+	<td>
+		<input type="radio" name="series_scoring_type" value="position"{if $series->info.series_scoring_type=='position'} CHECKED{/if}> 
+		This scoring uses the final place position as the score for the pilot with the lowest score being better. If an event is missed it is given a score of the number of pilots in the event plus one.
+	</td>
+</tr>
+<tr>
+	<th>USA Team Select Scoring</th>
+	<td>
+		<input type="radio" name="series_scoring_type" value="teamusa"{if $series->info.series_scoring_type=='teamusa'} CHECKED{/if}> 
+		This scoring gives a single point for the top 30% of positions in an event, and orders by highest score.
+	</td>
+</tr>
 <tr>
 	<th colspan="3" style="text-align: center;">
 		<input type="button" value=" Back To Series View " onClick="goback.submit();" class="block-button">
-		<input type="submit" value=" Save This Series{if $from} and Return{/if} " class="block-button">
+		<input type="submit" value=" Save Series Info{if $from} and Return{/if} " class="block-button">
 	</th>
 </tr>
+
 </table>
 {foreach $from as $f}
 <input type="hidden" name="{$f.key}" value="{$f.value}">

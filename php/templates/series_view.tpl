@@ -49,6 +49,12 @@ $(function() {
 		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name|escape} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
 		</h1>
 		<div class="entry-content clearfix">
+		
+		<form name="series_save_multiples" method="POST">
+		<input type="hidden" name="action" value="series">
+		<input type="hidden" name="function" value="series_save_multiples">
+		<input type="hidden" name="series_id" value="{$series->info.series_id}">
+		
 		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 		<tr>
 			<th width="20%" align="right">Series Name</th>
@@ -68,6 +74,18 @@ $(function() {
 			<th align="right">Series Web URL</th>
 			<td><a href="{$series->info.series_url}" target="_new">{$series->info.series_url}</a></td>
 		</tr>
+		<tr>
+			<th align="right">Series Scoring Type</th>
+			<td>
+				{if $series->info.series_scoring_type=='standard'}
+					Standard Scoring - Event percentage.
+				{elseif $series->info.series_scoring_type=='position'}
+					Position Scoring - Event position. Lower is better.
+				{elseif $series->info.series_scoring_type=='teamusa'}
+					USA Team Selects Scoring - Top 30% receive a point. Double points for multiple day event.
+				{/if}
+			</td>
+		</tr>
 		</table>
 		
 	</div>
@@ -82,6 +100,7 @@ $(function() {
 			<th align="left">State</th>
 			<th align="left">Country</th>
 			<th align="left">Pilots</th>
+			<th align="left">Point Multiple</th>
 		</tr>
 		{$num=1}
 		{foreach $series->events as $e}
@@ -101,11 +120,15 @@ $(function() {
 				{$e.country_name|escape}
 			</td>
 			<td nowrap>{$e.total_pilots|escape}</td>
+			<td nowrap>
+				<input type="text" name="multiple_{$e.event_series_id}" size="2" value="{$e.event_series_multiple|escape}">
+			</td>
 		</tr>
 		{$num=$num+1}
 		{/foreach}
 		</table>
-
+		<input type="button" value=" Save Multiples " onClick="document.series_save_multiples.submit();" class="block-button">
+		</form>
 
 
 		<br>
@@ -119,7 +142,9 @@ $(function() {
 				Completed Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect)
 			</th>
 			<th width="5%" nowrap>Total Score</th>
+			{if $series->info.series_scoring_type=='standard'}
 			<th width="5%" nowrap>Percentage</th>
+			{/if}
 		</tr>
 		<tr>
 			<th width="2%" align="left"></th>
@@ -137,7 +162,9 @@ $(function() {
 			{/foreach}
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
+			{if $series->info.series_scoring_type=='standard'}
 			<th>&nbsp;</th>
+			{/if}
 		</tr>
 		{$previous=0}
 		{$diff_to_lead=0}
@@ -160,28 +187,43 @@ $(function() {
 						{$drop=$p.events.$event_id.dropped}
 						{if $drop==1}<del><font color="red">{/if}
 						{if $p.events.$event_id.event_score!=0}
-						{$p.events.$event_id.event_score|string_format:"%03.0f"}
+							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+								{$p.events.$event_id.event_score|string_format:"%.1f"}
+							{else}
+								{$p.events.$event_id.event_score|string_format:"%0.2f"}
+							{/if}
 						{else}
-						0
+							0
 						{/if}
 						{if $drop==1}</font></del>{/if}
 						<span>
-						{$p.events.$event_id.event_score|string_format:"%06.3f"}
+							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+								{$p.events.$event_id.event_score|string_format:"%.1f"}
+							{else}
+								{$p.events.$event_id.event_score|string_format:"%0.3f"}
+							{/if}
 						</span>
 					</div>
 				</td>
 			{/foreach}
 			<td></td>
+			
 			<td width="5%" nowrap align="right">
 				<a href="" class="tooltip_score_left" onClick="return false;">
-					{$p.total_score|string_format:"%06.3f"}
+					{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+						{$p.total_score|string_format:"%.1f"}
+					{else}
+						{$p.total_score|string_format:"%0.3f"}
+					{/if}
 					<span>
 						<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
 						<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
 					</span>
 				</a>
 			</td>
-			<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
+			{if $series->info.series_scoring_type=='standard'}
+				<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
+			{/if}
 		</tr>
 		{$previous=$p.total_score}
 		{/foreach}

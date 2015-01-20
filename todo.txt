@@ -14,8 +14,6 @@ IMPORTING EVENTS
 	Ability to import F3F rounds one at a time, or completely overwrite existing rounds
 	
 EXPORTING
-	Ability to export pilot list
-	Ability to export  complete draw
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
@@ -76,6 +74,7 @@ PILOTS STUFF
 SERIES STUFF
 	print series pilot detail view
 	Different scoring possibilities (position based instead of score based)
+	Scoring multiple on events in series
 	
 OTHER STUFF
 	Put a "Send This Pilot a Message" button on the pilot view screen if that pilot has an account or an email address on file
@@ -84,10 +83,13 @@ OTHER STUFF
 MOBILE STUFF
 	Mobile score entry by end user
 	Change code for mobile maps to show correctly
-	Ability to expand with the fingers
 
 
 COMPLETED
+X	Add ability for event to be in multiple series
+X	Mobile Ability to expand with the fingers
+X	Ability to export pilot list
+X	Ability to export  complete draw
 X	Pilot point difference on summary screen
 X	Series screen sorted by most recent activity
 X		Add non existant pilots to the Edit Draw Functions

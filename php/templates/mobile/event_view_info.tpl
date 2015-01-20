@@ -1,21 +1,18 @@
 <div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
+	<div class="entry clearfix" style="overflow:auto;">                
 
 		<h1 class="post-title entry-title">{$event->info.event_name|escape}
 			<input type="button" value=" Back To Event View " onClick="goback.submit();" class="block-button">
 		</h1>
-		<div class="entry-content clearfix">
+		<div class="entry-content clearfix" style="overflow:auto;">
 
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder" style="overflow:auto;">
 <tr>
 	<th>Location</th>
 	<td align="left">
 		<a href="?action=location&function=location_view&location_id={$event->info.location_id}">
 		{$event->info.location_name|escape}</a> - 
 		{$event->info.location_city|escape}, {$event->info.state_name|escape}		
-		{if $event->info.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->info.country_code|escape}.png" class="inline_flag" title="{$event->info.country_name}">{/if}
-		{if $event->info.state_name && $event->info.country_code=="US"}<img src="/images/flags/states/16/{$event->info.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$event->info.state_name}">{/if}
-		{if $event->info.location_coordinates!=''} - <a class="fancybox-map" href="https://maps.google.com/maps?q={$event->info.location_coordinates|escape:'url'}+({$event->info.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}
 	</td>
 </tr>
 <tr>
@@ -35,16 +32,15 @@
 	<th>Contest Director</th>
 	<td align="left">
 		{$cd.pilot_first_name|escape} {$cd.pilot_last_name|escape} - {$cd.pilot_city|escape}
-		{if $cd.country_code}<img src="/images/flags/countries-iso/shiny/16/{$cd.country_code|escape}.png" class="inline_flag" title="{$cd.country_name}">{/if}
-		{if $cd.state_name && $event->info.country_code=="US"}<img src="/images/flags/states/16/{$cd.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$cd.state_name}">{/if}
-		{if $cd.user_id!=0}<a href="?action=message&function=message_edit&to_user_id={$cd.user_id}">Send Message</a>{/if}
 	</td>
 </tr>
-{if $event->info.series_name!=''}
+{if $event->series}
 <tr>
-	<th>Part of Series</th>
-	<td align="left">
-		{$event->info.series_name}
+	<th valign="top" align="right">Series</th>
+	<td valign="top" align="right">
+		{foreach $event->series as $s}
+		<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
+		{/foreach}
 	</td>
 </tr>
 {/if}
@@ -106,7 +102,7 @@
 <tr>
 	<th valign="top">Event Notes</th>
 	<td align="left">
-		<pre>{$event->info.event_notes|escape}</pre>
+		<pre style="white-space: pre-wrap;">{$event->info.event_notes|escape}</pre>
 	</td>
 </tr>
 <tr>
