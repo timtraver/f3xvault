@@ -4631,7 +4631,11 @@ function event_export_export() {
 		foreach($d['flights'] as $flight_type_id=>$f){
 			foreach($f as $round_number=>$r){
 				foreach($r['pilots'] as $event_pilot_id=>$p){
-					$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_group'];
+					if($event->flight_types[$flight_type_id]['flight_type_group']==1){
+						$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_group'];
+					}else{
+						$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_order'];
+					}
 				}
 			}
 		}
@@ -4644,7 +4648,22 @@ function event_export_export() {
 				$draws[$event_pilot_id]['draw'][$task_round]='';
 			}
 		}
+	}	
+	
+	$rounds=0;
+	if(count($event->rounds)>0){
+		$rounds=count($event->rounds);
 	}
+	if($rounds==0 && isset($event->tasks)){
+		$rounds=count($event->tasks);
+	}
+	if($rounds==0 && isset($draws) && count($draws)>0){
+		foreach($draws as $event_pilot_id=>$d){
+			$rounds=count($d['draw']);
+		}
+	}
+	$smarty->assign("rounds",$rounds);
+	
 	
 	# Make sure the values are sorted
 	$newdraws=array();
@@ -4674,7 +4693,7 @@ function event_export_export() {
 			$template="event_export_f3j.tpl";
 			break;
 		case "td":
-			$template="event_export_td.tpl";
+			$template="event_export_f3j.tpl";
 			break;
 	}
 
