@@ -121,7 +121,7 @@ $(function() {
 			</td>
 			<td nowrap>{$e.total_pilots|escape}</td>
 			<td nowrap>
-				<input type="text" name="multiple_{$e.event_series_id}" size="2" value="{$e.event_series_multiple|escape}">
+				<input type="text" name="multiple_{$e.event_series_id}" size="6" value="{$e.event_series_multiple|escape}">
 			</td>
 		</tr>
 		{$num=$num+1}
