@@ -3,7 +3,7 @@
 		</div>
 		<div id="footer" class="clearfix">
     	    <div id="copyright" class="clearfix">
-    	     	Copyright &copy; Tim Traver 2013-2014
+    	     	Copyright &copy; Tim Traver 2013-2015
    		    </div>
    		    
 			{if $device=='computer' || $device=='tablet'}   		    
