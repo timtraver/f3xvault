@@ -10,6 +10,8 @@ GENERAL
 =	Add blog menu item and set up simple wordpress blog
 	
 IMPORTING EVENTS
+	Import from f3kscore exported file!
+	Live import and login directly from f3kscore push
 	Make it so that you can choose some of the import fields
 	Ability to import F3F rounds one at a time, or completely overwrite existing rounds
 	
@@ -26,12 +28,15 @@ PLANE STUFF
 	Setup links!
 	
 EVENT STUFF
+	Registration stuff
+		New reg parameters interface to allow people to choose more items
+		Knowledge of payment to allow to come back and get a tshirt or other items.
+		Waiting list system
+		
 	Calendar System
 		Full integrated calendar system to show upcoming events using google's calendar api
 		Create calendar events as different colors for the different types
-	
-	Make a system to do drops on different times for f3j?
-	
+		
 	Reflights
 		modify the reflight addition popup to be able to add multiple pilots of different types
 			and if the reflight is requested, then mark the other flight as auto dropped (RR) Requested reflight
@@ -48,7 +53,6 @@ EVENT STUFF
 		
 	Tasks
 		Task list in event info email (edited in custom email settings)
-		Ability to print pilot names when "Printing Blank Pilot Sheets"
 		
 	Audio Playlist Generation
 		Figure out how to buid local path to audio files for inclusion
@@ -86,6 +90,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Ability to print pilot names when "Printing Blank Pilot Sheets"
 X	Add ability for event to be in multiple series
 X	Mobile Ability to expand with the fingers
 X	Ability to export pilot list

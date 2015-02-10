@@ -6,9 +6,7 @@
 <input type="hidden" name="action" value="register">
 <input type="hidden" name="function" value="save_registration">
 <p>
-Become a registered member of F3X Vault and be able to create and Edit Events, Series, Clubs, Planes and Locations!<br>
-<br>
-You will be sent a verification email and will have to follow the link given to verify your email address.<br>
+Become a registered member of F3X Vault and be able to register for events, create and edit new events, series, clubs, planes and locations!<br>
 <br>
 Your email address WILL NOT be shared with ANYONE. It will only be used as communication to you from this site, for a forgotten password link or other administrative actions. You will have the option to allow your club or series affiliations to send reminders if you select that option in your preferences.<br>
 </p>

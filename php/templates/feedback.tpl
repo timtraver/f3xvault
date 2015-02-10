@@ -39,6 +39,7 @@ This is just a short list of some of the things already on my suggestion and tod
 			<li>Full signup system for event registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Payment methods for registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Calander system to see upcoming events</li>
+			<li>Registration wait list for events that fill up quickly</li>
 		</ul>
 	<li>Event Scoring</li>
 		<ul>
@@ -51,7 +52,7 @@ This is just a short list of some of the things already on my suggestion and tod
 			<li>Email link to results for event participants</li>
 			<li>Full Mobile version for tablets and smartphones <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Show statistics for F3K events (quick turnaround times, etc)</li>
-			<li>Resolve ties by going back to dropped rounds for event rank</li>
+			<li>Resolve ties by going back to dropped rounds for event rank <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Create ability to set event calculation accuracy<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Location Database</li>
@@ -75,8 +76,8 @@ This is just a short list of some of the things already on my suggestion and tod
 	<li>Series</li>
 		<ul>
 			<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-			<li>Multiple Series assignment (Events can be part of more than one series)</li>
-			<li>Allow different types of series scoring such as MOM scoring</li>
+			<li>Multiple Series assignment (Events can be part of more than one series) <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+			<li>Allow different types of series scoring such as MOM scoring <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Clubs</li>
 		<ul>
@@ -93,7 +94,7 @@ This is just a short list of some of the things already on my suggestion and tod
 		<ul>
 			<li>Create a mobile version of the site to be able to view locations, planes, and events <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 			<li>Mobile score entry by end user</li>
-			<li>Ability to expand and contract to view mobile site better</li>
+			<li>Ability to expand and contract to view mobile site better <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 		</ul>
 	<li>Wish List</li>
 		<ul>
