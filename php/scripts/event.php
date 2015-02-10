@@ -1015,6 +1015,14 @@ function event_register() {
 			break;
 		}
 	}
+	# Lets check to see if the event has a max and its been reached
+	if($e->info['event_reg_status']==1 && $event_pilot_id==0){
+		$max=$e->info['event_reg_max'];
+		if(count($e->pilots)>=$max){
+			user_message("Registration for this event has reached a maximum of $max pilots. You cannot register for this event at this time.",1);
+			return event_view();
+		}
+	}
 	
 	# Get classes to choose to be available for this event
 	$stmt=db_prep("
@@ -1139,6 +1147,17 @@ function event_register_save() {
 		user_message("Registration info updated.");
 	}else{
 		# If its a new pilot, lets set the entry order
+
+		# Lets check to see if the event has a max and its been reached
+		$e=new Event($event_id);
+		if($e->info['event_reg_status']==1 && $event_pilot_id==0){
+			$max=$e->info['event_reg_max'];
+			if(count($e->pilots)>=$max){
+				user_message("Registration for this event has reached a maximum of $max pilots. You cannot register for this event at this time.",1);
+				return event_view();
+			}
+		}
+		
 		# Lets see what the next increment in the order is
 		$stmt=db_prep("
 			SELECT MAX(event_pilot_entry_order) as max

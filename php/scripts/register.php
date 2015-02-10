@@ -214,12 +214,12 @@ function save_registration(){
 	$user=get_user_info($user_id);
 	
 	# Send them back to the home page
-	$action='main';
-	$_REQUEST['action']='main';
+	$action='login';
+	$_REQUEST['action']='login';
 	$_REQUEST['function']='';
 	
 	log_action($user['user_id']);
-	user_message("Welcome ".urlencode($user_first_name).", please look for your registration email to complete your registration process! (Check any spam folders just in case)");
+	user_message("Welcome ".urlencode($user_first_name)." to your F3XVault account! Log in with your new username and password!");
 	
 	send_registration_email($user['user_id']);
 	$user=array();
