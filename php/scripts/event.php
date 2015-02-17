@@ -1018,7 +1018,7 @@ function event_register() {
 	# Lets check to see if the event has a max and its been reached
 	if($e->info['event_reg_status']==1 && $event_pilot_id==0){
 		$max=$e->info['event_reg_max'];
-		if(count($e->pilots)>=$max){
+		if(count($e->pilots)>=$max && $max!=0){
 			user_message("Registration for this event has reached a maximum of $max pilots. You cannot register for this event at this time.",1);
 			return event_view();
 		}
@@ -1152,7 +1152,7 @@ function event_register_save() {
 		$e=new Event($event_id);
 		if($e->info['event_reg_status']==1 && $event_pilot_id==0){
 			$max=$e->info['event_reg_max'];
-			if(count($e->pilots)>=$max){
+			if(count($e->pilots)>=$max && $max!=0){
 				user_message("Registration for this event has reached a maximum of $max pilots. You cannot register for this event at this time.",1);
 				return event_view();
 			}
