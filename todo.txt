@@ -10,10 +10,7 @@ GENERAL
 =	Add blog menu item and set up simple wordpress blog
 	
 IMPORTING EVENTS
-	Import from f3kscore exported file!
 	Live import and login directly from f3kscore push
-	Make it so that you can choose some of the import fields
-	Ability to import F3F rounds one at a time, or completely overwrite existing rounds
 	
 EXPORTING
 	
@@ -90,6 +87,7 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Import from f3kscore exported file!
 X	Ability to print pilot names when "Printing Blank Pilot Sheets"
 X	Add ability for event to be in multiple series
 X	Mobile Ability to expand with the fingers

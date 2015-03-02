@@ -7,6 +7,13 @@
 <form name="login" method="POST">
 <input type="hidden" name="action" value="main">
 <input type="hidden" name="function" value="user_login">
+<input type="hidden" name="redirect_action" value="{$redirect_action}">
+<input type="hidden" name="redirect_function" value="{$redirect_function}">
+{foreach $request as $key=>$value}
+	{if $key!='action' && $key!='function' && $key!='login' && $key!='password' && $key!='redirect_action' && $key!='redirect_function'}
+	<input type="hidden" name="{$key}" value="{$value}">
+	{/if}
+{/foreach}
 <table width="30%" cellpadding="2" cellspacing="1">
 <tr>
 	<th colspan="2">

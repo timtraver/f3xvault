@@ -88,15 +88,28 @@ function user_login() {
 		$user=get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
 		log_action($user['user_id']);
-		$_REQUEST['action']='my';
-		$_REQUEST['function']='';
+		
+		if(isset($_REQUEST['redirect_action'])){
+			$_REQUEST['action']=$_REQUEST['redirect_action'];
+		}else{
+			$_REQUEST['action']='my';
+		}
+		if(isset($_REQUEST['redirect_function'])){
+			$_REQUEST['function']=$_REQUEST['redirect_function'];
+		}else{
+			$_REQUEST['function']='';
+		}
 		$GLOBALS['user_id']=$user['user_id'];
-        include("{$GLOBALS['scripts_dir']}/my.php");
+        include("{$GLOBALS['scripts_dir']}/{$_REQUEST['action']}.php");
 		return $actionoutput;
 	}
 	# Unsuccessful login
 	$user=array();
 	user_message($check[1],1);
+	
+	$smarty->assign("redirect_action",$_REQUEST['redirect_action']);
+	$smarty->assign("redirect_function",$_REQUEST['redirect_function']);
+	$smarty->assign("request",$_REQUEST);
 	$maintpl=find_template("login.tpl");
 	return $smarty->fetch($maintpl);
 }

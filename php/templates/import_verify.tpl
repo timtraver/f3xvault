@@ -1,3 +1,79 @@
+<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
+<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+{literal}
+<script>
+$(function() {
+	$("#location_name").autocomplete({
+		source: "/lookup.php?function=lookup_location",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_location');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.location_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.location_name.value==''){
+				document.main.location_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_location');
+			loading.style.display = "none";
+   			var mes=document.getElementById('search_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new location.';
+			}
+		}
+	});
+	$("#event_cd_name").autocomplete({
+		source: "/lookup.php?function=lookup_pilot",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_cd');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.event_cd.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.event_cd_name.value==''){
+				document.main.event_cd.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_cd');
+			loading.style.display = "none";
+   			var mes=document.getElementById('cd_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new CD.';
+			}
+		}
+	});
+});
+</script>
+{/literal}
+	
+	
+	
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                
 		<h1 class="post-title entry-title">F3X Event Import Step 1</h1>
@@ -10,10 +86,12 @@
 <input type="hidden" name="function" value="import_import">
 <input type="hidden" name="event_id" value="{$event.event_id}">
 <input type="hidden" name="event_type_id" value="{$event.event_type_id}">
+<input type="hidden" name="event_type_code" value="{$event.event_type_code}">
 <input type="hidden" name="event_zero_round" value="{$event.event_zero_round}">
-<input type="hidden" name="event_name" value="{$event.event_name}">
 <input type="hidden" name="event_start_date" value="{$event.event_start_date}">
 <input type="hidden" name="event_end_date" value="{$event.event_end_date}">
+<input type="hidden" name="event_cd" value="{$event.event_cd}">
+<input type="hidden" name="location_id" value="{$event.location_id}">
 {foreach $rounds as $r}
 {$round=$r@key}
 <input type="hidden" name="event_round_{$round}" value="{$r.flight_type_id}">
@@ -24,31 +102,65 @@ Imported information from file
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
 	<th colspan="2">Event Type</th>
-	<td colspan="4">
+	<td colspan="5">
 		{$event.event_type_code} - {$event.event_type_name}
-		
 	</td>
 </tr>
 <tr>
 	<th colspan="2">Event Name</th>
-	<td colspan="4">
-		{$event.event_name}
+	<td colspan="5">
+		<input type="text" name="event_name" size="40" value="{$event.event_name|escape}">
 	</td>
 </tr>
 <tr>
 	<th colspan="2">Event Dates</th>
-	<td colspan="4">
-		{$event.event_start_date} TO {$event.event_end_date}
+	<td colspan="5">
+		{html_select_date prefix="event_start_date" start_year="-15" end_year="+3" day_format="%02d" time=$event.event_start_date} to 
+		{html_select_date prefix="event_end_date" start_year="-15" end_year="+3" day_format="%02d" time=$event.event_end_date}
 	</td>
 </tr>
 <tr>
-	<th colspan="3">Data Import</th>
+	<th colspan="2">Event Location</th>
+	<td colspan="5">
+		<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name|escape}">
+		<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
+	</td>
+</tr>
+
+<tr>
+	<th colspan="2">Contest Director</th>
+	<td colspan="5">
+		<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{$event.cd_name|escape}">
+		<img id="loading_cd" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
+	</td>
+</tr>
+{if $event.event_type_code=='f3k'}
+<tr>
+	<th colspan="2">Flyoff Rounds</th>
+	<td colspan="5">
+		<input type="checkbox" name="flyoff"> Import this file as a set of flyoff rounds
+	</td>
+</tr>
+{/if}
+{if $event.event_type_code=='f3f'}
+<tr>
+	<th colspan="2">Zero Round</th>
+	<td colspan="5">
+		<input type="checkbox" name="event_zero_round"> This event has a zero round
+	</td>
+</tr>
+{/if}
+<tr>
+	<th colspan="4">Data Import</th>
 	<th colspan="3">Example Import Round 1</th>
 </tr>
 <tr>
 	<th></th>
 	<th>Pilot Name</th>
 	<th>Pilot Lookup</th>
+	<th>Pilot Class</th>
 	<th>Grp</th>
 	<th>Flight</th>
 	<th>Pen</th>
@@ -60,7 +172,6 @@ Imported information from file
 	<td>
 		{$p.pilot_name}
 		<input type="hidden" name="pilot_name_{$line_number}" value="{$p.pilot_name}">
-		<input type="hidden" name="pilot_class_{$line_number}" value="{$p.pilot_class}">
 		<input type="hidden" name="pilot_freq_{$line_number}" value="{$p.pilot_freq}">
 		<input type="hidden" name="pilot_team_{$line_number}" value="{$p.pilot_team}">
 		{foreach $p.rounds as $r}
@@ -81,6 +192,14 @@ Imported information from file
 		{/foreach}
 		</select>
 	</td>
+	<td>
+		<select name="pilot_class_id_{$line_number}">
+		{foreach $classes as $c}
+			<option value="{$c.class_id}" {if $c.class_id==$p.class_id}SELECTED{/if}>{$c.class_description}</option>
+		{/foreach}
+		</select>
+	</td>
+	
 	<td align="center">{$p.rounds.1.group}</td>
 	<td align="center">
 		{if $p.rounds.1.flights.sub}
@@ -96,7 +215,7 @@ Imported information from file
 {$line_number=$line_number+1}
 {/foreach}
 <tr>
-	<th colspan="6">
+	<th colspan="7">
 	<input type="button" value=" Cancel Import " class="block-button" onClick="goback.submit();">
 	<input type="submit" value=" Import This Data " class="block-button">
 	</th>
@@ -107,8 +226,7 @@ Imported information from file
 
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="function" value="event_list">
 </form>
 
 

@@ -15,8 +15,28 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function="location_list";
 }
 
+$need_login=array(
+	"location_edit",
+	"location_save",
+	"location_media_edit",
+	"location_media_add",
+	"location_media_del",
+	"location_comment_add",
+	"location_comment_save"
+);
 if(check_user_function($function)){
-	eval("\$actionoutput=$function();");
+	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to use this feature.",1);
+		$smarty->assign("redirect_action",$_REQUEST['action']);
+		$smarty->assign("redirect_function",$_REQUEST['function']);
+		$smarty->assign("request",$_REQUEST);
+		$maintpl=find_template("feature_requires_login.tpl");
+		$actionoutput=$smarty->fetch($maintpl);
+	}else{
+		# They are allowed
+		eval("\$actionoutput=$function();");
+	}
 }else{
 	 $actionoutput= show_no_permission();
 }
@@ -247,12 +267,6 @@ function location_edit() {
 		$location_id=$_REQUEST['location_id'];
 	}
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
 	if(isset($_REQUEST['location_name'])){
 		$location_name=ucwords($_REQUEST['location_name']);
 	}
@@ -477,13 +491,6 @@ function location_view() {
 function location_save() {
 	global $smarty;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-	
 	$location=array();
 	if(isset($_REQUEST['location_id'])){
 		$location['location_id']=intval($_REQUEST['location_id']);
@@ -700,13 +707,6 @@ function location_media_edit() {
 	global $smarty;
 	global $user;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
 	$location_id=$_REQUEST['location_id'];
 	
 	$stmt=db_prep("
@@ -726,13 +726,6 @@ function location_media_add() {
 	global $smarty;
 	global $user;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
 	$location_id=$_REQUEST['location_id'];
 	$location_media_type=$_REQUEST['location_media_type'];
 	$location_media_caption=$_REQUEST['location_media_caption'];
@@ -811,13 +804,6 @@ function location_comment_add() {
 	global $smarty;
 	global $user;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
 	$location_id=$_REQUEST['location_id'];
 	
 	$stmt=db_prep("
@@ -837,13 +823,6 @@ function location_comment_save() {
 	global $smarty;
 	global $user;
 
-	if($GLOBALS['user_id']==0){
-		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit location information.",1);
-		$maintpl=find_template("feature_requires_login.tpl");
-		return $smarty->fetch($maintpl);
-	}
-		
 	$location_id=$_REQUEST['location_id'];
 	$location_comment_string=$_REQUEST['location_comment_string'];
 	

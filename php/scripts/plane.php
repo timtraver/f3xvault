@@ -15,8 +15,28 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function="plane_list";
 }
 
+$need_login=array(
+	"plane_edit",
+	"plane_save",
+	"plane_media_edit",
+	"plane_media_add",
+	"plane_media_del",
+	"plane_comment_add",
+	"plane_comment_save"
+);
 if(check_user_function($function)){
-	eval("\$actionoutput=$function();");
+	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
+		# The user is not logged in, so send the feature template
+		user_message("Sorry, but you must be logged in as a user to use this feature.",1);
+		$smarty->assign("redirect_action",$_REQUEST['action']);
+		$smarty->assign("redirect_function",$_REQUEST['function']);
+		$smarty->assign("request",$_REQUEST);
+		$maintpl=find_template("feature_requires_login.tpl");
+		$actionoutput=$smarty->fetch($maintpl);
+	}else{
+		# They are allowed
+		eval("\$actionoutput=$function();");
+	}
 }else{
 	 $actionoutput= show_no_permission();
 }

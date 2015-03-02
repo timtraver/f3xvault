@@ -30,7 +30,10 @@ $need_login=array(
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
 		# The user is not logged in, so send the feature template
-		user_message("Sorry, but you must be logged in as a user to Edit club information.",1);
+		user_message("Sorry, but you must be logged in as a user to use this feature.",1);
+		$smarty->assign("redirect_action",$_REQUEST['action']);
+		$smarty->assign("redirect_function",$_REQUEST['function']);
+		$smarty->assign("request",$_REQUEST);
 		$maintpl=find_template("feature_requires_login.tpl");
 		$actionoutput=$smarty->fetch($maintpl);
 	}else{

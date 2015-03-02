@@ -22,6 +22,7 @@
            			<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=event&function=event_edit&event_id=0">Create New Event</a></li>
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=series&country_id=0&state_id=0&search=">Series Browse</a></li>
 					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=records&country_id=0&page=1&perpage=20">F3F and F3B Records</a></li>
+					<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/?action=import">Import Competition</a></li>
 				</ul>
 			</li>
 			<li class="menu-item menu-item-type-post_type menu-item-object-page {if $current_menu=='pilots'}current-menu-item{/if} menu-item-ancestor"><a href="/?action=main&function=view_pilots"><strong>Pilot Profiles</strong></a>

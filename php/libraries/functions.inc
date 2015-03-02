@@ -105,7 +105,7 @@ function db_prep ($querystring) {
                 $stmt = $dbh->prepare($querystring);
         } catch (PDOException $e) {
                 $errorstring=$e->getMessage();
-                query_error($querystring,$errorstring);
+                query_error($querystring,array(),$errorstring);
         }
         return $stmt;
 }
@@ -133,13 +133,13 @@ function db_exec ($stmt,$data=array()) {
 	        }
         } catch (PDOException $e) {
 			$string=$e->getMessage();
-			query_error($stmt->queryString,$string);
+			query_error($stmt->queryString,$data,$string);
         }
         $last_insert_id=$dbh->lastInsertId();
         $total_queries++;
         return $results;
 }
-function query_error($query,$error){
+function query_error($query,$data,$error){
         # Function to write out the error
         $queryerrorfile="{$GLOBALS['include_paths']['libraries']}/query_errors.log";
 
@@ -169,6 +169,10 @@ function query_error($query,$error){
         $errorstring.=$tracestring;
         $errorstring.="STRING  : $query\n";
         $errorstring.="ERROR   : $error\n";
+        $errorstring.="Data    : \n";
+        foreach($data as $key=>$value){
+	        $errorstring.="        : $key -> $value\n";
+        }
         $errorstring.="_REQUEST: \n";
         foreach($_REQUEST as $key=>$value){
                 $errorstring.="        : $key -> $value\n";

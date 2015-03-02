@@ -12,6 +12,10 @@ $GLOBALS['current_menu']='message';
 # This whole section requires the user to be logged in
 if($GLOBALS['user_id']==0){
 	# The user is not logged in, so send the feature template
+	user_message("Sorry, but you must be logged in as a user to use this feature.",1);
+	$smarty->assign("redirect_action",$_REQUEST['action']);
+	$smarty->assign("redirect_function",$_REQUEST['function']);
+	$smarty->assign("request",$_REQUEST);
 	$maintpl=find_template("feature_requires_login.tpl");
 	$actionoutput=$smarty->fetch($maintpl);
 }else{

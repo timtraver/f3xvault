@@ -28,12 +28,6 @@
 		</td>
 	</tr>
 	<tr>
-		<th>Event has a Zero Round</th>
-		<td>
-			<input type="checkbox" name="event_zero_round">
-		</td>
-	</tr>
-	<tr>
 		<th>Import Field Separator</th>
 		<td>
 			<input type="radio" name="field_separator" value="," CHECKED> Comma or 
