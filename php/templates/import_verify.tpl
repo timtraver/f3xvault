@@ -97,7 +97,7 @@ $(function() {
 <input type="hidden" name="event_round_{$round}" value="{$r.flight_type_id}">
 {/foreach}
 
-Imported information from file
+Verify the imported information from the file and set additional information.
 
 <table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 <tr>
@@ -109,7 +109,7 @@ Imported information from file
 <tr>
 	<th colspan="2">Event Name</th>
 	<td colspan="5">
-		<input type="text" name="event_name" size="40" value="{$event.event_name|escape}">
+		<input type="text" name="event_name" size="40" value="{$event.event_name|escape}"> {if $event.event_id!=0}<font color="red">Found Existing Event!</font>{/if}
 	</td>
 </tr>
 <tr>

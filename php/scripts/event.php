@@ -67,43 +67,6 @@ if(check_user_function($function)){
 	 $actionoutput= show_no_permission();
 }
 
-function check_event_permission($event_id){
-	global $user;
-	# Function to check to see if this user can edit this event
-	# First check if its an administrator
-	if($user['user_admin']){
-		return 1;
-	}
-	
-	# Get event info
-	$stmt=db_prep("
-		SELECT *
-		FROM event
-		WHERE event_id=:event_id
-	");
-	$result=db_exec($stmt,array("event_id"=>$event_id));
-	$event=$result[0];
-
-	if($event['pilot_id']==$user['pilot_id']){
-		# This is the owner of the event, so of course he has access
-		return 1;
-	}
-	$allowed=0;
-	# Now lets get the other permissions
-	$stmt=db_prep("
-		SELECT *
-		FROM event_user
-		WHERE event_id=:event_id
-			AND event_user_status=1
-	");
-	$users=db_exec($stmt,array("event_id"=>$event_id));
-	foreach($users as $u){
-		if($user['pilot_id']==$u['pilot_id']){
-			$allowed=1;
-		}
-	}
-	return $allowed;
-}
 function event_list() {
 	global $smarty;
 	global $export;
