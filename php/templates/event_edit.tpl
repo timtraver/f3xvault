@@ -393,12 +393,6 @@ function reg_check(){
 <tr>
 	<th colspan="2">
 		<input type="submit" value=" Save These Event Parameters " class="block-button">
-		{if $event->pilots|count==0 && $event->info.event_type_code=='f3f'}
-			<input type="button" value=" Import F3F Event " class="block-button" onClick="document.import_f3f.submit();">
-		{/if}
-		{if $event->info.event_type_code=='f3k'}
-			<input type="button" value=" Import F3K Rounds " class="block-button" onClick="document.import_f3k.submit();">
-		{/if}
 	</th>
 </tr>
 
