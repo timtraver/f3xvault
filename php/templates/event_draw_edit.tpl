@@ -76,7 +76,7 @@ function calc_groups(){ldelim}
 
 {rdelim}
 </script>
-
+{$highlight_color="yellow"}
 <div class="page type-page status-publish hentry clearfix post nodate">
 	<div class="entry clearfix">                	
 	<br>
@@ -172,7 +172,7 @@ function calc_groups(){ldelim}
 <tr>
 	<th nowrap>Team Separation</th>
 	<td>
-		<input type="checkbox" name="event_draw_team_separation"{if $draw->draw.event_draw_team_separation==1} CHECKED{/if} onChange="set_changed();"> This will make sure team pilots are separated by at least one pilot.
+		<input type="checkbox" name="event_draw_team_separation"{if $draw->draw.event_draw_team_separation==1} CHECKED{/if} onChange="set_changed();"> This will make sure team pilots are separated by the lowest team size for clear separation.
 	</td>
 </tr>
 {/if}
@@ -196,14 +196,25 @@ function calc_groups(){ldelim}
 </form>
 
 {if $draw->rounds}
+	<br>
+<h1 class="post-title entry-title">Draw Manual Edit (Rounds {$draw->draw.event_draw_round_from} - {$draw->draw.event_draw_round_to})</h1>
+
+<form name="mainhl">
+Team Highlight :
+<select name="highlight" onChange="document.hl.highlight.value=document.mainhl.highlight.value;document.hl.submit();">
+<option value="">None</option>
+{foreach $event->teams as $t}
+<option value="{$t.event_pilot_team}"{if $highlight==$t.event_pilot_team} SELECTED{/if}>{$t.event_pilot_team}</option>
+{/foreach}
+</select>
+</form>
+
 <form name="draw_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_draw_manual_save">
 <input type="hidden" name="event_draw_id" value="{$event_draw_id}">
 <input type="hidden" name="event_id" value="{$event_id}">
 
-	<br>
-<h1 class="post-title entry-title">Draw Manual Edit (Rounds {$draw->draw.event_draw_round_from} - {$draw->draw.event_draw_round_to})</h1>
 		<table cellspacing="2">
 		<tr>
 			{foreach $event->rounds as $r}
@@ -261,17 +272,22 @@ function calc_groups(){ldelim}
 							{$bottom=1}
 						{/if}
 					{/if}
+					{if $event->pilots.$event_pilot_id.event_pilot_team==$highlight}
+						{$highlighted=1}
+					{else}
+						{$highlighted=0}
+					{/if}
 					<tr>
 						{if $event->flight_types.$flight_type_id.flight_type_group}
-							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 								<input type="text" size="1" name="draw_group_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_group}">
 							</td>
 						{else}
-							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 								<input type="text" size="1" name="draw_order_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_order}">
 							</td>
 						{/if}
-						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+						<td align="left" nowrap bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 							{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
 								<div class="pilot_bib_number_print">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 								&nbsp;
@@ -282,7 +298,7 @@ function calc_groups(){ldelim}
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
-						<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
 					{/if}
 					</tr>
 					{$oldgroup=$p.event_pilot_round_flight_group}
@@ -304,7 +320,14 @@ function calc_groups(){ldelim}
 
 
 
-
+<form name="hl" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw_edit">
+<input type="hidden" name="event_id" value="{$event_id}">
+<input type="hidden" name="event_draw_id" value="{$event_draw_id}">
+<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+<input type="hidden" name="highlight" value="">
+</form>
 
 
 <form name="goback" method="POST">

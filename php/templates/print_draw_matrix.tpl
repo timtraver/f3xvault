@@ -1,3 +1,4 @@
+		{$highlight_color="yellow"}
 		<h2>{$event->info.event_name}</h2>           
 		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
 		<tr>
@@ -12,6 +13,17 @@
 		</tr>
 		</table>
 		<h2 class="post-title entry-title" style="margin:0px;">Draw Matrix - {if $event->info.event_type_code!="f3k"}{$event->flight_types.$flight_type_id.flight_type_name} {/if}(Rounds {$print_round_from} - {$print_round_to})</h2>
+		
+			<form name="main">
+			Team Highlight :
+			<select name="highlight" onChange="document.hl.highlight.value=document.main.highlight.value;document.hl.submit();">
+			<option value="">None</option>
+			{foreach $event->teams as $t}
+			<option value="{$t.event_pilot_team}"{if $highlight==$t.event_pilot_team} SELECTED{/if}>{$t.event_pilot_team}</option>
+			{/foreach}
+			</select>
+			</form>
+			
 		<table cellspacing="2">
 		<tr>
 			{foreach $event->rounds as $r}
@@ -71,16 +83,21 @@
 							{else}
 								{$bgcolor='white'}
 							{/if}
-							{$bottom=1}
 						{/if}
+						{$bottom=1}
+					{/if}
+					{if $event->pilots.$event_pilot_id.event_pilot_team==$highlight}
+						{$highlighted=1}
+					{else}
+						{$highlighted=0}
 					{/if}
 					<tr>
 						{if $event->flight_types.$flight_type_id.flight_type_group}
-							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
+							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 						{else}
-							<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
+							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
 						{/if}
-						<td align="left" nowrap bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+						<td align="left" nowrap bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 							{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
 								<div class="pilot_bib_number_print">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 								&nbsp;
@@ -91,7 +108,7 @@
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
-						<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
 					{/if}
 					</tr>
 					{$oldgroup=$p.event_pilot_round_flight_group}
@@ -107,3 +124,19 @@
 			{/foreach}
 			</tr>
 			</table>
+			
+			<form name="hl">
+			<input type="hidden" name="action" value="event">
+			<input type="hidden" name="function" value="{$function}">
+			<input type="hidden" name="event_id" value="{$event->info.event_id}">
+			<input type="hidden" name="event_draw_id" value="{$event_draw_id}">
+			<input type="hidden" name="flight_type_id" value="{$flight_type_id}">
+			<input type="hidden" name="print_round_from" value="{$print_round_from}">
+			<input type="hidden" name="print_round_to" value="{$print_round_to}">
+			<input type="hidden" name="print_type" value="{$print_type}">
+			<input type="hidden" name="print_format" value="{$print_format}">
+			<input type="hidden" name="use_print_header" value="{$use_print_header}">
+			<input type="hidden" name="highlight" value="">
+			</form>
+			
+	

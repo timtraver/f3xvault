@@ -139,8 +139,21 @@ class Draw {
 			"round_to"=>$round_to
 		));
 		
+		if($this->draw['event_draw_team_separation']==1){
+			$separation=50;
+			# They want event team separation by as much as possible
+			# Step through the teams and get the teams with the least amount of pilots as the min distance (instead of just one)
+			foreach($this->teams as $team_name=>$t){
+				$temp_size=count($t);
+				if($temp_size<$separation){
+					$separation=$temp_size;
+				}
+			}
+		}		
+		
 		$last_team='';
 		for($round=$round_from;$round<=$round_to;$round++){
+			$last_teams=array();
 			$round_ok=1;
 			$order=array();
 			$pilots=$this->pilots;
@@ -153,12 +166,25 @@ class Draw {
 				if(count($pilots)>1){
 					$rand=mt_rand(0,$total_pilots);
 					$test=array_slice($pilots,$rand-1,1);
-					if($test[0]['event_pilot_team']!=$last_team || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
+					# Lets see if this pilots team is in the last X teams for the spacing
+					$spacing_ok=1;
+					$counter=1;
+					foreach($last_teams as $l){
+						if($test[0]['event_pilot_team']==$l){
+							$spacing_ok=0;
+						}
+						$counter++;
+						if($counter>=$separation){
+							break;
+						}
+					}
+					if($spacing_ok==1 || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
 						# This chosen one is indeed on a different team, so lets pop it off the array
 						$splice=array_splice($pilots,$rand-1,1);
 						$order[]=$splice[0];
 						$total_pilots--;
 						$last_team=$splice[0]['event_pilot_team'];
+						array_unshift($last_teams, $last_team);
 						if($y>20){
 							$round_ok=0;
 						}
@@ -172,6 +198,7 @@ class Draw {
 					$order[]=$pilots[0];
 					$total_pilots--;
 					$last_team=$pilots[0]['event_pilot_team'];
+					array_unshift($last_teams, $last_team);
 				}
 			}
 			if($round_ok==0){

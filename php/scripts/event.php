@@ -3472,6 +3472,7 @@ function event_draw_edit() {
 	$event_id=intval($_REQUEST['event_id']);
 	$event_draw_id=intval($_REQUEST['event_draw_id']);
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$highlight=$_REQUEST['highlight'];
 
 	$e=new Event($event_id);
 	$e->get_teams();
@@ -3604,6 +3605,7 @@ function event_draw_edit() {
 	$smarty->assign("max_groups_p",$max_groups_p);
 	$smarty->assign("min_groups_np",$min_groups_np);
 	$smarty->assign("max_groups_np",$max_groups_np);
+	$smarty->assign("highlight",$highlight);
 
 	$maintpl=find_template("event_draw_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -3991,11 +3993,14 @@ function event_draw_print() {
 	global $smarty;
 
 	$event_id=intval($_REQUEST['event_id']);
+	$event_draw_id=intval($_REQUEST['event_draw_id']);
 	$print_flight_type_id=intval($_REQUEST['flight_type_id']);
 	$print_round_from=intval($_REQUEST['print_round_from']);
 	$print_round_to=intval($_REQUEST['print_round_to']);
 	$print_type=$_REQUEST['print_type'];
 	$print_format=$_REQUEST['print_format'];
+	$use_print_header=$_REQUEST['use_print_header'];
+	$highlight=$_REQUEST['highlight'];
 
 	$template='';
 	$title='';
@@ -4112,8 +4117,13 @@ function event_draw_print() {
 
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);
-	$smarty->assign("print_format",$print_format);
 	$smarty->assign("flight_type_id",$print_flight_type_id);
+	$smarty->assign("print_format",$print_format);
+	$smarty->assign("print_type",$print_type);
+	$smarty->assign("highlight",$highlight);
+	$smarty->assign("use_print_header",$use_print_header);
+	$smarty->assign("event_draw_id",$event_draw_id);
+	$smarty->assign("function",$_REQUEST['function']);
 	$smarty->assign("event",$e);
 	
 	
@@ -4156,6 +4166,14 @@ function event_draw_view() {
 	$event_id=intval($_REQUEST['event_id']);
 	$event_draw_id=intval($_REQUEST['event_draw_id']);
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
+	$print_type=$_REQUEST['print_type'];
+	$print_format=$_REQUEST['print_format'];
+	$use_print_header=$_REQUEST['use_print_header'];
+	$highlight=$_REQUEST['highlight'];
+
+	if($print_format==''){
+		$print_format='html';
+	}
 
 	$template="print_draw_matrix.tpl";
 	$title="Draw Matrix";
@@ -4235,9 +4253,15 @@ function event_draw_view() {
 	$smarty->assign("print_round_from",$print_round_from);
 	$smarty->assign("print_round_to",$print_round_to);
 	$smarty->assign("flight_type_id",$flight_type_id);
-	$smarty->assign("print_format","html");
 	$smarty->assign("event",$e);
-	
+
+	$smarty->assign("print_type",$print_type);
+	$smarty->assign("print_format",$print_format);
+	$smarty->assign("highlight",$highlight);
+	$smarty->assign("use_print_header",$use_print_header);
+	$smarty->assign("event_draw_id",$event_draw_id);
+	$smarty->assign("function",$_REQUEST['function']);
+
 	$maintpl=find_template($template);
 	return $smarty->fetch($maintpl);
 }
