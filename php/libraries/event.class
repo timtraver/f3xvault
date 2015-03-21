@@ -858,7 +858,7 @@ class Event {
 		
 		$all=$this->rounds[$event_round_number]['flights'];
 		# Now lets add the reflights to that array so they are all in the same array before we send them to the calc
-		if(count($this->rounds[$event_round_number]['reflights']['pilots'])>0){
+		if(count($this->rounds[$event_round_number]['reflights'])>0){
 			foreach($this->rounds[$event_round_number]['reflights'] as $flight_type_id=>$r){
 				if(is_array($r)){
 					foreach($r['pilots'] as $p){
@@ -885,7 +885,6 @@ class Event {
 				}
 			}
 		}
-		
 		
 		# Lets set all of the reflight drop values for this pilot to 1 for this round and type and then find the biggest and mark it good
 		# Loop through only the reflights, cause we don't need to change the other pilots
