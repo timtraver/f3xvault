@@ -1953,7 +1953,21 @@ class Event {
 						);
 					}
 				}
-			}		
+			}
+			foreach($r['reflights'] as $flight_type_id=>$f){
+				if($f['event_round_flight_score']==0){
+					continue;
+				}
+				if($f['flight_type_code']=='f3b_distance'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						$temp_laps[]=array(
+							"event_pilot_id"=>$event_pilot_id,
+							"event_round_number"=>$event_round_number,
+							"event_pilot_round_flight_laps"=>$p['event_pilot_round_flight_laps']
+						);
+					}
+				}
+			}
 		}
 		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
 		return $laps;
