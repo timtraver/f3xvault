@@ -265,7 +265,13 @@ function import_verify() {
 					$x++;
 					# Read in all the subflights
 					for($y=1;$y<=$rounds[$r]['flight_type_sub_flights'];$y++){
-						$temp_rounds[$r]['flights']['sub'][$y]=convert_seconds_to_colon($lines[$l][$x]);
+						if(preg_match("/\:/",$lines[$l][$x])){
+							# It has a colon in it already so its in colon notation
+							$temp_rounds[$r]['flights']['sub'][$y]=$lines[$l][$x];
+						}else{
+							# It is in full seconds, so convert it to colon notation
+							$temp_rounds[$r]['flights']['sub'][$y]=convert_seconds_to_colon($lines[$l][$x]);
+						}
 						$x++;
 					}
 					$temp_rounds[$r]['penalty']=$lines[$l][$x];

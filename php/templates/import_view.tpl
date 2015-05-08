@@ -74,7 +74,17 @@
 <tr>
 	<th nowrap>Line 3 (Pilot Data)</th>
 	<td>
-		Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), Round_1_Group(txt), Round_1_flight_1(sec), Round_1_flight_X(sec), Round_1_Penalty(num), Round_2_Group(txt), Round_2_Flight_X(sec), Round_2_Penalty(num), ... Round_X_...
+		Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), Round_1_Group(txt), Round_1_flight_1(seconds or colon notation min:sec like 1:58), Round_1_flight_X(seconds or colon), Round_1_Penalty(num), Round_2_Group(txt), Round_2_Flight_X(seconds or colon), Round_2_Penalty(num), ... Round_X_...
+	</td>
+</tr>
+<tr>
+	<th nowrap>Example</th>
+	<td>
+		0,2015 International Hand Launch Glider Festival,05/02/2015,05/03/2015,f3k<br>
+		f3k_c,f3k_g,f3k_i,f3k_d,f3k_e,f3k_a,f3k_f,f3k_j,f3k_h,f3k_b,f3k_g,f3k_e<br>
+		0,Tim Traver,Open,2.4GHz,,E,3:00,3:00,3:00,,B,1:59,2:00,1:59,1:41,2:00,,............<br>
+		0,Thomas Kiesling,Open,2.4GHz,,D,3:00,3:00,3:00,,B,2:00,2:00,1:59,1:59,1:49,,...........<br>
+
 	</td>
 </tr>
 <tr>
@@ -93,7 +103,16 @@
 	</td>
 </tr>
 <tr>
-	<th align="left" colspan="2">Gloassary of Fields</th>
+	<th nowrap>Example</th>
+	<td>
+		0,2015 SCSR Vincent,05/18/2015,05/18/2015,f3f<br>
+		0,Tim Traver,Open,2.4GHz,,42.56,,46.22,,41.21,,40.37,,............<br>
+		0,Thomas Kiesling,Open,2.4GHz,,41.59,,43.29,,45.75,,41.21,,...........<br>
+
+	</td>
+</tr>
+<tr>
+	<th align="left" colspan="2">Glossary of Fields</th>
 </tr>
 <tr>
 	<th nowrap>Event_ID</th>
