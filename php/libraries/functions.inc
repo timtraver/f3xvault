@@ -763,6 +763,7 @@ function convert_colon_to_seconds($timestring){
 }
 function convert_seconds_to_colon($seconds){
 	# Function to convert a number of seconds to colon time string
+	$seconds=floatval($seconds);
 	$min=floor($seconds/60);
 	$mod=fmod($seconds,60);
 	$sec=sprintf("%02d",$mod);
