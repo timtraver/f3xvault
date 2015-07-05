@@ -68,6 +68,37 @@ $(function() {
 			}
 		}
 	});
+	$("#event_name").autocomplete({
+		source: "/lookup.php?function=lookup_event",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.event_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.event_name.value==''){
+				document.main.event_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "none";
+   			var mes=document.getElementById('event_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found.';
+			}
+		}
+	});
 });
 </script>
 {/literal}
@@ -109,7 +140,13 @@ Verify the imported information from the file and set additional information.
 <tr>
 	<th colspan="2">Event Name</th>
 	<td colspan="5">
-		<input type="text" name="event_name" size="40" value="{$event.event_name|escape}"> {if $event.event_id!=0}<font color="red">Found Existing Event!</font>{/if}
+		<input type="text" id="event_name" name="event_name" size="60" value="{$event.event_name|escape}"> 
+		<img id="loading_event" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+		{if $event.event_id != 0}
+			<font color="green">Matches Existing Event</font>
+		{else}
+			<span id="event_message" style="font-style: italic;color: grey;">Start typing to search events</span>
+		{/if}
 	</td>
 </tr>
 <tr>

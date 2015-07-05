@@ -139,13 +139,9 @@ function import_verify() {
 			FROM event e
 			LEFT JOIN location l ON e.location_id=l.location_id
 			WHERE e.event_name=:event_name
-				AND e.event_start_date=:event_start_date
-				AND e.event_end_date=:event_end_date
 		");
 		$result=db_exec($stmt,array(
-			"event_name"=>$event_name,
-			"event_start_date"=>$event_start_date,
-			"event_end_date"=>$event_end_date
+			"event_name"=>$event_name
 		));
 		if(isset($result[0])){
 			$event_id=$result[0]['event_id'];

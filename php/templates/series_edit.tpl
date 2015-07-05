@@ -60,7 +60,7 @@ $(function() {
    		response: function( event, ui ) {
    			var loading=document.getElementById('loading_event');
 			loading.style.display = "none";
-   			var mes=document.getElementById('user_event_message');
+   			var mes=document.getElementById('series_event_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
@@ -245,7 +245,7 @@ $(function() {
 		Add Event To Series 
 		<input type="text" id="series_event_name" name="series_event_name" size="40">
 		<img id="loading_event" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-		<span id="user_event_message" style="font-style: italic;color: grey;">Start typing to search events</span>
+		<span id="series_event_message" style="font-style: italic;color: grey;">Start typing to search events</span>
 		<input type="submit" value=" Add This Event " class="block-button">
 	</th>
 </tr>
