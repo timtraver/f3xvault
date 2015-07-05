@@ -24,7 +24,9 @@ $need_login=array(
 	"series_param_save",
 	"series_option_add_drop",
 	"series_user_save",
-	"series_user_delete"
+	"series_user_delete",
+	"series_event_save",
+	"series_event_delete"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id']==0 && in_array($function, $need_login)){
@@ -561,6 +563,69 @@ function series_user_delete() {
 	$result=db_exec($stmt,array("series_user_id"=>$series_user_id));
 	
 	user_message("Removed user access to edit this series.");
+	return series_edit();
+}
+function series_event_save() {
+	global $smarty;
+	global $user;
+	
+	$series_id=intval($_REQUEST['series_id']);
+	$event_id=intval($_REQUEST['event_id']);
+
+	if($event_id==0){
+		user_message("Cannot add a blank event.",1);
+		return series_edit();
+	}
+			
+	# Lets first see if this one is already added
+	$stmt=db_prep("
+		SELECT *
+		FROM event_series
+		WHERE series_id=:series_id
+			AND event_id=:event_id
+	");
+	$result=db_exec($stmt,array("series_id"=>$series_id,"event_id"=>$event_id));
+	
+	if(isset($result[0])){
+		# This record already exists, so lets just turn it on
+		$stmt=db_prep("
+			UPDATE event_series
+			SET event_series_status=1
+			WHERE event_series_id=:event_series_id
+		");
+		$result=db_exec($stmt,array("event_series_id"=>$result[0]['event_series_id']));
+	}else{
+		# Lets create a new record
+		$stmt=db_prep("
+			INSERT INTO event_series
+			SET series_id=:series_id,
+				event_id=:event_id,
+				event_series_status=1
+		");
+		$result=db_exec($stmt,array(
+			"series_id"=>$series_id,
+			"event_id"=>$event_id
+		));
+	}
+	user_message("New event added to this series.");
+	return series_edit();
+}
+function series_event_delete() {
+	global $smarty;
+	global $user;
+	
+	$series_id=intval($_REQUEST['series_id']);
+	$event_series_id=intval($_REQUEST['event_series_id']);
+
+	# Lets turn off this record
+	$stmt=db_prep("
+		UPDATE event_series
+		SET event_series_status=0
+		WHERE event_series_id=:event_series_id
+	");
+	$result=db_exec($stmt,array("event_series_id"=>$event_series_id));
+	
+	user_message("Removed event from this series.");
 	return series_edit();
 }
 function check_series_permission($series_id){

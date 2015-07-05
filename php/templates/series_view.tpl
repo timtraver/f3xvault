@@ -150,12 +150,12 @@ $(function() {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $series->events as $e}
-				<th class="info" width="5%" align="center" nowrap>
+				<th class="info" width="1%" align="center" nowrap>
 					<div style="position:relative;">
 					<span>
 						{$e.event_name|escape}
 					</span>
-					<a href="/?action=event&function=event_view&event_id={$e.event_id}">Event {$event_num}</a>
+					<a href="/?action=event&function=event_view&event_id={$e.event_id}">E {$event_num}</a>
 					</div>
 				</th>
 				{$event_num=$event_num+1}

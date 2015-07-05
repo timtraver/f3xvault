@@ -37,6 +37,37 @@ $(function() {
 			}
 		}
 	});
+	$("#series_event_name").autocomplete({
+		source: "/lookup.php?function=lookup_event",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.series_event.event_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.series_event.series_event_name.value==''){
+				document.series_event.event_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "none";
+   			var mes=document.getElementById('user_event_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found.';
+			}
+		}
+	});
 });
 </script>
 {/literal}
@@ -191,6 +222,38 @@ $(function() {
 
 </table>
 </form>
+
+<h1 class="post-title entry-title">Series Events</h1>
+<form name="series_event" method="POST">
+<input type="hidden" name="action" value="series">
+<input type="hidden" name="function" value="series_event_save">
+<input type="hidden" name="series_id" value="{$series->info.series_id}">
+<input type="hidden" name="event_id" value="">
+<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+<tr>
+	<th colspan="2" align="left">The Following Events Are In This Series</th>
+</tr>
+{foreach $series->events as $e}
+<tr>
+	<td>{$e.event_start_date|date_format:"Y-m-d"} - {$e.event_name|escape}</td>
+	<td width="2%">
+		<a href="?action=series&function=series_event_delete&series_id={$series->info.series_id}&event_series_id={$e.event_series_id}" title="Remove Event" onClick="return confirm('Are you sure you wish to remove this event?');"><img src="/images/del.gif"></a></td>
+</tr>
+{/foreach}
+<tr>
+	<th colspan="2">
+		Add Event To Series 
+		<input type="text" id="series_event_name" name="series_event_name" size="40">
+		<img id="loading_event" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+		<span id="user_event_message" style="font-style: italic;color: grey;">Start typing to search events</span>
+		<input type="submit" value=" Add This Event " class="block-button">
+	</th>
+</tr>
+
+</table>
+</form>
+
+
 {/if}
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="series">

@@ -88,6 +88,33 @@ function lookup_event_pilot() {
 
 	print json_encode($pilots);
 }
+function lookup_event() {
+	global $user;
+	global $smarty;
+
+	$q = trim(urldecode(strtolower($_GET["term"])));
+	$q = '%'.$q.'%';
+	# Do search
+	$stmt=db_prep("
+		SELECT *
+		FROM event e
+		WHERE LOWER(e.event_name) LIKE :term1
+			AND e.event_status=1
+		ORDER BY e.event_start_date DESC
+	");
+	$result=db_exec($stmt,array("term1"=>$q));
+	
+	foreach($result as $r){
+		$date=date("Y-m-d",strtotime($r['event_start_date']));
+		$events[]=array(
+			"id"=>$r['event_id'],
+			"label"=>"$date {$r['event_name']}",
+			"value"=>"{$r['event_name']}"
+		);
+	}
+
+	print json_encode($events);
+}
 function lookup_plane() {
 	global $user;
 	global $smarty;
