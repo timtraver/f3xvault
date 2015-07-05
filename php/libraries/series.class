@@ -91,6 +91,19 @@ class Series {
 			$events[$event_id]['pilots']=$pilots;
 			$events[$event_id]['total_pilots']=count($pilots);
 		}
+		
+		# Lets get the number of rounds that the events have
+		foreach($events as $event_id=>$e){
+			$stmt=db_prep("
+				SELECT *
+				FROM event_round er
+				WHERE er.event_id=:event_id
+					AND er.event_round_status=1
+			");
+			$results=db_exec($stmt,array("event_id"=>$event_id));
+			$events[$event_id]['total_rounds']=count($results);
+		}
+		
 		$this->events=$events;
 	}
 	function get_access(){
@@ -116,9 +129,15 @@ class Series {
 			}
 		}
 		# Now lets see how many drops based on the number of events
+		$number_events=0;
+		foreach($this->events as $e){
+			if($e['total_rounds']>0){
+				$number_events++;
+			}
+		}
 		$number_drops=0;
 		foreach($drop_rounds as $event_number){
-			if(count($this->events)>=$event_number){
+			if($number_events>=$event_number){
 				$number_drops++;
 			}
 		}
@@ -297,11 +316,16 @@ class Series {
 				}else{
 					$sub=0;
 				}
-				$subtotals[$pilot_id]['events'][$event_id]['event_score']=$sub;
-				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=$p['event_pilot_position'];
+				if($e['total_rounds']>0){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score']=$sub;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=$p['event_pilot_position'];
+					$subtotals[$pilot_id]['total_score']+=$sub;
+				}else{
+					$subtotals[$pilot_id]['events'][$event_id]['event_score']=0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position']=0;
+				}
 				$subtotals[$pilot_id]['pilot_first_name']=$p['pilot_first_name'];
 				$subtotals[$pilot_id]['pilot_last_name']=$p['pilot_last_name'];
-				$subtotals[$pilot_id]['total_score']+=$sub;
 			}
 		}
 		
