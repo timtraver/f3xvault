@@ -256,16 +256,22 @@ class Event {
 						case 'f3k_a':
 							$subs=array("5:00");
 							break;
+						case 'f3k_a2':
+							$subs=array("5:00");
+							break;
 						case 'f3k_b':
 							$subs=array("4:00","4:00");
+							break;
+						case 'f3k_b2':
+							$subs=array("3:00","3:00");
 							break;
 						case 'f3k_c':
 							$subs=array("3:00","3:00","3:00");
 							break;
-						case 'f3k_c4':
+						case 'f3k_c2':
 							$subs=array("3:00","3:00","3:00","3:00");
 							break;
-						case 'f3k_c5':
+						case 'f3k_c3':
 							$subs=array("3:00","3:00","3:00","3:00","3:00");
 							break;
 						case 'f3k_d':
