@@ -598,8 +598,9 @@ function series_event_save() {
 		# Lets create a new record
 		$stmt=db_prep("
 			INSERT INTO event_series
-			SET series_id=:series_id,
-				event_id=:event_id,
+			SET event_id=:event_id,
+				series_id=:series_id,
+				event_series_multiple=1.00,
 				event_series_status=1
 		");
 		$result=db_exec($stmt,array(
