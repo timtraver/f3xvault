@@ -176,7 +176,6 @@ function copy_location_values(){
 	document.create_new_location.from_event_cd.value=document.main.event_cd.value;
 	document.create_new_location.from_event_cd_name.value=document.main.event_cd_name.value;
 	document.create_new_location.from_series_id.value=document.main.series_id.value;
-	document.create_new_location.from_series_name.value=document.main.series_name.value;
 	document.create_new_location.from_club_id.value=document.main.club_id.value;
 	document.create_new_location.from_club_name.value=document.main.club_name.value;
 	document.create_new_location.from_event_reg_flag.value=document.main.event_reg_flag.value;
@@ -197,7 +196,6 @@ function copy_club_values(){
 	document.create_new_club.from_event_cd.value=document.main.event_cd.value;
 	document.create_new_club.from_event_cd_name.value=document.main.event_cd_name.value;
 	document.create_new_club.from_series_id.value=document.main.series_id.value;
-	document.create_new_club.from_series_name.value=document.main.series_name.value;
 	document.create_new_club.from_event_reg_flag.value=document.main.event_reg_flag.value;
 	document.create_new_club.from_event_notes.value=document.main.event_notes.value;
 }
@@ -216,7 +214,6 @@ function copy_cd_values(){
 	document.create_new_cd.from_event_end_dateYear.value=document.main.event_end_dateYear.value;
 	document.create_new_cd.from_event_type_id.value=document.main.event_type_id.value;
 	document.create_new_cd.from_series_id.value=document.main.series_id.value;
-	document.create_new_cd.from_series_name.value=document.main.series_name.value;
 	document.create_new_cd.from_event_reg_flag.value=document.main.event_reg_flag.value;
 	document.create_new_cd.from_event_notes.value=document.main.event_notes.value;
 }
@@ -514,7 +511,6 @@ reg_check();
 <input type="hidden" name="from_event_cd" value="">
 <input type="hidden" name="from_event_cd_name" value="">
 <input type="hidden" name="from_series_id" value="">
-<input type="hidden" name="from_series_name" value="">
 <input type="hidden" name="from_club_id" value="">
 <input type="hidden" name="from_club_name" value="">
 <input type="hidden" name="from_event_reg_flag" value="">
@@ -524,7 +520,6 @@ reg_check();
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_edit">
 <input type="hidden" name="series_id" value="0">
-<input type="hidden" name="series_name" value="">
 <input type="hidden" name="from_action" value="event">
 <input type="hidden" name="from_function" value="event_edit">
 <input type="hidden" name="from_event_id" value="{$event->info.event_id}">
@@ -566,7 +561,6 @@ reg_check();
 <input type="hidden" name="from_location_id" value="">
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_series_id" value="">
-<input type="hidden" name="from_series_name" value="">
 <input type="hidden" name="from_event_reg_flag" value="">
 <input type="hidden" name="from_event_notes" value="">
 </form>
@@ -591,7 +585,6 @@ reg_check();
 <input type="hidden" name="from_location_id" value="">
 <input type="hidden" name="from_location_name" value="">
 <input type="hidden" name="from_series_id" value="">
-<input type="hidden" name="from_series_name" value="">
 <input type="hidden" name="from_event_reg_flag" value="">
 <input type="hidden" name="from_event_notes" value="">
 </form>
