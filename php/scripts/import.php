@@ -288,7 +288,7 @@ function import_verify() {
 	foreach($pilots as $key=>$p){
 		$potentials=array();
 		$found_pilots=array();
-		if($p['pilot_id']=='' || $p['pilot_id']=='0'){
+		if($p['pilot_id']=='' || $p['pilot_id']=='0' || intval($p['pilot_id'])<=0){
 			# Lets get the list of possible pilot names for this one
 			$pilot_entered=$p['pilot_name'];
 			$q = trim(urldecode(strtolower($pilot_entered)));
@@ -306,8 +306,18 @@ function import_verify() {
 				WHERE LOWER(p.pilot_first_name) LIKE :term1
 					OR LOWER(p.pilot_last_name) LIKE :term2
 					OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
+					OR LOWER(p.pilot_first_name) LIKE :term4
+					OR LOWER(p.pilot_last_name) LIKE :term5
+					OR LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name)) LIKE :term6
 			");
-			$found_pilots=db_exec($stmt,array("term1"=>$first_name,"term2"=>$last_name,"term3"=>$q));
+			$found_pilots=db_exec($stmt,array(
+				"term1"=>$first_name,
+				"term2"=>$last_name,
+				"term3"=>$q,
+				"term4"=>$last_name,
+				"term5"=>$first_name,
+				"term6"=>$q
+			));
 			$potentials[]=array("pilot_id"=>0,"pilot_full_name"=>'Add As New Pilot');
 		}else{
 			$stmt=db_prep("
