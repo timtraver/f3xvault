@@ -139,7 +139,7 @@ $(function() {
 			<td width="2%" align="left"></td>
 			<th width="10%" align="right" nowrap></th>
 			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
-				Completed Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect)
+				Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events} Completed Events)
 			</th>
 			<th width="5%" nowrap>Total Score</th>
 			{if $series->info.series_scoring_type=='standard'}
