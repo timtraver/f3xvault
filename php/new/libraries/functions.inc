@@ -308,6 +308,7 @@ function show_pages($records,$defaultperpage=10){
         $smarty->assign("startrecord",$startrecord);
         $smarty->assign("endrecord",$endrecord);
         $smarty->assign("page",$page);
+        $smarty->assign("perpage",$perpage);
 
         return $showrecords;
 }

@@ -257,7 +257,7 @@ function location_list() {
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("location_list.tpl");
+	$maintpl=find_template("location/location_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_edit() {
@@ -367,7 +367,7 @@ function location_edit() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("disciplines",$disciplines);
 
-	$maintpl=find_template("location_edit.tpl");
+	$maintpl=find_template("location/location_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_view() {
@@ -485,7 +485,7 @@ function location_view() {
 	$smarty->assign("disciplines",$disciplines);
 	$smarty->assign("events",$events);
 
-	$maintpl=find_template("location_view.tpl");
+	$maintpl=find_template("location/location_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_save() {
@@ -719,7 +719,7 @@ function location_media_edit() {
 	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_id",$location_id);
-	$maintpl=find_template("location_edit_media.tpl");
+	$maintpl=find_template("location/location_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_media_add() {
@@ -816,7 +816,7 @@ function location_comment_add() {
 	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_id",$location_id);
-	$maintpl=find_template("location_comment.tpl");
+	$maintpl=find_template("location/location_comment.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_comment_save() {
@@ -990,7 +990,7 @@ function location_map() {
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("location_map.tpl");
+	$maintpl=find_template("location/location_map.tpl");
 	return $smarty->fetch($maintpl);
 }
 function location_calculate_records(){

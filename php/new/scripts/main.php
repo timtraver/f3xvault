@@ -31,7 +31,7 @@ function view_locations() {
 	global $user;
 	$smarty->assign('current_menu','locations');
 
-	$maintpl=find_template("locations.tpl");
+	$maintpl=find_template("location/locations.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_planes() {
