@@ -1,0 +1,320 @@
+<!doctype html>  
+<!--[if IE 6 ]><html lang="en-us" class="ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en-us" class="ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en-us" class="ie8"> <![endif]-->
+<!--[if (gt IE 7)|!(IE)]><!-->
+<html lang="en-us"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	
+	<title>The Drawer -  Mobile Retina | HTML5 & CSS3 And iWebApp</title>
+	
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="copyright" content="">
+	<meta name="generator" content="Documenter v1.6 http://rxa.li/documenter">
+	<meta name="date" content="2013-02-26T13:22:32+01:00">
+	
+	<link rel="stylesheet" href="css/documenter_style.css" media="all">
+	
+	
+	<script src="js/jquery.1.6.4.js"></script>
+	
+	<script src="js/jquery.scrollTo-1.4.2-min.js"></script>
+	<script src="js/jquery.easing.js"></script>
+	
+	<link rel="stylesheet" href="css/shDocumenter.css" media="screen">
+	<script src="js/shCore.js"></script>
+	<script src="js/shBrushXml.js"></script>
+	<script>SyntaxHighlighter.defaults['toolbar'] = false;SyntaxHighlighter.all();</script>
+
+	<script>document.createElement('section');var duration=500,easing='swing';</script>
+	<script src="js/script.js"></script>
+	
+	<style>
+		html{background-color:#FFFFFF;color:#383838;}
+		::-moz-selection{background:#444444;color:#DDDDDD;}
+		::selection{background:#444444;color:#DDDDDD;}
+		#documenter_sidebar #documenter_logo{background-image:url();}
+		a{color:#0000FF;}
+		hr{border-top:1px solid #EBEBEB;border-bottom:1px solid #FFFFFF;}
+		#documenter_sidebar, #documenter_sidebar ol a{background-color:#DDDDDD;color:#222222;}
+		#documenter_sidebar ol a{-webkit-text-shadow:1px 1px 0px #EEEEEE;-moz-text-shadow:1px 1px 0px #EEEEEE;text-shadow:1px 1px 0px #EEEEEE;}
+		#documenter_sidebar ol{border-top:1px solid #AAAAAA;}
+		#documenter_sidebar ol a{border-top:1px solid #EEEEEE;border-bottom:1px solid #AAAAAA;color:#444444;}
+		#documenter_sidebar ol a:hover{background:#444444;color:#DDDDDD;border-top:1px solid #444444;}
+		#documenter_sidebar ol a.current{background:#444444;color:#DDDDDD;border-top:1px solid #444444;}
+		#documenter_copyright{display:block !important;visibility:visible !important;}
+	</style>
+	
+</head>
+<body>
+	<div id="documenter_sidebar">
+		<a href="#documenter_cover" id="documenter_logo"></a>
+		<ol id="documenter_nav">
+			<li><a class="current" href="#documenter_cover">Start</a></li>
+			<li><a href="#f_a_q">F.A.Q</a>
+				<ol>
+					<li><a href="#f_a_q_how_do_i_install_this_template">How do I install this template?</a>
+				</ol>
+			</li>
+			<li><a href="#general_page_structure">General Page Structure</a>
+				<ol>
+					<li><a href="#general_page_structure_page_content">Page Content</a>
+					<li><a href="#general_page_structure_sidebar_structure">Sidebar Structure</a>
+				</ol>
+			</li>
+
+		</ol>
+		<div id="documenter_copyright">Copyright  2013<br>
+		made with the <a href="http://rxa.li/documenter">Documenter v1.6</a> 
+		</div>
+	</div>
+	<div id="documenter_content">
+	<section id="documenter_cover"><h1>The Drawer</h1><h2> Mobile Retina | HTML5 & CSS3 And iWebApp</h2><hr><ul></ul></section><section id="f_a_q">
+	<h3>F.A.Q</h3><hr class="notop">
+<p>
+	This documentation is made for you to understand the structure of The Drawer! All the features presented in the demonstration can be found in the epsilon.html documnetation!&nbsp;</p>
+<p>
+	&nbsp;</p>
+<h4 id="f_a_q_how_do_i_install_this_template">How do I install this template?</h4>
+<p>
+	Simply copy and paste the following files to your desired location on the server!&nbsp;</p>
+<div>
+	<strong>images</strong></div>
+<div>
+	<strong>php</strong></div>
+<div>
+	<strong>scripts</strong></div>
+<div>
+	<strong>styles</strong></div>
+<div>
+	blog.html</div>
+<div>
+	blog-post.html</div>
+<div>
+	contact.html</div>
+<div>
+	filtfolio.html</div>
+<div>
+	index.html</div>
+<div>
+	intro.html</div>
+<div>
+	jquery.html</div>
+<div>
+	other.html</div>
+<div>
+	swipefolio.html</div>
+<div>
+	twocfolio.html</div>
+<div>
+	typog.html</div>
+<div>
+	&nbsp;</div>
+<div>
+	<strong>How do I change the contact form information?</strong></div>
+<div>
+	&nbsp;</div>
+<div>
+	To change the contact form information, edit the only php file in the pack! If you can&#39;t find one, you need to purchase the item! :)&nbsp;</div>
+</section>
+<section id="general_page_structure">
+	<h3>General Page Structure</h3><hr class="notop">
+<p>
+	The page is divided into two main sections! The content part and the sidebar part!&nbsp;</p>
+<h4 id="general_page_structure_page_content">Page Content</h4>
+<p>
+	The following structure applies for the content!&nbsp;</p>
+<pre class="brush: html">
+&lt;div class=&quot;page-content&quot;&gt;
+    &lt;div class=&quot;content&quot;&gt;
+        &lt;div class=&quot;container&quot;&gt;
+            &lt;!--Whatever you like here, with a 20 pixel margin bottom--&gt;
+        &lt;div&gt;
+        &lt;div class=&quot;decoration&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;container no-bottom&quot;&gt;
+            &lt;!--Whatever you want here with no margin bottom!--&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+<p>
+	The no-bottom half-bottom are classes that apply to EVERYTHING in the template! No bottom removes the bottom margin from the container, half-bottom only adds 10 pixels margin bottom and not adding it leaves the default 20 pixels margin bottom!&nbsp;</p>
+<h4 id="general_page_structure_sidebar_structure">Sidebar Structure</h4>
+<pre class="brush: html">
+</pre>
+<div>
+	<pre class="brush: html">
+&lt;div class=&quot;page-sidebar&quot;&gt;</pre>
+</div>
+<div>
+	&nbsp; &lt;div class=&quot;page-sidebar-scroll&quot;&gt; &nbsp;</div>
+<div>
+	&nbsp; &nbsp;<span class="Apple-tab-span"> </span> &nbsp;&lt;a href=&quot;tel:+1 23 456 7890&quot; class=&quot;sidebar-button&quot;&gt; &lt;em class=&quot;sidebar-button-call&quot;&gt;CALL US&lt;/em&gt; &lt;/a&gt;</div>
+<div>
+	&nbsp; <span class="Apple-tab-span"> </span> &nbsp; &lt;a href=&quot;sms:+1 23 456 7890&quot; class=&quot;sidebar-button&quot;&gt; &lt;em class=&quot;sidebar-button-text&quot;&gt;TEXT US&lt;/em&gt; &lt;/a&gt;</div>
+<div>
+	&nbsp; <span class="Apple-tab-span"> </span> &nbsp; &lt;a href=&quot;mailto:&#109;&#97;&#105;&#108;&#64;&#100;&#111;&#97;&#109;&#97;&#105;&#110;&#46;&#99;&#111;&#109;&quot; class=&quot;sidebar-button hide2-sidebar&quot;&gt; &lt;em class=&quot;sidebar-button-close&quot;&gt;COLLAPSE&lt;/em&gt; &lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt; &nbsp;</div>
+<div>
+	&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;img class=&quot;sidebar-logo replace-2x&quot; src=&quot;images/misc/logow.png&quot; alt=&quot;img&quot;&gt;</div>
+<div>
+	&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;div class=&quot;menu&quot;&gt; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;menu-item&quot;&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong class=&quot;home-icon&quot;&gt;&lt;/strong&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a class=&quot;menu-enabled&quot; href=&quot;index.html&quot;&gt;Home&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;menu-item&quot;&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong class=&quot;features-icon&quot;&gt;&lt;/strong&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a class=&quot;menu-disabled deploy-submenu&quot; href=&quot;#&quot;&gt;Features&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;submenu&quot;&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="Apple-tab-span"> </span> &nbsp;&lt;a href=&quot;intro.html&quot;&gt;The Drawer Introduction&lt;/a&gt; <span class="Apple-tab-span"> </span> &nbsp; &lt;em class=&quot;submenu-decoration&quot;&gt;&lt;/em&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;a href=&quot;typog.html&quot;&gt;Typography Features&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;&nbsp;<span style="font-family: Arial, Verdana, sans-serif;">&nbsp;</span></div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;p class=&quot;sidebar-heading&quot;&gt;UPDATES&lt;/p&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-updates&quot;&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a href=&quot;#&quot; class=&quot;update-box update-news&quot;&gt; NEW ITEM RELEASED!&lt;br/&gt;21&#39; JAN 2012 &lt;/a&gt;<span class="Apple-tab-span"> </span> &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt;<span class="Apple-tab-span"> </span></div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a href=&quot;#&quot; class=&quot;update-box update-blog&quot;&gt; NEW BLOG CATEGORY CREATED&lt;br&gt;20&#39; JAN 2012 &lt;/a&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a href=&quot;#&quot; class=&quot;update-box update-folio&quot;&gt; NEW ITEM ADDED TOO PORTFOLIO&lt;br&gt;19&#39; JAN 2012 &lt;/a&gt; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;p class=&quot;sidebar-copyright center-text&quot;&gt;Copyright 2013. All rights reserved!&lt;/p&gt;</div>
+<div>
+	&nbsp;</div>
+<div>
+	&nbsp; <span class="Apple-tab-span"> </span> &nbsp; &lt;a href=&quot;#&quot; class=&quot;sidebar-button&quot;&gt; &lt;em class=&quot;sidebar-button-facebook&quot;&gt;FACEBOOK&lt;/em&gt; &lt;/a&gt;</div>
+<div>
+	&nbsp; <span class="Apple-tab-span"> </span> &nbsp; &lt;a href=&quot;#&quot; class=&quot;sidebar-button&quot;&gt; &lt;em class=&quot;sidebar-button-twitter&quot;&gt;TWITTER&lt;/em&gt; &lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;a href=&quot;#&quot; class=&quot;sidebar-button&quot;&gt; &lt;em class=&quot;sidebar-button-rss&quot;&gt;SUBSCRIBE&lt;/em&gt; &lt;/a&gt; &nbsp;&nbsp;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &lt;/div&gt;</div>
+<div>
+	&lt;/div&gt;</div>
+<p>
+	Copying this code into your page-content class will generate a sidebar. How it works is pretty easy! Don&#39;t be scared by teh size!&nbsp;</p>
+<p>
+	First achor classes are responsible for the phone, sms and closing of the sidebar!&nbsp;</p>
+<p>
+	Beeneth the first anchor classes is the sidebar logo! To change the logo width when adding your own logo, search for the sidebar-logo and logo classes inside of style.css</p>
+<p>
+	The menu item class, creates a simgle menu when used in the bellow syntax.&nbsp;</p>
+<pre class="brush: html">
+</pre>
+<div>
+	<pre class="brush: html">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;menu-item&quot;&gt;</pre>
+</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong class=&quot;home-icon&quot;&gt;&lt;/strong&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a class=&quot;menu-enabled&quot; href=&quot;index.html&quot;&gt;Home&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;&nbsp;</div>
+<p>
+	If you wish to create a submenu, use the bellow syntax</p>
+<pre class="brush: html">
+</pre>
+<div>
+	<pre class="brush: html">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;menu-item&quot;&gt;</pre>
+</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;strong class=&quot;features-icon&quot;&gt;&lt;/strong&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a class=&quot;menu-disabled deploy-submenu&quot; href=&quot;#&quot;&gt;Features&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;submenu submenu-on-page&quot;&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="Apple-tab-span"> </span> &nbsp;&lt;a href=&quot;intro.html&quot;&gt;The Drawer Introduction&lt;/a&gt; <span class="Apple-tab-span"> </span> &nbsp; &lt;em class=&quot;submenu-decoration&quot;&gt;&lt;/em&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;a class=&quot;submenu-active&quot; href=&quot;other.html&quot;&gt;Other Features&lt;/a&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</div>
+<div>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;&nbsp;</div>
+<p>
+	This syntax creates a submenu!&nbsp;</p>
+<p>
+	If you wish your menu to be selected, meaning have the right side ball white, replace menu-disabled with menu-enabled.</p>
+<p>
+	If you wish your sidemenu to be active, the submenu class will be &lt;div class=&quot;submenu submenu-on-page&quot;&gt;, by this, the submenu will stay deployed!&nbsp;</p>
+<p>
+	If you wish to make a submenu from the sidebar active, simply give one of the anchors the class &lt;a class=&quot;submenu-active&quot;... &gt;</p>
+<p>
+	The above submenu has both of these examples included!&nbsp;</p>
+<p>
+	The sidebar heading is a text that spans full width of the screen and is bolded white!</p>
+<p>
+	The sidebar updates class can house anchors with important news you wish to share! Example bellow</p>
+<pre class="brush: html">
+</pre>
+<div>
+	<pre class="brush: html">
+&lt;div class=&quot;sidebar-updates&quot;&gt;</pre>
+</div>
+<div>
+	&lt;a href=&quot;#&quot; class=&quot;update-box update-news&quot;&gt;NEW ITEM RELEASED!&lt;br/&gt;21&#39; JAN 2012&lt;/a&gt; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div>
+	&nbsp; &lt;a href=&quot;#&quot; class=&quot;update-box update-blog&quot;&gt;NEW BLOG CATEGORY&lt;br&gt;20&#39; JAN 2012&lt;/a&gt; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt;</div>
+<div>
+	&nbsp; &lt;a href=&quot;#&quot; class=&quot;update-box update-folio&quot;&gt;NEW ITEM ADDED TOO&lt;br&gt;19&#39; JAN 2012&lt;/a&gt; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;sidebar-decoration&quot;&gt;&lt;/div&gt; &lt;/div&gt;</div>
+<p>
+	Each of the update boxes has a specific icon!&nbsp;</p>
+<p>
+	That&#39;s about it!&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+</section>
+
+	</div>
+</body>
+</html>

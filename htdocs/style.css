@@ -165,3 +165,23 @@ html {
 	text-shadow: #16497e;
 	bottom: 30%;
 }
+.fixed-ratio-resize { /* basic responsive img */
+	max-width: 100%;
+	height: auto;
+	width: auto\9; /* IE8 */
+}
+h2.heading {
+	white-space: nowrap;
+	display: inline-block;
+	color: #2982C5;
+}
+table.filter {
+	padding: 5px;
+	border: 1px solid black;
+}
+table.filter th {
+	padding: 5px;
+	background-color: lightgray;
+}table.filter td {
+	padding: 5px;
+}

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--Declare page as mobile friendly --> 
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+<!-- Declare page as iDevice WebApp friendly -->
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<!-- iDevice WebApp Splash Screen, Regular Icon, iPhone, iPad, iPod Retina Icons -->
+<link rel="apple-touch-icon" sizes="114x114" href="images/splash/splash-icon.png"> 
+<link rel="apple-touch-startup-image" href="images/splash/splash-screen.png" media="screen and (max-device-width: 320px)" /> 
+<link rel="apple-touch-startup-image" href="images/splash/splash-screen@2x.png" media="(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)" /> 
+<link rel="apple-touch-startup-image" href="images/splash/splash-screen@3x.png" sizes="640x1096">
+
+<title>Epsilon Framework Docs</title>
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<script src="scripts/jquery.js"></script>
+<script src="scripts/jquery-ui-min.js"></script>
+<script src="scripts/custom.js"></script>
+</head>
+
+<body>
+
+
+
+<div class="header">
+</div>
+
+<div class="clear"></div>
+
+<div class="grid">
+
+	<div class="container">
+        <p class="center-text">
+           <a class="hider" href="#">HIDE TOP HEADER</a>
+        </p>
+	</div>
+
+	<div class="container">
+		<h4 class="center-text">Terms of support for products developed by Enabled!</h4>
+        <p>
+        	We simply love what we do, and for that reason alone we love helping out each customer and offering the best support!
+            This is the main reason we created this full optioned framework, to make a piece of code, that can be more or less universal with simple usage and a vast manual!
+            <strong>Envato™</strong> does not oblige authors to give support for their items, but as we love coding so much we offer support for all our files <strong>if</strong> and <strong>only if</strong> you are
+            a decent and understanding person! We are human too, we have families too, we need time for ourselves as well! That's why we reply to all inquieries that are not found in this manual or the templates manual
+            within 24-72 hours of you sending it! If you don't get a reply by then, please use one of the forms bellow!
+            
+            
+            <a class="question-href" href="#"><strong class="question">  Where do you get support?</strong></a>
+            If you send us a direct e-mail to any of our addresses claiming you purchased one of our files, chances are we won't reply! There is a simple method proivded by <strong>Envato™</strong> and that is the contact 
+            form on our page! You can find it  If you wish a more personal aproach, we have 2 forms built for specific issues! 
+            <br/><br/>
+            <a href="http://themeforest.net/user/Enabled">Envato Profile Contact Form!</a> | 
+            <a href="http://www.paultrifa.com/support/wordpress/">WordPress Support Form</a> | 
+            <a href="http://www.paultrifa.com/support/templates/">HTML Support Form</a> |
+            <a href="http://www.paultrifa.com/support/epsilon/">Epsilon Framework Updates!</a>
+            <br><br>
+            If there will be an Epsilon update, you will find it on the Epsilon Framework Updates page! We release only stable versions, so no need to worry that you might have bugs! These updates will include new features, that will NOT affect your current version of Epsilon!<br/>
+            Thank you for your understanding and we hope you love our files! Let's explain Epsilon, shall we?       
+        </p>
+    </div>
+
+	<div class="decoration"></div>  
+	      
+    <div class="container">
+		<h4>How the template is structured:</h4>
+        <p>
+        	The template is structured into 3 basic and main classes! These are <strong>header</strong>, <strong>content</strong>, and <strong>footer</strong>. The header and footer will be covered in the other documentation found in the pack.
+        	the content page is divided into <strong>container</strong> classes! <br>The default <strong>container</strong> class has a 20 pixel margin to the bottom! Please insert all elements inside the container class!
+            If your container has a paragraph right at the end and you don't want it to have a 20 pixel margin, simple name the class as <strong>container no-bottom</strong>!
+            This structure applies to the ENTIRE template except the places where it's specifically mentioned NOT to use this system!
+        </p>
+        
+    	<h4>How do the stylesheets work?</h4>
+        <p>
+        	Epsilon is a framework we built in order to make mobile templates more flexible, with better code optimization and make sure that you get the easiest user experience possible when editing it!
+           	Epsilon is structured in two main stylesheets, <strong>framework-style.css</strong> and <strong>framework.css</strong>, the <strong>framework.css</strong> file is the blueprint of the page. This shouldn't be tampered with.
+            inside this file the file is reset, structured, aligned, defined, and all it's default elements are created and aligned properly to the page!<br>
+            Inside the <strong>framework-style.css</strong> file you will find font sizes, colors, paddings, font families, and other variables that you can change to style your file in anyother way than provided! These are still framework related!
+            We strongly recommend that you DO NOT edit the framework.css file! If we find ( we probably won't ) any bugs in the framework, this file will be edited and this file will be the only file that needs to be replaced!<br/>
+            Inside the <strong>style.css</strong> you will find all custom items unique to that individual template, meaning navigation styles, footer styles, etc!
+    	</p>
+    </div>
+ 
+    <div class="container">
+    	<p>
+        	<strong>Definitions:<br/></strong> 
+        	To create a new container - add a class &lt;div class="container"&gt; ENABLED &lt;/div&gt; and replace ENABLED with the discussed elements<br>
+            To create a new no bottom container - add a class &lt;div class="container no-bottom"&gt; ENABLED &lt;/div&gt; and replace ENABLED with the discussed elements
+            <br><br>
+            <strong>Recomandation!</strong><br>
+            To make sure the file is working properly, we suggest NOT to crowd pages with multiple jQuery elements. For example, try to keep 1 slider and 1 portfolio type per page MAX!
+            This is not because the item is poorly optimized, but because there are devices like the Samsung Galaxy S, or the iPhone 3Gs that are still in use today, and have low
+            power CPU's! In which case, your page might just end up crashing the browser! <br><br>
+            
+            We also highly recommend that all edits done within the file should happen inside the <strong>style.css</strong> and <strong>framework-style.css</strong>! We will be releasing updates to all our
+            customers, a separate page availalble on our support page! If a update is availalble we will include a blog post, and explanations to what changed inside the <strong>framework.css</strong> file! 
+            
+            <br><br>
+            <strong>Note!</strong><br>
+            Our templates are tested on most devices you can think of, but they are tested for the devices default browser and webkit browsers! We haven't tested these on make shift garage built browsers.
+            This means that if your browsing the web from a 1 star browser found in the AppStore and the template doesn't work, be sure it's not our fault! We code templates to the standards of W3C and 
+            not to the standards of a beginner app developer! 
+        </p>
+    </div>
+    
+    <div class="decoration"></div>  
+    
+    <div class="container">
+    	<h4>General FAQ's</h4>
+    	<p>
+
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">FAQ: How do I instal this framework?</strong></a>
+            	<em>
+					The framework is integrated in your item! Awesome right? The framework is basically a very advanced CSS, JS that is customly coded to make awesome stuff happen on your device! Haha! <br> 
+                    Just kidding! The framework is integrated and installed! Just follow the instructions bellow to use elements and don't forget to check the pages provided! We already integrated a LOT of elements you can
+                    simply copy paste and replace the values with what you require!
+                </em>
+            </span> 
+
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">FAQ: Can I add more colors to elements?</strong></a>
+            	<em>Yes, you can, and it's very simple! Inside framework-style.css you can find /*----Background Color Styles-----*/, beneth this you can add more colors following the example given!<br>
+                	Elements such as the dropdown, the sliding door, the navigation, highlights use a code like bg-orange, create a new color code, name it bg-whatever, and add that class to any of the elements that use it! </em>
+            </span> 
+
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">FAQ: Can I change the background color of the small icons?</strong></a>
+            	<em> 
+					Yup! Same place as the question above, you will find a class called .icon, replace the background color there with whatever color you wish to use!	 
+                </em>
+            </span> 
+            
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">FAQ: Can I use elements from the framework that are not presented in the template?</strong></a>
+            	<em> 
+					Yes, you can! Just please do not edit the scripts and style orders to make sure they work properly! Make sure the 3D image slider is set ALONE on the page without anyother heavy javascsript elements as it might crash your device. 
+                </em>
+            </span>   
+            
+            
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">FAQ: Why are there 2 documentation files?</strong></a>
+            	<em> 
+					Because epsilon is a solid, rigid framework. By rigid I mean it will not change from template to template, the most improtant changes that will happen to any new file will happen in it's design and general user experience.
+                    This documentation explains what Epsilon has in it, what can be used, what can be called, and how they work! The other documentation makes sure you undersatnd the navigation, structure of the template! <br/>
+                    NOTE that the overal structure presented in this documentation still applies! class containers will hold all elements, and all the containers go in a main content class!  
+                </em>
+            </span> 
+            
+            <span style="margin-bottom:0px; margin-top:20px;" class="decoration"></span>
+        </p>
+        <h4>Elements and how they work!</h4>                                      
+        <p>    
+        	<span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Aligning texts from left to right.</strong></a>
+            	<em>There are 3 classes made that you can use for any heading you wish! These are left-text center-text and right-text. Adding these classes to your text
+            	will make it align itself to the designated location! i.e. if you want the text aligned to center, use center-text</em>
+            </span>
+            
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Full width text paragraphs!</strong></a>
+       			<em>To use a full screen paragrap, simply create a new no bottom container and insert a paragraph inside! That's all! The text will automatically expand to fit!</em>
+            </span>
+
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Heading with background</strong></a>
+       			<em>To use headings with icons use the bellow example!
+                <img src="images/1heading.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Speach bubbles!</strong></a>
+       			<em>Speach bubbles must be added to a no-bottom container and after each "dialogue" box a clear tag must be added!
+                <img src="images/1speach.PNG" alt="img"></em>
+            </span>  
+            
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Sliding mini boxes!</strong></a>
+       			<em>Sliding boxes are simple to use, must be added in a separate no bottom container!
+                <img src="images/1sliding.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  Dropdown menu!</strong></a>
+       			<em>Dropdown menus are simple to use, they must follow the bellow structure and each must be added in a separate no bottom container!
+                <img src="images/1dropleft.PNG" alt="img">
+                <img src="images/1dropright.PNG" alt="img"></em>
+            </span>
+            
+			<span class="questions">
+                <a class="question-href" href="#"><strong class="question">  Simple columns.</strong></a>
+                <em>Using columns is easy! Inside a new no bottom container, columns are structured into one-half and one-third! Add 2 one-half divs to create 2 columns or three one-third classes to create 3 columns!
+                <img src="images/text-columns.PNG" alt="img">
+                The above screenshot shows the classes used to create columns!</em>
+            </span>
+            
+            <span class="questions">   
+                <a class="question-href" href="#"><strong class="question">  Simple columns with small icon.</strong></a>
+                <em>Same principle as the above code applies here as well but the only difference is that inside the paragraph a span with the icon has been added!
+                <img src="images/text-columns-icon.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">
+                <a class="question-href" href="#"><strong class="question">  Simple columns with large icon.</strong></a>
+                <em>Same principle, create one-half or one-third divs and use the example screenshot bellow!
+                <img src="images/text-columns-image.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Dropcaps, large first letter.</strong></a>
+                <em>Dropcaps is simple to use, just add the following syntax in a no bottom container
+                <img src="images/dropcaps.PNG" alt="img"></em>
+            
+            </span>
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Highlighting portions of text.</strong></a>
+                <em>Highlights are awesomely easy to use. Add the following syntax into a no bottom container!
+                <img src="images/highlights.PNG" alt="img"></em>        
+            </span>
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Creating horizontal charts.</strong></a>
+                <em>Replace the p10 value to whatever value you want up to 100, the 10 value is a decimal percentage! <br>
+                Duplicate the bellow code screenshot as many times as needed to create more charts!
+                <img src="images/hchart.PNG" alt="img"></em>
+            </span>
+
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Creating vertical charts.</strong></a>
+                <em>Replace the vp10 value to wahtever value you want up to 100, the 10 value is a decimal percentage!<br>
+                We suggest not adding many vertical charts as these can be seen different from device to device!
+                <img src="images/vchart.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  List icons.</strong></a>
+                <em>Well, all kinds of lists, here are a few examples bellow! Add them to a container!
+                <img src="images/lists.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  CSS3 Buttons</strong></a>
+                <em>Buttons are amazingly easy to use! The bellow class shows exactly how to call out a button! Don't include the demo class! It's just for demos!
+                <img src="images/buttons.PNG" alt="img"></em>
+            </span>
+                
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Detecting mobile user agents.</strong></a>
+                <em>Device no, but platform yes! The bellow examples can be added to a page, and only the visiting patforms button will remain visible when browsed!
+                <img src="images/detector.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+                <a class="question-href" href="#"><strong class="question">  Checbox and Radiobox</strong></a>
+                <em>Yep! Any of the bellow codes can be use to generate a checkbox!
+                <img src="images/checkboxes.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+               <a class="question-href" href="#"><strong class="question">  Responsive Google Maps!</strong></a>
+               <em>We have that as well, generate youself an embed code from <a href="http://maps.google.com">maps.google.com</a> and add in the syntax bellow!<br>
+               This syntax must be incapsulated in a container!
+               <img src="images/maps.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+               <a class="question-href" href="#"><strong class="question">  Hidable header notification.</strong></a>
+               <em>Header notifications are notifications that are fixed to the top part of the page! Only one at a time can be used, but you have several to choose from!
+               <img src="images/hnotification.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+                <a class="question-href" href="#"><strong class="question">  Standard small notifications</strong></a>
+                <em>These have one line of text, one icon, and a close button! 
+                <img src="images/snotification.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+                <a class="question-href" href="#"><strong class="question">  Standard big notifications</strong></a>
+                <em>These have a heading, a text, and a close button!
+                <img src="images/bnotification.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+                <a class="question-href" href="#"><strong class="question">  Tabs</strong></a>
+                <em>Tabs are very easy to use! The top buttons must have an id, and the bottom classes must have the class named the same as the button id!
+                <img src="images/tabs.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Toggles</strong></a>
+                <em>There are 5 variations of toggles in the item. Use the structure presented in the image bellow to create a toggle.<br>
+                To check other variations, replace v1 with v2, v3, v4, v5!
+                <img src="images/toggles.PNG" alt="img"></em>
+            </span>      
+            
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Code snippets</strong></a>
+                <em>If you need code, then you have it! Just remember! There is no > < in HTML code, you must used the & to find your code! HTML Characters!
+                <img src="images/code.PNG" alt="img"></em>
+            </span> 
+        </p>
+    </div>
+    
+    <div class="decoration"></div>
+    
+    <div class="container">
+ 		<h3>Blog Page and Posts</h3>
+        
+        <p>
+        
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Blog Posts</strong></a>
+                <em>To add a new blog post, simply follow the bellow syntax!
+                <img src="images/blogPost.PNG" alt="img"></em>
+            </span>    
+    
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Blog Ads</strong></a>
+                <em>Ads have a special class beside the container! Please use it as the syntax bellow!
+                <img src="images/blogAds.PNG" alt="img"></em>
+            </span> 
+    
+            <span class="questions">    
+                <a class="question-href" href="#"><strong class="question">  Blog Posts</strong></a>
+                <em>Blog categories section!
+                <img src="images/blogCategories.PNG" alt="img"></em>
+            </span> 
+        
+        </p>
+    
+    </div>
+    
+    <div class="decoration"></div>
+    
+    <div class="container">
+    	<h4>Implementing Portfolios!</h4>
+        <p>
+        There are a couple of types of portfolios in here! They are quite simple to use but you need to pay attention when classing them!
+        	<span class="questions">   
+            	<a class="question-href" href="#"><strong class="question">  Full width portfolio</strong></a>
+            	<em>Yes, we have these! Follow the bellow syntax! These are connected to an edited version of ColorBox which will allow images to scale down on your device!
+            	<img src="images/portfolioFull.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+            	<a class="question-href" href="#"><strong class="question">  Two column portfolio</strong></a>
+            	<em>Yep! Bellow you will find them! To create a new row of items duplicate the column class!
+            	<img src="images/portfolioTwo.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+            	<a class="question-href" href="#"><strong class="question">  Swipe thumbnail gallery.</strong></a>
+            	<em>That is available as well! Photoswipe is bellow! Duplicate the list class to add a new item!
+            	<img src="images/portfolioSwipe.PNG" alt="img"></em>
+            </span>
+            
+            <span class="questions">   
+            	<a class="question-href" href="#"><strong class="question">  Filtralbe thumbnail portfolio.</strong></a>
+            	<em>Yes! We have filtrable folios as well, but only six filtrable classes at a time! Follow the structure bellow! 
+            	<img src="images/portfolioFilter.PNG" alt="img"></em>
+            </span>
+    	</p>
+    </div>
+    
+    <div class="container">
+    	<h4>Image Sliders!</h4>
+        <p>        
+        	<span class="questions">   
+                <a class="question-href"><strong class="question">Swipe Left Right Image Slider</strong></a>
+                <em>We have that as well, of course! Simply duplicate the list class to create new elements!
+                <img src="images/slider.PNG" alt="img"></em>
+            </span>
+        
+        </p>
+    </div>
+    
+    
+    <div class="container">
+    	<h4>Implementing the contact form!</h4>
+        <p>
+        Please follow the bellow instructions to the line, as the contact form is very sensitive! To change the contact form information and address please edit the ONLY php file found in the pack!
+        If you cannot find a php file, the congrats! You're missing the most important element of this template! You should buy stuff, not rip it!
+        	<span class="questions">
+            	<a class="question-href"><strong class="question">Contact form explanation!</strong></a>
+                <em>The contact form is very very simple to use but might appear complicated at first sight. All our templates come with a pre-made contact page.<br>
+                We suggest you take that page and adapt the content inside it to suit your needs!
+                <img src="images/contact-form.PNG" alt="img">
+                
+                In the code above, the formSuccessMessageWrap is actually a big notification! If you wish to make it something else, simply delete the notification box and enter your own text!
+                Same goes for the default errors that appear on the page. These are small-notification errors! </em>
+            </span>
+          
+            <span class="questions">
+        		<a class="question-href" href="#"><strong class="question">  What about the login page?!</strong></a>
+       			<em>The login page is not coded! This is just a markup! You need to connect it to a database!
+                <img src="images/1login.PNG" alt="img"></em>
+            </span>
+            
+        </p>
+        
+        
+    </div>
+    
+    <div class="decoration"></div>  
+    
+    <div class="container">
+    	<h4>Terms of service!</h4>
+        <p>
+        	As mentioned before, we love all our customers and we try to give our customers the best possible service! If you wish to collaborate with us, feel free to drop us a mail at <a href="mailto:ienabled@me.com">ienabled@me.com</a> !
+            Please do not use this e-mail for item support on the marketplaces, as all e-mails requesting support without verifications will be DELETED without offering a reply! Use these forms for support:
+             <a href="http://themeforest.net/user/Enabled">Envato Profile Contact Form!</a> | <a href="http://www.paultrifa.com/support/wordpress/">WordPress Support Form</a> | <a href="http://www.paultrifa.com/support/templates/">HTML Support Form</a><br><br>
+        	<br><br>
+            
+            Epsilon is a framework developed by <a href="http://themeforest.net/user/Enabled/?ref=Enabled">Enabled</a> and <a href="http://themeforest.net/user/CosminCotor/?ref=Enabled">CosminCotor</a>!
+            You are not allowed to redistribute this framework in ANYOTHER item except the one purcahsed from ThemeForest! Legal action will be pursued if this is breached!
+            
+            <p class="center-text">&copy; Enabled. All rights reserved!</p>
+        
+        </p>    
+    </div>
+
+	<div class="decoration"></div>
+    
+</div>
+
+
+
+</body>
+</html>

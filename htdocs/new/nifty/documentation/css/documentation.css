@@ -1,0 +1,136 @@
+body{
+	background-color: #fff;
+	font-size: 14px;
+}
+
+.navbar {
+	background-color: #32404e
+}
+
+#content-container {
+	background-color: #32404e;
+	padding: 0 !important
+}
+
+
+@media (min-width: 1200px) {
+	.container {
+	width: 100%;
+	max-width: 1360px
+	}
+}
+
+
+
+#docs-menu{
+	width: 250px;
+	float: left
+}
+
+#docs-menu.affix{
+	top:15px
+}
+
+#docs-menu a{
+	display: block;
+	padding:10px;
+	font-weight: 300;
+	color: #bababa;
+	transition: color .2s
+}
+#docs-menu > ul > li > a{
+	color: #dcdcdc;
+}
+
+#docs-menu > .nav > li{
+	border: 1px solid transparent
+}
+#docs-menu > .nav > .active{
+	box-shadow: inset 3px 0 0 #2986b8;
+	background-color: rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0,0,0,0.05)
+}
+#docs-menu a:focus{
+	background-color: transparent;
+}
+#docs-menu a:hover{
+	background-color: transparent;
+	color: #fff;
+	transition: color .2s
+}
+
+
+#docs-menu .active > a {
+	color: #fff;
+	font-weight: normal
+}
+
+
+#docs-menu .list-sub{
+	padding-left: 30px;
+	overflow: hidden;
+	max-height: 0;
+	margin-bottom: 0;
+	transition: max-height .5s;
+}
+
+#docs-menu > .nav > .in .list-sub,
+#docs-menu > .nav > .active .list-sub{
+	max-height: 500px;
+	transition: max-height .5s;
+}
+
+
+
+#docs-menu .list-sub a{
+	padding: 5px;
+	font-size: 1em;
+	font-weight: 300
+}
+
+
+
+
+#docs-header{
+	padding: 30px;
+	background-color: #32404e;
+	color: #fff
+}
+#docs-header h1{
+	padding-left: 235px
+}
+.docs-content{
+	background-color: #fff;
+	padding: 20px;
+	margin-left: 250px
+}
+
+.docs-section{
+	margin-bottom: 175px;
+}
+
+
+.docs-spy{
+	padding: 20px 0 0
+}
+
+.fol-child{
+	padding-left: 30px !important
+}
+.fol-child2{
+	padding-left: 60px !important
+}
+
+.divider{
+	margin-bottom: 100px;
+}
+
+
+
+.prettyprint .tag{
+	background-color: transparent;
+	border:0;
+	border-radius: 0;
+	font-size: inherit;
+	padding: 0
+}
