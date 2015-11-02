@@ -408,6 +408,7 @@ function location_view() {
 	$stmt=db_prep("
 		SELECT *
 		FROM location_media lm
+		LEFT JOIN user u ON lm.user_id=u.user_id
 		WHERE lm.location_id=:location_id
 		AND lm.location_media_status=1
 	");

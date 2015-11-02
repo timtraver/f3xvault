@@ -96774,3 +96774,3837 @@ current_event_id=285
 )
 
 Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-10-31 18:02:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:00:55
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:02:07
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:02:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:02:28
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:02:36
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:03:08
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:03:13
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:04:20
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:04:58
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:06:43
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:06:59
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:07:23
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:13:00
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:13:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:13:45
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:15:32
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:15:42
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:16:55
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:21:12
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:32:02
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:33:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:33:48
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:36:00
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:37:31
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:38:10
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:42:37
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:47:02
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:48:48
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:49:40
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:50:48
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:51:00
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:51:05
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:51:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:51:45
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:53:27
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:56:12
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:56:58
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 21:58:21
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:00:10
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:08:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:08:35
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:11:43
+    [session_status] => 1
+)
+
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:11:43
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:11:57
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:16:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:17:52
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:20:44
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:21:01
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:21:18
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:21:24
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:21:36
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:22:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:22:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:22:25
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:22:31
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=0
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:22:52
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=25
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:23:01
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:23:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:23:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:24:59
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:33:31
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:34:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:34:57
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:35:44
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:36:07
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:37:17
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:38:05
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:38:51
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=0
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:39:12
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=f3f
+discipline_id=2
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:39:18
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:39:23
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:39:41
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:41:33
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:43:29
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:43:59
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:44:29
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:45:41
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:47:02
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 22:48:30
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:02:34
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:03:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:05:25
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:08:58
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:09:50
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:12:40
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:16:49
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:18:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:18:55
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:20:01
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:21:53
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:22:04
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:24:39
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:25:31
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:25:51
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:26:27
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:28:52
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:34:10
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:34:34
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:35:46
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:37:59
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:38:14
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:38:23
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:38:29
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:38:35
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:39:57
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:13
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:22
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:27
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:36
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:42
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:48
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:54
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:41:58
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:03
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:10
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:23
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:28
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:34
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:41
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:46
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:51
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:42:56
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:43:00
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:43:05
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:43:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:43:16
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:46:53
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:48:34
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:49:40
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:52:11
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=285
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:57:51
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:13
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:31
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:37
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:43
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:48
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:58:55
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:59:01
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:59:25
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Starting Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Reading Existing Session : e1a0223756aca47ba8161b66e91a8abc437634f1
+Session : Array
+(
+    [session_id] => 14
+    [session_hash] => e1a0223756aca47ba8161b66e91a8abc437634f1
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+message_box=incoming
+perpage=50
+disc=
+discipline_id=0
+country_id=226
+state_id=5
+search=
+search_operator=
+search_field=location_name
+current_event_id=173
+
+    [session_start] => 2015-10-26 00:23:37
+    [session_last] => 2015-11-01 23:59:30
+    [session_status] => 1
+)
+
+Saving Session : e1a0223756aca47ba8161b66e91a8abc437634f1

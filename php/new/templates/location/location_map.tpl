@@ -23,7 +23,7 @@
 					map: map
 				{rdelim});
 				var infowindow = new google.maps.InfoWindow({ldelim}
-					content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id}">{$l.location_name|escape}</a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:"url"}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id}">View Site Details</a></center></div>'
+					content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id}"><b>{$l.location_name|escape}</b></a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:"url"}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id}">View Site Details</a></center></div>'
 				{rdelim});
 				makeInfoWindowEvent(map, infowindow, marker);
 				markers.push(marker);
@@ -56,70 +56,56 @@
 	</div>
 	<div class="panel-body">
 
-
-
-<form name="searchform" method="POST">
-<input type="hidden" name="action" value="location">
-<input type="hidden" name="function" value="location_map">
-<table width="80%">
-<tr>
-	<th>Filter By Site Discipline</th>
-	<td colspan="3">
-	<select name="discipline_id" onChange="searchform.submit();">
-	{foreach $disciplines as $d}
-		<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-<tr>
-	<th>Filter By Country</th>
-	<td>
-	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
-	<option value="0">Choose Country to Narrow Search</option>
-	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
-	{/foreach}
-	</select>
-	</td>
-	<th>Filter By State</th>
-	<td>
-	<select name="state_id" onChange="searchform.submit();">
-	<option value="0">Choose State to Narrow Search</option>
-	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
-	{/foreach}
-	</select>
-	</td>
-</tr>
-<tr>
-	<th nowrap>	
-		And Search on Field : 
-	</th>
-	<td valign="center" colspan="3">
-		<select name="search_field">
-		<option value="location_name" {if $search_field=="location_name"}SELECTED{/if}>Location Name</option>
-		<option value="location_city" {if $search_field=="location_city"}SELECTED{/if}>City</option>
-		</select>
-		<select name="search_operator">
-		<option value="contains" {if $search_operator=="contains"}SELECTED{/if}>Contains</option>
-		<option value="exactly" {if $search_operator=="exactly"}SELECTED{/if}>Is Exactly</option>
-		</select>
-		<input type="text" name="search" size="30" value="{$search|escape}">
-		<input type="submit" value=" Search " class="block-button">
-		<input type="submit" value=" Reset " class="block-button" onClick="document.searchform.country_id.value=0;document.searchform.state_id.value=0;document.searchform.search_field.value='location_name';document.searchform.search_operator.value='contains';document.searchform.search.value='';searchform.submit();">
-		</form>
-	</td>
-</tr>
-</table>
-</form>
-
-<br>
-
- <div id="googleMap" style="width:900px;height:600px;"></div>
- 
- <br>
-
+		<p>
+	
+			<div>
+				<form name="search_form" method="POST">
+				<input type="hidden" name="action" value="location">
+				<input type="hidden" name="function" value="location_map">
+				<table class="filter" cellpadding="2" cellspacing="2">
+					<tr>
+						<th colspan="2">Filter Results</th>
+					</tr>
+					<tr>
+						<td align="right">Country</td>
+						<td nowrap>
+							<select name="country_id" onChange="document.search_form.state_id.value=0;search_form.submit();">
+							<option value="0">Choose Country to Narrow Search</option>
+							{foreach $countries as $country}
+								<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+							{/foreach}
+							</select>
+				
+						</td>
+					</tr>
+					<tr>
+						<td align="right">State</td>
+						<td nowrap>
+							<select name="state_id" onChange="search_form.submit();">
+							<option value="0">Choose State to Narrow Search</option>
+							{foreach $states as $state}
+								<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+							{/foreach}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">Name</td>
+						<td nowrap>
+							<input type="text" name="search" size="20" value="{$search|escape}">
+							<input type="submit" value=" Search " class="btn btn-primary btn-rounded">
+							<input type="submit" value=" Reset " class="btn btn-primary btn-rounded" onClick="document.search_form.country_id.value=0;document.search_form.state_id.value=0;document.search_form.search_field.value='location_name';document.search_form.search_operator.value='contains';document.search_form.search.value='';search_form.submit();">
+						</td>
+					</tr>
+				</table>
+				</form>
+			</div>
+	
+			<br>
+			<div id="googleMap" style="height:600px;position:relative;overflow:hidden;"></div>
+			<br>
+	
+		</p>
 	</div>
 </div>
 {/block}

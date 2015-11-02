@@ -4207,7 +4207,8 @@ hr {
 #container .table th {
   font-size: 1.05em;
   font-weight: 600;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.14);
+/*  border-bottom: 2px solid rgba(0, 0, 0, 0.14); */
+  background-color: lightgrey;
 }
 #container .table td {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
@@ -5257,7 +5258,7 @@ a.list-group-item-dark:focus {
 /* TAB */
 /*======================================*/
 .tab-base {
-  margin-bottom: 35px;
+/*  margin-bottom: 35px; */
 }
 .tab-base .tab-content {
   background-color: #ffffff;
@@ -5282,6 +5283,8 @@ a.list-group-item-dark:focus {
   opacity: .7;
   -webkit-transition: opacity, 0.3s;
   transition: opacity, 0.3s;
+  color: black;
+  font-weight: bold;
 }
 .tab-base .nav-tabs > li:not(.active) > a:hover {
   opacity: .9;
@@ -5295,6 +5298,8 @@ a.list-group-item-dark:focus {
 .tab-base .nav-tabs > .active a:hover,
 .tab-base .nav-tabs > .active > a:focus {
   border-color: transparent;
+  color: black;
+  font-weight: bold;
 }
 .tab-base .nav-tabs.tabs-right {
   text-align: right;
