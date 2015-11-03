@@ -69,46 +69,11 @@ function location_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
 	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'location_name':
-			$search_field='location_name';
-			break;
-		case 'location_city':
-			$search_field='location_city';
-			break;
-		default:
-			$search_field='location_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='location_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
 	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
-
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND l.country_id=$country_id ";
@@ -117,19 +82,13 @@ function location_list() {
 	if($state_id!=0){
 		$addstate.=" AND l.state_id=$state_id ";
 	}
-#print "addcountry=$addcountry<br>\n";
-#print "addstate=$addstate<br>\n";
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
 
 	# Add search options for discipline
 	$joind='';
 	$extrad='';
 	if($discipline_id!=0){
-		$joind='LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
-		$extrad='AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
+		$joind = 'LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
+		$extrad = 'AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
 	}
 	$locations=array();
 	if($search!='%%' && $search!=''){
@@ -169,13 +128,13 @@ function location_list() {
 			LEFT JOIN event_type elt ON el.event_type_id=elt.event_type_id
 
 			$joind
-			WHERE l.$search_field $operator :search
+			WHERE l.location_name LIKE :search
 				$addcountry
 				$addstate
 				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
-		$locations=db_exec($stmt,array("search"=>$search));
+		$locations=db_exec($stmt,array("search"=>'%'.$search.'%'));
 	}else{
 		# Get all locations for search
 		$stmt=db_prep("
@@ -222,8 +181,6 @@ function location_list() {
 		$locations=db_exec($stmt,array());
 	}
 	
-#print_r($locations);
-	
 	# Get only countries that we have locations for
 	$stmt=db_prep("
 		SELECT *
@@ -241,7 +198,7 @@ function location_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$locations=show_pages($locations,25);
+	$locations=show_pages($locations,"action=location&function=location_list");
 
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
@@ -252,8 +209,6 @@ function location_list() {
 	$smarty->assign("disciplines",get_disciplines());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
@@ -376,7 +331,11 @@ function location_view() {
 	if(isset($_REQUEST['location_id'])){
 		$location_id=$_REQUEST['location_id'];
 	}
-
+	$tab=0;
+	if(isset($_REQUEST['tab'])){
+		$tab=$_REQUEST['tab'];
+	}
+	
 	$location=array();
 	$stmt=db_prep("
 		SELECT *
@@ -475,7 +434,7 @@ function location_view() {
 		ORDER BY e.event_start_date DESC
 	");
 	$events=db_exec($stmt,array("location_id"=>$location_id));
-	$events=show_pages($events,20);
+	$events=show_pages($events,"action=location&function=location_view&location_id={$location_id}&tab=3");
 	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);
@@ -485,6 +444,7 @@ function location_view() {
 	$smarty->assign("comments_num",count($comments));
 	$smarty->assign("disciplines",$disciplines);
 	$smarty->assign("events",$events);
+	$smarty->assign("tab",$tab);
 
 	$maintpl=find_template("location/location_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -742,13 +702,13 @@ function location_media_add() {
 		}
 		# Now copy the file into place
 		if(file_exists("{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id/$name")){
-			user_message("A media file with that name already exists, please choose another and try again!");
+			user_message("A media file with that name already exists, please choose another and try again!",1);
 			return location_edit();
 		}
 		if(move_uploaded_file($tempname, "{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id/$name")) {
 			user_message("File $name uploaded.");
 		}else{
-			user_message("There was an error uploading the file, please try again!");
+			user_message("There was an error uploading the file, please try again!",1);
 			return location_edit();
 		}
 		$location_media_url="{$GLOBALS['base_location_media']}/$location_id/$name";
@@ -868,44 +828,9 @@ function location_map() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
-	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'location_name':
-			$search_field='location_name';
-			break;
-		case 'location_city':
-			$search_field='location_city';
-			break;
-		default:
-			$search_field='location_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='location_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
-	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
 	}
 
 	$addcountry='';
@@ -921,8 +846,8 @@ function location_map() {
 	$joind='';
 	$extrad='';
 	if($discipline_id!=0){
-		$joind='LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
-		$extrad='AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
+		$joind = 'LEFT JOIN location_discipline ld ON l.location_id=ld.location_id';
+		$extrad = 'AND ld.discipline_id='.$discipline_id.' AND ld.location_discipline_status=1';
 	}
 
 	$locations=array();
@@ -934,13 +859,13 @@ function location_map() {
 			LEFT JOIN country c ON l.country_id=c.country_id
 			$joind
 			WHERE (l.location_coordinates IS NOT NULL AND l.location_coordinates!='')
-				AND l.$search_field $operator :search
+				AND l.location_name LIKE :search
 				$addcountry
 				$addstate
 				$extrad
 			ORDER BY l.country_id,l.state_id,l.location_name
 		");
-		$locations=db_exec($stmt,array("search"=>$search));
+		$locations=db_exec($stmt,array("search"=>'%'.$search.'%'));
 	}else{
 		# Get all locations for search
 		$stmt=db_prep("
@@ -958,7 +883,6 @@ function location_map() {
 		$locations=db_exec($stmt,array());
 	}
 	
-#print_r($locations);
 	
 	# Get only countries that we have locations and location coordinates for
 	$stmt=db_prep("
@@ -986,8 +910,6 @@ function location_map() {
 	$smarty->assign("disciplines",get_disciplines());
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 

@@ -228,7 +228,7 @@ function decrypt ($input) {
         $output=trim($output);
         return $output;
 }
-function show_pages($records,$defaultperpage=10){
+function show_pages($records,$callback,$defaultperpage=10){
         # This is a function to do all of the paging work for showing long lists of records
         global $smarty;
 
@@ -309,6 +309,7 @@ function show_pages($records,$defaultperpage=10){
         $smarty->assign("endrecord",$endrecord);
         $smarty->assign("page",$page);
         $smarty->assign("perpage",$perpage);
+        $smarty->assign("callback",$callback);
 
         return $showrecords;
 }
@@ -339,27 +340,19 @@ function user_log($type,$log_string){
         return;
 }
 function user_message($message,$error=0){
-        # Routine to set the message at the top bar
-        # Initialize the array if needed
-        if(!isset($GLOBALS['messages'])){
-                $GLOBALS['messages']=array();
-        }
-        if($error==1){
-                $GLOBALS['messages'][]=array("message_color"=>"red","message"=>$message);
-        }else{
-                $GLOBALS['messages'][]=array("message_color"=>"green","message"=>$message);
-        }
-        # Check if it needs the alert graphic
-        $GLOBALS['message_graphic']='';
-        $found=0;
-        foreach($GLOBALS['messages'] as $key=>$value){
-                if($value['message_color']=="red"){
-                        $found=1;
-                }
-        }
-        if($found==1){
-                $GLOBALS['message_graphic']='<img src="/images/errortriangle.gif">';
-        }
+	global $smarty;
+	# Routine to set the message at the top bar
+	# Initialize the array if needed
+	if(!isset($GLOBALS['messages'])){
+		$GLOBALS['messages']=array();
+	}
+	if($error==1){
+		$GLOBALS['messages'][]=array("message_color"=>"red","message"=>$message);
+	}else{
+		$GLOBALS['messages'][]=array("message_color"=>"green","message"=>$message);
+	}
+	$smarty->assign("messages",$GLOBALS['messages']);
+	return;
 }
 function start_fsession(){
 	global $fsession;

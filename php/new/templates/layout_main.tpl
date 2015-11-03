@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>F3X Vault</title>
-		
-		<!--STYLESHEET-->
-		<!--=================================================-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>F3X Vault</title>
 	
-		<!--Open Sans Font [ OPTIONAL ] -->
-	 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
-	
-	
-		<!--Bootstrap Stylesheet [ REQUIRED ]-->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-	
-	
-		<!--Nifty Stylesheet [ REQUIRED ]-->
-		<link href="css/nifty.css" rel="stylesheet">
-	
-	
-		<!--Font Awesome [ OPTIONAL ]-->
-		<link href="css/font-awesome.min.css" rel="stylesheet">
+	<!--STYLESHEET-->
+	<!--=================================================-->
 
-		<!--Bootstrap Select [ OPTIONAL ]-->
-		<link href="plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+	<!--Open Sans Font [ OPTIONAL ] -->
+ 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
 
-		<link href="/style.css" rel="stylesheet">
-		<link href="/style2.css" rel="stylesheet">
-		
-		<!--SCRIPT-->
-		<!--=================================================-->
+
+	<!--Bootstrap Stylesheet [ REQUIRED ]-->
+	<link href="css/bootstrap.new.css" rel="stylesheet">
+
+
+	<!--Nifty Stylesheet [ REQUIRED ]-->
+	<link href="css/nifty.css" rel="stylesheet">
+
+
+	<!--Font Awesome [ OPTIONAL ]-->
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+
+	<!--Bootstrap Select [ OPTIONAL ]-->
+	<link href="plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+
+	<link href="/style.css" rel="stylesheet">
+	<link href="/style2.css" rel="stylesheet">
 	
-		<!--Page Load Progress Bar [ OPTIONAL ]-->
-		<link href="css/pace.min.css" rel="stylesheet">
-		<script src="js/pace.min.js"></script>
+	<!--SCRIPT-->
+	<!--=================================================-->
 
-		{block name="header"}{/block}
+	<!--Page Load Progress Bar [ OPTIONAL ]-->
+	<link href="css/pace.min.css" rel="stylesheet">
+	<script src="js/pace.min.js"></script>
+	
+	{block name="header"}{/block}
 </head>
 <body>
 	<div id="container" class="effect mainnav-lg navbar-fixed">
@@ -52,7 +52,7 @@
 					<a href="#" class="navbar-brand">
 						<img src="img/logo.png" alt="F3xVault Logo" class="brand-icon mainnav-toggle">
 						<div class="brand-title">
-							<span class="brand-text">F3XVault</span>
+							<span class="brand-text mainnav-toggle">F3XVault</span>
 						</div>
 					</a>
 				</div>
@@ -349,7 +349,8 @@
 		<!--===================================================-->
 		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
 		<!--===================================================-->
-
+		<div id="floating-top-right" class="floating-container"></div>
+		
 	</div>
 	<!--===================================================-->
 	<!-- END OF CONTAINER -->
@@ -373,7 +374,19 @@
 	
 	<!--Nifty Admin [ RECOMMENDED ]-->
 	<script src="js/nifty.min.js"></script>
-
+	<script type="text/javascript">
+		$(document).ready(function() {ldelim}
+				{foreach $messages as $m}
+					$.niftyNoty({ldelim}
+						type: '{if $m.message_color == 'green'}success{else}danger{/if}',
+						icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
+						container : 'floating',
+						title : '{$m.message}',
+						timer : 10000
+					{rdelim});
+				{/foreach}
+		{rdelim})
+	</script>
 	<!--
 
 	REQUIRED

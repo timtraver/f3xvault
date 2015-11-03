@@ -125,11 +125,6 @@
 </tfoot>
 </table>
 
-<center>
-	<input type="button" value=" Create New Location Entry " onclick="newlocation.submit();" class="btn btn-primary btn-rounded">
-</center>
-
-
 <form name="newlocation" method="POST">
 <input type="hidden" name="action" value="location">
 <input type="hidden" name="function" value="location_edit">

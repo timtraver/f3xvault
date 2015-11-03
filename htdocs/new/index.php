@@ -157,9 +157,9 @@ $smarty->assign("message_graphic",$GLOBALS['message_graphic']);
 $smarty->assign("total_queries",$GLOBALS['total_queries']);
 $smarty->assign("trace",$GLOBALS['trace']);
 $messagetpl=find_template("messages.tpl");
-if($GLOBALS['messages']){
-	$smarty->display($messagetpl);
-}
+#if($GLOBALS['messages']){
+#	$smarty->display($messagetpl);
+#}
 print $actionoutput;
 
 if($trace_on){

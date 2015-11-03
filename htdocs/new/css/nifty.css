@@ -662,6 +662,7 @@ h6,
   bottom: 0;
   z-index: 4;
   min-height: 100%;
+  margin-bottom: -5000px;
 }
 #mainnav {
   height: 100%;
@@ -687,8 +688,8 @@ h6,
 /* NAVIGATION MENU */
 /*======================================*/
 #mainnav-menu-wrap {
-  margin-top: -50px;
-  padding-top: 50px;
+/*  margin-top: -50px;
+  padding-top: 50px; */
 }
 #mainnav-menu ul,
 .mainnav-widget ul,
@@ -3068,6 +3069,7 @@ a.disabled-link:hover {
   transition: max-height 1s linear;
 }
 .floating-container .animated.alert-wrap {
+  margin-top: 60px;
   overflow: visible;
 }
 .floating-container .animated.alert-wrap > .alert {
