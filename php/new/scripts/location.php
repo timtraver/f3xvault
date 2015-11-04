@@ -200,9 +200,6 @@ function location_list() {
 	
 	$locations=show_pages($locations,"action=location&function=location_list");
 
-	# Lets reset the discipline for the top bar if needed
-	set_disipline($discipline_id);
-
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
@@ -525,6 +522,7 @@ function location_save() {
 		$result=db_exec($stmt,$location);
 		# Set the old location_id back for the rest of the routine
 		$location['location_id']=$GLOBALS['last_insert_id'];
+		$_REQUEST['location_id']=$location['location_id'];
 	}else{
 		# Update the existing record
 		$stmt=db_prep("

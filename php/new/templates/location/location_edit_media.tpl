@@ -32,19 +32,16 @@
 				<li class="active">
 					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=1" aria-expanded="true" aria-selected="true">
 						Media
-						<span class="badge badge-blue">{$media|count}</span>
 					</a>
 				</li>
 				<li>
 					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=2" aria-expanded="false">
 						Comments
-						<span class="badge badge-blue">{$comments|count}</span>
 					</a>
 				</li>
 				<li>
 					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=3" aria-expanded="false">
 						Competitions
-						<span class="badge badge-blue">{$totalrecords}</span>
 					</a>
 				</li>
 			</ul>

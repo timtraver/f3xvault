@@ -1,42 +1,82 @@
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">F3X Location Database</h1>
-		<div class="entry-content clearfix">
-		
-<form name="main" method="POST">
-<input type="hidden" name="action" value="location">
-<input type="hidden" name="function" value="location_comment_save">
-<input type="hidden" name="location_id" value="{$location_id}">
+{extends file='layout_main.tpl'}
 
-<h1 class="post-title entry-title">Location Comment Add</h1>
+{block name="content"}
 
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-<tr>
-	<th>Location</th>
-	<td>
-		{$location.location_name|escape}
-	</td>
-</tr>
-<tr>
-	<th valign="top">Comment</th>
-	<td>
-		<textarea cols="75" rows="8" name="location_comment_string"></textarea>
-	</td>
-</tr>
-</table>
-<center>
-<br>
-<input type="submit" value=" Add This Comment " class="block-button">
-<input type="button" value=" Back To Location Profile " class="block-button" onclick="goback.submit();">
-</center>
-</form>
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">F3X Location Details - {$location.location_name|escape}</h2>
+	</div>
+	<div class="panel-body" style="background-color:#337ab7;">
+		<p>
+		<div class="tab-base">
+			<ul class="nav nav-tabs">
+				<li>
+					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=0" aria-expanded="true">
+						Information
+					</a>
+				</li>
+				<li>
+					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=1" aria-expanded="false">
+						Media
+					</a>
+				</li>
+				<li class="active">
+					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=2" aria-expanded="true" aria-selected="true">
+						Comments
+					</a>
+				</li>
+				<li>
+					<a href="?action=location&function=location_view&location_id={$location_id|escape}&tab=3" aria-expanded="false">
+						Competitions
+					</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="location-tab-3" class="tab-pane fade active in">
+					<h2 style="float:left;">Location Comment Add</h2>
+					<div style="float:right;overflow:hidden;">
+						<input type="button" value=" Back To Location View " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
+					</div>
+					<br style="clear:left;">
 
-<form name="goback" method="GET">
-<input type="hidden" name="action" value="location">
-<input type="hidden" name="function" value="location_view">
-<input type="hidden" name="location_id" value="{$location_id}">
-</form>
 
+					<form name="main" method="POST">
+					<input type="hidden" name="action" value="location">
+					<input type="hidden" name="function" value="location_comment_save">
+					<input type="hidden" name="location_id" value="{$location_id}">
+					<input type="hidden" name="tab" value="2">
+					
+					<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
+					<tr>
+						<th>Location</th>
+						<td>
+							{$location.location_name|escape}
+						</td>
+					</tr>
+					<tr>
+						<th valign="top">Comment</th>
+						<td>
+							<textarea cols="75" rows="8" name="location_comment_string"></textarea>
+						</td>
+					</tr>
+					</table>
+					<center>
+						<input type="submit" value=" Add This Comment " class="btn btn-primary btn-rounded">
+					</center>
+					</form>
+
+					<form name="goback" method="GET">
+					<input type="hidden" name="action" value="location">
+					<input type="hidden" name="function" value="location_view">
+					<input type="hidden" name="location_id" value="{$location_id}">
+					<input type="hidden" name="tab" value="2">
+					</form>
+
+				</div>
+			</div>
+			<br>
+		</div>
+	</div>
 </div>
-</div>
-</div>
+
+{/block}

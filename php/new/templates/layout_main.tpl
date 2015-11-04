@@ -67,12 +67,12 @@
 					<div class="nav navbar-top-links pull-left" style="height: 50px;position: relative;display:inline-block;padding-top: 5px;">
 						<span style="position: relative; display: inline-block;padding-top: 4px;">
 						<select name="disc" class="selectpicker col-lg-4" data-style="btn-primary" data-width="100%" onchange="location = this.value;">
-							<option value="?action={$action}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
-							<option value="?action={$action}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
-							<option value="?action={$action}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
-							<option value="?action={$action}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
-							<option value="?action={$action}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Multi Task</option>
-							<option value="?action={$action}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
+							<option value="?action={$action}&function={$function}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
+							<option value="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
+							<option value="?action={$action}&function={$function}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
+							<option value="?action={$action}&function={$function}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
+							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Multi Task</option>
+							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
 						</select>
 						</span>
 					</div>
@@ -206,7 +206,7 @@
 									</li>
 						
 									<!--Menu list item-->
-									<li>
+									<li{if $current_menu == 'planes'} class="active-link"{/if}>
 										<a href="#">
 											<i class="fa fa-plane"></i>
 											<span class="menu-title">
@@ -215,9 +215,9 @@
 											</span>
 											<i class="arrow"></i>
 										</a>
-										<ul class="collapse">
-											<li class="active-link"><a href="/?action=main&function=view_planes"><strong>Plane Home</strong></a></li>
-											<li><a href="/?action=plane&search="><strong>Plane Browse</strong></a></li>
+										<ul class="collapse{if $current_menu == 'planes'} in{/if}">
+											<li{if $current_menu == 'planes' && $function == 'view_planes'} class="active-link"{/if}><a href="/new/?action=main&function=view_planes"><strong>Plane Home</strong></a></li>
+											<li{if $current_menu == 'planes' && $function != 'view_planes'} class="active-link"{/if}><a href="/new/?action=plane&search="><strong>Plane Browse</strong></a></li>
 										</ul>
 									</li>
 						
@@ -232,12 +232,12 @@
 											<i class="arrow"></i>
 										</a>
 										<ul class="collapse">
-											<li><a href="/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
-											<li><a href="/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
-											<li><a href="/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
-											<li><a href="/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
-											<li><a href="/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
-											<li><a href="/?action=import"><strong>Import Event</strong></a></li>
+											<li><a href="/new/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
+											<li><a href="/new/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
+											<li><a href="/new/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
+											<li><a href="/new/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
+											<li><a href="/new/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
+											<li><a href="/new/?action=import"><strong>Import Event</strong></a></li>
 										</ul>
 									</li>
 						
@@ -252,10 +252,10 @@
 											<i class="arrow"></i>
 										</a>
 										<ul class="collapse">
-											<li><a href="/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
-											<li><a href="/?action=my"><strong>My Pilot Profile</strong></a></li>
-											<li><a href="/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
-											<li><a href="/?action=message"><strong>Message Center</strong></a></li>
+											<li><a href="/new/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
+											<li><a href="/new/?action=my"><strong>My Pilot Profile</strong></a></li>
+											<li><a href="/new/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
+											<li><a href="/new/?action=message"><strong>Message Center</strong></a></li>
 										</ul>
 									</li>
 						
@@ -270,14 +270,14 @@
 											<i class="arrow"></i>
 										</a>
 										<ul class="collapse">
-											<li><a href="/?action=main&function=view_clubs"><strong>Clubs Home</strong></a></li>
-											<li><a href="/?action=club&country_id=0&state_id=0&search="><strong>Club Browse</strong></a></li>
+											<li><a href="/new/?action=main&function=view_clubs"><strong>Clubs Home</strong></a></li>
+											<li><a href="/new/?action=club&country_id=0&state_id=0&search="><strong>Club Browse</strong></a></li>
 										</ul>
 									</li>
 						
 									<!--Menu list item-->
 									<li>
-										<a href="/?action=main&function=main_feedback">
+										<a href="/new/?action=main&function=main_feedback">
 											<i class="fa fa-list"></i>
 											<span class="menu-title">
 												<strong>Todo</strong>
@@ -287,7 +287,7 @@
 
 									<!--Menu list item-->
 									<li>
-										<a href="/?action=main&function=logout">
+										<a href="/new/?action=main&function=logout">
 											<i class="fa fa-sign-out"></i>
 											<span class="menu-title">
 												<strong>Logout</strong>
@@ -387,6 +387,9 @@
 				{/foreach}
 		{rdelim})
 	</script>
+	
+	{block name="footer"}{/block}
+
 	<!--
 
 	REQUIRED

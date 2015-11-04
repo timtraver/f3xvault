@@ -91,9 +91,7 @@
 						<tr>
 							<th valign="top" nowrap>Detailed Directions</th>
 							<td colspan="2">
-								<pre style="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;word-break: keep-all;">
-									{$location.location_directions|escape}
-								</pre>
+								<pre style="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;word-break: keep-all;">{$location.location_directions|escape}</pre>
 							</td>
 						</tr>
 						<tr>
@@ -154,7 +152,11 @@
 									{if $m.location_media_type == 'picture'}
 										<img src="{$m.location_media_url}"><br>
 									{else}
-										<iframe width="640" height="480" src="{$m.location_media_url}?autoplay=1&html5=1"></iframe>
+										<div class="video-wrapper">
+											<div class="video-container">
+												<iframe src="{$m.location_media_url}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+											</div>
+										</div>
 									{/if}
 									<br>
 									<br>

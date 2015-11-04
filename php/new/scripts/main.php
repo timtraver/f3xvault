@@ -39,7 +39,7 @@ function view_planes() {
 	global $user;
 	$smarty->assign('current_menu','planes');
 
-	$maintpl=find_template("planes.tpl");
+	$maintpl=find_template("plane/planes.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_events() {
