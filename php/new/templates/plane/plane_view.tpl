@@ -117,7 +117,7 @@ function calc_area(){ldelim}
 
 {block name="content"}
 
-<div class="panel">
+<div class="panel" style="min-width:1000px;">
 	<div class="panel-heading">
 		<h2 class="heading">Plane Details - {$plane.plane_name|escape}</h2>
 	</div>
@@ -126,55 +126,52 @@ function calc_area(){ldelim}
 			<div class="tab-base">
 				<ul class="nav nav-tabs">
 					<li{if $tab==0} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-1" aria-expanded="true" {if $tab==0}aria-selected="true"{/if}>
+						<a data-toggle="tab" href="#location-tab-0" aria-expanded="true" {if $tab==0}aria-selected="true"{/if}>
 							Information
 						</a>
 					</li>
 					<li{if $tab==1} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-2" aria-expanded="false" {if $tab==1}aria-selected="true"{/if}>
+						<a data-toggle="tab" href="#location-tab-1" aria-expanded="false" {if $tab==1}aria-selected="true"{/if}>
 							Media
 							<span class="badge badge-blue">{$media|count}</span>
 						</a>
 					</li>
 					<li{if $tab==2} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-3" aria-expanded="false" {if $tab==2}aria-selected="true"{/if}>
+						<a data-toggle="tab" href="#location-tab-2" aria-expanded="false" {if $tab==2}aria-selected="true"{/if}>
 							Comments
 							<span class="badge badge-blue">{$comments|count}</span>
 						</a>
 					</li>
 					<li{if $tab==3} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-4" aria-expanded="true" {if $tab==3}aria-selected="true"{/if}>
+						<a data-toggle="tab" href="#location-tab-3" aria-expanded="true" {if $tab==3}aria-selected="true"{/if}>
 							Competitions
 							<span class="badge badge-blue">{$totalrecords}</span>
 						</a>
 					</li>
 					{if $f3f_records}
 					<li{if $tab==4} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
+						<a data-toggle="tab" href="#location-tab-4" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
 							F3F Speed
-							<span class="badge badge-blue">{$f3f_records|count}</span>
 						</a>
 					</li>
 					{/if}
 					{if $f3b_records}
-					<li{if $tab==4} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
+					<li{if $tab==5} class="active"{/if}>
+						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==5}aria-selected="true"{/if}>
 							F3B Speed
-							<span class="badge badge-blue">{$f3b_records|count}</span>
 						</a>
 					</li>
 					{/if}
 					{if $f3b_distance}
-					<li{if $tab==4} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
+					<li{if $tab==6} class="active"{/if}>
+						<a data-toggle="tab" href="#location-tab-6" aria-expanded="true" {if $tab==6}aria-selected="true"{/if}>
 							F3B Distance
-							<span class="badge badge-blue">{$f3b_distance|count}</span>
 						</a>
 					</li>
 					{/if}
 				</ul>
 				<div class="tab-content">
-					<div id="location-tab-1" class="tab-pane fade{if $tab==0} active in{/if}">
+					<div id="location-tab-0" class="tab-pane fade{if $tab==0} active in{/if}">
 						<h2 style="float:left;">Plane Information</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Edit Plane Information " class="btn btn-primary btn-rounded" onClick="plane_edit.submit();">
@@ -327,7 +324,7 @@ function calc_area(){ldelim}
 						</tr>
 </table>
 					</div>
-					<div id="location-tab-2" class="tab-pane fade{if $tab==1} active in{/if}">
+					<div id="location-tab-1" class="tab-pane fade{if $tab==1} active in{/if}">
 						<h2 style="float:left;">Plane Media</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Add New Plane Media " class="btn btn-primary btn-rounded" onClick="add_media.submit();">
@@ -378,8 +375,8 @@ function calc_area(){ldelim}
 						</form>
 						
 					</div>
-					<div id="location-tab-3" class="tab-pane fade{if $tab==2} active in{/if}">
-						<h2>Plane Comments</h2>
+					<div id="location-tab-2" class="tab-pane fade{if $tab==2} active in{/if}">
+						<h2 style="float:left;">Plane Comments</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Add Comment " class="btn btn-primary btn-rounded" onClick="addcomment.submit();">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
@@ -405,8 +402,8 @@ function calc_area(){ldelim}
 							{/foreach}
 						
 					</div>
-					<div id="location-tab-4" class="tab-pane fade{if $tab==3} active in{/if}">
-						<h2>Plane Competitions</h2>
+					<div id="location-tab-3" class="tab-pane fade{if $tab==3} active in{/if}">
+						<h2 style="float:left;">Plane Competitions</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Add Comment " class="btn btn-primary btn-rounded" onClick="addcomment.submit();">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
@@ -422,25 +419,21 @@ function calc_area(){ldelim}
 						
 					</div>
 					{if $f3f_records}
-					<div id="location-tab-5" class="tab-pane fade{if $tab==4} active in{/if}">
-						<h2>Top F3F Speeds ({$startrecord} - {$endrecord})</h2>
+					<div id="location-tab-4" class="tab-pane fade{if $tab==4} active in{/if}">
+						<h2 style="float:left;">Top F3F Speeds ({$startrecord} - {$endrecord})</h2>
 						<div style="float:right;overflow:hidden;">
-							<input type="button" value=" Add Comment " class="btn btn-primary btn-rounded" onClick="addcomment.submit();">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
 						<br style="clear:left;">
-						
-						<h4 class="comments gutter-left current">{$comments_num} Plane F3F Times</h4>
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
 						<tr>
 							<th style="text-align: left;"></th>
 							<th style="text-align: left;">Event Date</th>
+							<th style="text-align: left;">Speed</th>
 							<th style="text-align: left;">Pilot</th>
-							<th style="text-align: left;">Plane</th>
 							<th style="text-align: left;">Event Name</th>
 							<th style="text-align: left;">Location</th>
-							<th style="text-align: left;">Speed</th>
 						</tr>
 						{$rank=$startrecord}
 						{$last=0}
@@ -452,18 +445,17 @@ function calc_area(){ldelim}
 									{/if}
 								</td>
 								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
 								<td>
 									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
 								</td>
-								<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
 								<td>
 									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
 									{$f.country_code|escape}
 								</td>
-								<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
 							</tr>
 							{$rank=$rank+1}
 							{$last=$f.event_pilot_round_flight_seconds}
@@ -473,7 +465,123 @@ function calc_area(){ldelim}
 						                {if $page>1}[<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
 						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page+1}">Next Page &gt;&gt</a>]
 						        </td>
-						        <td align="right" colspan="4">PerPage
+						        <td align="right" colspan="3">PerPage
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=20">20</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=40">40</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=60">60</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page=1">First Page</a>]
+						        </td>
+						</tr>
+						</table>
+
+					</div>
+					{/if}
+					{if $f3b_records}
+					<div id="location-tab-5" class="tab-pane fade{if $tab==5} active in{/if}">
+						<h2 style="float:left;">Top F3B Speeds ({$startrecord} - {$endrecord})</h2>
+						<div style="float:right;overflow:hidden;">
+							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
+						</div>
+						<br style="clear:left;">
+												
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<tr>
+							<th style="text-align: left;"></th>
+							<th style="text-align: left;">Event Date</th>
+							<th style="text-align: left;">Speed</th>
+							<th style="text-align: left;">Pilot</th>
+							<th style="text-align: left;">Event Name</th>
+							<th style="text-align: left;">Location</th>
+						</tr>
+						{$rank=$startrecord}
+						{$last=0}
+						{foreach $f3b_records as $f}
+							<tr>
+								<td align="right">
+									{if $f.event_pilot_round_flight_seconds!=$last}
+										{$rank}
+									{/if}
+								</td>
+								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
+								<td>
+									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+								</td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
+								<td>
+									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
+									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
+									{$f.country_code|escape}
+								</td>
+							</tr>
+							{$rank=$rank+1}
+							{$last=$f.event_pilot_round_flight_seconds}
+						{/foreach}
+						<tr style="background-color: lightgray;">
+						        <td align="left" colspan="3">
+						                {if $page>1}[<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page+1}">Next Page &gt;&gt</a>]
+						        </td>
+						        <td align="right" colspan="3">PerPage
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=20">20</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=40">40</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=60">60</a>]
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page=1">First Page</a>]
+						        </td>
+						</tr>
+						</table>
+
+					</div>
+					{/if}
+					{if $f3b_distance}
+					<div id="location-tab-6" class="tab-pane fade{if $tab==6} active in{/if}">
+						<h2 style="float:left;">Top F3B Distance Runs ({$startrecord} - {$endrecord})</h2>
+						<div style="float:right;overflow:hidden;">
+							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
+						</div>
+						<br style="clear:left;">
+												
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<tr>
+							<th style="text-align: left;"></th>
+							<th style="text-align: left;">Event Date</th>
+							<th style="text-align: left;">Laps</th>
+							<th style="text-align: left;">Pilot</th>
+							<th style="text-align: left;">Event Name</th>
+							<th style="text-align: left;">Location</th>
+						</tr>
+						{$rank=$startrecord}
+						{$last=0}
+						{foreach $f3b_distance as $f}
+							<tr>
+								<td align="right">
+									{if $f.event_pilot_round_flight_laps!=$last}
+										{$rank}
+									{/if}
+								</td>
+								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
+								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_laps|string_format:"%d"}</b></font></td>
+								<td>
+									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+								</td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
+								<td>
+									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
+									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
+									{$f.country_code|escape}
+								</td>
+							</tr>
+							{$rank=$rank+1}
+							{$last=$f.event_pilot_round_flight_laps}
+						{/foreach}
+						<tr style="background-color: lightgray;">
+						        <td align="left" colspan="3">
+						                {if $page>1}[<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
+						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page+1}">Next Page &gt;&gt</a>]
+						        </td>
+						        <td align="right" colspan="3">PerPage
 						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=20">20</a>]
 						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=40">40</a>]
 						                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=60">60</a>]
@@ -487,126 +595,6 @@ function calc_area(){ldelim}
 				</div>
 			</div>
 		</p>
-
-
-
-<form name="goback" method="GET">
-<input type="hidden" name="action" value="plane">
-</form>
-
-
-
-
-
-
-{if $f3b_records}
-<br>
-<h1 class="post-title entry-title">Top F3B Speeds For This Model ({$startrecord} - {$endrecord})</h1>
-<table width="100%" cellpadding="2" cellspacing="1">
-<tr>
-	<th style="text-align: left;"></th>
-	<th style="text-align: left;">Event Date</th>
-	<th style="text-align: left;">Pilot</th>
-	<th style="text-align: left;">Plane</th>
-	<th style="text-align: left;">Event Name</th>
-	<th style="text-align: left;">Location</th>
-	<th style="text-align: left;">Speed</th>
-</tr>
-{$rank=$startrecord}
-{$last=0}
-{foreach $f3b_records as $f}
-	<tr bgcolor="{cycle values="white,lightgray"}">
-		<td align="right" bgcolor="lightgrey">
-			{if $f.event_pilot_round_flight_seconds!=$last}
-				{$rank}
-			{/if}
-		</td>
-		<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
-		<td>
-			{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-			<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
-		</td>
-		<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
-		<td>
-			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-			<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
-			{$f.country_code|escape}
-		</td>
-		<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
-	</tr>
-	{$rank=$rank+1}
-	{$last=$f.event_pilot_round_flight_seconds}
-{/foreach}
-<tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
-                {if $page>1}[<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page+1}">Next Page &gt;&gt</a>]
-        </td>
-        <td align="right" colspan="4">PerPage
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=20">20</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=40">40</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=60">60</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page=1">First Page</a>]
-        </td>
-</tr>
-</table>
-{/if}
-{if $f3b_distance}
-<br>
-<h1 class="post-title entry-title">Top F3B Distance Runs ({$startrecord} - {$endrecord})</h1>
-<table width="100%" cellpadding="2" cellspacing="1">
-<tr>
-	<th style="text-align: left;"></th>
-	<th style="text-align: left;">Event Date</th>
-	<th style="text-align: left;">Pilot</th>
-	<th style="text-align: left;">Plane</th>
-	<th style="text-align: left;">Event Name</th>
-	<th style="text-align: left;">Location</th>
-	<th style="text-align: left;">Laps</th>
-</tr>
-{$rank=$startrecord}
-{$last=0}
-{foreach $f3b_distance as $f}
-	<tr bgcolor="{cycle values="white,lightgray"}">
-		<td align="right" bgcolor="lightgrey">
-			{if $f.event_pilot_round_flight_laps!=$last}
-				{$rank}
-			{/if}
-		</td>
-		<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
-		<td>
-			{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-			<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
-		</td>
-		<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-		<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
-		<td>
-			{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-			<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
-			{$f.country_code|escape}
-		</td>
-		<td align="right"><b>{$f.event_pilot_round_flight_laps}</b></td>
-	</tr>
-	{$rank=$rank+1}
-	{$last=$f.event_pilot_round_flight_laps}
-{/foreach}
-<tr style="background-color: lightgray;">
-        <td align="left" colspan="3">
-                {if $page>1}[<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page-1}"> &lt;&lt; Prev Page</a>]{/if}
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page={$page+1}">Next Page &gt;&gt</a>]
-        </td>
-        <td align="right" colspan="4">PerPage
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=20">20</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=40">40</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&perpage=60">60</a>]
-                [<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id}&page=1">First Page</a>]
-        </td>
-</tr>
-</table>
-{/if}
-
-
 
 
 </div>
@@ -627,6 +615,9 @@ function calc_area(){ldelim}
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_media_edit">
 <input type="hidden" name="plane_id" value="{$plane.plane_id}">
+</form>
+<form name="goback" method="GET">
+<input type="hidden" name="action" value="plane">
 </form>
 
 {/block}

@@ -35,7 +35,7 @@
 	<!--Page Load Progress Bar [ OPTIONAL ]-->
 	<link href="css/pace.min.css" rel="stylesheet">
 	<script src="js/pace.min.js"></script>
-	
+
 	{block name="header"}{/block}
 </head>
 <body>
@@ -50,7 +50,7 @@
 				<!--================================-->
 				<div class="navbar-header">
 					<a href="#" class="navbar-brand">
-						<img src="img/logo.png" alt="F3xVault Logo" class="brand-icon mainnav-toggle">
+						<img id="main_logo" src="img/logo.png" alt="F3xVault Logo" class="brand-icon mainnav-toggle">
 						<div class="brand-title">
 							<span class="brand-text mainnav-toggle">F3XVault</span>
 						</div>
@@ -387,7 +387,14 @@
 				{/foreach}
 		{rdelim})
 	</script>
-	
+	<script>
+		$( "#main_logo" ).hide();
+
+		setInterval(function(){ldelim}
+		$( "#main_logo" ).fadeIn(2000).fadeOut(500);
+		{rdelim},0);
+		
+	</script>
 	{block name="footer"}{/block}
 
 	<!--

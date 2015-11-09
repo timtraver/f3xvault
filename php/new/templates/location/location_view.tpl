@@ -2,7 +2,7 @@
 
 {block name="content"}
 
-<div class="panel">
+<div class="panel" style="min-width:600px;">
 	<div class="panel-heading">
 		<h2 class="heading">F3X Location Details - {$location.location_name|escape}</h2>
 	</div>

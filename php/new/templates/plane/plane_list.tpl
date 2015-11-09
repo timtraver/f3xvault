@@ -2,7 +2,7 @@
 
 {block name="content"}
 
-<div class="panel">
+<div class="panel" style="min-width:600px;">
 	<div class="panel-heading">
 		<h2 class="heading">Browse F3X Planes</h2>
 	</div>

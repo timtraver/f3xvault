@@ -112684,3 +112684,2053 @@ search_operator=
 )
 
 Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-04 01:21:54
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:16:50
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:16:55
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:02
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:06
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:16
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:25
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:31
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:17:37
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:21:41
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:22:39
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:22:59
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:24:53
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:25:17
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:25:44
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:27:07
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:28:46
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:29:01
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:30:07
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:30:23
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:30:29
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:30:42
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:31:16
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:31:22
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:31:33
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:31:38
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:31:44
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:32:33
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:32:36
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:32:58
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:33:03
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:33:13
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:33:19
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:45:27
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:50:17
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:50:59
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:51:31
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:57:46
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:58:24
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:59:05
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:59:29
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 20:59:48
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:00:06
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:02:35
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:03:38
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:09:24
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:09:51
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:11:06
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:12:24
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:12:28
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:13:48
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:14:13
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:14:29
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:15:40
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:15:47
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:16:09
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:16:30
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:16:34
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:16:53
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:17:03
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:17:32
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:17:38
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:19:03
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:22:55
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:23:53
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:25:16
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:25:50
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:26:42
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:26:49
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:29:18
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:29:32
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:29:43
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:29:51
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:32:51
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:38:33
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:39:44
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:42:58
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:45:15
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:47:59
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:49:15
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:50:49
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Starting Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Reading Existing Session : 81165f9d1585d535e8f128f218c6e33b786cea03
+Session : Array
+(
+    [session_id] => 15
+    [session_hash] => 81165f9d1585d535e8f128f218c6e33b786cea03
+    [session_data] => device=computer
+auth=1
+user_id=2
+user_name=tt
+country_id=0
+state_id=0
+search=precision
+perpage=25
+discipline_id=1
+disc=f3b
+search_field=plane_name
+search_operator=
+
+    [session_start] => 2015-11-03 23:24:28
+    [session_last] => 2015-11-08 21:52:11
+    [session_status] => 1
+)
+
+Saving Session : 81165f9d1585d535e8f128f218c6e33b786cea03
