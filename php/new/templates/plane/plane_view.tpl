@@ -148,23 +148,29 @@ function calc_area(){ldelim}
 							<span class="badge badge-blue">{$totalrecords}</span>
 						</a>
 					</li>
-					{if $f3f_records}
 					<li{if $tab==4} class="active"{/if}>
 						<a data-toggle="tab" href="#location-tab-4" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
+							Pilots
+							<span class="badge badge-blue">{$totalrecords}</span>
+						</a>
+					</li>
+					{if $f3f_records}
+					<li{if $tab==5} class="active"{/if}>
+						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==5}aria-selected="true"{/if}>
 							F3F Speed
 						</a>
 					</li>
 					{/if}
 					{if $f3b_records}
-					<li{if $tab==5} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-5" aria-expanded="true" {if $tab==5}aria-selected="true"{/if}>
+					<li{if $tab==6} class="active"{/if}>
+						<a data-toggle="tab" href="#location-tab-6" aria-expanded="true" {if $tab==6}aria-selected="true"{/if}>
 							F3B Speed
 						</a>
 					</li>
 					{/if}
 					{if $f3b_distance}
-					<li{if $tab==6} class="active"{/if}>
-						<a data-toggle="tab" href="#location-tab-6" aria-expanded="true" {if $tab==6}aria-selected="true"{/if}>
+					<li{if $tab==7} class="active"{/if}>
+						<a data-toggle="tab" href="#location-tab-7" aria-expanded="true" {if $tab==7}aria-selected="true"{/if}>
 							F3B Distance
 						</a>
 					</li>
@@ -418,8 +424,21 @@ function calc_area(){ldelim}
 						
 						
 					</div>
-					{if $f3f_records}
 					<div id="location-tab-4" class="tab-pane fade{if $tab==4} active in{/if}">
+						<h2 style="float:left;">Plane Pilots</h2>
+						<div style="float:right;overflow:hidden;">
+							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
+						</div>
+						<br style="clear:left;">
+						
+						
+						
+						
+						
+						
+					</div>
+					{if $f3f_records}
+					<div id="location-tab-5" class="tab-pane fade{if $tab==5} active in{/if}">
 						<h2 style="float:left;">Top F3F Speeds ({$startrecord} - {$endrecord})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
@@ -477,7 +496,7 @@ function calc_area(){ldelim}
 					</div>
 					{/if}
 					{if $f3b_records}
-					<div id="location-tab-5" class="tab-pane fade{if $tab==5} active in{/if}">
+					<div id="location-tab-6" class="tab-pane fade{if $tab==6} active in{/if}">
 						<h2 style="float:left;">Top F3B Speeds ({$startrecord} - {$endrecord})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
@@ -535,7 +554,7 @@ function calc_area(){ldelim}
 					</div>
 					{/if}
 					{if $f3b_distance}
-					<div id="location-tab-6" class="tab-pane fade{if $tab==6} active in{/if}">
+					<div id="location-tab-7" class="tab-pane fade{if $tab==7} active in{/if}">
 						<h2 style="float:left;">Top F3B Distance Runs ({$startrecord} - {$endrecord})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Location List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
