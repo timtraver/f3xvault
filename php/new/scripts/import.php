@@ -211,6 +211,28 @@ function import_verify() {
 			$rounds[$x]=$flight_types[$r];
 			$x++;
 		}
+	}elseif($event_type_code=='f3j' || $event_type_code=='td'){
+		# Lets get all the flight types and the round types
+		$stmt=db_prep("
+			SELECT *
+			FROM flight_type
+			WHERE flight_type_code LIKE :flight_type_code
+		");
+		$result=db_exec($stmt,array("flight_type_code"=>$event_type_code."%"));
+		foreach($result as $row){
+			$flight_type_code=$row['flight_type_code'];
+			$flight_types[$flight_type_code]=$row;
+		}
+		# Lets read in the second line which are the round target times
+		$line++;
+		$x=1;
+		$rounds=array();
+		foreach($lines[$line] as $r){
+			if($r!=''){
+				$rounds[$x]=array_merge($flight_types[$flight_type_code],array("target"=>$r));
+				$x++;
+			}
+		}
 	}else{
 		# Lets get the flight types for this discipline
 		$stmt=db_prep("
@@ -236,6 +258,9 @@ function import_verify() {
 		$temp_pilot['pilot_team']=$lines[$l][4];
 		$x=5;
 		$r=1;
+		if($temp_pilot['pilot_name'] == ''){
+			continue;
+		}
 		$temp_rounds=array();
 		while(isset($lines[$l][$x])){
 			switch($event_type_code){
@@ -253,7 +278,22 @@ function import_verify() {
 					break;
 				case 'f3j':
 					# F3J special fields
-					
+					$temp_rounds[$r]['group']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['min']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['sec']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['land']=$lines[$l][$x];
+					$x++;
+					if($lines[$l][$x] != '' && $lines[$l][$x] != 0){
+						$temp_rounds[$r]['over']=1;
+					}else{
+						$temp_rounds[$r]['over']=0;
+					}
+					$x++;
+					$temp_rounds[$r]['penalty']=$lines[$l][$x];
+					$x++;
 					break;
 				case 'f3k':
 					# F3K subflights for this round
@@ -275,7 +315,16 @@ function import_verify() {
 					break;
 				case 'td':
 					# TD flights
-					
+					$temp_rounds[$r]['group']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['min']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['sec']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['land']=$lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['penalty']=$lines[$l][$x];
+					$x++;
 					break;
 			}
 			$r++;
@@ -450,19 +499,43 @@ function import_import() {
 			$round=$match[2];
 			$pilots[$number]['rounds'][$round]['pen']=$value;
 		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_min/",$key,$match)){
+			$number=$match[1];
+			$round=$match[2];
+			$pilots[$number]['rounds'][$round]['min']=$value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_sec/",$key,$match)){
+			$number=$match[1];
+			$round=$match[2];
+			$pilots[$number]['rounds'][$round]['sec']=$value;
+		}
 		if(preg_match("/^pilot_(\d+)_round_(\d+)_sub_(\d+)/",$key,$match)){
 			$number=$match[1];
 			$round=$match[2];
 			$sub=$match[3];
 			$pilots[$number]['rounds'][$round]['sub'][$sub]=$value;
 		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_land/",$key,$match)){
+			$number=$match[1];
+			$round=$match[2];
+			$pilots[$number]['rounds'][$round]['land']=$value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_over/",$key,$match)){
+			$number=$match[1];
+			$round=$match[2];
+			$pilots[$number]['rounds'][$round]['over']=$value;
+		}
 		if(preg_match("/^pilot_id_(\d+)/",$key,$match)){
 			$number=$match[1];
 			$pilots[$number]['pilot_id']=$value;
 		}
-		if(preg_match("/^event_round_(\d+)/",$key,$match)){
+		if(preg_match("/^event_round_(\d+)_target$/",$key,$match)){
 			$round=$match[1];
-			$event['rounds'][$round]=$value;
+			$event['rounds'][$round]['target']=$value;
+		}
+		if(preg_match("/^event_round_(\d+)$/",$key,$match)){
+			$round=$match[1];
+			$event['rounds'][$round]['flight_type_id']=$value;
 		}
 	}
 
@@ -590,7 +663,9 @@ function import_import() {
 				if($event['event_zero_round']==1){
 					$round_number=$round_number-1;
 				}
-				$event['rounds'][$round_number]=$flight_type['flight_type_id'];
+				if(!isset($event['rounds'][$round_number]['flight_type_id'])){
+					$event['rounds'][$round_number]['flight_type_id']=$flight_type['flight_type_id'];
+				}
 			}
 			break;
 		}
@@ -744,7 +819,7 @@ function import_import() {
 			$result=db_exec($stmt,array("event_id"=>$event['event_id']));
 		}
 		# Now lets turn back on or create the new ones
-		foreach($event['rounds'] as $round=>$flight_type_id){
+		foreach($event['rounds'] as $round=>$r){
 			if($flyoff==1){
 				# Add the existing rounds
 				$rn=$round+$existing_rounds;
@@ -774,7 +849,7 @@ function import_import() {
 				");
 				$result=db_exec($stmt,array(
 					"event_task_round_type"=>$rn_type,
-					"flight_type_id"=>$flight_type_id,
+					"flight_type_id"=>$r['flight_type_id'],
 					"event_task_id"=>$result[0]['event_task_id']
 				));
 			}else{
@@ -791,7 +866,7 @@ function import_import() {
 					"event_id"=>$event['event_id'],
 					"event_task_round"=>$rn,
 					"event_task_round_type"=>$rn_type,
-					"flight_type_id"=>$flight_type_id
+					"flight_type_id"=>$r['flight_type_id']
 				));
 			}
 		}
@@ -853,6 +928,10 @@ function import_import() {
 		}else{
 			$event_round_score_status=1;
 		}
+		$event_round_time_choice = 0;
+		if($event['rounds'][$round_number]['target']){
+			$event_round_time_choice = $event['rounds'][$round_number]['target'];
+		}
 		$stmt=db_prep("
 			SELECT *
 			FROM event_round
@@ -869,13 +948,15 @@ function import_import() {
 			$stmt=db_prep("
 				UPDATE event_round
 				SET flight_type_id=:flight_type_id,
+					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
 					event_round_flyoff=:flyoff_number,
 					event_round_status=1 
 				WHERE event_round_id=:event_round_id
 			");
 			$result=db_exec($stmt,array(
-				"flight_type_id"=>$event['rounds'][$round_number],
+				"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id'],
+				"event_round_time_choice"=>$event_round_time_choice,
 				"event_round_score_status"=>$event_round_score_status,
 				"flyoff_number"=>$flyoff_number,
 				"event_round_id"=>$event_round_id
@@ -887,6 +968,7 @@ function import_import() {
 				SET event_id=:event_id,
 					event_round_number=:event_round_number,
 					flight_type_id=:flight_type_id,
+					event_round_time_choice=:event_round_time_choice,
 					event_round_score_status=:event_round_score_status,
 					event_round_flyoff=:flyoff_number,
 					event_round_status=1 
@@ -894,7 +976,8 @@ function import_import() {
 			$result=db_exec($stmt,array(
 				"event_id"=>$event['event_id'],
 				"event_round_number"=>$round_number,
-				"flight_type_id"=>$event['rounds'][$round_number],
+				"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id'],
+				"event_round_time_choice"=>$event_round_time_choice,
 				"event_round_score_status"=>$event_round_score_status,
 				"flyoff_number"=>$flyoff_number
 			));
@@ -918,7 +1001,7 @@ function import_import() {
 				WHERE event_round_flight_id=:event_round_flight_id
 			");
 			$result=db_exec($stmt,array(
-				"flight_type_id"=>$event['rounds'][$round_number],
+				"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id'],
 				"event_round_flight_id"=>$result[0]['event_round_flight_id']
 			));
 		}else{
@@ -931,7 +1014,7 @@ function import_import() {
 			");
 			$result=db_exec($stmt,array(
 				"event_round_id"=>$event_round_id,
-				"flight_type_id"=>$event['rounds'][$round_number]
+				"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id']
 			));
 		}
 		
@@ -968,23 +1051,30 @@ function import_import() {
 			# Lets total the sub flights if there are any
 ############## Not finished. Needs to be modified if we are going to do any other imports
 			$subtotal=0;
-			foreach($r['sub'] as $sub_num=>$sub_time){
-				$subtotal+=convert_colon_to_seconds($sub_time);
-			}
 			switch($event['event_type_code']){
 				case 'f3k':
+					foreach($r['sub'] as $sub_num=>$sub_time){
+						$subtotal+=convert_colon_to_seconds($sub_time);
+					}
 					$min=floor($subtotal/60);
 					$sec=sprintf("%02d",fmod($subtotal,60));
 					break;
 				case 'f3f':
 					$min=0;
+					foreach($r['sub'] as $sub_num=>$sub_time){
+						$subtotal+=convert_colon_to_seconds($sub_time);
+					}
 					$sec=$subtotal;
 					break;
 				case 'f3j':
-					$min=floor($subtotal/60);
-					$sec=sprintf("%02.f",fmod($subtotal,60));
+				case 'td':
+					$min = $r['min'];
+					$sec=sprintf("%02.f",$r['sec']);
 					break;
 				default:
+					foreach($r['sub'] as $sub_num=>$sub_time){
+						$subtotal+=convert_colon_to_seconds($sub_time);
+					}
 					$min=floor($subtotal/60);
 					$sec=sprintf("%02d",fmod($subtotal,60));
 					break;
@@ -998,7 +1088,7 @@ function import_import() {
 			");
 			$result=db_exec($stmt,array(
 				"event_pilot_round_id"=>$event_pilot_round_id,
-				"flight_type_id"=>$event['rounds'][$round_number]
+				"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id']
 			));
 			if(isset($result[0])){
 				$event_pilot_round_flight_id=$result[0]['event_pilot_round_flight_id'];
@@ -1008,6 +1098,8 @@ function import_import() {
 					SET event_pilot_round_flight_group=:group,
 						event_pilot_round_flight_minutes=:min,
 						event_pilot_round_flight_seconds=:sec,
+						event_pilot_round_flight_landing=:landing,
+						event_pilot_round_flight_over=:over,
 						event_pilot_round_flight_penalty=:penalty,
 						event_pilot_round_flight_status=1
 					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
@@ -1016,6 +1108,8 @@ function import_import() {
 					"group"=>$r['group'],
 					"min"=>$min,
 					"sec"=>$sec,
+					"landing"=>$r['land'],
+					"over"=>$r['over'],
 					"penalty"=>$r['penalty'],
 					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id
 				));
@@ -1028,57 +1122,63 @@ function import_import() {
 						event_pilot_round_flight_group=:group,
 						event_pilot_round_flight_minutes=:min,
 						event_pilot_round_flight_seconds=:sec,
+						event_pilot_round_flight_landing=:landing,
+						event_pilot_round_flight_over=:over,
 						event_pilot_round_flight_penalty=:penalty,
 						event_pilot_round_flight_status=1
 				");
 				$result=db_exec($stmt,array(
 					"event_pilot_round_id"=>$event_pilot_round_id,
-					"flight_type_id"=>$event['rounds'][$round_number],
+					"flight_type_id"=>$event['rounds'][$round_number]['flight_type_id'],
 					"group"=>$r['group'],
 					"min"=>$min,
 					"sec"=>$sec,
+					"landing"=>$r['land'],
+					"over"=>$r['over'],
 					"penalty"=>$r['pen']
 				));
 				$event_pilot_round_flight_id=$GLOBALS['last_insert_id'];
 			}
 			
 			# Now add the sub flights
-			foreach($r['sub'] as $sub_num=>$sub_time){
-				# See if there already is one
-				$stmt=db_prep("
-					SELECT *
-					FROM event_pilot_round_flight_sub
-					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
-						AND event_pilot_round_flight_sub_num=:sub_num
-				");
-				$result=db_exec($stmt,array(
-					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
-					"sub_num"=>$sub_num
-				));
-				if(isset($result[0])){
-					# Update it
+			if(isset($r['sub'])){
+				foreach($r['sub'] as $sub_num=>$sub_time){
+					# See if there already is one
 					$stmt=db_prep("
-						UPDATE event_pilot_round_flight_sub
-						SET event_pilot_round_flight_sub_val=:sub_time
-						WHERE event_pilot_round_flight_sub_id=:event_pilot_round_flight_sub_id
-					");
-					$result=db_exec($stmt,array(
-						"sub_time"=>$sub_time,
-						"event_pilot_round_flight_sub_id"=>$result[0]['event_pilot_round_flight_sub_id']
-					));
-				}else{
-					# Create it
-					$stmt=db_prep("
-						INSERT INTO event_pilot_round_flight_sub
-						SET event_pilot_round_flight_id=:event_pilot_round_flight_id,
-							event_pilot_round_flight_sub_num=:sub_num,
-							event_pilot_round_flight_sub_val=:sub_time
+						SELECT *
+						FROM event_pilot_round_flight_sub
+						WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+							AND event_pilot_round_flight_sub_num=:sub_num
 					");
 					$result=db_exec($stmt,array(
 						"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
-						"sub_num"=>$sub_num,
-						"sub_time"=>$sub_time
+						"sub_num"=>$sub_num
 					));
+					if(isset($result[0])){
+						# Update it
+						$stmt=db_prep("
+							UPDATE event_pilot_round_flight_sub
+							SET event_pilot_round_flight_sub_val=:sub_time
+							WHERE event_pilot_round_flight_sub_id=:event_pilot_round_flight_sub_id
+						");
+						$result=db_exec($stmt,array(
+							"sub_time"=>$sub_time,
+							"event_pilot_round_flight_sub_id"=>$result[0]['event_pilot_round_flight_sub_id']
+						));
+					}else{
+						# Create it
+						$stmt=db_prep("
+							INSERT INTO event_pilot_round_flight_sub
+							SET event_pilot_round_flight_id=:event_pilot_round_flight_id,
+								event_pilot_round_flight_sub_num=:sub_num,
+								event_pilot_round_flight_sub_val=:sub_time
+						");
+						$result=db_exec($stmt,array(
+							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id,
+							"sub_num"=>$sub_num,
+							"sub_time"=>$sub_time
+						));
+					}
 				}
 			}
 		}
