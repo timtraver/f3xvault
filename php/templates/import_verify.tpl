@@ -126,6 +126,9 @@ $(function() {
 {foreach $rounds as $r}
 {$round=$r@key}
 <input type="hidden" name="event_round_{$round}" value="{$r.flight_type_id}">
+{if $r.target}
+<input type="hidden" name="event_round_{$round}_target" value="{$r.target}">
+{/if}
 {/foreach}
 
 Verify the imported information from the file and set additional information.
@@ -173,7 +176,7 @@ Verify the imported information from the file and set additional information.
 		<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
 	</td>
 </tr>
-{if $event.event_type_code=='f3k'}
+{if $event.event_type_code=='f3k' || $event.event_type_code=='f3j' || $event.event_type_code=='td'}
 <tr>
 	<th colspan="2">Flyoff Rounds</th>
 	<td colspan="5">
@@ -189,9 +192,17 @@ Verify the imported information from the file and set additional information.
 	</td>
 </tr>
 {/if}
+{$num_cols=3}
+{if $rounds.1.flight_type_landing==1}
+	{$num_cols = $num_cols + 1}
+{/if}
+{if $rounds.1.flight_type_over_penalty==1}
+	{$num_cols = $num_cols + 1}
+{/if}
+{$total_cols = 4 + $num_cols}
 <tr>
 	<th colspan="4">Data Import</th>
-	<th colspan="3">Example Import Round 1</th>
+	<th colspan="{$num_cols}">Example Import Round 1</th>
 </tr>
 <tr>
 	<th></th>
@@ -200,6 +211,12 @@ Verify the imported information from the file and set additional information.
 	<th>Pilot Class</th>
 	<th>Grp</th>
 	<th>Flight</th>
+	{if $rounds.1.flight_type_landing==1}
+	<th>Land</th>
+	{/if}
+	{if $rounds.1.flight_type_over_penalty==1}
+	<th>Over</th>
+	{/if}
 	<th>Pen</th>
 </tr>
 {$line_number=1}
@@ -218,6 +235,14 @@ Verify the imported information from the file and set additional information.
 				{$subnum=$s@key}
 				<input type="hidden" name="pilot_{$line_number}_round_{$round}_sub_{$subnum}" value="{$s}">
 			{/foreach}
+			<input type="hidden" name="pilot_{$line_number}_round_{$round}_min" value="{$r.min}">
+			<input type="hidden" name="pilot_{$line_number}_round_{$round}_sec" value="{$r.sec}">
+			{if $rounds.1.flight_type_landing==1}
+				<input type="hidden" name="pilot_{$line_number}_round_{$round}_land" value="{$r.land}">
+			{/if}
+			{if $rounds.1.flight_type_over_penalty==1}
+				<input type="hidden" name="pilot_{$line_number}_round_{$round}_over" value="{$r.over}">
+			{/if}
 			<input type="hidden" name="pilot_{$line_number}_round_{$round}_pen" value="{$r.penalty}">
 		{/foreach}
 	</td>
@@ -239,20 +264,30 @@ Verify the imported information from the file and set additional information.
 	
 	<td align="center">{$p.rounds.1.group}</td>
 	<td align="center">
-		{if $p.rounds.1.flights.sub}
-			{foreach $p.rounds.1.flights.sub as $s}
-				{$s}{if !$s@last},{/if}
-			{/foreach}
+		{if $event.event_type_code=='f3j' || $event.event_type_code=='td'}
+			{$p.rounds.1.min|string_format:"%d"}:{$p.rounds.1.sec|string_format:"%05.2f"}
 		{else}
-			{$p.rounds.1.flights.1}
+			{if $p.rounds.1.flights.sub}
+				{foreach $p.rounds.1.flights.sub as $s}
+					{$s}{if !$s@last},{/if}
+				{/foreach}
+			{else}
+				{$p.rounds.1.flights.1}
+			{/if}
 		{/if}
 	</td>
+	{if $rounds.1.flight_type_landing==1}
+	<td>{$p.rounds.1.land}</td>
+	{/if}
+	{if $rounds.1.flight_type_over_penalty==1}
+	<td>{if $p.rounds.1.over}YES{/if}</td>
+	{/if}
 	<td align="center">{$p.rounds.1.penalty}</td>
 </tr>
 {$line_number=$line_number+1}
 {/foreach}
 <tr>
-	<th colspan="7">
+	<th colspan="{$total_cols}">
 	<input type="button" value=" Cancel Import " class="block-button" onClick="goback.submit();">
 	<input type="submit" value=" Import This Data " class="block-button">
 	</th>

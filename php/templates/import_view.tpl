@@ -88,6 +88,9 @@
 	</td>
 </tr>
 <tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
 	<th align="left" colspan="2">For F3F Events</th>
 </tr>
 <tr>
@@ -110,6 +113,42 @@
 		0,Thomas Kiesling,Open,2.4GHz,,41.59,,43.29,,45.75,,41.21,,...........<br>
 
 	</td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<th align="left" colspan="2">For F3J and TD Events</th>
+</tr>
+<tr>
+	<th nowrap>Line 1 (Event Info)</th>
+	<td>
+		Same as First Line 1
+	</td>
+</tr>
+<tr>
+	<th nowrap>Line 2 (Round Target Times)</th>
+	<td>
+		Round_1_Target ('10:00'), Round_2_Target ('15:00'), Round_X_Target (time) . . .
+	</td>
+</tr>
+<tr>
+	<th nowrap>Line 3 (Pilot Data)</th>
+	<td>
+		Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), Round_1_group(txt), Round_1_min(num), Round_1_sec(num), Round_1_landing(num), Round_1_over(boolean), Round_1_Penalty(num), Round_2_group(txt), Round_2_min(num), Round_2_sec(num), Round_2_landing(num), Round_2_over(boolean), Round_2_Penalty(num), ... Round_X_...
+	</td>
+</tr>
+<tr>
+	<th nowrap>Example</th>
+	<td>
+		0,2015 F3J SoCal,11/7/15,11/8/15,f3j
+		10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,15:00,15:00,15:00,15:00
+		0,Tim Traver,Open,2.4,Slope Rebels,4,9,55.22,93,,,1,9,55.56,97,,,1,6,35.42,99, ,,2,9,55.38,98,,,2,,,,,,2,9,51.46,0,,,4,9,53.9,96,,,2,8,47.04,91,, ,1,9,54.84,90,,,1,9,53.88,90,, 
+		0,Thomas Kiesling,Open,2.4,Team MKS USA,1,9,18.56,0,,,4,9,54.34,99,,,4,9,55.5,96,,,3,9,55.14,95,,,2,9,53.16,96,,,2,9,53.21,100,,,3,9,53.37,96,,,3,9,34.88,100,,,1,7,32.08,94,,,3,9,56.4,91,,
+	</td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
 </tr>
 <tr>
 	<th align="left" colspan="2">Glossary of Fields</th>
@@ -135,7 +174,7 @@
 <tr>
 	<th nowrap>Event_Type</th>
 	<td>
-		String of the event type. Currently only 'f3k' or 'f3f'
+		String of the event type. Currently 'f3k', 'f3f', 'f3j', 'td'
 	</td>
 </tr>
 <tr>
@@ -143,6 +182,12 @@
 	<td>
 		This is the list of round types for each round. They contain the strings for the round types (f3k_a - f3k_j).<br>
 		And example of this line might look like this : f3k_a,f3k_c,f3k_h,f3k_g
+	</td>
+</tr>
+<tr>
+	<th nowrap>Round Target Times</th>
+	<td>
+		For the F3J and TD types, this is the list of round target times
 	</td>
 </tr>
 <tr>
@@ -178,7 +223,7 @@
 <tr>
 	<th nowrap>Round_X Data</th>
 	<td>
-		These fields are each round data. For F3K, it includes the flight group, the number of sub flights corresponding to the task, and the penalty.
+		These fields are each round data. For F3K, it includes the flight group, the number of sub flights corresponding to the task, and the penalty. For F3J it includes the group, the minutes, the seconds, landing score, over time, and penalty.
 	</td>
 </tr>
 
