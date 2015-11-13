@@ -234,6 +234,9 @@ function location_edit() {
 		$smarty->assign("from",$from);
 	}
 
+	# Get the previous view totals to show on top of tabs
+	location_view();
+
 	$location=array();
 	if($location_id!=0){
 		$stmt=db_prep("
@@ -403,6 +406,8 @@ function location_view() {
 		FROM location_comment l
 		LEFT JOIN user u ON l.user_id=u.user_id
 		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
 		WHERE l.location_id=:location_id
 		ORDER BY l.location_comment_date DESC
 	");
@@ -431,7 +436,7 @@ function location_view() {
 		ORDER BY e.event_start_date DESC
 	");
 	$events=db_exec($stmt,array("location_id"=>$location_id));
-	$events=show_pages($events,"action=location&function=location_view&location_id={$location_id}&tab=3");
+	$events=show_pages($events,"action=location&function=location_view&location_id={$location_id}");
 	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);
@@ -668,16 +673,8 @@ function location_media_edit() {
 
 	$location_id=$_REQUEST['location_id'];
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM location l
-		WHERE l.location_id=:location_id
-	");
-	$result=db_exec($stmt,array("location_id"=>$location_id));
-	$location=$result[0];
+	location_view();
 	
-	$smarty->assign("location",$location);
-	$smarty->assign("location_id",$location_id);
 	$maintpl=find_template("location/location_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -706,8 +703,8 @@ function location_media_add() {
 		if(move_uploaded_file($tempname, "{$GLOBALS['base_webroot']}{$GLOBALS['base_location_media']}/$location_id/$name")) {
 			user_message("File $name uploaded.");
 		}else{
-			user_message("There was an error uploading the file, please try again!",1);
-			return location_edit();
+			user_message("There was an error uploading the file, please try again! ($tempname)",1);
+			return location_view();
 		}
 		$location_media_url="{$GLOBALS['base_location_media']}/$location_id/$name";
 	}else{
@@ -765,16 +762,8 @@ function location_comment_add() {
 
 	$location_id=$_REQUEST['location_id'];
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM location l
-		WHERE l.location_id=:location_id
-	");
-	$result=db_exec($stmt,array("location_id"=>$location_id));
-	$location=$result[0];
+	location_view();
 	
-	$smarty->assign("location",$location);
-	$smarty->assign("location_id",$location_id);
 	$maintpl=find_template("location/location_comment.tpl");
 	return $smarty->fetch($maintpl);
 }

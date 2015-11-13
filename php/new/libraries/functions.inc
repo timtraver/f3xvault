@@ -228,7 +228,7 @@ function decrypt ($input) {
         $output=trim($output);
         return $output;
 }
-function show_pages($records,$callback,$defaultperpage=10){
+function show_pages($records,$callback,$label='main'){
         # This is a function to do all of the paging work for showing long lists of records
         global $smarty;
 
@@ -300,16 +300,33 @@ function show_pages($records,$callback,$defaultperpage=10){
                         }
                 }
         }
-
-        $smarty->assign("totalrecords",$totalrecords);
-        $smarty->assign("totalpages",$totalpages);
-        $smarty->assign("prevpage",$prevpage);
-        $smarty->assign("nextpage",$nextpage);
-        $smarty->assign("startrecord",$startrecord);
-        $smarty->assign("endrecord",$endrecord);
-        $smarty->assign("page",$page);
-        $smarty->assign("perpage",$perpage);
-        $smarty->assign("callback",$callback);
+        $paging[$label]['totalrecords']=$totalrecords;
+        $paging[$label]['totalpages']=$totalpages;
+        $paging[$label]['prevpage']=$prevpage;
+        $paging[$label]['nextpage']=$nextpage;
+        $paging[$label]['startrecord']=$startrecord;
+        $paging[$label]['endrecord']=$endrecord;
+        $paging[$label]['page']=$page;
+        $paging[$label]['perpage']=$perpage;
+        $paging[$label]['callback']=$callback;
+		if($smarty->getTemplateVars('paging')){
+			$paging1 = $smarty->getTemplateVars('paging');
+        	$smarty->assign("paging",array_merge($paging,$paging1));
+		}else{
+        	$smarty->assign("paging",$paging);
+        }
+        if($label == 'main'){
+	        # If it main, then spit out the regular variables by themselves
+	        $smarty->assign('totalrecords',$totalrecords);
+	        $smarty->assign('totalpages',$totalpages);
+	        $smarty->assign('prevpage',$prevpage);
+	        $smarty->assign('nextpage',$nextpage);
+	        $smarty->assign('startrecord',$startrecord);
+	        $smarty->assign('endrecord',$endrecord);
+	        $smarty->assign('page',$page);
+	        $smarty->assign('perpage',$perpage);
+	        $smarty->assign('callback',$callback);
+        }
 
         return $showrecords;
 }

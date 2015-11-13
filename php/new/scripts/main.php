@@ -47,7 +47,7 @@ function view_events() {
 	global $user;
 	$smarty->assign('current_menu','events');
 
-	$maintpl=find_template("events.tpl");
+	$maintpl=find_template("event/events.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_pilots() {
@@ -55,7 +55,7 @@ function view_pilots() {
 	global $user;
 	$smarty->assign('current_menu','pilots');
 
-	$maintpl=find_template("pilots.tpl");
+	$maintpl=find_template("pilot/pilots.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_clubs() {
@@ -63,7 +63,7 @@ function view_clubs() {
 	global $user;
 	$smarty->assign('current_menu','clubs');
 
-	$maintpl=find_template("clubs.tpl");
+	$maintpl=find_template("club/clubs.tpl");
 	return $smarty->fetch($maintpl);
 }
 function login() {

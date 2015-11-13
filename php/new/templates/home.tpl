@@ -1,4 +1,4 @@
-{extends file='layout_main.tpl'}
+{extends file='layout/layout_main.tpl'}
 
 {block name="content"}
 

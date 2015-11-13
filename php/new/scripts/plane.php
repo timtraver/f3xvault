@@ -198,6 +198,9 @@ function plane_edit() {
 		return $smarty->fetch($maintpl);
 	}
 	
+	# Get the previous view totals to show on top of tabs
+	plane_view();
+
 	$plane=array();
 	$stmt=db_prep("
 		SELECT *
@@ -288,6 +291,10 @@ function plane_view() {
 	if(isset($_REQUEST['plane_id'])){
 		$plane_id=$_REQUEST['plane_id'];
 	}
+	$tab=0;
+	if(isset($_REQUEST['tab'])){
+		$tab=$_REQUEST['tab'];
+	}
 
 	$plane=array();
 	$stmt=db_prep("
@@ -371,6 +378,7 @@ function plane_view() {
 	}
 	# Now lets merge the two arrays
 	$media=array_merge($media2,$media3);
+	$media_total = count($media);
 	
 	# Lets get the disciplines that this plane has
 	$stmt=db_prep("
@@ -389,11 +397,14 @@ function plane_view() {
 		FROM plane_comment pc
 		LEFT JOIN user u ON pc.user_id=u.user_id
 		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
 		WHERE pc.plane_id=:plane_id
 		ORDER BY pc.plane_comment_date DESC
 	");
 	$comments=db_exec($stmt,array("plane_id"=>$plane_id));
-
+	$comment_total = count($comments);
+	
 	# Lets get the plane records to show
 	$f3f_records=array();
 	$f3b_records=array();
@@ -465,15 +476,15 @@ function plane_view() {
 	");
 	$f3b_distance=db_exec($stmt,array("plane_id"=>$plane_id));
 
-	$f3f_records=show_pages($f3f_records,20);
+	$f3f_records=show_pages($f3f_records,"action=plane&function=plane_view&plane_id={$plane_id}");
 	# Now lets save the page info for when we do the next 2 arrays
 	$temp_totalpages=$smarty->getTemplateVars('totalpages');
 	$temp_startrecord=$smarty->getTemplateVars('startrecord');
 	$temp_endrecord=$smarty->getTemplateVars('endrecord');
 	$temp_page=$smarty->getTemplateVars('page');
 	
-	$f3b_records=show_pages($f3b_records,20);
-	$f3b_distance=show_pages($f3b_distance,20);
+	$f3b_records=show_pages($f3b_records,"action=plane&function=plane_view&plane_id={$plane_id}");
+	$f3b_distance=show_pages($f3b_distance,"action=plane&function=plane_view&plane_id={$plane_id}");
 
 	# Now lets reset the page values if needed
 	if($smarty->getTemplateVars('page')==0){
@@ -482,6 +493,41 @@ function plane_view() {
 		$smarty->assign("endrecord",$temp_endrecord);	
 		$smarty->assign("page",$temp_page);	
 	}
+
+	# Lets get the events that this plane is in
+	$events=array();
+	$stmt=db_prep("
+		SELECT *,count(event_pilot_id) as total_pilots
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		WHERE ep.plane_id=:plane_id
+			AND ep.event_pilot_status=1
+			AND e.event_status=1
+		GROUP by e.event_id
+		ORDER BY e.event_start_date DESC
+	");
+	$events=db_exec($stmt,array("plane_id"=>$plane_id));
+	$event_total = count($events);
+	$events=show_pages($events,"action=plane&function=plane_view&plane_id={$plane_id}",'events');
+
+	# Lets get the pilots that are flying this plane
+	$pilots=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot_plane pp
+		LEFT JOIN plane p ON pp.plane_id=p.plane_id
+		LEFT JOIN pilot pi ON pp.pilot_id=pi.pilot_id
+		LEFT JOIN country c ON pi.country_id=c.country_id
+		LEFT JOIN state s ON pi.state_id=s.state_id
+		WHERE p.plane_id=:plane_id
+			AND pp.pilot_plane_status=1
+		GROUP BY pp.pilot_id
+		ORDER BY c.country_name,pi.pilot_last_name
+	");
+	$pilots=db_exec($stmt,array("plane_id"=>$plane_id));
+	$pilot_total = count($pilots);
+	$pilots=show_pages($pilots,"action=plane&function=plane_view&plane_id={$plane_id}",'pilots');
 
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);
@@ -494,6 +540,13 @@ function plane_view() {
 	$smarty->assign("comments",$comments);
 	$smarty->assign("comments_num",count($comments));
 	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("events",$events);
+	$smarty->assign("pilots",$pilots);
+	$smarty->assign("tab",$tab);
+	$smarty->assign("pilot_total",$pilot_total);
+	$smarty->assign("media_total",$media_total);
+	$smarty->assign("comment_total",$comment_total);
+	$smarty->assign("event_total",$event_total);
 
 	$maintpl=find_template("plane/plane_view.tpl");
 	return $smarty->fetch($maintpl);
@@ -784,16 +837,8 @@ function plane_media_edit() {
 		
 	$plane_id=$_REQUEST['plane_id'];
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM plane p
-		WHERE p.plane_id=:plane_id
-	");
-	$result=db_exec($stmt,array("plane_id"=>$plane_id));
-	$plane=$result[0];
+	plane_view();
 	
-	$smarty->assign("plane",$plane);
-	$smarty->assign("plane_id",$plane_id);
 	$maintpl=find_template("plane/plane_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -829,8 +874,8 @@ function plane_media_add() {
 		if(move_uploaded_file($tempname, "{$GLOBALS['base_webroot']}{$GLOBALS['base_plane_media']}/$plane_id/$name")) {
 			user_message("File $name uploaded.");
 		}else{
-			user_message("There was an error uploading the file, please try again!");
-			return plane_edit();
+			user_message("There was an error uploading the file, please try again!",1);
+			return plane_view();
 		}
 		$plane_media_url="{$GLOBALS['base_plane_media']}/$plane_id/$name";
 	}else{
@@ -852,7 +897,7 @@ function plane_media_add() {
 
 	log_action($plane_id);
 	user_message("Added your $plane_media_type media!");
-	return plane_edit();
+	return plane_view();
 }
 function plane_media_del() {
 	global $user;
@@ -892,19 +937,11 @@ function plane_comment_add() {
 		$maintpl=find_template("feature_requires_login.tpl");
 		return $smarty->fetch($maintpl);
 	}
-		
+
 	$plane_id=$_REQUEST['plane_id'];
+
+	plane_view();
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM plane l
-		WHERE l.plane_id=:plane_id
-	");
-	$result=db_exec($stmt,array("plane_id"=>$plane_id));
-	$plane=$result[0];
-	
-	$smarty->assign("plane",$plane);
-	$smarty->assign("plane_id",$plane_id);
 	$maintpl=find_template("plane/plane_comment.tpl");
 	return $smarty->fetch($maintpl);
 }

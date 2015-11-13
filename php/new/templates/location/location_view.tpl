@@ -1,4 +1,4 @@
-{extends file='layout_main.tpl'}
+{extends file='layout/layout_main.tpl'}
 
 {block name="content"}
 
@@ -199,7 +199,17 @@
 									<div class="panel-control">
 										<em class="text-muted"><small>{$c.location_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</small></em>
 									</div>
-									<h4 class="panel-title">{$c.user_first_name|escape} {$c.user_last_name|escape}</h4>
+									<h4 class="panel-title"><b>{$c.user_first_name|escape} {$c.user_last_name|escape}</b>
+										{if $c.pilot_city}{$c.pilot_city}, {/if}
+										{if $c.state_name && $c.country_code=="US"}
+											<img src="/images/flags/states/24/{$c.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">
+											{$c.state_name|escape}
+										{/if}
+										{if $c.country_code}
+											<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;" title="{$c.country_code}">
+											{$c.country_name|escape}
+										{/if}
+									</h4>
 								</div>
 								<!--Panel body-->
 								<div class="panel-body">
@@ -219,11 +229,11 @@
 						<tr class="table-row-heading-left" style="background-color: lightgray;">
 							<th colspan="1" style="text-align: left;" nowrap>Locations (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 							<th colspan="6" nowrap>
-								{include file="paging.tpl"}
+								{include file="paging.tpl" tab=3}
 							</th>
 						</tr>
 						<tr>
-							<th style="text-align: left;">Event Date</th>
+							<th width="20%" style="text-align: left;">Event Date</th>
 							<th style="text-align: left;">Event Name</th>
 							<th style="text-align: left;">Event Type</th>
 							<th style="text-align: left;">Pilots</th>
@@ -232,14 +242,14 @@
 							{foreach $events as $e}
 							<tr bgcolor="{cycle values="white,lightgray"}">
 								<td>{$e.event_start_date|date_format:"Y-m-d"}</td>
-								<td><a href="?action=event&function=event_view&event_id={$e.event_id}" title="View This Event">{$e.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
 								<td align="left">{$e.event_type_name|escape}</td>
 								<td align="left">{$e.total_pilots}</td>
 							</tr>
 							{/foreach}
 							<tr style="background-color: lightgray;">
 								<td colspan="4">
-									{include file="paging.tpl"}
+									{include file="paging.tpl" tab=3}
 								</td>
 							</tr>
 						{else}

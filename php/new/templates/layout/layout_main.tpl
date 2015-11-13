@@ -9,8 +9,8 @@
 	<!--=================================================-->
 
 	<!--Open Sans Font [ OPTIONAL ] -->
- 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
-
+ 	<!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
+	 -->
 
 	<!--Bootstrap Stylesheet [ REQUIRED ]-->
 	<link href="css/bootstrap.new.css" rel="stylesheet">
@@ -28,7 +28,6 @@
 
 	<link href="/style.css" rel="stylesheet">
 	<link href="/style2.css" rel="stylesheet">
-	
 	<!--SCRIPT-->
 	<!--=================================================-->
 
@@ -242,7 +241,7 @@
 									</li>
 						
 									<!--Menu list item-->
-									<li>
+									<li{if $current_menu == 'pilots' || $current_menu == 'my' || $current_menu == 'messages'} class="active-link"{/if}>
 										<a href="#">
 											<i class="fa fa-user"></i>
 											<span class="menu-title">
@@ -251,11 +250,11 @@
 											</span>
 											<i class="arrow"></i>
 										</a>
-										<ul class="collapse">
-											<li><a href="/new/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
-											<li><a href="/new/?action=my"><strong>My Pilot Profile</strong></a></li>
-											<li><a href="/new/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
-											<li><a href="/new/?action=message"><strong>Message Center</strong></a></li>
+										<ul class="collapse{if $current_menu == 'pilots' || $current_menu == 'my' || $current_menu == 'messages'} in{/if}">
+											<li{if $current_menu == 'pilots' && $function == 'view_pilots'} class="active-link"{/if}><a href="/new/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
+											<li{if $current_menu == 'my'} class="active-link"{/if}><a href="/new/?action=pilot&function=pilot_view&pilot_id={$user.pilot_id}"><strong>My Pilot Profile</strong></a></li>
+											<li{if $current_menu == 'pilots' && $function == ''} class="active-link"{/if}><a href="/new/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
+											<li{if $current_menu == 'messages'} class="active-link"{/if}><a href="/new/?action=message"><strong>Message Center</strong></a></li>
 										</ul>
 									</li>
 						

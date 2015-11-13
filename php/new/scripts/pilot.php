@@ -7,7 +7,7 @@
 #	This is the script to handle the pilots
 #
 ############################################################################
-$GLOBALS['current_menu']='pilots';
+$smarty->assign("current_menu",'pilots');
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];
@@ -42,49 +42,11 @@ function pilot_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
 	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'pilot_first_name':
-			$search_field='pilot_first_name';
-			break;
-		case 'pilot_last_name':
-			$search_field='pilot_last_name';
-			break;
-		case 'pilot_city':
-			$search_field='pilot_city';
-			break;
-		default:
-			$search_field='pilot_first_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='pilot_first_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
 	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
-
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND p.country_id=$country_id ";
@@ -93,12 +55,6 @@ function pilot_list() {
 	if($state_id!=0){
 		$addstate.=" AND p.state_id=$state_id ";
 	}
-#print "addcountry=$addcountry<br>\n";
-#print "addstate=$addstate<br>\n";
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
 
 	$pilots=array();
 	if($search!='%%' && $search!=''){
@@ -107,12 +63,18 @@ function pilot_list() {
 			FROM pilot p
 			LEFT JOIN state s ON p.state_id=s.state_id
 			LEFT JOIN country c ON p.country_id=c.country_id
-			WHERE p.$search_field $operator :search
+			WHERE (p.pilot_first_name LIKE :search
+				OR p.pilot_last_name LIKE :search2
+				OR p.pilot_city LIKE :search3)
 				$addcountry
 				$addstate
 			ORDER BY p.pilot_first_name
 		");
-		$pilots=db_exec($stmt,array("search"=>$search));
+		$pilots=db_exec($stmt,array(
+			"search"=>"%".$search."%",
+			"search2"=>"%".$search."%",
+			"search3"=>"%".$search."%"
+		));
 	}else{
 		# Get all pilots for search
 		$stmt=db_prep("
@@ -127,7 +89,6 @@ function pilot_list() {
 		");
 		$pilots=db_exec($stmt,array());
 	}
-#print_r($pilots);
 	
 	# Get only countries that we have pilots for
 	$stmt=db_prep("
@@ -148,19 +109,17 @@ function pilot_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$pilots=show_pages($pilots,25);
+	$pilots=show_pages($pilots,"action=pilot&function=pilot_list");
 	
 	$smarty->assign("pilots",$pilots);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("pilot_list.tpl");
+	$maintpl=find_template("pilot/pilot_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function pilot_view() {
@@ -168,6 +127,7 @@ function pilot_view() {
 	global $smarty;
 	
 	$pilot_id=intval($_REQUEST['pilot_id']);
+	$tab=intval($_REQUEST['tab']);
 	
 	# Get the current users pilot info
 	$stmt=db_prep("
@@ -275,9 +235,9 @@ function pilot_view() {
 				AND e.event_type_id=1
 				AND eprf.event_pilot_round_flight_seconds!=0
 			ORDER BY eprf.event_pilot_round_flight_seconds
-			LIMIT 0,3
 		");
 		$f3f_records=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		$f3f_records = show_pages($f3f_records,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 		# Lets get the top speeds in F3B across all of the events
 		$stmt=db_prep("
 			SELECT *
@@ -296,9 +256,9 @@ function pilot_view() {
 				AND (e.event_type_id=2 || e.event_type_id=3)
 				AND eprf.event_pilot_round_flight_seconds!=0
 			ORDER BY eprf.event_pilot_round_flight_seconds
-			LIMIT 0,3
 		");
 		$f3b_records=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		$f3b_records = show_pages($f3b_records,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 		# Lets get the top distance runs in F3B across all of the events
 		$stmt=db_prep("
 			SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
@@ -318,9 +278,9 @@ function pilot_view() {
 				AND eprf.flight_type_id=2
 				AND eprf.event_pilot_round_flight_laps!=0
 			ORDER BY eprf.event_pilot_round_flight_laps DESC
-			LIMIT 0,3
 		");
-		$f3b_dist=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		$f3b_distance=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+		$f3b_distance = show_pages($f3b_distance,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 	}
 
 	$smarty->assign("pilot",$pilot);
@@ -330,9 +290,10 @@ function pilot_view() {
 	$smarty->assign("pilot_clubs",$pilot_clubs);
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);
-	$smarty->assign("f3b_dist",$f3b_dist);
+	$smarty->assign("f3b_distance",$f3b_distance);
+	$smarty->assign("tab",$tab);
 	
-	$maintpl=find_template("pilot_view.tpl");
+	$maintpl=find_template("pilot/pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function pilot_add_cd() {
@@ -359,7 +320,7 @@ function pilot_add_cd() {
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("pilot",$pilot);
 
-	$maintpl=find_template("event_cd_add.tpl");
+	$maintpl=find_template("pilot/event_cd_add.tpl");
 	return $smarty->fetch($maintpl);
 }
 function pilot_save_cd() {
