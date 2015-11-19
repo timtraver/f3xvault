@@ -127,41 +127,6 @@
 						{/if}
 						</table>
 						<br>
-						
-						{if $media}
-						<h2 style="float:left;">Plane Media</h2>
-						<div id="media-carousel" class="carousel slide" data-ride="carousel">
-							<ol class="carousel-indicators dark out">
-								{foreach $media as $m}
-								<li class="{if $m@index == 0}active{/if}" data-slide-to="{$m@index}" data-target="#media-carousel"></li>
-								{/foreach}
-							</ol>
-							<div class="carousel-inner">
-								{foreach $media as $m}
-								<div class="item{if $m@index == 0} active{/if}">
-									<center>
-									{if $m.pilot_plane_media_type == 'picture'}
-										<img src="{$m.pilot_plane_media_url}"><br>
-									{else}
-										<div class="video-wrapper">
-											<div class="video-container">
-												<iframe src="{$m.pilot_plane_media_url}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-											</div>
-										</div>
-									{/if}
-									<br>
-									{$m.plane_name|escape}
-									<br>
-									{$m.plane_media_caption|escape}
-									</center>
-								</div>
-								{/foreach}
-								<a class="carousel-control left" data-slide="prev" href="#media-carousel"><i class="fa fa-chevron-left fa-2x"></i></a>
-								<a class="carousel-control right" data-slide="next" href="#media-carousel"><i class="fa fa-chevron-right fa-2x"></i></a>
-							</div>
-						</div>
-						{/if}
-						
 					</div>
 					<div id="pilot-tab-2" class="tab-pane fade{if $tab==2} active in{/if}">
 						<h2 style="float:left;">Pilot Club Affiliations</h2>
@@ -377,9 +342,9 @@
 	</div>
 </div>
 <form name="pilot_edit" method="GET">
-<input type="hidden" name="action" value="my">
-<input type="hidden" name="function" value="my_user_show">
-<input type="hidden" name="plane_id" value="{$user.user_id}">
+<input type="hidden" name="action" value="pilot">
+<input type="hidden" name="function" value="pilot_edit">
+<input type="hidden" name="plane_id" value="{$pilot.pilot_id}">
 <input type="hidden" name="tab" value="0">
 </form>
 

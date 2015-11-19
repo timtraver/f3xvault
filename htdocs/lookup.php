@@ -155,8 +155,16 @@ function lookup_location() {
 		LEFT JOIN state s ON l.state_id=s.state_id
 		LEFT JOIN country c ON l.country_id=c.country_id
 		WHERE LOWER(l.location_name) LIKE :q
+			OR l.location_city LIKE :q2
+			OR s.state_name LIKE :q3
+			OR c.country_name LIKE :q4
 	");
-	$result=db_exec($stmt,array("q"=>$q));
+	$result=db_exec($stmt,array(
+		"q"=>$q,
+		"q2"=>$q,
+		"q3"=>$q,
+		"q4"=>$q
+	));
 	
 	foreach($result as $r){
 		$locations[]=array(

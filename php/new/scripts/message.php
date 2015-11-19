@@ -7,7 +7,7 @@
 #       This is the script to show individual messages
 #
 ############################################################################
-$GLOBALS['current_menu']='message';
+$smarty->assign("current_menu",'message');
 
 # This whole section requires the user to be logged in
 if($GLOBALS['user_id']==0){
@@ -74,11 +74,11 @@ function message_list() {
 		$user_messages=db_exec($stmt,array("user_id"=>$GLOBALS['user_id']));
 	}
 	
-	$user_messages=show_pages($user_messages,25);
+	$user_messages=show_pages($user_messages,"action=message&function=message_list");
 	
 	$smarty->assign("message_box",$message_box);
 	$smarty->assign("user_messages",$user_messages);
-	$maintpl=find_template("message_list.tpl");
+	$maintpl=find_template("message/message_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function message_edit() {
@@ -148,7 +148,7 @@ function message_edit() {
 	}
 		
 	$smarty->assign("user_message",$user_message);
-	$maintpl=find_template("message_edit.tpl");
+	$maintpl=find_template("message/message_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function message_save() {

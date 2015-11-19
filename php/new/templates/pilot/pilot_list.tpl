@@ -40,7 +40,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="right">Name</td>
+				<td align="right">Name/City</td>
 				<td nowrap>
 					<input type="text" name="search" size="20" value="{$search|escape}">
 					<input type="submit" value=" Search " class="btn btn-primary btn-rounded">

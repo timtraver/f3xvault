@@ -282,6 +282,21 @@ function pilot_view() {
 		$f3b_distance=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
 		$f3b_distance = show_pages($f3b_distance,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 	}
+	
+	# Get plane media records
+	$media=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot_plane_media ppm
+		LEFT JOIN pilot_plane pp ON ppm.pilot_plane_id=pp.pilot_plane_id
+		LEFT JOIN pilot p ON pp.pilot_id=p.pilot_id
+		LEFT JOIN plane pl ON pp.plane_id=pl.plane_id
+		WHERE p.pilot_id=:pilot_id
+			AND pp.pilot_plane_status=1
+			AND ppm.pilot_plane_media_status=1
+	");
+	$media=db_exec($stmt,array("pilot_id"=>$pilot['pilot_id']));
+	
 
 	$smarty->assign("pilot",$pilot);
 	$smarty->assign("pilot_planes",$pilot_planes);
@@ -291,6 +306,7 @@ function pilot_view() {
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);
 	$smarty->assign("f3b_distance",$f3b_distance);
+	$smarty->assign("media",$media);
 	$smarty->assign("tab",$tab);
 	
 	$maintpl=find_template("pilot/pilot_view.tpl");
