@@ -7,7 +7,7 @@
 #       This is the script to show the main screen
 #
 ############################################################################
-$GLOBALS['current_menu']='events';
+$smarty->assign("current_menu",'events');
 
 include_library("event.class");
 
@@ -96,47 +96,11 @@ function event_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
 	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	$search_prefix='e.';
-	switch($search_field_entry){
-		case 'event_name':
-			$search_field='event_name';
-			break;
-		case 'event_type_name':
-			$search_field='event_type_name';
-			$search_prefix='et.';
-			break;
-		default:
-			$search_field='event_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='event_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
 	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND l.country_id=$country_id ";
@@ -160,7 +124,6 @@ function event_list() {
 		$extrad='AND et.event_type_code LIKE '."'$discipline_code'";
 	}
 
-
 	$events=array();
 	if($search!='%%' && $search!=''){
 		$stmt=db_prep("
@@ -170,14 +133,13 @@ function event_list() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.event_status=1
-				AND $search_prefix$search_field $operator :search
+			WHERE e.event_name LIKE :search
 				$addcountry
 				$addstate
 				$extrad
 			ORDER BY e.event_start_date DESC,l.country_id,l.state_id
 		");
-		$events=db_exec($stmt,array("search"=>$search));
+		$events=db_exec($stmt,array("search"=>'%'.$search.'%'));
 		
 	}else{
 		# Get all events for search
@@ -267,7 +229,7 @@ function event_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$events=show_pages($events,25);
+	$events=show_pages($events,"action=event&function=event_list");
 
 	# Lets get the number of pilots for this event
 	foreach($events as $key=>$e){
@@ -311,7 +273,7 @@ function event_list() {
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("event_list.tpl");
+	$maintpl=find_template("event/event_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_view() {
@@ -416,7 +378,7 @@ function event_view() {
 	}
 	$smarty->assign("active_draws",$active_draws);
 	
-	$maintpl=find_template("event_view.tpl");
+	$maintpl=find_template("event/event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_edit() {
@@ -522,7 +484,7 @@ function event_edit() {
 	$smarty->assign("event_types",$event_types);
 	$smarty->assign("event",$e);
 
-	$maintpl=find_template("event_edit.tpl");
+	$maintpl=find_template("event/event_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_save() {
@@ -735,7 +697,7 @@ function event_chart() {
 	$smarty->assign("event",$e);
 	$smarty->assign("event_id",$event_id);
 	
-	$maintpl=find_template("event_chart.tpl");
+	$maintpl=find_template("event/event_chart.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_series_save() {
@@ -818,7 +780,7 @@ function event_reg_edit() {
 	
 	$smarty->assign("event",$e);
 	$smarty->assign("currencies",get_currencies());
-	$maintpl=find_template("event_reg_edit.tpl");
+	$maintpl=find_template("event/event_reg_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_reg_save() {
@@ -960,7 +922,7 @@ function event_view_info() {
 	$cd=$result[0];
 	$smarty->assign("cd",$cd);
 	
-	$maintpl=find_template("event_view_info.tpl");
+	$maintpl=find_template("event/event_view_info.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_register() {
@@ -1059,7 +1021,7 @@ function event_register() {
 		$smarty->assign("go_to_paypal",$go_to_paypal);
 	}
 	
-	$maintpl=find_template("event_register.tpl");
+	$maintpl=find_template("event/event_register.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_register_save() {
@@ -1361,9 +1323,9 @@ function event_registration_report() {
 	$smarty->assign("reg_options",$reg_options);
 	
 	if(isset($_REQUEST['use_print_header'])){
-		$maintpl=find_template("event_register_report_print.tpl");
+		$maintpl=find_template("event/event_register_report_print.tpl");
 	}else{
-		$maintpl=find_template("event_register_report.tpl");
+		$maintpl=find_template("event/event_register_report.tpl");
 	}
 	return $smarty->fetch($maintpl);
 }
@@ -1563,7 +1525,7 @@ function event_pilot_edit() {
 	}
 	$smarty->assign("has_sizes",$has_sizes);
 
-	$maintpl=find_template("event_pilot_edit.tpl");
+	$maintpl=find_template("event/event_pilot_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_pilot_save() {
@@ -1660,7 +1622,7 @@ function event_pilot_save() {
 					}
 				}
 				
-				$maintpl=find_template("event_pilot_show_possible.tpl");
+				$maintpl=find_template("event/event_pilot_show_possible.tpl");
 				return $smarty->fetch($maintpl);
 			}
 		}
@@ -1972,7 +1934,7 @@ function event_pilot_edit_pilot() {
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_pilot_id",$event_pilot_id);
 
-	$maintpl=find_template("event_pilot_edit_pilot.tpl");
+	$maintpl=find_template("event/event_pilot_edit_pilot.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_pilot_save_pilot() {
@@ -2310,9 +2272,9 @@ function event_round_edit() {
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 	if($permission==1 && $view_only!=1){
-		$maintpl=find_template("event_round_edit.tpl");
+		$maintpl=find_template("event/event_round_edit.tpl");
 	}else{
-		$maintpl=find_template("event_round_view.tpl");
+		$maintpl=find_template("event/event_round_view.tpl");
 	}
 	return $smarty->fetch($maintpl);
 }
@@ -3031,7 +2993,7 @@ function event_pilot_rounds() {
 	$smarty->assign("event_pilot_id",$event_pilot_id);
 	$smarty->assign("event",$event);
 	
-	$maintpl=find_template("event_pilot_view.tpl");
+	$maintpl=find_template("event/event_pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function save_individual_flight(){
@@ -3281,7 +3243,7 @@ function event_print_overall() {
 
 	$smarty->assign("event",$e);
 	
-	$maintpl=find_template("print_event_overall.tpl");
+	$maintpl=find_template("print/print_event_overall.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_print_rank() {
@@ -3299,7 +3261,7 @@ function event_print_rank() {
 
 	$smarty->assign("event",$e);
 	
-	$maintpl=find_template("print_event_rankings.tpl");
+	$maintpl=find_template("print/print_event_rankings.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_print_round() {
@@ -3325,7 +3287,7 @@ function event_print_round() {
 	$smarty->assign("round_to",$round_to);
 	$smarty->assign("one_per_page",$one_per_page);
 	
-	$maintpl=find_template("print_event_rounds.tpl");
+	$maintpl=find_template("print/print_event_rounds.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_print_pilot() {
@@ -3341,7 +3303,7 @@ function event_print_pilot() {
 	$smarty->assign("event_pilot_id",$event_pilot_id);
 	$smarty->assign("event",$event);
 	
-	$maintpl=find_template("print_event_pilot_view.tpl");
+	$maintpl=find_template("print/print_event_pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_print_stats() {
@@ -3415,7 +3377,7 @@ function event_print_stats() {
 	
 	$smarty->assign("event",$e);
 	
-	$maintpl=find_template("print_event_stats.tpl");
+	$maintpl=find_template("print/print_event_stats.tpl");
 	return $smarty->fetch($maintpl);
 }
 
@@ -3463,7 +3425,7 @@ function event_draw() {
 	
 	$smarty->assign("print_rounds",$print_rounds);
 
-	$maintpl=find_template("event_draw.tpl");
+	$maintpl=find_template("event/event_draw.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_draw_edit() {
@@ -3607,7 +3569,7 @@ function event_draw_edit() {
 	$smarty->assign("max_groups_np",$max_groups_np);
 	$smarty->assign("highlight",$highlight);
 
-	$maintpl=find_template("event_draw_edit.tpl");
+	$maintpl=find_template("event/event_draw_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_draw_save(){
@@ -4304,7 +4266,7 @@ function event_draw_stats() {
 	$smarty->assign("group_totals",$group_totals);
 	$smarty->assign("from_event_view",$from_event_view);
 	
-	$maintpl=find_template("event_draw_stats.tpl");
+	$maintpl=find_template("event/event_draw_stats.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_view_draws() {
@@ -4353,7 +4315,7 @@ function event_view_draws() {
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 
-	$maintpl=find_template("event_draw_view.tpl");
+	$maintpl=find_template("event/event_draw_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_draw_manual_save(){
@@ -4607,7 +4569,7 @@ function event_export() {
 	$event=new Event($event_id);
 
 	$smarty->assign("event",$event);
-	$maintpl=find_template("event_export.tpl");
+	$maintpl=find_template("event/event_export.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_export_export() {
@@ -4724,7 +4686,7 @@ function event_export_export() {
         exit;
 	}elseif($export_format=="csv_text"){
 		$smarty->assign("export_content",$content);
-		$maintpl=find_template("event_export.tpl");
+		$maintpl=find_template("event/event_export.tpl");
 		return $smarty->fetch($maintpl);
 	}
 }
@@ -4823,7 +4785,7 @@ function event_import() {
 	$smarty->assign("lines",$lines);
 	$smarty->assign("columns",$columns);
 
-	$maintpl=find_template("event_import.tpl");
+	$maintpl=find_template("event/event_import.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_import_save() {
@@ -5175,7 +5137,7 @@ function event_import_f3k() {
 	$smarty->assign("round",$round);
 	$smarty->assign("flight_type_id",$flight_type_id);
 
-	$maintpl=find_template("event_import_f3k.tpl");
+	$maintpl=find_template("event/event_import_f3k.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_import_f3k_save() {
@@ -5535,7 +5497,7 @@ function event_tasks() {
 	}
 	$smarty->assign("last_prelim_round",$round);
 	
-	$maintpl=find_template("event_tasks.tpl");
+	$maintpl=find_template("event/event_tasks.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_tasks_save() {

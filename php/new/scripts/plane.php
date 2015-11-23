@@ -79,7 +79,6 @@ function plane_list() {
 	if($country_id!=0){
 		$addcountry.=" AND p.country_id=$country_id ";
 	}
-
 	# Add search options for discipline
 	$joind='';
 	$extrad='';
@@ -87,7 +86,6 @@ function plane_list() {
 		$joind='LEFT JOIN plane_discipline pd ON p.plane_id=pd.plane_id';
 		$extrad='AND pd.discipline_id='.$discipline_id.' AND pd.plane_discipline_status=1';
 	}
-
 	$planes=array();
 	$newplanes=array();
 	if($search!='%%' && $search!=''){

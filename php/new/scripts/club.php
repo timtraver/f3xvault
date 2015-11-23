@@ -158,6 +158,7 @@ function club_view() {
 	global $smarty;
 	
 	$club_id=intval($_REQUEST['club_id']);
+	$tab=intval($_REQUEST['tab']);
 	
 	# Get the club info
 	$stmt=db_prep("
@@ -217,6 +218,7 @@ function club_view() {
 	
 	$smarty->assign("club",$club);
 	$smarty->assign("club_locations",$club_locations);
+	$smarty->assign("tab",$tab);
 	$maintpl=find_template("club/club_view.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -227,6 +229,9 @@ function club_edit() {
 	if(isset($_REQUEST['club_name'])){
 		$club_name=ucwords($_REQUEST['club_name']);
 	}
+	
+	# Start off with the same info as the view fo rthe tabs
+	club_view();
 	
 	if(isset($_REQUEST['from_action'])){
 		# Lets make an array of all of the return values
@@ -272,6 +277,7 @@ function club_edit() {
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("states",get_states());
 	$smarty->assign("club",$club);
+	$smarty->assign("tab",$tab);
 
 	$maintpl=find_template("club/club_edit.tpl");
 	return $smarty->fetch($maintpl);

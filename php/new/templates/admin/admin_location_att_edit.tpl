@@ -1,14 +1,19 @@
-<div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
-	<div class="entry clearfix">
-		<h2 class="post-title entry-title">F3X Vault Admin area !</h2>
-				<div class="entry-content clearfix">
+{extends file='layout/layout_main.tpl'}
+
+{block name="content"}
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">F3X Vault Admin area !</h2>
+	</div>
+	<div class="panel-body">
 
 				<form name="main" method="POST">
 				<input type="hidden" name="action" value="admin">
 				<input type="hidden" name="function" value="admin_location_att_save">
 				<input type="hidden" name="location_att_id" value="{$attribute.location_att_id}">
 				
-				<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+				<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 				<tr class="table-row-heading-left">
 					<th colspan="2">Admin Location Attributes</th>
 				</tr>
@@ -57,8 +62,8 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="table-data-heading-center">
-					<input type="button" value=" Go Back " onclick="document.goback.submit();" class="button">
-					<input type="button" value=" Save " onclick="document.main.submit();" class="button">
+					<input type="button" value=" Go Back " onclick="document.goback.submit();" class="btn btn-primary btn-rounded">
+					<input type="button" value=" Save " onclick="document.main.submit();" class="btn btn-primary btn-rounded">
 					</td>
 				</tr>
 				</table>
@@ -72,3 +77,4 @@
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_location">
 </form>
+{/block}

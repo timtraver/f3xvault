@@ -45,7 +45,7 @@
 				<td nowrap>
 					<input type="text" name="search" size="20" value="{$search|escape}">
 					<input type="submit" value=" Search " class="btn btn-primary btn-rounded">
-					<input type="submit" value=" Reset " class="btn btn-primary btn-rounded" onClick="document.search_form.country_id.value=0;document.search_form.state_id.value=0;document.search_form.search_field.value='location_name';document.search_form.search_operator.value='contains';document.search_form.search.value='';search_form.submit();">
+					<input type="submit" value=" Reset " class="btn btn-primary btn-rounded" onClick="document.search_form.country_id.value=0;document.search_form.state_id.value=0;document.search_form.search.value='';search_form.submit();">
 				</td>
 			</tr>
 		</table>

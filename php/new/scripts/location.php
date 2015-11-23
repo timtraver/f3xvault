@@ -954,7 +954,7 @@ function location_calculate_records(){
 	#$results=db_exec($stmt,array());
 	
 	$smarty->assign("results",$results);
-	$maintpl=find_template("admin_results.tpl");
+	$maintpl=find_template("admin/admin_results.tpl");
 	return $smarty->fetch($maintpl);
 }
 ?>

@@ -379,7 +379,7 @@
 <form name="pilot_edit" method="GET">
 <input type="hidden" name="action" value="my">
 <input type="hidden" name="function" value="my_user_show">
-<input type="hidden" name="plane_id" value="{$user.user_id}">
+<input type="hidden" name="user_id" value="{$user.user_id}">
 <input type="hidden" name="tab" value="0">
 </form>
 

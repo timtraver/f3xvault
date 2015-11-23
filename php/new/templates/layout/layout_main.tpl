@@ -223,7 +223,7 @@
 									</li>
 						
 									<!--Menu list item-->
-									<li>
+									<li{if $current_menu == 'events'} class="active-link"{/if}>
 										<a href="#">
 											<i class="fa fa-trophy"></i>
 											<span class="menu-title">
@@ -232,9 +232,9 @@
 											</span>
 											<i class="arrow"></i>
 										</a>
-										<ul class="collapse">
-											<li><a href="/new/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
-											<li><a href="/new/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
+										<ul class="collapse{if $current_menu == 'events'} in{/if}">
+											<li{if $current_menu == 'events' && $function == 'view_events'} class="active-link"{/if}><a href="/new/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
+											<li{if $current_menu == 'events' && ($function == 'event_list' || $function == '')} class="active-link"{/if}><a href="/new/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
 											<li><a href="/new/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
 											<li><a href="/new/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
 											<li><a href="/new/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
@@ -303,7 +303,7 @@
 									<br>
 									<br>
 									<li>
-										<a href="#">
+										<a href="/new/?action=main&function=main_feedback">
 											<i class="fa fa-thumbs-o-up"></i>
 											<span class="menu-title">
 												<strong>Feedback</strong>
@@ -319,7 +319,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="#">
+										<a href="#" onClick="document.donate.submit();">
 											<i class="fa fa-money"></i>
 											<span class="menu-title">
 												<strong>Donate</strong>
@@ -327,7 +327,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="#">
+										<a href="?action=admin">
 											<i class="fa fa-cogs"></i>
 											<span class="menu-title">
 												<strong>Admin</strong>
@@ -413,7 +413,13 @@
 	Detailed information and more samples can be found in the document.
 
 	-->
-		
+	<form name="donate" method="GET" action="https://www.paypal.com/cgi-bin/webscr" target="_blank">
+	<input name="cmd" type="hidden" value="_xclick">
+	<input name="business" type="hidden" value="timtraver@gmail.com">
+	<input name="currency_code" type="hidden" value="USD">
+	<input name="item_name" type="hidden" value="F3XVault Donation">
+	<input name="amount" type="hidden" value="">
+	</form>
 {debug}
 </body>
 </html>

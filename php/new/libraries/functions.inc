@@ -229,106 +229,105 @@ function decrypt ($input) {
         return $output;
 }
 function show_pages($records,$callback,$label='main'){
-        # This is a function to do all of the paging work for showing long lists of records
-        global $smarty;
+	# This is a function to do all of the paging work for showing long lists of records
+	global $smarty;
 
-        # Get input variables if they exist
-        if(isset($_REQUEST['page'])){
-                $page=intval($_REQUEST['page']);
-        }else{
-                $page=1;
-        }
-        if($page==0){
-                $page=1;
-        }
-        if(isset($_REQUEST['perpage'])){
-                $perpage=$_REQUEST['perpage'];
-                if($perpage!='all'){
-                        $perpage=intval($_REQUEST['perpage']);
-                }
-        }else{
-                if(isset($GLOBALS['fsession']['perpage'])){
-                        $perpage=$GLOBALS['fsession']['perpage'];
-                        if($perpage<$defaultperpage){
-                                $perpage=$defaultperpage;
-                        }
-                }else{
-                        $perpage=$defaultperpage;
-                }
-        }
-        if($perpage!='all'){
-                $GLOBALS['fsession']['perpage']=$perpage;
-        }
-        # Now calculate some totals
-        $totalrecords=count($records);
-
-        if($perpage=='all'){
-                $startrecord=0;
-                $endrecord=$totalrecords;
-                $prevpage=1;
-                $nextpage=1;
-                $totalpages=1;
-                $page=1;
-                $showrecords=$records;
-        }else{
-                $totalpages=intval(ceil($totalrecords/$perpage));
-                if($page>$totalpages){
-                        $page=$totalpages;
-                }
-                $startrecord=$page*$perpage - ($perpage)+1;
-                if($startrecord<0){
-                        $startrecord=0;
-                }
-                $endrecord=$startrecord+$perpage -1;
-                if($endrecord>=$totalrecords){
-                        $endrecord=$totalrecords;
-                }
-                $prevpage=$page-1;
-                $nextpage=$page+1;
-                if($prevpage<1){
-                        $prevpage=1;
-                }
-                if($nextpage>$totalpages){
-                        $nextpage=$totalpages;
-                }
-
-                # OK, now narrow the array down to the records we want to see only
-                $showrecords=array();
-                foreach($records as $key=>$value){
-                        if($key >= ($startrecord-1) && $key <= ($endrecord-1)){
-                                $showrecords[]=$value;
-                        }
-                }
-        }
-        $paging[$label]['totalrecords']=$totalrecords;
-        $paging[$label]['totalpages']=$totalpages;
-        $paging[$label]['prevpage']=$prevpage;
-        $paging[$label]['nextpage']=$nextpage;
-        $paging[$label]['startrecord']=$startrecord;
-        $paging[$label]['endrecord']=$endrecord;
-        $paging[$label]['page']=$page;
-        $paging[$label]['perpage']=$perpage;
-        $paging[$label]['callback']=$callback;
-		if($smarty->getTemplateVars('paging')){
-			$paging1 = $smarty->getTemplateVars('paging');
-        	$smarty->assign("paging",array_merge($paging,$paging1));
+	# Get input variables if they exist
+	if(isset($_REQUEST['page'])){
+		$page=intval($_REQUEST['page']);
+	}else{
+		$page=1;
+	}
+	if($page==0){
+		$page=1;
+	}
+	if(isset($_REQUEST['perpage'])){
+		$perpage=$_REQUEST['perpage'];
+		if($perpage!='all'){
+			$perpage=intval($_REQUEST['perpage']);
+		}
+	}else{
+		if(isset($GLOBALS['fsession']['perpage'])){
+			$perpage=$GLOBALS['fsession']['perpage'];
+			if($perpage<$defaultperpage){
+				$perpage=$defaultperpage;
+			}
 		}else{
-        	$smarty->assign("paging",$paging);
-        }
-        if($label == 'main'){
-	        # If it main, then spit out the regular variables by themselves
-	        $smarty->assign('totalrecords',$totalrecords);
-	        $smarty->assign('totalpages',$totalpages);
-	        $smarty->assign('prevpage',$prevpage);
-	        $smarty->assign('nextpage',$nextpage);
-	        $smarty->assign('startrecord',$startrecord);
-	        $smarty->assign('endrecord',$endrecord);
-	        $smarty->assign('page',$page);
-	        $smarty->assign('perpage',$perpage);
-	        $smarty->assign('callback',$callback);
-        }
+			$perpage=25;
+		}
+	}
+	if($perpage!='all'){
+		$GLOBALS['fsession']['perpage']=$perpage;
+	}
+	# Now calculate some totals
+	$totalrecords=count($records);
 
-        return $showrecords;
+	if($perpage=='all'){
+		$startrecord=0;
+		$endrecord=$totalrecords;
+		$prevpage=1;
+		$nextpage=1;
+		$totalpages=1;
+		$page=1;
+		$showrecords=$records;
+	}else{
+		$totalpages=intval(ceil($totalrecords/$perpage));
+		if($page>$totalpages){
+			$page=$totalpages;
+		}
+		$startrecord=$page*$perpage - ($perpage)+1;
+		if($startrecord<0){
+			$startrecord=0;
+		}
+		$endrecord=$startrecord+$perpage -1;
+		if($endrecord>=$totalrecords){
+			$endrecord=$totalrecords;
+		}
+		$prevpage=$page-1;
+		$nextpage=$page+1;
+		if($prevpage<1){
+			$prevpage=1;
+		}
+		if($nextpage>$totalpages){
+			$nextpage=$totalpages;
+		}
+
+		# OK, now narrow the array down to the records we want to see only
+		$showrecords=array();
+		foreach($records as $key=>$value){
+			if($key >= ($startrecord-1) && $key <= ($endrecord-1)){
+				$showrecords[]=$value;
+			}
+		}
+	}
+	$paging[$label]['totalrecords']=$totalrecords;
+	$paging[$label]['totalpages']=$totalpages;
+	$paging[$label]['prevpage']=$prevpage;
+	$paging[$label]['nextpage']=$nextpage;
+	$paging[$label]['startrecord']=$startrecord;
+	$paging[$label]['endrecord']=$endrecord;
+	$paging[$label]['page']=$page;
+	$paging[$label]['perpage']=$perpage;
+	$paging[$label]['callback']=$callback;
+	if($smarty->getTemplateVars('paging')){
+		$paging1 = $smarty->getTemplateVars('paging');
+		$smarty->assign("paging",array_merge($paging,$paging1));
+	}else{
+		$smarty->assign("paging",$paging);
+	}
+	if($label == 'main'){
+		# If it main, then spit out the regular variables by themselves
+		$smarty->assign('totalrecords',$totalrecords);
+		$smarty->assign('totalpages',$totalpages);
+		$smarty->assign('prevpage',$prevpage);
+		$smarty->assign('nextpage',$nextpage);
+		$smarty->assign('startrecord',$startrecord);
+		$smarty->assign('endrecord',$endrecord);
+		$smarty->assign('page',$page);
+		$smarty->assign('perpage',$perpage);
+		$smarty->assign('callback',$callback);
+	}
+	return $showrecords;
 }
 function user_log($type,$log_string){
         global $user;

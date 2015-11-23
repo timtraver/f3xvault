@@ -1,14 +1,22 @@
-<div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-uncategorized clearfix post">
-	<div class="entry clearfix">
-		<h2 class="post-title entry-title">F3X Vault Admin area !</h2>
+{extends file='layout/layout_main.tpl'}
 
-				<div class="entry-content clearfix">
-					Results from Admin Function
-					
-					<textarea>{$results}</textarea>
+{block name="content"}
 
-				</div>
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">F3X Vault Admin area !</h2>
+	</div>
+	<div class="panel-body">
+
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+		<tr>
+			<th>Results from Admin Function</th>
+			<td>
+				<textarea cols="80" rows="30">{foreach $results as $r}{$r}{/foreach}</textarea>
+			</td>
+		</tr>
+		</table>
 	</div>
 </div>
 
- 
+ {/block}
