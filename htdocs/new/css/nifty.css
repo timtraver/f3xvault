@@ -1286,10 +1286,6 @@ h6,
   }
 }
 @media (min-width: 1200px) {
-  #container .brand-icon {
-    -webkit-transition: all 0.7s;
-    transition: all 0.7s;
-  }
   #mainnav-menu a {
     -webkit-transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
     transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
