@@ -42,12 +42,6 @@ if(isset($GLOBALS['fsession']['auth'])) {
 	$user_id=$user['user_id'];
 }
 
-# Check if they were logged in and now they aren't
-if($user && $user['user_status']==0){
-	destroy_fsession();
-	$errorstring="User is no longer active.";
-}
-
 # Load system flags
 get_global_flags();
 

@@ -23,7 +23,11 @@ function view_home() {
 	global $user;
 	$smarty->assign('current_menu','home');
 
+	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl=find_template("home.tpl");
+	if(!isset($GLOBALS['fsession']['auth']) && (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '')){
+		$maintpl=find_template("welcome.tpl");
+	}
 	return $smarty->fetch($maintpl);
 }
 function view_locations() {
@@ -78,12 +82,10 @@ function user_login() {
 	global $smarty;
 	global $user;
 	global $actionoutput;
-	$smarty->assign('current_menu','login');
 
 	# ok, lets log the user in
 	$check=check_login();
 	if($check[0]==0){
-		save_fsession();
 		# The user is successfully logged in, so lets redirect to refresh the page
 		$user=get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");

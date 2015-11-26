@@ -370,6 +370,8 @@ function user_message($message,$error=0){
 	$smarty->assign("messages",$GLOBALS['messages']);
 	return;
 }
+
+# Session Functions
 function start_fsession(){
 	global $fsession;
 	global $fsid;
@@ -473,6 +475,7 @@ function destroy_fsession(){
         ");
         $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
 }
+
 function array_msort($array, $cols) {
         # Array to sort an associative array by multiple keys
         # $cols is an array of 'col_name'=>SORT_ASC (or SORT_DESC)
