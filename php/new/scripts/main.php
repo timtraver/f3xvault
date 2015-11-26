@@ -25,7 +25,7 @@ function view_home() {
 
 	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl=find_template("home.tpl");
-	if(!isset($GLOBALS['fsession']['auth']) && (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '')){
+	if(!isset($GLOBALS['fsession']['auth']) && !isset($_SERVER['HTTP_REFERER'])){
 		$maintpl=find_template("welcome.tpl");
 	}
 	return $smarty->fetch($maintpl);

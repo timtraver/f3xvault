@@ -25,7 +25,7 @@ global $device;
 
 $base = '/shared/links/f/3/x/v/f3xvault.com/site';
 
-$base_webroot = "$base/htdocsnew/";
+$base_webroot = "$base/htdocs/new/";
 $base_plane_media = "/images/pilot_plane_images";
 $base_location_media = "/images/location_images";
 $base_url = "http://{$_SERVER['HTTP_HOST']}/";
