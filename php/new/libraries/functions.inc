@@ -396,6 +396,7 @@ function start_fsession(){
 			$session=$result[0];
 		}else{
 			$fsid='';
+			destroy_fsession();
 			return;
 		}
 		# OK, now read the session data and populate the fsession array
@@ -463,17 +464,22 @@ function save_fsession(){
         }
 }
 function destroy_fsession(){
-        $path="/";
-        $host=$_SERVER['HTTP_HOST'];
-        setcookie('fsid','',0,$path,$host,FALSE,TRUE);
-        logsession("Destroying Session : ".$GLOBALS['fsid'].",$path,$host");
-        # Turn off session db record
-        $stmt=db_prep("
-                UPDATE session
-                SET session_status=0
-                WHERE session_hash=:fsid
-        ");
-        $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
+	global $fsid;
+	$path="/";
+	$host=$_SERVER['HTTP_HOST'];
+	$host=preg_replace("/^www\./", "", $host);
+	setcookie('fsid','',0,$path,$host,FALSE,TRUE);
+	logsession("Destroying Session : ".$GLOBALS['fsid'].",$path,$host");
+	if($fsid){
+		# Turn off session db record
+		$stmt=db_prep("
+			UPDATE session
+			SET session_status=0
+			WHERE session_hash=:fsid
+		");
+		$result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
+	}
+	return;
 }
 
 function array_msort($array, $cols) {

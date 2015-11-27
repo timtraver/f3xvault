@@ -44,7 +44,7 @@ $template_dir=$include_paths['templates'];
 $compile_dir=$include_paths['templates_c'];
 $scripts_dir=$include_paths['scripts'];
 
-$logsessions=0;
+$logsessions=1;
 
 # Functions to include libraries and modules
 function include_library($library){

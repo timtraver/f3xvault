@@ -80,6 +80,7 @@
 
 					<ul class="nav navbar-top-links pull-right">
 
+						{if $user.user_id}
 						<!--Messages Dropdown-->
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 						<li class="dropdown">
@@ -106,7 +107,6 @@
 						</li>
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 						<!--End message dropdown-->
-
 
 						<!--User dropdown-->
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -138,7 +138,7 @@
 
 								<!-- Dropdown footer -->
 								<div class="pad-all text-right">
-									<a href="/?action=main&function=logout" class="btn btn-primary">
+									<a href="?action=main&function=logout" class="btn btn-primary">
 										<i class="fa fa-sign-out fa-fw"></i> Logout
 									</a>
 								</div>
@@ -146,7 +146,11 @@
 						</li>
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 						<!--End user dropdown-->
-
+						{else}
+						<li class="dropdown">
+							<input type="button" style = "margin-right: 15px;margin-top: 10px;" value=" Log Me In " onClick="document.logmein.submit();" class="btn btn-primary btn-rounded">
+						</li>
+						{/if}
 					</ul>
 				</div>
 				<!--================================-->
@@ -327,6 +331,15 @@
 										</a>
 									</li>
 									<li>
+										<a href="?action=main&function=view_home&slideshow=1">
+											<i class="fa fa-picture-o"></i>
+											<span class="menu-title">
+												<strong>Slide Show</strong>
+											</span>
+										</a>
+									</li>
+									{if $user.user_admin == 1}
+									<li>
 										<a href="?action=admin">
 											<i class="fa fa-cogs"></i>
 											<span class="menu-title">
@@ -334,6 +347,7 @@
 											</span>
 										</a>
 									</li>
+									{/if}
 							</div>
 						</div>
 					</div>
@@ -419,6 +433,10 @@
 	<input name="currency_code" type="hidden" value="USD">
 	<input name="item_name" type="hidden" value="F3XVault Donation">
 	<input name="amount" type="hidden" value="">
+	</form>
+	<form name="logmein" method="POST">
+	<input name="action" type="hidden" value="main">
+	<input name="function" type="hidden" value="login">
 	</form>
 {debug}
 </body>

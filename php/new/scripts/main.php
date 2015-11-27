@@ -21,12 +21,14 @@ if(check_user_function($function)){
 function view_home() {
 	global $smarty;
 	global $user;
+	global $fsession;
 	$smarty->assign('current_menu','home');
 
 	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl=find_template("home.tpl");
-	if(!isset($GLOBALS['fsession']['auth']) && !isset($_SERVER['HTTP_REFERER']) && !isset($_REQUEST['enter'])){
+	if(!isset($fsession['welcome']) || $_REQUEST['slideshow'] == 1){
 		$maintpl=find_template("welcome.tpl");
+		$fsession['welcome']=1;
 	}
 	return $smarty->fetch($maintpl);
 }
@@ -91,17 +93,19 @@ function user_login() {
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
 		log_action($user['user_id']);
 		
-		if(isset($_REQUEST['redirect_action'])){
+		if(isset($_REQUEST['redirect_action']) && $_REQUEST['redirect_action'] != ''){
 			$_REQUEST['action']=$_REQUEST['redirect_action'];
 		}else{
 			$_REQUEST['action']='my';
 		}
-		if(isset($_REQUEST['redirect_function'])){
+		if(isset($_REQUEST['redirect_function']) && $_REQUEST['redirect_function'] != ''){
 			$_REQUEST['function']=$_REQUEST['redirect_function'];
 		}else{
 			$_REQUEST['function']='';
 		}
 		$GLOBALS['user_id']=$user['user_id'];
+		$user=get_user_info($GLOBALS['user_id']);
+		$smarty->assign("user",$user);
         include("{$GLOBALS['scripts_dir']}/{$_REQUEST['action']}.php");
 		return $actionoutput;
 	}
