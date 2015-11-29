@@ -107,7 +107,7 @@ h6,
 /* PAGE CONTENT */
 /*======================================*/
 #page-content {
-  padding: 0px 5px 0px 0px;
+  padding: 0px 0px 0px 0px;
   overflow: auto;
 }
 @media (min-width: 768px) {
