@@ -404,11 +404,17 @@
 	</script>
 	<script>
 		$( "#main_logo" ).hide();
-
 		setInterval(function(){ldelim}
 		$( "#main_logo" ).fadeIn(2000).fadeOut(500);
 		{rdelim},0);
-		
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function() {ldelim}
+			var sw = nifty.container.width();
+			if (sw <= 740) {ldelim}
+				nifty.container.addClass('mainnav-sm').removeClass('mainnav-lg');
+			{rdelim}
+		{rdelim})
 	</script>
 	{block name="footer"}{/block}
 
