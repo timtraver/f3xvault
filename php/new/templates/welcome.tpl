@@ -6,7 +6,7 @@
 {block name="content"}
 
 	<div id="container" class="cls-container">
-		<div class="cls-content">
+		<div>
 			<div style="position: fixed;top: 0;width: 100%;margin-top: 50px;">
 				<h1 style="color:#337ab7;">Welcome To F3XVault</h1>
 			</div>

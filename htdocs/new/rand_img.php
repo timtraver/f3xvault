@@ -64,10 +64,16 @@ do{
 	
 	# Figure out the image type
 	$file_type = $finfo->file($path);
+	
+	# Lets make sure its less than 1MB
+	if(filesize($path)>1048576){
+		$file_type = '';
+	}
 }while($file_type == '');
 
 # Now lets read the file and spit it out
 header("Content-Type: $file_type");
+header("Pragma: no-cache");
 readfile($path);
 
 exit;

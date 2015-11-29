@@ -421,10 +421,12 @@ h6,
   overflow: hidden;
   width: 220px;
 }
+/*
 .navbar-brand:hover,
 .navbar-brand:focus {
   color: #ffffff;
 }
+*/
 .brand-title,
 .brand-icon {
   display: block;
