@@ -25,11 +25,8 @@
 						<input type="hidden" name="from_show_pilots" value="1">
 						<div class="form-group">
 							<div class="input-group">
-
+							<center>
 							<table cellpadding="2" cellspacing="2" class="table">
-							<tr class="table-row-heading-left">
-								<th colspan="4">Possible Pilots</th>
-							</tr>
 							<tr>
 								<th nowrap>&nbsp;</th>
 								<th nowrap>Pilot Name</th>
@@ -45,13 +42,13 @@
 							</tr>
 							{/foreach}
 							<tr>
-								<td class="table-data-heading-left" nowrap>
+								<td nowrap>
 									<input type="radio" name="pilot_id" value="0" CHECKED>
 								</td>
 								<td colspan="3">I'm sorry, but none of these pilots are me.</td>
 							</tr>
 							</table>
-
+							</center>
 							</div>
 						</div>
 						<div class="row">
