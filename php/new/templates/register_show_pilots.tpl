@@ -7,7 +7,7 @@
 
 	<div id="container" class="cls-container">
 		<div class="cls-content">
-			<div class="cls-content-sm panel">
+			<div class="cls-content-md panel">
 				<div class="panel-body">
 					<p style="font-size: x-large;"><h2 style="color:#337ab7;">F3X Vault Registration</h2></p>
 						{if $messages}
@@ -16,7 +16,7 @@
 						<p>
 						It looks like we may have you in the database already as a pilot from an event!<br>
 						<br>
-						Look down through this list and check the box that could be you.<br>
+						Look down through this list and check the box that could be you, and we will associate your account.<br>
 						<br>
 						</p>
 						<form name="login" method="POST" autocomplete="off">
@@ -31,18 +31,16 @@
 								<th colspan="4">Possible Pilots</th>
 							</tr>
 							<tr>
-								<th class="table-data-heading-left" nowrap>&nbsp;</th>
-								<th class="table-data-heading-left" nowrap>Pilot Last Name</th>
-								<th class="table-data-heading-left" nowrap>Pilot First Name</th>
-								<th class="table-data-heading-left" nowrap>Last Event</th>
+								<th nowrap>&nbsp;</th>
+								<th nowrap>Pilot Name</th>
+								<th nowrap>Last Event</th>
 							<tr>
 							{foreach $pilots as $pilot}
 							<tr>
-								<td class="table-data-heading-left" nowrap>
+								<td nowrap>
 									<input type="radio" name="pilot_id" value="{$pilot.pilot_id}">
 								</td>
-								<td>{$pilot.pilot_last_name|escape}</td>
-								<td>{$pilot.pilot_first_name|escape}</td>
+								<td>{$pilot.pilot_first_name|escape} {$pilot.pilot_last_name|escape}</td>
 								<td>{$pilot.eventstring|escape}</td>
 							</tr>
 							{/foreach}
