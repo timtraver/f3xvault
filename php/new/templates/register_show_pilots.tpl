@@ -7,7 +7,7 @@
 
 	<div id="container" class="cls-container">
 		<div class="cls-content">
-			<div class="cls-content-md panel">
+			<div class="cls-content-lg panel">
 				<div class="panel-body">
 					<p style="font-size: x-large;"><h2 style="color:#337ab7;">F3X Vault Registration</h2></p>
 						{if $messages}
