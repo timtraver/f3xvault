@@ -24,8 +24,8 @@
 						<input type="hidden" name="function" value="save_registration">
 						<input type="hidden" name="from_show_pilots" value="1">
 						<div class="form-group">
-							<div class="input-group">
 							<center>
+							<div class="input-group">
 							<table cellpadding="2" cellspacing="2" class="table">
 							<tr>
 								<th nowrap>&nbsp;</th>
@@ -48,8 +48,8 @@
 								<td colspan="3">I'm sorry, but none of these pilots are me.</td>
 							</tr>
 							</table>
-							</center>
 							</div>
+							</center>
 						</div>
 						<div class="row">
 							<div class="form-group">
