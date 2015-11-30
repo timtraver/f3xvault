@@ -307,6 +307,14 @@
 									<br>
 									<br>
 									<li>
+										<a href="/new/?action=register">
+											<i class="fa fa-hand-o-right"></i>
+											<span class="menu-title">
+												<strong>Register</strong>
+											</span>
+										</a>
+									</li>
+									<li>
 										<a href="/new/?action=main&function=main_feedback">
 											<i class="fa fa-thumbs-o-up"></i>
 											<span class="menu-title">
@@ -315,18 +323,18 @@
 										</a>
 									</li>
 									<li>
-										<a href="#">
-											<i class="fa fa-copyright"></i>
-											<span class="menu-title">
-												<strong>Tim Traver 2015</strong>
-											</span>
-										</a>
-									</li>
-									<li>
 										<a href="#" onClick="document.donate.submit();">
 											<i class="fa fa-money"></i>
 											<span class="menu-title">
 												<strong>Donate</strong>
+											</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<i class="fa fa-copyright"></i>
+											<span class="menu-title">
+												<strong>Tim Traver 2015</strong>
 											</span>
 										</a>
 									</li>

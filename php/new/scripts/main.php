@@ -291,6 +291,7 @@ function pass_recovery_save(){
 	$fsession['user_id']=$user_info['user_id'];
 	$fsession['user_name']=$user_info['user_name'];
 	$user=$user_info;
+	$smarty->assign("user",$user);
 	$GLOBALS['user_id']=$user_info['user_id'];
 	save_fsession();
         
