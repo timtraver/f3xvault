@@ -181,20 +181,15 @@ function main_feedback_save() {
 }
 function forgot() {
 	global $smarty;
-	global $user;
-	$smarty->assign('current_menu','login');
-
 	# ok, lets present the user with the ability to enter their user name
-
 	$maintpl=find_template("forgot.tpl");
 	return $smarty->fetch($maintpl);
 }
 function forgot_send() {
 	global $smarty;
 	global $user;
-	$smarty->assign('current_menu','login');
 
-	# ok, lets present the user with the ability to enter their user name
+	# ok, lets check to see if they are a user, and send them a password reset email
 	$email=$_REQUEST['email'];
 	if($email==''){
 		user_message("You must enter an email address for the password recovery process.",1);
@@ -263,7 +258,7 @@ function pass_recovery_save(){
 	if($pass1!=$pass2){
 		user_message("I'm sorry, but the two entered passwords do not match.",1);
 		$user=array();
-		return view_home();
+		return pass_recovery();
 	}
 	$user_info=get_user_info($user_id);
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
@@ -271,7 +266,7 @@ function pass_recovery_save(){
 	if($hash!=$compare){
 		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
 		$user=array();
-		return view_home();
+		return pass_recovery();
 	}
 	
 	# They have successfully come here to change their password!
@@ -303,26 +298,6 @@ function pass_recovery_save(){
 	$_REQUEST['function']='';
 	include("{$GLOBALS['scripts_dir']}/my.php");
 	return $actionoutput;	
-}
-function change_format() {
-	global $smarty;
-	global $user;
-
-	$format=$_REQUEST['format'];
-	switch($format){
-		case 'phone':
-			$format='phone';
-			break;
-		case 'tablet':
-		case 'computer':
-		default :
-			$format='computer';
-			break;
-	}
-	$GLOBALS['fsession']['device']=$format;
-	save_fsession();
-	header("Location: /");
-	exit;
 }
 
 ?>

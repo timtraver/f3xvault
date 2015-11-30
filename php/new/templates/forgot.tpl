@@ -20,13 +20,13 @@
 						<input type="hidden" name="function" value="forgot_send">
 						<div class="form-group">
 							<div class="input-group">
-								<div class="input-group-addon"><i class="fa fa-user"></i></div>
-								<input type="text" name="email" class="form-control" placeholder="Username or Email Address">
+								<div class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></div>
+								<input type="text" name="email" class="form-control" placeholder="Email Address">
 							</div>
 						</div>
 						<div class="row">
 							<div class="form-group">
-								<button class="btn btn-success text-uppercase" type="submit">Send Me A Recovery</button>
+								<button class="btn btn-success text-uppercase" type="submit">Send Me A Recovery Link</button>
 							</div>
 						</div>
 					</form>

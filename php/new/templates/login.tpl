@@ -32,7 +32,7 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<div class="input-group-addon"><i class="fa fa-asterisk"></i></div>
+								<div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
 								<input type="password" name="password" class="form-control" placeholder="Password">
 							</div>
 						</div>
