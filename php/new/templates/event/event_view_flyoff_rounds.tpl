@@ -1,28 +1,28 @@
 		<!--# Now lets do the flyoff rounds -->
 		{foreach $event->flyoff_totals as $t}
 			{$flyoff_number=$t@key}
-		<h1 class="post-title entry-title">Event Flyoff #{$flyoff_number} Rounds ({$t.total_rounds}) Overall Classification
-		</h1>
-		<table width="100%" cellpadding="2" cellspacing="2">
+		<h3 class="post-title entry-title">Flyoff #{$flyoff_number} Rounds ({$t.total_rounds})</h3>
+		<table width="100%" cellpadding="2" cellspacing="2" class="table-striped table-event">
 		<tr>
 			<th width="10%" align="right" nowrap colspan="3"></th>
 			<th colspan="{$t.total_rounds + 1}" align="center" nowrap>
 				Completed Rounds ({if $t.round_drops==0}No{else}{$t.round_drops}{/if} Drop{if $t.round_drops!=1}s{/if} In Effect)
 			</th>
-			<th width="5%" nowrap>SubTotal</th>
-			<th width="5%" nowrap>Drop</th>
-			<th width="5%" nowrap>Pen</th>
-			<th width="5%" nowrap>Total Score</th>
-			<th width="5%" nowrap>Percent</th>
+			<th width="5%" style="text-align: center;" nowrap>Sub</th>
+			<th width="5%" style="text-align: center;" nowrap>Drop</th>
+			<th width="5%" style="text-align: center;" nowrap>Pen</th>
+			<th width="5%" style="text-align: center;" nowrap>Total</th>
+			<th width="5%" style="text-align: center;" nowrap>Diff</th>
+			<th width="5%" style="text-align: center;" nowrap>Percent</th>
 		</tr>
 		<tr>
-			<th width="10%" align="right" nowrap colspan="3">Pilot Name</th>
+			<th width="10%" style="text-align:center;" nowrap colspan="3">Pilot Name</th>
 			{foreach $event->rounds as $r}
 				{if $r.event_round_flyoff!=$flyoff_number}
 					{continue}
 				{/if}
 				<th class="info" width="5%" align="center" nowrap>
-					<div style="position:relative;">
+					<div style="position:relative;text-align: center;">
 					<span>
 						{$flight_type_id=$r.flight_type_id}
 						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
@@ -31,10 +31,11 @@
 							View Details of Round {$r.event_round_number|escape}
 						{/if}
 					</span>
-					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0}</del></font>{/if}</a>
+					<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="btn-link" title="Edit Round">{if $r.event_round_score_status==0}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0}</del></font>{/if}</a>
 					</div>
 				</th>
 			{/foreach}
+			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
@@ -53,7 +54,7 @@
 			{$diff_to_lead=$diff_to_lead+$diff}
 		{/if}
 		{$event_pilot_id=$e.event_pilot_id}
-		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+		<tr>
 			<td>{$e.overall_rank}</td>
 			<td>
 				{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
@@ -61,9 +62,12 @@
 				{/if}
 			</td>
 			<td align="right" nowrap>
-				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}">{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}</a>
-				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;" title="{$e.country_name}">{/if}
-				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;" title="{$e.state_name}">{/if}
+				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
+				<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" class="tooltip_e btn-link" style="vertical-align: middle;"><b>{$full_name|truncate:20:"...":true:true|escape}</b>
+					{include file="event/event_view_pilot_main_popup.tpl"}
+				</a>
+				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
+				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
 			</td>
 			{foreach $e.rounds as $r}
 				{if $r@iteration <=9}
@@ -107,8 +111,14 @@
 					</span>
 				</a>
 			</td>
+			<td width="5%" nowrap align="right">
+			{if $diff>0}
+				<div style="color:red;">-{$diff|string_format:$event->event_calc_accuracy_string}</div>
+			{/if}
+			</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}%</td>
 		</tr>
+		{$previous=$e.total}
 		{/foreach}
 		{if $event->info.event_type_code=='f3f'}
 		<tr>

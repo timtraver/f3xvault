@@ -41,7 +41,7 @@
 						</div>
 						<br style="clear:left;">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
 							<th width="20%" align="right">Club Name</th>
 							<td>
@@ -80,7 +80,7 @@
 						<div class="btn-group btn-group-xs"><button class="btn btn-primary btn-rounded" type="button" onclick="create_new_location.submit();"> + Create New Location </button></div>
 						<br>
 						<br>
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th align="left">Location Name</th>
 							<th align="left">Location City</th>
@@ -120,7 +120,9 @@
 						<input type="text" id="pilot_name" name="pilot_name" size="40">
 						    <img id="loading_pilot" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 						    <span id="pilot_message" style="font-style: italic;color: grey;"> Start typing to search pilots</span>
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<br>
+						<br>
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th width="2%" align="left"></th>
 							<th width="10%" align="center">AMA#</th>

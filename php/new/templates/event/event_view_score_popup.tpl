@@ -26,6 +26,11 @@
 			</td>
 			</tr>
 		{/if}
+		{if $drop==1}
+			<tr>
+				<td colspan="2" align="center" nowrap="nowrap"><div style="color:red;">Score Dropped</div></td>
+			</tr>
+		{/if}
 	{/foreach}
 	</table>
 </span>

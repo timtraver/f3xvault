@@ -1,4 +1,4 @@
-{$perpage=8}
+{$perpage=10}
 {* Lets figure out how many flyoff and zero rounds there are *}
 {$flyoff_rounds=0}
 {$zero_rounds=0}
@@ -33,30 +33,22 @@
 {if $page_num>1}
 	{$numrounds=$end_round-$start_round + 1}
 {/if}
-<h2 class="post-title entry-title">Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}
-	{if $page_num==1}
-		{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}		
-			{if $event->info.event_type_flyoff==1}<input type="button" value=" Add Flyoff Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.flyoff_round.value=1; document.event_add_round.submit();{rdelim}{/if}" class="btn btn-primary btn-rounded">{/if}
-			{if $event->info.event_type_zero_round==1}<input type="button" value=" Add Zero Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.zero_round.value=1; document.event_add_round.submit();{rdelim}{/if}" class="btn btn-primary btn-rounded">{/if}
-			<input type="button" value=" Add Round " onClick="{if $event->pilots|count==0}alert('You must enter pilots before you add a round.');{else}if(check_permission()){ldelim}document.event_add_round.submit();{rdelim}{/if}" class="btn btn-primary btn-rounded">
-		{/if}
-	{/if}
-</h2>
-<table width="100%" cellpadding="2" cellspacing="1" class="table">
+<h3 class="post-title entry-title">Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if}</h3>
+<table width="100%" cellpadding="2" cellspacing="1" class="table-striped table-event">
 <tr>
-	<th width="2%" align="left" colspan="2"></th>
-	<th width="10%" align="right" nowrap></th>
+	<th align="left" colspan="3"></th>
 	<th colspan="{$numrounds+1}" align="center" nowrap style="text-align: center;">
 		Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 	</th>
-	<th width="5%" nowrap>SubTotal</th>
-	<th width="5%" nowrap>Drop</th>
-	<th width="5%" nowrap>Pen</th>
-	<th width="5%" nowrap>Total Score</th>
-	<th width="5%" nowrap>Percent</th>
+	<th width="5%" style="text-align: center;" nowrap>Sub</th>
+	<th width="5%" style="text-align: center;" nowrap>Drop</th>
+	<th width="5%" style="text-align: center;" nowrap>Pen</th>
+	<th width="5%" style="text-align: center;" nowrap>Total</th>
+	<th width="5%" style="text-align: center;" nowrap>Diff</th>
+	<th width="5%" style="text-align: center;" nowrap>Percent</th>
 </tr>
 <tr>
-	<th width="10%" style="text-align:right;" nowrap colspan="3">Pilot Name</th>
+	<th width="10%" style="text-align:center;" nowrap colspan="3">Pilot Name</th>
 	{foreach $event->rounds as $r}
 		{if $r.event_round_flyoff!=0}
 			{continue}
@@ -64,7 +56,7 @@
 		{$round_number=$r.event_round_number}
 		{if $round_number >= $start_round && $round_number <= $end_round}
 		<th class="info" width="5%" align="center" nowrap>
-			<div style="position:relative;">
+			<div style="position:relative;text-align: center;">
 			<span>
 				{$flight_type_id=$r.flight_type_id}
 				{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}
@@ -76,11 +68,12 @@
 					View Details of Round {$r.event_round_number|escape}
 				{/if}
 			</span>
-			<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+			<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="btn-link" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
 			</div>
 		</th>
 		{/if}
 	{/foreach}
+	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
@@ -99,7 +92,7 @@
 	{$diff_to_lead=$diff_to_lead+$diff}
 {/if}
 {$event_pilot_id=$e.event_pilot_id}
-<tr style="background-color: {cycle values="#9DCFF0,white"};">
+<tr>
 	<td>{$e.overall_rank|escape}</td>
 	<td>
 		{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
@@ -108,11 +101,11 @@
 	</td>
 	<td style="text-align:right;" nowrap>
 		{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
-		<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" title="{$full_name}" class="tooltip">{$full_name|truncate:20:"...":true:true}
+		<a href="?action=event&function=event_pilot_rounds&event_pilot_id={$e.event_pilot_id}&event_id={$event->info.event_id}" class="tooltip_e btn-link" style="vertical-align: middle;"><b>{$full_name|truncate:20:"...":true:true|escape}</b>
 			{include file="event/event_view_pilot_main_popup.tpl"}
 		</a>
-		{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
-		{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
+		{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
+		{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
 	</td>
 	{foreach $e.rounds as $r}
 		{$round_number=$r@key}
@@ -162,6 +155,11 @@
 			<b>Behind Lead</b> : {$diff_to_lead|string_format:$event->event_calc_accuracy_string}<br>
 			</span>
 		</a>
+	</td>
+	<td width="5%" nowrap align="right">
+		{if $diff>0}
+		<div style="color:red;">-{$diff|string_format:$event->event_calc_accuracy_string}</div>
+		{/if}
 	</td>
 	<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}%</td>
 </tr>

@@ -1,11 +1,21 @@
+{extends file='layout/layout_main.tpl'}
 
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series - {$series->info.series_name|escape}</h1>
+{block name="header"}
+{/block}
 
-		<br>
-		<h1 class="post-title entry-title">Pilot Event Detail for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+{block name="content"}
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">{$series->info.series_name|escape}</h2>
+		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Back To Series View " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
+		</div>
+	</div>
+	<div class="panel-body">
+
+		<h2 class="post-title entry-title">Pilot Event Detail for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h2>
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered table-striped">
 		<tr>
 			<th width="2%" align="center">Number</th>
 			<th align="left">Event Name</th>
@@ -18,7 +28,7 @@
 				{$event_id=$e@key}
 				{$bgcolor='#9DCFF0'}
 				<td align="center">{$num}</td>
-				<td align="left">{$e.event_name|escape}</td>
+				<td align="left"><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">{$e.event_name|escape}</a></td>
 				<td align="right" nowrap>
 					{if $series->totals.pilots.$pilot_id.events.$event_id.dropped==1}<del><font color="red">{/if}
 						{$series->totals.pilots.$pilot_id.events.$event_id.event_score|string_format:"%06.3f"}
@@ -32,9 +42,8 @@
 		{/foreach}
 		</table>
 		
-		<br>
-		<h1 class="post-title entry-title">Pilot Totals for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h1>
-		<table width="50%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h2 class="post-title entry-title">Pilot Totals for {$series->totals.pilots.$pilot_id.pilot_first_name|escape} {$series->totals.pilots.$pilot_id.pilot_last_name|escape}</h2>
+		<table width="50%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 		<tr>
 			<th>Overall Rank</th>
 			<td>{$series->totals.pilots.$pilot_id.overall_rank}</td>
@@ -48,10 +57,9 @@
 			<td>{$series->totals.pilots.$pilot_id.pilot_total_percentage|string_format:"%06.3f"} %</td>
 		</tr>
 		</table>
-<br>
-<input type="button" value=" Back To Series View " onClick="goback.submit();" class="block-button">
-<input type="button" value=" Print Pilot Series Results " onClick="print_pilot.submit();" class="block-button">
-</div>
+		<br>
+
+	</div>
 </div>
 
 <form name="goback" method="GET">
@@ -66,3 +74,5 @@
 <input type="hidden" name="pilot_id" value="{$pilot_id}">
 <input type="hidden" name="use_print_header" value="1">
 </form>
+
+{/block}

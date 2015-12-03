@@ -7,11 +7,11 @@
 </div>
 {/if}
 
-<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-event">
 <tr>
 	<th width="2%" align="left">#</th>
-	<th width="10%" align="center">AMA/FAI#</th>
 	<th align="left" colspan="2">Pilot Name</th>
+	<th width="10%" align="left">AMA/FAI#</th>
 	<th align="left">Pilot Class</th>
 	<th align="left">Pilot Plane</th>
 	<th align="left">Pilot Freq</th>
@@ -25,21 +25,22 @@
 {foreach $event->pilots as $p}
 <tr>
 	<td>{$num}</td>
-	<td align="center">
-		{if $p.pilot_fai}
-			{$p.pilot_fai|escape}
-		{else}
-			{$p.pilot_ama|escape}
-		{/if}
-	</td>
-	<td width="10" nowrap>
-		{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" class="inline_flag" title="{$p.country_code}">{/if}
+	<td width="5%" nowrap>
+		{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" class="inline_flag" title="{$p.country_code}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
+		{if $p.state_name && $p.country_code=="US"}<img src="/images/flags/states/16/{$p.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$p.state_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
 	</td>
 	<td{if $p.event_pilot_draw_status==0} bgcolor="lightgrey"{/if}>
 		{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
 			<div class="pilot_bib_number">{$p.event_pilot_bib}</div>
 		{/if}
 		&nbsp;{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
+	</td>
+	<td align="left">
+		{if $p.pilot_fai}
+			{$p.pilot_fai|escape}
+		{else}
+			{$p.pilot_ama|escape}
+		{/if}
 	</td>
 	<td>{$p.class_description|escape}</td>
 	<td>{$p.plane_name|escape}</td>

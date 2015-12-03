@@ -56,7 +56,7 @@
 	<br style="clear:left;">
 	<br>
 	
-	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 	<tr class="table-row-heading-left">
 		<th colspan="3" style="text-align: left;" nowrap>Clubs (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 		<th colspan="3" nowrap>

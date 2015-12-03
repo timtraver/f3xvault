@@ -70,7 +70,7 @@
 						</div>
 						<br style="clear:left;">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th width="20%">Pilot Name</th>
 							<td>{$pilot.pilot_first_name|escape} {$pilot.pilot_last_name|escape}</td>
@@ -100,7 +100,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Plane</th>
 							<th style="text-align: left;">Plane Type</th>
@@ -171,7 +171,7 @@
 						<br style="clear:left;">
 
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Club Name</th>
 							<th style="text-align: left;">Club City</th>
@@ -202,7 +202,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Location Name</th>
 							<th style="text-align: left;">Location City</th>
@@ -235,7 +235,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Event Date</th>
 							<th style="text-align: left;">Event Name</th>
@@ -274,7 +274,7 @@
 							<input type="button" value=" Back To Pilot List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
 						<br style="clear:left;">
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Event Date</th>
 							<th style="text-align: left;">Speed</th>
@@ -308,7 +308,7 @@
 							<input type="button" value=" Back To Pilot List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
 						<br style="clear:left;">
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Event Date</th>
 							<th style="text-align: left;">Speed</th>
@@ -343,7 +343,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Event Date</th>
 							<th style="text-align: left;">Laps</th>

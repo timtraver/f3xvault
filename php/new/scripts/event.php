@@ -284,11 +284,12 @@ function event_view() {
 		user_message("That is not a proper event id to edit.");
 		return event_list();
 	}
-	
+		
 	$e=new Event($event_id);
 	$e->get_rounds();
 	$e->get_draws();
 	$e->calculate_event_totals();
+	$e->get_running_totals();
 	
 	# Lets determine if we need a laps report and an average speed report
 	$laps=0;
@@ -375,9 +376,42 @@ function event_view() {
 		if($d['event_draw_active']==1){
 			$active_draws=1;
 		}
+		$event_draw_id=$d['event_draw_id'];
 	}
 	$smarty->assign("active_draws",$active_draws);
+	$total_prelim_rounds = 0;
+	$total_flyoff_rounds = 0;
+	foreach($e->rounds as $r){
+		if($r['event_round_flyoff'] != 0){
+			$total_flyoff_rounds++;
+		}else{
+			$total_prelim_rounds++;
+		}
+	}
+	# If there are active draws, then do the statistics for them
+	if($active_draws){
+		include_library("draw.class");
+		$d=new Draw($event_draw_id);
+		$d->get_teams();
+		$d->initialize_stats();
+		$d->get_stats();
+		
+		$groups=$d->get_group_array();
+		$group_totals=array();
+		foreach($groups as $g){
+			$group_totals[$g]++;
+		}
+		$num_teams=count($d->teams);
 	
+		$smarty->assign("d",$d);
+		$smarty->assign("event_draw_id",$event_draw_id);
+		$smarty->assign("stats",$d->stats);
+		$smarty->assign("stat_totals",$d->stat_totals);
+		$smarty->assign("group_totals",$group_totals);
+	}
+	
+	$smarty->assign("total_prelim_rounds",$total_prelim_rounds);
+	$smarty->assign("total_flyoff_rounds",$total_flyoff_rounds);
 	$maintpl=find_template("event/event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -682,23 +716,6 @@ function event_delete() {
 
 	log_action($event_id);
 	return event_list();
-}
-function event_chart() {
-	global $smarty;
-
-	$event_id=intval($_REQUEST['event_id']);
-
-	$e=new Event($event_id);
-	$e->get_teams();
-	$e->get_rounds();
-	$e->calculate_event_totals();
-	$e->get_running_totals();
-	
-	$smarty->assign("event",$e);
-	$smarty->assign("event_id",$event_id);
-	
-	$maintpl=find_template("event/event_chart.tpl");
-	return $smarty->fetch($maintpl);
 }
 function event_series_save() {
 	global $smarty;

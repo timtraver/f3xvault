@@ -14,7 +14,7 @@
 			<p>It appears this is the first time you are logging in to edit your Pilot Profile, and we may already have a pilot in the database with your name that has attended an entered event.</p>
 			<p>Are any of these pilots you?</p>
 		
-			<table width="100%" cellpadding="2" cellspacing="2" class="table table-condensed table-striped">
+			<table width="100%" cellpadding="2" cellspacing="2" class="table table-condensed table-striped table-bordered">
 			<tr class="table-row-heading-left">
 				<th colspan="4" style="text-align: left;">Possible Pilots</td>
 			</tr>
@@ -88,7 +88,7 @@
 						<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
 						<input type="hidden" name="tab" value="0">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
 							<th align="right">First Name</th>
 							<td><input type="text" size="30" name="pilot_first_name" value="{$pilot.pilot_first_name|escape}"></td>
@@ -147,7 +147,7 @@
 						</div>
 						<br style="clear:left;">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Plane</th>
 							<th style="text-align: left;">Plane Type</th>
@@ -187,7 +187,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Club Name</th>
 							<th style="text-align: left;">Club City</th>
@@ -219,7 +219,7 @@
 						</div>
 						<br style="clear:left;">
 
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;">Location Name</th>
 							<th style="text-align: left;">Location City</th>

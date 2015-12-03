@@ -7,7 +7,7 @@
 #	This is the script to handle the series of events for pilot totals
 #
 ############################################################################
-$GLOBALS['current_menu']='events';
+$smarty->assign("current_menu",'events');
 
 include_library("series.class");
 
@@ -77,46 +77,14 @@ function series_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
-	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'series_name':
-			$search_field='series_name';
-			break;
-		case 'series_area':
-			$search_field='series_area';
-			break;
-		default:
-			$search_field='series_name';
-			break;
 	}
 	if($search=='' || $search=='%%'){
 		$search_field='series_name';
 	}
-	$GLOBALS['fsession']['search_field']=$search_field;
 	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
-
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND c.country_id=$country_id ";
@@ -135,13 +103,13 @@ function series_list() {
 			LEFT JOIN country c ON se.country_id=c.country_id
 			LEFT JOIN event_series es ON se.series_id=es.series_id
 			LEFT JOIN event e ON es.event_id=e.event_id
-			WHERE se.$search_field $operator :search
+			WHERE (se.series_name LIKE :search OR se.series_area LIKE :search2)
 				$addcountry
 				$addstate
 			GROUP BY se.series_name
 			ORDER BY e.event_end_date DESC,se.country_id,se.state_id,se.series_name desc
 		");
-		$series=db_exec($stmt,array("search"=>$search));
+		$series=db_exec($stmt,array("search"=>"%".$search."%","search2"=>"%".$search."%"));
 	}else{
 		# Get all locations for search
 		$stmt=db_prep("
@@ -177,19 +145,17 @@ function series_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$series=show_pages($series,25);
+	$series=show_pages($series,"action=series&function=series_list");
 	
 	$smarty->assign("series",$series);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("states",$states);
 
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("series_list.tpl");
+	$maintpl=find_template("series/series_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function series_view() {
@@ -217,7 +183,7 @@ function series_view() {
 	$series->calculate_series_totals();
 	
 	$smarty->assign("series",$series);
-	$maintpl=find_template("series_view.tpl");
+	$maintpl=find_template("series/series_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function series_edit() {
@@ -252,7 +218,7 @@ function series_edit() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("series",$series);
 
-	$maintpl=find_template("series_edit.tpl");
+	$maintpl=find_template("series/series_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function series_save() {
@@ -677,7 +643,7 @@ function series_pilot_view() {
 	$smarty->assign("pilot_id",$pilot_id);
 	$smarty->assign("series",$series);
 	
-	$maintpl=find_template("series_pilot_view.tpl");
+	$maintpl=find_template("series/series_pilot_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 

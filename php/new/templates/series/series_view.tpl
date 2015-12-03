@@ -1,69 +1,34 @@
-<script src="/includes/jquery-ui/ui/jquery.ui.core.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.widget.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.position.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
-<script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
-<script>
-{literal}
-$(function() {
-	$("#pilot_name").autocomplete({
-		source: "/lookup.php?function=lookup_pilot",
-		minLength: 2, 
-		highlightItem: true, 
-        matchContains: true,
-        autoFocus: true,
-        scroll: true,
-        scrollHeight: 300,
-   		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_pilot');
-			loading.style.display = "inline";
-		},
-   		select: function( event, ui ) {
-   			var id=document.getElementById('pilot_name');
-			document.add_pilot.pilot_id.value = ui.item.id;
-			document.add_pilot.pilot_name.value = id.value;
-		},
-   		change: function( event, ui ) {
-   			var id=document.getElementById('pilot_name');
-   			if(id.value==''){
-				document.add_pilot.pilot_id.value = 0;
-			}
-		},
-   		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_pilot');
-			loading.style.display = "none";
-   			var mes=document.getElementById('pilot_message');
-			if(ui.content && ui.content.length){
-				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
-			}else{
-				mes.innerHTML = ' No Results Found. Use Add button to add new pilot.';
-			}
-		}
-	});
-});
-</script>
-{/literal}
+{extends file='layout/layout_main.tpl'}
 
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Series Settings - {$series->info.series_name|escape} <input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="block-button">
-		</h1>
-		<div class="entry-content clearfix">
+{block name="header"}
+{/block}
+
+{block name="content"}
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">{$series->info.series_name|escape}</h2>
+		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="btn btn-primary btn-rounded" style"float:right;">
+			<input type="button" value=" Back To Series List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
+		</div>
+	</div>
+	<div class="panel-body">
 		
 		<form name="series_save_multiples" method="POST">
 		<input type="hidden" name="action" value="series">
 		<input type="hidden" name="function" value="series_save_multiples">
 		<input type="hidden" name="series_id" value="{$series->info.series_id}">
 		
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="0" cellspacing="0" class="table table-condensed table-bordered">
 		<tr>
-			<th width="20%" align="right">Series Name</th>
+			<th width="20%" style="text-align:right;">Series Name</th>
 			<td>
 			{$series->info.series_name|escape}
 			</td>
 		</tr>
 		<tr>
-			<th align="right">Location</th>
+			<th style="text-align:right;">Location</th>
 			<td>
 			{$series->info.series_area|escape},{$series->info.state_code|escape} {$series->info.country_code|escape}
 			{if $series->info.country_code}<img src="/images/flags/countries-iso/shiny/24/{$series->info.country_code|escape}.png" style="vertical-align: middle;">{/if}
@@ -71,11 +36,11 @@ $(function() {
 			</td>
 		</tr>
 		<tr>
-			<th align="right">Series Web URL</th>
-			<td><a href="{$series->info.series_url}" target="_new">{$series->info.series_url}</a></td>
+			<th style="text-align:right;">Series Web URL</th>
+			<td><a href="{$series->info.series_url}" target="_new" class="btn-link">{$series->info.series_url}</a></td>
 		</tr>
 		<tr>
-			<th align="right">Series Scoring Type</th>
+			<th style="text-align:right;">Series Scoring Type</th>
 			<td>
 				{if $series->info.series_scoring_type=='standard'}
 					Standard Scoring - Event percentage.
@@ -88,10 +53,8 @@ $(function() {
 		</tr>
 		</table>
 		
-	</div>
-		<br>
-		<h1 class="post-title entry-title">Series Events</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h2 class="post-title entry-title">Series Events</h2>
+		<table width="100%" cellpadding="0" cellspacing="0" class="table table-condensed table-striped table-bordered">
 		<tr>
 			<th align="center">#</th>
 			<th align="left" width="10%">Date</th>
@@ -108,14 +71,14 @@ $(function() {
 			<td align="center">{$num}</td>
 			<td nowrap>{$e.event_start_date|date_format:"Y-m-d"}</td>
 			<td>
-				<a href="?action=event&function=event_view&event_id={$e.event_id}">{$e.event_name|escape}</a>
+				<a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">{$e.event_name|escape}</a>
 			</td>
 			<td>{$e.location_name|escape}</td>
-			<td>
+			<td nowrap>
 				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 				{$e.state_name|escape}
 			</td>
-			<td>
+			<td nowrap>
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" style="vertical-align: middle;">{/if}
 				{$e.country_name|escape}
 			</td>
@@ -127,17 +90,15 @@ $(function() {
 		{$num=$num+1}
 		{/foreach}
 		</table>
-		<input type="button" value=" Save Multiples " onClick="document.series_save_multiples.submit();" class="block-button">
+		<input type="button" value=" Save Multiples " onClick="document.series_save_multiples.submit();" class="btn btn-primary btn-rounded" style="float:right;">
 		</form>
 
 
-		<br>
 		{$event_num=1}
-		<h1 class="post-title entry-title">Series Overall Classification</h1>
-		<table width="100%" cellpadding="2" cellspacing="2">
+		<h2 class="post-title entry-title">Series Overall Classification</h2>
+		<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
 		<tr>
-			<td width="2%" align="left"></td>
-			<th width="10%" align="right" nowrap></th>
+			<th colspan="2" align="right" nowrap></th>
 			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
 				Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events} Completed Events)
 			</th>
@@ -150,12 +111,12 @@ $(function() {
 			<th width="2%" align="left"></th>
 			<th width="10%" align="right" nowrap>Pilot Name</th>
 			{foreach $series->events as $e}
-				<th class="info" width="1%" align="center" nowrap>
+				<th class="info" width="1%" align="center" style="text-align: center;" nowrap>
 					<div style="position:relative;">
 					<span>
 						{$e.event_name|escape}
 					</span>
-					<a href="/?action=event&function=event_view&event_id={$e.event_id}">E {$event_num}</a>
+					<a href="/?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">E {$event_num}</a>
 					</div>
 				</th>
 				{$event_num=$event_num+1}
@@ -177,9 +138,9 @@ $(function() {
 			{$diff=$previous-$p.total_score}
 			{$diff_to_lead=$diff_to_lead+$diff}
 		{/if}
-		<tr style="background-color: {cycle values="#9DCFF0,white"};">
+		<tr>
 			<td>{$p.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
+			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
 			{foreach $series->events as $e}
 				{$event_id=$e.event_id}
 				<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
@@ -228,16 +189,9 @@ $(function() {
 		{$previous=$p.total_score}
 		{/foreach}
 		</table>
-
-
-
-
-<br>
-
-
-<input type="button" value=" Back To Series List " onClick="goback.submit();" class="block-button">
-
-</div>
+		<br>
+		<br>
+	</div>
 </div>
 
 <form name="goback" method="GET">
@@ -249,22 +203,5 @@ $(function() {
 <input type="hidden" name="function" value="series_edit">
 <input type="hidden" name="series_id" value="{$series->info.series_id}">
 </form>
-<form name="add_pilot" method="POST">
-<input type="hidden" name="action" value="series">
-<input type="hidden" name="function" value="series_add_pilot">
-<input type="hidden" name="series_id" value="{$series->info.series_id}">
-<input type="hidden" name="pilot_id" value="">
-<input type="hidden" name="pilot_name" value="">
-</form>
-<form name="add_location" method="POST">
-<input type="hidden" name="action" value="series">
-<input type="hidden" name="function" value="series_location_add">
-<input type="hidden" name="series_id" value="{$series->info.series_id}">
-<input type="hidden" name="location_id" value="">
-</form>
-<form name="create_new_location" method="POST">
-<input type="hidden" name="action" value="location">
-<input type="hidden" name="function" value="location_edit">
-<input type="hidden" name="location_id" value="0">
-</form>
 
+{/block}

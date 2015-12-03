@@ -56,7 +56,7 @@
 	<br style="clear:left;">
 	<br>
 
-	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 	<tr class="table-row-heading-left" style="background-color: lightgray;">
 		<th colspan="2" style="text-align: left;" nowrap>Pilots (records {$paging.main.startrecord|escape} - {$paging.main.endrecord|escape} of {$paging.main.totalrecords|escape})</th>
 		<th colspan="2" nowrap>
@@ -70,7 +70,7 @@
 		<th style="text-align: left;">Country</th>
 	</tr>
 	{foreach $pilots as $p}
-	<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
+	<tr>
 		<td>
 			<a href="?action=pilot&function=pilot_view&pilot_id={$p.pilot_id|escape}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
 		</td>

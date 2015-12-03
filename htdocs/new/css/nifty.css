@@ -4226,10 +4226,10 @@ hr {
 }
 #container .table-bordered td,
 #container .table-bordered th {
-  border-color: rgba(0, 0, 0, 0.11);
+  border-color: rgba(0, 0, 0, 0.04);
 }
 #container .table-striped > tbody > tr:nth-child(2n+1) {
-  background-color: #f6f8fa;
+  background-color: rgba(218, 237, 255, 0.97);
 }
 #container .table-hover > tbody > tr:hover {
   background-color: #f0f2f6;
@@ -4882,6 +4882,8 @@ a.list-group-item-dark:focus {
 /*======================================*/
 .dropdown-header {
   padding: 5px 20px 5px 10px;
+  color: black;
+  background-color: lightgrey;
 }
 .dropdown-toggle > .dropdown-caret {
   padding-left: 0.5em;

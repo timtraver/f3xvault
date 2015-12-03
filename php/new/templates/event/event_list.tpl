@@ -62,7 +62,7 @@
 		<div style="border-style:solid;border-width:1px;width:110px;background:white;float:left;text-align:center;">Completed Event</div>
 		<br>
 		<br>
-		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 		<tr class="table-row-heading-left">
 			<th colspan="2" style="text-align: left;" nowrap>Events (records {$startrecord|escape} - {$endrecord|escape} of {$totalrecords|escape})</th>
 			<th colspan="5" nowrap>

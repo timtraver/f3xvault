@@ -46,7 +46,7 @@
 <br>
 
 
-<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 <tr class="table-row-heading-left" style="background-color: lightgray;">
 	<th colspan="2" style="text-align: left;" nowrap>Planes (records {$paging.main.startrecord|escape} - {$paging.main.endrecord|escape} of {$paging.main.totalrecords|escape})</th>
 	<th colspan="5" nowrap>

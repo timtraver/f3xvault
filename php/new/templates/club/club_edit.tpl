@@ -44,7 +44,7 @@
 						<input type="hidden" name="function" value="club_save">
 						<input type="hidden" name="club_id" value="{$club.club_id}">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
 							<th width="20%" align="right">Club Name</th>
 							<td>
@@ -106,7 +106,7 @@
 						<input type="hidden" name="function" value="club_user_save">
 						<input type="hidden" name="club_id" value="{$club.club_id}">
 						<input type="hidden" name="pilot_id" value="">
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
 							<th colspan="2" align="left">The Following Users Have Access To Edit This Club</th>
 						</tr>

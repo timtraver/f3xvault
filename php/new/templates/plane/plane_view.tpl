@@ -421,7 +421,7 @@ function calc_area(){ldelim}
 						
 						<h4 class="comments gutter-left current">{$event_total} Plane Competitions</h4>
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr class="table-row-heading-left" style="background-color: lightgray;">
 							<th colspan="1" style="text-align: left;" nowrap>(records {$paging.events.startrecord|escape} - {$paging.events.endrecord|escape} of {$paging.events.totalrecords|escape})</th>
 							<th colspan="4" nowrap>
@@ -465,7 +465,7 @@ function calc_area(){ldelim}
 						
 						<h4 class="comments gutter-left current">{$pilot_total} Pilots Flying This Plane</h4>
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;"></th>
 							<th style="text-align: left;">Pilot Name</th>
@@ -521,7 +521,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 						
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;"></th>
 							<th style="text-align: left;">Event Date</th>
@@ -572,7 +572,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 												
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;"></th>
 							<th style="text-align: left;">Event Date</th>
@@ -622,7 +622,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 												
-						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
+						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
 							<th style="text-align: left;"></th>
 							<th style="text-align: left;">Event Date</th>

@@ -28,8 +28,7 @@
 	<!--Bootstrap Select [ OPTIONAL ]-->
 	<link href="plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
 
-	<link href="/style.css" rel="stylesheet">
-	<link href="/style2.css" rel="stylesheet">
+	<link href="/new/css/f3x.css" rel="stylesheet">
 	<!--SCRIPT-->
 	<!--=================================================-->
 
@@ -67,7 +66,7 @@
 										
 					<div class="nav navbar-top-links pull-left" style="height: 50px;position: relative;display:inline-block;padding-top: 5px;">
 						<span style="position: relative; display: inline-block;padding-top: 4px;">
-						<select name="disc" class="selectpicker col-lg-4" data-style="btn-primary" data-width="100%" onchange="location = this.value;">
+						<select name="disc" class="selectpicker col-lg-4" data-style="btn-primary btn-rounded" data-width="100%" onchange="location = this.value;">
 							<option value="?action={$action}&function={$function}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
 							<option value="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
 							<option value="?action={$action}&function={$function}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
@@ -240,7 +239,7 @@
 											<li{if $current_menu == 'events' && $function == 'view_events'} class="active-link"{/if}><a href="/new/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
 											<li{if $current_menu == 'events' && ($function == 'event_list' || $function == '')} class="active-link"{/if}><a href="/new/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
 											<li><a href="/new/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
-											<li><a href="/new/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
+											<li{if $current_menu == 'events' && preg_match("/^series\_/",$function)} class="active-link"{/if}><a href="/new/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
 											<li><a href="/new/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
 											<li><a href="/new/?action=import"><strong>Import Event</strong></a></li>
 										</ul>
@@ -425,6 +424,7 @@
 		{rdelim})
 	</script>
 	{block name="footer"}{/block}
+	{block name="footer2"}{/block}
 
 	<!--
 
