@@ -263,17 +263,11 @@
 <input type="hidden" name="function" value="event_export">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
-{if $event->rounds}
-<script>
-	 document.getElementById('pilots').style.display = 'none';
-	 document.getElementById('viewtoggle').innerHTML = 'Show Pilots';
-</script>
-{else}
-<script>
-	 document.getElementById('pilots').style.display = 'block';
-	 document.getElementById('viewtoggle').innerHTML = 'Hide Pilots';
-</script>
-{/if}
+<form name="event_tasks" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_tasks">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
 
 {/block}
 {block name="footer"}

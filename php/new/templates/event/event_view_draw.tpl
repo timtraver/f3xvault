@@ -1,4 +1,4 @@
-<form name="main">
+{if $event->teams|count > 0}
 Team Highlight :
 <select name="highlight" onChange="document.hl.highlight.value=document.main.highlight.value;document.hl.submit();">
 <option value="">None</option>
@@ -6,7 +6,8 @@ Team Highlight :
 <option value="{$t.event_pilot_team}"{if $highlight==$t.event_pilot_team} SELECTED{/if}>{$t.event_pilot_team}</option>
 {/foreach}
 </select>
-</form>
+<br>
+{/if}
 
 <table cellspacing="2" cellpadding="1">
 <tr>

@@ -85,41 +85,45 @@ function check_login () {
     return array($error,"$errorstring");
 }
 function get_user_info($user_parameter){
-        # $user_parameter cna be either user_id (int) or user_name (string)
-        # Function to get all of the user info, including permissions
-        $user=array();
+    # $user_parameter cna be either user_id (int) or user_name (string)
+    # Function to get all of the user info, including permissions
+    $user=array();
 
-        # Lets see if what was passed was a user_id or a user_name
-        if(preg_match("/^\d+$/",$user_parameter)){
-                $user_id=$user_parameter;
-        }else{
-                $user_id=0;
+    # Lets see if what was passed was a user_id or a user_name
+    if(preg_match("/^\d+$/",$user_parameter)){
+		$user_id=$user_parameter;
+    }else{
+		$user_id=0;
+    }
+    # Now get the base user info
+    if($user_id!=0){
+        $stmt=db_prep("
+            SELECT *
+            FROM user u
+            LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+            LEFT JOIN state s ON p.state_id=s.state_id
+            LEFT JOIN country c ON p.country_id=c.country_id
+            WHERE u.user_id=:user_id
+        ");
+        $result=db_exec($stmt,array("user_id"=>$user_id));
+    }else{
+        $stmt=db_prep("
+            SELECT *
+            FROM user u
+            LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+            LEFT JOIN state s ON p.state_id=s.state_id
+            LEFT JOIN country c ON p.country_id=c.country_id
+            WHERE u.user_name=:user_name
+        ");
+        $result=db_exec($stmt,array("user_name"=>$user_parameter));
+    }
+    if($result){
+        # Get the user groups and permissions
+        foreach($result[0] as $key=>$value){
+			$user[$key]=$value;
         }
-        # Now get the base user info
-        if($user_id!=0){
-                $stmt=db_prep("
-                        SELECT *
-                        FROM user u
-                        LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
-                        WHERE u.user_id=:user_id
-                ");
-                $result=db_exec($stmt,array("user_id"=>$user_id));
-        }else{
-                $stmt=db_prep("
-                        SELECT *
-                        FROM user u
-                        LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
-                        WHERE u.user_name=:user_name
-                ");
-                $result=db_exec($stmt,array("user_name"=>$user_parameter));
-        }
-        if($result){
-                # Get the user groups and permissions
-                foreach($result[0] as $key=>$value){
-                        $user[$key]=$value;
-                }
-        }
-        return $user;
+    }
+    return $user;
 }
 function check_event_permission($event_id){
 	global $user;

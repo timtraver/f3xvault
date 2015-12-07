@@ -73,12 +73,13 @@
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right" style="width: 200px;">
 				<li class="dropdown-header">Main Functions</li>
-				{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}">Event Settings</a></li>
-				{/if}
 				<li><a href="#" onClick="document.event_view_info.submit();">View Full Event Info</a></li>
 				{if $active_draws}
-				<li><a href="#" onClick="document.event_view_draws.submit();">View Draws</a></li>
+				<li><a href="#" onClick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">Manage Event Draws</a></li>
+				{/if}
+				{if $event->info.event_type_code == 'f3k'}
+				<li><a href="#" onClick="document.event_tasks.submit();">Manage F3K Tasks</a></li>
 				{/if}
 				{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_status!=0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">View Registration Report</a></li>
@@ -86,6 +87,7 @@
 				{if $event->info.event_id!=0}
 				<li><a href="#" onClick="document.event_export.submit();">Export Event Info</a></li>
 				{/if}
+				
 				<li class="dropdown-header">Printing Functions</li>
 				<li><a href="#" onClick="document.print_pilot_list.submit();">Print Pilot List</a></li>
 				{if $event->rounds|count > 0}

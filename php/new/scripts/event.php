@@ -409,7 +409,12 @@ function event_view() {
 		$smarty->assign("stat_totals",$d->stat_totals);
 		$smarty->assign("group_totals",$group_totals);
 	}
-	
+	$tab=0;
+	if(count($event->rounds) == 0){
+		$tab = 2;
+	}
+	$smarty->assign("tab",$tab);
+
 	$smarty->assign("total_prelim_rounds",$total_prelim_rounds);
 	$smarty->assign("total_flyoff_rounds",$total_flyoff_rounds);
 	$maintpl=find_template("event/event_view.tpl");
@@ -484,7 +489,8 @@ function event_edit() {
 			$e->info['event_cd_name']=$_REQUEST['event_cd_name'];
 		}
 	}
-
+	$tab=$_REQUEST['tab'];
+	
 	# Get all event types
 	$stmt=db_prep("
 		SELECT *
@@ -502,7 +508,17 @@ function event_edit() {
 		WHERE eu.event_id=:event_id
 			AND eu.event_user_status=1
 	");
-	$event_users=db_exec($stmt,array("event_id"=>$event_id));
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	# Lets first add the current user, which is the owner
+	$event_users[] = array(
+		"user_id"=>$GLOBALS['user']['user_id'],
+		"pilot_first_name"=>$GLOBALS['user']['pilot_first_name'],
+		"pilot_last_name"=>$GLOBALS['user']['pilot_last_name'],
+		"pilot_city"=>$GLOBALS['user']['pilot_city'],
+		"state_code"=>$GLOBALS['user']['state_code'],
+		"country_code"=>$GLOBALS['user']['country_code']
+	);
+	$event_users = array_merge($event_users,$result);
 	$smarty->assign("event_users",$event_users);
 	
 	# Get classes to choose to be available for this event
@@ -517,6 +533,7 @@ function event_edit() {
 	
 	$smarty->assign("event_types",$event_types);
 	$smarty->assign("event",$e);
+	$smarty->assign("tab",$tab);
 
 	$maintpl=find_template("event/event_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -539,6 +556,7 @@ function event_save() {
 	$event_view_status=intval($_REQUEST['event_view_status']);
 	$event_reg_flag=intval($_REQUEST['event_reg_flag']);
 	$event_notes=$_REQUEST['event_notes'];
+	$tab=$_REQUEST['tab'];
 
 	# Get the checkboxes for each class type
 	$classes=array();
@@ -792,6 +810,12 @@ function event_series_delete() {
 function event_reg_edit() {
 	global $smarty;
 
+	# Run this through the save routine first
+	$save_first=intval($_REQUEST['save_first']);
+	if($save_first){
+		event_save();
+	}
+	
 	$event_id=intval($_REQUEST['event_id']);
 	$e=new Event($event_id);
 	
