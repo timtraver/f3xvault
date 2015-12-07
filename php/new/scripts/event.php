@@ -410,7 +410,7 @@ function event_view() {
 		$smarty->assign("group_totals",$group_totals);
 	}
 	$tab=0;
-	if(count($event->rounds) > 0){
+	if(count($e->rounds) > 0){
 		$tab = 2;
 	}
 	$smarty->assign("tab",$tab);
