@@ -257,6 +257,8 @@
 						<td width="2%" bgcolor="white">
 							{if $user['user_id'] == $u['user_id']}
 								Event Owner
+							{elseif $u['user_id'] == $event->info.event_cd}
+								Contest Director
 							{else}
 								<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}&tab=3"><img src="/images/del.gif"></a>
 							{/if}

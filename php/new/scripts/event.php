@@ -518,6 +518,15 @@ function event_edit() {
 		"state_code"=>$GLOBALS['user']['state_code'],
 		"country_code"=>$GLOBALS['user']['country_code']
 	);
+	# Now lets add the CD, cause he has access too
+	$event_users[] = array(
+		"user_id"=>$e->info['event_cd'],
+		"pilot_first_name"=>$e->info['pilot_first_name'],
+		"pilot_last_name"=>$e->info['pilot_last_name'],
+		"pilot_city"=>$e->info['pilot_city'],
+		"state_code"=>$e->info['state_code'],
+		"country_code"=>$e->info['country_code']
+	);
 	$event_users = array_merge($event_users,$result);
 	$smarty->assign("event_users",$event_users);
 	
