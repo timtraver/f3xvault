@@ -1,246 +1,221 @@
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Draws for {$event->info.event_name|escape}
-				<input type="button" value=" Back To Event Edit " onClick="goback.submit();" class="block-button">
-		</h1>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-			<th width="20%" align="right">Event Dates</th>
-			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td>
-			<a href="?action=location&function=location_view&location_id={$event->info.location_id}">{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}</a>
-			</td>
-		</tr>
-		<tr>
-			<th align="right">Event Type</th>
-			<td>
-			{$event->info.event_type_name|escape}
-			</td>
-			<th align="right">Event Contest Director</th>
-			<td>
-			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
-			</td>
-		</tr>
-		{if $event->series || $event->info.club_name}
-		<tr>
-			<th valign="top" align="right">Part Of Series</th>
-			<td valign="top">
-				{foreach $event->series as $s}
-				<a href="?action=series&function=series_view&series_id={$s.series_id}">{$s.series_name|escape}</a>{if !$s@last}<br>{/if}
-				{/foreach}
-			</td>
-			<th valign="top" align="right">Club</th>
-			<td valign="top">
-			<a href="?action=club&function=club_view&club_id={$event->info.club_id}">{$event->info.club_name|escape}</a>
-			</td>
-		</tr>
-		{/if}
-		</table>
-		
-	</div>
-<br>
-<h1 class="post-title entry-title">Draws</h1>
+{extends file='layout/layout_main.tpl'}
 
-<form name="main" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_draw_edit">
-<input type="hidden" name="event_draw_id" value="0">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="flight_type_id" value="0">
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-<tr>
-	<th width="10%" nowrap>Flight Type</th>
-	<th width="5%" nowrap>Status</th>
-	<th width="10%" nowrap>Draw Type</th>
-	<th width="10%" nowrap>Round From</th>
-	<th width="10%" nowrap>Round To</th>
-	<th width="20%"  nowrap>View</th>
-	<th width="25%" nowrap>Action</th>
-</tr>
-{$f3k_first=0}
-{foreach $event->flight_types as $ft}
-	{if $f3k_first!=0}
-		{continue}
-	{/if}
-	{$total=0}
-	{foreach $event->draws as $d}
-		{if $d.flight_type_id==$ft.flight_type_id}
-			{$total=$total+1}
-		{/if}
-	{/foreach}
-	{if $total==0}
+{block name="header"}
+{/block}
+
+{block name="content"}
+
+{include file="event/event_view_top_info.tpl"}
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">Event Draws for {$event->info.event_name|escape}</h2>
+		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Back To Event View " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
+		</div>
+	</div>
+	<div class="panel-body">
+
+		<h3 class="post-title entry-title">Draws</h3>
+		<form name="main" method="POST">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_draw_edit">
+		<input type="hidden" name="event_draw_id" value="0">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="flight_type_id" value="0">
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		<tr>
-			<th width="20%" nowrap>
-				{if $event->info.event_type_code=='f3k'}
-					F3K
-				{else}
-					{$ft.flight_type_name}
-				{/if}
-			</th>
-			<td colspan="6">No draws created</td>
+			<th width="10%" nowrap>Flight Type</th>
+			<th width="5%" nowrap>Status</th>
+			<th width="10%" nowrap>Draw Type</th>
+			<th width="10%" nowrap>Round From</th>
+			<th width="10%" nowrap>Round To</th>
+			<th width="20%"  nowrap>View</th>
+			<th width="25%" nowrap>Action</th>
 		</tr>
-	{else}	
-		{foreach $event->draws as $d}
-			{if $d.flight_type_id!=$ft.flight_type_id}
-				{continue}
-			{/if}
-			<tr>
-			<th nowrap>
-				{if $event->info.event_type_code=='f3k'}
-					F3K
-				{else}
-					{$ft.flight_type_name}
-				{/if}
-			</th>
-			{if $d.event_draw_active}
-				<td align="center" bgcolor="#9DCFF0">
-					Active
-				</td>
-			{else}
-				<td align="center">
-					Not Applied
-				</td>
-			{/if}
-			<td align="center">{if $d.event_draw_type=="random"}Random{elseif $d.event_draw_type=='random_step'}Random With Step{elseif $d.event_draw_type=='group'}Group{/if}</td>
-			<td align="center">{$d.event_draw_round_from}</td>
-			<td align="center">{$d.event_draw_round_to}</td>
-			<td align="center" nowrap>
-				{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
-				<input type="button" value="View Stats" class="button" style="float:left;" onClick="location.href='?action=event&function=event_draw_stats&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
-				{/if}
-				<input type="button" value="View Draw" class="button" style="float:left;" onClick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');">
-			</td>
-			<td nowrap>
-				<input type="button" value="Delete" class="button" onClick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}">
-				<input type="button" value="Edit" class="button" onClick="location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';">
-				<input type="button" value="UnApply" class="button" onClick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
-				<input type="button" value="Apply" class="button" onClick="if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}">
-			</td>
-			</tr>
-		{/foreach}
-	{/if}
-	{if $event->info.event_type_code=='f3k'}
-		{$f3k_first=1}
-	{/if}
-{/foreach}
-<tr>
-	<td colspan="7" style="padding-top:10px;">
 		{$f3k_first=0}
 		{foreach $event->flight_types as $ft}
-		{if $f3k_first!=0}
-			{continue}
-		{/if}
-		<input type="button" value=" Create {if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="block-button">
-		{if $event->info.event_type_code=='f3k'}
-			{$f3k_first=1}
-		{/if}
-		{/foreach}
-	</td>
-</tr>
-</table>
-</form>
-
-<br>
-<h1 class="post-title entry-title">Printing Active Draws</h1>
-<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-{$f3k_first=0}
-{if $event->draws}
-	{foreach $event->flight_types as $ft}
-		{if $f3k_first!=0}
-			{continue}
-		{/if}
-		{$flight_type_id=$ft.flight_type_id}
-		<form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
-		<input type="hidden" name="action" value="event">
-		<input type="hidden" name="function" value="event_draw_print">
-		<input type="hidden" name="event_id" value="{$event->info.event_id}">
-		<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
-		<input type="hidden" name="print_type" value="">
-		<input type="hidden" name="use_print_header" value="1">
-
-		<tr>
-			<th width="10%" nowrap>{if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if}</th>
-			<td style="padding-top:10px;">
-				Rounds
-				<select name="print_round_from">
-				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-				<option value="{$i}">{$i}</option>
-				{/for}
-				</select>
-				To
-				<select name="print_round_to">
-				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-				<option value="{$i}" SELECTED>{$i}</option>
-				{/for}
-				</select>
-				<select name="print_format">
-				<option value="html">HTML</option>
-				<option value="pdf">PDF</option>
-				</select>
-				<input type="button" value=" CD Recording Sheet " onClick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();" class="block-button">
-				{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
-				<input type="button" value=" Pilot Recording Sheets " onClick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();" class="block-button">
+			{if $f3k_first!=0}
+				{continue}
+			{/if}
+			{$total=0}
+			{foreach $event->draws as $d}
+				{if $d.flight_type_id==$ft.flight_type_id}
+					{$total=$total+1}
 				{/if}
-				<input type="button" value=" Draw Table " onClick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();" class="block-button">
-				<input type="button" value=" Full Draw Matrix " onClick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();" class="block-button">
-			</td>
-		</tr>
-		</form>
-		{if $event->info.event_type_code=='f3k'}
-			{$f3k_first=1}
-		{/if}
-	{/foreach}
-	{if $event->info.event_type_code=='f3b'}
-		<form name="print_f3b_combined" method="POST" target="_blank">
-		<input type="hidden" name="action" value="event">
-		<input type="hidden" name="function" value="event_draw_print">
-		<input type="hidden" name="event_id" value="{$event->info.event_id}">
-		<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
-		<input type="hidden" name="print_type" value="">
-		<input type="hidden" name="use_print_header" value="1">
+			{/foreach}
+			{if $total==0}
+				<tr>
+					<th width="20%" nowrap>
+						{if $event->info.event_type_code=='f3k'}
+							F3K
+						{else}
+							{$ft.flight_type_name}
+						{/if}
+					</th>
+					<td colspan="6">No draws created</td>
+				</tr>
+			{else}	
+				{foreach $event->draws as $d}
+					{if $d.flight_type_id!=$ft.flight_type_id}
+						{continue}
+					{/if}
+					<tr>
+					<th nowrap>
+						{if $event->info.event_type_code=='f3k'}
+							F3K
+						{else}
+							{$ft.flight_type_name}
+						{/if}
+					</th>
+					{if $d.event_draw_active}
+						<td align="center" bgcolor="#9DCFF0">
+							Active
+						</td>
+					{else}
+						<td align="center" nowrap>
+							Not Applied
+						</td>
+					{/if}
+					<td align="center">{if $d.event_draw_type=="random"}Random{elseif $d.event_draw_type=='random_step'}Random With Step{elseif $d.event_draw_type=='group'}Group{/if}</td>
+					<td align="center">{$d.event_draw_round_from}</td>
+					<td align="center">{$d.event_draw_round_to}</td>
+					<td align="center" nowrap>
+						<div style="overflow: hidden;">
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="window.open('?action=event&function=event_draw_view&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}&use_print_header=1','_blank');"> View Draw </button></div>
+							{if $ft.flight_type_code!="f3b_speed" && $ft.flight_type_code!="f3b_speed_only" && $ft.flight_type_code!="f3f_speed"}
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="location.href='?action=event&function=event_draw_stats&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';"> View Stats </button></div>
+							{/if}
+						</div>
+					</td>
+					<td nowrap>
+						<div style="overflow: hidden;">
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}"> Delete </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';"> Edit </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> UnApply </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> Apply </button></div>
+						</div>
+					</td>
+					</tr>
+				{/foreach}
+			{/if}
+			{if $event->info.event_type_code=='f3k'}
+				{$f3k_first=1}
+			{/if}
+		{/foreach}
 		<tr>
-			<th width="10%" nowrap>F3B Combined</th>
-			<td style="padding-top:10px;">
-				Rounds
-				<select name="print_round_from">
-				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-				<option value="{$i}">{$i}</option>
-				{/for}
-				</select>
-				To
-				<select name="print_round_to">
-				{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
-				<option value="{$i}" SELECTED>{$i}</option>
-				{/for}
-				</select>
-				<select name="print_format">
-				<option value="html">HTML</option>
-				<option value="pdf">PDF</option>
-				</select>
-				<input type="button" value=" Draw Table " onClick="document.print_f3b_combined.print_type.value='f3b_table';submit();" class="block-button">
+			<td colspan="7" style="text-align: right;padding-top:10px;">
+				{$f3k_first=0}
+				{foreach $event->flight_types as $ft}
+				{if $f3k_first!=0}
+					{continue}
+				{/if}
+				<input type="button" value=" Create {if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="btn btn-primary btn-rounded">
+				{if $event->info.event_type_code=='f3k'}
+					{$f3k_first=1}
+				{/if}
+				{/foreach}
 			</td>
 		</tr>
-	{/if}
-{else} {* if no draws are active *}
-	<tr>
-		<th colspan="2" nowrap>There are no current active draws.</th>
-	</tr>
-{/if}
-</table>
-</form>
+		</table>
+		</form>
 
-<form name="goback" method="POST">
-<input type="hidden" name="action" value="event">
-<input type="hidden" name="function" value="event_edit">
-<input type="hidden" name="event_id" value="{$event->info.event_id}">
-</form>
+		<h3 class="post-title entry-title">Printing Active Draws</h3>
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
+		{$f3k_first=0}
+		{if $event->draws && $print_rounds|count >0}
+			{foreach $event->flight_types as $ft}
+				{if $f3k_first!=0}
+					{continue}
+				{/if}
+				{$flight_type_id=$ft.flight_type_id}
+				<form name="print_{$ft.flight_type_id}" method="POST" target="_blank">
+				<input type="hidden" name="action" value="event">
+				<input type="hidden" name="function" value="event_draw_print">
+				<input type="hidden" name="event_id" value="{$event->info.event_id}">
+				<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+				<input type="hidden" name="print_type" value="">
+				<input type="hidden" name="use_print_header" value="1">
+		
+				<tr>
+					<th width="10%" nowrap>{if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if}</th>
+					<td nowrap>
+						Rounds
+						<select name="print_round_from">
+						{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+						<option value="{$i}">{$i}</option>
+						{/for}
+						</select>
+						To
+						<select name="print_round_to">
+						{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+						<option value="{$i}" SELECTED>{$i}</option>
+						{/for}
+						</select>
+						<select name="print_format">
+						<option value="html">HTML</option>
+						<option value="pdf">PDF</option>
+						</select>
+						<div style="overflow: hidden;float: right;">
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();"> Full Draw Matrix </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();"> Draw Table </button></div>
+							{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
+								<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();"> Pilot Recording Sheets </button></div>
+								{/if}
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();"> CD Recording Sheet </button></div>
+						</div>
+					</td>
+				</tr>
+				</form>
+				{if $event->info.event_type_code=='f3k'}
+					{$f3k_first=1}
+				{/if}
+			{/foreach}
+			{if $event->info.event_type_code=='f3b'}
+				<form name="print_f3b_combined" method="POST" target="_blank">
+				<input type="hidden" name="action" value="event">
+				<input type="hidden" name="function" value="event_draw_print">
+				<input type="hidden" name="event_id" value="{$event->info.event_id}">
+				<input type="hidden" name="flight_type_id" value="{$ft.flight_type_id}">
+				<input type="hidden" name="print_type" value="">
+				<input type="hidden" name="use_print_header" value="1">
+				<tr>
+					<th width="10%" nowrap>F3B Combined</th>
+					<td style="padding-top:10px;">
+						Rounds
+						<select name="print_round_from">
+						{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+						<option value="{$i}">{$i}</option>
+						{/for}
+						</select>
+						To
+						<select name="print_round_to">
+						{for $i=$print_rounds.$flight_type_id.min to $print_rounds.$flight_type_id.max}
+						<option value="{$i}" SELECTED>{$i}</option>
+						{/for}
+						</select>
+						<select name="print_format">
+						<option value="html">HTML</option>
+						<option value="pdf">PDF</option>
+						</select>
+						<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_f3b_combined.print_type.value='f3b_table';submit();"> Draw Table </button></div>
+					</td>
+				</tr>
+			{/if}
+		{else} {* if no draws are active *}
+			<tr>
+				<td colspan="2" nowrap>There are no current applied draws to print. Apply a draw above to print.</td>
+			</tr>
+		{/if}
+		</table>
+		</form>
+		
+		<form name="goback" method="POST">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_view">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		</form>
 
+	</div>
 </div>
-</div>
-</div>
-
+{/block}

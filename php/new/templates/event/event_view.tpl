@@ -263,6 +263,11 @@
 <input type="hidden" name="function" value="event_export">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+<form name="event_draw" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
 <form name="event_tasks" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_tasks">
@@ -348,25 +353,6 @@ $(function() {
 		$( "#print_round" ).dialog( "open" );
 	});
 });
-function toggle(element,tog) {
-	var namestring="";
-	if (element=='pilots') {
-		namestring="Pilots";
-	}
-	if (element=="rankings") {
-		namestring="Rankings";
-	}
-	if(element=="stats") {
-		namestring="Statistics";
-	}
-	if (document.getElementById(element).style.display == 'none') {
-		document.getElementById(element).style.display = 'block';
-		tog.innerHTML = 'Hide ' + namestring;
-	} else {
-		document.getElementById(element).style.display = 'none';
-		tog.innerHTML = 'Show ' + namestring;
-	}
-}
 {/literal}
 function check_permission() {ldelim}
 	{if $permission!=1}
@@ -379,8 +365,8 @@ function check_permission() {ldelim}
 </script>
 {/block}
 {block name="footer2"}
+{if $event->rounds|count>0}
 <script src="/includes/highcharts/js/highcharts.js"></script>
-
 <script>
 $(function () {ldelim} 
     $('#chart_div').highcharts({ldelim}
@@ -490,4 +476,5 @@ $(function () {ldelim}
     {rdelim});
 {rdelim});
 </script>
+{/if}
 {/block}

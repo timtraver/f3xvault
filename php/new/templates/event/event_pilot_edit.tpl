@@ -173,40 +173,30 @@
 		</table>
 		
 		{if $event->reg_options}
-		<h1 class="post-title entry-title">Registration Values</h1>
+		<h2 class="post-title entry-title">Registration Values</h2>
 		{if $has_sizes}{$cols=5}{else}{$cols=4}{/if}
 		
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 		<tr>
 			<th width="20%">Name</th>
-			<th width="10%"> Qty</th>
+			<th width="10%" style="text-align: center;"> Qty</th>
 			{if $has_sizes}
-			<th width="20%">Parameter Choice</th>
+			<th width="20%" style="text-align: right;">Parameter Choice</th>
 			{/if}
-			<th width="10%">Cost Per Unit</th>
-			<th align="right" width="10%">Extended</th>
+			<th width="10%" style="text-align: right;">Cost Per Unit</th>
+			<th align="right" width="10%" style="text-align: right;">Extended</th>
 		</tr>
 		{foreach $event->reg_options as $r}
 		{$reg_id=$r.event_reg_param_id}
 		<tr>
-			<td align="right">
-				{$r.event_reg_param_name} - <a href="" class="tooltip" onClick="return false;">(detail description)
-				<span>
-				<img class="callout" src="/images/callout.gif">
-				<strong>Registration Item Detail</strong><br>
-				<table>
-				<tr>
-					<td>{$r.event_reg_param_description}</td>
-				</tr>
-				</table>
-				</span>
-				</a>
+			<td align="left">
+				{$r.event_reg_param_name} - <a href="#" onClick="return false;" class="add-popover" data-placement="right" data-toggle="popover" data-original-title="Registration Item Detail" data-content="{$r.event_reg_param_description}">(detail description)</a>
 			</td>
 			<td align="center">
 				{if $r.event_reg_param_mandatory==1}
 				1<input type="hidden" name="event_reg_param_{$r.event_reg_param_id}_qty" value="1">
 				{elseif $r.event_reg_param_qty_flag==1}
-					<input type="text" size="1" name="event_reg_param_{$r.event_reg_param_id}_qty" value="{$params.$reg_id.event_pilot_reg_qty}" onChange="calc_totals();">
+					<input type="text" size="3" name="event_reg_param_{$r.event_reg_param_id}_qty" value="{$params.$reg_id.event_pilot_reg_qty}" onChange="calc_totals();">
 				{else}
 					<input type="checkbox" name="event_reg_param_{$r.event_reg_param_id}_qty"{if $params.$reg_id.event_pilot_reg_qty==1} CHECKED{/if} onChange="calc_totals();">
 				{/if}
@@ -214,10 +204,10 @@
 			{if $has_sizes}
 			<td align="right" valign="top">
 				{if $r.event_reg_param_choice_name!=''}
-				{for $x=0 to $params.$reg_id.event_pilot_reg_qty-1}
+				{for $x=0 to $r.$reg_id.event_pilot_reg_qty-1}
 					<select name="event_reg_param_{$r.event_reg_param_id}_choice_value_{$x}">
 					{foreach $r.choices as $c}
-					<option value="{$c}"{if $params.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
+					<option value="{$c}"{if $r.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
 					{/foreach}
 					</select>
 				{/for}
@@ -233,33 +223,33 @@
 		</tr>
 		{/foreach}
 		<tr>
-			<th align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</th>
-			<th align="right" width="10%">
+			<td align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</td>
+			<td align="right" width="10%">
 				<span id="total"></span>
-			</th>
+			</td>
 		</tr>
 		<tr>
-			<th align="right" colspan="{$cols-1}">Status</th>
-			<th align="right" width="10%">
+			<td align="right" colspan="{$cols-1}">Status</td>
+			<td align="right" width="10%">
 			{if $pilot.event_pilot_paid_flag==1}
 			<font color="green"><b>PAID</b></font>
 			{else}
 			<font color="red"><b>DUE</b></font>
 			{/if}
-			</th>
+			</td>
 		</tr>
 		<tr>
-			<th align="right" colspan="{$cols-1}">Set Status</th>
-			<th align="right" width="10%">
+			<td align="right" colspan="{$cols-1}">Set Status</td>
+			<td align="right" width="10%">
 			<select name="event_pilot_paid_flag">
 			<option value="0"{if $pilot.event_pilot_paid_flag==0} SELECTED{/if}>DUE</option>
 			<option value="1"{if $pilot.event_pilot_paid_flag==1} SELECTED{/if}>PAID</option>
-			</th>
+			</td>
 		</tr>
 		<tr>
-			<th colspan="{$cols}" style="text-align: center;">
-				<input type="submit" value=" Save Registration Parameters " class="block-button" onClick="return check_event();">
-			</th>
+			<td colspan="{$cols}" style="text-align: center;">
+				<input type="submit" value=" Save Registration Parameters " class="btn btn-primary btn-rounded" onClick="return check_event();">
+			</td>
 		</tr>
 		</table>
 		{/if}
@@ -421,6 +411,7 @@ function change_pilot(){ldelim}
 	var pilot_message=document.getElementById('pilot_message');
 	pilot_message.style.display = "inline";
 {rdelim}
+{if $event->reg_options}
 function calc_totals(){ldelim}
 	var total=0;
 {foreach $event->reg_options as $r}
@@ -444,16 +435,21 @@ function calc_totals(){ldelim}
 	var id_total=document.getElementById('total');
 	id_total.innerHTML = '{$event->info.currency_html}'+total.toFixed(2);
 {rdelim}
+{/if}
 </script>
 
+{if $event->reg_options}
 <script>
 	calc_totals();
 </script>
+{/if}
 <script>
-	{if $pilot.pilot_id==0}
+setTimeout(function(){ldelim}
+	{if $pilot.pilot_id == 0}
 		document.main.pilot_city.focus();
 	{else}
-		document.main.event_pilot_bib.focus();
+		$("#event_pilot_team").focus();
 	{/if}
+{rdelim});
 </script>
 {/block}

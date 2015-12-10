@@ -17,13 +17,13 @@
 
 
 	<!--Nifty Stylesheet [ REQUIRED ]-->
-	<link href="css/nifty.css" rel="stylesheet">
+	<link href="/new/css/nifty.css" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
 	
 	<!--Font Awesome [ OPTIONAL ]-->
-	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<link href="/new/css/font-awesome.min.css" rel="stylesheet">
 
 	<!--Bootstrap Select [ OPTIONAL ]-->
 	<link href="plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">

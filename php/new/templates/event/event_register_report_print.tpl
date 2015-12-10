@@ -1,10 +1,14 @@
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event Registration Report for {$event->info.event_name}</h1>
-		<div class="entry-content clearfix">
+{extends file='layout/layout_print.tpl'}
 
-<h1 class="post-title entry-title">Pilots</h1>
-<table width="100%" cellpadding="3" cellspacing="0" style="border: 1px solid black;" class="tableborder">
+{block name="header"}
+{/block}
+
+{block name="content"}
+
+<h1 class="post-title entry-title">Event Registration Report for {$event->info.event_name}</h1>
+
+<h2>Pilots</h2>
+<table width="100%" cellpadding="3" cellspacing="0" class="table table-condensed table-event">
 <tr bgcolor="lightgray">
 	<th width="2%" align="left"></th>
 	<th width="10%" align="center">ORG#</th>
@@ -85,9 +89,9 @@
 
 
 
-<h1 class="post-title entry-title">Totals For Registration Values</h1>
+<h2 class="post-title entry-title">Totals For Registration Values</h2>
 
-<table width="100%" cellpadding="2" cellspacing="1" style="border: 2px solid black;" class="printborder">
+<table width="100%" cellpadding="2" cellspacing="1" style="border: 2px solid black;" class="table table-condensed table-event">
 <tr bgcolor="lightgray">
 	<th width="20%">Name</th>
 	<th width="10%">Qty</th>
@@ -128,8 +132,4 @@
 </tr>
 </table>
 
-
-</div>
-</div>
-</div>
-
+{/block}

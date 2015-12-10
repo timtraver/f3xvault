@@ -4021,36 +4021,36 @@ function event_draw_print() {
 	$e=new Event($event_id);
 	switch($print_type){
 		case "cd":
-			$template="print_draw_cd.tpl";
+			$template="print/print_draw_cd.tpl";
 			$title="CD Recording Sheet";
 			$orientation="P";
 			$sort_by='flight_order';
 			break;
 		case "pilot":
 			if($e->info['event_type_code']=='f3k'){
-				$template="print_draw_pilot_recording_f3k.tpl";
+				$template="print/print_draw_pilot_recording_f3k.tpl";
 			}else{
-				$template="print_draw_pilot_recording.tpl";
+				$template="print/print_draw_pilot_recording.tpl";
 			}
 			$title="Pilot Score Recording Sheets";
 			$orientation="L";
 			$sort_by='alphabetical_first';
 			break;
 		case "table":
-			$template="print_draw_table.tpl";
+			$template="print/print_draw_table.tpl";
 			$title="Draw Table";
 			$orientation="P";
 			$sort_by='team';
 			break;
 		case "f3b_table":
-			$template="print_draw_f3b_table.tpl";
+			$template="print/print_draw_f3b_table.tpl";
 			$title="Draw Table";
 			$orientation="P";
 			$sort_by='team';
 			break;
 		case "matrix":
 		default :
-			$template="print_draw_matrix.tpl";
+			$template="print/print_draw_matrix.tpl";
 			$title="Draw Matrix";
 			$orientation="P";
 			$sort_by='draw';
@@ -4187,7 +4187,7 @@ function event_draw_view() {
 		$print_format='html';
 	}
 
-	$template="print_draw_matrix.tpl";
+	$template="print/print_draw_matrix.tpl";
 	$title="Draw Matrix";
 	$sort_by='flight_order';
 		
@@ -4295,6 +4295,8 @@ function event_draw_stats() {
 		return event_draw();
 	}
 
+	$e=new Event($event_id);
+	
 	$d=new Draw($event_draw_id);
 	$d->get_teams();
 	$d->initialize_stats();
@@ -4307,6 +4309,7 @@ function event_draw_stats() {
 	}
 	$num_teams=count($d->teams);
 
+	$smarty->assign("event",$e);
 	$smarty->assign("d",$d);
 	$smarty->assign("event_id",$event_id);
 	$smarty->assign("event_draw_id",$event_draw_id);
@@ -4699,22 +4702,22 @@ function event_export_export() {
 	$template='';
 	switch($event->info['event_type_code']){
 		case "f3b":
-			$template="event_export_f3b.tpl";
+			$template="event/event_export_f3b.tpl";
 			break;
 		case "f3b_speed":
-			$template="event_export_f3b.tpl";
+			$template="event/event_export_f3b.tpl";
 			break;
 		case "f3f":
-			$template="event_export_f3f.tpl";
+			$template="event/event_export_f3f.tpl";
 			break;
 		case "f3k":
-			$template="event_export_f3k.tpl";
+			$template="event/event_export_f3k.tpl";
 			break;
 		case "f3j":
-			$template="event_export_f3j.tpl";
+			$template="event/event_export_f3j.tpl";
 			break;
 		case "td":
-			$template="event_export_f3j.tpl";
+			$template="event/event_export_f3j.tpl";
 			break;
 	}
 
