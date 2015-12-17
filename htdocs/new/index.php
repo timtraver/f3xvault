@@ -26,7 +26,7 @@ $start_time=microtime(true);
 
 require_once("/shared/links/r/c/v/a/rcvault.com/site/php/new/conf.php");
 
-$logsessions=1;
+$logsessions=0;
 
 include_library('security_functions.inc');
 include_library('functions.inc');

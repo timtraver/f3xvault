@@ -235,12 +235,12 @@
 											</span>
 											<i class="arrow"></i>
 										</a>
-										<ul class="collapse{if $current_menu == 'events'} in{/if}">
+										<ul class="collapse{if $current_menu == 'events' || $current_menu == 'records'} in{/if}">
 											<li{if $current_menu == 'events' && $function == 'view_events'} class="active-link"{/if}><a href="/new/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
 											<li{if $current_menu == 'events' && ($function == 'event_list' || $function == '')} class="active-link"{/if}><a href="/new/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
 											<li><a href="/new/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
 											<li{if $current_menu == 'events' && preg_match("/^series\_/",$function)} class="active-link"{/if}><a href="/new/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
-											<li><a href="/new/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
+											<li{if $current_menu == 'records'} class="active-link"{/if}><a href="/new/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
 											<li><a href="/new/?action=import"><strong>Import Event</strong></a></li>
 										</ul>
 									</li>

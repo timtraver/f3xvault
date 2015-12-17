@@ -109,3 +109,109 @@
 		<br>
 	</div>
 </div>
+<!-- All the forms for the action list -->
+<form name="event_edit" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_view_info" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view_info">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_view_draws" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view_draws">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_delete" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_delete">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_pilot_add" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_pilot_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_pilot_id" value="0">
+<input type="hidden" name="pilot_id" value="">
+<input type="hidden" name="pilot_name" value="">
+</form>
+<form name="event_add_round" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_round_edit">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_round_id" value="0">
+<input type="hidden" name="zero_round" value="0">
+<input type="hidden" name="flyoff_round" value="0">
+</form>
+<form name="print_overall" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_overall">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="chart" method="GET" action="?">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_chart">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="print_stats" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_stats">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="print_rank" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_rank">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="registration_report" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_registration_report">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_export" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_export">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_draw" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_draw">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_tasks" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_tasks">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+
+<div id="print_round" style="overflow: hidden;">
+		<form name="printround" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_round">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="use_print_header" value="1">
+		<div style="float: left;padding-right: 10px;">
+			Print Round From :
+			<select name="round_start_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select>
+			To 
+			<select name="round_end_number">
+			{foreach $event->rounds as $r}
+			<option value="{$r.event_round_number}">{$r.event_round_number}</option>
+			{/foreach}
+			</select><br>
+			<br>
+			Print One Round Per Page <input type="checkbox" name="oneper" CHECKED>
+		</div>
+		<br style="clear:both" />
+		</form>
+</div>

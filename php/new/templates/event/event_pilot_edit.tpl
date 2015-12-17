@@ -5,8 +5,6 @@
 
 {block name="content"}
 
-{include file="event/event_view_top_info.tpl"}
-
 <div class="panel">
 	<div class="panel-heading">
 		<h2 class="heading">Event Pilot {if $pilot.event_pilot_id!=0}Edit{else}Add{/if}{if $pilot.pilot_id==0} (And Create New Pilot){/if}</h2>

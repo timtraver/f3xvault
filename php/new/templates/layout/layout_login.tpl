@@ -51,7 +51,7 @@
 	{block name="content"}{/block}
 	
 	<div style="position: fixed;bottom: 0;width: 100%;margin-bottom: 20px;text-align: center;">
-		<h5>Slideshow pictures are from randomly entered media by pilots around the world</h5>
+		<h5>Slideshow pictures are from randomly submitted media by pilots around the world</h5>
 	</div>
 
 	<!--jQuery [ REQUIRED ]-->

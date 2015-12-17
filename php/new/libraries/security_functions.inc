@@ -53,8 +53,9 @@ function check_login () {
         SELECT *
         FROM user u
         WHERE u.user_name=:login
+        	OR u.user_email=:login2
     ");
-    $result=db_exec($stmt,array("login"=>$login));
+    $result=db_exec($stmt,array("login"=>$login,"login2"=>$login));
     if(isset($result[0])) {
         $user=$result[0];
         if($user['user_status']==0){
@@ -85,7 +86,7 @@ function check_login () {
     return array($error,"$errorstring");
 }
 function get_user_info($user_parameter){
-    # $user_parameter cna be either user_id (int) or user_name (string)
+    # $user_parameter can be either user_id (int) or user_name (string)
     # Function to get all of the user info, including permissions
     $user=array();
 
@@ -114,8 +115,9 @@ function get_user_info($user_parameter){
             LEFT JOIN state s ON p.state_id=s.state_id
             LEFT JOIN country c ON p.country_id=c.country_id
             WHERE u.user_name=:user_name
+            	OR u.user_email=:email
         ");
-        $result=db_exec($stmt,array("user_name"=>$user_parameter));
+        $result=db_exec($stmt,array("user_name"=>$user_parameter,"email"=>$user_parameter));
     }
     if($result){
         # Get the user groups and permissions

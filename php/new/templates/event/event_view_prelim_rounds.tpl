@@ -68,7 +68,7 @@
 					View Details of Round {$r.event_round_number|escape}
 				{/if}
 			</span>
-			<a href="/?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="btn-link" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="btn-link" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
 			</div>
 		</th>
 		{/if}
@@ -167,7 +167,7 @@
 {/foreach}
 {if $event->info.event_type_code=='f3f'}
 <tr>
-	<th colspan="3" align="right">Round Fast Time</th>
+	<th colspan="3" style="text-align: right;">Round Fast Time</th>
 	{foreach $event->rounds as $r}
 		{$round_number=$r.event_round_number}
 		{if $round_number >= $start_round && $round_number <= $end_round}
@@ -182,7 +182,7 @@
 				{/foreach}
 			{/foreach}
 			{if $fast==1000}{$fast=0}{/if}
-			<th align="center">
+			<th align="center" style="text-align: center;">
 				<a href="" class="tooltip_score" onClick="return false;">
 				{$fast|escape}s
 				<span>

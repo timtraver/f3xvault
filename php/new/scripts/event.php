@@ -7,6 +7,7 @@
 #       This is the script to show the main screen
 #
 ############################################################################
+global $smarty;
 $smarty->assign("current_menu",'events');
 
 include_library("event.class");
@@ -351,7 +352,6 @@ function event_view() {
 		$smarty->assign("duration_rank",$duration_rank);
 	}
 	
-	$smarty->assign("event",$e);
 	$permission=check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
 	
@@ -388,33 +388,21 @@ function event_view() {
 			$total_prelim_rounds++;
 		}
 	}
-	# If there are active draws, then do the statistics for them
-	if($active_draws){
-		include_library("draw.class");
-		$d=new Draw($event_draw_id);
-		$d->get_teams();
-		$d->initialize_stats();
-		$d->get_stats();
-		
-		$groups=$d->get_group_array();
-		$group_totals=array();
-		foreach($groups as $g){
-			$group_totals[$g]++;
-		}
-		$num_teams=count($d->teams);
-	
-		$smarty->assign("d",$d);
-		$smarty->assign("event_draw_id",$event_draw_id);
-		$smarty->assign("stats",$d->stats);
-		$smarty->assign("stat_totals",$d->stat_totals);
-		$smarty->assign("group_totals",$group_totals);
-	}
 	$tab=0;
 	if(count($e->rounds) <= 0){
 		$tab = 2;
 	}
 	$smarty->assign("tab",$tab);
 
+	# Lets set the draw rounds to be able to see them in the tab
+	$e->get_active_draws_and_stats();
+
+	$smarty->assign("group_totals",$group_totals);
+	$smarty->assign("event",$e);
+	$smarty->assign("draw_rounds",$e->draw_rounds);
+	$smarty->assign("stats",$e->draw_rounds_stats);
+	$smarty->assign("stat_totals",$e->draw_rounds_stats_totals);
+	$smarty->assign("draw_info",$e->draw_rounds_stats_info);
 	$smarty->assign("total_prelim_rounds",$total_prelim_rounds);
 	$smarty->assign("total_flyoff_rounds",$total_flyoff_rounds);
 	$maintpl=find_template("event/event_view.tpl");
@@ -2800,7 +2788,7 @@ function event_round_save() {
 						");
 						$result2=db_exec($stmt,array(
 							"event_pilot_round_flight_id"=>$event_pilot_round_flight_id_actual,
-							"event_pilot_round_flight_group"=>$v['group'],
+							"event_pilot_round_flight_group"=>strtoupper($v['group']),
 							"event_pilot_round_flight_minutes"=>$v['min'],
 							"event_pilot_round_flight_seconds"=>$v['sec'],
 							"event_pilot_round_flight_over"=>$v['over'],
@@ -2834,7 +2822,7 @@ function event_round_save() {
 						$result2=db_exec($stmt,array(
 							"event_pilot_round_id"=>$event_pilot_round_id,
 							"flight_type_id"=>$flight_type_id,
-							"event_pilot_round_flight_group"=>$v['group'],
+							"event_pilot_round_flight_group"=>strtoupper($v['group']),
 							"event_pilot_round_flight_minutes"=>$v['min'],
 							"event_pilot_round_flight_seconds"=>$v['sec'],
 							"event_pilot_round_flight_over"=>$v['over'],
@@ -2933,7 +2921,7 @@ function event_round_add_reflight() {
 	$flight_type_id=intval($_REQUEST['flight_type_id']);
 	$event_pilot_id=intval($_REQUEST['event_pilot_id']);
 	$event_round_number=$_REQUEST['event_round_number'];
-	$group=$_REQUEST['group'];
+	$group=strtoupper($_REQUEST['group']);
 	
 	# Need to find the event_pilot_round_id from the info given
 	$stmt=db_prep("
@@ -3159,6 +3147,7 @@ function save_individual_flight(){
 	switch($field){
 		case "group":
 			$setline='event_pilot_round_flight_group=:value';
+			$field_value = strtoupper($field_value);
 			break;
 		case "min":
 			$setline='event_pilot_round_flight_minutes=:value';
@@ -4838,7 +4827,7 @@ function event_import() {
 	$smarty->assign("lines",$lines);
 	$smarty->assign("columns",$columns);
 
-	$maintpl=find_template("event/event_import.tpl");
+	$maintpl=find_template("import/event_import.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_import_save() {
@@ -5190,7 +5179,7 @@ function event_import_f3k() {
 	$smarty->assign("round",$round);
 	$smarty->assign("flight_type_id",$flight_type_id);
 
-	$maintpl=find_template("event/event_import_f3k.tpl");
+	$maintpl=find_template("import/event_import_f3k.tpl");
 	return $smarty->fetch($maintpl);
 }
 function event_import_f3k_save() {

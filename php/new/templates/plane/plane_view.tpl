@@ -422,8 +422,8 @@ function calc_area(){ldelim}
 						<h4 class="comments gutter-left current">{$event_total} Plane Competitions</h4>
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
-						<tr class="table-row-heading-left" style="background-color: lightgray;">
-							<th colspan="1" style="text-align: left;" nowrap>(records {$paging.events.startrecord|escape} - {$paging.events.endrecord|escape} of {$paging.events.totalrecords|escape})</th>
+						<tr class="table-row-heading-left">
+							<th colspan="1" style="text-align: left;" nowrap>Records {$paging.events.startrecord|escape} - {$paging.events.endrecord|escape} of {$paging.events.totalrecords|escape}</th>
 							<th colspan="4" nowrap>
 								{include file="paging.tpl" tab=3 label='events'}
 							</th>
@@ -436,7 +436,7 @@ function calc_area(){ldelim}
 						</tr>
 						{if $events}
 							{foreach $events as $e}
-							<tr bgcolor="{cycle values="white,lightgray"}">
+							<tr>
 								<td>{$e.event_start_date|date_format:"Y-m-d"}</td>
 								<td><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
 								<td align="left">{$e.event_type_name|escape}</td>

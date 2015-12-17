@@ -64,6 +64,9 @@
 					</form>
 				</div>
 			</div>
+			<div class="pad-ver">
+				<a href="?action=main&function=forgot" class="btn-link mar-rgt">Forgot password ?</a>
+			</div>
 		</div>
 	</div>
 

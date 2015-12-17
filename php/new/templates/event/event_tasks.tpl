@@ -5,8 +5,6 @@
 
 {block name="content"}
 
-{include file="event/event_view_top_info.tpl"}
-
 <div class="panel">
 	<div class="panel-heading">
 		<h2 class="heading">Event Tasks for {$event->info.event_name|escape}</h2>
@@ -66,8 +64,8 @@
 		{/if}
 		<tr>
 			<td colspan="4" style="text-align: right;padding-top:10px;">
-				<input type="button" value=" Add Round " onClick="document.main.add_round.value=1;document.main.submit();" class="btn btn-primary btn-rounded">
-				<input type="button" value=" Save Rounds " onClick="document.main.submit();" class="btn btn-primary btn-rounded">
+				<input type="button" value=" Add Task Round " onClick="document.main.add_round.value=1;document.main.submit();" class="btn btn-primary btn-rounded">
+				<input type="button" value=" Save Task Rounds " onClick="document.main.submit();" class="btn btn-primary btn-rounded">
 				
 				<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="btn btn-primary btn-rounded">
 				<input type="button" value=" Print Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="btn btn-primary btn-rounded">

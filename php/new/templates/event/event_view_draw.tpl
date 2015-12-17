@@ -11,7 +11,7 @@ Team Highlight :
 
 <table cellspacing="2" cellpadding="1">
 <tr>
-{foreach $event->rounds as $r}
+{foreach $draw_rounds as $r}
 {if $event->info.event_type_code=="f3k"}
 	{$flight_type_id=$r.flight_type_id}
 {/if}
@@ -115,31 +115,31 @@ Team Highlight :
 <tr>
 	<th width="20%" align="right" nowrap>Draw Flight Type</th>
 	<td>
-		{if $d->draw.event_type_code=='f3k'}
+		{if $draw_info.event_type_code=='f3k'}
 			F3K
 		{else}
-			{$d->draw.flight_type_name}
+			{$draw_info.flight_type_name}
 		{/if}
 	</td>
 </tr>
 <tr>
 	<th width="10%" align="right" nowrap>Round Range</th>
 	<td>
-		{$d->draw.event_draw_round_from} to {$d->draw.event_draw_round_to}
+		{$draw_info.event_draw_round_from} to {$draw_info.event_draw_round_to}
 	</td>
 </tr>
 <tr>
 	<th nowrap align="right">Team Protection</th>
 	<td>
-		{if $d->draw.event_draw_team_protection==1} ON{else}OFF{/if}
+		{if $draw_info.event_draw_team_protection==1} ON{else}OFF{/if}
 	</td>
 </tr>
 <tr>
 	<th nowrap align="right" valign="top">Flight Groups</th>
 	<td>
-		There are currently <b>{$d->pilots|count}</b> Pilots in this event{if $d->teams|count > 0} on {$d->teams|count} teams{/if}.<br>
-		You have selected to have {$d->draw.event_draw_number_groups} flight groups,
-		resulting in {foreach $group_totals as $g}{$num_groups=$g@key}{$g} group{if $g>1}s{/if} of {$num_groups}{if !$g@last} and {/if}{/foreach}
+		There are currently <b>{$stats|count}</b> Pilots in this event{if $draw_info.teams|count > 1} on {$draw_info.teams|count} teams{/if}.<br>
+		You have selected to have {$draw_info.event_draw_number_groups} flight groups,
+		resulting in {foreach $draw_info.group_totals as $g}{$num_groups=$g@key}{$g} group{if $g>1}s{/if} of {$num_groups}{if !$g@last} and {/if}{/foreach}
 	</td>
 </tr>
 <tr>
@@ -160,12 +160,12 @@ Team Highlight :
 <tr>
 	<th nowrap align="right" valign="top">Matchup Details<br>(Mouse over for details)</th>
 	<td>
-		{foreach $d->pilots as $p}
+		{foreach $stats as $p}
 			{$event_pilot_id=$p@key}
-			<a href="" class="tooltip_stat">{$p.pilot_first_name} {$p.pilot_last_name}
+			<a href="" class="tooltip_stat">{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}
 				<span>
 				<img class="callout_stat" src="/images/callout.gif">
-				<strong>{$p.pilot_first_name} {$p.pilot_last_name}</strong> - {$p.event_pilot_team}
+				<strong>{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}</strong> - {$event->pilots.$event_pilot_id.event_pilot_team}
 				<table>
 				<tr>
 					<th>Pilot</th>
@@ -176,10 +176,10 @@ Team Highlight :
 					{$event_pilot_id2=$s@key}
 					<tr>
 						<td align="right" nowrap>
-							{$d->pilots.$event_pilot_id2.pilot_first_name} {$d->pilots.$event_pilot_id2.pilot_last_name}
+							{$event->pilots.$event_pilot_id2.pilot_first_name} {$event->pilots.$event_pilot_id2.pilot_last_name}
 						</td>
 						<td align="right" nowrap>
-							{$d->pilots.$event_pilot_id2.event_pilot_team}
+							{$event->pilots.$event_pilot_id2.event_pilot_team}
 						</td>
 						<td align="center">
 							{$s}

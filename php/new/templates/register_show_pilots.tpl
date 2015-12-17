@@ -59,6 +59,7 @@
 						
 						<input type="hidden" name="user_first_name" value="{$user.user_first_name|escape}">
 						<input type="hidden" name="user_last_name" value="{$user.user_last_name|escape}">
+						<input type="hidden" name="login" value="{$user.user_email|escape}">
 						<input type="hidden" name="user_email" value="{$user.user_email|escape}">
 						<input type="hidden" name="user_pass" value="{$user.user_pass|escape}">
 						<input type="hidden" name="user_pass2" value="{$user.user_pass2|escape}">

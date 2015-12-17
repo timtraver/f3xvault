@@ -5,8 +5,6 @@
 
 {block name="content"}
 
-{include file="event/event_view_top_info.tpl"}
-
 <div class="panel">
 	<div class="panel-heading">
 		<h2 class="heading">Event Draws for {$event->info.event_name|escape}</h2>

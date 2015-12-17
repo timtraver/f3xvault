@@ -191,6 +191,7 @@
 	</div>
 	{/if}
 	<br>
-	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="block-button">
+	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="btn btn-primary btn-rounded">
+	<br>
 	</div>
 </div>

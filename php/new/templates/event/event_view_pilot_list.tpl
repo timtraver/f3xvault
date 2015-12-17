@@ -26,7 +26,7 @@
 	{foreach $event->pilots as $p}
 	<tr>
 		<td>{$num}</td>
-		<td width="5%" nowrap>
+		<td width="1%" nowrap>
 			{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" class="inline_flag" title="{$p.country_code}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
 			{if $p.state_name && $p.country_code=="US"}<img src="/images/flags/states/16/{$p.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$p.state_name}">{else}<img src="/images/1x1.png" width="16" style="display:inline;">{/if}
 		</td>

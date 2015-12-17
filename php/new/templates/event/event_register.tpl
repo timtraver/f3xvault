@@ -113,7 +113,7 @@
 		{foreach $event->reg_options as $r}
 		{$reg_id=$r.event_reg_param_id}
 		<tr>
-			<td align="right" valign="top">
+			<td align="left" valign="top">
 				{$r.event_reg_param_name} - <a href="" class="tooltip_e" onClick="return false;">(detail description)
 				<span>
 				<img class="callout" src="/images/callout.gif">
@@ -126,7 +126,7 @@
 				</span>
 				</a>
 			</td>
-			<td align="center" valign="top">
+			<td align="left" valign="top">
 				{if $r.event_reg_param_mandatory==1}
 				1<input type="hidden" name="event_reg_param_{$r.event_reg_param_id}_qty" value="1">
 				{elseif $r.event_reg_param_qty_flag==1}
@@ -157,14 +157,14 @@
 		</tr>
 		{/foreach}
 		<tr>
-			<th align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</th>
-			<th align="right" width="10%">
+			<th style="text-align: right;" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</th>
+			<th style="text-align: right;" width="10%">
 				<span id="total"></span>
 			</th>
 		</tr>
 		<tr>
-			<th align="right" colspan="{$cols-1}">Status</th>
-			<th align="right" width="10%">
+			<th style="text-align: right;" colspan="{$cols-1}">Status</th>
+			<th style="text-align: right;" width="10%">
 			{if $event_pilot.event_pilot_paid_flag==1}
 			<font color="green"><b>PAID</b></font>
 			{else}
@@ -178,13 +178,13 @@
 		</tr>
 		{if $event->info.event_reg_paypal_address!='' && $go_to_paypal!=1}
 		<tr>
-			<td colspan="{$cols}" style="text-align: center;">
+			<td colspan="{$cols}" style="text-align: right;">
 				<input type="button" value=" Pay With Paypal Account Now " class="btn btn-primary btn-rounded" onClick="calc_totals();document.main.go_to_paypal.value=1;main.submit();">
 			</td>
 		</tr>
 		{/if}
 		<tr>
-			<td colspan="{$cols}" style="text-align: center;">
+			<td colspan="{$cols}" style="text-align: right;">
 				<input type="button" value=" Save Registration Parameters " class="btn btn-primary btn-rounded" onClick="return check_event() && main.submit();">
 			</td>
 		</tr>
@@ -192,9 +192,6 @@
 		{/if}
 		</form>
 		
-		<script>
-		calc_totals();
-		</script>
 
 		<form name="goback" method="POST">
 		<input type="hidden" name="action" value="event">
@@ -329,5 +326,8 @@ function check_event(){ldelim}
 	{rdelim}	
 {rdelim}
 
+</script>
+<script>
+	calc_totals();
 </script>
 {/block}

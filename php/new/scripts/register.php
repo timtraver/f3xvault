@@ -25,7 +25,7 @@ function view_registration() {
 	global $smarty;
 	$smarty->assign("user_first_name",$_REQUEST['user_first_name']);
 	$smarty->assign("user_last_name",$_REQUEST['user_last_name']);
-	$smarty->assign("user_email",$_REQUEST['user_email']);
+	$smarty->assign("user_email",strtolower($_REQUEST['user_email']));
 	
 	# Set recaptcha
 	include_library('recaptchalib.php');
@@ -66,7 +66,7 @@ function save_registration(){
 		user_message("You must enter a last name",1);
 	}
 	if(isset($_REQUEST['user_email']) && $_REQUEST['user_email']!=''){
-		$user_email=$_REQUEST['user_email'];
+		$user_email=strtolower($_REQUEST['user_email']);
 		$user['user_email']=$user_email;
 	}else{
 		user_message("You must enter a valid email address as your login",1);
@@ -95,11 +95,12 @@ function save_registration(){
 		SELECT *
 		FROM user
 		WHERE user_name=:user_name
+			OR user_email=:user_email
 		AND user_status=1
 	");
-	$result=db_exec($stmt,array("user_name"=>$user_email));
+	$result=db_exec($stmt,array("user_name"=>$user_email,"user_email"=>$user_email));
 	if($result){
-		user_message("A user with this name already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
+		user_message("A user with this name or email address already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
 		return view_registration();
 	}
 	
@@ -108,9 +109,9 @@ function save_registration(){
 		include_library('recaptchalib.php');
 		$privatekey = "6Le6t94SAAAAAEDs3x4GleessiNUAqBjC0txOdqH";
 		$resp = recaptcha_check_answer ($privatekey,
-                                $_SERVER["REMOTE_ADDR"],
-                                $_POST["recaptcha_challenge_field"],
-                                $_POST["recaptcha_response_field"]);
+		$_SERVER["REMOTE_ADDR"],
+		$_POST["recaptcha_challenge_field"],
+		$_POST["recaptcha_response_field"]);
 
     	if (!$resp->is_valid) {
 		    // What happens when the CAPTCHA was entered incorrectly
@@ -211,7 +212,7 @@ function save_registration(){
 	$action='main';
 	$_REQUEST['action']='main';
 	$_REQUEST['function']='user_login';
-	$_REQUEST['login']=$user_name;
+	$_REQUEST['login']=$user_email;
 	$_REQUEST['password']=$user_pass;
 	
 	log_action($user['user_id']);

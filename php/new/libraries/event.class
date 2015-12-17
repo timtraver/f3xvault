@@ -23,6 +23,11 @@ class Event {
 	var $flight_types=array();
 	var $series=array();
 	var $draws=array();
+	var $draw_rounds=array();
+	var $draw_rounds_stats=array();
+	var $draw_rounds_stats_info=array();
+	var $draw_rounds_stats_totals=array();
+	var $active_draws=array();
 	var $tasks=array();
 	var $event_record_speed;
 	var $event_record_speed_event_pilot_id;
@@ -856,6 +861,78 @@ class Event {
 			}
 		}
 		return;
+	}
+	function get_active_draws_and_stats(){
+		# Method to get all of the current active draws and their combined statistics
+		include_library("draw.class");
+		if(count($this->draws) == 0){
+			$this->get_draws();
+		}
+		$draw_rounds = array();
+		$draw_info = array();
+		foreach($this->draws as $draw_id=>$d){
+			if($d['event_draw_active']!=1){
+				continue;
+			}
+			if(! is_object($draw)){
+				$draw = new Draw($draw_id);
+				$draw->initialize_stats();
+			}else{
+				$draw->Draw($draw_id);
+			}
+			$draw->get_stats();
+			
+			if(count($draw_info) == 0){
+				$draw_info = $draw->draw;
+				$draw_info['groups'] = $draw->get_group_array();
+				foreach($draw_info['groups'] as $g){
+					$group_totals[$g]++;
+				}
+				$draw_info['group_totals'] = $group_totals;
+				$draw_info['teams'] = $draw->teams;
+			}else{
+				# only replace the from and to rounds
+				if($draw->draw['event_draw_round_to'] > $draw_info['event_draw_round_to']){
+					$draw_info['event_draw_round_to'] = $draw->draw['event_draw_round_to'];
+				}
+			}
+			
+			for($event_round_number=$draw->draw['event_draw_round_from'];$event_round_number<=$draw->draw['event_draw_round_to'];$event_round_number++){
+				# Lets create the event round and enough info from the draw to print
+				$event_draw_id=$d['event_draw_id'];
+				#Step through the draw rounds and see if one exists for this round
+				foreach($d['flights'] as $flight_type_id=>$f){
+					if($e->info['event_type_code']=='f3k'){
+						$flight_type_id=$e->tasks[$event_round_number]['flight_type_id'];
+					}
+					foreach($f as $round_num=>$v){
+						if($round_num==$event_round_number){
+							# Lets create the round info
+							$draw_rounds[$event_round_number]['event_round_number']=$event_round_number;
+							$draw_rounds[$event_round_number]['event_round_status']=1;
+							if($e->info['event_type_code']=='f3k'){
+								$draw_rounds[$event_round_number]['flight_type_id']=$draw_round_flight_types[$round_num];
+							}else{
+								$draw_rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+							}
+							$draw_rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+							foreach($v['pilots'] as $event_pilot_id=>$p){
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=1;
+							}
+						}
+					}
+				}	
+			}
+		}
+		
+		$this->draw_rounds = $draw_rounds;
+		$this->draw_rounds_stats = $draw->stats;
+		$this->draw_rounds_stats_info = $draw_info;
+		$this->draw_rounds_stats_totals = $draw->stat_totals;
 	}
 	
 	# Calculation Routines

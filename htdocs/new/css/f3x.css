@@ -418,12 +418,12 @@ td.info:hover span,th.info:hover span { /*the span will display just on :hover s
   padding-right: 1px;
   padding-bottom: 1px;
   padding-left: 1px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 16px;
   color: white;
   background-color: blue;
-  width: 16px;
+  width: 18px;
   float: left;
   text-align: center;	
 }

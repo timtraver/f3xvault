@@ -596,6 +596,7 @@ function set_disipline($discipline_id){
 	return;
 }
 function return_to_action($from){
+	global $smarty;
 	# Function to return to a screen from whence they came
 	# Lets change the request array to the new values
 	$new=array();
