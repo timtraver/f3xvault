@@ -16,10 +16,8 @@
 	<th align="left">Pilot Class</th>
 	<th align="left">Pilot Reg Values</th>
 	<th align="left">Event Team</th>
-	{if $event->info.event_reg_flag==1}
-	<th align="left" align="right">Reg Status</th>
-	{/if}
-	<th align="left" width="4%"></th>
+	<th align="left" align="right">Amount</th>
+	<th align="left" align="right">Registration Balance</th>
 </tr>
 {assign var=num value=1}
 {foreach $event->pilots as $p}
@@ -59,20 +57,19 @@
 			{/foreach}
 		</td>
 		<td valign="top" style="border-style:thin;">{$p.event_pilot_team|escape}</td>
-		{if $event->info.event_reg_flag==1}
-			<td valign="top" align="right" style="border-style:thin;">
-				{$event->info.currency_html}{$total|string_format:"%.2f"}&nbsp;&nbsp;
-				{if $p.event_pilot_paid_flag==1}
-				<font color="green">PAID ({$p.event_pilot_paid_date|date_format:"%D"})</font>
-				{else}
-				<font color="red">DUE</font>
-				{/if}
-			</td>
-		{/if}
-		<td valign="top" nowrap style="border-style:thin;">
-			<a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
-			{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}		
-				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name|escape} from the event?');"><img width="14px" src="/images/del.gif"></a>
+		<td valign="top">{$event->info.currency_html} {$total|string_format:"%.2f"}</td>
+		<td valign="top" align="right">
+			{foreach $payments.$event_pilot_id as $pay}
+				{$pay.event_pilot_payment_type} Payment ({$pay.event_pilot_payment_date|date_format:"Y-m-d"})
+				{$event->info.currency_html} {$pay.event_pilot_payment_amount|string_format:"%.2f"}
+				<br>
+			{/foreach}
+			Amount Owed - {$event->info.currency_html} {$balances.$event_pilot_id|string_format:"%.2f"}
+			<br>
+			{if $p.event_pilot_paid_flag==1}
+			<font color="green">PAID</font>
+			{else}
+			<font color="red">DUE</font>
 			{/if}
 		</td>
 	</tr>
@@ -115,21 +112,21 @@
 		{/foreach}
 	</td>
 	<td align="right" valign="top">
-		{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
+		{$event->info.currency_html} {$r.event_reg_param_cost|string_format:"%.2f"}
 	</td>
 	<td align="right" valign="top">
 		{$ext=$r.qty*$r.event_reg_param_cost}
-		{$event->info.currency_html}{$ext|string_format:"%.2f"}
+		{$event->info.currency_html} {$ext|string_format:"%.2f"}
 	</td>
 </tr>
 {$total_collected=$total_collected+$ext}
 {/foreach}
-<tr>
-	<th align="right" colspan="4">Total Registration Fee ({$event->info.currency_name})</th>
-	<th align="right" width="10%">
-		{$event->info.currency_html}{$total_collected|string_format:"%.2f"}
-	</th>
-</tr>
+		<tr>
+			<th style="text-align: right;" colspan="4">Total Fees ({$event->info.currency_name})</th>
+			<th style="text-align: right;" width="10%">
+				{$event->info.currency_html} {$total_collected|string_format:"%.2f"}
+			</th>
+		</tr>
 </table>
 
 {/block}

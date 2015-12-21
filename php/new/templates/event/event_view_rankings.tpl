@@ -1,7 +1,6 @@
 <div class="page type-page status-publish hentry clearfix post nodate" style="display:inline-block;" id="6">
 	<div class="entry clearfix" style="vertical-align:top;" id="7">                
 
-	{if $event->classes|count > 1}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-right: 10px;">                
 		<h3 class="post-title">Class Rankings</h3>
 		<table cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
@@ -32,7 +31,6 @@
 		</tr>
 		</table>
 	</div>
-	{/if}
 	{if $event->totals.teams}
 	{$count=0}
 	{foreach $event->options as $o}

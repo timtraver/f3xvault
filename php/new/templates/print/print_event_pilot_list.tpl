@@ -1,11 +1,8 @@
-{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}
-<div style="margin-bottom: 3px;">
-	<div class="btn-group btn-group-xs" style="float: right;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}"> + Add New Pilot </button></div>
-	<input type="text" id="pilot_name" name="pilot_name" size="40">
-	<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-	<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
-</div>
-{/if}
+{extends file='layout/layout_print.tpl'}
+
+{block name="content"}
+
+{include file='print/print_event_header_info.tpl'}
 
 <table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-event">
 <tr>
@@ -19,7 +16,6 @@
 	{if $event->info.event_reg_flag==1}
 		<th align="left" align="right">Reg Status</th>
 	{/if}
-	<th align="left" width="4%"></th>
 </tr>
 {if $event->pilots|count >0}
 	{assign var=num value=1}
@@ -56,12 +52,6 @@
 				{/if}
 			</td>
 		{/if}
-		<td nowrap>
-			{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}		
-				<a href="?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
-				<a href="/?action=event&function=event_pilot_remove&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Remove Event Pilot" onClick="return confirm('Are you sure you want to remove {$p.pilot_first_name|escape} from the event?');"><img width="14px" src="/images/del.gif"></a>
-			{/if}
-		</td>
 	</tr>
 	{assign var=num value=$num+1}
 	{/foreach}
@@ -71,3 +61,4 @@
 	</tr>
 {/if}
 </table>
+{/block}

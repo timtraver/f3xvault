@@ -398,15 +398,15 @@
 	<script src="js/nifty.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {ldelim}
-				{foreach $messages as $m}
-					$.niftyNoty({ldelim}
-						type: '{if $m.message_color == 'green'}success{else}danger{/if}',
-						icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
-						container : 'floating',
-						title : '{$m.message}',
-						timer : 10000
-					{rdelim});
-				{/foreach}
+			{foreach $messages as $m}
+				$.niftyNoty({ldelim}
+					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
+					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
+					container : 'floating',
+					title : '{$m.message}',
+					timer : 10000
+				{rdelim});
+			{/foreach}
 		{rdelim})
 	</script>
 	<script>

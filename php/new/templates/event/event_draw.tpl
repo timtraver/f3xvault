@@ -159,8 +159,10 @@
 							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();"> Draw Table </button></div>
 							{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
 								<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();"> Pilot Recording Sheets </button></div>
-								{/if}
+							{/if}
+							{if !$ft.flight_type_code|strstr:"f3k"}
 							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();"> CD Recording Sheet </button></div>
+							{/if}
 						</div>
 					</td>
 				</tr>

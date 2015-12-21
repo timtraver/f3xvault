@@ -1,28 +1,16 @@
-<div class="page type-page status-publish hentry clearfix post nodate" style="-webkit-print-color-adjust:exact;">
+{extends file='layout/layout_print.tpl'}
+
+{block name="content"}
+
+{include file='print/print_event_header_info.tpl'}
+
+<div style="-webkit-print-color-adjust:exact;">
 	<div class="entry clearfix">                
 	{foreach $event->rounds as $r}
 		{$round_number=$r.event_round_number}
-		{if $round_number >= $round_from && $round_number <= $round_to}
-
-	<div class="entry clearfix">                
-		<h2 class="post-title entry-title">Event - {$event->info.event_name|escape}</h2>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="3" class="tableborder">
-		<tr>
-			<th width="20%" align="right">Event Dates</th>
-			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
-			</td>
-		</tr>
-		</table>
-	</div>
-		
-		<h1 class="post-title entry-title">Round {$round_number} Detail Results</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		{if $round_number >= $round_from && $round_number <= $round_to}		
+		<h2 class="post-title entry-title">Round {$round_number} Detail Results</h2>
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		{foreach $event->flight_types as $ft}
 			{$flight_type_id=$ft.flight_type_id}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
@@ -69,7 +57,7 @@
 			{foreach $f.pilots as $p}
 			{$event_pilot_id=$p@key}
 			{if $oldgroup!=$p.event_pilot_round_flight_group}
-				{if $groupcolor=='lightgrey'}{$groupcolor='#9DCFF0'}{else}{$groupcolor='lightgrey'}{/if}
+				{if $groupcolor=='white'}{$groupcolor='#9DCFF0'}{else}{$groupcolor='white'}{/if}
 				{$oldgroup=$p.event_pilot_round_flight_group|escape}
 			{/if}
 			{$time_disabled=0}
@@ -229,4 +217,4 @@
 	{/foreach}
 	</div>
 </div>
-<br>
+{/block}

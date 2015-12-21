@@ -3128,8 +3128,8 @@ a.disabled-link:hover {
   position: fixed;
   text-align: right;
   top: 7px;
-  right: 7px;
-  left: 7px;
+  right: 30%;
+  left: 30%;
   z-index: 15;
 }
 #floating-top-right .alert-wrap {

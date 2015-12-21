@@ -1,16 +1,9 @@
-		<h2>{$event->info.event_name}</h2>           
-		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
-		<tr>
-			<th width="15%" align="right">Event Dates</th>
-			<td nowrap>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td nowrap>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
-			</td>
-		</tr>
-		</table>
+{extends file='layout/layout_print.tpl'}
+
+{block name="content"}
+
+{include file='print/print_draw_header.tpl'}
+
 		{$bgcolor="lightgray"}
 		{$oldteam="nada"}
 		<h2 class="post-title entry-title">Pilot Matrix List{if $event->info.event_type_code!="f3k"} - {$event->flight_types.$flight_type_id.flight_type_name}{/if}</h2>		
@@ -83,3 +76,4 @@
 		{$oldteam=$p.event_pilot_team}
 		{/foreach}
 		</table>
+{/block}

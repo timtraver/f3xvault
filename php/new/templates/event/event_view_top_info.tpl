@@ -76,10 +76,10 @@
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_edit.submit();{rdelim}">Event Settings</a></li>
 				<li><a href="#" onClick="document.event_view_info.submit();">View Full Event Info</a></li>
 				{if $event->info.event_type_code == 'f3k'}
-				<li><a href="#" onClick="document.event_tasks.submit();">Set F3K Tasks</a></li>
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3K Tasks</a></li>
 				{/if}
 				{if $active_draws || $event->pilots|count >0}
-				<li><a href="#" onClick="{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}">Manage Event Draws</a></li>
+				<li><a href="#" onClick="if(check_permission()){ldelim}{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}{rdelim}">Manage Event Draws</a></li>
 				{/if}
 				{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_status!=0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">View Registration Report</a></li>
@@ -92,11 +92,13 @@
 				<li><a href="#" onClick="document.print_pilot_list.submit();">Print Pilot List</a></li>
 				{if $event->rounds|count > 0}
 				<li><a href="#" onClick="document.print_overall.submit();">Print Overall Classification</a></li>
+				<li><a href="#" onClick="document.print_position.submit();">Print Position Chart</a></li>
 				<li><a href="#" onClick="$('#print_round').dialog('open');">Print Round Detail</a></li>
 				<li><a href="#" onClick="document.print_rank.submit();">Print Class Rankings</a></li>
+				<li><a href="#" onClick="document.print_stats.submit();">Print Statistics</a></li>
 				{/if}
 				{if $active_draws}
-				<li><a href="#" onClick="document.print_overall.submit();">Print Draw</a></li>
+				<li><a href="#" onClick="document.event_draw.submit();">Print Draws</a></li>
 				{/if}
 				{if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 				<li class="divider"></li>
@@ -150,7 +152,11 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_overall">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="print_pilot_list" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_pilot_list">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="chart" method="GET" action="?">
 <input type="hidden" name="action" value="event">
@@ -161,13 +167,16 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_stats">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="use_print_header" value="1">
 </form>
 <form name="print_rank" method="GET" action="?" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_rank">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
-<input type="hidden" name="use_print_header" value="1">
+</form>
+<form name="print_position" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_position_chart">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="registration_report" method="POST">
 <input type="hidden" name="action" value="event">
@@ -195,7 +204,6 @@
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_print_round">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
-		<input type="hidden" name="use_print_header" value="1">
 		<div style="float: left;padding-right: 10px;">
 			Print Round From :
 			<select name="round_start_number">

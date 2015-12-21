@@ -1,16 +1,9 @@
-		<h2>{$event->info.event_name}</h2>           
-		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
-		<tr>
-			<th width="15%" align="right">Event Dates</th>
-			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
-			</td>
-		</tr>
-		</table>
+{extends file='layout/layout_print.tpl'}
+
+{block name="content"}
+
+{include file='print/print_draw_header.tpl'}
+
 		{$num_rounds_printed=0}
 		{foreach $event->rounds as $r}
 		{if $event->info.event_type_code=="f3k"}
@@ -150,3 +143,4 @@
 		{/if}
 		</table>
 		{/foreach}
+{/block}

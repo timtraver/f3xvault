@@ -5,8 +5,6 @@
 
 {block name="content"}
 
-{include file="event/event_view_top_info.tpl"}
-
 <div class="panel">
 	<div class="panel-heading">
 		<h2 class="heading">Draw Stats</h2>

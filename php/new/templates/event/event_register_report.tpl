@@ -23,9 +23,8 @@
 			<th align="left">Pilot Class</th>
 			<th align="left">Pilot Reg Values</th>
 			<th align="left">Event Team</th>
-			{if $event->info.event_reg_flag==1}
-			<th align="left" align="right">Reg Status</th>
-			{/if}
+			<th align="left" align="right">Amount</th>
+			<th align="left" align="right">Registration Balance</th>
 			<th align="left" width="4%"></th>
 		</tr>
 		{assign var=num value=1}
@@ -66,16 +65,21 @@
 					{/foreach}
 				</td>
 				<td valign="top">{$p.event_pilot_team|escape}</td>
-				{if $event->info.event_reg_flag==1}
-					<td valign="top" align="right">
-						{$event->info.currency_html}{$total|string_format:"%.2f"}&nbsp;&nbsp;
-						{if $p.event_pilot_paid_flag==1}
-						<font color="green">PAID ({$p.event_pilot_paid_date|date_format:"%D"})</font>
-						{else}
-						<font color="red">DUE</font>
-						{/if}
-					</td>
-				{/if}
+				<td valign="top">{$event->info.currency_html} {$total|string_format:"%.2f"}</td>
+				<td valign="top" align="right">
+					{foreach $payments.$event_pilot_id as $pay}
+						{$pay.event_pilot_payment_type} Payment ({$pay.event_pilot_payment_date|date_format:"Y-m-d"})
+						{$event->info.currency_html} {$pay.event_pilot_payment_amount|string_format:"%.2f"}
+						<br>
+					{/foreach}
+					Amount Owed - {$event->info.currency_html} {$balances.$event_pilot_id|string_format:"%.2f"}
+					<br>
+					{if $p.event_pilot_paid_flag==1}
+					<font color="green">PAID</font>
+					{else}
+					<font color="red">DUE</font>
+					{/if}
+				</td>
 				<td valign="top" nowrap>
 					<a href="/?action=event&function=event_pilot_edit&event_id={$event->info.event_id}&event_pilot_id={$p.event_pilot_id}" title="Edit Event Pilot"><img width="16" src="/images/icon_edit_small.gif"></a>
 					{if $user.user_id!=0 && ($permission==1 || $user.user_admin==1)}		
@@ -121,19 +125,19 @@
 				{/foreach}
 			</td>
 			<td align="right" valign="top">
-				{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
+				{$event->info.currency_html} {$r.event_reg_param_cost|string_format:"%.2f"}
 			</td>
 			<td align="right" valign="top">
 				{$ext=$r.qty*$r.event_reg_param_cost}
-				{$event->info.currency_html}{$ext|string_format:"%.2f"}
+				{$event->info.currency_html} {$ext|string_format:"%.2f"}
 			</td>
 		</tr>
 		{$total_collected=$total_collected+$ext}
 		{/foreach}
 		<tr>
-			<th style="text-align: right;" colspan="4">Total Registration Fee ({$event->info.currency_name})</th>
+			<th style="text-align: right;" colspan="4">Total Fees ({$event->info.currency_name})</th>
 			<th style="text-align: right;" width="10%">
-				{$event->info.currency_html}{$total_collected|string_format:"%.2f"}
+				{$event->info.currency_html} {$total_collected|string_format:"%.2f"}
 			</th>
 		</tr>
 		</table>
@@ -150,7 +154,7 @@
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
-<form name="print_report" method="POST">
+<form name="print_report" method="POST" target="_blank">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_registration_report">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">

@@ -175,7 +175,19 @@
 					</tr>
 					{foreach $event->options as $o}
 					<tr>
-						<th align="right" width="30%">{$o.event_type_option_name|escape} (<a href="#" title="{$o.event_type_option_description|escape}">?</a>)</th>
+						<th align="right" width="30%">
+							{$o.event_type_option_name|escape} - <a href="#" class="tooltip_e" onClick="return false;">(?)
+								<span>
+								<img class="callout" src="/images/callout.gif">
+								<strong>Parameter Detail</strong>
+								<table>
+								<tr>
+									<td>{$o.event_type_option_description|escape}</td>
+								</tr>
+								</table>
+								</span>
+								</a>
+						</th>
 						<td>
 							{if $o.event_type_option_type == 'boolean'}
 									<input type="checkbox" name="option_{$o.event_type_option_id}" {if $o.event_option_status==1 && $o.event_option_value ==1}CHECKED{/if}>

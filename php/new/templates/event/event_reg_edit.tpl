@@ -149,8 +149,8 @@
 							<input type="text" name="reg_param_{$r.event_reg_param_id}_cost" size="6" value="{$r.event_reg_param_cost}">
 						</td>
 						<td align="right">
-							Name<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_name" size="15" value="{$r.event_reg_param_choice_name}"><br>
-							Values<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_values" size="15" value="{$r.event_reg_param_choice_values}">
+							Name<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_name" size="25" value="{$r.event_reg_param_choice_name}"><br>
+							Values<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_values" size="25" value="{$r.event_reg_param_choice_values}">
 						</td>
 						<td>
 							<a title="Delete" href="?action=event&function=event_reg_del&event_id={$event->info.event_id}&event_reg_param_id={$r.event_reg_param_id}"><img src="/images/del.gif"></a>

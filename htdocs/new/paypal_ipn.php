@@ -150,7 +150,7 @@ if (preg_match("/VERIFIED/",$res)) {
 	//$item_name = $_POST['item_name'];
 	//$item_number = $_POST['item_number'];
 	//$payment_status = $_POST['payment_status'];
-	//$payment_amount = $_POST['mc_gross'];
+	$payment_amount = $_POST['mc_gross'];
 	//$payment_currency = $_POST['mc_currency'];
 	//$txn_id = $_POST['txn_id'];
 	//$receiver_email = $_POST['receiver_email'];
@@ -161,14 +161,31 @@ if (preg_match("/VERIFIED/",$res)) {
 	error_log(date('[Y-m-d H:i e] '). "receiver_email: $receiver_email" . PHP_EOL, 3, LOG_FILE);
 	error_log(date('[Y-m-d H:i e] '). "event_email: {$event_pilot['event_reg_paypal_address']}" . PHP_EOL, 3, LOG_FILE);
 	if($checked_out==1 && isset($event_pilot['event_pilot_id'])){
-		# Change the event pilot to have a status of paid
+		# Add the payment record
 		$stmt=db_prep("
-			UPDATE event_pilot
-			SET event_pilot_paid_flag=1,
-				event_pilot_paid_date=now()
-			WHERE event_pilot_id=:event_pilot_id
+			INSERT INTO event_pilot_payment
+			SET event_pilot_id=:event_pilot_id,
+				event_pilot_payment_date=now(),
+				event_pilot_payment_type='Manual',
+				event_pilot_payment_amount=:amount,
+				event_pilot_payment_status=1
 		");
-		$result=db_exec($stmt,array("event_pilot_id"=>$event_pilot_id));
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id,
+			"amount"=>$payment_amount
+		));
+		$balance = calculate_amount_owed($event_pilot_id);
+		if($balance <=0){
+			# Set the whole event_pilot status to paid
+			$stmt=db_prep("
+				UPDATE event_pilot
+				SET event_pilot_paid_flag=:event_pilot_paid_flag
+				WHERE event_pilot_id=1
+			");
+			$result=db_exec($stmt,array(
+				"event_pilot_id"=>$event_pilot_id
+			));
+		}
 	}
 	
 	if(DEBUG == true) {
@@ -180,6 +197,37 @@ if (preg_match("/VERIFIED/",$res)) {
 	if(DEBUG == true) {
 		error_log(date('[Y-m-d H:i e] '). "Invalid IPN: $req" . PHP_EOL, 3, LOG_FILE);
 	}
+}
+
+function calculate_amount_owed($event_pilot_id){
+	# Function to determine the balance owed by a pilot
+	$stmt=db_prep("
+		SELECT *
+		FROM event_pilot_reg epr
+		LEFT JOIN event_reg_param erp ON epr.event_reg_param_id=erp.event_reg_param_id
+		WHERE epr.event_pilot_id=:event_pilot_id
+			AND epr.event_pilot_reg_status=1
+	");
+	$result=db_exec($stmt,array(
+		"event_pilot_id"=>$event_pilot_id,
+	));
+	$total_owed = 0;
+	foreach($result as $row){
+		$total_owed += $row['event_pilot_reg_qty']*$row['event_reg_param_cost'];
+	}
+	# Total the paid records
+	$stmt=db_prep("
+		SELECT sum(event_pilot_payment_amount) as total_paid
+		FROM event_pilot_payment
+		WHERE event_pilot_id=:event_pilot_id
+			AND event_pilot_payment_status=1
+	");
+	$result=db_exec($stmt,array(
+		"event_pilot_id"=>$event_pilot_id,
+	));
+	$total_paid = $result[0]['total_paid'];
+	$balance = $total_owed - $total_paid;
+	return $balance;
 }
 
 ?>

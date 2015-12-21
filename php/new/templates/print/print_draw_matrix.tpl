@@ -1,17 +1,11 @@
+{extends file='layout/layout_print.tpl'}
+
+{block name="content"}
+
+{include file='print/print_draw_header.tpl'}
+
 		{$highlight_color="yellow"}
-		<h2>{$event->info.event_name}</h2>           
-		<table width="600" cellpadding="2" cellspacing="1" class="printborder">
-		<tr>
-			<th width="15%" align="right">Event Dates</th>
-			<td nowrap>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td nowrap>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
-			</td>
-		</tr>
-		</table>
+		
 		<h2 class="post-title entry-title" style="margin:0px;">Draw Matrix - {if $event->info.event_type_code!="f3k"}{$event->flight_types.$flight_type_id.flight_type_name} {/if}(Rounds {$print_round_from} - {$print_round_to})</h2>
 		
 			<form name="main">
@@ -23,8 +17,8 @@
 			{/foreach}
 			</select>
 			</form>
-			
-		<table cellspacing="2">
+		<br>
+		<table cellspacing="2" cellpadding="1">
 		<tr>
 			{foreach $event->rounds as $r}
 			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
@@ -44,9 +38,9 @@
 			{/if}
 			
 			<td>
-				<table cellpadding="1" cellspacing="1" style="border: 1px solid black;font-size:{if $print_format=="pdf"}8{else}12{/if};">
-				<tr bgcolor="lightgray">
-					<td {if $print_format=="html"}colspan="{$size}"{/if}><strong>Round {$r.event_round_number}</strong></td>
+				<table cellpadding="2" cellspacing="1" style="border: 1px solid black;font-size:12;margin-right: 10px;margin-bottom: 10px;border-collapse:separate;" class="table-event">
+				<tr>
+					<th {if $print_format=="html"}colspan="{$size}"{/if}><strong>Round {$r.event_round_number}</strong></th>
 				</tr>
 				{if $event->info.event_type_code=='f3k'}
 					{$ftid=$r.flight_type_id}
@@ -139,4 +133,4 @@
 			<input type="hidden" name="highlight" value="">
 			</form>
 			
-	
+{/block}

@@ -194,7 +194,7 @@
 				{if $r.event_reg_param_mandatory==1}
 				1<input type="hidden" name="event_reg_param_{$r.event_reg_param_id}_qty" value="1">
 				{elseif $r.event_reg_param_qty_flag==1}
-					<input type="text" size="3" name="event_reg_param_{$r.event_reg_param_id}_qty" value="{$params.$reg_id.event_pilot_reg_qty}" onChange="calc_totals();">
+					<input type="text" size="3" id="event_reg_param_{$r.event_reg_param_id}_qty" name="event_reg_param_{$r.event_reg_param_id}_qty" value="{$params.$reg_id.event_pilot_reg_qty}" onChange="calc_totals();">
 				{else}
 					<input type="checkbox" name="event_reg_param_{$r.event_reg_param_id}_qty"{if $params.$reg_id.event_pilot_reg_qty==1} CHECKED{/if} onChange="calc_totals();">
 				{/if}
@@ -202,29 +202,47 @@
 			{if $has_sizes}
 			<td align="right" valign="top">
 				{if $r.event_reg_param_choice_name!=''}
-				{for $x=0 to $r.$reg_id.event_pilot_reg_qty-1}
+				{for $x=0 to $params.$reg_id.event_pilot_reg_qty-1}
 					<select name="event_reg_param_{$r.event_reg_param_id}_choice_value_{$x}">
 					{foreach $r.choices as $c}
-					<option value="{$c}"{if $r.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
+					<option value="{$c}"{if $params.$reg_id.event_pilot_reg_choice_values.$x==$c} SELECTED{/if}>{$c}</option>
 					{/foreach}
 					</select>
+					<br>
 				{/for}
 				{/if}
+				<div id="choices_{$r.event_reg_param_id}"></div>
 			</td>
 			{/if}
 			<td align="right">
-				{$event->info.currency_html}{$r.event_reg_param_cost|string_format:"%.2f"}
+				{$event->info.currency_html} {$r.event_reg_param_cost|string_format:"%.2f"}
 			</td>
 			<td align="right">
 				<span id="extended_{$r.event_reg_param_id}"></span>
 			</td>
 		</tr>
 		{/foreach}
+		{foreach $payments as $p}
 		<tr>
-			<td align="right" colspan="{$cols-1}">Total Registration Fee ({$event->info.currency_name})</td>
-			<td align="right" width="10%">
-				<span id="total"></span>
+			<td style="text-align: right;" colspan="{$cols-1}">
+				{$p.event_pilot_payment_type} Payment ({$p.event_pilot_payment_date|date_format:"Y-m-d"})
 			</td>
+			<td style="text-align: right;" width="10%">
+				<font color="green">({$event->info.currency_html} {$p.event_pilot_payment_amount|string_format:"%.2f"})</font>
+			</td>
+		</tr>
+		{/foreach}
+		<tr>
+			<th style="text-align: right;" colspan="{$cols-1}">Total Fees Owed ({$event->info.currency_name})</th>
+			<th style="text-align: right;" width="10%">
+				<span id="total"></span>
+			</th>
+		</tr>
+		<tr>
+			<th style="text-align: right;" colspan="{$cols-1}">Manual Payment Collection</th>
+			<th style="text-align: right;" width="10%">
+				{$event->info.currency_html}<input type="text" name="manual_payment_amount" size="5" style="text-align: right;" value="0.00">
+			</th>
 		</tr>
 		<tr>
 			<td align="right" colspan="{$cols-1}">Status</td>
@@ -240,12 +258,13 @@
 			<td align="right" colspan="{$cols-1}">Set Status</td>
 			<td align="right" width="10%">
 			<select name="event_pilot_paid_flag">
-			<option value="0"{if $pilot.event_pilot_paid_flag==0} SELECTED{/if}>DUE</option>
-			<option value="1"{if $pilot.event_pilot_paid_flag==1} SELECTED{/if}>PAID</option>
+			<option value="2" SELECTED>Automatic</option>
+			<option value="0">DUE</option>
+			<option value="1">PAID</option>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="{$cols}" style="text-align: center;">
+			<td colspan="{$cols}" style="text-align: right;">
 				<input type="submit" value=" Save Registration Parameters " class="btn btn-primary btn-rounded" onClick="return check_event();">
 			</td>
 		</tr>
@@ -301,6 +320,35 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.menu.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
 <script>
+{if $event->reg_options}
+$(document).ready(function() {ldelim}
+	{foreach $event->reg_options as $r}
+		{$reg_id=$r.event_reg_param_id}
+		{if $r.event_reg_param_choice_name!=''}
+			$('#event_reg_param_{$reg_id}_qty').keyup(
+				function() {ldelim}
+					var current_{$reg_id} = {if $params.$reg_id.event_pilot_reg_qty}{$params.$reg_id.event_pilot_reg_qty}{else}0{/if};
+					var current_value = document.main.event_reg_param_{$reg_id}_qty.value;
+					diff = current_value - current_{$reg_id};
+					var new_choices = "";
+					if(diff>0){ldelim}
+						for(i = current_{$reg_id} + 1;i<=(diff + current_{$reg_id}); i++){ldelim}
+							new_choices += '<select name="event_reg_param_{$reg_id}_choice_value_' + i + '">' +
+								{foreach $r.choices as $c}
+								'<option value="{$c}">{$c}</option>' +
+								{/foreach}
+								'</select><br>';
+						{rdelim}
+						document.getElementById("choices_{$reg_id}").innerHTML = new_choices;
+					{rdelim}else{ldelim}
+						document.getElementById("choices_{$reg_id}").innerHTML = '';
+					{rdelim}
+					calc_totals();
+				{rdelim});
+		{/if}
+	{/foreach}
+{rdelim});			
+{/if}
 $(function() {ldelim}
 	var teams = [
 		{foreach $teams as $t}
@@ -412,26 +460,28 @@ function change_pilot(){ldelim}
 {if $event->reg_options}
 function calc_totals(){ldelim}
 	var total=0;
-{foreach $event->reg_options as $r}
-	{if $r.event_reg_param_mandatory==1}
-		var qty_{$r.event_reg_param_id} = 1;
-	{else}
-		var qty_{$r.event_reg_param_id} = 0;
-		{if $r.event_reg_param_qty_flag!=1}
-			if(document.main.event_reg_param_{$r.event_reg_param_id}_qty.checked==true){ldelim}
-				var qty_{$r.event_reg_param_id} = 1;
-			{rdelim}
+	var already_paid = {if $payments}{foreach $payments as $p}{$p.event_pilot_payment_amount}{if $p@last}{else} +{/if}{/foreach}{else}0{/if};
+	{foreach $event->reg_options as $r}
+		{if $r.event_reg_param_mandatory==1}
+			var qty_{$r.event_reg_param_id} = 1;
 		{else}
-			var qty_{$r.event_reg_param_id} = document.main.event_reg_param_{$r.event_reg_param_id}_qty.value;
+			var qty_{$r.event_reg_param_id} = 0;
+			{if $r.event_reg_param_qty_flag!=1}
+				if(document.main.event_reg_param_{$r.event_reg_param_id}_qty.checked==true){ldelim}
+					var qty_{$r.event_reg_param_id} = 1;
+				{rdelim}
+			{else}
+				var qty_{$r.event_reg_param_id} = document.main.event_reg_param_{$r.event_reg_param_id}_qty.value;
+			{/if}
 		{/if}
-	{/if}
-	var id_{$r.event_reg_param_id} = document.getElementById('extended_{$r.event_reg_param_id}');
-	var temp_extended=qty_{$r.event_reg_param_id}*{$r.event_reg_param_cost};
-	id_{$r.event_reg_param_id}.innerHTML = '{$event->info.currency_html}'+temp_extended.toFixed(2);
-	total=total + temp_extended;
-{/foreach}
+		var id_{$r.event_reg_param_id} = document.getElementById('extended_{$r.event_reg_param_id}');
+		var temp_extended=qty_{$r.event_reg_param_id}*{$r.event_reg_param_cost};
+		id_{$r.event_reg_param_id}.innerHTML = '{$event->info.currency_html} '+temp_extended.toFixed(2);
+		total=total + temp_extended;
+	{/foreach}
+	total = total - already_paid;
 	var id_total=document.getElementById('total');
-	id_total.innerHTML = '{$event->info.currency_html}'+total.toFixed(2);
+	id_total.innerHTML = '{$event->info.currency_html} '+total.toFixed(2);
 {rdelim}
 {/if}
 </script>

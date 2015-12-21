@@ -73,13 +73,7 @@
 		</th>
 		{/if}
 	{/foreach}
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
+	<th colspan="7">&nbsp;</th>
 </tr>
 {$previous=0}
 {$diff_to_lead=0}

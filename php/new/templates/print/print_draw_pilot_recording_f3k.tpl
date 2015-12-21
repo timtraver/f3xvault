@@ -27,10 +27,6 @@
 				<tr>
 					<th width="50" height="30" align="center" nowrap bgcolor="lightgrey">Pilot</th>
 					<td height="20">
-						{if $p.event_pilot_bib!='' && $p.event_pilot_bib!=0}
-							<div class="pilot_bib_number_print">{$p.event_pilot_bib}</div>
-							&nbsp;
-						{/if}
 						<b>{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</b>
 					</td>
 					<th width="80" height="20" align="right" nowrap bgcolor="lightgrey">Group</th>
