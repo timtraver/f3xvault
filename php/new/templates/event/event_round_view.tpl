@@ -1,43 +1,19 @@
-<script>
-function toggle(element,tog) {ldelim}
-         if (document.getElementById(element).style.display == 'none') {ldelim}
-                document.getElementById(element).style.display = 'table-row-group';
-                tog.innerHTML = '<img width="24" height="24" src="/images/arrow-down.png" style="vertical-align:middle;">';
-         {rdelim} else {ldelim}
-                 document.getElementById(element).style.display = 'none';
-                 tog.innerHTML = '<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;">';
-         {rdelim}
-{rdelim}
-</script>
-<div class="page type-page status-publish hentry clearfix post nodate">
-	<div class="entry clearfix">                
-		<h1 class="post-title entry-title">Event - {$event->info.event_name|escape}</h1>
-		<div class="entry-content clearfix">
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
-		<tr>
-			<th width="20%" align="right">Event Dates</th>
-			<td>
-			{$event->info.event_start_date|date_format:"%Y-%m-%d"} to {$event->info.event_end_date|date_format:"%Y-%m-%d"}
-			</td>
-			<th align="right">Location</th>
-			<td>
-			{$event->info.location_name|escape} - {$event->info.location_city|escape},{$event->info.state_code|escape} {$event->info.country_code|escape}
-			</td>
-		</tr>
-		<tr>
-			<th align="right">Event Type</th>
-			<td>
-			{$event->info.event_type_name|escape}
-			</td>
-			<th align="right">Event Contest Director</th>
-			<td>
-			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
-			</td>
-		</tr>
-		</table>
-		
+{extends file='layout/layout_main.tpl'}
+
+{block name="header"}
+{/block}
+
+{block name="content"}
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="heading">{$event->info.event_name}</h2>
+		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Back To Event View " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
+		</div>
 	</div>
-		<br>
+	<div class="panel-body">
+
 		<form name="main" method="POST">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_round_save">
@@ -46,7 +22,7 @@ function toggle(element,tog) {ldelim}
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="create_new_round" value="0">
 
-		<h1 class="post-title entry-title">Event Round 
+		<h2 class="post-title entry-title">Event Round 
 			{$prev=$round_number-1}
 			{$next=$round_number+1}
 			{if $event->rounds.$prev}
@@ -56,8 +32,8 @@ function toggle(element,tog) {ldelim}
 			{if $event->rounds.$next}
 			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$next.event_round_id}"><img src="/images/arrow-right.png" style="vertical-align:text-bottom;"></a>
 			{/if}
-		</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		</h2>
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		<tr>
 			<th width="20%" nowrap>Event Round Type</th>
 			<td>
@@ -118,12 +94,9 @@ function toggle(element,tog) {ldelim}
 		</tr>
 		{/if}
 		</table>
-		<br>
-		<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-		<br>
 		
-		<h1 class="post-title entry-title">Round Flights</h1>
-		<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
+		<h2 class="post-title entry-title">Round Flights</h2>
+		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		{$tabindex=2}
 		{foreach $flight_types as $ft}
 			{$flight_type_id=$ft.flight_type_id}
@@ -348,12 +321,12 @@ function toggle(element,tog) {ldelim}
 			</tbody>
 		{/foreach}
 		</table>
-
 		</form>
-<br>
-<input type="button" value=" Print Round Detail " onClick="document.printround.submit();" class="block-button">
-<input type="button" value=" Back To Event " onClick="goback.submit();" class="block-button">
-
+		<center>
+			<input type="button" value=" Print Round Detail " onClick="document.printround.submit();" class="btn btn-primary btn-rounded">
+			<input type="button" value=" Back To Event " onClick="goback.submit();" class="btn btn-primary btn-rounded">
+		</center>
+		<br>
 </div>
 
 <form name="sort_round" method="GET">
@@ -377,3 +350,18 @@ function toggle(element,tog) {ldelim}
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+
+{/block}
+{block name="footer"}
+<script>
+function toggle(element,tog) {ldelim}
+	if (document.getElementById(element).style.display == 'none') {ldelim}
+		document.getElementById(element).style.display = 'table-row-group';
+		tog.innerHTML = '<img width="24" height="24" src="/images/arrow-down.png" style="vertical-align:middle;">';
+	{rdelim} else {ldelim}
+		document.getElementById(element).style.display = 'none';
+		tog.innerHTML = '<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;">';
+	{rdelim}
+{rdelim}
+</script>
+{/block}

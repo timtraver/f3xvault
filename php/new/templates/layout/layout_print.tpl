@@ -13,7 +13,7 @@
 	 -->
 
 	<!--Bootstrap Stylesheet [ REQUIRED ]-->
-	<link href="css/bootstrap.new.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 
 
 	<!--Nifty Stylesheet [ REQUIRED ]-->
@@ -28,7 +28,7 @@
 	<!--Bootstrap Select [ OPTIONAL ]-->
 	<link href="plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
 
-	<link href="/new/css/f3x.css" rel="stylesheet">
+	<link href="/new/css/f3x.min.css" rel="stylesheet">
 	<!--SCRIPT-->
 	<!--=================================================-->
 

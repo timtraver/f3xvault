@@ -118,6 +118,7 @@ $smarty->assign("_SERVER",$_SERVER);
 $smarty->assign("include_paths",$GLOBALS['include_paths']);
 $smarty->assign("template_dir",$GLOBALS['template_dir']);
 $smarty->assign("compile_dir",$GLOBALS['compile_dir']);
+$smarty->assign("debug",$GLOBALS['debug']);
 $smarty->assign("user",$user);
 if(isset($_REQUEST['function'])){
 	$smarty->assign("function",$_REQUEST['function']);

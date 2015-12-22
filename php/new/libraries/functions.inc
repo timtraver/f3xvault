@@ -60,21 +60,21 @@ function clean_input() {
         }
 }
 function start_smarty () {
-        # Function to start the smarty template engine
-        global $smarty;
-        global $template_dir;
-        global $compile_dir;
+	# Function to start the smarty template engine
+	global $smarty;
+	global $template_dir;
+	global $compile_dir;
 
-        $smarty=new Smarty;
-        $smarty->template_dir = $template_dir;
-        $smarty->compile_dir = $compile_dir;
-        $smarty->compile_check = true;
-        $smarty->auto_literal = false;
-        if($GLOBALS['debug']==1){
-	        $smarty->debugging = true;
-        }else{
-	        $smarty->debugging = false;
-        }
+	$smarty=new Smarty;
+	$smarty->template_dir = $template_dir;
+	$smarty->compile_dir = $compile_dir;
+	$smarty->compile_check = true;
+	$smarty->auto_literal = false;
+	if($GLOBALS['debug']==1){
+		$smarty->debugging = true;
+	}else{
+		$smarty->debugging = false;
+	}
 }
 function find_template ($input) {
         # Function to find the reseller template or return the default
