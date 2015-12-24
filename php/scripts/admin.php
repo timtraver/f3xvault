@@ -243,6 +243,7 @@ function admin_email_send_all() {
 			$addresses[] = $email_to;
 		}
 	}
+	sort($addresses);
 	#foreach($addresses as $email_to){
 	#	send_email($email_name,$email_to,$data);
 	#}
