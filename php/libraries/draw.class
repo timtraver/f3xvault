@@ -820,7 +820,6 @@ class Draw {
 				}
 			}
 		}
-		
 		# Now get the stat totals too
 		# Lets calculate the totals of the stats for this draw
 		$stat_totals=array();

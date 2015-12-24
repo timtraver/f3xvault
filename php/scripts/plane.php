@@ -7,7 +7,7 @@
 #	This is the script to handle the plane records
 #
 ############################################################################
-$GLOBALS['current_menu']='planes';
+$smarty->assign("current_menu",'planes');
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];
@@ -46,6 +46,13 @@ function plane_list() {
 	global $export;
 
 	$discipline_id=0;
+	$country_id=0;
+	if(isset($_REQUEST['country_id'])){
+		$country_id=intval($_REQUEST['country_id']);
+		$GLOBALS['fsession']['country_id']=$country_id;
+	}elseif(isset($GLOBALS['fsession']['country_id'])){
+		$country_id=$GLOBALS['fsession']['country_id'];
+	}
 	if(isset($_REQUEST['discipline_id'])){
 		$discipline_id=intval($_REQUEST['discipline_id']);
 		$GLOBALS['fsession']['discipline_id']=$discipline_id;
@@ -55,44 +62,10 @@ function plane_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
 	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'plane_manufacturer':
-			$search_field='plane_manufacturer';
-			break;
-		case 'plane_year':
-			$search_field='plane_year';
-			break;
-		case 'plane_wing_type':
-			$search_field='plane_wing_type';
-			break;
-		case 'plane_tail_type':
-			$search_field='plane_tail_type';
-			break;
-		default:
-			$search_field='plane_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='plane_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
-
-#	if($search!='' & $search!='%%'){
-#		$plane_type_id=0;
-#		$GLOBALS['fsession']['plane_type_id']=0;
-#	}
 
 	# Get all plane types
 	$stmt=db_prep("
@@ -101,30 +74,11 @@ function plane_list() {
 		ORDER BY plane_type_short_name
 	");
 	$plane_types=db_exec($stmt,array());
-	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'greater':
-			$operator=">=";
-			break;
-		case 'less':
-			$operator="<=";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
+
+	$addcountry='';
+	if($country_id!=0){
+		$addcountry.=" AND p.country_id=$country_id ";
 	}
-
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
-
 	# Add search options for discipline
 	$joind='';
 	$extrad='';
@@ -132,7 +86,6 @@ function plane_list() {
 		$joind='LEFT JOIN plane_discipline pd ON p.plane_id=pd.plane_id';
 		$extrad='AND pd.discipline_id='.$discipline_id.' AND pd.plane_discipline_status=1';
 	}
-
 	$planes=array();
 	$newplanes=array();
 	if($search!='%%' && $search!=''){
@@ -140,12 +93,14 @@ function plane_list() {
 		$stmt=db_prep("
 			SELECT *
 			FROM plane p
+			LEFT JOIN country c ON p.country_id=c.country_id
 			$joind
-			WHERE $search_field $operator :search
+			WHERE p.plane_name LIKE :search OR p.plane_manufacturer LIKE :search2
+			$addcountry
 			$extrad
 			ORDER BY p.plane_name
 		");
-		$planes=db_exec($stmt,array("search"=>$search));
+		$planes=db_exec($stmt,array("search"=>'%'.$search.'%',"search2"=>'%'.$search.'%'));
 	}else{
 		# Get all planes
 		$stmt=db_prep("
@@ -154,6 +109,7 @@ function plane_list() {
 			LEFT JOIN country c ON p.country_id=c.country_id
 			$joind
 			WHERE 1
+			$addcountry
 			$extrad
 			ORDER BY p.plane_name
 		");
@@ -177,7 +133,7 @@ function plane_list() {
 		}
 		$newplanes[]=$plane;
 	}
-	$planes=show_pages($newplanes,25);
+	$planes=show_pages($newplanes,"action=plane&function=plane_list");
 
 	foreach($planes as $key=>$plane){
 		# Lets get the plane types
@@ -191,18 +147,24 @@ function plane_list() {
 		$disciplines=db_exec($stmt,array("plane_id"=>$plane['plane_id']));
 		$planes[$key]['disciplines']=$disciplines;
 	}
-
-	# Lets reset the discipline for the top bar if needed
-	set_disipline($discipline_id);
+	# Get only countries that we have planes for
+	$stmt=db_prep("
+		SELECT *
+		FROM ( SELECT DISTINCT country_id FROM plane) p
+		LEFT JOIN country c ON c.country_id=p.country_id
+		WHERE c.country_id!=0
+	");
+	$countries=db_exec($stmt,array());
 
 	$smarty->assign("planes",$planes);
 	$smarty->assign("plane_types",$plane_types);
+	$smarty->assign("countries",$countries);
 	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("disciplines",get_disciplines());
+	$smarty->assign("search",$GLOBALS['fsession']['search']);
+	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 
-	$maintpl=find_template("plane_list.tpl");
+	$maintpl=find_template("plane/plane_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function plane_edit() {
@@ -234,6 +196,9 @@ function plane_edit() {
 		return $smarty->fetch($maintpl);
 	}
 	
+	# Get the previous view totals to show on top of tabs
+	plane_view();
+
 	$plane=array();
 	$stmt=db_prep("
 		SELECT *
@@ -315,7 +280,7 @@ function plane_edit() {
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("media",$media);
 
-	$maintpl=find_template("plane_edit.tpl");
+	$maintpl=find_template("plane/plane_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function plane_view() {
@@ -323,6 +288,10 @@ function plane_view() {
 
 	if(isset($_REQUEST['plane_id'])){
 		$plane_id=$_REQUEST['plane_id'];
+	}
+	$tab=0;
+	if(isset($_REQUEST['tab'])){
+		$tab=$_REQUEST['tab'];
 	}
 
 	$plane=array();
@@ -407,18 +376,8 @@ function plane_view() {
 	}
 	# Now lets merge the two arrays
 	$media=array_merge($media2,$media3);
+	$media_total = count($media);
 	
-	# Lets get a random picture to show on the front page of the plane view
-	if(count($media)>1){
-		$count=0;
-		do {
-			$rand=array_rand($media);
-			$count++;
-		}while($media[$rand]['plane_media_type']!='picture' && $count<10);
-	}else{
-		$rand=0;
-	}
-
 	# Lets get the disciplines that this plane has
 	$stmt=db_prep("
 		SELECT *
@@ -436,11 +395,14 @@ function plane_view() {
 		FROM plane_comment pc
 		LEFT JOIN user u ON pc.user_id=u.user_id
 		LEFT JOIN pilot p ON u.pilot_id=p.pilot_id
+		LEFT JOIN state s ON p.state_id=s.state_id
+		LEFT JOIN country c ON p.country_id=c.country_id
 		WHERE pc.plane_id=:plane_id
 		ORDER BY pc.plane_comment_date DESC
 	");
 	$comments=db_exec($stmt,array("plane_id"=>$plane_id));
-
+	$comment_total = count($comments);
+	
 	# Lets get the plane records to show
 	$f3f_records=array();
 	$f3b_records=array();
@@ -512,15 +474,15 @@ function plane_view() {
 	");
 	$f3b_distance=db_exec($stmt,array("plane_id"=>$plane_id));
 
-	$f3f_records=show_pages($f3f_records,20);
+	$f3f_records=show_pages($f3f_records,"action=plane&function=plane_view&plane_id={$plane_id}");
 	# Now lets save the page info for when we do the next 2 arrays
 	$temp_totalpages=$smarty->getTemplateVars('totalpages');
 	$temp_startrecord=$smarty->getTemplateVars('startrecord');
 	$temp_endrecord=$smarty->getTemplateVars('endrecord');
 	$temp_page=$smarty->getTemplateVars('page');
 	
-	$f3b_records=show_pages($f3b_records,20);
-	$f3b_distance=show_pages($f3b_distance,20);
+	$f3b_records=show_pages($f3b_records,"action=plane&function=plane_view&plane_id={$plane_id}");
+	$f3b_distance=show_pages($f3b_distance,"action=plane&function=plane_view&plane_id={$plane_id}");
 
 	# Now lets reset the page values if needed
 	if($smarty->getTemplateVars('page')==0){
@@ -529,6 +491,41 @@ function plane_view() {
 		$smarty->assign("endrecord",$temp_endrecord);	
 		$smarty->assign("page",$temp_page);	
 	}
+
+	# Lets get the events that this plane is in
+	$events=array();
+	$stmt=db_prep("
+		SELECT *,count(event_pilot_id) as total_pilots
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id=e.event_id
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		WHERE ep.plane_id=:plane_id
+			AND ep.event_pilot_status=1
+			AND e.event_status=1
+		GROUP by e.event_id
+		ORDER BY e.event_start_date DESC
+	");
+	$events=db_exec($stmt,array("plane_id"=>$plane_id));
+	$event_total = count($events);
+	$events=show_pages($events,"action=plane&function=plane_view&plane_id={$plane_id}",'events');
+
+	# Lets get the pilots that are flying this plane
+	$pilots=array();
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot_plane pp
+		LEFT JOIN plane p ON pp.plane_id=p.plane_id
+		LEFT JOIN pilot pi ON pp.pilot_id=pi.pilot_id
+		LEFT JOIN country c ON pi.country_id=c.country_id
+		LEFT JOIN state s ON pi.state_id=s.state_id
+		WHERE p.plane_id=:plane_id
+			AND pp.pilot_plane_status=1
+		GROUP BY pp.pilot_id
+		ORDER BY c.country_name,pi.pilot_last_name
+	");
+	$pilots=db_exec($stmt,array("plane_id"=>$plane_id));
+	$pilot_total = count($pilots);
+	$pilots=show_pages($pilots,"action=plane&function=plane_view&plane_id={$plane_id}",'pilots');
 
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);
@@ -541,8 +538,15 @@ function plane_view() {
 	$smarty->assign("comments",$comments);
 	$smarty->assign("comments_num",count($comments));
 	$smarty->assign("disciplines",$disciplines);
+	$smarty->assign("events",$events);
+	$smarty->assign("pilots",$pilots);
+	$smarty->assign("tab",$tab);
+	$smarty->assign("pilot_total",$pilot_total);
+	$smarty->assign("media_total",$media_total);
+	$smarty->assign("comment_total",$comment_total);
+	$smarty->assign("event_total",$event_total);
 
-	$maintpl=find_template("plane_view.tpl");
+	$maintpl=find_template("plane/plane_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function plane_save() {
@@ -831,17 +835,9 @@ function plane_media_edit() {
 		
 	$plane_id=$_REQUEST['plane_id'];
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM plane p
-		WHERE p.plane_id=:plane_id
-	");
-	$result=db_exec($stmt,array("plane_id"=>$plane_id));
-	$plane=$result[0];
+	plane_view();
 	
-	$smarty->assign("plane",$plane);
-	$smarty->assign("plane_id",$plane_id);
-	$maintpl=find_template("plane_edit_media.tpl");
+	$maintpl=find_template("plane/plane_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
 function plane_media_add() {
@@ -876,8 +872,8 @@ function plane_media_add() {
 		if(move_uploaded_file($tempname, "{$GLOBALS['base_webroot']}{$GLOBALS['base_plane_media']}/$plane_id/$name")) {
 			user_message("File $name uploaded.");
 		}else{
-			user_message("There was an error uploading the file, please try again!");
-			return plane_edit();
+			user_message("There was an error uploading the file, please try again!",1);
+			return plane_view();
 		}
 		$plane_media_url="{$GLOBALS['base_plane_media']}/$plane_id/$name";
 	}else{
@@ -899,7 +895,7 @@ function plane_media_add() {
 
 	log_action($plane_id);
 	user_message("Added your $plane_media_type media!");
-	return plane_edit();
+	return plane_view();
 }
 function plane_media_del() {
 	global $user;
@@ -939,20 +935,12 @@ function plane_comment_add() {
 		$maintpl=find_template("feature_requires_login.tpl");
 		return $smarty->fetch($maintpl);
 	}
-		
+
 	$plane_id=$_REQUEST['plane_id'];
+
+	plane_view();
 	
-	$stmt=db_prep("
-		SELECT *
-		FROM plane l
-		WHERE l.plane_id=:plane_id
-	");
-	$result=db_exec($stmt,array("plane_id"=>$plane_id));
-	$plane=$result[0];
-	
-	$smarty->assign("plane",$plane);
-	$smarty->assign("plane_id",$plane_id);
-	$maintpl=find_template("plane_comment.tpl");
+	$maintpl=find_template("plane/plane_comment.tpl");
 	return $smarty->fetch($maintpl);
 }
 function plane_comment_save() {

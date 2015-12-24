@@ -7,7 +7,7 @@
 #	This is the script to handle the pilots
 #
 ############################################################################
-$GLOBALS['current_menu']='clubs';
+$smarty->assign("current_menu",'clubs');
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];
@@ -76,46 +76,11 @@ function club_list() {
 	$search='';
 	if(isset($_REQUEST['search']) ){
 		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
 		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
 	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
 		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
 	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'club_name':
-			$search_field='club_name';
-			break;
-		case 'club_city':
-			$search_field='club_city';
-			break;
-		default:
-			$search_field='club_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='club_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
 	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
-
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND cl.country_id=$country_id ";
@@ -132,12 +97,15 @@ function club_list() {
 			FROM club cl
 			LEFT JOIN state s ON cl.state_id=s.state_id
 			LEFT JOIN country c ON cl.country_id=c.country_id
-			WHERE p.$search_field $operator :search
+			WHERE ( cl.club_name LIKE :search OR cl.club_city LIKE :search2)
 				$addcountry
 				$addstate
 			ORDER BY cl.country_id,cl.state_id,cl.club_name
 		");
-		$clubs=db_exec($stmt,array("search"=>$search));
+		$clubs=db_exec($stmt,array(
+			"search"=>'%'.$search.'%',
+			"search2"=>'%'.$search.'%'
+		));
 	}else{
 		# Get all locations for search
 		$stmt=db_prep("
@@ -170,7 +138,7 @@ function club_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$clubs=show_pages($clubs,25);
+	$clubs=show_pages($clubs,"action=club&function=club_list");
 	
 	$smarty->assign("clubs",$clubs);
 	$smarty->assign("countries",$countries);
@@ -182,7 +150,7 @@ function club_list() {
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("club_list.tpl");
+	$maintpl=find_template("club/club_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function club_view() {
@@ -190,6 +158,7 @@ function club_view() {
 	global $smarty;
 	
 	$club_id=intval($_REQUEST['club_id']);
+	$tab=intval($_REQUEST['tab']);
 	
 	# Get the club info
 	$stmt=db_prep("
@@ -249,7 +218,8 @@ function club_view() {
 	
 	$smarty->assign("club",$club);
 	$smarty->assign("club_locations",$club_locations);
-	$maintpl=find_template("club_view.tpl");
+	$smarty->assign("tab",$tab);
+	$maintpl=find_template("club/club_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function club_edit() {
@@ -259,6 +229,9 @@ function club_edit() {
 	if(isset($_REQUEST['club_name'])){
 		$club_name=ucwords($_REQUEST['club_name']);
 	}
+	
+	# Start off with the same info as the view fo rthe tabs
+	club_view();
 	
 	if(isset($_REQUEST['from_action'])){
 		# Lets make an array of all of the return values
@@ -304,8 +277,9 @@ function club_edit() {
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("states",get_states());
 	$smarty->assign("club",$club);
+	$smarty->assign("tab",$tab);
 
-	$maintpl=find_template("club_edit.tpl");
+	$maintpl=find_template("club/club_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function club_save() {
@@ -668,7 +642,7 @@ function club_pilot_quick_add() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 
-	$maintpl=find_template("club_pilot_quick_add.tpl");
+	$maintpl=find_template("club/club_pilot_quick_add.tpl");
 	return $smarty->fetch($maintpl);
 }
 function club_save_pilot_quick_add() {

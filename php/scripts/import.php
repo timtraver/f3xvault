@@ -50,7 +50,7 @@ function import_view() {
 	}
 	$smarty->assign("event",$event);
 	$smarty->assign("event_types",$event_types);
-	$maintpl=find_template("import_view.tpl");
+	$maintpl=find_template("import/import_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function import_verify() {
@@ -433,7 +433,7 @@ function import_verify() {
 	$smarty->assign("pilots",$pilots);
 	$smarty->assign("rounds",$rounds);
 	
-	$maintpl=find_template("import_verify.tpl");
+	$maintpl=find_template("import/import_verify.tpl");
 	return $smarty->fetch($maintpl);
 }
 function import_import() {

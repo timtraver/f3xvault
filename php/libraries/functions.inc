@@ -60,21 +60,21 @@ function clean_input() {
         }
 }
 function start_smarty () {
-        # Function to start the smarty template engine
-        global $smarty;
-        global $template_dir;
-        global $compile_dir;
+	# Function to start the smarty template engine
+	global $smarty;
+	global $template_dir;
+	global $compile_dir;
 
-        $smarty=new Smarty;
-        $smarty->template_dir = $template_dir;
-        $smarty->compile_dir = $compile_dir;
-        $smarty->compile_check = true;
-        $smarty->auto_literal = false;
-        if($GLOBALS['debug']==1){
-	        $smarty->debugging = true;
-        }else{
-	        $smarty->debugging = false;
-        }
+	$smarty=new Smarty;
+	$smarty->template_dir = $template_dir;
+	$smarty->compile_dir = $compile_dir;
+	$smarty->compile_check = true;
+	$smarty->auto_literal = false;
+	if($GLOBALS['debug']==1){
+		$smarty->debugging = true;
+	}else{
+		$smarty->debugging = false;
+	}
 }
 function find_template ($input) {
         # Function to find the reseller template or return the default
@@ -228,88 +228,106 @@ function decrypt ($input) {
         $output=trim($output);
         return $output;
 }
-function show_pages($records,$defaultperpage=10){
-        # This is a function to do all of the paging work for showing long lists of records
-        global $smarty;
+function show_pages($records,$callback,$label='main'){
+	# This is a function to do all of the paging work for showing long lists of records
+	global $smarty;
 
-        # Get input variables if they exist
-        if(isset($_REQUEST['page'])){
-                $page=intval($_REQUEST['page']);
-        }else{
-                $page=1;
-        }
-        if($page==0){
-                $page=1;
-        }
-        if(isset($_REQUEST['perpage'])){
-                $perpage=$_REQUEST['perpage'];
-                if($perpage!='all'){
-                        $perpage=intval($_REQUEST['perpage']);
-                }
-        }else{
-                if(isset($GLOBALS['fsession']['perpage'])){
-                        $perpage=$GLOBALS['fsession']['perpage'];
-                        if($perpage<$defaultperpage){
-                                $perpage=$defaultperpage;
-                        }
-                }else{
-                        $perpage=$defaultperpage;
-                }
-        }
-        if($perpage!='all'){
-                $GLOBALS['fsession']['perpage']=$perpage;
-        }
-        # Now calculate some totals
-        $totalrecords=count($records);
+	# Get input variables if they exist
+	if(isset($_REQUEST['page'])){
+		$page=intval($_REQUEST['page']);
+	}else{
+		$page=1;
+	}
+	if($page==0){
+		$page=1;
+	}
+	if(isset($_REQUEST['perpage'])){
+		$perpage=$_REQUEST['perpage'];
+		if($perpage!='all'){
+			$perpage=intval($_REQUEST['perpage']);
+		}
+	}else{
+		if(isset($GLOBALS['fsession']['perpage'])){
+			$perpage=$GLOBALS['fsession']['perpage'];
+			if($perpage<$defaultperpage){
+				$perpage=$defaultperpage;
+			}
+		}else{
+			$perpage=25;
+		}
+	}
+	if($perpage!='all'){
+		$GLOBALS['fsession']['perpage']=$perpage;
+	}
+	# Now calculate some totals
+	$totalrecords=count($records);
 
-        if($perpage=='all'){
-                $startrecord=0;
-                $endrecord=$totalrecords;
-                $prevpage=1;
-                $nextpage=1;
-                $totalpages=1;
-                $page=1;
-                $showrecords=$records;
-        }else{
-                $totalpages=intval(ceil($totalrecords/$perpage));
-                if($page>$totalpages){
-                        $page=$totalpages;
-                }
-                $startrecord=$page*$perpage - ($perpage)+1;
-                if($startrecord<0){
-                        $startrecord=0;
-                }
-                $endrecord=$startrecord+$perpage -1;
-                if($endrecord>=$totalrecords){
-                        $endrecord=$totalrecords;
-                }
-                $prevpage=$page-1;
-                $nextpage=$page+1;
-                if($prevpage<1){
-                        $prevpage=1;
-                }
-                if($nextpage>$totalpages){
-                        $nextpage=$totalpages;
-                }
+	if($perpage=='all'){
+		$startrecord=0;
+		$endrecord=$totalrecords;
+		$prevpage=1;
+		$nextpage=1;
+		$totalpages=1;
+		$page=1;
+		$showrecords=$records;
+	}else{
+		$totalpages=intval(ceil($totalrecords/$perpage));
+		if($page>$totalpages){
+			$page=$totalpages;
+		}
+		$startrecord=$page*$perpage - ($perpage)+1;
+		if($startrecord<0){
+			$startrecord=0;
+		}
+		$endrecord=$startrecord+$perpage -1;
+		if($endrecord>=$totalrecords){
+			$endrecord=$totalrecords;
+		}
+		$prevpage=$page-1;
+		$nextpage=$page+1;
+		if($prevpage<1){
+			$prevpage=1;
+		}
+		if($nextpage>$totalpages){
+			$nextpage=$totalpages;
+		}
 
-                # OK, now narrow the array down to the records we want to see only
-                $showrecords=array();
-                foreach($records as $key=>$value){
-                        if($key >= ($startrecord-1) && $key <= ($endrecord-1)){
-                                $showrecords[]=$value;
-                        }
-                }
-        }
-
-        $smarty->assign("totalrecords",$totalrecords);
-        $smarty->assign("totalpages",$totalpages);
-        $smarty->assign("prevpage",$prevpage);
-        $smarty->assign("nextpage",$nextpage);
-        $smarty->assign("startrecord",$startrecord);
-        $smarty->assign("endrecord",$endrecord);
-        $smarty->assign("page",$page);
-
-        return $showrecords;
+		# OK, now narrow the array down to the records we want to see only
+		$showrecords=array();
+		foreach($records as $key=>$value){
+			if($key >= ($startrecord-1) && $key <= ($endrecord-1)){
+				$showrecords[]=$value;
+			}
+		}
+	}
+	$paging[$label]['totalrecords']=$totalrecords;
+	$paging[$label]['totalpages']=$totalpages;
+	$paging[$label]['prevpage']=$prevpage;
+	$paging[$label]['nextpage']=$nextpage;
+	$paging[$label]['startrecord']=$startrecord;
+	$paging[$label]['endrecord']=$endrecord;
+	$paging[$label]['page']=$page;
+	$paging[$label]['perpage']=$perpage;
+	$paging[$label]['callback']=$callback;
+	if($smarty->getTemplateVars('paging')){
+		$paging1 = $smarty->getTemplateVars('paging');
+		$smarty->assign("paging",array_merge($paging,$paging1));
+	}else{
+		$smarty->assign("paging",$paging);
+	}
+	if($label == 'main'){
+		# If it main, then spit out the regular variables by themselves
+		$smarty->assign('totalrecords',$totalrecords);
+		$smarty->assign('totalpages',$totalpages);
+		$smarty->assign('prevpage',$prevpage);
+		$smarty->assign('nextpage',$nextpage);
+		$smarty->assign('startrecord',$startrecord);
+		$smarty->assign('endrecord',$endrecord);
+		$smarty->assign('page',$page);
+		$smarty->assign('perpage',$perpage);
+		$smarty->assign('callback',$callback);
+	}
+	return $showrecords;
 }
 function user_log($type,$log_string){
         global $user;
@@ -338,28 +356,22 @@ function user_log($type,$log_string){
         return;
 }
 function user_message($message,$error=0){
-        # Routine to set the message at the top bar
-        # Initialize the array if needed
-        if(!isset($GLOBALS['messages'])){
-                $GLOBALS['messages']=array();
-        }
-        if($error==1){
-                $GLOBALS['messages'][]=array("message_color"=>"red","message"=>$message);
-        }else{
-                $GLOBALS['messages'][]=array("message_color"=>"green","message"=>$message);
-        }
-        # Check if it needs the alert graphic
-        $GLOBALS['message_graphic']='';
-        $found=0;
-        foreach($GLOBALS['messages'] as $key=>$value){
-                if($value['message_color']=="red"){
-                        $found=1;
-                }
-        }
-        if($found==1){
-                $GLOBALS['message_graphic']='<img src="/images/errortriangle.gif">';
-        }
+	global $smarty;
+	# Routine to set the message at the top bar
+	# Initialize the array if needed
+	if(!isset($GLOBALS['messages'])){
+		$GLOBALS['messages']=array();
+	}
+	if($error==1){
+		$GLOBALS['messages'][]=array("message_color"=>"red","message"=>$message);
+	}else{
+		$GLOBALS['messages'][]=array("message_color"=>"green","message"=>$message);
+	}
+	$smarty->assign("messages",$GLOBALS['messages']);
+	return;
 }
+
+# Session Functions
 function start_fsession(){
 	global $fsession;
 	global $fsid;
@@ -383,10 +395,16 @@ function start_fsession(){
 		if(isset($result[0])){
 			$session=$result[0];
 		}else{
-			# Kill the cookie
-	        setcookie('fsid','',0,"/",$_SERVER['HTTP_HOST'],FALSE,TRUE);
-	        logsession("Destroying Non existent Session : ".$fsid.",$path,$host");
+			# Kill the cookie at this host and its base
+			$host = $_SERVER['HTTP_HOST'];
+	        setcookie('fsid','',0,"/",$host,FALSE,TRUE);
+	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
+		        $host = $match[1];
+				setcookie('fsid','',0,"/",$host,FALSE,TRUE);
+	        }
+	        logsession("Destroying Non existent Session : ".$fsid.",/,$host");
 			$fsid='';
+			create_fsession("/",$_SERVER['HTTP_HOST']);
 			return;
 		}
 		# OK, now read the session data and populate the fsession array
@@ -415,7 +433,9 @@ function logsession($string){
 }
 function create_fsession($path,$host){
 	# Lets take off the www from the host name so we set them on all the same domain
-	$host=preg_replace("/^www\./", "", $host);
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
+		$host = $match[1];
+	}
 	$time=microtime();
     $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
     setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
@@ -454,18 +474,27 @@ function save_fsession(){
         }
 }
 function destroy_fsession(){
-        $path="/";
-        $host=$_SERVER['HTTP_HOST'];
-        setcookie('fsid','',0,$path,$host,FALSE,TRUE);
-        logsession("Destroying Session : ".$GLOBALS['fsid'].",$path,$host");
-        # Turn off session db record
-        $stmt=db_prep("
-                UPDATE session
-                SET session_status=0
-                WHERE session_hash=:fsid
-        ");
-        $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
+	global $fsid;
+	$path="/";
+	$host=$_SERVER['HTTP_HOST'];
+	$host=preg_replace("/^www\./", "", $host);
+	setcookie('fsid','',0,$path,$host,FALSE,TRUE);
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
+		setcookie('fsid','',0,"/",$match[1],FALSE,TRUE);
+	}
+	logsession("Destroying Session : ".$fsid.",$path,$host");
+	if($fsid){
+		# Turn off session db record
+		$stmt=db_prep("
+			UPDATE session
+			SET session_status=0
+			WHERE session_hash=:fsid
+		");
+		$result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
+	}
+	return;
 }
+
 function array_msort($array, $cols) {
         # Array to sort an associative array by multiple keys
         # $cols is an array of 'col_name'=>SORT_ASC (or SORT_DESC)
@@ -580,6 +609,7 @@ function set_disipline($discipline_id){
 	return;
 }
 function return_to_action($from){
+	global $smarty;
 	# Function to return to a screen from whence they came
 	# Lets change the request array to the new values
 	$new=array();
@@ -855,6 +885,89 @@ function get_currencies(){
 	");
 	$currencies=db_exec($stmt,array());
 	return $currencies;
+}
+function get_database_stats(){
+	# Function to make a few queries to get totals based on the current chosen discipline
+	$discipline = $GLOBALS['fsession']['disc'];
+	$discipline_id = $GLOBALS['fsession']['discipline_id'];
+	$db_totals = array();
+	# Locations total
+	if($discipline_id == 0){
+		# All locations
+		$stmt=db_prep("
+			SELECT count(location_id) AS total
+			FROM location
+		");
+		$result=db_exec($stmt,array());
+		$db_totals['locations'] = $result[0]['total'];
+	}else{
+		$stmt=db_prep("
+			SELECT count(l.location_id) AS total
+			FROM location_discipline ld
+			LEFT JOIN location l ON ld.location_id=l.location_id
+			WHERE ld.location_discipline_status=1
+				AND ld.discipline_id=:discipline_id
+		");
+		$result=db_exec($stmt,array("discipline_id"=>$discipline_id));
+		$db_totals['locations'] = $result[0]['total'];
+	}
+	# planes total
+	if($discipline_id == 0){
+		# All planes
+		$stmt=db_prep("
+			SELECT count(plane_id) AS total
+			FROM plane
+		");
+		$result=db_exec($stmt,array());
+		$db_totals['planes'] = $result[0]['total'];
+	}else{
+		$stmt=db_prep("
+			SELECT count(p.plane_id) AS total
+			FROM plane_discipline pd
+			LEFT JOIN plane p ON pd.plane_id=p.plane_id
+			WHERE pd.plane_discipline_status=1
+				AND pd.discipline_id=:discipline_id
+		");
+		$result=db_exec($stmt,array("discipline_id"=>$discipline_id));
+		$db_totals['planes'] = $result[0]['total'];
+	}
+	# competitions total
+	if($discipline_id == 0){
+		# All competitions
+		$stmt=db_prep("
+			SELECT count(event_id) AS total
+			FROM event
+			WHERE event_status=1
+		");
+		$result=db_exec($stmt,array());
+		$db_totals['events'] = $result[0]['total'];
+	}else{
+		$stmt=db_prep("
+			SELECT count(e.event_id) AS total
+			FROM event e
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+			WHERE e.event_status=1
+				AND et.event_type_code=:discipline
+		");
+		$result=db_exec($stmt,array("discipline"=>$discipline));
+		$db_totals['events'] = $result[0]['total'];
+	}
+	# pilots total
+	$stmt=db_prep("
+		SELECT count(pilot_id) AS total
+		FROM pilot
+	");
+	$result=db_exec($stmt,array());
+	$db_totals['pilots'] = $result[0]['total'];
+	# clubs total
+	$stmt=db_prep("
+		SELECT count(club_id) AS total
+		FROM club
+	");
+	$result=db_exec($stmt,array());
+	$db_totals['clubs'] = $result[0]['total'];
+	
+	return $db_totals;
 }
 
 function round_down($number,$precision){

@@ -8,11 +8,7 @@
 #
 ############################################################################
 
-if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
-	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
-}else{
-	require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
-}
+require_once("/var/www/f3xvault.com/site/php/conf.php");
 
 include_library('functions.inc');
 include_library('security_functions.inc');
@@ -155,16 +151,8 @@ function lookup_location() {
 		LEFT JOIN state s ON l.state_id=s.state_id
 		LEFT JOIN country c ON l.country_id=c.country_id
 		WHERE LOWER(l.location_name) LIKE :q
-			OR l.location_city LIKE :q2
-			OR s.state_name LIKE :q3
-			OR c.country_name LIKE :q4
 	");
-	$result=db_exec($stmt,array(
-		"q"=>$q,
-		"q2"=>$q,
-		"q3"=>$q,
-		"q4"=>$q
-	));
+	$result=db_exec($stmt,array("q"=>$q));
 	
 	foreach($result as $r){
 		$locations[]=array(

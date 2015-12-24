@@ -1,0 +1,2266 @@
+<?php
+############################################################################
+#       event.class
+#
+#       Tim Traver
+#       8/11/12
+#       This is the event Class
+#
+############################################################################
+
+class Event {
+	# Global class to handle event data and manipulation
+	var $event_id;
+	var $info=array();
+	var $pilots=array();
+	var $planes=array();
+	var $rounds=array();
+	var $totals=array();
+	var $flyoff_totals=array();
+	var $options=array();
+	var $reg_options=array();
+	var $classes=array();
+	var $flight_types=array();
+	var $series=array();
+	var $draws=array();
+	var $tasks=array();
+	var $event_record_speed;
+	var $event_record_speed_event_pilot_id;
+	var $event_record_distance;
+	var $event_record_distance_event_pilot_id;
+	var $event_calc_accuracy;
+	var $event_calc_accuracy_string;
+	var $f3k_flight_type_id;
+	
+	function Event($event_id){
+		# Initialization of the class
+		$this->event_id=$event_id;
+		$stmt=db_prep("
+			SELECT *,s.state_id,c.country_id,u.user_id
+			FROM event e
+			LEFT JOIN location l ON e.location_id=l.location_id
+			LEFT JOIN state s ON l.state_id=s.state_id
+			LEFT JOIN country c ON c.country_id=l.country_id
+			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+			LEFT JOIN pilot p ON e.event_cd=p.pilot_id
+			LEFT JOIN user u ON e.pilot_id=u.pilot_id
+			LEFT JOIN club cl ON e.club_id=cl.club_id
+			LEFT JOIN currency cu ON e.currency_id=cu.currency_id
+			WHERE e.event_id=:event_id
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		$this->info=$result[0];
+		
+		$this->get_options();
+		$this->get_series();
+		$this->get_reg_options();
+		$this->get_pilots();
+		$this->get_flight_types();
+		$this->get_tasks();
+		
+		# Lets set the calculation accuracy for the event
+		$this->event_calc_accuracy=$this->find_option_value($this->info['event_type_code']."_calc_accuracy");
+		$this->event_calc_accuracy_string="%.".$this->event_calc_accuracy."f";
+		
+		sub_trace();
+	}
+	
+	# Retrieving routines
+	function get_pilots(){
+		# Now lets get the pilots assigned to this event
+		$sort_by=$_REQUEST['sort_by'];
+		switch($sort_by){
+			case 'alphabetical_first':
+				$sort_string='ORDER BY p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'team':
+				$sort_string='ORDER BY ep.event_pilot_team';
+				break;
+			case 'flight_order':
+			case 'round_rank':
+			case 'entry_order':
+			default:
+				$sort_string='ORDER BY ep.event_pilot_entry_order';
+				break;
+		}
+		$stmt=db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			LEFT JOIN class c ON ep.class_id=c.class_id
+			LEFT JOIN plane pl ON ep.plane_id=pl.plane_id
+			LEFT JOIN country ct ON p.country_id=ct.country_id
+			LEFT JOIN state s ON p.state_id=s.state_id
+			WHERE ep.event_id=:event_id
+				AND ep.event_pilot_status=1
+			$sort_string
+		");
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($results as $pilot){
+			$event_pilot_id=$pilot['event_pilot_id'];
+			$this->pilots[$event_pilot_id]=$pilot;
+			$class_id=$pilot['class_id'];
+			if(!isset($this->classes[$class_id]['class_description'])){
+				$this->classes[$class_id]=array("class_id"=>$pilot['class_id'],"class_description"=>$pilot['class_description']);
+			}
+		}
+		
+		$temp=array_msort($this->pilots,array('event_pilot_position'=>SORT_ASC));
+		$planes=array();
+		foreach($temp as $p){
+			$event_pilot_id=$p['event_pilot_id'];
+			if($p['plane_id']!=0){
+				# Lets add this to the list of planes
+				$plane_id=$p['plane_id'];
+				$planes[$plane_id]['total']++;
+				$planes[$plane_id]['name']=$p['plane_name'];
+				$planes[$plane_id]['pilots'][]=$event_pilot_id;
+			}
+		}
+		$this->planes=array_msort($planes,array('total'=>SORT_DESC));
+		sub_trace();
+		return;
+	}
+	function get_options(){
+		# Now lets get the event options
+		# Get all of the base options
+		$stmt=db_prep("
+			SELECT *
+			FROM event_type_option eto
+			WHERE eto.event_type_id=:event_type_id
+			ORDER BY eto.event_type_option_order
+		");
+		$options=db_exec($stmt,array("event_type_id"=>$this->info['event_type_id']));
+
+		$stmt=db_prep("
+			SELECT *
+			FROM event_option
+			WHERE event_id=:event_id
+				AND event_option_status=1
+		");
+		$values=db_exec($stmt,array("event_id"=>$this->event_id));
+
+		# Step through each of the values and put those entries into the options array
+		foreach ($options as $key=>$o){
+			$id=$o['event_type_option_id'];
+			foreach($values as $value){
+				if($value['event_type_option_id']==$id){
+					$options[$key]['event_option_value']=$value['event_option_value'];
+					$options[$key]['event_option_status']=$value['event_option_status'];
+				}
+			}
+		}
+		# Lets step through and set the defaults of the empty ones
+		foreach($options as $key=>$o){
+			$id=$o['event_type_option_id'];
+			if(!isset($options[$key]['event_option_value'])){
+				$options[$key]['event_option_value']=$options[$key]['event_type_option_default'];
+			}
+		}
+		$this->options=$options;
+		return;
+	}
+	function find_option_value($option_name){
+		$value='';
+		foreach($this->options as $key=>$o){
+			if($o['event_type_option_code']==$option_name){
+				$value=$o['event_option_value'];
+			}
+		}
+		return $value;
+	}
+	function get_reg_options(){
+		# Now lets get the event registration options
+		$reg_options=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_reg_param erp
+			WHERE erp.event_id=:event_id
+			AND erp.event_reg_param_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $r){
+			$event_reg_param_id=$r['event_reg_param_id'];
+			if($r['event_reg_param_choice_name']!=''){
+				# Make an array of the choice list values
+				$choices=array();
+				$choices[]='Select '.$r['event_reg_param_choice_name'];
+				$list=explode(',',$r['event_reg_param_choice_values']);
+				foreach($list as $l){
+					$choices[]=trim($l);
+				}
+				$r['choices']=$choices;
+			}
+			$reg_options[$event_reg_param_id]=$r;
+		}
+		$this->reg_options=$reg_options;
+		return;
+	}
+	function get_series(){
+		# Now lets get the event series settings
+		$series=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM event_series es
+			LEFT JOIN series s ON es.series_id=s.series_id
+			WHERE es.event_id=:event_id
+				AND es.event_series_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $row){
+			$series_id=$row['series_id'];
+			$series[$series_id]=$row;
+		}
+		$this->series=$series;
+		return;
+	}
+	function get_flight_types(){
+		# Function to get the flight types in this event
+		# Lets figure out the round type base on the event type
+		$this->flight_types=array();
+		$stmt=db_prep("
+			SELECT *
+			FROM flight_type
+			ORDER BY flight_type_order
+		");
+		$result=db_exec($stmt,array());
+		$type=$this->info['event_type_code'];
+		foreach($result as $r){
+			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type==$r['flight_type_code']){
+				$id=$r['flight_type_id'];
+				# Lets step through each of the options and set the accuracy for this flight type
+				# And whether or not an F3F event has groups
+				$code=$r['flight_type_code'];
+				foreach($this->options as $o){
+					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
+						$r['accuracy']=$o['event_option_value'];
+					}
+					if(preg_match("/f3f_use_groups/",$o['event_type_option_code'])){
+						$r['flight_type_group']=$o['event_option_value'];
+					}
+				}
+				if($r['accuracy']==''){
+					$r['accuracy']=0;
+				}
+				$r['accuracy_string']="%.".$r['accuracy']."f";
+				# if this is an f3k type, then lets set the subs array
+				if($type=='f3k'){
+					$subs=array();
+					switch($r['flight_type_code']){
+						case 'f3k_a':
+							$subs=array("5:00");
+							break;
+						case 'f3k_a2':
+							$subs=array("5:00");
+							break;
+						case 'f3k_b':
+							$subs=array("4:00","4:00");
+							break;
+						case 'f3k_b2':
+							$subs=array("3:00","3:00");
+							break;
+						case 'f3k_c':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_c2':
+							$subs=array("3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_c3':
+							$subs=array("3:00","3:00","3:00","3:00","3:00");
+							break;
+						case 'f3k_d':
+							$subs=array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
+							break;
+						case 'f3k_e':
+							$subs=array("Pilot","Nominated");
+							break;
+						case 'f3k_f':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_g':
+							$subs=array("2:00","2:00","2:00","2:00","2:00");
+							break;
+						case 'f3k_h':
+							$subs=array("1:00","2:00","3:00","4:00");
+							break;
+						case 'f3k_i':
+							$subs=array("3:20","3:20","3:20");
+							break;
+						case 'f3k_j':
+							$subs=array("3:00","3:00","3:00");
+							break;
+						case 'f3k_m':
+							$subs=array("1:00","1:30","2:00","2:30","3:00");
+							break;
+					}
+					$r['subs']=$subs;
+				}
+				$this->flight_types[$id]=$r;
+			}
+		}
+		return;
+	}
+	function get_teams(){
+		# Function to get the unique teams in an event
+		$names=array();
+		$stmt=db_prep("
+			SELECT DISTINCT(ep.event_pilot_team)
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id=e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			WHERE ep.event_pilot_team !=''
+				AND e.event_id=:event_id
+				AND ep.event_pilot_status=1
+		");
+		$names=db_exec($stmt,array("event_id"=>$this->event_id));
+		$this->teams=$names;
+		return;
+	}
+	function get_draws(){
+		# Lets see if they chose a sort order
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
+		switch($sort_by){
+			case 'entry_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_entry_order';
+				break;
+			case 'team':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_team,p.pilot_first_name';
+				break;
+			case 'flight_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
+				break;
+			case 'bib_order':
+				$sort_string='ORDER BY edr.event_draw_round_number,ep.event_pilot_bib';
+				break;
+			case 'group_alphabetical_first':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'group_alphabetical_last':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'group_entry':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,ep.event_pilot_entry_order';
+				break;
+			case 'alphabetical_first':
+				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY edr.event_draw_round_number,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'draw':
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_lane,edr.event_draw_round_order';
+				break;
+			case 'round_rank':
+			default:
+				$sort_string='ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order';
+				break;
+		}
+		# Now lets get the draws that have been created for this event
+		$draws=array();
+		
+		# Lets first make an array of round types for this event and its draws
+		$round_types=array();
+		$stmt=db_prep("
+			SELECT *,edrf.flight_type_id
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id=ed.event_draw_id
+			WHERE ed.event_id=:event_id
+				AND edrf.event_draw_round_flight_status=1
+				AND ed.event_draw_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $key=>$r){
+			$round_number=$r['event_draw_round_number'];
+			$event_draw_id=$r['event_draw_id'];
+			$round_types[$event_draw_id][$round_number]=$r['flight_type_id'];
+		}
+				
+		$stmt=db_prep("
+			SELECT *
+			FROM event_draw ed
+			WHERE ed.event_id=:event_id
+			AND event_draw_status=1
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		
+		# Now lets step through each of the draws and get the draw rounds
+		foreach($result as $draw){
+			$event_draw_id=$draw['event_draw_id'];
+			$draws[$event_draw_id]=$draw;
+			$flight_type_id=$draw['flight_type_id'];
+			$stmt=db_prep("
+				SELECT *
+				FROM event_draw_round edr
+				LEFT JOIN event_pilot ep ON edr.event_pilot_id=ep.event_pilot_id
+				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+				WHERE edr.event_draw_id=:event_draw_id
+					AND edr.event_draw_round_status=1
+				$sort_string
+			");
+			$rounds=db_exec($stmt,array("event_draw_id"=>$event_draw_id));
+			foreach($rounds as $round){
+				$round_number=$round['event_draw_round_number'];
+				if($this->info['event_type_code']=='f3k'){
+					$flight_type_id=$this->tasks[$round_number]['flight_type_id'];
+				}elseif(isset($round_types[$event_draw_id][$round_number])){
+					$flight_type_id=$round_types[$event_draw_id][$round_number];
+				}
+				$event_pilot_id=$round['event_pilot_id'];
+				$draws[$event_draw_id]['flights'][$flight_type_id][$round_number]['pilots'][$event_pilot_id]=$round;
+			}
+		}
+		$this->draws=$draws;
+		return;
+	}
+	function get_tasks(){
+		# Now lets get the tasks that have been created for this event
+		$tasks=array();
+		
+		# Lets first make an array of round types for this event and its draws		
+		$stmt=db_prep("
+			SELECT *
+			FROM event_task et
+			WHERE et.event_id=:event_id
+			AND event_task_status=1
+			ORDER BY event_task_round
+		");
+		$result=db_exec($stmt,array("event_id"=>$this->event_id));
+		foreach($result as $r){
+			$round=$r['event_task_round'];
+			$tasks[$round]=$r;
+		}
+		$this->tasks=$tasks;
+		return;
+	}
+	function get_rounds(){
+		sub_trace();
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
+		if($this->event_id==NULL || $this->event_id==0){
+			return;
+		}
+		switch($sort_by){
+			case 'current_standing':
+				break;
+			case 'entry_order':
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_entry_order';
+				break;
+			case 'team':
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_team,p.pilot_first_name';
+				break;
+			case 'flight_order':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_order';
+				break;
+			case 'bib_order':
+				$sort_string='ORDER BY er.event_round_number,ep.event_pilot_bib';
+				break;
+			case 'group_alphabetical_first':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'group_alphabetical_last':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'group_entry':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,ep.event_pilot_entry_order';
+				break;
+			case 'alphabetical_first':
+				$sort_string='ORDER BY er.event_round_number,p.pilot_first_name,p.pilot_last_name';
+				break;
+			case 'alphabetical_last':
+				$sort_string='ORDER BY er.event_round_number,p.pilot_last_name,p.pilot_first_name';
+				break;
+			case 'draw':
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_lane,erf.event_pilot_round_flight_order';
+				break;
+			case 'round_rank':
+			default:
+				$sort_string='ORDER BY er.event_round_number,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
+				break;
+		}
+				
+		# Now lets get the rounds for this event
+		$stmt=db_prep("
+			SELECT er.*,erf.*
+			FROM event_round er
+			LEFT JOIN event_round_flight erf ON er.event_round_id=erf.event_round_id
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+			ORDER BY ABS(er.event_round_number),erf.flight_type_id ASC
+		");
+		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		$rounds=array();
+		# Step through each round and set pilot flights
+		foreach($results as $key=>$round){
+			$event_round_number=$round['event_round_number'];
+			$flight_type_id=$round['flight_type_id'];
+			$rounds[$event_round_number]['event_round_id']=$round['event_round_id'];
+			$rounds[$event_round_number]['event_id']=$round['event_id'];
+			$rounds[$event_round_number]['event_round_number']=$round['event_round_number'];
+			$rounds[$event_round_number]['last_round']=0;
+			$rounds[$event_round_number]['flight_type_id']=$round['flight_type_id'];
+			$rounds[$event_round_number]['event_round_time_choice']=$round['event_round_time_choice'];
+			$rounds[$event_round_number]['event_round_score_status']=$round['event_round_score_status'];
+			$rounds[$event_round_number]['event_round_score_second']=$round['event_round_score_second'];
+			$rounds[$event_round_number]['event_round_needs_calc']=$round['event_round_needs_calc'];
+			$rounds[$event_round_number]['event_round_flyoff']=$round['event_round_flyoff'];
+			$rounds[$event_round_number]['event_round_status']=$round['event_round_status'];
+			$rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+			$rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
+			$rounds[$event_round_number]['reflights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+			$rounds[$event_round_number]['reflights'][$flight_type_id]['event_round_flight_score']=$round['event_round_flight_score'];
+		}
+		if(count($rounds)!=0){
+			$rounds[$event_round_number]['last_round']=1;
+		}
+		$this->rounds=$rounds;
+		
+		# Lets get all of the flights for each round in one query and then step through them
+		$stmt=db_prep("
+			SELECT er.event_round_number,erf.*,epr.*
+			FROM event_pilot_round_flight erf
+			LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
+			LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id=ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+				AND erf.event_pilot_round_flight_status=1
+				AND ep.event_pilot_status=1
+			$sort_string
+		");
+		$results=db_exec($stmt,array("event_id"=>$round['event_id']));
+		foreach($results as $flight){
+			$event_round_number=$flight['event_round_number'];
+			$event_pilot_id=$flight['event_pilot_id'];
+			$flight_type_id=$flight['flight_type_id'];
+			# Set the decimal accuracy for the flight seconds
+			$flight['event_pilot_round_flight_seconds']=sprintf('%02.'.$this->flight_types[$flight_type_id]['accuracy'].'f',$flight['event_pilot_round_flight_seconds']);
+			if($flight['event_pilot_round_flight_reflight']==1){
+				$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots'][$event_pilot_id]=array(
+					"event_pilot_round_flight_id"=>$flight['event_pilot_round_flight_id'],
+					"event_pilot_round_id"=>$flight['event_pilot_round_id'],
+					"flight_type_id"=>$flight['flight_type_id'],
+					"event_pilot_round_flight_group"=>$flight['event_pilot_round_flight_group'],
+					"event_pilot_round_flight_minutes"=>$flight['event_pilot_round_flight_minutes'],
+					"event_pilot_round_flight_seconds"=>$flight['event_pilot_round_flight_seconds'],
+					"event_pilot_round_flight_over"=>$flight['event_pilot_round_flight_over'],
+					"event_pilot_round_flight_laps"=>$flight['event_pilot_round_flight_laps'],
+					"event_pilot_round_flight_landing"=>$flight['event_pilot_round_flight_landing'],
+					"event_pilot_round_flight_penalty"=>$flight['event_pilot_round_flight_penalty'],
+					"event_pilot_round_flight_raw_score"=>$flight['event_pilot_round_flight_raw_score'],
+					"event_pilot_round_flight_score"=>$flight['event_pilot_round_flight_score'],
+					"event_pilot_round_flight_rank"=>$flight['event_pilot_round_flight_rank'],
+					"event_pilot_round_flight_dropped"=>$flight['event_pilot_round_flight_dropped'],
+					"event_pilot_round_flight_order"=>$flight['event_pilot_round_flight_order'],
+					"event_pilot_round_flight_lane"=>$flight['event_pilot_round_flight_lane'],
+					"event_pilot_round_flight_dns"=>$flight['event_pilot_round_flight_dns'],
+					"event_pilot_round_flight_dnf"=>$flight['event_pilot_round_flight_dnf'],
+					"event_pilot_round_flight_reflight"=>$flight['event_pilot_round_flight_reflight'],
+					"event_pilot_round_flight_reflight_dropped"=>$flight['event_pilot_round_flight_reflight_dropped'],
+					"event_pilot_round_flight_status"=>$flight['event_pilot_round_flight_status'],
+					"event_pilot_id"=>$flight['event_pilot_id'],
+					"event_round_id"=>$flight['event_round_id'],
+					"event_pilot_round_raw_score"=>$flight['event_pilot_round_raw_score'],
+					"event_pilot_round_rank"=>$flight['event_pilot_round_rank'],
+					"event_pilot_round_drop_score"=>$flight['event_pilot_round_drop_score'],
+					"event_pilot_round_total_score"=>$flight['event_pilot_round_total_score'],
+					"event_pilot_round_completed"=>$flight['event_pilot_round_completed']
+				);
+			}else{
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=array(
+					"event_pilot_round_flight_id"=>$flight['event_pilot_round_flight_id'],
+					"event_pilot_round_id"=>$flight['event_pilot_round_id'],
+					"flight_type_id"=>$flight['flight_type_id'],
+					"event_pilot_round_flight_group"=>$flight['event_pilot_round_flight_group'],
+					"event_pilot_round_flight_minutes"=>$flight['event_pilot_round_flight_minutes'],
+					"event_pilot_round_flight_seconds"=>$flight['event_pilot_round_flight_seconds'],
+					"event_pilot_round_flight_over"=>$flight['event_pilot_round_flight_over'],
+					"event_pilot_round_flight_laps"=>$flight['event_pilot_round_flight_laps'],
+					"event_pilot_round_flight_landing"=>$flight['event_pilot_round_flight_landing'],
+					"event_pilot_round_flight_penalty"=>$flight['event_pilot_round_flight_penalty'],
+					"event_pilot_round_flight_raw_score"=>$flight['event_pilot_round_flight_raw_score'],
+					"event_pilot_round_flight_score"=>$flight['event_pilot_round_flight_score'],
+					"event_pilot_round_flight_rank"=>$flight['event_pilot_round_flight_rank'],
+					"event_pilot_round_flight_dropped"=>$flight['event_pilot_round_flight_dropped'],
+					"event_pilot_round_flight_order"=>$flight['event_pilot_round_flight_order'],
+					"event_pilot_round_flight_lane"=>$flight['event_pilot_round_flight_lane'],
+					"event_pilot_round_flight_dns"=>$flight['event_pilot_round_flight_dns'],
+					"event_pilot_round_flight_dnf"=>$flight['event_pilot_round_flight_dnf'],
+					"event_pilot_round_flight_reflight"=>$flight['event_pilot_round_flight_reflight'],
+					"event_pilot_round_flight_reflight_dropped"=>$flight['event_pilot_round_flight_reflight_dropped'],
+					"event_pilot_round_flight_status"=>$flight['event_pilot_round_flight_status'],
+					"event_pilot_id"=>$flight['event_pilot_id'],
+					"event_round_id"=>$flight['event_round_id'],
+					"event_pilot_round_raw_score"=>$flight['event_pilot_round_raw_score'],
+					"event_pilot_round_rank"=>$flight['event_pilot_round_rank'],
+					"event_pilot_round_drop_score"=>$flight['event_pilot_round_drop_score'],
+					"event_pilot_round_total_score"=>$flight['event_pilot_round_total_score'],
+					"event_pilot_round_completed"=>$flight['event_pilot_round_completed']
+				);
+			}
+		}
+		
+		# Now lets do a big query to get the sub flights all in one shot
+		$stmt=db_prep("
+			SELECT er.event_round_number,eprf.flight_type_id,ep.event_pilot_id,epr.event_pilot_round_id,eprf.event_pilot_round_flight_reflight,eprs.*
+			FROM event_pilot_round_flight_sub eprs
+			LEFT JOIN event_pilot_round_flight eprf ON eprs.event_pilot_round_flight_id=eprf.event_pilot_round_flight_id
+			LEFT JOIN event_pilot_round epr ON epr.event_pilot_round_id=eprf.event_pilot_round_id
+			LEFT JOIN event_pilot ep ON ep.event_pilot_id=epr.event_pilot_id
+			LEFT JOIN event_round er ON er.event_round_id=epr.event_round_id
+			WHERE er.event_id=:event_id
+				AND er.event_round_status=1
+				AND eprf.event_pilot_round_flight_status=1
+				AND ep.event_pilot_status=1
+		");
+		$results=db_exec($stmt,array("event_id"=>$round['event_id']));
+		foreach($results as $r){
+			$event_round_number=$r['event_round_number'];
+			$flight_type_id=$r['flight_type_id'];
+			$event_pilot_id=$r['event_pilot_id'];
+			$num=$r['event_pilot_round_flight_sub_num'];
+			if($r['event_pilot_round_flight_reflight']==1){
+				$this->rounds[$event_round_number]['reflights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=array(
+					"event_pilot_round_flight_sub_id"=>$r['event_pilot_round_flight_sub_id'],
+					"event_pilot_round_flight_id"=>$r['event_pilot_round_flight_id'],
+					"event_pilot_round_flight_sub_num"=>$r['event_pilot_round_flight_sub_num'],
+					"event_pilot_round_flight_sub_val"=>$r['event_pilot_round_flight_sub_val']
+				);
+			}else{
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'][$num]=array(
+					"event_pilot_round_flight_sub_id"=>$r['event_pilot_round_flight_sub_id'],
+					"event_pilot_round_flight_id"=>$r['event_pilot_round_flight_id'],
+					"event_pilot_round_flight_sub_num"=>$r['event_pilot_round_flight_sub_num'],
+					"event_pilot_round_flight_sub_val"=>$r['event_pilot_round_flight_sub_val']
+				);
+			}
+		}
+		
+		# Now add any pilots that dont have a flight
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				if(!isset($this->rounds[$event_round_number]['flights'][$flight_type_id])){
+					continue;
+				}
+				foreach($this->pilots as $event_pilot_id=>$p){
+					if(!isset($this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
+						$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]=array("event_pilot_round_flight_id"=>0);
+					}
+				}
+			}
+		}
+				
+		# Lets recalculate any rounds if we need to
+		# Lets see if this is the owner of the event or a person allowed to recalculate rounds
+		# This will cut down on the system recalculating rounds when someone is just viewing while rounds are being entered
+		global $user;
+		$try_recalc=0;
+		if($user['user_admin']==1 || $this->info['pilot_id']==$user['pilot_id']){
+			$try_recalc=1;
+		}
+		if($try_recalc==0){
+			# Lets see if there are other users that have permissions that could recalc this event
+			$stmt=db_prep("
+				SELECT *
+				FROM event_user
+				WHERE event_id=:event_id
+					AND event_user_status=1
+			");
+			$results=db_exec($stmt,array("event_id"=>$this->event_id));
+			foreach($results as $u){
+				if($user['pilot_id']==$u['pilot_id']){
+					$try_recalc=1;
+				}
+			}
+		}
+		if($try_recalc){
+			$stmt=db_prep("
+				SELECT *
+				FROM event_round er
+				WHERE er.event_id=:event_id
+					AND er.event_round_status=1
+					AND er.event_round_needs_calc=1
+				ORDER BY ABS(er.event_round_number)
+			");
+			$needed_recalc=0;
+			$results=db_exec($stmt,array("event_id"=>$this->event_id));
+			foreach($results as $key=>$round){
+				if($round['event_round_needs_calc']==1){
+					$this->calculate_round($round['event_round_number']);
+					$needed_recalc=1;
+					# turn off the recalc for that round
+					$stmt=db_prep("
+						UPDATE event_round
+						SET event_round_needs_calc=0
+						WHERE event_round_id=:event_round_id
+					");
+					$result=db_exec($stmt,array("event_round_id"=>$round['event_round_id']));
+				}
+			}
+			if($needed_recalc==1){
+				# It needed some rounds recalculated, so lets re-do the rounds
+				$this->get_rounds();
+				$this->calculate_event_totals();	
+				$this->event_save_totals();
+				$this->get_pilots();
+				return;
+			}
+		}
+		# Lets put them in current standing order if desired
+		if($sort_by == 'current_standing'){
+			$this->calculate_event_totals();
+			# ok, now lets step through each round and create a new rounds array
+			foreach($this->rounds as $event_round_number=>$r){
+				foreach($r['flights'] as $flight_type_id=>$ft){
+					$newpilots=array();
+					foreach($this->totals['pilots'] as $tp){
+						$total_event_pilot_id=$tp['event_pilot_id'];
+						$newpilots[$total_event_pilot_id]=$ft['pilots'][$total_event_pilot_id];
+					}
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$newpilots;
+				}
+			}
+		}
+		sub_trace();
+		return;
+	}
+	function get_new_round($event_round_number){
+		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
+		$pilots=array();
+		$this->get_draws();
+
+		if(isset($_REQUEST['sort_by'])){
+			$sort_by=$_REQUEST['sort_by'];
+		}else{
+			$sort_by='';
+		}
+		
+		foreach($this->draws as $event_draw_id=>$d){
+			if($d['event_draw_active']!=1){
+				continue;
+			}
+			if($this->info['event_type_code']=='f3k'){
+				# If this is an F3K event, then lets determine which flight type id this round is
+				$flight_type_id=0;
+				if(isset($this->tasks[$event_round_number]['flight_type_id'])){
+					$flight_type_id=$this->tasks[$event_round_number]['flight_type_id'];
+				}
+				$this->f3k_flight_type_id=$flight_type_id;
+				
+				foreach($d['flights'][$flight_type_id][$event_round_number]['pilots'] as $event_pilot_id=>$p){
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
+				}
+				# Insert any pilots that didn't exist
+				foreach($this->pilots as $event_pilot_id=>$p){
+					# Catch the straglers if they weren't in the draw
+					if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+						$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+					}
+				}
+				# Now lets make a new round in the rounds array so that the round edit screen shows properly
+				$this->rounds[$event_round_number]['event_round_id']=0;
+				$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$this->rounds[$event_round_number]['flight_type_id']=$flight_type_id;
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+			}else{
+				foreach($d['flights'] as $flight_type_id=>$f){
+					if(!isset($f[$event_round_number])){
+						continue;
+					}
+					foreach($f[$event_round_number]['pilots'] as $event_pilot_id=>$p){
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']=$p['event_draw_round_order'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_lane']=$p['event_draw_round_lane'];
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+						$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=0;
+					}
+				}
+				# Insert any pilots that didn't exist
+				foreach($this->pilots as $event_pilot_id=>$p){
+					foreach($p as $flight_type_id=>$f){
+						# Catch the straglers if they weren't in the draw
+						if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+							$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+						}
+					}
+				}
+				# Now lets make a new round in the rounds array so that the round edit screen shows properly
+				foreach($this->flight_types as $flight_type_id=>$ft){
+					$this->rounds[$event_round_number]['event_round_id']=0;
+					$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]=$ft;
+					$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+				}
+			}
+		}
+		
+		# ok, that was if they had any draws available, so lets check to see if we need to add pilots after that
+		if($this->info['event_type_code']=='f3k'){
+			$flight_type_id=$this->f3k_flight_type_id;
+			foreach($this->pilots as $event_pilot_id=>$p){
+				if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+					$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+				}
+			}
+			$this->rounds[$event_round_number]['event_round_id']=0;
+			$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+		}else{
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				foreach($this->pilots as $event_pilot_id=>$p){
+					if(!isset($pilots[$flight_type_id][$event_pilot_id])){
+						$pilots[$flight_type_id][$event_pilot_id]=array("event_pilot_round_flight_id"=>0,"event_pilot_id"=>$event_pilot_id);
+					}
+				}
+				$this->rounds[$event_round_number]['event_round_id']=0;
+				$this->rounds[$event_round_number]['event_round_number']=$event_round_number;
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$pilots[$flight_type_id];
+			}
+		}
+		
+		# Set the flyoff round default
+		if($_REQUEST['flyoff_round']==1 || $this->tasks[$event_round_number]['event_task_round_type']=='flyoff'){
+			$this->rounds[$event_round_number]['event_round_flyoff']=1;
+		}
+		# Lets put them in current standing order if desired
+		if($sort_by == 'current_standing'){
+			$this->calculate_event_totals();
+			# ok, now lets step through the round and create a new rounds array
+			foreach($this->flight_types as $flight_type_id=>$ft){
+				$newpilots=array();
+				foreach($this->totals['pilots'] as $tp){
+					$total_event_pilot_id=$tp['event_pilot_id'];
+					$newpilots[$total_event_pilot_id]=$pilots[$flight_type_id];
+				}
+				$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']=$newpilots;
+			}
+		}
+		return;
+	}
+	
+	# Calculation Routines
+	function calculate_round($event_round_number){
+		# Function to calculate the values in a round given the event round id
+		if(!isset($this->rounds[$event_round_number])){
+			$this->get_rounds();
+		}
+		
+		$all=$this->rounds[$event_round_number]['flights'];
+		# Now lets add the reflights to that array so they are all in the same array before we send them to the calc
+		if(count($this->rounds[$event_round_number]['reflights'])>0){
+			foreach($this->rounds[$event_round_number]['reflights'] as $flight_type_id=>$r){
+				if(is_array($r)){
+					foreach($r['pilots'] as $p){
+						$all[$flight_type_id]['pilots'][]=$p;
+					}
+				}
+			}
+		}
+		$all_flights=$this->calculate_flights($event_round_number,$all);
+		
+		$flights=array();
+#		$flights=$this->calculate_flights($event_round_number,$this->rounds[$event_round_number]['flights']);
+		$reflights=array();
+#		$reflights=$this->calculate_flights($event_round_number,$this->rounds[$event_round_number]['reflights']);
+
+		
+		# Lets step through now an separate the flights and reflights
+		foreach($all_flights as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				if($v['event_pilot_round_flight_reflight']==1){
+					$reflights[$flight_type_id][]=$v;
+				}else{
+					$flights[$flight_type_id][]=$v;
+				}
+			}
+		}
+		
+		# Lets set all of the reflight drop values for this pilot to 1 for this round and type and then find the biggest and mark it good
+		# Loop through only the reflights, cause we don't need to change the other pilots
+		foreach($reflights as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				$event_pilot_id=$v['event_pilot_id'];
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_reflight_dropped=1
+					WHERE event_pilot_round_id IN (
+						SELECT event_pilot_round_id
+						FROM event_pilot_round
+						WHERE event_pilot_id=:event_pilot_id
+						AND event_round_id=:event_round_id
+					)
+					AND flight_type_id=:flight_type_id
+				");
+				$result=db_exec($stmt,array(
+					"event_pilot_id"=>$event_pilot_id,
+					"event_round_id"=>$this->rounds[$event_round_number]['event_round_id'],
+					"flight_type_id"=>$flight_type_id
+				));
+			}
+		}
+
+		# Figure out how to calculate the best flights out of the reflights and normal flights
+		# And then drop the ones that we don't need
+		# Loop through the normal flights
+		foreach($flights as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				$event_pilot_id=$v['event_pilot_id'];
+				$score[$flight_type_id]=$v['event_pilot_round_flight_score'];
+				$goodid=$v['event_pilot_round_flight_id'];
+				
+				# Now lets step through each reflight and see if it is a better score
+				foreach($reflights as $rftid=>$rp){
+					if($rftid!=$flight_type_id){
+						continue;
+					}
+					foreach($rp as $repid=>$rv){
+						if($rv['event_pilot_id']!=$event_pilot_id){
+							continue;
+						}
+						if($rv['event_pilot_round_flight_score']>$score[$flight_type_id]){
+							$score[$flight_type_id]=$rv['event_pilot_round_flight_score'];
+							$goodid=$rv['event_pilot_round_flight_id'];
+						}
+					}
+				}
+				$round_total_score[$event_pilot_id]+=$score[$flight_type_id];
+				$round_totals[$event_pilot_id]['raw']+=$score[$flight_type_id];
+				
+				# Now lets save the good record to have the reflight dropped flag set back to 0
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET event_pilot_round_flight_reflight_dropped=0
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result2=db_exec($stmt,array("event_pilot_round_flight_id"=>$goodid));
+			}
+		}
+		
+		# Determine the overall round rank
+		foreach($round_total_score as $event_pilot_id=>$p){
+			arsort($round_total_score);
+			$count=1;
+			foreach($round_total_score as $event_pilot_id=>$value){
+				$round_totals[$event_pilot_id]['rank']=$count;
+				$count++;
+			}
+		}
+
+		# Now lets save the round totals in the event_pilot_round records
+		foreach($round_totals as $event_pilot_id=>$v){	
+			# Lets see if the event_pilot_round record exists
+			$stmt=db_prep("
+				SELECT *
+				FROM event_pilot_round
+				WHERE event_round_id=:event_round_id
+					AND event_pilot_id=:event_pilot_id
+			");
+			$result=db_exec($stmt,array("event_round_id"=>$this->rounds[$event_round_number]['event_round_id'],"event_pilot_id"=>$event_pilot_id));
+			if(isset($result[0])){
+				# It exists, so lets save it
+				$stmt=db_prep("
+					UPDATE event_pilot_round
+					SET event_pilot_round_raw_score=:raw,
+						event_pilot_round_drop_score=:drop,
+						event_pilot_round_rank=:rank,
+						event_pilot_round_total_score=:total
+					WHERE event_pilot_round_id=:event_pilot_round_id
+				");
+				$result2=db_exec($stmt,array(
+					"raw"=>$v['raw'],
+					"drop"=>$v['drop'],
+					"rank"=>$v['rank'],
+					"total"=>($v['raw']-$v['drop']),
+					"event_pilot_round_id"=>$result[0]['event_pilot_round_id']
+				));
+			}else{
+			
+#			print "event_pilot_id=$event_pilot_id\n";
+#			print "event_round_id=$event_round_id\n";
+#			print "raw={$v['raw']}\n";
+#			print "drop={$v['drop']}\n";
+#			print "total=".($v['raw']-$v['drop'])."\n";
+#			print "rank={$v['rank']}\n";
+
+				# Doesn't exist, so lets create it
+				$stmt=db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id=:event_pilot_id,
+						event_round_id=:event_round_id,
+						event_pilot_round_raw_score=:raw,
+						event_pilot_round_drop_score=:drop,
+						event_pilot_round_total_score=:total,
+						event_pilot_round_rank=:rank
+				");
+				$result2=db_exec($stmt,array(
+					"event_pilot_id"=>$event_pilot_id,
+					"event_round_id"=>$this->rounds[$event_round_number]['event_round_id'],
+					"raw"=>$v['raw'],
+					"drop"=>$v['drop'],
+					"total"=>$v['raw']-$v['drop'],
+					"rank"=>$v['rank']
+				));
+			}
+	
+		}
+		sub_trace();
+		return;
+	}
+	function calculate_flights($event_round_number,$flights){
+		# Function to calculate a group of flights in a particular round
+		$flight=array();
+		# Lets set the point value for seconds
+		$second_value=$this->rounds[$event_round_number]['event_round_score_second'];
+		# Now lets step through the flight data and set some of the basics
+		foreach($flights as $flight_type_id=>$f){
+			if(!isset($f['pilots'])){
+				continue;
+			}
+			foreach($f['pilots'] as $v){
+				$event_pilot_id=$v['event_pilot_id'];
+				$raw=0;
+				if($f['flight_type_minutes']==1){
+					$raw+=60*intval($v['event_pilot_round_flight_minutes'])*$second_value;
+				}
+				if($f['flight_type_seconds']==1){
+					$raw+=floatval($v['event_pilot_round_flight_seconds'])*$second_value;
+				}
+				# Ok, now we have to subtract the absolute value of the max time (on just the time)
+				switch($f['flight_type_code']){
+					case 'f3b_duration':
+						if($raw>(600*$second_value)){
+							$raw=(600*$second_value)-abs((600*$second_value)-$raw);
+						}
+						break;
+					case 'td_duration':
+					case 'f3j_duration':
+						$round_max_seconds=$this->rounds[$event_round_number]['event_round_time_choice']*60*$second_value;
+						if($raw>$round_max_seconds){
+							$raw=$round_max_seconds-abs($round_max_seconds-$raw);
+						}
+				}
+				if($f['flight_type_laps']==1){
+					$raw+=$v['event_pilot_round_flight_laps'];
+				}
+				if($f['flight_type_landing']==1){
+					$raw+=$v['event_pilot_round_flight_landing'];
+				}
+				# Lets add the f3j scoring penalty if they went over
+				if($f['flight_type_code']=='f3j_duration'){
+					if($v['event_pilot_round_flight_over']==1){
+						# Subtract 30 seconds from the time, and negate the landing points
+						$raw-=30;
+						$raw-=$v['event_pilot_round_flight_landing'];
+					}
+				}
+				$temp_flight['event_pilot_round_flight_raw_score']=round_down($raw,$this->flight_types[$flight_type_id]['accuracy']);
+				$temp_flight['event_pilot_round_flight_id']=$v['event_pilot_round_flight_id'];
+				$temp_flight['event_pilot_round_flight_group']=$v['event_pilot_round_flight_group'];
+				$temp_flight['event_pilot_round_flight_reflight']=$v['event_pilot_round_flight_reflight'];
+				$temp_flight['event_pilot_id']=$v['event_pilot_id'];
+				$flight[$flight_type_id][]=$temp_flight;
+				
+#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score']=round($raw,$this->flight_types[$flight_type_id]['accuracy']);
+#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id']=$v['event_pilot_round_flight_id'];
+#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']=$v['event_pilot_round_flight_group'];
+	
+				# ok, now lets find the max score in each group
+				$group=$v['event_pilot_round_flight_group'];
+				if($group==''){
+					$group='none';
+				}
+				switch($f['flight_type_code']){
+					case 'f3b_speed':
+					case 'f3f_speed':
+						if(($raw<$max[$flight_type_id][$group]['raw'] || $max[$flight_type_id][$group]['raw']==0) && $raw!=0){
+							$max[$flight_type_id][$group]['raw']=$raw;
+						}
+						break;
+					default:
+						if($raw>$max[$flight_type_id][$group]['raw']){
+							$max[$flight_type_id][$group]['raw']=$raw;
+						}
+				}
+				
+			}
+		}
+		
+		# Now step through and do the normalization scores
+		# lets first determine if we need to do normalization
+		if($this->find_option_value($this->info['event_type_code']."_normalize")==1){
+			# If its check to NOT normalize scores
+			$normalize=0;
+		}else{
+			$normalize=1;
+		}
+		
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				$event_pilot_id=$v['event_pilot_id'];
+				$group=$v['event_pilot_round_flight_group'];
+				if($group==''){
+					$group='none';
+				}
+				switch($this->flight_types[$flight_type_id]['flight_type_code']){
+					case 'f3b_speed':
+					case 'f3f_speed':
+						if($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']==0){
+							$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=0;
+						}else{
+							if($normalize==1){
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=round_down(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'])*1000,$this->event_calc_accuracy);
+							}else{
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=round_down($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'],$this->event_calc_accuracy);
+							}
+						}
+						break;
+					default:
+						if($max[$flight_type_id][$group]['raw']==0){
+							$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=0;
+						}else{
+							if($normalize==1){
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=round_down(($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']/$max[$flight_type_id][$group]['raw'])*1000,$this->event_calc_accuracy);
+							}else{
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score']=round_down($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'],$this->event_calc_accuracy);
+							}
+						}
+				}
+			}
+		}
+		$scores=array();
+		# Now determine the flight type rank
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				# Create an array of all of the scores
+				$group=$v['event_pilot_round_flight_group'];
+				$scores[$flight_type_id][$group][$key]=$v['event_pilot_round_flight_score'];
+			}
+		}
+		foreach($scores as $flight_type_id=>$f){
+			foreach($f as $group=>$g){
+				arsort($g);
+				$count=1;
+				foreach($g as $key=>$value){
+					$flight[$flight_type_id][$key]['event_pilot_round_flight_rank']=$count;
+					$count++;
+				}
+			}
+		}
+		
+		# Now step through each one of the flights and save the flight record
+		foreach($flight as $flight_type_id=>$p){
+			foreach($p as $key=>$v){
+				$event_pilot_id=$v['event_pilot_id'];
+				# There is already a record, so save it
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight
+					SET	event_pilot_round_flight_raw_score=:event_pilot_round_flight_raw_score,
+						event_pilot_round_flight_score=:event_pilot_round_flight_score,
+						event_pilot_round_flight_rank=:event_pilot_round_flight_rank,
+						event_pilot_round_flight_status=1
+					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+				");
+				$result2=db_exec($stmt,array(
+					"event_pilot_round_flight_raw_score"=>$v['event_pilot_round_flight_raw_score'],
+					"event_pilot_round_flight_score"=>$v['event_pilot_round_flight_score'],
+					"event_pilot_round_flight_rank"=>$v['event_pilot_round_flight_rank'],
+					"event_pilot_round_flight_id"=>$flight[$flight_type_id][$key]['event_pilot_round_flight_id']
+				));
+			}
+		}
+		sub_trace();
+		return $flight;
+	}
+	function calculate_event_totals(){
+		# Function to calculate the subtotals and totals per pilot for an event
+		if(count($this->rounds)==0 || count($this->pilots)==0){
+			return;
+		}
+		$subtotals=array();
+		$totals=array();
+		$flyoff_totals=array();
+		$flyoff_subtotals=array();
+		$total_prelim_rounds=0;
+		foreach($this->rounds as $round_number=>$r){
+			$flyoff_number=$r['event_round_flyoff'];
+			if($flyoff_number==0){
+				$total_prelim_rounds++;
+			}else{
+				$flyoff_round_count[$flyoff_number]++;
+			}
+			
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if(!isset($f['pilots'])){
+					continue;
+				}
+				foreach($f['pilots'] as $event_pilot_id=>$p){
+					if($f['event_round_flight_score']==0 && preg_match("/f3b_/",$f['flight_type_code']) && !isset($subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score'])){
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']=0;
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=0;
+						continue;
+					}
+					$sub=round_down($p['event_pilot_round_flight_score'],$this->event_calc_accuracy);
+					$penalty=$p['event_pilot_round_flight_penalty'];
+					# Lets step through each of the reflights and see if there is a higher score
+					foreach($r['reflights'] as $rftid=>$rp){
+						if($rftid!=$flight_type_id){
+							continue;
+						}
+						if(isset($rp['pilots'])){
+							foreach($rp['pilots'] as $repid=>$rv){
+								if($repid!=$event_pilot_id){
+									continue;
+								}
+								if($rv['event_pilot_round_flight_score']>$sub){
+									$sub=$rv['event_pilot_round_flight_score'];
+									# Also replace the flight info with the relight info for the totals
+									$p=$rv;
+								}
+								if($rv['event_pilot_round_flight_penalty']>0){
+									$penalty+=$rv['event_pilot_round_flight_penalty'];
+								}
+							}
+						}
+					}
+					if($r['event_round_flyoff']!=0){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_code']=$this->pilots[$event_pilot_id]['country_code'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_name']=$this->pilots[$event_pilot_id]['country_name'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_code']=$this->pilots[$event_pilot_id]['state_code'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_name']=$this->pilots[$event_pilot_id]['state_name'];
+						
+						# This is a flyoff round, so lets add it to the flyoff totals instead
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];
+						
+						if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') && $p['event_pilot_round_flight_seconds']!=0){
+							# Lets add the speed rounds together and get an average for the pilot
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['speed_total_seconds']+=$p['event_pilot_round_flight_seconds'];
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['speed_total_runs']++;
+						}
+						if($f['flight_type_laps']){
+							# Lets add the laps done for this pilot
+							if($p['event_pilot_round_flight_dropped']!=1 && $p['event_pilot_round_flight_reflight_dropped']!=1){
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							}
+						}
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
+						
+						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$sub;
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties']+=$penalty;
+							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
+								# This means that this flight was not dropped, and the round is being scored
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$sub;
+							}else{
+								# This means that the round is being scored, but the flight was dropped
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drop']+=$sub;
+								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'][]=$sub;
+							}
+							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']-=$penalty;
+						}
+					}else{
+						$subtotals[$event_pilot_id]['pilot_first_name']=$this->pilots[$event_pilot_id]['pilot_first_name'];
+						$subtotals[$event_pilot_id]['pilot_last_name']=$this->pilots[$event_pilot_id]['pilot_last_name'];
+						$subtotals[$event_pilot_id]['country_code']=$this->pilots[$event_pilot_id]['country_code'];
+						$subtotals[$event_pilot_id]['country_name']=$this->pilots[$event_pilot_id]['country_name'];
+						$subtotals[$event_pilot_id]['state_code']=$this->pilots[$event_pilot_id]['state_code'];
+						$subtotals[$event_pilot_id]['state_name']=$this->pilots[$event_pilot_id]['state_name'];
+						
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_round_score_status']=$r['event_round_score_status'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score']+=$sub;
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$p['event_pilot_round_rank'];					
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
+					
+						if(($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed') 
+							&& $p['event_pilot_round_flight_seconds']!=0 
+							&& $p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0
+						){
+							# Lets add the speed rounds together and get an average for the pilot
+							$subtotals[$event_pilot_id]['speed_total_seconds']+=$p['event_pilot_round_flight_seconds'];
+							$subtotals[$event_pilot_id]['speed_total_runs']++;
+						}
+						
+						if($f['flight_type_laps']){
+							# Lets add the laps done for this pilot
+							if($p['event_pilot_round_flight_dropped']!=1 && $p['event_pilot_round_flight_reflight_dropped']!=1){
+								$subtotals[$event_pilot_id]['total_laps']+=$p['event_pilot_round_flight_laps'];
+							}
+						}
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']+=$sub;
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']=$p['event_pilot_round_flight_dropped'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']=$p['event_pilot_round_flight_reflight_dropped'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']=$p['event_pilot_round_flight_dns'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']=$p['event_pilot_round_flight_dnf'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_id']=$p['event_pilot_round_flight_id'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_round_flight_score']=$f['event_round_flight_score'];
+												
+						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$subtotals[$event_pilot_id]['subtotal']+=$sub;
+							$subtotals[$event_pilot_id]['penalties']+=$penalty;
+							if($p['event_pilot_round_flight_dropped']==0 && $p['event_pilot_round_flight_reflight_dropped']==0){
+								# This means that this flight was not dropped, and the round is being scored
+								$subtotals[$event_pilot_id]['total']+=$sub;
+							}else{
+								# This means that the round is being scored, but the flight was dropped
+								$subtotals[$event_pilot_id]['drop']+=$sub;
+								$subtotals[$event_pilot_id]['drops'][]=$sub;
+							}
+							$subtotals[$event_pilot_id]['total']-=$penalty;
+						}
+					}
+				}
+			}
+			# Lets determine the round rank from the subtotal entries
+			# Lets first create an easier array to sort
+			$tempranks=array();
+			foreach($subtotals as $event_pilot_id=>$temp){
+				$tempranks[$event_pilot_id]=$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score'];
+			}
+			arsort($tempranks);
+			#print_r($tempranks);
+			$count=1;
+			foreach($tempranks as $event_pilot_id=>$tr){
+				$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank']=$count;
+				$count++;
+			}
+		}
+		# Lets sort each of the drop arrays 
+		foreach($subtotals as $event_pilot_id=>$temp){
+			# sort the dropped round totals
+			if(is_array($subtotals[$event_pilot_id]['drops'])){
+				sort($subtotals[$event_pilot_id]['drops'],SORT_NUMERIC);
+			}
+		}
+		# Now lets make subtotals for each drop
+		foreach($subtotals as $event_pilot_id=>$temp){
+			if(is_array($temp['drops'])){
+				foreach($temp['drops'] as $drop){
+					$subtotals[$event_pilot_id]['subtotals'][]=$drop;
+				}
+			}
+		}
+		# Lets sort each of the flyoff drop arrays
+		foreach($flyoff_subtotals as $flyoff_number=>$f){
+			foreach($f as $event_pilot_id=>$temp){
+				# sort the dropped round totals
+				if(is_array($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'])){
+					sort($flyoff_subtotals[$flyoff_number][$event_pilot_id]['drops'],SORT_NUMERIC);
+				}
+			}
+		}
+		# Now lets make subtotals for each drop in flyoffs
+		foreach($flyoff_subtotals as $flyoff_number=>$f){
+			foreach($f as $event_pilot_id=>$temp){
+				if(is_array($temp['drops'])){
+					foreach($temp['drops'] as $drop){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotals'][]=$drop;
+					}
+				}
+			}
+		}
+		
+		# Step through each of the subtotals and make sure there are rounds that may not be completed
+		foreach($this->rounds as $round_number=>$r){
+			$flyoff_number=$r['event_round_flyoff'];
+			foreach($this->pilots as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				if($r['event_round_flyoff']!=0){
+					if(!isset($flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number])){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]=0;
+					}
+				}elseif(!isset($subtotals[$event_pilot_id]['rounds'][$round_number])){
+					$subtotals[$event_pilot_id]['rounds'][$round_number]=0;
+				}
+			}
+		}
+
+		# Calculate the average speed from the subtotals
+		foreach($subtotals as $event_pilot_id=>$p){
+			if($p['speed_total_runs']>0){
+				$subtotals[$event_pilot_id]['speed_average']=$p['speed_total_seconds']/$p['speed_total_runs'];
+			}else{
+				$subtotals[$event_pilot_id]['speed_average']=0;
+			}
+		}
+		
+		# Lets determine the average speed rank
+		$speed=array();
+		foreach($subtotals as $event_pilot_id=>$t){
+			# Create an array of all of the average speeds
+			if($t['speed_average']!=0){
+				$speed[$event_pilot_id]=$t['speed_average'];
+			}
+		}
+		asort($speed);
+		$count=1;
+		foreach($speed as $event_pilot_id=>$p){
+			if($subtotals[$event_pilot_id]['speed_average']!=0){
+				$subtotals[$event_pilot_id]['event_pilot_average_speed_rank']=$count;
+				$count++;
+			}
+		}
+
+		# Now determine the overall contest rank
+		$scores=array();
+		$max_points=0;
+		foreach($subtotals as $event_pilot_id=>$t){
+			# Create an array of all of the scores
+			$scores[$event_pilot_id]['drop_total']=$t['total'];
+			$d=1;
+			foreach($t['subtotals'] as $s){
+				$key='drop'.$d;
+				$scores[$event_pilot_id][$key]=$s;
+				$d++;
+			}
+			if($t['total']>$max_points){
+				$max_points=$t['total'];
+			}
+			$drops=count($t['subtotals']);
+		}
+		# Now lets build the msort array call string
+		$sort_cols=array('drop_total'=>SORT_DESC);
+		$count=1;
+		for($count=1;$count<=$drops; $count++){
+			$string="drop".$count;
+			$sort_cols=array_merge($sort_cols,array("$string"=>SORT_DESC));
+		}
+		$scores=array_msort($scores,$sort_cols);
+		
+		$count=1;
+		foreach($scores as $event_pilot_id=>$f){
+			$subtotals[$event_pilot_id]['overall_rank']=$count;
+			$subtotals[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+			# Lets calculate the percentage of points from the leader
+			if($max_points==0){
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=0;
+			}else{
+				$subtotals[$event_pilot_id]['event_pilot_total_percentage']=round(($subtotals[$event_pilot_id]['total']/$max_points)*100,3);
+			}
+			$totals[]=$subtotals[$event_pilot_id];
+			$count++;
+		}
+		
+		
+		# Lets see if the flyoff has a carryover score from the prelims and add those subtotals in before we determine rank
+		$carry=0;
+		foreach($this->options as $o){
+			if(preg_match("/\_flyoff_carry/",$o['event_type_option_code'])){
+				$carry=$o['event_option_value'];
+			}
+		}
+		if($carry==1){
+			# This flyoff is meant to have a carryover from the prelims
+			# Lets step though and add the subtotals from the prelim to each pilot
+			foreach($flyoff_subtotals as $flyoff_number=>$s){
+				foreach($s as $event_pilot_id=>$t){
+					if($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']!=0){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']+=$subtotals[$event_pilot_id]['total'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['subtotal']+=$subtotals[$event_pilot_id]['subtotal'];
+					}
+				}
+			}
+		}
+		
+		# Now determine the overall flyoff rank
+		foreach($flyoff_subtotals as $flyoff_number=>$s){
+			$at_least_one_score=0;
+			
+			$scores=array();
+			$max_points=0;
+			foreach($s as $event_pilot_id=>$t){
+				# Create an array of all of the scores
+				$scores[$event_pilot_id]['drop_total']=$t['total'];
+				$d=1;
+				if(is_array($t['subtotals'])){
+					foreach($t['subtotals'] as $s){
+						$key='drop'.$d;
+						$scores[$event_pilot_id][$key]=$s;
+						$d++;
+					}
+				}
+				if($t['total']>$max_points){
+					$max_points=$t['total'];
+				}
+				if($t['total']>0){
+					$at_least_one_score=1;
+				}
+				$drops=count($t['subtotals']);
+			}
+			# Now lets build the msort array call string
+			$sort_cols=array('drop_total'=>SORT_DESC);
+			$count=1;
+			for($count=1;$count<=$drops; $count++){
+				$string="drop".$count;
+				$sort_cols=array_merge($sort_cols,array("$string"=>SORT_DESC));
+			}
+			$scores=array_msort($scores,$sort_cols);
+
+			$count=1;
+			$last_score=0;
+			$flyoff_has_tie=0;
+			foreach($scores as $event_pilot_id=>$f){
+				if($f['drop_total']==0 && $at_least_one_score==1){
+					# This pilot has no scores, so lets not show them
+					continue;
+				}
+				$flyoff_subtotals[$flyoff_number][$event_pilot_id]['overall_rank']=$count;
+				$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+				# Lets calculate the percentage of points from the leader
+				if($max_points==0){
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage']=0;
+				}else{
+					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage']=round_down(($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']/$max_points)*100,$this->event_calc_accuracy);
+				}
+				$flyoff_totals[$flyoff_number]['total_rounds']=$flyoff_round_count[$flyoff_number];
+				$flyoff_totals[$flyoff_number]['pilots'][]=$flyoff_subtotals[$flyoff_number][$event_pilot_id];
+				$count++;
+				if($last_score==$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total']){
+					$flyoff_has_tie=1;
+				}
+				$last_score=$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'];
+			}
+			print "<!-- flyoff_has_tie ($flyoff_number) =$flyoff_has_tie -->\n";
+		}
+		# Lets get the round drops
+		foreach($this->options as $o){
+			if(preg_match("/\_drop\d/",$o['event_type_option_code']) && !preg_match("/flyoff\_drop/",$o['event_type_option_code'])){
+				$drop_rounds[]=$o['event_option_value'];
+			}
+		}
+		# Now lets see how many drops based on those round numbers
+		$number_drops=0;
+		foreach($drop_rounds as $drop_round_number){
+			# Lets step through each of the round types to determine COMPLETED rounds
+			$completed=1;
+			foreach($this->rounds as $round_number=>$r){
+				$flyoff_number=$r['event_round_flyoff'];
+				if($flyoff_number!=0){
+					# If its not a prelim round
+					continue;
+				}
+				if($r['event_round_score_status']==0){
+					continue;
+				}
+				if($this->info['event_type_code']=='f3k'){
+					$flight_type_id=$r['flight_type_id'];
+					if($r['flights'][$flight_type_id]['event_round_flight_score']==0){
+						# this one is not being scored, so set completed to 0
+						$completed=0;
+					}
+				}else{
+					# Step through each of the flight types to see if the round is complete
+					foreach($this->flight_types as $flight_type_id=>$ft){
+						if($r['flights'][$flight_type_id]['event_round_flight_score']==0){
+							# It has a flight type that is not being scored, so set completed to 0
+							$completed=0;
+						}
+					}
+				}
+				if($completed==1 && $round_number==$drop_round_number){
+					$number_drops++;
+				}
+			}
+		}
+		
+		# Lets get the flyoff round drops
+		foreach($this->options as $o){
+			if(preg_match("/\_flyoff\_drop\d/",$o['event_type_option_code'])){
+				$flyoff_drop_rounds[]=$o['event_option_value'];
+			}
+		}
+		# Now lets see how many flyoff drops based on those round numbers
+		foreach($flyoff_totals as $flyoff_number=>$f){
+			$flyoff_number_drops=0;
+			foreach($flyoff_drop_rounds as $round_number){
+				if($f['total_rounds']>=$round_number){
+					$flyoff_number_drops++;
+				}
+			}
+			$flyoff_totals[$flyoff_number]['round_drops']=$flyoff_number_drops;
+		}
+		
+		# lets get the team totals now
+		# lets first check to see how many team members are supposed to count
+		$team_count=$this->find_option_value('team_total_pilots');
+		if($team_count==''){
+			$team_count=0;
+		}
+		$team_counted=array();
+		foreach($totals as $p){
+			$event_pilot_id=$p['event_pilot_id'];
+			$team_name=$this->pilots[$event_pilot_id]['event_pilot_team'];
+			if($team_name!='' && ($team_count==0 || $team_counted[$team_name]<$team_count)){
+				$teams[$team_name]+=$p['total'];
+				$team_counted[$team_name]++;
+			}
+		}
+		if(count($teams)>0){
+			arsort($teams);
+			# There are team totals, so lets sort them
+			$count=1;
+			foreach($teams as $team_name=>$total){
+				$this->totals['teams'][]=array("rank"=>$count,"team_name"=>$team_name,"total"=>$total);
+				$count++;
+			}
+		}		
+		
+		$this->totals['total_rounds']=$total_prelim_rounds;
+		$this->totals['round_drops']=$number_drops;
+		$this->totals['pilots']= $totals;		
+		
+		$this->flyoff_totals= $flyoff_totals;
+		sub_trace();
+		
+		# Lets set the top speed for the contest for easy retrieval by the other sections
+		$speeds=$this->get_top_speeds();
+		$temp=current($speeds);
+		# Lets determine the accuracy from the event_options
+		$accuracy=0;
+		foreach($this->options as $o){
+			if($o['event_type_option_code']=='f3b_speed_accuracy' || $o['event_type_option_code']=='f3f_speed_accuracy'){
+				$accuracy=intval($o['event_option_value']);
+			}
+		}
+		$this->event_record_speed=round_down($temp['event_pilot_round_flight_seconds'],$accuracy);
+		$this->event_record_speed_event_pilot_id=$temp['event_pilot_id'];
+		$laps=$this->get_top_distance();
+		$temp2=current($laps);
+		$this->event_record_distance=$temp2['event_pilot_round_flight_laps'];
+		$this->event_record_distance_event_pilot_id=$temp2['event_pilot_id'];
+		return;
+	}
+	function event_save_totals(){
+		# Function to save the total values for the pilots
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		sub_trace();
+		
+		# Lets step through the totals now and figure out which need to be dropped and save the pilot totals for the event too
+		$temp=array();
+		$temp=$this->totals['pilots'];
+
+		# ok, this is different for f3b tasks than any other event type so lets do it differently
+		if($this->info['event_type_code']=='f3b'){
+			# It has multiple tasks and the drops only happen in task types
+
+			# Lets make another array to more easily sort the values to drop
+			$temp_flights=array();
+			foreach($temp as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				foreach($p['rounds'] as $round_number=>$r){
+					foreach($r['flights'] as $flight_type_id=>$f){
+						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
+							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+							$temp_flights[$event_pilot_id][$flight_type_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
+						}
+					}
+				}
+			}
+
+			if($this->totals['round_drops']>0){
+				# Lets clear all of the flights for all of the pilots of their flight dropped status
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight eprf
+					LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+					LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+					SET eprf.event_pilot_round_flight_dropped=0
+					WHERE er.event_id=:event_id
+						AND er.event_round_status=1
+						AND er.event_round_flyoff=0
+				");
+				$result=db_exec($stmt,array("event_id"=>$this->event_id));
+			
+				foreach($temp_flights as $event_pilot_id=>$ft){
+					foreach($ft as $flight_type_id=>$r){
+						$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
+						# Now lets pick off the ones to mark as dropped
+						$drop=0;
+						foreach($temp2 as $round_number=>$f){
+							if($drop<$this->totals['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
+								# Set the drop flag for this flight
+								$stmt=db_prep("
+									UPDATE event_pilot_round_flight
+									SET event_pilot_round_flight_dropped=1
+									WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+								");
+								$result=db_exec($stmt,array("event_pilot_round_flight_id"=>$f['event_pilot_round_flight_id']));
+								$drop++;
+							}
+						}
+					}
+				}
+			}
+		}else{
+			# This is for all of the other event types, where there is only a single flight type per round, so drops happen to the whole round
+			# Lets make another array to more easily sort the values to drop
+			$temp_flights=array();
+			foreach($temp as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				foreach($p['rounds'] as $round_number=>$r){
+					foreach($r['flights'] as $flight_type_id=>$f){
+						if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
+							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+							$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
+						}
+					}
+				}
+			}
+			sub_trace();
+		
+			# Lets clear all of the flights for all of the pilots of their flight dropped status
+			$stmt=db_prep("
+				UPDATE event_pilot_round_flight eprf
+				LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+				LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+				SET eprf.event_pilot_round_flight_dropped=0
+				WHERE er.event_id=:event_id
+					AND er.event_round_status=1
+					AND er.event_round_flyoff=0
+			");
+			$result=db_exec($stmt,array("event_id"=>$this->event_id));
+			foreach($temp_flights as $event_pilot_id=>$r){
+				$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
+				
+				# Now lets pick off the ones to mark as dropped
+				$drop=0;
+				foreach($temp2 as $round_number=>$f){
+					if($drop<$this->totals['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
+						# Set the drop flag for this flight
+						$stmt=db_prep("
+							UPDATE event_pilot_round_flight
+							SET event_pilot_round_flight_dropped=1
+							WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+						");
+						$result=db_exec($stmt,array("event_pilot_round_flight_id"=>$f['event_pilot_round_flight_id']));
+						$drop++;
+					}
+				}
+			}
+		}
+		sub_trace();
+		
+		# lets do the drops for the flyoff rounds!
+		if($this->flyoff_totals){
+
+			foreach($this->flyoff_totals as $flyoff_number=>$temp){
+						
+				# Lets make another array to more easily sort the values to drop
+				$temp_flights=array();
+				foreach($temp['pilots'] as $p){
+					$event_pilot_id=$p['event_pilot_id'];
+					foreach($p['rounds'] as $round_number=>$r){
+						foreach($r['flights'] as $flight_type_id=>$f){
+							if($r['event_round_score_status']==1 && $f['event_round_flight_score']==1){
+								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_total_score']=$f['event_pilot_round_total_score'];
+								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_id']=$f['event_pilot_round_flight_id'];
+								$temp_flights[$event_pilot_id][$round_number]['event_pilot_round_flight_reflight_dropped']=$f['event_pilot_round_flight_reflight_dropped'];
+							}
+						}
+					}
+				}	
+
+				# Lets clear all of the flights for all of the pilots of their flight dropped status
+				$stmt=db_prep("
+					UPDATE event_pilot_round_flight eprf
+					LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+					LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+					SET eprf.event_pilot_round_flight_dropped=0
+					WHERE er.event_id=:event_id
+						AND er.event_round_status=1
+						AND er.event_round_flyoff=:event_round_flyoff
+				");
+				$result=db_exec($stmt,array("event_id"=>$this->event_id,"event_round_flyoff"=>$flyoff_number));
+
+				foreach($temp_flights as $event_pilot_id=>$r){
+					$temp2=array_msort($r,array('event_pilot_round_total_score'=>SORT_ASC));
+				
+					# Now lets pick off the ones to mark as dropped
+					$drop=0;
+					foreach($temp2 as $round_number=>$f){
+						if($drop<$temp['round_drops'] && $f['event_pilot_round_flight_reflight_dropped']==0){
+							# Set the drop flag for this flight
+							$stmt=db_prep("
+								UPDATE event_pilot_round_flight
+								SET event_pilot_round_flight_dropped=1
+								WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
+							");
+							$result=db_exec($stmt,array("event_pilot_round_flight_id"=>$f['event_pilot_round_flight_id']));
+							$drop++;
+						}
+					}
+				}
+			}
+		}
+		sub_trace();
+		
+		# Lets save the pilot totals to the event_pilot table
+		foreach($this->totals['pilots'] as $p){
+			$stmt=db_prep("
+				UPDATE event_pilot
+				SET event_pilot_position=:rank,
+					event_pilot_total_score=:score,
+					event_pilot_total_percentage=:percent,
+					event_pilot_total_laps=:laps,
+					event_pilot_lap_rank=:event_pilot_lap_rank,
+					event_pilot_average_speed=:speed_average,
+					event_pilot_average_speed_rank=:event_pilot_average_speed_rank
+				WHERE event_pilot_id=:event_pilot_id
+			");
+			$result=db_exec($stmt,array(
+				"rank"=>$p['overall_rank'],
+				"score"=>$p['total'],
+				"percent"=>$p['event_pilot_total_percentage'],
+				"laps"=>$p['total_laps'],
+				"event_pilot_lap_rank"=>$p['event_pilot_lap_rank'],
+				"speed_average"=>$p['speed_average'],
+				"event_pilot_average_speed_rank"=>$p['event_pilot_average_speed_rank'],
+				"event_pilot_id"=>$p['event_pilot_id']
+			));
+		}
+		sub_trace();
+		# Lets save the top speed and distances for the contest for easy retrieval by the other sections
+		$stmt=db_prep("
+			UPDATE event
+			SET event_record_speed=:event_record_speed,
+				event_record_speed_event_pilot_id=:event_record_speed_event_pilot_id,
+				event_record_distance=:event_record_distance,
+				event_record_distance_event_pilot_id=:event_record_distance_event_pilot_id
+			WHERE event_id=:event_id
+		");
+		$result=db_exec($stmt,array(
+			"event_record_speed"=>$this->event_record_speed,
+			"event_record_speed_event_pilot_id"=>$this->event_record_speed_event_pilot_id,
+			"event_record_distance"=>$this->event_record_distance,
+			"event_record_distance_event_pilot_id"=>$this->event_record_distance_event_pilot_id,
+			"event_id"=>$this->event_id
+		));
+		# Now lets see if the location values for records need to be updated
+		if($this->event_record_speed !=0 && ($this->event_record_speed<$this->info['location_record_speed'] || $this->info['location_record_speed']==0)  && $this->info['location_id']!=0){
+			# Lets update the location with the new top speed
+			$stmt=db_prep("
+				UPDATE location
+				SET location_record_speed=:event_record_speed,
+					location_record_speed_event_pilot_id=:event_record_speed_event_pilot_id
+				WHERE location_id=:location_id
+			");
+			$result=db_exec($stmt,array(
+				"event_record_speed"=>$this->event_record_speed,
+				"event_record_speed_event_pilot_id"=>$this->event_record_speed_event_pilot_id,
+				"location_id"=>$this->info['location_id']
+			));
+		
+		}
+		if($this->event_record_distance !=0 && ($this->event_record_distance>$this->info['location_record_distance'] || $this->info['location_record_distance']==0)  && $this->info['location_id']!=0){
+			# Lets update the location with the new top laps
+			$stmt=db_prep("
+				UPDATE location
+				SET location_record_distance=:event_record_distance,
+					location_record_distance_event_pilot_id=:event_record_distance_event_pilot_id
+				WHERE location_id=:location_id
+			");
+			$result=db_exec($stmt,array(
+				"event_record_distance"=>$this->event_record_distance,
+				"event_record_distance_event_pilot_id"=>$this->event_record_distance_event_pilot_id,
+				"location_id"=>$this->info['location_id']
+			));
+		
+		}
+		return;
+	}
+	function recalculate_all_rounds(){
+		# Function to step through and recaclulate all of the rounds
+		foreach($this->rounds as $event_round_number=>$r){
+			$this->calculate_round($event_round_number);
+		}
+		return;
+	}
+	
+	# Statistics Routines
+	function get_top_speeds(){
+		# Function to get the top speeds of the contest
+		if(count($this->rounds)==0){
+			$this->get_rounds();
+		}
+		if(count($this->totals['pilots'])==0 && count($this->flyoff_totals)==0){
+			$this->calculate_event_totals();
+		}
+		$temp_speeds=array();
+		$speeds=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if($f['event_round_flight_score']==0){
+					continue;
+				}
+				if($f['flight_type_code']=='f3f_speed' || $f['flight_type_code']=='f3b_speed'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						if($p['event_pilot_round_flight_seconds']!=0){
+							$temp_speeds[]=array(
+								"event_pilot_id"=>$event_pilot_id,
+								"event_round_number"=>$event_round_number,
+								"event_pilot_round_flight_seconds"=>$p['event_pilot_round_flight_seconds'],
+								"accuracy_string"=>$f['accuracy_string']
+							);
+						}
+					}
+				}
+			}		
+		}
+		$speeds=array_msort($temp_speeds,array("event_pilot_round_flight_seconds"=>SORT_ASC));
+		return $speeds;
+	}
+	function get_top_distance(){
+		# Function to get the top distance laps of the contest
+		if(count($this->totals['pilots'])==0 && count($this->flyoff_totals)==0){
+			$this->calculate_event_totals();
+		}
+		$temp_laps=array();
+		$laps=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			foreach($r['flights'] as $flight_type_id=>$f){
+				if($f['event_round_flight_score']==0){
+					continue;
+				}
+				if($f['flight_type_code']=='f3b_distance'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						$temp_laps[]=array(
+							"event_pilot_id"=>$event_pilot_id,
+							"event_round_number"=>$event_round_number,
+							"event_pilot_round_flight_laps"=>$p['event_pilot_round_flight_laps']
+						);
+					}
+				}
+			}
+			foreach($r['reflights'] as $flight_type_id=>$f){
+				if($f['event_round_flight_score']==0){
+					continue;
+				}
+				if($f['flight_type_code']=='f3b_distance'){
+					foreach($f['pilots'] as $event_pilot_id=>$p){
+						$temp_laps[]=array(
+							"event_pilot_id"=>$event_pilot_id,
+							"event_round_number"=>$event_round_number,
+							"event_pilot_round_flight_laps"=>$p['event_pilot_round_flight_laps']
+						);
+					}
+				}
+			}
+		}
+		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
+		return $laps;
+	}
+	function get_total_distance(){
+		# Function to get the total distance laps in the contest per pilot
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_laps=array();
+		$laps=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_distance'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_laps[$event_pilot_id]['event_pilot_id']=$event_pilot_id;						
+							$temp_laps[$event_pilot_id]['event_pilot_round_flight_laps']+=$p['event_pilot_round_flight_laps'];						
+						}
+					}
+				}
+				if(count($r['reflights']['pilots'])>0){
+					foreach($r['reflights'] as $flight_type_id=>$f){
+						if($f['event_round_flight_score']==0){
+							continue;
+						}
+						if($f['flight_type_code']=='f3b_distance'){
+							foreach($f['pilots'] as $event_pilot_id=>$p){
+								if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+									continue;
+								}
+								$temp_laps[$event_pilot_id]['event_pilot_id']=$event_pilot_id;						
+								$temp_laps[$event_pilot_id]['event_pilot_round_flight_laps']+=$p['event_pilot_round_flight_laps'];						
+							}
+						}
+					}
+				}
+			}	
+		}
+		$laps=array_msort($temp_laps,array("event_pilot_round_flight_laps"=>SORT_DESC));
+		return $laps;
+	}
+	function get_top_landing(){
+		# Function to get the top landing averages of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_landing=array();
+		$landing=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_landing']==1){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_landing[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_landing[$event_pilot_id]['event_pilot_round_flight_landing']+=$p['event_pilot_round_flight_landing'];
+							$temp_landing[$event_pilot_id]['number_rounds']++;
+						}
+					}
+				}
+			}	
+		}
+		foreach($temp_landing as $event_pilot_id=>$t){
+			$temp_landing[$event_pilot_id]['average_landing']=$t['event_pilot_round_flight_landing']/$t['number_rounds'];
+		}
+		
+		$landing=array_msort($temp_landing,array("average_landing"=>SORT_DESC));
+		return $landing;
+	}
+	function get_duration_rank(){
+		# Function to get the duration ranking of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_duration=array();
+		$duration=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_duration'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_duration[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_duration[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+						}
+					}
+				}
+				# Now step through the reflights and do the same
+				if(count($r['reflights']['pilots'])>0){
+					foreach($r['reflights'] as $flight_type_id=>$f){
+						if($f['event_round_flight_score']==0){
+							continue;
+						}
+						if($f['flight_type_code']=='f3b_duration'){
+							foreach($f['pilots'] as $event_pilot_id=>$p){
+								if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+									continue;
+								}
+								$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+								$temp_distance[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+							}
+						}
+					}
+				}
+			}	
+		}		
+		$duration=array_msort($temp_duration,array("event_pilot_round_flight_score"=>SORT_DESC));
+		return $duration;
+	}
+	function get_distance_rank(){
+		# Function to get the distance ranking of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_distance=array();
+		$distance=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_distance'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+								continue;
+							}
+							$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_distance[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+						}
+					}
+				}
+				# Now step through the reflights and do the same
+				if(count($r['reflights']['pilots'])>0){
+					foreach($r['reflights'] as $flight_type_id=>$f){
+						if($f['event_round_flight_score']==0){
+							continue;
+						}
+						if($f['flight_type_code']=='f3b_distance'){
+							foreach($f['pilots'] as $event_pilot_id=>$p){
+								if($p['event_pilot_round_flight_dropped']==1 || $p['event_pilot_round_flight_reflight_dropped']==1){
+									continue;
+								}
+								$temp_distance[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+								$temp_distance[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+							}
+						}
+					}
+				}
+			}	
+		}		
+		$distance=array_msort($temp_distance,array("event_pilot_round_flight_score"=>SORT_DESC));
+		return $distance;
+	}
+	function get_speed_rank(){
+		# Function to get the speed ranking of the contest
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		$temp_speed=array();
+		$speed=array();
+		foreach($this->rounds as $event_round_number=>$r){
+			if($r['event_round_score_status']==1){
+				foreach($r['flights'] as $flight_type_id=>$f){
+					if($f['event_round_flight_score']==0){
+						continue;
+					}
+					if($f['flight_type_code']=='f3b_speed'){
+						foreach($f['pilots'] as $event_pilot_id=>$p){
+							if($p['event_pilot_round_flight_dropped']==1){
+								continue;
+							}
+							$temp_speed[$event_pilot_id]['event_pilot_id']=$event_pilot_id;
+							$temp_speed[$event_pilot_id]['event_pilot_round_flight_score']+=$p['event_pilot_round_flight_score'];
+						}
+					}
+				}
+			}	
+		}		
+		$speed=array_msort($temp_speed,array("event_pilot_round_flight_score"=>SORT_DESC));
+		return $speed;
+	}
+	function get_running_totals(){
+		# Function to figure out the running totals for each round
+		if(count($this->totals['pilots'])==0){
+			$this->calculate_event_totals();
+		}
+		# First, lets get the round drop values
+		foreach($this->options as $o){
+			if(preg_match("/\_drop\d/",$o['event_type_option_code']) && !preg_match("/flyoff\_drop/",$o['event_type_option_code'])){
+				$drop_rounds[]=$o['event_option_value'];
+			}
+		}
+		# Lets step through each round and get the totals
+		$drops=0;
+		foreach($this->rounds as $event_round_number=>$r){
+			if(in_array($event_round_number,$drop_rounds)){
+				$drops++;
+			}
+			if($r['event_round_score_status']==0){
+				continue;
+			}
+			$pilots=array();
+			foreach($this->totals['pilots'] as $p){
+				$event_pilot_id=$p['event_pilot_id'];
+				foreach($p['rounds'] as $ern=>$pr){
+					if($ern>$event_round_number || $pr['event_round_score_status']==0 ){
+						continue;
+					}
+					$pilots[$event_pilot_id]['subtotal']+=$pr['event_pilot_round_total_score'];
+					foreach($pr['flights'] as $ftid=>$prf){
+						if($this->info['event_type_code']=='f3k'){
+							$ftid=1;
+						}
+						$pilots[$event_pilot_id]['flight_scores'][$ftid][]=$prf['event_pilot_round_total_score'];
+					}
+				}
+			}
+			if($drops!=0){
+				# We have to drop the lowest scores from the subtotal
+				foreach($pilots as $event_pilot_id=>$p){
+					foreach($p['flight_scores'] as $ftid=>$prf){
+						$temparray=$prf;
+					
+						arsort($temparray);
+						$dropped=0;
+						while($dropped<$drops){
+							$pilots[$event_pilot_id]['subtotal']-=array_pop($temparray);
+							$dropped++;
+						}
+					}
+				}	
+			}
+			# Now we have to include any penalties that we might find in those rounds
+			foreach($this->rounds as $ern=>$er){
+				if($ern>$event_round_number || $er['event_round_score_status']==0 ){
+					continue;
+				}
+				# Lets step through each of the pilots and see if there were any penalties
+				foreach($er['flights'] as $f){
+					foreach($f['pilots'] as $epid=>$epf){
+						if($epf['event_pilot_round_flight_penalty']!=0){
+							$pilots[$epid]['subtotal']-=$epf['event_pilot_round_flight_penalty'];
+						}
+					}
+				}
+			}
+			
+			#print "event_round_number=$event_round_number<br>\n";
+			#print "drops=$drops<br>\n";
+			arsort($pilots);
+			
+			# Now lets sort the array to determine the position
+			$pos=1;
+			$temp=array_msort($pilots,array('subtotal'=>SORT_ASC));
+			foreach($pilots as $event_pilot_id=>$p){
+				foreach($this->totals['pilots'] as $key=>$tp){
+					if($event_pilot_id!=$tp['event_pilot_id']){
+						continue;
+					}
+					$this->totals['pilots'][$key]['rounds'][$event_round_number]['event_round_upto_rank']=$pos;
+					$this->totals['pilots'][$key]['rounds'][$event_round_number]['event_round_upto_sub']=$p['subtotal'];
+				}
+				$pos++;
+			}
+		}
+		return;
+	}
+}
+?>

@@ -21,55 +21,61 @@ if(check_user_function($function)){
 function view_home() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='home';
+	global $fsession;
+	$smarty->assign('current_menu','home');
 
+	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl=find_template("home.tpl");
+	if(!isset($fsession['welcome']) || $_REQUEST['slideshow'] == 1){
+		$maintpl=find_template("welcome.tpl");
+		$fsession['welcome']=1;
+	}
 	return $smarty->fetch($maintpl);
 }
 function view_locations() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='locations';
+	$smarty->assign('current_menu','locations');
 
-	$maintpl=find_template("locations.tpl");
+	$maintpl=find_template("location/locations.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_planes() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='planes';
+	$smarty->assign('current_menu','planes');
 
-	$maintpl=find_template("planes.tpl");
+	$maintpl=find_template("plane/planes.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_events() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='events';
+	$smarty->assign('current_menu','events');
 
-	$maintpl=find_template("events.tpl");
+	$maintpl=find_template("event/events.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_pilots() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='pilots';
+	$smarty->assign('current_menu','pilots');
 
-	$maintpl=find_template("pilots.tpl");
+	$maintpl=find_template("pilot/pilots.tpl");
 	return $smarty->fetch($maintpl);
 }
 function view_clubs() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='clubs';
+	$smarty->assign('current_menu','clubs');
 
-	$maintpl=find_template("clubs.tpl");
+	$maintpl=find_template("club/clubs.tpl");
 	return $smarty->fetch($maintpl);
 }
 function login() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='login';
+	$smarty->assign('current_menu','login');
 
 	$maintpl=find_template("login.tpl");
 	return $smarty->fetch($maintpl);
@@ -78,28 +84,28 @@ function user_login() {
 	global $smarty;
 	global $user;
 	global $actionoutput;
-	$GLOBALS['current_menu']='login';
 
 	# ok, lets log the user in
 	$check=check_login();
 	if($check[0]==0){
-		save_fsession();
 		# The user is successfully logged in, so lets redirect to refresh the page
 		$user=get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
 		log_action($user['user_id']);
 		
-		if(isset($_REQUEST['redirect_action'])){
+		if(isset($_REQUEST['redirect_action']) && $_REQUEST['redirect_action'] != ''){
 			$_REQUEST['action']=$_REQUEST['redirect_action'];
 		}else{
 			$_REQUEST['action']='my';
 		}
-		if(isset($_REQUEST['redirect_function'])){
+		if(isset($_REQUEST['redirect_function']) && $_REQUEST['redirect_function'] != ''){
 			$_REQUEST['function']=$_REQUEST['redirect_function'];
 		}else{
 			$_REQUEST['function']='';
 		}
 		$GLOBALS['user_id']=$user['user_id'];
+		$user=get_user_info($GLOBALS['user_id']);
+		$smarty->assign("user",$user);
         include("{$GLOBALS['scripts_dir']}/{$_REQUEST['action']}.php");
 		return $actionoutput;
 	}
@@ -116,7 +122,7 @@ function user_login() {
 function logout() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='login';
+	$smarty->assign('current_menu','login');
 
 	# ok, lets log them out
 	destroy_fsession();
@@ -175,20 +181,15 @@ function main_feedback_save() {
 }
 function forgot() {
 	global $smarty;
-	global $user;
-	$GLOBALS['current_menu']='login';
-
 	# ok, lets present the user with the ability to enter their user name
-
 	$maintpl=find_template("forgot.tpl");
 	return $smarty->fetch($maintpl);
 }
 function forgot_send() {
 	global $smarty;
 	global $user;
-	$GLOBALS['current_menu']='login';
 
-	# ok, lets present the user with the ability to enter their user name
+	# ok, lets check to see if they are a user, and send them a password reset email
 	$email=$_REQUEST['email'];
 	if($email==''){
 		user_message("You must enter an email address for the password recovery process.",1);
@@ -257,7 +258,7 @@ function pass_recovery_save(){
 	if($pass1!=$pass2){
 		user_message("I'm sorry, but the two entered passwords do not match.",1);
 		$user=array();
-		return view_home();
+		return pass_recovery();
 	}
 	$user_info=get_user_info($user_id);
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
@@ -265,7 +266,7 @@ function pass_recovery_save(){
 	if($hash!=$compare){
 		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
 		$user=array();
-		return view_home();
+		return pass_recovery();
 	}
 	
 	# They have successfully come here to change their password!
@@ -290,6 +291,7 @@ function pass_recovery_save(){
 	$fsession['user_id']=$user_info['user_id'];
 	$fsession['user_name']=$user_info['user_name'];
 	$user=$user_info;
+	$smarty->assign("user",$user);
 	$GLOBALS['user_id']=$user_info['user_id'];
 	save_fsession();
         
@@ -297,26 +299,6 @@ function pass_recovery_save(){
 	$_REQUEST['function']='';
 	include("{$GLOBALS['scripts_dir']}/my.php");
 	return $actionoutput;	
-}
-function change_format() {
-	global $smarty;
-	global $user;
-
-	$format=$_REQUEST['format'];
-	switch($format){
-		case 'phone':
-			$format='phone';
-			break;
-		case 'tablet':
-		case 'computer':
-		default :
-			$format='computer';
-			break;
-	}
-	$GLOBALS['fsession']['device']=$format;
-	save_fsession();
-	header("Location: /");
-	exit;
 }
 
 ?>

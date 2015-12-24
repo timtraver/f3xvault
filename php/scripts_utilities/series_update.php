@@ -8,11 +8,7 @@
 #
 ############################################################################
 
-if(file_exists('C:/Program Files (x86)/Apache Software Foundation/Apache2.2/local')){
-	require_once("C:\Program Files (x86)\Apache Software Foundation\Apache2.2\php\conf.php");
-}else{
-	require_once("/shared/links/r/c/v/a/rcvault.com/site/php/conf.php");
-}
+require_once("/var/www/f3xvault.com/php/conf.php");
 
 include_library('functions.inc');
 include_library('event.class');

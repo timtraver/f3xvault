@@ -7,7 +7,7 @@
 #	This is the script to handle the different records for speeds and distances
 #
 ############################################################################
-$GLOBALS['current_menu']='events';
+$smarty->assign("current_menu",'records');
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 	$function=$_REQUEST['function'];
@@ -50,7 +50,6 @@ function records_list() {
 	}elseif(isset($GLOBALS['fsession']['page'])){
 		$page=$GLOBALS['fsession']['page'];
 	}
-	$perpage=20;
 	if(isset($_REQUEST['perpage'])){
 		$perpage=intval($_REQUEST['perpage']);
 		$GLOBALS['fsession']['perpage']=$perpage;
@@ -63,7 +62,6 @@ function records_list() {
 		$addcountry.=" AND pc.country_id=$country_id ";
 	}
 	
-	
 	# Get only countries that we have events for
 	$stmt=db_prep("
 		SELECT DISTINCT c.*
@@ -74,7 +72,6 @@ function records_list() {
 			AND e.event_type_id IN (1,2,3)
 	");
 	$countries=db_exec($stmt,array());
-
 
 	# Lets determine the records to show from the page and the number of pilots per page
 	if($page==1){
@@ -168,6 +165,24 @@ function records_list() {
 
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 
+	# Set the paging stuff manually for this one
+	if($page == 1){
+		$prev = 1;
+	}else{
+		$prev = $page - 1;
+	}
+	$paging['main'] = array(
+		"page"=>$page,
+		"startrecord"=>$limit_start,
+		"endrecord"=>$limit_end,
+		"callback"=>'action=records',
+		"perpage"=>$perpage,
+		"nextpage"=>$page+1,
+		"prevpage"=>$prev,
+		"totalpages"=>$page+1,
+		"totalrecords"=>1000000000
+	);
+	$smarty->assign("paging",$paging);
 	$smarty->assign("countries",$countries);
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);

@@ -33,6 +33,12 @@ function my_user_show() {
 	global $user;
 	global $smarty;
 	
+	if(isset($_REQUEST['tab'])){
+		$tab = $_REQUEST['tab'];
+	}else{
+		$tab = 0;
+	}
+	
 	$is_pilotlist=0;
 	# Get the current users pilot info
 	$stmt=db_prep("
@@ -285,10 +291,11 @@ function my_user_show() {
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);
 	$smarty->assign("f3b_dist",$f3b_dist);
+	$smarty->assign("tab",$tab);
 	
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
-	$maintpl=find_template("my.tpl");
+	$maintpl=find_template("my/my.tpl");
 	return $smarty->fetch($maintpl);
 }
 function my_user_save(){
@@ -449,10 +456,12 @@ function my_plane_edit() {
 		AND ppm.pilot_plane_media_status=1
 	");
 	$media=db_exec($stmt,array("pilot_plane_id"=>$pilot_plane_id));
-	
+
+	my_user_show();
+		
 	$smarty->assign("pilot_plane",$pilot_plane);
 	$smarty->assign("media",$media);
-	$maintpl=find_template("my_plane_edit.tpl");
+	$maintpl=find_template("my/my_plane_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function my_plane_save() {
@@ -560,7 +569,7 @@ function my_plane_media_edit() {
 	
 	$smarty->assign("plane",$plane);
 	$smarty->assign("pilot_plane_id",$pilot_plane_id);
-	$maintpl=find_template("my_plane_edit_media.tpl");
+	$maintpl=find_template("my/my_plane_edit_media.tpl");
 	return $smarty->fetch($maintpl);
 }
 function my_plane_media_add() {
@@ -629,183 +638,41 @@ function my_plane_media_del() {
 	user_message("Removed plane media from this plane.");
 	return my_plane_edit();
 }
-function my_location_edit() {
-	global $smarty;
-	global $user;
-
-	$country_id=0;
-	$state_id=0;
-	if(isset($_REQUEST['country_id'])){
-		$country_id=intval($_REQUEST['country_id']);
-		$GLOBALS['fsession']['country_id']=$country_id;
-	}elseif(isset($GLOBALS['fsession']['country_id'])){
-		$country_id=$GLOBALS['fsession']['country_id'];
-	}
-	if(isset($_REQUEST['state_id'])){
-		$state_id=intval($_REQUEST['state_id']);
-		$GLOBALS['fsession']['state_id']=$state_id;
-	}elseif(isset($GLOBALS['fsession']['state_id'])){
-		$state_id=$GLOBALS['fsession']['state_id'];
-	}
-
-	$search='';
-	if(isset($_REQUEST['search']) ){
-		$search=$_REQUEST['search'];
-		$search_operator=$_REQUEST['search_operator'];
-		$GLOBALS['fsession']['search']=$_REQUEST['search'];
-		$GLOBALS['fsession']['search_operator']=$_REQUEST['search_operator'];
-	}elseif(isset($GLOBALS['fsession']['search']) && $GLOBALS['fsession']['search']!=''){
-		$search=$GLOBALS['fsession']['search'];
-		$search_operator=$GLOBALS['fsession']['search_operator'];
-	}
-	if(isset($_REQUEST['search_field']) && $_REQUEST['search_field']!=''){
-		$search_field_entry=$_REQUEST['search_field'];
-	}elseif(isset($GLOBALS['fsession']['search_field'])){
-		$search_field_entry=$GLOBALS['fsession']['search_field'];
-	}
-	switch($search_field_entry){
-		case 'location_name':
-			$search_field='location_name';
-			break;
-		case 'location_city':
-			$search_field='location_city';
-			break;
-		default:
-			$search_field='location_name';
-			break;
-	}
-	if($search=='' || $search=='%%'){
-		$search_field='location_name';
-	}
-	$GLOBALS['fsession']['search_field']=$search_field;
-	
-	switch($search_operator){
-		case 'contains':
-			$operator='LIKE';
-			$search="%$search%";
-			break;
-		case 'exactly':
-			$operator="=";
-			break;
-		default:
-			$operator="LIKE";
-	}
-
-	$addcountry='';
-	if($country_id!=0){
-		$addcountry.=" AND l.country_id=$country_id ";
-	}
-	$addstate='';
-	if($state_id!=0){
-		$addstate.=" AND l.state_id=$state_id ";
-	}
-#print "addcountry=$addcountry<br>\n";
-#print "addstate=$addstate<br>\n";
-#print "search=$search<br>\n";
-#print "search_field=$search_field<br>\n";
-#print "search_operator=$search_operator<br>\n";
-#print "operator=$operator<br>\n";
-
-	$locations=array();
-	if($search!='%%' && $search!=''){
-		$stmt=db_prep("
-			SELECT *
-			FROM location l
-			LEFT JOIN state s ON l.state_id=s.state_id
-			LEFT JOIN country c ON l.country_id=c.country_id
-			WHERE l.$search_field $operator :search
-				$addcountry
-				$addstate
-			ORDER BY l.country_id,l.state_id,l.location_name
-		");
-		$locations=db_exec($stmt,array("search"=>$search));
-	}else{
-		# Get all locations for search
-		$stmt=db_prep("
-			SELECT *
-			FROM location l
-			LEFT JOIN state s ON l.state_id=s.state_id
-			LEFT JOIN country c ON l.country_id=c.country_id
-			WHERE 1
-				$addcountry
-				$addstate
-			ORDER BY l.country_id,l.state_id,l.location_name
-		");
-		$locations=db_exec($stmt,array());
-	}
-		
-	# Get only countries that we have locations for
-	$stmt=db_prep("
-		SELECT *
-		FROM ( SELECT DISTINCT country_id FROM location) l
-		LEFT JOIN country c ON c.country_id=l.country_id
-		WHERE c.country_id!=0
-	");
-	$countries=db_exec($stmt,array());
-	# Get only states that we have locations for
-	$stmt=db_prep("
-		SELECT *
-		FROM ( SELECT DISTINCT state_id FROM location) l
-		LEFT JOIN state s ON s.state_id=l.state_id
-		WHERE s.state_id!=0
-	");
-	$states=db_exec($stmt,array());
-	
-	$locations=show_pages($locations,25);
-	
-	$smarty->assign("locations",$locations);
-	$smarty->assign("count",$count);
-	$smarty->assign("countries",$countries);
-	$smarty->assign("states",$states);
-
-	$smarty->assign("search",$GLOBALS['fsession']['search']);
-	$smarty->assign("search_field",$GLOBALS['fsession']['search_field']);
-	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
-	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
-	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
-
-	$maintpl=find_template("my_location_edit.tpl");
-	return $smarty->fetch($maintpl);
-}
 function my_location_add() {
 	global $user;
 
 	$pilot_id=get_current_pilot_id();
-
-	# OK, lets step through each of the locations selected and add if needed
-	foreach($_REQUEST as $key=>$value){
-		if(preg_match("/^location\_(\d+)/",$key,$match) && ($value=='On' || $value=='on')){
-			$location_id=$match[1];
-			# Lets see if they already have one
-			$stmt=db_prep("
-				SELECT *
-				FROM pilot_location
-				WHERE pilot_id=:pilot_id
-				AND location_id=:location_id
-			");
-			$result=db_exec($stmt,array("pilot_id"=>$pilot_id,"location_id"=>$location_id));
-			if($result[0]){
-				# A record already exists, so update it
-				$stmt=db_prep("
-					UPDATE pilot_location
-					SET pilot_location_status=1
-					WHERE pilot_location_id=:pilot_location_id
-				");
-				$result2=db_exec($stmt,array("pilot_location_id"=>$result[0]['pilot_location_id']));
-			}else{
-				# Create a new record for this one
-				$stmt=db_prep("
-					INSERT INTO pilot_location
-					SET pilot_id=:pilot_id,
-						location_id=:location_id,
-						pilot_location_status=1
-				");
-				$result2=db_exec($stmt,array("pilot_id"=>$pilot_id,"location_id"=>$location_id));
-			}
-		}
+	$location_id = $_REQUEST['location_id'];
+	
+	# Lets see if they already have one
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot_location
+		WHERE pilot_id=:pilot_id
+		AND location_id=:location_id
+	");
+	$result=db_exec($stmt,array("pilot_id"=>$pilot_id,"location_id"=>$location_id));
+	if($result[0]){
+		# A record already exists, so update it
+		$stmt=db_prep("
+			UPDATE pilot_location
+			SET pilot_location_status=1
+			WHERE pilot_location_id=:pilot_location_id
+		");
+		$result2=db_exec($stmt,array("pilot_location_id"=>$result[0]['pilot_location_id']));
+	}else{
+		# Create a new record for this one
+		$stmt=db_prep("
+			INSERT INTO pilot_location
+			SET pilot_id=:pilot_id,
+				location_id=:location_id,
+				pilot_location_status=1
+		");
+		$result2=db_exec($stmt,array("pilot_id"=>$pilot_id,"location_id"=>$location_id));
 	}
+
 	log_action($pilot_id);
-	user_message("Added New locations!");
+	user_message("Added New location");
 	return my_user_show();
 }
 function my_location_del() {
@@ -831,7 +698,7 @@ function show_change_password(){
 	global $smarty;
 	
 	# Show them the change password screen
-	$maintpl=find_template("my_change_password.tpl");
+	$maintpl=find_template("my/my_change_password.tpl");
 	return $smarty->fetch($maintpl);
 }
 function change_password(){

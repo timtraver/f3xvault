@@ -25,14 +25,13 @@ function view_registration() {
 	global $smarty;
 	$smarty->assign("user_first_name",$_REQUEST['user_first_name']);
 	$smarty->assign("user_last_name",$_REQUEST['user_last_name']);
-	$smarty->assign("user_email",$_REQUEST['user_email']);
+	$smarty->assign("user_email",strtolower($_REQUEST['user_email']));
 	
 	# Set recaptcha
 	include_library('recaptchalib.php');
 	$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
 	$recaptcha_html=recaptcha_get_html($publickey);
 		
-	$smarty->assign("user",$user);
 	$smarty->assign("recaptcha_html",$recaptcha_html);
 	$maintpl=find_template("register.tpl");
 	return $smarty->fetch($maintpl);
@@ -53,12 +52,7 @@ function save_registration(){
 		$pilot_id=0;
 	}
 	$user=array();
-	if(isset($_REQUEST['user_name']) && $_REQUEST['user_name']!=''){
-		$user_name=$_REQUEST['user_name'];
-		$user['user_name']=$user_name;
-	}else{
-		user_message("You must enter a user name",1);
-	}
+
 	if(isset($_REQUEST['user_first_name']) && $_REQUEST['user_first_name']!=''){
 		$user_first_name=$_REQUEST['user_first_name'];
 		$user['user_first_name']=$user_first_name;
@@ -72,7 +66,7 @@ function save_registration(){
 		user_message("You must enter a last name",1);
 	}
 	if(isset($_REQUEST['user_email']) && $_REQUEST['user_email']!=''){
-		$user_email=$_REQUEST['user_email'];
+		$user_email=strtolower($_REQUEST['user_email']);
 		$user['user_email']=$user_email;
 	}else{
 		user_message("You must enter a valid email address as your login",1);
@@ -87,25 +81,26 @@ function save_registration(){
 		$user_pass2=$_REQUEST['user_pass2'];
 		$user['user_pass2']=$user_pass2;
 	}else{
-		user_message("You must enter a verified password",1);
+		user_message("You must confirm your password",1);
 	}
 	if(isset($_REQUEST['user_pass']) && isset($_REQUEST['user_pass2']) && $_REQUEST['user_pass'] != $_REQUEST['user_pass2']){
-		user_message("The passwords you entered are not the same. Please try again",1);
+		user_message("The passwords you entered do not match. Please try again",1);
 	}
 	if($GLOBALS['messages']){
-		$smarty->assign("user",$user);
 		return view_registration();
 	}
+	
 	# Check to see if this user already exists
 	$stmt=db_prep("
 		SELECT *
 		FROM user
 		WHERE user_name=:user_name
+			OR user_email=:user_email
 		AND user_status=1
 	");
-	$result=db_exec($stmt,array("user_name"=>$user_name));
+	$result=db_exec($stmt,array("user_name"=>$user_email,"user_email"=>$user_email));
 	if($result){
-		user_message("A user with this name already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
+		user_message("A user with this name or email address already exists. Please choose another address, or if this is yours, use the forgot password link.",1);
 		return view_registration();
 	}
 	
@@ -114,9 +109,9 @@ function save_registration(){
 		include_library('recaptchalib.php');
 		$privatekey = "6Le6t94SAAAAAEDs3x4GleessiNUAqBjC0txOdqH";
 		$resp = recaptcha_check_answer ($privatekey,
-                                $_SERVER["REMOTE_ADDR"],
-                                $_POST["recaptcha_challenge_field"],
-                                $_POST["recaptcha_response_field"]);
+		$_SERVER["REMOTE_ADDR"],
+		$_POST["recaptcha_challenge_field"],
+		$_POST["recaptcha_response_field"]);
 
     	if (!$resp->is_valid) {
 		    // What happens when the CAPTCHA was entered incorrectly
@@ -191,7 +186,7 @@ function save_registration(){
 			user_status=1
 	");
 	$result=db_exec($stmt,array(
-		"user_name"=>$user_name,
+		"user_name"=>$user_email,
 		"user_first_name"=>$user_first_name,
 		"user_last_name"=>$user_last_name,
 		"user_email"=>$user_email,
@@ -217,7 +212,7 @@ function save_registration(){
 	$action='main';
 	$_REQUEST['action']='main';
 	$_REQUEST['function']='user_login';
-	$_REQUEST['login']=$user_name;
+	$_REQUEST['login']=$user_email;
 	$_REQUEST['password']=$user_pass;
 	
 	log_action($user['user_id']);
@@ -240,61 +235,5 @@ function send_registration_email($user_id){
 	
 	send_email('registration',array($user_to['user_email']),$data);
 	return;
-}
-function validate_registration(){
-	# Function to get the user registered
-	global $user;
-	global $fsession;
-	global $smarty;
-
-	# Lets get the inputted strings from the URL
-	$user_id=intval($_REQUEST['user_id']);
-	$hash=$_REQUEST['hash'];
-	
-	$user_info=get_user_info($user_id);
-	if($user_info['user_activated']==1){
-		user_message("Your account is already activated. Please log in using your user name and password.");
-		$_REQUEST['action']='main';
-		$_REQUEST['function']='login';
-		include("{$GLOBALS['scripts_dir']}/main.php");
-		return $actionoutput;	
-	}
-	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
-	if($hash==$compare){
-		# They have successfully activated!
-		# Turn on their activation status
-		$stmt=db_prep("
-			UPDATE user
-			SET user_activated=1
-			WHERE user_id=:user_id
-		");
-		$result=db_exec($stmt,array(
-			"user_id"=>$user_id
-		));
-		user_message("Congratulations! Your account is now activated and you have been automatically logged in. Enjoy!");
-		
-		destroy_fsession();
-        $path="/";
-        $host=$_SERVER['HTTP_HOST'];
-        # New session stuff
-        create_fsession($path,$host);
-        $fsession['auth']=TRUE;
-        $fsession['user_id']=$user_info['user_id'];
-        $fsession['user_name']=$user_info['user_name'];
-        $user=$user_info;
-        save_fsession();
-        
-		$_REQUEST['action']='my';
-		$_REQUEST['function']='';
-		include("{$GLOBALS['scripts_dir']}/my.php");
-		return $actionoutput;	
-	}else{
-		user_message("I'm sorry, but that does not appear to be a proper validation link. If you feel that you have gotten this in error, please send a feedback message about your account, or use the account recovery link on the login screen.",1);
-		$_REQUEST['action']='main';
-		$_REQUEST['function']='';
-		$user=array();
-		include("{$GLOBALS['scripts_dir']}/main.php");
-		return $actionoutput;	
-	}
 }
 ?>

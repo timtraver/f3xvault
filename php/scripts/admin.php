@@ -7,7 +7,8 @@
 #       This is the script to show the main screen
 #
 ############################################################################
-$GLOBALS['current_menu']='admin';
+$smarty->assign("current_menu",'admin');
+
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
         $function=$_REQUEST['function'];
 }else{
@@ -29,7 +30,7 @@ function admin_view() {
 	global $smarty;
 	global $user;
 
-	$maintpl=find_template("admin.tpl");
+	$maintpl=find_template("admin/admin.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_email() {
@@ -46,7 +47,7 @@ function admin_email() {
 
 	$smarty->assign("emails",$emails);
 
-	$maintpl=find_template("admin_email.tpl");
+	$maintpl=find_template("admin/admin_email.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_email_edit() {
@@ -75,7 +76,7 @@ function admin_email_edit() {
 	$images=db_exec($stmt,array("email_id"=>$email_id));
 	$smarty->assign("images",$images);
 
-	$maintpl=find_template("admin_email_edit.tpl");
+	$maintpl=find_template("admin/admin_email_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_email_save() {
@@ -279,7 +280,7 @@ function admin_location() {
 
 	$smarty->assign("attributes",$attributes);
 
-	$maintpl=find_template("admin_location.tpl");
+	$maintpl=find_template("admin/admin_location.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_location_att_edit() {
@@ -309,7 +310,7 @@ function admin_location_att_edit() {
 	$smarty->assign("attribute",$attribute);
 	$smarty->assign("categories",$categories);
 
-	$maintpl=find_template("admin_location_att_edit.tpl");
+	$maintpl=find_template("admin/admin_location_att_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_location_att_save() {
@@ -406,7 +407,7 @@ function admin_location_cat_edit() {
 	
 	$smarty->assign("category",$category);
 
-	$maintpl=find_template("admin_location_cat_edit.tpl");
+	$maintpl=find_template("admin/admin_location_cat_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_location_cat_save() {
@@ -490,7 +491,7 @@ function admin_plane() {
 
 	$smarty->assign("attributes",$attributes);
 
-	$maintpl=find_template("admin_plane.tpl");
+	$maintpl=find_template("admin/admin_plane.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_att_edit() {
@@ -520,7 +521,7 @@ function admin_plane_att_edit() {
 	$smarty->assign("attribute",$attribute);
 	$smarty->assign("categories",$categories);
 
-	$maintpl=find_template("admin_plane_att_edit.tpl");
+	$maintpl=find_template("admin/admin_plane_att_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_att_save() {
@@ -617,7 +618,7 @@ function admin_plane_cat_edit() {
 	
 	$smarty->assign("category",$category);
 
-	$maintpl=find_template("admin_plane_cat_edit.tpl");
+	$maintpl=find_template("admin/admin_plane_cat_edit.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_cat_save() {
@@ -800,7 +801,7 @@ function admin_plane_list() {
 		}
 		$newplanes[]=$plane;
 	}
-	$planes=show_pages($newplanes,25);
+	$planes=show_pages($newplanes,"action=admin&function=admin_plane_list");
 
 	foreach($planes as $key=>$plane){
 		# Lets get the plane types
@@ -825,7 +826,7 @@ function admin_plane_list() {
 	$smarty->assign("search_operator",$GLOBALS['fsession']['search_operator']);
 	$smarty->assign("disciplines",get_disciplines());
 
-	$maintpl=find_template("admin_plane_list.tpl");
+	$maintpl=find_template("admin/admin_plane_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_view() {
@@ -914,7 +915,7 @@ function admin_plane_view() {
 	$smarty->assign("countries",get_countries());
 	$smarty->assign("media",$media);
 
-	$maintpl=find_template("admin_plane_view.tpl");
+	$maintpl=find_template("admin/admin_plane_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_save() {
@@ -1237,7 +1238,7 @@ function admin_plane_compare() {
 
 	$smarty->assign("planes",$planes);
 
-	$maintpl=find_template("admin_plane_compare.tpl");
+	$maintpl=find_template("admin/admin_plane_compare.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_plane_merge() {
@@ -1300,7 +1301,7 @@ function admin_plane_merge() {
 		$result=db_exec($stmt,array("plane_id"=>$plane_id));
 	}
 
-	user_message("Merged selected pilots into plane id $primary_id");
+	user_message("Merged selected planes into plane id $primary_id");
 	return admin_plane_list();
 }
 
@@ -1317,11 +1318,11 @@ function admin_activity() {
 	");
 	$entries=db_exec($stmt,array());
 
-	$entries=show_pages($entries,25);
+	$entries=show_pages($entries,"action=admin&function=admin_activity");
 
 	$smarty->assign("entries",$entries);
 
-	$maintpl=find_template("admin_activity.tpl");
+	$maintpl=find_template("admin/admin_activity.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_user_list() {
@@ -1446,7 +1447,7 @@ function admin_user_list() {
 	");
 	$states=db_exec($stmt,array());
 	
-	$pilots=show_pages($pilots,50);
+	$pilots=show_pages($pilots,"action=admin&function=admin_user_list");
 	
 	$smarty->assign("pilots",$pilots);
 	$smarty->assign("countries",$countries);
@@ -1458,7 +1459,7 @@ function admin_user_list() {
 	$smarty->assign("country_id",$GLOBALS['fsession']['country_id']);
 	$smarty->assign("state_id",$GLOBALS['fsession']['state_id']);
 
-	$maintpl=find_template("admin_user_list.tpl");
+	$maintpl=find_template("admin/admin_user_list.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_user_view() {
@@ -1565,7 +1566,7 @@ function admin_user_view() {
 	$smarty->assign("states",get_states());
 	$smarty->assign("countries",get_countries());
 	
-	$maintpl=find_template("admin_user_view.tpl");
+	$maintpl=find_template("admin/admin_user_view.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_user_compare() {
@@ -1650,7 +1651,7 @@ function admin_user_compare() {
 
 	$smarty->assign("pilots",$pilots);
 
-	$maintpl=find_template("admin_user_compare.tpl");
+	$maintpl=find_template("admin/admin_user_compare.tpl");
 	return $smarty->fetch($maintpl);
 }
 function admin_user_merge() {

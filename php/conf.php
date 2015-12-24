@@ -23,9 +23,9 @@ global $session_expiration;
 global $logsessions;
 global $device;
 
-$base = '/shared/links/f/3/x/v/f3xvault.com/site';
+$base = '/var/www/f3xvault.com';
 
-$base_webroot = "$base/htdocs";
+$base_webroot = "$base/htdocs/";
 $base_plane_media = "/images/pilot_plane_images";
 $base_location_media = "/images/location_images";
 $base_url = "http://{$_SERVER['HTTP_HOST']}/";
@@ -37,14 +37,14 @@ $include_paths=array(
 	"templates"=>"$base/php/templates",
 	"templates_c"=>"$base/php/templates_c",
 	"scripts"=>"$base/php/scripts",
-	"images"=>"$base/images"
+	"images"=>"$base_webroot/images"
 );
 
 $template_dir=$include_paths['templates'];
 $compile_dir=$include_paths['templates_c'];
 $scripts_dir=$include_paths['scripts'];
 
-$logsessions=0;
+$logsessions=1;
 
 # Functions to include libraries and modules
 function include_library($library){
