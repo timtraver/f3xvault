@@ -217,19 +217,36 @@ function admin_email_send_all() {
 	$email_name=$_REQUEST['email_name'];
 	$data=array();
 
-	# Get all users
+	# Lets find all of the email addresses in the system
+	$addresses = array();
 	$stmt=db_prep("
 		SELECT *
 		FROM user
-		WHERE user_status=1
-			AND user_activated=1
+		WHERE user_email != ''
 	");
 	$users=db_exec($stmt,array());
 	foreach($users as $u){
-		$email_to=$u['user_email'];
-		send_email($email_name,$email_to,$data);
+		$email_to=strtolower($u['user_email']);
+		if(!in_array($email_to, $addresses)){
+			$addresses[] = $email_to;
+		}
 	}
-	
+	$stmt=db_prep("
+		SELECT *
+		FROM pilot
+		WHERE pilot_email != ''
+	");
+	$pilots=db_exec($stmt,array());
+	foreach($pilots as $p){
+		$email_to=strtolower($p['pilot_email']);
+		if(!in_array($email_to, $addresses)){
+			$addresses[] = $email_to;
+		}
+	}
+	#foreach($addresses as $email_to){
+	#	send_email($email_name,$email_to,$data);
+	#}
+	print_r($addresses);
 	user_message("Sent email to all users.");
 	return admin_email();
 }
