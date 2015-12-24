@@ -175,7 +175,7 @@ function main_feedback_save() {
 	$data['feedback_string']=$feedback_string;
 	$data['email_address']=$email_address;
 	
-	send_email('feedback',array('timtraver@gmail.com'),$data);
+	send_email('feedback','timtraver@gmail.com',$data);
 	user_message("Thank You for your comments and suggestions!");
 	return view_home();
 }
@@ -213,7 +213,7 @@ function forgot_send() {
 	$hash=sha1($recovery['user_id'].$recovery['user_name'].$recovery['user_email']);
 	$recovery['hash']=$hash;
 	
-	send_email('password_recovery',array($recovery['user_email']),$recovery);
+	send_email('password_recovery',$recovery['user_email'],$recovery);
 	user_message("A Message has been sent to the email address with instructions on how to reset your password.");
 	return view_home();
 }

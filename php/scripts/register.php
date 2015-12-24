@@ -233,7 +233,7 @@ function send_registration_email($user_id){
 	$data=$user_to;
 	$data['hash']=$hash;
 	
-	send_email('registration',array($user_to['user_email']),$data);
+	send_email('registration',$user_to['user_email'],$data);
 	return;
 }
 ?>

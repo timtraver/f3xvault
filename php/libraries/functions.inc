@@ -660,40 +660,34 @@ function send_email($email_name,$email_to,$data){
 	}
 
 	# Send the email
-	include_library('htmlMimeMail5/htmlMimeMail5.php');
-	$mail=new htmlMimeMail5();
+	include_library('PHPMailer/PHPMailerAutoload.php');
+	$mail=new PHPMailer();
 	
 	# Replace any tokens in the content
 	$email['email_html']=$smarty1->fetch('string:'.$email['email_html']);
 	$email['email_subject']=$smarty1->fetch('string:'.$email['email_subject']);
-        
-	$mail->setFrom("\"{$email['email_from_name']}\" <{$email['email_from_address']}>");
-	$mail->setSubject($email['email_subject']);
-	$mail->setHtml($email['email_html']);
+
+	$mail->isSMTP();
+	$mail->Host = 'localhost';
+	$mail->SMTPAuth = false;
+	$mail->Port = 25;
 	
-	$mail->SetBcc("timtraver@gmail.com");
-	
-	# Get any images associated with this email
-	$stmt=db_prep("
-		SELECT *
-		FROM email_image
-		WHERE email_id=:email_id
-		AND email_image_status=1
-	");
-	$emails=db_exec($stmt,array("email_id"=>$email['email_id']));
-	foreach($emails as $image){
-		$path="{$GLOBALS['include_paths']['images']}/{$email['email_id']}/{$image['email_image_name']}";
-		if(preg_match("/\.jpg$/",$path)){
-			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/jpg', new Base64Encoding()));
-		}
-		if(preg_match("/\.gif$/",$path)){
-			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/gif', new Base64Encoding()));
-		}
-		if(preg_match("/\.png$/",$path)){
-			$mail->addEmbeddedImage(new fileEmbeddedImage($path, 'image/png', new Base64Encoding()));
-		}
+	$mail->setFrom($email['email_from_address'],$email['email_from_name']);
+	$mail->isHTML(true);
+	$mail->Subject = $email['email_subject'];
+	$mail->Body = $email['email_html'];	
+	$mail->addAddress($email_to);
+	$mail->addBCC("timtraver@gmail.com");
+
+	# Send the email
+	try {
+		$mail->send();
+		return 1;
+	} catch (phpmailerException $e) {
+		throw $e;
+		error_log("Unable to send to: " . $to . ': ' . $e->getMessage(), 0);
+		return 0;
 	}
-	$mail->send($email_to,'smtp');
 	return;
 }
 function log_action($id){

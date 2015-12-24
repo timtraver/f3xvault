@@ -201,7 +201,7 @@ function message_save() {
 	$data['user_message_subject']=$user_message_subject;
 	$data['user_message_text']=$user_message_text;
 	
-	send_email('message_notification',array($to['user_email']),$data);
+	send_email('message_notification',$to['user_email'],$data);
 	user_message("Message has been sent!");
 	return message_list();
 }

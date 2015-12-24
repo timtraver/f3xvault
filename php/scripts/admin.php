@@ -206,7 +206,7 @@ function admin_email_send_test() {
 			);
 			break;
 	}
-	send_email($email_name,array($email_to),$data);
+	send_email($email_name,$email_to,$data);
 
 	user_message("Sent test email to $email_to.");
 	return admin_email();
@@ -227,7 +227,7 @@ function admin_email_send_all() {
 	$users=db_exec($stmt,array());
 	foreach($users as $u){
 		$email_to=$u['user_email'];
-		send_email($email_name,array($email_to),$data);
+		send_email($email_name,$email_to,$data);
 	}
 	
 	user_message("Sent email to all users.");
