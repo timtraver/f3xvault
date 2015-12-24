@@ -398,7 +398,7 @@ function start_fsession(){
 			# Kill the cookie at this host and its base
 			$host = $_SERVER['HTTP_HOST'];
 	        setcookie('fsid','',0,"/",$host,FALSE,TRUE);
-	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
 		        $host = $match[1];
 				setcookie('fsid','',0,"/",$host,FALSE,TRUE);
 	        }
@@ -432,7 +432,7 @@ function logsession($string){
 }
 function create_fsession($path,$host){
 	# Lets take off the www from the host name so we set them on all the same domain
-	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
 		$host = $match[1];
 	}
 	$time=microtime();
@@ -478,7 +478,7 @@ function destroy_fsession(){
 	$host=$_SERVER['HTTP_HOST'];
 	$host=preg_replace("/^www\./", "", $host);
 	setcookie('fsid','',0,$path,$host,FALSE,TRUE);
-	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
 		setcookie('fsid','',0,"/",$match[1],FALSE,TRUE);
 	}
 	logsession("Destroying Session : ".$fsid.",$path,$host");
