@@ -396,11 +396,13 @@ function start_fsession(){
 			$session=$result[0];
 		}else{
 			# Kill the cookie at this host and its base
-	        setcookie('fsid','',0,"/",$_SERVER['HTTP_HOST'],FALSE,TRUE);
-	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $_SERVER['HTTP_HOST'])){
-				setcookie('fsid','',0,"/",$match[1],FALSE,TRUE);
+			$host = $_SERVER['HTTP_HOST'];
+	        setcookie('fsid','',0,"/",$host,FALSE,TRUE);
+	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+		        $host = $match[1];
+				setcookie('fsid','',0,"/",$host,FALSE,TRUE);
 	        }
-	        logsession("Destroying Non existent Session : ".$fsid.",$path,$host");
+	        logsession("Destroying Non existent Session : ".$fsid.",/,$host");
 			$fsid='';
 			return;
 		}
