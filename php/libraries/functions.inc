@@ -370,9 +370,9 @@ function start_fsession(){
 	}else{
 		$fsid='';
 	}
-	logsession("Starting Session : ".$GLOBALS['fsid']);
+	logsession("Starting Session : ".$fsid);
 	if($fsid){
-		logsession("Reading Existing Session : ".$GLOBALS['fsid']);
+		logsession("Reading Existing Session : ".$fsid);
 		$stmt=db_prep("
 			SELECT *
 			FROM session
@@ -383,6 +383,9 @@ function start_fsession(){
 		if(isset($result[0])){
 			$session=$result[0];
 		}else{
+			# Kill the cookie
+	        setcookie('fsid','',0,"/",$_SERVER['HTTP_HOST'],FALSE,TRUE);
+	        logsession("Destroying Non existent Session : ".$fsid.",$path,$host");
 			$fsid='';
 			return;
 		}
