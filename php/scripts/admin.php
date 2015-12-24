@@ -244,10 +244,9 @@ function admin_email_send_all() {
 		}
 	}
 	sort($addresses);
-	#foreach($addresses as $email_to){
-	#	send_email($email_name,$email_to,$data);
-	#}
-	print_r($addresses);
+	foreach($addresses as $email_to){
+		send_email($email_name,$email_to,$data);
+	}
 	user_message("Sent email to all users.");
 	return admin_email();
 }
