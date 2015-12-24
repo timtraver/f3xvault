@@ -404,6 +404,7 @@ function start_fsession(){
 	        }
 	        logsession("Destroying Non existent Session : ".$fsid.",/,$host");
 			$fsid='';
+			create_fsession("/",$_SERVER['HTTP_HOST']);
 			return;
 		}
 		# OK, now read the session data and populate the fsession array
