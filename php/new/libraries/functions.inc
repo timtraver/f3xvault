@@ -382,9 +382,9 @@ function start_fsession(){
 	}else{
 		$fsid='';
 	}
-	logsession("Starting Session : ".$GLOBALS['fsid']);
+	logsession("Starting Session : ".$fsid);
 	if($fsid){
-		logsession("Reading Existing Session : ".$GLOBALS['fsid']);
+		logsession("Reading Existing Session : ".$fsid);
 		$stmt=db_prep("
 			SELECT *
 			FROM session
@@ -395,8 +395,13 @@ function start_fsession(){
 		if(isset($result[0])){
 			$session=$result[0];
 		}else{
+			# Kill the cookie at this host and its base
+	        setcookie('fsid','',0,"/",$_SERVER['HTTP_HOST'],FALSE,TRUE);
+	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $_SERVER['HTTP_HOST'])){
+				setcookie('fsid','',0,"/",$match[1],FALSE,TRUE);
+	        }
+	        logsession("Destroying Non existent Session : ".$fsid.",$path,$host");
 			$fsid='';
-			destroy_fsession();
 			return;
 		}
 		# OK, now read the session data and populate the fsession array
@@ -425,7 +430,9 @@ function logsession($string){
 }
 function create_fsession($path,$host){
 	# Lets take off the www from the host name so we set them on all the same domain
-	$host=preg_replace("/^www\./", "", $host);
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+		$host = $match[1];
+	}
 	$time=microtime();
     $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
     setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
@@ -469,7 +476,10 @@ function destroy_fsession(){
 	$host=$_SERVER['HTTP_HOST'];
 	$host=preg_replace("/^www\./", "", $host);
 	setcookie('fsid','',0,$path,$host,FALSE,TRUE);
-	logsession("Destroying Session : ".$GLOBALS['fsid'].",$path,$host");
+	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host)){
+		setcookie('fsid','',0,"/",$match[1],FALSE,TRUE);
+	}
+	logsession("Destroying Session : ".$fsid.",$path,$host");
 	if($fsid){
 		# Turn off session db record
 		$stmt=db_prep("
