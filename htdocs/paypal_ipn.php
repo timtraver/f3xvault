@@ -9,7 +9,7 @@
 #
 ############################################################################
 #
-require_once("/shared/links/f/3/x/v/f3xvault.com/site/php/conf.php");
+require_once("/var/www/f3xvault.com/php/conf.php");
 include_library('functions.inc');
 
 
@@ -153,8 +153,8 @@ if (preg_match("/VERIFIED/",$res)) {
 	$payment_amount = $_POST['mc_gross'];
 	//$payment_currency = $_POST['mc_currency'];
 	//$txn_id = $_POST['txn_id'];
-	//$receiver_email = $_POST['receiver_email'];
-	//$payer_email = $_POST['payer_email'];
+	$receiver_email = $_POST['receiver_email'];
+	$payer_email = $_POST['payer_email'];
 	
 	error_log(date('[Y-m-d H:i e] '). "event_pilot_id: $event_pilot_id" . PHP_EOL, 3, LOG_FILE);
 	error_log(date('[Y-m-d H:i e] '). "checked_out: $checked_out" . PHP_EOL, 3, LOG_FILE);
@@ -166,7 +166,7 @@ if (preg_match("/VERIFIED/",$res)) {
 			INSERT INTO event_pilot_payment
 			SET event_pilot_id=:event_pilot_id,
 				event_pilot_payment_date=now(),
-				event_pilot_payment_type='Manual',
+				event_pilot_payment_type='Paypal',
 				event_pilot_payment_amount=:amount,
 				event_pilot_payment_status=1
 		");
@@ -179,8 +179,8 @@ if (preg_match("/VERIFIED/",$res)) {
 			# Set the whole event_pilot status to paid
 			$stmt=db_prep("
 				UPDATE event_pilot
-				SET event_pilot_paid_flag=:event_pilot_paid_flag
-				WHERE event_pilot_id=1
+				SET event_pilot_paid_flag=1
+				WHERE event_pilot_id=:event_pilot_id
 			");
 			$result=db_exec($stmt,array(
 				"event_pilot_id"=>$event_pilot_id
