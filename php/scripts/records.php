@@ -56,7 +56,9 @@ function records_list() {
 	}elseif(isset($GLOBALS['fsession']['perpage'])){
 		$perpage=$GLOBALS['fsession']['perpage'];
 	}
-
+	if(!$perpage){
+		$perpage=25;
+	}
 	$addcountry='';
 	if($country_id!=0){
 		$addcountry.=" AND pc.country_id=$country_id ";
