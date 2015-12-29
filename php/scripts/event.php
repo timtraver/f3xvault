@@ -134,7 +134,8 @@ function event_list() {
 			LEFT JOIN state s ON l.state_id=s.state_id
 			LEFT JOIN country c ON l.country_id=c.country_id
 			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE e.event_name LIKE :search
+			WHERE e.event_status=1
+				AND e.event_name LIKE :search
 				$addcountry
 				$addstate
 				$extrad
