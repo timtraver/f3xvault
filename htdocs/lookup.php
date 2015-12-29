@@ -8,7 +8,7 @@
 #
 ############################################################################
 
-require_once("/var/www/f3xvault.com/site/php/conf.php");
+require_once("/var/www/f3xvault.com/php/conf.php");
 
 include_library('functions.inc');
 include_library('security_functions.inc');
