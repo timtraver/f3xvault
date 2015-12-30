@@ -69,7 +69,4 @@
 			</div>
 		</div>
 	</div>
-	<div style="position: fixed;bottom: 0;width: 100%;margin-bottom: 50px;text-align: center;">
-		<h1 style="font-size: 60px;font-weight: 900; color:#337ab7;"><a href="/?">Enter</a></h1>
-	</div>
 {/block}
