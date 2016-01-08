@@ -12,12 +12,31 @@ require_once("/var/www/f3xvault.com/php/conf.php");
 
 include_library('functions.inc');
 
+if(isset($_REQUEST['user_id']) && $_REQUEST['user_id'] !=''){
+	$user_id = intval($_REQUEST['user_id']);
+	$stmt=db_prep("
+		SELECT *
+		FROM user u
+		WHERE user_id=:user_id
+	");
+	$result=db_exec($stmt,array("user_id"=>$user_id));
+	$user = current($result);
+}else{
+	$user = array();
+	$user_id = 0;
+}
+
 # Lets make the database call to get a random image from the images in the system
 $media=array();
+$extra = '';
+if($user_id){
+	$extra = "AND user_id=$user_id";
+}
 $stmt=db_prep("
 	SELECT location_media_url
 	FROM location_media
 	WHERE location_media_type='picture'
+		$extra
 		AND location_media_status=1
 ");
 $result=db_exec($stmt,array());
@@ -29,6 +48,7 @@ $stmt=db_prep("
 	SELECT plane_media_url
 	FROM plane_media
 	WHERE plane_media_type='picture'
+		$extra
 		AND plane_media_status=1
 ");
 $result=db_exec($stmt,array());
@@ -36,11 +56,17 @@ foreach($result as $r=>$m){
 	$media[]=$m['plane_media_url'];
 }
 
+$extra = '';
+if($user_id){
+	$extra = "AND pp.pilot_id={$user['pilot_id']}";
+}
 $stmt=db_prep("
-	SELECT pilot_plane_media_url
-	FROM pilot_plane_media
-	WHERE pilot_plane_media_type='picture'
-		AND pilot_plane_media_status=1
+	SELECT ppm.pilot_plane_media_url
+	FROM pilot_plane_media ppm
+	LEFT JOIN pilot_plane pp ON ppm.pilot_plane_id=pp.pilot_plane_id
+	WHERE ppm.pilot_plane_media_type='picture'
+		$extra
+		AND ppm.pilot_plane_media_status=1
 ");
 $result=db_exec($stmt,array());
 foreach($result as $r=>$m){

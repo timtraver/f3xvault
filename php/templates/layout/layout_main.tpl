@@ -187,7 +187,7 @@
 										<a href="/">
 											<i class="fa fa-home"></i>
 											<span class="menu-title">
-												<strong>Home</strong>
+												<strong>{if $user.user_name !=''}My {/if}Home</strong>
 											</span>
 										</a>
 									</li>
@@ -461,6 +461,6 @@
 		ga('send', 'pageview');
 	</script>
 	{/literal}
-
+	{debug}
 </body>
 </html>

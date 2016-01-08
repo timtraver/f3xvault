@@ -51,7 +51,11 @@
 	{block name="content"}{/block}
 	
 	<div style="position: fixed;bottom: 0;width: 100%;margin-bottom: 20px;text-align: center;">
-		<h5>Slideshow pictures are from randomly submitted media by pilots around the world</h5>
+		{if $user_only}
+			<h5>User Slideshow</h5>
+		{else}
+			<h5>Slideshow pictures are from randomly submitted media by pilots around the world</h5>
+		{/if}
 	</div>
 
 	<!--jQuery [ REQUIRED ]-->

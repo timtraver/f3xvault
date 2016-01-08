@@ -27,8 +27,52 @@ function view_home() {
 	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl=find_template("home.tpl");
 	if(!isset($fsession['welcome']) || $_REQUEST['slideshow'] == 1){
-		$maintpl=find_template("welcome.tpl");
+		if(isset($_REQUEST['user_only'])){
+			$smarty->assign("user_id",$user['user_id']);
+		}
+		if($_REQUEST['slideshow'] == 1){
+			$maintpl=find_template("slideshow.tpl");
+		}else{
+			$maintpl=find_template("welcome.tpl");
+		}
 		$fsession['welcome']=1;
+		return $smarty->fetch($maintpl);
+	}
+	# And if they are actually logged in, then show them the my home page
+	if($user['user_name'] !=''){
+		# lets find out if they have some events that they are CD'ing or participating in coming up
+		$current = array();
+		$future = array();
+		$past = array();
+		$now = strtotime(date("Y-m-d",time()));
+		$stmt=db_prep("
+			SELECT *,ep.pilot_id as epilot_id
+			FROM event e
+			LEFT JOIN event_pilot ep ON ep.event_id=e.event_id
+			WHERE ((ep.pilot_id=:pilot_id AND ep.event_pilot_status=1) OR e.pilot_id=:pilot_id2 OR e.event_cd=:pilot_id3)
+				AND e.event_status=1
+			GROUP BY e.event_id
+			ORDER BY e.event_start_date DESC
+		");
+		$result=db_exec($stmt,array(
+			"pilot_id"=>$user['pilot_id'],
+			"pilot_id2"=>$user['pilot_id'],
+			"pilot_id3"=>$user['pilot_id']
+		));
+				
+		foreach($result as $row){
+			if(($row['event_cd'] == $user['pilot_id'] || $row['epilot_id'] == $user['pilot_id']) && ($now >= strtotime($row['event_start_date']) && $now <= strtotime($row['event_end_date']))){
+				$current = $row;
+			}elseif(strtotime($row['event_start_date']) > $now){
+				$future[]=$row;
+			}else{
+				$past[]=$row;
+			}
+		}
+		$smarty->assign("current",$current);
+		$smarty->assign("future",$future);
+		$smarty->assign("past",$past);
+		$maintpl = find_template("my_home.tpl");
 	}
 	return $smarty->fetch($maintpl);
 }
@@ -96,16 +140,19 @@ function user_login() {
 		if(isset($_REQUEST['redirect_action']) && $_REQUEST['redirect_action'] != ''){
 			$_REQUEST['action']=$_REQUEST['redirect_action'];
 		}else{
-			$_REQUEST['action']='my';
+			$_REQUEST['action']='main';
 		}
 		if(isset($_REQUEST['redirect_function']) && $_REQUEST['redirect_function'] != ''){
 			$_REQUEST['function']=$_REQUEST['redirect_function'];
 		}else{
-			$_REQUEST['function']='';
+			$_REQUEST['function']='view_home';
 		}
 		$GLOBALS['user_id']=$user['user_id'];
 		$user=get_user_info($GLOBALS['user_id']);
 		$smarty->assign("user",$user);
+		if($_REQUEST['action'] == 'main'){
+			return view_home();
+		}
         include("{$GLOBALS['scripts_dir']}/{$_REQUEST['action']}.php");
 		return $actionoutput;
 	}
@@ -295,10 +342,9 @@ function pass_recovery_save(){
 	$GLOBALS['user_id']=$user_info['user_id'];
 	save_fsession();
         
-	$_REQUEST['action']='my';
-	$_REQUEST['function']='';
-	include("{$GLOBALS['scripts_dir']}/my.php");
-	return $actionoutput;	
+	$_REQUEST['action']='main';
+	$_REQUEST['function']='view_home';
+	return view_home();	
 }
 
 ?>
