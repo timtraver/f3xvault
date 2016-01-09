@@ -17,7 +17,7 @@
 				<a href="?action=event" class="btn btn-block btn-primary btn-rounded" style="font-size: 18px;"><i class="fa fa-trophy" style="float:left;padding-top: 3px;"></i>Browse Events</a><br>
 				
 				{if $current}
-					<a href="?action=event&function=event_view&event_id={$current.event_id}" class="btn btn-block btn-success btn-rounded" style="font-size: 18px;"><i class="fa fa-hand-o-right" style="float:left;padding-top: 3px;"></i>Go To The Event I'm At</a><br>
+					<a href="?action=event&function=event_view&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded" style="font-size: 18px;"><i class="fa fa-thumbs-o-up" style="float:left;padding-top: 3px;"></i>I'm At This Event Now!</a><br>
 					{*
 					<a href="?action=event&function=event_enter_score&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded"><i class="fa fa-list" style="float:left;padding-top: 3px;"></i>Enter Scores</a><br>
 					*}
@@ -26,7 +26,7 @@
 					<div class="btn-group" style="display:block;">
 						<button class="btn btn-block btn-success btn-rounded dropdown-toggle" style="font-size: 18px;" data-toggle="dropdown" aria-expanded="false">
 							<i class="fa fa-hand-o-right" style="float:left;padding-top: 3px;"></i>
-							Go To Future Events
+							My Future Events
 							<i class="dropdown-caret fa fa-chevron-down"style="float:right;padding-top: 3px;"></i>
 						</button>
 						<ul class="dropdown-menu" style="width:100%;position: relative;">
@@ -42,8 +42,8 @@
 				{if $past|count !=0}
 					<div class="btn-group" style="display:block;">
 						<button class="btn btn-block btn-success btn-rounded dropdown-toggle" style="font-size: 18px;" data-toggle="dropdown" aria-expanded="false">
-							<i class="fa fa-hand-o-right" style="float:left;padding-top: 3px;"></i>
-							Go To Past Events
+							<i class="fa fa-hand-o-left" style="float:left;padding-top: 3px;"></i>
+							My Past Events
 							<i class="dropdown-caret fa fa-chevron-down"style="float:right;padding-top: 3px;"></i>
 						</button>
 						<ul class="dropdown-menu" style="width:100%;position: relative;">
