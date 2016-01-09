@@ -868,8 +868,12 @@ class Draw {
 		# Function to determine the number of groups and members in each group from the settings
 		$num_pilots=count($this->pilots);
 		$num_groups=$this->draw['event_draw_number_groups'];
-		$per_group=floor($num_pilots/$num_groups);
-		$left_over=$num_pilots % $num_groups;
+		if($num_groups){
+			$per_group=floor($num_pilots/$num_groups);
+			$left_over=$num_pilots % $num_groups;
+		}else{
+			return array();
+		}
 		
 		$groups=array();
 		if($left_over==0){
