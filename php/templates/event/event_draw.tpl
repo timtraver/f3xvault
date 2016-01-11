@@ -150,10 +150,6 @@
 						<option value="{$i}" SELECTED>{$i}</option>
 						{/for}
 						</select>
-						<select name="print_format">
-						<option value="html">HTML</option>
-						<option value="pdf">PDF</option>
-						</select>
 						<div style="overflow: hidden;float: right;">
 							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();"> Full Draw Matrix </button></div>
 							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();"> Draw Table </button></div>

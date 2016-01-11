@@ -283,7 +283,7 @@ class Event {
 							$subs=array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
 							break;
 						case 'f3k_e':
-							$subs=array("Pilot","Nominated");
+							$subs=array("","Pilot","Nominated","","");
 							break;
 						case 'f3k_f':
 							$subs=array("3:00","3:00","3:00");

@@ -17,212 +17,25 @@ $start_time=microtime(true);
 require_once("/var/www/f3xvault.com/php/conf.php");
 
 include_library('functions.inc');
-include_library('pdf_f3k.class');
+include_library('pdf_f3x.class');
 
 # Load system flags
 get_global_flags();
 
-$pdf = new PDF_F3K();
+$pdf = new PDF_F3X();
 
 # Lets make a routine to build one complete cell, then we can duplicate it all around
 $data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Tim Traver",
+	"event_name"=>"Cal Valley F3B Open",
+	"pilot"=>"Darrel Zaballos",
 	"round"=>2,
-	"group"=>"D",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Mike Smith",
-	"round"=>1,
-	"group"=>"F",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Amardeep Dugal",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
-);
-$data[] = array(
-	"event_name"=>"7th Annual John Erickson Memorial DLG Contest",
-	"pilot"=>"Doug Chronkite",
-	"round"=>1,
-	"group"=>"A",
-	"task"=>"F3K Task B - Last Two Flights (3:00 Max) 7 Min Working",
-	"flights"=>array(
-		array("type"=>"time","label"=>"1:00"),
-		array("type"=>"time","label"=>"1:30"),
-		array("type"=>"time","label"=>"2:00"),
-		array("type"=>"time","label"=>"2:30"),
-		array("type"=>"time","label"=>"3:00")
-	)
+	"group"=>"C",
+	"spot"=>"3",
+	"task"=>"Thermal Duration",
+	"target_time"=>"10 min"
 );
 
-$pdf->render($data);
+$pdf->render('td',$data);
 
 
 

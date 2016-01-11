@@ -4225,7 +4225,8 @@ function event_draw_print() {
 	$print_format=$_REQUEST['print_format'];
 	$use_print_header=$_REQUEST['use_print_header'];
 	$highlight=$_REQUEST['highlight'];
-
+	$pdf = 0;
+	
 	$template='';
 	$title='';
 	$orientation='P';
@@ -4239,11 +4240,8 @@ function event_draw_print() {
 			$sort_by='flight_order';
 			break;
 		case "pilot":
-			if($e->info['event_type_code']=='f3k'){
-				$template="print/print_draw_pilot_recording_f3k.tpl";
-			}else{
-				$template="print/print_draw_pilot_recording.tpl";
-			}
+			# We are going to force this to be a pdf now
+			$pdf = 1;
 			$title="Pilot Score Recording Sheets";
 			$orientation="L";
 			$sort_by='alphabetical_first';
@@ -4351,34 +4349,58 @@ function event_draw_print() {
 	$smarty->assign("event",$e);
 	
 	
-	if($print_format=='pdf'){
+	if($pdf == 1){
 		# Create the PDF
-		#include_library('tcpdf/config/lang/eng.php');
-		include_library('tcpdf/tcpdf.php');
-		$maintpl=find_template($template);
-		$page_html=$smarty->fetch($template);
-	
+		include_library('pdf_f3x.class');
+
+		# Lets create the proper data string to send to the pdf routine for this event type
+		$data = array();
+		foreach($e->pilots as $event_pilot_id=>$p){
+			foreach($e->rounds as $event_round_number=>$r){
+				if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
+					continue;
+				}
+				if($e->info['event_type_code'] == 'f3b'){
+					$r['event_round_time_choice'] = 10;
+					$flight_type_id = $print_flight_type_id;
+				}else{
+					$flight_type_id = $r['flight_type_id'];
+				}
+				$type = "time";
+				if($r['flights'][$flight_type_id]['flight_type_code'] == 'f3k_d'){
+					# Special checkboxes for ladder
+					$type = "check";
+				}
+				# Creat the subflight array
+				$flights = array();
+				foreach($r['flights'][$flight_type_id]['subs'] as $s){
+					$flights[] = array(
+						"type"=>$type,
+						"label"=>$s
+					);
+				}
+				
+				$data[] = array(
+					"event_name"=>$e->info['event_name'],
+					"pilot"=>$p['pilot_first_name'].' '.$p['pilot_last_name'],
+					"round"=>$event_round_number,
+					"task"=>$r['flights'][$flight_type_id]['flight_type_name'],
+					"group"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
+					"spot"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+					"lane"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+					"target_time"=>$r['event_round_time_choice']." min",
+					"flights"=>$flights
+				);
+			}
+		}
+		#print_r($e);
+		#print_r($data);
+		#return;
 		# Now create the pdf from the above template and save it
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->SetCreator('F3X Vault');
-		$pdf->SetAuthor('F3X Vault');
-		$pdf->SetTitle($title);
-		$pdf->setPrintHeader(false);
-		$pdf->setHeaderMargin(0);
-		$pdf->setFooterData($tc=array(0,64,0), $lc=array(0,64,128));
-#		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-		$pdf->SetMargins(10, 0, 10);
-		$pdf->SetHeaderMargin(0);
-		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		$pdf->setFontSubsetting(true);
-		$pdf->SetFont('times', '', 10, '', true);
-		$pdf->AddPage($orientation);
-		$pdf->writeHTMLCell($w=0, $h=0, $x='', $y='', $page_html, $border=0, $ln=1, $fill=0, $reseth=true, $align='', $autopadding=false);
-		$file_contents=$pdf->Output("$title.pdf", 'D');
+		$pdf = new PDF_F3X();
+		$pdf->render($e->info['event_type_code'],$data);
+		exit;
+		#$file_contents=$pdf->Output("$title.pdf", 'D');
 	}else{
 		$maintpl=find_template($template);
 		return $smarty->fetch($maintpl);
@@ -5478,11 +5500,6 @@ function event_print_blank_task() {
 	$e->get_draws();
 	$e->get_tasks();
 	
-	if($e->info['event_type_code']=='f3k'){
-		$template="print/print_draw_pilot_recording_f3k_blank.tpl";
-	}else{
-		$template="print/print_draw_pilot_recording_blank.tpl";
-	}
 	$title="Pilot Score Recording Sheets";
 	$orientation="L";
 	$sort_by='alphabetical_first';
@@ -5580,13 +5597,55 @@ function event_print_blank_task() {
 		}
 	}
 
-	$smarty->assign("print_round_from",$print_round_from);
-	$smarty->assign("print_round_to",$print_round_to);
-	$smarty->assign("print_format",$print_format);
-	$smarty->assign("flight_type_id",$print_flight_type_id);
-	$smarty->assign("event",$e);
-	
-	$maintpl=find_template($template);
-	return $smarty->fetch($maintpl);
+	# Create the PDF
+	include_library('pdf_f3x.class');
+
+	# Lets create the proper data string to send to the pdf routine for this event type
+	$data = array();
+	foreach($e->pilots as $event_pilot_id=>$p){
+		foreach($e->rounds as $event_round_number=>$r){
+			if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
+				continue;
+			}
+			if($e->info['event_type_code'] == 'f3b'){
+				$r['event_round_time_choice'] = 10;
+				$flight_type_id = $print_flight_type_id;
+			}else{
+				$flight_type_id = $r['flight_type_id'];
+			}
+			$type = "time";
+			if($r['flights'][$flight_type_id]['flight_type_code'] == 'f3k_d'){
+				# Special checkboxes for ladder
+				$type = "check";
+			}
+			# Creat the subflight array
+			$flights = array();
+			foreach($r['flights'][$flight_type_id]['subs'] as $s){
+				$flights[] = array(
+					"type"=>$type,
+					"label"=>$s
+				);
+			}
+			
+			$data[] = array(
+				"event_name"=>$e->info['event_name'],
+				"pilot"=>$p['pilot_first_name'].' '.$p['pilot_last_name'],
+				"round"=>$event_round_number,
+				"task"=>$r['flights'][$flight_type_id]['flight_type_name'],
+				"group"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
+				"spot"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+				"lane"=>$r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+				"target_time"=>$r['event_round_time_choice']." min",
+				"flights"=>$flights
+			);
+		}
+	}
+	#print_r($e);
+	#print_r($data);
+	#return;
+	# Now create the pdf from the above template and save it
+	$pdf = new PDF_F3X();
+	$pdf->render($e->info['event_type_code'],$data);
+	exit;
 }
 ?>
