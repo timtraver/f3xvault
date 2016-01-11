@@ -1,13 +1,9 @@
 Todo list for f3xvault project
 
-= before launch
-
 GENERAL
-=	Send welcome email once registered and save it as their first message
 	Create a "Using this site" kind of tutorial instructions with free screen recorder! ;)
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
-=	Add blog menu item and set up simple wordpress blog
 	
 IMPORTING EVENTS
 	Live import and login directly from f3kscore push
@@ -20,15 +16,12 @@ LOCATION STUFF
 	
 PLANE STUFF
 	Add layup types as a function to the planes
-	Pilots Flying Model
 	Build log links!
 	Setup links!
 	
 EVENT STUFF
 	Registration stuff
-		New reg parameters interface to allow people to choose more items
-		Knowledge of payment to allow to come back and get a tshirt or other items.
-		Waiting list system
+		Wait list system
 		
 	Calendar System
 		Full integrated calendar system to show upcoming events using google's calendar api
@@ -52,7 +45,7 @@ EVENT STUFF
 		Task list in event info email (edited in custom email settings)
 		
 	Audio Playlist Generation
-		Figure out how to buid local path to audio files for inclusion
+		Figure out how to build local path to audio files for inclusion
 		Create audio file list
 		Create Audio files to run a contest
 		
@@ -73,9 +66,6 @@ EVENT STUFF
 PILOTS STUFF
 	
 SERIES STUFF
-	print series pilot detail view
-	Different scoring possibilities (position based instead of score based)
-	Scoring multiple on events in series
 	
 OTHER STUFF
 	Put a "Send This Pilot a Message" button on the pilot view screen if that pilot has an account or an email address on file
@@ -87,6 +77,11 @@ MOBILE STUFF
 
 
 COMPLETED
+X	Scoring multiple on events in series
+X	Different scoring possibilities (position based instead of score based)
+X		New reg parameters interface to allow people to choose more items
+X		Knowledge of payment to allow to come back and get a tshirt or other items.
+X	Pilots Flying Model
 X	Import from f3kscore exported file!
 X	Ability to print pilot names when "Printing Blank Pilot Sheets"
 X	Add ability for event to be in multiple series

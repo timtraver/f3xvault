@@ -190,10 +190,6 @@
 						<option value="{$i}" SELECTED>{$i}</option>
 						{/for}
 						</select>
-						<select name="print_format">
-						<option value="html">HTML</option>
-						<option value="pdf">PDF</option>
-						</select>
 						<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_f3b_combined.print_type.value='f3b_table';submit();"> Draw Table </button></div>
 					</td>
 				</tr>

@@ -14,9 +14,9 @@
 			
 		<td>
 			
-			<table align="left" height="290" width="300" cellpadding="2" cellspacing="2" style="border: 1px solid black;font-size:{if $print_format=="pdf"}8{else}12{/if};margin:10px;">
+			<table align="left" height="290" width="300" cellpadding="2" cellspacing="2" style="border: 1px solid black;font-size:12;margin:10px;">
 			<tr bgcolor="lightgrey">
-				<th colspan="4" align="left" style="font-size:{if $print_format=="pdf"}8{else}10{/if};">
+				<th colspan="4" align="left" style="font-size:10;">
 					{$event->info.event_name} - {$event->info.event_start_date|date_format:"%Y-%m-%d"}
 				</th>
 			</tr>
@@ -74,7 +74,7 @@
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table style="font-size:{if $print_format=="pdf"}8{else}12{/if};margin:0px;">
+					<table style="font-size:12;margin:0px;">
 					<tr>
 					<th bgcolor="lightgrey" height="20" align="right" nowrap>Pilot Sig</th>
 					<td height="20" width="80" style="border: 1px solid black;"> &nbsp;</td>

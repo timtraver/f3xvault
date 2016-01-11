@@ -461,5 +461,8 @@
 		ga('send', 'pageview');
 	</script>
 	{/literal}
+	{if $debug}
+		{debug}
+	{/if}
 </body>
 </html>

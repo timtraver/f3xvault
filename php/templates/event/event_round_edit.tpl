@@ -112,7 +112,7 @@
 				<input type="button" style="float: right;margin-left: 10px;" value=" Delete This Round " class="btn btn-danger btn-rounded" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 			{/if}
 		</div>
-		
+		{$flight_type_id = $event->rounds.$round_number.flight_type_id}
 		{if $event->info.event_type_code=='f3k' && $event_round_id==0 && !$event->rounds.$round_number.flights.$flight_type_id.pilots}
 		</form>
 		{else}

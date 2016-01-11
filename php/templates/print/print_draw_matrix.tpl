@@ -40,12 +40,12 @@
 			<td>
 				<table cellpadding="2" cellspacing="1" style="border: 1px solid black;font-size:12;margin-right: 10px;margin-bottom: 10px;border-collapse:separate;" class="table-event">
 				<tr>
-					<th {if $print_format=="html"}colspan="{$size}"{/if}><strong>Round {$r.event_round_number}</strong></th>
+					<th colspan="{$size}"><strong>Round {$r.event_round_number}</strong></th>
 				</tr>
 				{if $event->info.event_type_code=='f3k'}
 					{$ftid=$r.flight_type_id}
 					<tr bgcolor="white">
-						<td {if $print_format=="html"}colspan="2"{/if}>{$event->flight_types.$ftid.flight_type_name_short}</td>
+						<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short}</td>
 					</tr>
 				{/if}
 				<tr bgcolor="lightgray">
@@ -128,7 +128,6 @@
 			<input type="hidden" name="print_round_from" value="{$print_round_from}">
 			<input type="hidden" name="print_round_to" value="{$print_round_to}">
 			<input type="hidden" name="print_type" value="{$print_type}">
-			<input type="hidden" name="print_format" value="{$print_format}">
 			<input type="hidden" name="use_print_header" value="{$use_print_header}">
 			<input type="hidden" name="highlight" value="">
 			</form>
