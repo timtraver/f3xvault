@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=0.75">
+	<meta name="viewport" content="width=device-width, initial-scale=0.75, minimum-scale=0.25">
 	<title>F3X Vault</title>
 	
 	<!--STYLESHEET-->
