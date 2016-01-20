@@ -52,6 +52,8 @@
 	<!--Nifty Admin [ RECOMMENDED ]-->
 	<script src="js/nifty.min.js"></script>
 	{block name="footer"}{/block}
-
+	{if $debug}
+		{debug}
+	{/if}
 </body>
 </html>

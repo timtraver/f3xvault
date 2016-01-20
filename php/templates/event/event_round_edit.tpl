@@ -354,7 +354,7 @@
 		{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 		<input type="button" style="float: right;margin-left: 10px;" value=" Delete This Round " class="btn btn-danger btn-rounded" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 		{/if}
-		<input type="button" style="float: right;margin-left: 10px;" value=" Back To Event " onClick="goback.submit();" class="btn btn-primary btn-rounded">
+		<input type="button" style="float: right;margin-left: 10px;" value=" Back To Event " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 		<input type="button" style="float: right;margin-left: 10px;" value=" Print Round Detail " onClick="document.printround.submit();" class="btn btn-primary btn-rounded">
 		<input type="button" style="float: right;margin-left: 10px;" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="btn btn-primary btn-rounded">
 		<input type="button" style="float: right;margin-left: 10px;" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="btn btn-primary btn-rounded">
@@ -386,7 +386,7 @@
 
 		{/if}
 
-<form name="sort_round" method="GET">
+<form name="sort_round" method="GET" action="">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_round_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
@@ -402,13 +402,13 @@
 <input type="hidden" name="round_end_number" value="{$round_number|escape}">
 </form>
 
-<form name="goback" method="GET">
+<form name="goback" method="GET" action="">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 
-<form name="delete_round" method="GET">
+<form name="delete_round" method="GET" action="">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_round_delete">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
