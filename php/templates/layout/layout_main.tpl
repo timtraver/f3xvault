@@ -70,7 +70,7 @@
 							<option value="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
 							<option value="?action={$action}&function={$function}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
 							<option value="?action={$action}&function={$function}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
-							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Multi Task</option>
+							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
 							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
 						</select>
 						</span>
