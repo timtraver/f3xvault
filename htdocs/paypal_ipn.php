@@ -104,6 +104,7 @@ if (curl_errno($ch) != 0) // cURL error
 } else {
 		// Log the entire HTTP response if debug is switched on.
 		if(DEBUG == true) {
+			error_log(date('[Y-m-d H:i e] '). "New Request ---------------------------------------------------------------------------" . PHP_EOL, 3, LOG_FILE);
 			error_log(date('[Y-m-d H:i e] '). "HTTP request of validation request:". curl_getinfo($ch, CURLINFO_HEADER_OUT) ." for IPN payload: $req" . PHP_EOL, 3, LOG_FILE);
 			error_log(date('[Y-m-d H:i e] '). "HTTP response of validation request: $res" . PHP_EOL, 3, LOG_FILE);
 
@@ -140,7 +141,7 @@ if (preg_match("/VERIFIED/",$res)) {
 	}
 	// check that txn_id has not been previously processed
 	// check that receiver_email is your PayPal email
-	if(strtolower($_POST['receiver_email'])!=strtolower($event_pilot['event_reg_paypal_address'])){
+	if(strtolower($_POST['receiver_email'])!=strtolower($event_pilot['event_reg_paypal_address']) && strtolower($_POST['business'])!=strtolower($event_pilot['event_reg_paypal_address'])){
 		$checked_out=0;
 	}
 	// check that payment_amount/payment_currency are correct
