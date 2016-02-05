@@ -2016,10 +2016,24 @@ function event_pilot_save() {
 	switch($event_pilot_paid_flag){
 		case 2:
 			# This is the automatic case, where we should set it if they paid everything
+			# But only if they've manually paid something
 			$balance = calculate_amount_owed($event_pilot_id);
+			# See if they have any paid records
+			# Total the paid records
+			$stmt=db_prep("
+				SELECT sum(event_pilot_payment_amount) as total_paid
+				FROM event_pilot_payment
+				WHERE event_pilot_id=:event_pilot_id
+					AND event_pilot_payment_status=1
+			");
+			$result=db_exec($stmt,array(
+				"event_pilot_id"=>$event_pilot_id,
+			));
+			$total_paid = $result[0]['total_paid'];
+
 			# Change the status accordingly
-			$status=0;
-			if($balance <= 0){
+			$status=2;
+			if(($total_paid>0 && $balance <= 0) || $balance < 0){
 				# Update the status to PAID
 				$status=1;
 			}
@@ -2031,15 +2045,17 @@ function event_pilot_save() {
 			$status=1;
 	}
 	# Update the status
-	$stmt=db_prep("
-		UPDATE event_pilot
-		SET event_pilot_paid_flag=:event_pilot_paid_flag
-		WHERE event_pilot_id=:event_pilot_id
-	");
-	$result=db_exec($stmt,array(
-		"event_pilot_id"=>$event_pilot_id,
-		"event_pilot_paid_flag"=>$status
-	));
+	if($status!=2){
+		$stmt=db_prep("
+			UPDATE event_pilot
+			SET event_pilot_paid_flag=:event_pilot_paid_flag
+			WHERE event_pilot_id=:event_pilot_id
+		");
+		$result=db_exec($stmt,array(
+			"event_pilot_id"=>$event_pilot_id,
+			"event_pilot_paid_flag"=>$status
+		));
+	}
 	
 	log_action($event_pilot_id);
 	user_message("Updated event pilot info.");
