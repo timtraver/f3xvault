@@ -46,7 +46,7 @@
 		<h2>Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if} Overall Classification</h2>
 		<table width="100%" cellpadding="2" cellspacing="2" class="table table-condensed table-event table-striped">
 		<tr>
-			<th align="left" colspan="6"></th>
+			<th align="left" colspan="7"></th>
 			<th colspan="{$numrounds+1}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
@@ -56,6 +56,7 @@
 			<th width="1%" style="text-align:center;" nowrap>#</th>
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:center;" nowrap>Pilot Name</th>
+			<th width="1%" style="text-align:center;" nowrap>FAI</th>
 			<th style="text-align:center;" nowrap>Total</th>
 			<th style="text-align:center;" nowrap>Diff</th>
 			<th style="text-align:center;width:2px;" width="2" nowrap></th>
@@ -101,6 +102,11 @@
 				{$full_name}
 				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
 				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
+			</td>
+			<td width="5%" nowrap align="right">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.pilot_fai|escape}</b>
+				</div>
 			</td>
 			<td width="5%" nowrap align="right">
 				<div style="position:relative;">
@@ -157,7 +163,7 @@
 		{/foreach}
 		{if $event->info.event_type_code=='f3f'}
 		<tr>
-			<th colspan="6" align="right">Round Fast Time</th>
+			<th colspan="7" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
 				{$round_number=$r.event_round_number}
 				{if $round_number >= $start_round && $round_number <= $end_round}
