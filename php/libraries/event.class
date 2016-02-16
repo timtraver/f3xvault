@@ -300,7 +300,7 @@ class Event {
 						case 'f3k_j':
 							$subs=array("3:00","3:00","3:00");
 							break;
-						case 'f3k_m':
+						case 'f3k_k':
 							$subs=array("1:00","1:30","2:00","2:30","3:00");
 							break;
 					}
