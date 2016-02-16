@@ -22,6 +22,8 @@ global $user_id;
 global $session_expiration;
 global $logsessions;
 global $device;
+global $recaptcha_key;
+global $recaptcha_secret;
 
 $base = '/var/www/f3xvault.com';
 
@@ -43,6 +45,9 @@ $include_paths=array(
 $template_dir=$include_paths['templates'];
 $compile_dir=$include_paths['templates_c'];
 $scripts_dir=$include_paths['scripts'];
+
+$recaptcha_key = '6LdAXhgTAAAAAMeN_Dg8fMqjyYpGbnilpbN3txPJ';
+$recaptcha_secret = '6LdAXhgTAAAAAHbZ4eyQr2FwuCAlAyGroQA7Re4h';
 
 $logsessions=1;
 

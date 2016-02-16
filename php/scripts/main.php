@@ -182,15 +182,27 @@ function main_feedback() {
 	global $smarty;
 	global $user;
 
+	$smarty->assign("recaptcha_key",$GLOBALS['recaptcha_key']);
 	$maintpl=find_template("feedback.tpl");
 	return $smarty->fetch($maintpl);
 }
 function main_feedback_save() {
 	global $smarty;
 	global $user;
+	include_library("recaptcha2.php");
 	
 	$email_address=$_REQUEST['email_address'];
 	$feedback_string=$_REQUEST['feedback_string'];
+	
+	$recaptcha_key = $GLOBALS['recaptcha_key'];
+	$recaptcha_secret = $GLOBALS['recaptcha_secret'];
+	
+	# Check recaptcha entered
+	if(recaptcha_check() == 0){
+		user_message("Recaptcha entered incorrectly!");
+		return main_feedback();
+	}
+	
 	# Get admin user id
 	$stmt=db_prep("
 		SELECT *

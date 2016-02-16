@@ -1,5 +1,9 @@
 {extends file='layout/layout_main.tpl'}
 
+{block name="header"}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{/block}
+
 {block name="content"}
 
 <div class="panel">
@@ -24,7 +28,8 @@
 			<tr>
 				<th width="30%" valign="top" nowrap>Feedback, Comments, or Feature Requests</th>
 				<td>
-					<textarea cols="75" rows="8" name="feedback_string"></textarea>
+					<textarea cols="75" rows="8" name="feedback_string"></textarea><br>
+					<div class="g-recaptcha" data-sitekey="{$recaptcha_key}"></div>
 				</td>
 			</tr>
 			</table>
