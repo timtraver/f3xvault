@@ -189,16 +189,27 @@ function main_feedback() {
 function main_feedback_save() {
 	global $smarty;
 	global $user;
-	include_library("recaptcha2.php");
+	include_library("recaptchalib.php");
 	
 	$email_address=$_REQUEST['email_address'];
 	$feedback_string=$_REQUEST['feedback_string'];
 	
-	$recaptcha_key = $GLOBALS['recaptcha_key'];
 	$recaptcha_secret = $GLOBALS['recaptcha_secret'];
 	
 	# Check recaptcha entered
-	if(recaptcha_check() == 0){
+	$reCaptcha = new ReCaptcha($recaptcha_secret);
+	if ($_POST["g-recaptcha-response"]) {
+    	$response = $reCaptcha->verifyResponse(
+        	$_SERVER["REMOTE_ADDR"],
+			$_POST["g-recaptcha-response"]
+		);
+		if ($response != null && $response->success) {
+			# Successful, so let it fall through
+		}else{
+			user_message("Recaptcha entered incorrectly!");
+			return main_feedback();
+		}
+	}else{
 		user_message("Recaptcha entered incorrectly!");
 		return main_feedback();
 	}
