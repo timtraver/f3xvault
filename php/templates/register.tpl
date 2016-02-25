@@ -1,7 +1,9 @@
 {extends file='layout/layout_login.tpl'}
 
 {block name="header"}
+<script src='https://www.google.com/recaptcha/api.js'></script>
 {/block}
+
 
 {block name="content"}
 
@@ -53,7 +55,7 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								{$recaptcha_html}
+								<div class="g-recaptcha" data-sitekey="{$recaptcha_key}"></div>
 							</div>
 						</div>
 						<div class="row">
@@ -63,9 +65,6 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			<div class="pad-ver">
-				<a href="?action=main&function=forgot" class="btn-link mar-rgt">Forgot password ?</a>
 			</div>
 		</div>
 	</div>

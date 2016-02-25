@@ -29,8 +29,9 @@ function view_registration() {
 	
 	# Set recaptcha
 	include_library('recaptchalib.php');
-	$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
-	$recaptcha_html=recaptcha_get_html($publickey);
+	#$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
+	#$recaptcha_html=recaptcha_get_html($publickey);
+	$smarty->assign("recaptcha_key",$GLOBALS['recaptcha_key']);
 		
 	$smarty->assign("recaptcha_html",$recaptcha_html);
 	$maintpl=find_template("register.tpl");
@@ -40,7 +41,27 @@ function save_registration(){
 	# Function to get the user registered
 	global $user;
 	global $smarty;
-	
+	include_library("recaptchalib.php");
+	$recaptcha_secret = $GLOBALS['recaptcha_secret'];
+
+	# Check recaptcha entered
+	$reCaptcha = new ReCaptcha($recaptcha_secret);
+	if ($_POST["g-recaptcha-response"]) {
+    	$response = $reCaptcha->verifyResponse(
+        	$_SERVER["REMOTE_ADDR"],
+			$_POST["g-recaptcha-response"]
+		);
+		if ($response != null && $response->success) {
+			# Successful, so let it fall through
+		}else{
+			user_message("Recaptcha entered incorrectly!");
+			return view_registration();
+		}
+	}else{
+		user_message("Recaptcha entered incorrectly!");
+		return view_registration();
+	}
+
 	if(isset($_REQUEST['from_show_pilots'])){
 		$from_show_pilots=$_REQUEST['from_show_pilots'];
 	}else{
