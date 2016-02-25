@@ -8,6 +8,7 @@
 #       This is the script to show the registration form
 #
 ############################################################################
+include_library('recaptchalib.php');
 $GLOBALS['current_menu']='register';
 
 if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
@@ -28,7 +29,6 @@ function view_registration() {
 	$smarty->assign("user_email",strtolower($_REQUEST['user_email']));
 	
 	# Set recaptcha
-	include_library('recaptchalib.php');
 	#$publickey='6Le6t94SAAAAACe6fF0BzRXUx-bYvKrDPjoFKE8j';
 	#$recaptcha_html=recaptcha_get_html($publickey);
 	$smarty->assign("recaptcha_key",$GLOBALS['recaptcha_key']);
