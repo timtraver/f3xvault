@@ -54,11 +54,11 @@ function save_registration(){
 		if ($response != null && $response->success) {
 			# Successful, so let it fall through
 		}else{
-			user_message("Recaptcha entered incorrectly!");
+			user_message("Recaptcha entered incorrectly!",1);
 			return view_registration();
 		}
 	}else{
-		user_message("Recaptcha entered incorrectly!");
+		user_message("Recaptcha entered incorrectly!",1);
 		return view_registration();
 	}
 
