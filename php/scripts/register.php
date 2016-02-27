@@ -44,24 +44,6 @@ function save_registration(){
 	include_library("recaptchalib.php");
 	$recaptcha_secret = $GLOBALS['recaptcha_secret'];
 
-	# Check recaptcha entered
-	$reCaptcha = new ReCaptcha($recaptcha_secret);
-	if ($_POST["g-recaptcha-response"]) {
-    	$response = $reCaptcha->verifyResponse(
-        	$_SERVER["REMOTE_ADDR"],
-			$_POST["g-recaptcha-response"]
-		);
-		if ($response != null && $response->success) {
-			# Successful, so let it fall through
-		}else{
-			user_message("Recaptcha entered incorrectly!",1);
-			return view_registration();
-		}
-	}else{
-		user_message("Recaptcha entered incorrectly!",1);
-		return view_registration();
-	}
-
 	if(isset($_REQUEST['from_show_pilots'])){
 		$from_show_pilots=$_REQUEST['from_show_pilots'];
 	}else{
@@ -127,16 +109,22 @@ function save_registration(){
 	
 	if($from_show_pilots==0){
 		# Lets check the recaptcha
-		include_library('recaptchalib.php');
-		$privatekey = "6Le6t94SAAAAAEDs3x4GleessiNUAqBjC0txOdqH";
-		$resp = recaptcha_check_answer ($privatekey,
-		$_SERVER["REMOTE_ADDR"],
-		$_POST["recaptcha_challenge_field"],
-		$_POST["recaptcha_response_field"]);
-
-    	if (!$resp->is_valid) {
-		    // What happens when the CAPTCHA was entered incorrectly
-			user_message("The reCaptcha value you chose was not correct. Please try again. {$resp->error}",1);
+		$valid = 0;
+		$reCaptcha = new ReCaptcha($recaptcha_secret);
+		if ($_POST["g-recaptcha-response"]) {
+	    	$response = $reCaptcha->verifyResponse(
+	        	$_SERVER["REMOTE_ADDR"],
+				$_POST["g-recaptcha-response"]
+			);
+			if ($response != null && $response->success) {
+				# Successful, so let it fall through
+				$valid = 1;
+			}else{
+				user_message("Recaptcha entered incorrectly!",1);
+				return view_registration();
+			}
+		}else{
+			user_message("Recaptcha entered incorrectly!",1);
 			return view_registration();
 		}
 	
