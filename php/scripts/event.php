@@ -1345,26 +1345,33 @@ function event_register_save() {
 	$data['info']=$e->info;
 	$data['pilots']=$e->pilots;
 	
+	# Send it to the registered user
 	if($GLOBALS['user']['user_email'] != ''){
 		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
-		# Send it to the owner of the event too
-		if($e->info['pilot_email'] != ''){
-			send_email('event_registration_confirm',$e->info['pilot_email'],$data);
-		}
-		# Send a copy to the admins of the event
-		$stmt=db_prep("
-			SELECT *
-			FROM event_user eu
-			LEFT JOIN pilot p ON eu.pilot_id=p.pilot_id
-			WHERE eu.event_id=:event_id
-				AND eu.event_user_status=1
-		");
-		$result=db_exec($stmt,array("event_id"=>$event_id));
-		foreach($result as $row){
-			$email = $row['pilot_email'];
-			if($email != '' && $email != $GLOBALS['user']['user_email']){
-				send_email('event_registration_confirm',$email,$data);
-			}
+	}
+	
+	# Send it to the owner of the event too
+	if($e->info['user_email'] != ''){
+		send_email('event_registration_confirm',$e->info['user_email'],$data);
+	}
+	# Send it to the CD of the event too
+	if($e->info['pilot_email'] != ''){
+		send_email('event_registration_confirm',$e->info['pilot_email'],$data);
+	}
+	
+	# Send a copy to the admins of the event
+	$stmt=db_prep("
+		SELECT *
+		FROM event_user eu
+		LEFT JOIN pilot p ON eu.pilot_id=p.pilot_id
+		WHERE eu.event_id=:event_id
+			AND eu.event_user_status=1
+	");
+	$result=db_exec($stmt,array("event_id"=>$event_id));
+	foreach($result as $row){
+		$email = $row['pilot_email'];
+		if($email != '' && $email != $GLOBALS['user']['user_email']){
+			send_email('event_registration_confirm',$email,$data);
 		}
 	}
 	return event_register();
