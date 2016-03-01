@@ -1345,8 +1345,12 @@ function event_register_save() {
 	$data['info']=$e->info;
 	$data['pilots']=$e->pilots;
 	
-	if($GLOBALS['user']['user_email']!=''){
+	if($GLOBALS['user']['user_email'] != ''){
 		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
+		# Send it to the owner of the event too
+		if($e->info['pilot_email'] != ''){
+			send_email('event_registration_confirm',$e->info['pilot_email'],$data);
+		}
 		# Send a copy to the admins of the event
 		$stmt=db_prep("
 			SELECT *
