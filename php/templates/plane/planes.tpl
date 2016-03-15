@@ -4,7 +4,7 @@
 
 <div class="panel">
 	<div class="panel-heading">
-		<h2 class="heading">F3X Flying Locations</h2>
+		<h2 class="heading">F3X Plane Database</h2>
 	</div>
 	<div class="panel-body">
 	<p>
