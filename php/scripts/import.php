@@ -176,7 +176,12 @@ function import_verify() {
 			$event_type_name=$result[0]['event_type_name'];
 		}
 	}
-
+	if($event_type_code == ''){
+		# Didn't find the event type
+		user_message("Event type code was not found. Make sure that in the first line of the export that the event type code is correct.",1);
+		return import_view();
+	}
+	
 	# Get classes to choose for the pilots
 	$stmt=db_prep("
 		SELECT *
