@@ -53,16 +53,18 @@
 					<font color="red"><b>Registration Currently Closed</b></font>
 				{else}
 					<font color="green"><b>Registration Currently Open</b></font>
-					<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
-					Register Me Now!
-					</a>
-				{/if}
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					{if $registered==1}
-					<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
-					You Are Registered! Update Your Registration Info
-					</a>
+					{if $registered==0}
+						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
+						Register Me Now!
+						</a>
+					{else}
+						You Are Currently Registered For This Event! &nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
+						 Update Your Registration Info Here
+						</a>
 					{/if}
+				{/if}
 			</td>
 		{/if}
 		</table>

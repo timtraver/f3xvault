@@ -30,7 +30,7 @@
 	<link href="css/f3x.min.css" rel="stylesheet">
 	<!--SCRIPT-->
 	<!--=================================================-->
-
+	
 	<!--Page Load Progress Bar [ OPTIONAL ]-->
 	<link href="css/pace.min.css" rel="stylesheet">
 	<script src="js/pace.min.js"></script>
@@ -389,12 +389,12 @@
 	<!--Bootstrap Select [ OPTIONAL ]-->
 	<script src="plugins/bootstrap-select/bootstrap-select.min.js"></script>
 
+	<!--Nifty Admin [ RECOMMENDED ]-->
+	<script src="js/nifty.min.js"></script>
+
 	<!--Fast Click [ OPTIONAL ]-->
 	<script src="js/fastclick.min.js"></script>
 
-	
-	<!--Nifty Admin [ RECOMMENDED ]-->
-	<script src="js/nifty.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {ldelim}
 			{foreach $messages as $m}
