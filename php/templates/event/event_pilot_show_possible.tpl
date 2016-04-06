@@ -49,7 +49,7 @@
 			<td class="table-data-heading-left" nowrap>
 				<input type="radio" name="pilot_id" value="0" CHECKED>
 			</td>
-			<td colspan="5">I'm sorry, but none of those pilots are the one I wanted, Please create the one I entered.<br>
+			<td colspan="5">Sorry, but none of those pilots are the one I wanted, Please create the one I entered.<br>
 				<br>
 				{$pilot_first_name|escape} {$pilot_last_name|escape}<br>
 				{$pilot_city|escape}, {$state.state_name|escape} - {$country.country_name|escape}

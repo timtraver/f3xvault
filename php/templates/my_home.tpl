@@ -17,7 +17,7 @@
 				<a href="?action=event" class="btn btn-block btn-primary btn-rounded" style="font-size: 18px;"><i class="fa fa-trophy" style="float:left;padding-top: 3px;"></i>Browse Events</a><br>
 				
 				{if $current}
-					<a href="?action=event&function=event_view&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded" style="font-size: 18px;"><i class="fa fa-thumbs-o-up" style="float:left;padding-top: 3px;"></i>I'm At This Event Now!</a><br>
+					<a href="?action=event&function=event_view&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded" style="font-size: 18px;"><i class="fa fa-thumbs-o-up" style="float:left;padding-top: 3px;"></i>I Am At This Event Now!</a><br>
 					{*
 					<a href="?action=event&function=event_enter_score&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded"><i class="fa fa-list" style="float:left;padding-top: 3px;"></i>Enter Scores</a><br>
 					*}

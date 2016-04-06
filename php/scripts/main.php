@@ -275,7 +275,7 @@ function forgot_send() {
 	if(isset($result[0])){
 		$recovery=get_user_info($result[0]['user_id']);
 	}else{
-		user_message("I'm sorry, I do not recognize a user account with that email address.",1);
+		user_message("Sorry, I do not recognize a user account with that email address.",1);
 		return forgot();
 	}
 	# If it got here, then we need to send the email
@@ -301,7 +301,7 @@ function pass_recovery(){
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
 	
 	if($hash!=$compare){
-		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
+		user_message("Sorry, but that does not appear to be a proper email recovery link.",1);
 		$user=array();
 		return view_home();	
 	}
@@ -326,7 +326,7 @@ function pass_recovery_save(){
 	$pass2=$_REQUEST['pass2'];
 	
 	if($pass1!=$pass2){
-		user_message("I'm sorry, but the two entered passwords do not match.",1);
+		user_message("Sorry, but the two entered passwords do not match.",1);
 		$user=array();
 		return pass_recovery();
 	}
@@ -334,7 +334,7 @@ function pass_recovery_save(){
 	$compare=sha1($user_id.$user_info['user_name'].$user_info['user_email']);
 	
 	if($hash!=$compare){
-		user_message("I'm sorry, but that does not appear to be a proper email recovery link.",1);
+		user_message("Sorry, but that does not appear to be a proper email recovery link.",1);
 		$user=array();
 		return pass_recovery();
 	}

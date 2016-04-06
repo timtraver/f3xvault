@@ -57,7 +57,7 @@ if(check_user_function($function)){
 				eval("\$actionoutput=$function();");
 			}else{
 				# They aren't allowed
-				user_message("I'm sorry, but you do not have permission to edit this event. Please contact the event creator for access.",1);
+				user_message("Sorry, but you do not have permission to edit this event. Please contact the event creator for access.",1);
 				$actionoutput=event_view();
 			}
 		}else{
@@ -716,7 +716,7 @@ function event_delete() {
 	$e=new Event($event_id);
 	if($user['user_id']!=$e->info['user_id'] && $user['user_admin']!=1){
 		# This is not the owner, so don't delete it...
-		user_message("I'm sorry, but only the owner of the event can delete it.",1);
+		user_message("Sorry, but only the owner of the event can delete it.",1);
 		return event_list();
 	}
 	# Save the database record for this event to delete it

@@ -44,7 +44,7 @@ if(check_user_function($function)){
 				eval("\$actionoutput=$function();");
 			}else{
 				# They aren't allowed
-				user_message("I'm sorry, but you do not have permission to edit this club. Please contact the club creator for access.",1);
+				user_message("Sorry, but you do not have permission to edit this club. Please contact the club creator for access.",1);
 				$actionoutput=club_view();
 			}
 		}else{

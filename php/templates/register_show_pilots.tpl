@@ -45,7 +45,7 @@
 								<td nowrap>
 									<input type="radio" name="pilot_id" value="0" CHECKED>
 								</td>
-								<td colspan="3">I'm sorry, but none of these pilots are me.</td>
+								<td colspan="3">Sorry, but none of these pilots are me.</td>
 							</tr>
 							</table>
 							</div>

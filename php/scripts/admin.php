@@ -17,7 +17,7 @@ if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
 
 if($user['user_admin']!=1){
 	# User does not have admin access
-	user_message("I'm sorry, you do not have user admin access.");
+	user_message("Sorry, you do not have user admin access.");
 	include("{$GLOBALS['scripts_dir']}/main.php");
 	$actionoutput=view_home();
 }else{

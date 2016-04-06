@@ -713,12 +713,12 @@ function change_password(){
 	$pass2=$_REQUEST['pass2'];
 	# Check the existing pass first
 	if(sha1($pass)!=$user['user_pass']){
-		user_message("I'm sorry, but the entered existing password does not match.",1);
+		user_message("Sorry, but the entered existing password does not match.",1);
 		return show_change_password();
 	}
 	
 	if($pass1!=$pass2){
-		user_message("I'm sorry, but the two new entered passwords do not match each other.",1);
+		user_message("Sorry, but the two new entered passwords do not match each other.",1);
 		return show_change_password();
 	}
 

@@ -38,7 +38,7 @@
 				<th nowrap>
 					<input type="radio" name="pilot_id" value="0" CHECKED>
 				</th>
-				<td colspan="3">I'm sorry, but none of these pilots are me. Please start with my default information.</td>
+				<td colspan="3">Sorry, but none of these pilots are me. Please start with my default information.</td>
 			</tr>
 			<tr>
 				<th colspan="4" style="text-align: center;">
