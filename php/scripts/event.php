@@ -975,7 +975,7 @@ function event_register() {
 	$smarty->assign("event",$e);
 	
 	# Lets check to see if they are already registered
-	foreach($e->pilots as $event_pilot_id=>$p){
+	foreach($e->pilots as $p){
 		if($p['pilot_id']==$GLOBALS['user']['pilot_id']){
 			user_message("You are already Registered for this event! You can update your registration parameters here.");
 			$event_pilot_id=$p['event_pilot_id'];
