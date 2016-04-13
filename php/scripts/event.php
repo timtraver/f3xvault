@@ -1345,18 +1345,23 @@ function event_register_save() {
 	$data['info']=$e->info;
 	$data['pilots']=$e->pilots;
 	
+	$sent = array(); # array of already sent emails
+	
 	# Send it to the registered user
 	if($GLOBALS['user']['user_email'] != ''){
 		send_email('event_registration_confirm',$GLOBALS['user']['user_email'],$data);
+		array_push($sent, $GLOBALS['user']['user_email']);
 	}
 	
 	# Send it to the owner of the event too
-	if($e->info['user_email'] != ''){
+	if($e->info['user_email'] != '' && !in_array($e->info['user_email'], $sent)){
 		send_email('event_registration_confirm',$e->info['user_email'],$data);
+		array_push($sent, $e->info['user_email']);
 	}
 	# Send it to the CD of the event too
-	if($e->info['pilot_email'] != ''){
+	if($e->info['pilot_email'] != '' && !in_array($e->info['pilot_email'], $sent)){
 		send_email('event_registration_confirm',$e->info['pilot_email'],$data);
+		array_push($sent, $e->info['pilot_email']);
 	}
 	
 	# Send a copy to the admins of the event
@@ -1370,7 +1375,7 @@ function event_register_save() {
 	$result=db_exec($stmt,array("event_id"=>$event_id));
 	foreach($result as $row){
 		$email = $row['pilot_email'];
-		if($email != '' && $email != $GLOBALS['user']['user_email']){
+		if($email != '' && $email != $GLOBALS['user']['user_email'] && !in_array($email, $sent)){
 			send_email('event_registration_confirm',$email,$data);
 		}
 	}
