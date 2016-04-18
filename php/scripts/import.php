@@ -161,6 +161,9 @@ function import_verify() {
 	# Lets get the event type id
 	$event_type_code='';
 	if($event_type_name!=''){
+		if($event_type_name == 'F3K Multi Task'){
+			$event_type_name = 'f3k';
+		}
 		$stmt=db_prep("
 			SELECT *
 			FROM event_type
