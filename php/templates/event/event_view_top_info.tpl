@@ -83,7 +83,7 @@
 				{if $active_draws || $event->pilots|count >0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}{rdelim}">Manage Event Draws</a></li>
 				{/if}
-				{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_status!=0}
+				{if ($permission==1 || $user.user_admin==1) && $event->info.event_reg_flag!=0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">View Registration Report</a></li>
 				{/if}
 				{if $event->info.event_id!=0}
