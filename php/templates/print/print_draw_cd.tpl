@@ -30,7 +30,7 @@
 				">
 		<tr bgcolor="lightgray">
 			<th width="60">Round</th>
-			{if $event->flight_types.$flight_type_id.flight_type_group}
+			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 				<th width="60">Group</th>
 			{else}
 				<th width="60">Order</th>
@@ -73,7 +73,7 @@
 		{/if}
 		<tr>
 			<td align="center" {if $p@first}style="border-top: 2px solid black;"{/if}>{if $p@first}{$r.event_round_number}{/if}</td>
-			{if $event->flight_types.$flight_type_id.flight_type_group}
+			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
