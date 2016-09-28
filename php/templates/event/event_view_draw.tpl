@@ -1,20 +1,7 @@
-{if $event->teams|count > 0}
-Team Highlight :
-<select name="highlight" onChange="document.hl.highlight.value=document.main.highlight.value;document.hl.submit();">
-<option value="">None</option>
-{foreach $event->teams as $t}
-<option value="{$t.event_pilot_team}"{if $highlight==$t.event_pilot_team} SELECTED{/if}>{$t.event_pilot_team}</option>
-{/foreach}
-</select>
-<br>
-{/if}
-
 <table cellspacing="2" cellpadding="1">
 <tr>
 {foreach $draw_rounds as $r}
-{if $event->info.event_type_code=="f3k"}
-	{$flight_type_id=$r.flight_type_id}
-{/if}
+{$flight_type_id=$r.flight_type_id}
 {$bgcolor=''}
 {if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
 	|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
@@ -37,7 +24,7 @@ Team Highlight :
 		</tr>
 	{/if}
 	<tr>
-		{if $event->flight_types.$flight_type_id.flight_type_group}
+		{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 			<th width="30">Group</th>
 		{else}
 			<th>&nbsp;#&nbsp;</th>
@@ -74,7 +61,7 @@ Team Highlight :
 			{$highlighted=0}
 		{/if}
 		<tr>
-			{if $event->flight_types.$flight_type_id.flight_type_group}
+			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 				<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
 				<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
@@ -107,7 +94,7 @@ Team Highlight :
 </tr>
 </table>
 
-
+{if $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 <h2 style="float:left;">Draw Statistics</h2>
 <br style="clear:left;">
 
@@ -193,7 +180,7 @@ Team Highlight :
 	</td>
 </tr>
 </table>
-
+{/if}
 
 
 

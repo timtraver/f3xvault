@@ -915,7 +915,7 @@ class Event {
 							}else{
 								$draw_rounds[$event_round_number]['flight_type_id']=$flight_type_id;
 							}
-							$draw_rounds[$event_round_number]['flights'][$flight_type_id]=$e->flight_types[$flight_type_id];
+							$draw_rounds[$event_round_number]['flights'][$flight_type_id]=$this->flight_types[$flight_type_id];
 							foreach($v['pilots'] as $event_pilot_id=>$p){
 								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id']=$flight_type_id;
 								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group']=$p['event_draw_round_group'];

@@ -49,7 +49,7 @@
 					</tr>
 				{/if}
 				<tr bgcolor="lightgray">
-					{if $event->flight_types.$flight_type_id.flight_type_group}
+					{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 						<td width="30">Group</td>
 					{else}
 						<td>&nbsp;#&nbsp;</td>
@@ -86,7 +86,7 @@
 						{$highlighted=0}
 					{/if}
 					<tr>
-						{if $event->flight_types.$flight_type_id.flight_type_group}
+						{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 						{else}
 							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>

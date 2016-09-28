@@ -4928,7 +4928,7 @@ function event_export_export() {
 		foreach($d['flights'] as $flight_type_id=>$f){
 			foreach($f as $round_number=>$r){
 				foreach($r['pilots'] as $event_pilot_id=>$p){
-					if($event->flight_types[$flight_type_id]['flight_type_group']==1){
+					if($event->flight_types[$flight_type_id]['flight_type_group']==1 && $event->flight_types[$flight_type_id]['flight_type_code']!='f3f_speed'){
 						$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_group'];
 					}else{
 						$draws[$event_pilot_id]['draw'][$round_number]=$p['event_draw_round_order'];
