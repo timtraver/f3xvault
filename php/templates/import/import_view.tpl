@@ -65,7 +65,7 @@
 		<tr>
 			<th nowrap>Line 1 (Event Info)</th>
 			<td>
-				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3k or f3f)
+				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3k or f3f or f3f_group)
 			</td>
 		</tr>
 		<tr>
@@ -85,8 +85,8 @@
 			<td>
 				0,2015 International Hand Launch Glider Festival,05/02/2015,05/03/2015,f3k<br>
 				f3k_c,f3k_g,f3k_i,f3k_d,f3k_e,f3k_a,f3k_f,f3k_j,f3k_h,f3k_b,f3k_g,f3k_e<br>
-				0,Tim Traver,Open,2.4GHz,,E,3:00,3:00,3:00,,B,1:59,2:00,1:59,1:41,2:00,,............<br>
-				0,Thomas Kiesling,Open,2.4GHz,,D,3:00,3:00,3:00,,B,2:00,2:00,1:59,1:59,1:49,,...........<br>
+				0,Tim Traver,Open,2.4GHz,,E,3:00,3:00,3:00,,B,1:59,2:00,1:59,1:41,2:00,,............etc<br>
+				0,Thomas Kiesling,Open,2.4GHz,,D,3:00,3:00,3:00,,B,2:00,2:00,1:59,1:59,1:49,,...........etc<br>
 		
 			</td>
 		</tr>
@@ -105,16 +105,19 @@
 		<tr>
 			<th nowrap>Line 2 (Pilot Data)</th>
 			<td>
-				Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), Round_1_flight(sec), Round_1_Penalty(num), Round_2_Flight(sec), Round_2_Penalty(num), ... Round_X_...
+				Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), (GROUP if f3f_group), Round_1_flight(sec), Round_1_Penalty(num), Round_2_Flight(sec), Round_2_Penalty(num), ... Round_X_...
 			</td>
 		</tr>
 		<tr>
 			<th nowrap>Example</th>
 			<td>
 				0,2015 SCSR Vincent,05/18/2015,05/18/2015,f3f<br>
-				0,Tim Traver,Open,2.4GHz,,42.56,,46.22,,41.21,,40.37,,............<br>
-				0,Thomas Kiesling,Open,2.4GHz,,41.59,,43.29,,45.75,,41.21,,...........<br>
-		
+				0,Tim Traver,Open,2.4GHz,,42.56,,46.22,,41.21,,40.37,,............etc<br>
+				0,Thomas Kiesling,Open,2.4GHz,,41.59,,43.29,,45.75,,41.21,,...........etc<br>
+				<br>
+				<br>
+				If you are using f3f_groups, then the format will have an extra field in front of the times for the group like this : <br>
+				0,Tim Traver,Open,2.4GHz,,A,42.56,,B,46.22,,A,41.21,,C,40.37,,............etc<br>
 			</td>
 		</tr>
 		<tr>
@@ -177,7 +180,7 @@
 		<tr>
 			<th nowrap>Event_Type</th>
 			<td>
-				String of the event type. Currently 'f3k', 'f3f', 'f3j', 'td'
+				String of the event type. Currently 'f3k', 'f3f', 'f3f_group', 'f3j', 'td'
 			</td>
 		</tr>
 		<tr>

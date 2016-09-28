@@ -21,6 +21,7 @@
 		<input type="hidden" name="event_end_date" value="{$event.event_end_date}">
 		<input type="hidden" name="event_cd" value="{$event.event_cd}">
 		<input type="hidden" name="location_id" value="{$event.location_id}">
+		<input type="hidden" name="f3f_group" value="{$event.f3f_group}">
 		{foreach $rounds as $r}
 		{$round=$r@key}
 		<input type="hidden" name="event_round_{$round}" value="{$r.flight_type_id}">
@@ -35,7 +36,7 @@
 		<tr>
 			<th colspan="2">Event Type</th>
 			<td colspan="5">
-				{$event.event_type_code} - {$event.event_type_name}
+				{$event.event_type_code} - {$event.event_type_name} {if $event.f3f_group == 1} (with groups){/if}
 			</td>
 		</tr>
 		<tr>

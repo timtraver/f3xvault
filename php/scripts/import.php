@@ -160,9 +160,14 @@ function import_verify() {
 	
 	# Lets get the event type id
 	$event_type_code='';
+	$f3f_group=0;
 	if($event_type_name!=''){
 		if($event_type_name == 'F3K Multi Task'){
 			$event_type_name = 'f3k';
+		}
+		if($event_type_name == 'f3f_group'){
+			$event_type_name = 'f3f';
+			$f3f_group=1;
 		}
 		$stmt=db_prep("
 			SELECT *
@@ -252,6 +257,9 @@ function import_verify() {
 		$result=db_exec($stmt,array("flight_type_code"=>$event_type_code."%"));
 		foreach($result as $row){
 			$flight_type_code=$row['flight_type_code'];
+			if($f3f_group == 1){
+				$row['flight_type_group'] = 1;
+			}
 			$flight_types[$flight_type_code]=$row;
 		}
 	}
@@ -278,7 +286,12 @@ function import_verify() {
 					break;
 				case 'f3f':
 					# F3F Flights
-					$temp_rounds[$r]['group']='';
+					if($f3f_group == 1){
+						$temp_rounds[$r]['group']=$lines[$l][$x];
+						$x++;
+					}else{
+						$temp_rounds[$r]['group']='';
+					}
 					$temp_rounds[$r]['flights']['sub'][1]=$lines[$l][$x];
 					$x++;
 					$temp_rounds[$r]['penalty']=$lines[$l][$x];
@@ -419,6 +432,7 @@ function import_verify() {
 	$event['location_id']=$e['location_id'];
 	$event['location_name']=$e['location_name'];
 	$event['event_cd']=$e['event_cd'];
+	$event['f3f_group']=$f3f_group;
 	# If it was an existing event, lets get the cd name for the screen
 	if(isset($e)){
 		$stmt=db_prep("
@@ -457,6 +471,7 @@ function import_import() {
 	$event['event_cd']=$_REQUEST['event_cd'];
 	$event['event_type_id']=$_REQUEST['event_type_id'];
 	$event['event_type_code']=$_REQUEST['event_type_code'];
+	$event['f3f_group']=$_REQUEST['f3f_group'];
 	
 	if(isset($_REQUEST['event_start_dateMonth'])){
 		$event['event_start_date']=date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
