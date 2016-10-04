@@ -926,6 +926,35 @@ function import_import() {
 		}
 	}
 	
+	# Lets get the current active draw if there is one, so we can insert the flight order for f3f_group scoring
+	include_library("draw.class");
+	$active_draw = array();
+	# Get the list of active draws
+	$stmt=db_prep("
+		SELECT *
+		FROM event_draw ed
+		LEFT JOIN event e ON ed.event_id=e.event_id
+		LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+		WHERE ed.event_id=:event_id
+			AND ed.event_draw_status=1
+			AND ed.event_draw_active=1
+	");
+	$result=db_exec($stmt,array("event_id"=>$event['event_id']));
+	foreach($result as $row){
+		$event_draw_id=$row['event_draw_id'];
+		$d = new Draw($event_draw_id);
+		$d->get_pilots();
+		$d->get_rounds();
+		foreach($d->rounds as $rd){
+			foreach($rd as $rg){
+				foreach($rg['pilots'] as $rp){
+					$rn = $rp['event_draw_round_number'];
+				}
+			}
+			$active_draw[$rn] = $rd;
+		}
+	}
+
 	# Step through each pilot and create the round entries (turning on if existing)
 	# Lets first make an easier array so we can go through round by round instead of pilot by pilot
 	$import_rounds=array();
@@ -1116,6 +1145,15 @@ function import_import() {
 			if(isset($result[0])){
 				$event_pilot_round_flight_id=$result[0]['event_pilot_round_flight_id'];
 				# It already exists, so update it
+				# Lets see if they have a draw order
+				$flight_order = '';
+				$group = $r['group'];
+				if(isset($active_draw[$round_number][$group]['pilots'][$event_pilot_id]['event_draw_round_order'])){
+					$flight_order = $active_draw[$round_number][$group]['pilots'][$event_pilot_id]['event_draw_round_order'];
+				}
+				if(isset($active_draw[$round_number]['']['pilots'][$event_pilot_id]['event_draw_round_order'])){
+					$flight_order = $active_draw[$round_number]['']['pilots'][$event_pilot_id]['event_draw_round_order'];
+				}
 				$stmt=db_prep("
 					UPDATE event_pilot_round_flight
 					SET event_pilot_round_flight_group=:group,
@@ -1124,6 +1162,7 @@ function import_import() {
 						event_pilot_round_flight_landing=:landing,
 						event_pilot_round_flight_over=:over,
 						event_pilot_round_flight_penalty=:penalty,
+						event_pilot_round_flight_order=:order,
 						event_pilot_round_flight_status=1
 					WHERE event_pilot_round_flight_id=:event_pilot_round_flight_id
 				");
@@ -1134,10 +1173,19 @@ function import_import() {
 					"landing"=>$r['land'],
 					"over"=>$r['over'],
 					"penalty"=>$r['penalty'],
+					"order"=>$flight_order,
 					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id
 				));
 			}else{
 				# Need to create it
+				$flight_order = '';
+				$group = $r['group'];
+				if(isset($active_draw[$round_number][$group]['pilots'][$event_pilot_id]['event_draw_round_order'])){
+					$flight_order = $active_draw[$round_number][$group]['pilots'][$event_pilot_id]['event_draw_round_order'];
+				}
+				if(isset($active_draw[$round_number]['']['pilots'][$event_pilot_id]['event_draw_round_order'])){
+					$flight_order = $active_draw[$round_number]['']['pilots'][$event_pilot_id]['event_draw_round_order'];
+				}
 				$stmt=db_prep("
 					INSERT INTO event_pilot_round_flight
 					SET event_pilot_round_id=:event_pilot_round_id,
@@ -1148,6 +1196,7 @@ function import_import() {
 						event_pilot_round_flight_landing=:landing,
 						event_pilot_round_flight_over=:over,
 						event_pilot_round_flight_penalty=:penalty,
+						event_pilot_round_flight_order=:order,
 						event_pilot_round_flight_status=1
 				");
 				$result=db_exec($stmt,array(
@@ -1158,7 +1207,8 @@ function import_import() {
 					"sec"=>$sec,
 					"landing"=>$r['land'],
 					"over"=>$r['over'],
-					"penalty"=>$r['pen']
+					"penalty"=>$r['pen'],
+					"order"=>$flight_order
 				));
 				$event_pilot_round_flight_id=$GLOBALS['last_insert_id'];
 			}
