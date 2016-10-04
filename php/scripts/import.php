@@ -1172,7 +1172,7 @@ function import_import() {
 					"sec"=>$sec,
 					"landing"=>$r['land'],
 					"over"=>$r['over'],
-					"penalty"=>$r['penalty'],
+					"penalty"=>$r['pen'],
 					"order"=>$flight_order,
 					"event_pilot_round_flight_id"=>$event_pilot_round_flight_id
 				));
