@@ -5,10 +5,18 @@ GENERAL
 	Create a "send location" link to a buddy
 	Audacity for recording the permanent stuff, and maybe http://audior.ec/ for recording from site
 	
+BACK END
+	Seperate event types event code to make it easier to create new event types
+	
 IMPORTING EVENTS
 	Live import and login directly from f3kscore push
+
+API
+	Create a full API for exporting and importing parts of an event (for other apps and mobile scoring devices)
 	
 EXPORTING
+	Export using the API
+	
 	
 LOCATION STUFF
 	Add Map waypoints to make for better maps
