@@ -977,7 +977,7 @@ function event_register() {
 	# Lets check to see if they are already registered
 	foreach($e->pilots as $p){
 		if($p['pilot_id']==$GLOBALS['user']['pilot_id']){
-			user_message("You are already Registered for this event! You can update your registration parameters here.");
+			user_message("You are Registered for this event! You can update your registration parameters here.");
 			$event_pilot_id=$p['event_pilot_id'];
 			break;
 		}
@@ -1131,6 +1131,12 @@ function event_register_save() {
 		));
 		user_message("Registration info updated.");
 	}else{
+		# Lets check to see if the pilot is logged in first
+		if(!isset($GLOBALS['user']['pilot_id']) || $GLOBALS['user']['pilot_id'] == 0){
+			user_message("You must be logged in to register for an event.",1);
+			return event_view();
+		}
+		
 		# If its a new pilot, lets set the entry order
 
 		# Lets check to see if the event has a max and its been reached

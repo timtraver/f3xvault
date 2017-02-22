@@ -386,36 +386,24 @@
 	
 	<!--JAVASCRIPT-->
 	<!--=================================================-->
-
 	<!--jQuery [ REQUIRED ]-->
 	<script src="js/jquery-2.1.1.min.js"></script>
-
 
 	<!--BootstrapJS [ RECOMMENDED ]-->
 	<script src="js/bootstrap.min.js"></script>
 
 	<!--Bootstrap Select [ OPTIONAL ]-->
 	<script src="plugins/bootstrap-select/bootstrap-select.min.js"></script>
-
+	
 	<!--Nifty Admin [ RECOMMENDED ]-->
 	<script src="js/nifty.min.js"></script>
 
 	<!--Fast Click [ OPTIONAL ]-->
 	<script src="js/fastclick.min.js"></script>
 
-	<script type="text/javascript">
-		$(document).ready(function() {ldelim}
-			{foreach $messages as $m}
-				$.niftyNoty({ldelim}
-					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
-					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
-					container : 'floating',
-					title : '{$m.message}',
-					timer : 10000
-				{rdelim});
-			{/foreach}
-		{rdelim})
-	</script>
+	{block name="footer"}{/block}
+	{block name="footer2"}{/block}
+
 	<script>
 		$( "#main_logo" ).hide();
 		setInterval(function(){ldelim}
@@ -430,8 +418,21 @@
 			{rdelim}
 		{rdelim})
 	</script>
-	{block name="footer"}{/block}
-	{block name="footer2"}{/block}
+
+	<script type="text/javascript">
+		$(document).ready(function() {ldelim}
+			{foreach $messages as $m}
+				$.niftyNoty({ldelim}
+					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
+					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
+					container : 'floating',
+					title : '{$m.message}',
+					timer : 10000
+				{rdelim});
+			{/foreach}
+		{rdelim});
+	</script>
+
 
 	<!--
 
