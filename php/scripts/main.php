@@ -369,5 +369,12 @@ function pass_recovery_save(){
 	$_REQUEST['function']='view_home';
 	return view_home();	
 }
+function main_privacy() {
+	global $smarty;
+	global $user;
+
+	$maintpl=find_template("privacy.tpl");
+	return $smarty->fetch($maintpl);
+}
 
 ?>

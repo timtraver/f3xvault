@@ -19,6 +19,7 @@
 						Become a registered member of F3X Vault and be able to register for events, create and edit new events, series, clubs, planes and locations!<br>
 						<br>
 						Your email address WILL NOT be shared with ANYONE. It will only be used as communication to you from this site, for a forgotten password link or other administrative actions.<br>
+						You can read the official privacy policy <a href="?action=main&function=main_privacy" style="color: red;">here</a>.
 						</p>
 						<form name="login" method="POST" autocomplete="off">
 						<input type="hidden" name="action" value="register">

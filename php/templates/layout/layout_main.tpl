@@ -321,6 +321,14 @@
 										</a>
 									</li>
 									<li>
+										<a href="/?action=main&function=main_privacy">
+											<i class="fa fa-key"></i>
+											<span class="menu-title">
+												<strong>Privacy Policy</strong>
+											</span>
+										</a>
+									</li>
+									<li>
 										<a href="#" onClick="document.donate.submit();">
 											<i class="fa fa-money"></i>
 											<span class="menu-title">
@@ -332,7 +340,7 @@
 										<a href="#">
 											<i class="fa fa-copyright"></i>
 											<span class="menu-title">
-												<strong>Tim Traver 2015</strong>
+												<strong>Tim Traver 2015-17</strong>
 											</span>
 										</a>
 									</li>
