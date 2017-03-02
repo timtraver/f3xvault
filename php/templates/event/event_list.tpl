@@ -95,24 +95,39 @@
 			</td>
 			<td nowrap>
 				{if $event.event_reg_flag==1 && $event.time_status!=-1 && $event.time_status!=0}
-					{if $event.event_reg_status==0 || 
-						($event.pilot_count>=$event.event_reg_max && $event.event_reg_max!=0)
+
+					{if $event.event_reg_status == 0 || 
+						($event.pilot_count >= $event.event_reg_max && $event.event_reg_max != 0) ||
+						($event.event_reg_close_on == 1 && time() > $event.event_reg_close_date_stamp) ||
+						($event.event_reg_status == 2 && time() < $event.event_reg_open_date_stamp)
 					}
-						<font color="red"><b>Registration Closed</b></font>
+					<font color="red"><b>Registration Currently Closed {if $event.pilot_count >= $event.event_reg_max} Due To Max Pilots{/if}</b></font>
+					{if $event.event_reg_status == 2 && time() < $event.event_reg_open_date_stamp}
+					Registration opens on {date("Y-m-d h:i a",$event.event_reg_open_date_stamp)}
+					{/if}
 					{else}
-						<font color="green"><b>Registration Open</b></font>
+						<font color="green"><b>Registration Currently Open</b></font>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="?action=event&function=event_register&event_id={$event.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
-						Register Me Now!
+						{if $registered==0}
+							<a href="?action=event&function=event_register&event_id={$event.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
+							Register Me Now!
+						</a>
+						{/if}
+					{/if}
+					{if $registered == 1}
+						You Are Currently Registered For This Event! &nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="?action=event&function=event_register&event_id={$event.event_id}" class="btn btn-success btn-rounded">
+						 Update Your Registration Info Here
 						</a>
 					{/if}
+
 				{else}
-					{if $event.time_status==2}
-					Scheduled
-					{elseif $event.time_status==1}
-					In Progress
+					{if $event.time_status == 2}
+						Scheduled
+					{elseif $event.time_status == 1}
+						In Progress
 					{else}
-					Completed
+						Completed
 					{/if}
 				{/if}
 			</td>

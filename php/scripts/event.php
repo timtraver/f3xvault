@@ -398,8 +398,18 @@ function event_view() {
 	# Lets set the draw rounds to be able to see them in the tab
 	$e->get_active_draws_and_stats();
 
+	$event_reg_past = 0;
+	if($e->info['event_reg_status'] == 2 ){
+		# The registration date is past due, so lets set that variable
+		$regdatestamp = strtotime($e->info['event_reg_date']) + 86400;
+		$nowstamp = time();
+		if($nowstamp > $regdatestamp){
+			$event_reg_past = 1;
+		}
+	}
 	$smarty->assign("group_totals",$group_totals);
 	$smarty->assign("event",$e);
+	$smarty->assign("event_reg_past",$event_reg_past);
 	$smarty->assign("draw_rounds",$e->draw_rounds);
 	$smarty->assign("stats",$e->draw_rounds_stats);
 	$smarty->assign("stat_totals",$e->draw_rounds_stats_totals);
@@ -817,6 +827,17 @@ function event_reg_edit() {
 	$event_id=intval($_REQUEST['event_id']);
 	$e=new Event($event_id);
 	
+	# lets get the offset for the timezones for the stamps for showing in the reg edit screen
+	$open_stamp = $e->info['event_reg_open_date_stamp'];
+	$close_stamp = $e->info['event_reg_open_date_stamp'];
+	
+	date_default_timezone_set( "UTC" );
+	$open_offset = timezone_offset_get( timezone_open( $e->info['event_reg_open_tz'] ), new DateTime() );
+	$close_offset = timezone_offset_get( timezone_open( $e->info['event_reg_close_tz'] ), new DateTime() );	
+	
+	$e->info['event_reg_open_date_stamp'] = $e->info['event_reg_open_date_stamp'] + $open_offset;
+	$e->info['event_reg_close_date_stamp'] = $e->info['event_reg_close_date_stamp'] + $close_offset;
+
 	$smarty->assign("event",$e);
 	$smarty->assign("currencies",get_currencies());
 	$maintpl=find_template("event/event_reg_edit.tpl");
@@ -826,18 +847,37 @@ function event_reg_save() {
 	# Save the registration parameters
 	global $smarty;
 
-	$event_id=intval($_REQUEST['event_id']);
-	$e=new Event($event_id);
-	$event_reg_status=intval($_REQUEST['event_reg_status']);
-	$event_reg_date=$_REQUEST['event_reg_dateYear']."-".$_REQUEST['event_reg_dateMonth']."-".$_REQUEST['event_reg_dateDay'];
-	$event_reg_max=intval($_REQUEST['event_reg_max']);
-	$event_reg_pay_flag=0;
-	if(isset($_REQUEST['event_reg_pay_flag']) && $_REQUEST['event_reg_pay_flag']=='on'){
-		$event_reg_pay_flag=1;
+	$event_id = intval($_REQUEST['event_id']);
+	$e = new Event($event_id);
+	$event_reg_status = intval($_REQUEST['event_reg_status']);
+	$event_reg_max = intval($_REQUEST['event_reg_max']);
+	$event_reg_pay_flag = 0;
+	if(isset($_REQUEST['event_reg_pay_flag']) && $_REQUEST['event_reg_pay_flag'] == 'on'){
+		$event_reg_pay_flag = 1;
 	}
-	$currency_id=$_REQUEST['currency_id'];
-	$event_reg_paypal_address=$_REQUEST['event_reg_paypal_address'];
-	$event_reg_add_name=$_REQUEST['event_reg_add_name'];
+	$event_reg_close_on = 0;
+	if(isset($_REQUEST['event_reg_close_on']) && $_REQUEST['event_reg_close_on'] == 'on'){
+		$event_reg_close_on = 1;
+	}
+	$currency_id = $_REQUEST['currency_id'];
+	$event_reg_paypal_address = $_REQUEST['event_reg_paypal_address'];
+	$event_reg_add_name = $_REQUEST['event_reg_add_name'];
+	
+	# Get the entered dates
+	$event_reg_open_date_string = $_REQUEST['event_reg_open_dateYear']."-".$_REQUEST['event_reg_open_dateMonth']."-".$_REQUEST['event_reg_open_dateDay']." ".$_REQUEST['event_reg_open_dateHour'].":".$_REQUEST['event_reg_open_dateMinute'].$_REQUEST['event_reg_open_dateMeridian'];
+	$event_reg_close_date_string = $_REQUEST['event_reg_close_dateYear']."-".$_REQUEST['event_reg_close_dateMonth']."-".$_REQUEST['event_reg_close_dateDay']." ".$_REQUEST['event_reg_close_dateHour'].":".$_REQUEST['event_reg_close_dateMinute'].$_REQUEST['event_reg_close_dateMeridian'];
+	$event_reg_open_tz = $_REQUEST['event_reg_open_tz'];
+	$event_reg_close_tz = $_REQUEST['event_reg_close_tz'];
+	
+	$dateTime = new DateTime(); 
+	$dateTime->setTimeZone(new DateTimeZone($event_reg_open_tz));
+	$open_tz_abbr = $dateTime->format('T');
+	$dateTime->setTimeZone(new DateTimeZone($event_reg_close_tz));
+	$close_tz_abbr = $dateTime->format('T');
+
+	$open_date_stamp = strtotime($event_reg_open_date_string." ".$open_tz_abbr);
+	$close_date_stamp = strtotime($event_reg_close_date_string." ".$close_tz_abbr);
+
 	# Now lets get the existing additional values
 	$params=array();
 	foreach($_REQUEST as $key=>$value){
@@ -852,7 +892,11 @@ function event_reg_save() {
 	$stmt=db_prep("
 		UPDATE event
 		SET event_reg_status=:event_reg_status,
-			event_reg_date=:event_reg_date,
+			event_reg_open_date_stamp=:event_reg_open_date_stamp,
+			event_reg_open_tz=:event_reg_open_tz,
+			event_reg_close_on=:event_reg_close_on,
+			event_reg_close_date_stamp=:event_reg_close_date_stamp,
+			event_reg_close_tz=:event_reg_close_tz,
 			event_reg_max=:event_reg_max,
 			event_reg_pay_flag=:event_reg_pay_flag,
 			currency_id=:currency_id,
@@ -861,7 +905,11 @@ function event_reg_save() {
 	");
 	$result=db_exec($stmt,array(
 		"event_reg_status"=>$event_reg_status,
-		"event_reg_date"=>$event_reg_date,
+		"event_reg_open_date_stamp"=>$open_date_stamp,
+		"event_reg_open_tz"=>$event_reg_open_tz,
+		"event_reg_close_on"=>$event_reg_close_on,
+		"event_reg_close_date_stamp"=>$close_date_stamp,
+		"event_reg_close_tz"=>$event_reg_close_tz,
 		"event_reg_max"=>$event_reg_max,
 		"event_reg_pay_flag"=>$event_reg_pay_flag,
 		"currency_id"=>$currency_id,

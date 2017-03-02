@@ -46,11 +46,15 @@
 		<tr>
 			<th align="right">Registration Status</th>
 			<td colspan="3">
-				{if $event->info.event_reg_status==0 || 
-					($event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max!=0) ||
-					$event_reg_passed==1
+				{if $event->info.event_reg_status == 0 || 
+					($event->pilots|count >= $event->info.event_reg_max && $event->info.event_reg_max != 0) ||
+					($event->info.event_reg_close_on == 1 && time() > $event->info.event_reg_close_date_stamp) ||
+					($event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp)
 				}
-					<font color="red"><b>Registration Currently Closed</b></font>
+					<font color="red"><b>Registration Currently Closed {if $event->pilots|count>=$event->info.event_reg_max} Due To Max Pilots{/if}</b></font>
+					{if $event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp}
+					Registration opens on {date("Y-m-d h:i a",$event->info.event_reg_open_date_stamp)}
+					{/if}
 				{else}
 					<font color="green"><b>Registration Currently Open</b></font>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -58,12 +62,13 @@
 						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
 						Register Me Now!
 						</a>
-					{else}
-						You Are Currently Registered For This Event! &nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
-						 Update Your Registration Info Here
-						</a>
 					{/if}
+				{/if}
+				{if $registered == 1}
+					You Are Currently Registered For This Event! &nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="?action=event&function=event_register&event_id={$event->info.event_id}" class="btn btn-success btn-rounded">
+						 Update Your Registration Info Here
+					</a>
 				{/if}
 			</td>
 		{/if}

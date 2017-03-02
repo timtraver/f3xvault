@@ -1,6 +1,13 @@
 {extends file='layout/layout_main.tpl'}
 
 {block name="header"}
+<script src="/js/moment.min.js"></script>
+<script src="/js/moment-timezone-with-data.min.js"></script>
+<script type="text/javascript">
+	function guess_open_zone(){ldelim}
+		return moment.tz.guess();
+	{rdelim}
+</script>
 {/block}
 
 {block name="content"}
@@ -54,17 +61,34 @@
 					<tr>
 						<th width="20%">Registration Status</th>
 						<td>
-							<select name="event_reg_status">
-							<option value="0"{if $event->info.event_reg_status==0} SELECTED{/if}>Registration Currently Closed</option>
-							<option value="1"{if $event->info.event_reg_status==1} SELECTED{/if}>Registration Currently Open</option>
-							<option value="2"{if $event->info.event_reg_status==2} SELECTED{/if}>Registration Open Until Date</option>
-							</select>
+							<input type="radio" name="event_reg_status" value="0"{if $event->info.event_reg_status == 0} CHECKED{/if}> Event Registration is Closed<br>
+							<input type="radio" name="event_reg_status" value="1"{if $event->info.event_reg_status == 1} CHECKED{/if}> Event Registration is Open<br>
+							<input type="radio" name="event_reg_status" value="2"{if $event->info.event_reg_status == 2} CHECKED{/if}> Event Registration Opens on &nbsp;&nbsp;
+								{html_select_date prefix="event_reg_open_date" end_year="+3" day_format="%02d" day_value_format="%02d" time=$event->info.event_reg_open_date_stamp}
+								&nbsp;&nbsp;
+								{html_select_time prefix="event_reg_open_date" use_24_hours=false display_seconds=false display_meridian=true time=$event->info.event_reg_open_date_stamp}
+								
+								<select name="event_reg_open_tz">
+								{foreach timezone_identifiers_list() as $t}
+								<option value="{$t}"{if $event->info.event_reg_open_tz == $t} SELECTED{/if}>{$t}</option>
+								{/foreach}
+								</select>
+								<br>
 						</td>
 					</tr>
 					<tr>
 						<th>Registration Till Date</th>
 						<td>
-						{html_select_date prefix="event_reg_date" end_year="+3" day_format="%02d" time=$event->info.event_reg_date} 
+							<input type="checkbox" name="event_reg_close_on"{if $event->info.event_reg_close_on == 1} CHECKED{/if}> Close Registration On &nbsp;&nbsp;
+							{html_select_date prefix="event_reg_close_date" end_year="+3" day_format="%02d" day_value_format="%02d" time=$event->info.event_reg_close_date_stamp}
+							&nbsp;&nbsp;
+							{html_select_time prefix="event_reg_close_date" use_24_hours=false display_seconds=false display_meridian=true time=$event->info.event_reg_close_date_stamp}
+						
+							<select name="event_reg_close_tz">
+							{foreach timezone_identifiers_list() as $t}
+							<option value="{$t}"{if $event->info.event_reg_close_tz == $t} SELECTED{/if}>{$t}</option>
+							{/foreach}
+							</select>
 						</td>
 					</tr>
 					<tr>
@@ -185,4 +209,17 @@
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
+{/block}
+
+{block name="footer"}
+{if $event->info.event_reg_open_date_stamp == 0 || !$event->info.event_reg_open_date_stamp}
+<script type="text/javascript">
+	document.main.event_reg_open_tz.value = guess_open_zone();
+</script>
+{/if}
+{if $event->info.event_reg_close_date_stamp == 0 || !$event->info.event_reg_close_date_stamp}
+<script type="text/javascript">
+	document.main.event_reg_close_tz.value = guess_open_zone();
+</script>
+{/if}
 {/block}
