@@ -832,8 +832,8 @@ function event_reg_edit() {
 	$close_stamp = $e->info['event_reg_open_date_stamp'];
 	
 	date_default_timezone_set( "UTC" );
-	$open_offset = timezone_offset_get( timezone_open( $e->info['event_reg_open_tz'] ), new DateTime() );
-	$close_offset = timezone_offset_get( timezone_open( $e->info['event_reg_close_tz'] ), new DateTime() );	
+	$open_offset = timezone_offset_get( timezone_open( $e->info['event_reg_open_tz'] ), new DateTimeZone() );
+	$close_offset = timezone_offset_get( timezone_open( $e->info['event_reg_close_tz'] ), new DateTimeZone() );	
 	
 	$e->info['event_reg_open_date_stamp'] = $e->info['event_reg_open_date_stamp'] + $open_offset;
 	$e->info['event_reg_close_date_stamp'] = $e->info['event_reg_close_date_stamp'] + $close_offset;
