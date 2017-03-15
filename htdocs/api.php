@@ -19,6 +19,8 @@ $api = new API();
 if($api->api_check_login()){
 	$api->api_process_request();
 	$api->api_send_response();
+}else{
+	$api->api_send_response();
 }
 
 exit;
