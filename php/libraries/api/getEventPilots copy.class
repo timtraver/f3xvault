@@ -1,0 +1,58 @@
+<?php
+############################################################################
+#	getEventPilots.class
+#
+#	Tim Traver
+#	3/12/2017
+#	class to extend API class to get pilots info for an event
+#
+############################################################################
+#
+include_library('event.class');
+
+class getEventPilots {
+	public $event_id;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_mandatory_fields();
+	}
+	
+	public function set_mandatory_fields(){
+		# This is where we set the mandatory fields
+		$this->api->mandatory_fields = array(
+			"event_id"
+		);
+	}
+
+	public function process_request(){
+		global $smarty;
+		
+		# This is the method where we process the request
+		$this->event_id = $_REQUEST['event_id'];
+		start_smarty();
+
+		$event = new Event($this->event_id);
+		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+			$field_separator = $_REQUEST['field_separator'];
+		}else{
+			$field_separator = ',';
+		}
+
+		$smarty->assign("event",$event);
+		$smarty->assign("fs",$field_separator);		
+		
+		$template = "api/event_pilots.tpl";
+	
+		# Get the export content
+		$content_template = find_template($template);
+		$content = $smarty->fetch($content_template);		
+		
+		return $content;
+
+	}
+
+}
+
+?>

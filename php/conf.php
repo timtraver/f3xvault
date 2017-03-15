@@ -27,29 +27,37 @@ global $recaptcha_secret;
 
 $base = '/var/www/f3xvault.com';
 
-$base_webroot = "$base/htdocs/";
-$base_plane_media = "/images/pilot_plane_images";
-$base_location_media = "/images/location_images";
-$base_url = "http://{$_SERVER['HTTP_HOST']}/";
+$base_webroot			= "$base/htdocs/";
+$base_plane_media		= "/images/pilot_plane_images";
+$base_location_media	= "/images/location_images";
+$base_url				= "http://{$_SERVER['HTTP_HOST']}/";
 
 # Determine which paths to set for library includes
 $include_paths=array(
-	"base"=>"$base",
-	"libraries"=>"$base/php/libraries",
-	"templates"=>"$base/php/templates",
-	"templates_c"=>"$base/php/templates_c",
-	"scripts"=>"$base/php/scripts",
-	"images"=>"$base_webroot/images"
+	"base"			=> "$base",
+	"libraries"		=> "$base/php/libraries",
+	"templates"		=> "$base/php/templates",
+	"templates_c"	=> "$base/php/templates_c",
+	"scripts"		=> "$base/php/scripts",
+	"images"		=> "$base_webroot/images"
 );
 
-$template_dir=$include_paths['templates'];
-$compile_dir=$include_paths['templates_c'];
-$scripts_dir=$include_paths['scripts'];
+define('DEBUG', is_file("{$GLOBALS['include_paths']['base']}/debug"));
 
-$recaptcha_key = '6LdAXhgTAAAAAMeN_Dg8fMqjyYpGbnilpbN3txPJ';
-$recaptcha_secret = '6LdAXhgTAAAAAHbZ4eyQr2FwuCAlAyGroQA7Re4h';
+$template_dir	= $include_paths['templates'];
+$compile_dir	= $include_paths['templates_c'];
+$scripts_dir	= $include_paths['scripts'];
 
-$logsessions=1;
+$recaptcha_key		= '6LdAXhgTAAAAAMeN_Dg8fMqjyYpGbnilpbN3txPJ';
+$recaptcha_secret	= '6LdAXhgTAAAAAHbZ4eyQr2FwuCAlAyGroQA7Re4h';
+
+$logsessions = 1;
+
+include_library('debug_logger.php');
+
+if (DEBUG) {
+	$debugLogger = new DebugLogger();
+}
 
 # Functions to include libraries and modules
 function include_library($library){

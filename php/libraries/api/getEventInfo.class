@@ -1,0 +1,139 @@
+<?php
+############################################################################
+#	getEventInfo.class
+#
+#	Tim Traver
+#	3/12/2017
+#	class to extend API class to get a event info
+#
+############################################################################
+#
+include_library('event.class');
+
+class getEventInfo {
+	public $event_id;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_mandatory_fields();
+	}
+	
+	public function set_mandatory_fields(){
+		# This is where we set the mandatory fields
+		$this->api->mandatory_fields = array(
+			"event_id"
+		);
+	}
+
+	public function process_request(){
+		global $smarty;
+		
+		# This is the method where we process the request
+		$this->event_id = $_REQUEST['event_id'];
+		start_smarty();
+
+		$event = new Event($this->event_id);
+		$event->get_draws();
+		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+			$field_separator = $_REQUEST['field_separator'];
+		}else{
+			$field_separator = ',';
+		}
+
+		$smarty->assign("event",$event);
+		$smarty->assign("fs",$field_separator);
+		
+		# Lets make the draw array easier to use and add it to the pilot array
+		$draws = array();
+		
+		# Lets pre-populate it with the pilot list
+		foreach($event->pilots as $event_pilot_id => $p){
+			$draws[$event_pilot_id]['draw'] = array();
+		}
+		
+		# Now lets get the info from the draw
+		foreach($event->draws as $draw_id => $d){
+			if($d['event_draw_active'] == 0){
+				continue;
+			}
+			foreach($d['flights'] as $flight_type_id => $f){
+				foreach($f as $round_number => $r){
+					foreach($r['pilots'] as $event_pilot_id => $p){
+						if($event->flight_types[$flight_type_id]['flight_type_group'] == 1 && $event->flight_types[$flight_type_id]['flight_type_code'] != 'f3f_speed'){
+							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_group'];
+						}else{
+							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_order'];
+						}
+					}
+				}
+			}
+		}
+		
+		# Now Step through the task list to make sure there are the full amount of tasks in the export
+		foreach($draws as $event_pilot_id => $d){
+			foreach($event->tasks as $task_round => $t){
+				if(!isset($draws[$event_pilot_id]['draw'][$task_round])){
+					$draws[$event_pilot_id]['draw'][$task_round] = '';
+				}
+			}
+		}	
+		
+		$rounds = 0;
+		if(count($event->rounds) > 0){
+			$rounds = count($event->rounds);
+		}
+		if($rounds == 0 && isset($event->tasks)){
+			$rounds = count($event->tasks);
+		}
+		if($rounds == 0 && isset($draws) && count($draws) > 0){
+			foreach($draws as $event_pilot_id => $d){
+				$rounds = count($d['draw']);
+			}
+		}
+		$smarty->assign("rounds",$rounds);
+		
+		
+		# Make sure the values are sorted
+		$newdraws = array();
+		foreach($draws as $event_pilot_id => $d){
+			ksort($d['draw']);
+			$newdraws[$event_pilot_id]['draw'] = $d['draw'];
+		}
+		$draws = $newdraws;
+	
+		$smarty->assign("draws",$draws);
+	
+		$template = '';
+		switch($event->info['event_type_code']){
+			case "f3b":
+				$template = "api/event_export_f3b.tpl";
+				break;
+			case "f3b_speed":
+				$template = "api/event_export_f3b.tpl";
+				break;
+			case "f3f":
+				$template = "api/event_export_f3f.tpl";
+				break;
+			case "f3k":
+				$template = "api/event_export_f3k.tpl";
+				break;
+			case "f3j":
+				$template = "api/event_export_f3j.tpl";
+				break;
+			case "td":
+				$template = "api/event_export_f3j.tpl";
+				break;
+		}
+	
+		# Get the export content
+		$content_template = find_template($template);
+		$content = $smarty->fetch($content_template);		
+		
+		return $content;
+
+	}
+
+}
+
+?>

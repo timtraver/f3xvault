@@ -35,6 +35,10 @@
 	<link href="css/pace.min.css" rel="stylesheet">
 	<script src="js/pace.min.js"></script>
 
+    {if $debug}
+        <link href="/css/debug-toolbar.css" rel="stylesheet" type="text/css">
+    {/if}
+
 	{block name="header"}{/block}
 </head>
 <body>

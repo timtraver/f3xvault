@@ -1,0 +1,93 @@
+/**
+ * 	Debugging Bar
+ */
+#debug-toolbar{
+	position:relative;
+}
+#debug-toolbar-bar {
+	position:fixed;
+	width:100%;
+	background: #000;
+	color:#fff;
+	bottom:0;
+	left:0;
+	z-index:9998;
+}
+#debug-toolbar-bar ul.debug-toolbar-menu{
+	margin:0;
+	padding:0;
+}
+#debug-toolbar-bar  ul.debug-toolbar-menu > li{
+	margin:0;
+	padding:0;
+	display:inline-block;
+	zoom:1;
+	*display:inline;
+	padding: 5px;
+}
+#debug-toolbar-bar ul.debug-toolbar-menu > li,
+#debug-toolbar-bar ul.debug-toolbar-menu > li a{
+	color: #fff;
+}
+#debug-toolbar-bar ul.debug-toolbar-menu > li.title{
+	font-weight:bold;
+	font-size: 18pt;
+}
+
+#debug-toolbar-bar .close-wrapper {
+	float:right;
+}
+
+#debug-toolbar-bar a.close{
+	color:#fff;
+	text-decoration:none;
+	font-size: 20pt;
+}
+.debug-toolbar-pane {
+	position:absolute;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right:0;
+	background: #fff;
+	border: 2px solid #000;
+	border-radius: 5px;
+	z-index: 9999;
+	width: 650px;
+}
+.debug-toolbar-pane-title{
+	display:block;
+	background: #000;
+	color: #fff;
+	padding: 6px;
+	font-size: 12pt;
+}
+.debug-toolbar-pane-title .close-pane{
+	float:right;
+	color: #fff;
+	text-decoration: none;
+}
+.debug-toolbar-pane-content{
+	overflow-x: hidden;
+	overflow-y:scroll;
+		height: 400px;
+}
+.debug-template-var-list{
+	margin:0;
+	padding:0;
+}
+.debug-template-var-list > li{
+	margin:0;
+	padding:5px;
+	font-size: 12pt;
+}
+.debug-template-var-list > li a{
+	font-size: 12pt;
+	color: #000;
+}
+.debug-template-var-details{
+	margin-left: 10px;
+	margin-right: 10px;
+	background: #c1c1c1;
+
+}

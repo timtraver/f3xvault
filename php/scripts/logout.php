@@ -13,3 +13,5 @@ destroy_fsession();
 user_message("User Logged Out.");
 header("Location: ?logout");
 exit;
+
+?>

@@ -9,20 +9,21 @@
 #
 ############################################################################
 
-if(isset($_REQUEST['function']) && $_REQUEST['function']!='') {
-        $function=$_REQUEST['function'];
+if(isset($_REQUEST['function']) && $_REQUEST['function'] != '') {
+        $function = $_REQUEST['function'];
 }else{
-        $function="view";
+        $function = "view";
 }
 if(check_user_function($function)){
-        eval("\$actionoutput=$function();");
+        eval("\$actionoutput = $function();");
 }
 
 function view() {
         global $reseller_id;
         global $smarty;
 
-        $tpl=find_template("notyet.tpl",$reseller_id);
+        $tpl = find_template("notyet.tpl",$reseller_id);
         return $smarty->fetch($tpl);
 }
+
 ?>

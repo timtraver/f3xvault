@@ -1,0 +1,77 @@
+<?php
+############################################################################
+#	searchPilots.class
+#
+#	Tim Traver
+#	3/12/2017
+#	class to extend API class to search for pilots
+#
+############################################################################
+#
+include_library('event.class');
+
+class searchPilots {
+	public $string;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_mandatory_fields();
+	}
+	
+	public function set_mandatory_fields(){
+		# This is where we set the mandatory fields
+		$this->api->mandatory_fields = array(
+			"string"
+		);
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+		$this->string = $_REQUEST['string'];
+
+		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+			$field_separator = $_REQUEST['field_separator'];
+		}else{
+			$field_separator = ',';
+		}
+
+		$string = trim(urldecode(strtolower($this->string)));
+		$string = '%'.$string.'%';
+		# Do search
+		$stmt = db_prep("
+			SELECT *
+			FROM pilot p
+			LEFT JOIN state s ON p.state_id = s.state_id
+			LEFT JOIN country c ON p.country_id = c.country_id
+			WHERE LOWER(p.pilot_first_name) LIKE :term1
+				OR LOWER(p.pilot_last_name) LIKE :term2
+				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
+		");
+		$result = db_exec($stmt,array(
+			"term1"	=> $string,
+			"term2"	=> $string,
+			"term3"	=> $string
+		));
+		
+		foreach($result as $r){
+			$pilots[] = array(
+				"id"	=> $r['pilot_id'],
+				"name"	=> "{$r['pilot_first_name']} {$r['pilot_last_name']}",
+				"location"	=> "{$r['pilot_city']} {$r['state_code']} - {$r['country_code']}",
+			);
+		}
+		$content = '';
+		
+		foreach($pilots as $p){
+			$content .= "\"{$p['id']}\"{$field_separator}\"{$p['name']}\"{$field_separator}\"{$p['location']}\"\n";
+		}
+		
+		return $content;
+
+	}
+
+}
+
+?>

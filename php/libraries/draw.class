@@ -10,249 +10,249 @@
 
 class Draw {
 	# Global class to handle event data and manipulation
-	var $event_draw_id;
-	var $event_id;
-	var $draw=array();
-	var $pilots=array();
-	var $teams=array();
-	var $rounds=array();
-	var $round_flight_types=array();
-	var $grow_only;
-	var $stats=array();
-	var $existing_stats=array();
-	var $stat_totals=array();
+	public $event_draw_id;
+	public $event_id;
+	public $draw = array();
+	public $pilots = array();
+	public $teams = array();
+	public $rounds = array();
+	public $round_flight_types = array();
+	public $grow_only;
+	public $stats = array();
+	public $existing_stats = array();
+	public $stat_totals = array();
 	
-	function Draw($event_draw_id){
+	public function __construct($event_draw_id){
 		# Initialization of the class
-		$this->event_draw_id=$event_draw_id;
-		$stmt=db_prep("
+		$this->event_draw_id = $event_draw_id;
+		$stmt = db_prep("
 			SELECT *
 			FROM event_draw ed
-			LEFT JOIN flight_type ft ON ed.flight_type_id=ft.flight_type_id
-			LEFT JOIN event e ON ed.event_id=e.event_id
-			LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
-			WHERE ed.event_draw_id=:event_draw_id
+			LEFT JOIN flight_type ft ON ed.flight_type_id = ft.flight_type_id
+			LEFT JOIN event e ON ed.event_id = e.event_id
+			LEFT JOIN event_type et ON e.event_type_id = et.event_type_id
+			WHERE ed.event_draw_id =:event_draw_id
 		");
-		$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
-		$this->draw=$result[0];
-		$this->event_id=$this->draw['event_id'];
+		$result = db_exec($stmt,array("event_draw_id" => $this->event_draw_id));
+		$this->draw = $result[0];
+		$this->event_id = $this->draw['event_id'];
 		$this->get_pilots();
 		$this->get_rounds();
 		$this->get_round_flight_types();
-		$this->grow_only=0;
+		$this->grow_only = 0;
 	}
-	function get_pilots(){
+	public function get_pilots(){
 		# Now lets get the pilots assigned to this event, and that have the draw status on
-		$stmt=db_prep("
+		$stmt = db_prep("
 			SELECT ep.event_pilot_id,ep.event_pilot_team,p.pilot_first_name,p.pilot_last_name
 			FROM event_pilot ep
-			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			WHERE ep.event_id=:event_id
-				AND ep.event_pilot_draw_status=1
-				AND ep.event_pilot_status=1
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			WHERE ep.event_id =:event_id
+				AND ep.event_pilot_draw_status = 1
+				AND ep.event_pilot_status = 1
 		");
-		$results=db_exec($stmt,array("event_id"=>$this->event_id));
+		$results = db_exec($stmt,array("event_id" => $this->event_id));
 		foreach($results as $pilot){
-			$event_pilot_id=$pilot['event_pilot_id'];
-			$team=$pilot['event_pilot_team'];
-			$this->pilots[$event_pilot_id]=$pilot;
-			$this->teams[$team][$event_pilot_id]=$pilot;
+			$event_pilot_id = $pilot['event_pilot_id'];
+			$team = $pilot['event_pilot_team'];
+			$this->pilots[$event_pilot_id] = $pilot;
+			$this->teams[$team][$event_pilot_id] = $pilot;
 		}
 		return;
 	}
-	function get_teams(){
+	public function get_teams(){
 		# Function to get the unique teams in an event
-		$names=array();
-		$stmt=db_prep("
+		$names = array();
+		$stmt = db_prep("
 			SELECT DISTINCT(ep.event_pilot_team)
 			FROM event_pilot ep
-			LEFT JOIN event e ON ep.event_id=e.event_id
-			LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-			WHERE ep.event_pilot_team !=''
-				AND e.event_id=:event_id
-				AND ep.event_pilot_draw_status=1
-				AND ep.event_pilot_status=1
+			LEFT JOIN event e ON ep.event_id = e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			WHERE ep.event_pilot_team != ''
+				AND e.event_id =:event_id
+				AND ep.event_pilot_draw_status = 1
+				AND ep.event_pilot_status = 1
 		");
-		$names=db_exec($stmt,array("event_id"=>$this->event_id));
-		$this->teams=$names;
+		$names = db_exec($stmt,array("event_id" => $this->event_id));
+		$this->teams = $names;
 		return;
 	}
-	function get_rounds(){
+	public function get_rounds(){
 		# Function to get the saved rounds for this draw
-		$rounds=array();
-		$stmt=db_prep("
+		$rounds = array();
+		$stmt = db_prep("
 			SELECT *
 			FROM event_draw_round 
-			WHERE event_draw_id=:event_draw_id
-				AND event_draw_round_status=1
+			WHERE event_draw_id =:event_draw_id
+				AND event_draw_round_status = 1
 			ORDER BY event_draw_round_number,event_draw_round_group,event_draw_round_lane,event_draw_round_order
 		");
-		$results=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
+		$results = db_exec($stmt,array("event_draw_id" => $this->event_draw_id));
 		foreach($results as $round){
-			$round_number=$round['event_draw_round_number'];
-			$event_pilot_id=$round['event_pilot_id'];
-			$group=$round['event_draw_round_group'];
-			$rounds[$round_number][$group]['pilots'][$event_pilot_id]=$round;
+			$round_number = $round['event_draw_round_number'];
+			$event_pilot_id = $round['event_pilot_id'];
+			$group = $round['event_draw_round_group'];
+			$rounds[$round_number][$group]['pilots'][$event_pilot_id] = $round;
 		}
-		$this->rounds=$rounds;
+		$this->rounds = $rounds;
 		return;
 	}
-	function get_round_flight_types(){
+	public function get_round_flight_types(){
 		# Function to get the round flight types for this draw
-		$round_types=array();
-		$stmt=db_prep("
+		$round_types = array();
+		$stmt = db_prep("
 			SELECT *
 			FROM event_draw_round_flight
-			WHERE event_draw_id=:event_draw_id
-				AND event_draw_round_flight_status=1
+			WHERE event_draw_id =:event_draw_id
+				AND event_draw_round_flight_status = 1
 			ORDER BY event_draw_round_number
 		");
-		$results=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id));
+		$results = db_exec($stmt,array("event_draw_id" => $this->event_draw_id));
 		foreach($results as $round){
-			$round_number=$round['event_draw_round_number'];
-			$round_types[$round_number]=$round;
+			$round_number = $round['event_draw_round_number'];
+			$round_types[$round_number] = $round;
 		}
-		$this->round_flight_types=$round_types;
+		$this->round_flight_types = $round_types;
 		return;
 	}
-	function create_random_rounds($recalc=0){
+	public function create_random_rounds($recalc = 0){
 		# Function to create the round array for an order type of round
 		# This means we essentially create the random array for speed rounds
 		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
 		
-		$round_from=$this->draw['event_draw_round_from'];
-		$round_to=$this->draw['event_draw_round_to'];
+		$round_from = $this->draw['event_draw_round_from'];
+		$round_to = $this->draw['event_draw_round_to'];
 		
 		# Lets turn off any rounds that are outside the range
-		$stmt=db_prep("
+		$stmt = db_prep("
 			UPDATE event_draw_round
-			SET event_pilot_id=0,
-				event_draw_round_group='',
-				event_draw_round_status=0
-			WHERE event_draw_id=:event_draw_id
+			SET event_pilot_id = 0,
+				event_draw_round_group = '',
+				event_draw_round_status = 0
+			WHERE event_draw_id =:event_draw_id
 				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
 				
 		");
-		$result=db_exec($stmt,array(
-			"event_draw_id"=>$this->event_draw_id,
-			"round_from"=>$round_from,
-			"round_to"=>$round_to
+		$result = db_exec($stmt,array(
+			"event_draw_id" => $this->event_draw_id,
+			"round_from" => $round_from,
+			"round_to" => $round_to
 		));
 		
-		if($this->draw['event_draw_team_separation']==1){
-			$separation=50;
+		if($this->draw['event_draw_team_separation'] == 1){
+			$separation = 50;
 			# They want event team separation by as much as possible
 			# Step through the teams and get the teams with the least amount of pilots as the min distance (instead of just one)
-			foreach($this->teams as $team_name=>$t){
-				$temp_size=count($t);
-				if($temp_size<$separation){
-					$separation=$temp_size;
+			foreach($this->teams as $team_name => $t){
+				$temp_size = count($t);
+				if($temp_size < $separation){
+					$separation = $temp_size;
 				}
 			}
 		}		
 		
-		$last_team='';
-		for($round=$round_from;$round<=$round_to;$round++){
-			$last_teams=array();
-			$round_ok=1;
-			$order=array();
-			$pilots=$this->pilots;
+		$last_team = '';
+		for($round = $round_from;$round <= $round_to;$round++){
+			$last_teams = array();
+			$round_ok = 1;
+			$order = array();
+			$pilots = $this->pilots;
 			shuffle($pilots);
-			$loop=count($pilots);
-			$total_pilots=count($pilots);
+			$loop = count($pilots);
+			$total_pilots = count($pilots);
 			# Set a y value to prevent looping
-			$y=0;
-			for($x=1;$x<=$loop;$x++){
+			$y = 0;
+			for($x = 1;$x <= $loop;$x++){
 				if(count($pilots)>1){
-					$rand=mt_rand(0,$total_pilots);
-					$test=array_slice($pilots,$rand-1,1);
+					$rand = mt_rand(0,$total_pilots);
+					$test = array_slice($pilots,$rand-1,1);
 					# Lets see if this pilots team is in the last X teams for the spacing
-					$spacing_ok=1;
-					$counter=1;
+					$spacing_ok = 1;
+					$counter = 1;
 					foreach($last_teams as $l){
-						if($test[0]['event_pilot_team']==$l){
-							$spacing_ok=0;
+						if($test[0]['event_pilot_team'] == $l){
+							$spacing_ok = 0;
 						}
 						$counter++;
-						if($counter>=$separation){
+						if($counter >= $separation){
 							break;
 						}
 					}
-					if($spacing_ok==1 || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
+					if($spacing_ok == 1 || $test[0]['event_pilot_team'] == '' || $this->draw['event_draw_team_separation'] == 0 || $y>20){
 						# This chosen one is indeed on a different team, so lets pop it off the array
-						$splice=array_splice($pilots,$rand-1,1);
-						$order[]=$splice[0];
+						$splice = array_splice($pilots,$rand-1,1);
+						$order[] = $splice[0];
 						$total_pilots--;
-						$last_team=$splice[0]['event_pilot_team'];
+						$last_team = $splice[0]['event_pilot_team'];
 						array_unshift($last_teams, $last_team);
 						if($y>20){
-							$round_ok=0;
+							$round_ok = 0;
 						}
-						$y=0;
+						$y = 0;
 					}else{
 						# Try again by resetting the x var
 						$x--;
 						$y++;
 					}
 				}else{
-					$order[]=$pilots[0];
+					$order[] = $pilots[0];
 					$total_pilots--;
-					$last_team=$pilots[0]['event_pilot_team'];
+					$last_team = $pilots[0]['event_pilot_team'];
 					array_unshift($last_teams, $last_team);
 				}
 			}
-			if($round_ok==0){
+			if($round_ok == 0){
 				# This means that the separation didn't work
 				$round--;
 			}
 			
 			# Now lets step through the array and save the round info
-			$x=1;
-			foreach($order as $key=>$o){
+			$x = 1;
+			foreach($order as $key => $o){
 				# Lets see if a record already exists
-				$event_draw_round_id=0;
-				$stmt=db_prep("
+				$event_draw_round_id = 0;
+				$stmt = db_prep("
 					SELECT event_draw_round_id
 					FROM event_draw_round
-					WHERE event_draw_id=:event_draw_id
-						AND event_draw_round_number=:round
-						AND event_draw_round_order=:event_draw_round_order
-						AND event_draw_round_status=1
+					WHERE event_draw_id =:event_draw_id
+						AND event_draw_round_number =:round
+						AND event_draw_round_order =:event_draw_round_order
+						AND event_draw_round_status = 1
 				");
-				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
+				$result = db_exec($stmt,array("event_draw_id" => $this->event_draw_id,"round" => $round,"event_draw_round_order" => $x));
 				if(isset($result[0])){
-					$event_draw_round_id=$result[0]['event_draw_round_id'];
+					$event_draw_round_id = $result[0]['event_draw_round_id'];
 				}
 				
-				if($event_draw_round_id==0){
+				if($event_draw_round_id == 0){
 					# Make a new record
-					$stmt=db_prep("
+					$stmt = db_prep("
 						INSERT INTO event_draw_round
-						SET event_draw_id=:event_draw_id,
-							event_draw_round_number=:event_draw_round_number,
-							event_pilot_id=:event_pilot_id,
-							event_draw_round_group='',
-							event_draw_round_order=:x,
-							event_draw_round_status=1
+						SET event_draw_id =:event_draw_id,
+							event_draw_round_number =:event_draw_round_number,
+							event_pilot_id =:event_pilot_id,
+							event_draw_round_group = '',
+							event_draw_round_order =:x,
+							event_draw_round_status = 1
 					");
-					$result=db_exec($stmt,array(
-						"event_draw_id"=>$this->event_draw_id,
-						"event_draw_round_number"=>$round,
-						"event_pilot_id"=>$o['event_pilot_id'],
-						"x"=>$x
+					$result = db_exec($stmt,array(
+						"event_draw_id" => $this->event_draw_id,
+						"event_draw_round_number" => $round,
+						"event_pilot_id" => $o['event_pilot_id'],
+						"x" => $x
 					));
 				}else{
-					if($recalc==1){
+					if($recalc == 1){
 						# Update an existing record if its being recalced
-						$stmt=db_prep("
+						$stmt = db_prep("
 							UPDATE event_draw_round
-							SET event_pilot_id=:event_pilot_id,
-								event_draw_round_group='',
-								event_draw_round_order=:x,
-								event_draw_round_status=1
-							WHERE event_draw_round_id=:event_draw_round_id
+							SET event_pilot_id =:event_pilot_id,
+								event_draw_round_group = '',
+								event_draw_round_order =:x,
+								event_draw_round_status = 1
+							WHERE event_draw_round_id =:event_draw_round_id
 						");
-						$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+						$result = db_exec($stmt,array("event_draw_round_id" => $event_draw_round_id,"event_pilot_id" => $o['event_pilot_id'],"x" => $x));
 					}
 				}
 				$x++;
@@ -260,94 +260,94 @@ class Draw {
 		}
 		return;
 	}
-	function create_random_step_rounds($recalc=0){
+	public function create_random_step_rounds($recalc = 0){
 		# Function to create the round array for an random draw with a step
 		# We create the first round as random, and then step the pilots forward X amount every round
 		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
 		
-		$round_from=$this->draw['event_draw_round_from'];
-		$round_to=$this->draw['event_draw_round_to'];
+		$round_from = $this->draw['event_draw_round_from'];
+		$round_to = $this->draw['event_draw_round_to'];
 		
 		# Lets turn off any rounds that are outside the range
-		$stmt=db_prep("
+		$stmt = db_prep("
 			UPDATE event_draw_round
-			SET event_pilot_id=0,
-				event_draw_round_group='',
-				event_draw_round_status=0
-			WHERE event_draw_id=:event_draw_id
+			SET event_pilot_id = 0,
+				event_draw_round_group = '',
+				event_draw_round_status = 0
+			WHERE event_draw_id =:event_draw_id
 				AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
 				
 		");
-		$result=db_exec($stmt,array(
-			"event_draw_id"=>$this->event_draw_id,
-			"round_from"=>$round_from,
-			"round_to"=>$round_to
+		$result = db_exec($stmt,array(
+			"event_draw_id" => $this->event_draw_id,
+			"round_from" => $round_from,
+			"round_to" => $round_to
 		));
 		
-		$existing_first=array();
-		if($recalc==0){
+		$existing_first = array();
+		if($recalc == 0){
 			# Lets see if we can get the first round of the existing range to use as the start order
-			$stmt=db_prep("
+			$stmt = db_prep("
 				SELECT *
 				FROM event_draw_round edr
-				LEFT JOIN event_pilot ep ON edr.event_pilot_id=ep.event_pilot_id
-				LEFT JOIN pilot p ON ep.pilot_id=p.pilot_id
-				WHERE edr.event_draw_id=:event_draw_id
-					AND edr.event_draw_round_number=:round_from
-					AND edr.event_draw_round_status=1
+				LEFT JOIN event_pilot ep ON edr.event_pilot_id = ep.event_pilot_id
+				LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+				WHERE edr.event_draw_id =:event_draw_id
+					AND edr.event_draw_round_number =:round_from
+					AND edr.event_draw_round_status = 1
 			");
-			$existing_first=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round_from"=>$round_from
+			$existing_first = db_exec($stmt,array(
+				"event_draw_id" => $this->event_draw_id,
+				"round_from" => $round_from
 			));
 		}
 				
-		$last_team='';
-		$first_round=1;
-		$order=array();
-		$step=$this->draw['event_draw_step_size'];
-		for($round=$round_from;$round<=$round_to;$round++){
-			$round_ok=1;
+		$last_team = '';
+		$first_round = 1;
+		$order = array();
+		$step = $this->draw['event_draw_step_size'];
+		for($round = $round_from;$round <= $round_to;$round++){
+			$round_ok = 1;
 			
-			if($first_round && count($existing_first)>0 && $recalc==0){
-				$order=$existing_first;
-				$first_round=0;
+			if($first_round && count($existing_first)>0 && $recalc == 0){
+				$order = $existing_first;
+				$first_round = 0;
 				continue;
 			}
 			
 			if($first_round){
-				$pilots=$this->pilots;
+				$pilots = $this->pilots;
 				shuffle($pilots);
-				$loop=count($pilots);
-				$total_pilots=count($pilots);
+				$loop = count($pilots);
+				$total_pilots = count($pilots);
 				# Set a y value to prevent looping
-				$y=0;
-				for($x=1;$x<=$loop;$x++){
+				$y = 0;
+				for($x = 1;$x <= $loop;$x++){
 					if(count($pilots)>1){
-						$rand=mt_rand(0,$total_pilots);
-						$test=array_slice($pilots,$rand-1,1);
-						if($test[0]['event_pilot_team']!=$last_team || $test[0]['event_pilot_team']=='' || $this->draw['event_draw_team_separation']==0 || $y>20){
+						$rand = mt_rand(0,$total_pilots);
+						$test = array_slice($pilots,$rand-1,1);
+						if($test[0]['event_pilot_team']!= $last_team || $test[0]['event_pilot_team'] == '' || $this->draw['event_draw_team_separation'] == 0 || $y>20){
 							# This chosen one is indeed on a different team, so lets pop it off the array
-							$splice=array_splice($pilots,$rand-1,1);
-							$order[]=$splice[0];
+							$splice = array_splice($pilots,$rand-1,1);
+							$order[] = $splice[0];
 							$total_pilots--;
-							$last_team=$splice[0]['event_pilot_team'];
+							$last_team = $splice[0]['event_pilot_team'];
 							if($y>20){
-								$round_ok=0;
+								$round_ok = 0;
 							}
-							$y=0;
+							$y = 0;
 						}else{
 							# Try again by resetting the x var
 							$x--;
 							$y++;
 						}
 					}else{
-						$order[]=$pilots[0];
+						$order[] = $pilots[0];
 						$total_pilots--;
-						$last_team=$pilots[0]['event_pilot_team'];
+						$last_team = $pilots[0]['event_pilot_team'];
 					}
 				}
-				if($round_ok==0){
+				if($round_ok == 0){
 					# This means that the separation didn't work
 					$round--;
 					continue;
@@ -355,61 +355,61 @@ class Draw {
 			}else{
 				# After the first round, now we will just move the array forward X amount
 				# We just need to grab the offset of the array and re-order it
-				$temp=array();
-				for($x=1;$x<=$step;$x++){
-					$temp=array_shift($order);
-					$order[]=$temp;
+				$temp = array();
+				for($x = 1;$x <= $step;$x++){
+					$temp = array_shift($order);
+					$order[] = $temp;
 				}
 			}
-			$first_round=0;
+			$first_round = 0;
 				
 			# Now lets step through the array and save the round info
-			$x=1;
-			foreach($order as $key=>$o){
+			$x = 1;
+			foreach($order as $key => $o){
 				# Lets see if a record already exists
-				$event_draw_round_id=0;
-				$stmt=db_prep("
+				$event_draw_round_id = 0;
+				$stmt = db_prep("
 					SELECT event_draw_round_id
 					FROM event_draw_round
-					WHERE event_draw_id=:event_draw_id
-						AND event_draw_round_number=:round
-						AND event_draw_round_order=:event_draw_round_order
-						AND event_draw_round_status=1
+					WHERE event_draw_id =:event_draw_id
+						AND event_draw_round_number =:round
+						AND event_draw_round_order =:event_draw_round_order
+						AND event_draw_round_status = 1
 				");
-				$result=db_exec($stmt,array("event_draw_id"=>$this->event_draw_id,"round"=>$round,"event_draw_round_order"=>$x));
+				$result = db_exec($stmt,array("event_draw_id" => $this->event_draw_id,"round" => $round,"event_draw_round_order" => $x));
 				if(isset($result[0])){
-					$event_draw_round_id=$result[0]['event_draw_round_id'];
+					$event_draw_round_id = $result[0]['event_draw_round_id'];
 				}
 				
-				if($event_draw_round_id==0){
+				if($event_draw_round_id == 0){
 					# Make a new record
-					$stmt=db_prep("
+					$stmt = db_prep("
 						INSERT INTO event_draw_round
-						SET event_draw_id=:event_draw_id,
-							event_draw_round_number=:event_draw_round_number,
-							event_pilot_id=:event_pilot_id,
-							event_draw_round_group='',
-							event_draw_round_order=:x,
-							event_draw_round_status=1
+						SET event_draw_id =:event_draw_id,
+							event_draw_round_number =:event_draw_round_number,
+							event_pilot_id =:event_pilot_id,
+							event_draw_round_group = '',
+							event_draw_round_order =:x,
+							event_draw_round_status = 1
 					");
-					$result=db_exec($stmt,array(
-						"event_draw_id"=>$this->event_draw_id,
-						"event_draw_round_number"=>$round,
-						"event_pilot_id"=>$o['event_pilot_id'],
-						"x"=>$x
+					$result = db_exec($stmt,array(
+						"event_draw_id" => $this->event_draw_id,
+						"event_draw_round_number" => $round,
+						"event_pilot_id" => $o['event_pilot_id'],
+						"x" => $x
 					));
 				}else{
 					# Update an existing record
-					if($recalc==1){
-						$stmt=db_prep("
+					if($recalc == 1){
+						$stmt = db_prep("
 							UPDATE event_draw_round
-							SET event_pilot_id=:event_pilot_id,
-								event_draw_round_group='',
-								event_draw_round_order=:x,
-								event_draw_round_status=1
-							WHERE event_draw_round_id=:event_draw_round_id
+							SET event_pilot_id =:event_pilot_id,
+								event_draw_round_group = '',
+								event_draw_round_order =:x,
+								event_draw_round_status = 1
+							WHERE event_draw_round_id =:event_draw_round_id
 						");
-						$result=db_exec($stmt,array("event_draw_round_id"=>$event_draw_round_id,"event_pilot_id"=>$o['event_pilot_id'],"x"=>$x));
+						$result = db_exec($stmt,array("event_draw_round_id" => $event_draw_round_id,"event_pilot_id" => $o['event_pilot_id'],"x" => $x));
 					}
 				}
 				$x++;
@@ -417,66 +417,66 @@ class Draw {
 		}
 		return;
 	}
-	function create_group_rounds($recalc=0){
+	public function create_group_rounds($recalc = 0){
 		# Function to create the round array for an order type of group round
 		# We will create a random first round and then iterate through the rounds, adding stats along the way
 		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
 		
-		$round_from=$this->draw['event_draw_round_from'];
-		$round_to=$this->draw['event_draw_round_to'];
+		$round_from = $this->draw['event_draw_round_from'];
+		$round_to = $this->draw['event_draw_round_to'];
 		
-		$calculate_rounds=0;
-		if($recalc==0){
+		$calculate_rounds = 0;
+		if($recalc == 0){
 			# this means that we don't change the saved draw values
 			# Lets turn off any rounds that are out of the current bounds
-			$stmt=db_prep("
+			$stmt = db_prep("
 				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
+				SET event_pilot_id = 0,
+					event_draw_round_group = '',
+					event_draw_round_status = 0
+				WHERE event_draw_id =:event_draw_id
 					AND (event_draw_round_number<:round_from OR event_draw_round_number>:round_to)
 			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id,
-				"round_from"=>$round_from,
-				"round_to"=>$round_to
+			$result = db_exec($stmt,array(
+				"event_draw_id" => $this->event_draw_id,
+				"round_from" => $round_from,
+				"round_to" => $round_to
 			));
 			# So lets get the saved values, and check to see if we need to add more
 			# Get the rounds again now that we've removed the ones that we don't want
 			$this->get_rounds();
 			# Get the last round to see what rounds we might need to add
-			$max_round_number=0;
-			foreach($this->rounds as $round_number=>$r){
+			$max_round_number = 0;
+			foreach($this->rounds as $round_number => $r){
 				if($round_number>$max_round_number){
-					$max_round_number=$round_number;
+					$max_round_number = $round_number;
 				}
 			}
 			
 			# ok, now we have the max round number of the rounds that already exist.
 			# Lets see if there are rounds to make
 			if($round_to>$max_round_number){
-				$calculate_rounds=1;
-				$round_from=$max_round_number+1;
+				$calculate_rounds = 1;
+				$round_from = $max_round_number+1;
 				$this->get_stats();
-				$this->existing_stats=$this->stats;
+				$this->existing_stats = $this->stats;
 			}
 		}else{
 			# This means to force the whole thing to be recalculated
 			# Lets turn off any saved rounds
-			$stmt=db_prep("
+			$stmt = db_prep("
 				UPDATE event_draw_round
-				SET event_pilot_id=0,
-					event_draw_round_group='',
-					event_draw_round_status=0
-				WHERE event_draw_id=:event_draw_id
+				SET event_pilot_id = 0,
+					event_draw_round_group = '',
+					event_draw_round_status = 0
+				WHERE event_draw_id =:event_draw_id
 			");
-			$result=db_exec($stmt,array(
-				"event_draw_id"=>$this->event_draw_id
+			$result = db_exec($stmt,array(
+				"event_draw_id" => $this->event_draw_id
 			));
-			$calculate_rounds=1;
+			$calculate_rounds = 1;
 		}
-		if($calculate_rounds==0){
+		if($calculate_rounds == 0){
 			# This means that we don't need to calculate any rounds, so lets return
 			return;
 		}	
@@ -484,49 +484,49 @@ class Draw {
 		# If it got here, then it means that we need to go ahead and build rounds
 		
 		# Number of iterations to do
-		$iterations=100;
-		$draws=array();
+		$iterations = 100;
+		$draws = array();
 		
-		for($i=1;$i<=$iterations;$i++){
+		for($i = 1;$i <= $iterations;$i++){
 		
-			$rounds=array();
+			$rounds = array();
 			$this->initialize_stats();
-			if(count($this->existing_stats)!=0){
-				$this->stats=$this->existing_stats;
+			if(count($this->existing_stats)!= 0){
+				$this->stats = $this->existing_stats;
 			}
 			
 			# If they want to take the statistics from the previously applied rounds, then do that here
 			# (insert code for retrieval of stats from previous rounds)
-			$groups=$this->get_group_array();
+			$groups = $this->get_group_array();
 			
-			$first_round=1;
-			for($round=$round_from;$round<=$round_to;$round++){
-				$round_ok=1;
+			$first_round = 1;
+			for($round = $round_from;$round <= $round_to;$round++){
+				$round_ok = 1;
 	
 				# Set the temporary stats array
-				$temp_stats=$this->stats;				
-				$this_round=array(); # Initialize the round array for this round
-				if($first_round==1){
+				$temp_stats = $this->stats;				
+				$this_round = array(); # Initialize the round array for this round
+				if($first_round == 1){
 					# Lets make the first round a random draw taking into account the protection
 					do{
-						$pilots=$this->pilots;
-						$total_pilots=count($pilots);
-						$round_ok=1;
-						$this_round_attempt=array();
+						$pilots = $this->pilots;
+						$total_pilots = count($pilots);
+						$round_ok = 1;
+						$this_round_attempt = array();
 						# Lets step through the group structure
-						foreach($groups as $group_num=>$number_group_pilots){
-							$this_group_array=array();
-							$this_group_teams=array();
-							for($x=1;$x<=$number_group_pilots;$x++){
-								$clear=0;
-								$y=0; # set value to make sure it doesn't continually loop
+						foreach($groups as $group_num => $number_group_pilots){
+							$this_group_array = array();
+							$this_group_teams = array();
+							for($x = 1;$x <= $number_group_pilots;$x++){
+								$clear = 0;
+								$y = 0; # set value to make sure it doesn't continually loop
 								do{
-									$rand=mt_rand(0,$total_pilots);
-									if($this->draw['event_draw_team_protection']==1){
+									$rand = mt_rand(0,$total_pilots);
+									if($this->draw['event_draw_team_protection'] == 1){
 										# This draw has team protection, so lets see if this choice is already on a team in this group
-										$test=array_slice($pilots,$rand-1,1);
+										$test = array_slice($pilots,$rand-1,1);
 										if(!in_array($test[0]['event_pilot_team'],$this_group_teams)){
-											$clear=1;
+											$clear = 1;
 										}else{
 											$y++;
 											if($y>20){
@@ -536,98 +536,98 @@ class Draw {
 											}
 										}
 									}else{
-										$clear=1;
+										$clear = 1;
 									}
-								} while($clear==0);
+								} while($clear == 0);
 								if($y>20){
 									# We didn't get the group ok, so lets start the group over
-									$round_ok=0;
+									$round_ok = 0;
 									break(2);
 								}
 								# This is where we got a good group, so lets set it and continue
-								$temp_pilot=array_splice($pilots,$rand-1,1);
-								$this_group_array[]=$temp_pilot[0];
-								$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
+								$temp_pilot = array_splice($pilots,$rand-1,1);
+								$this_group_array[] = $temp_pilot[0];
+								$this_group_teams[] = $temp_pilot[0]['event_pilot_team'];
 								$total_pilots--;
 							}
-							$this_round_attempt[$group_num]=$this_group_array;					
+							$this_round_attempt[$group_num] = $this_group_array;					
 						}
-						if($round_ok==1){
-							$this_round=$this_round_attempt;
+						if($round_ok == 1){
+							$this_round = $this_round_attempt;
 						}
-					} while($round_ok==0);
-					$first_round=0;
+					} while($round_ok == 0);
+					$first_round = 0;
 				}else{
 					# This is a subsequent round, so we will be taking in the stats into account to create it
 					do{
-						$pilots=$this->pilots;
+						$pilots = $this->pilots;
 
-						$total_pilots=count($pilots);
-						$round_ok=1;
-						$this_round_attempt=array();
+						$total_pilots = count($pilots);
+						$round_ok = 1;
+						$this_round_attempt = array();
 						# Lets step through the group structure
-						foreach($groups as $group_num=>$number_group_pilots){
-							$this_group_array=array();
-							$this_group_teams=array();
-							$first_in_group=1;
-							$last_event_pilot_id=0;
-							for($x=1;$x<=$number_group_pilots;$x++){
-								if($first_in_group==1){
+						foreach($groups as $group_num => $number_group_pilots){
+							$this_group_array = array();
+							$this_group_teams = array();
+							$first_in_group = 1;
+							$last_event_pilot_id = 0;
+							for($x = 1;$x <= $number_group_pilots;$x++){
+								if($first_in_group == 1){
 									# Go ahead and just get a random pilot from the whole list
-									$rand=mt_rand(0,$total_pilots);
-									$first_in_group=0;
-									$temp_pilot=array_slice($pilots,$rand-1,1);
-									$this_group_array[]=$temp_pilot[0];
-									$this_group_teams[]=$temp_pilot[0]['event_pilot_team'];
-									$last_event_pilot_id=$temp_pilot[0]['event_pilot_id'];
+									$rand = mt_rand(0,$total_pilots);
+									$first_in_group = 0;
+									$temp_pilot = array_slice($pilots,$rand-1,1);
+									$this_group_array[] = $temp_pilot[0];
+									$this_group_teams[] = $temp_pilot[0]['event_pilot_team'];
+									$last_event_pilot_id = $temp_pilot[0]['event_pilot_id'];
 									unset($pilots[$last_event_pilot_id]);
 								}else{									
-									$temp_stats2=$temp_stats[$last_event_pilot_id];
+									$temp_stats2 = $temp_stats[$last_event_pilot_id];
 									asort($temp_stats2);
 									
 									# Lets step through and look at each of the pilots with the lowest values and see about their pairings with the others in the group too
 									# Lets create a list of sums to see how adding the next pilot compares to the ones already in the group
 									
 									# Create another temp array holding the current pilots in the group
-									$temp_sums=array();
-									$temp_array3=array();
-									foreach($this_group_array as $key=>$p){
-										$temp_array3[]=$p['event_pilot_id'];
+									$temp_sums = array();
+									$temp_array3 = array();
+									foreach($this_group_array as $key => $p){
+										$temp_array3[] = $p['event_pilot_id'];
 									}
 									# Now lets look through each of our choices for the next pilot and add up the total flights they've already had with the existing group pilots
-									$temp_sum=array();
-									foreach($temp_stats2 as $epid2=>$value){
-										$sum=0;
-										foreach($temp_array3 as $key=>$epid){
-											$sum+=$temp_stats[$epid][$epid2];
+									$temp_sum = array();
+									foreach($temp_stats2 as $epid2 => $value){
+										$sum = 0;
+										foreach($temp_array3 as $key => $epid){
+											$sum+= $temp_stats[$epid][$epid2];
 										}
-										$temp_sums[$epid2]=$sum;
+										$temp_sums[$epid2] = $sum;
 									}
 									asort($temp_sums);
 									
 									# The first one in this array that is still available is the one we should use
-									foreach($temp_sums as $epid=>$value){
+									foreach($temp_sums as $epid => $value){
 										if(isset($pilots[$epid])){
-											if($this->draw['event_draw_team_protection']==1){
+											if($this->draw['event_draw_team_protection'] == 1){
 												# This draw has team protection, so lets see if this choice is already on a team in this group
 												if(in_array($pilots[$epid]['event_pilot_team'],$this_group_teams)){
 													continue;
 												}
 											}
 											# If we made it here, then the epid is good
-											$this_group_array[]=$pilots[$epid];
-											$this_group_teams[]=$pilots[$epid]['event_pilot_team'];
+											$this_group_array[] = $pilots[$epid];
+											$this_group_teams[] = $pilots[$epid]['event_pilot_team'];
 											unset($pilots[$epid]);
 											# Lets update the temp stats with these new pairings
-											foreach($this_group_array as $key=>$p2){
-												$event_pilot_id2=$p2['event_pilot_id'];
-												if($epid==$event_pilot_id2){
+											foreach($this_group_array as $key => $p2){
+												$event_pilot_id2 = $p2['event_pilot_id'];
+												if($epid == $event_pilot_id2){
 													continue;
 												}
 												$temp_stats[$epid][$event_pilot_id2]++;
 												$temp_stats[$event_pilot_id2][$epid]++;
 											}
-											$last_event_pilot_id=$epid;
+											$last_event_pilot_id = $epid;
 											break;
 										}
 									}
@@ -636,69 +636,69 @@ class Draw {
 								# This is where we got a good group, so lets set it and continue
 								$total_pilots--;
 							}
-							$this_round_attempt[$group_num]=$this_group_array;
+							$this_round_attempt[$group_num] = $this_group_array;
 						}
 						# Check to see if this round has the appropriate number of pilots
-						$pilot_count=0;
-						foreach($this_round_attempt as $group=>$g){
-							foreach($g as $key=>$p){
+						$pilot_count = 0;
+						foreach($this_round_attempt as $group => $g){
+							foreach($g as $key => $p){
 								$pilot_count++;
 							}
 						}
-						if($pilot_count!=count($this->pilots)){
-							$round_ok=0;
+						if($pilot_count!= count($this->pilots)){
+							$round_ok = 0;
 						}
-						if($round_ok==1){
-							$this_round=$this_round_attempt;
+						if($round_ok == 1){
+							$this_round = $this_round_attempt;
 						}
-					} while($round_ok==0);
+					} while($round_ok == 0);
 				}
 				$this->add_round_to_stats($this_round);
 				
 				# lets now set the round
-				$rounds[$round]=$this_round;
+				$rounds[$round] = $this_round;
 			}
 			
-			$draws[$i]['rounds']=$rounds;
+			$draws[$i]['rounds'] = $rounds;
 			
 			# Lets calculate the totals of the stats for this round
-			$stat_totals=array();
-			$already=array();
-			foreach($this->stats as $epid=>$p){
-				foreach($p as $epid2=>$value){
+			$stat_totals = array();
+			$already = array();
+			foreach($this->stats as $epid => $p){
+				foreach($p as $epid2 => $value){
 					if(!in_array($epid2,$already)){
 						$stat_totals[$value]++;	
 					}
 				}
-				$already[]=$epid;
+				$already[] = $epid;
 			}
 			
 			# Now lets calculate the mean of the meetings
-			$samples=0;
-			$total=0;
-			$totals_array=array();
-			foreach($stat_totals as $key=>$value){
-				$samples+=$value;
-				$total+=($value*$key);
-				for($x=1;$x<=$value;$x++){
-					$totals_array[]=$key;
+			$samples = 0;
+			$total = 0;
+			$totals_array = array();
+			foreach($stat_totals as $key => $value){
+				$samples+= $value;
+				$total+= ($value*$key);
+				for($x = 1;$x <= $value;$x++){
+					$totals_array[] = $key;
 				}
 			}
-			$mean=$total/$samples;
+			$mean = $total/$samples;
 
 			# Lets calculate the standard deviation now
-			$sd=$this->sd($totals_array);
+			$sd = $this->sd($totals_array);
 
-			$draws[$i]['mean']=$mean;
-			$draws[$i]['sd']=$sd;
-			$draws[$i]['totals']=$stat_totals;
+			$draws[$i]['mean'] = $mean;
+			$draws[$i]['sd'] = $sd;
+			$draws[$i]['totals'] = $stat_totals;
 			
 		} # End of iterations loop
 		
 		# Lets quickly find out which iteration of the draw we want to use
-		$draws=array_msort($draws,array('sd'=>SORT_ASC));
-		foreach($draws as $i=>$d){
-			$draw_picked=$d;
+		$draws = array_msort($draws,array('sd' => SORT_ASC));
+		foreach($draws as $i => $d){
+			$draw_picked = $d;
 			break;
 		}
 
@@ -706,81 +706,81 @@ class Draw {
 		# Lets figure out what the group type and lane/buzzer/landing values to use
 		switch($this->draw['flight_type_code']){
 			case 'f3b_distance':
-				$group_type='numeric';
-				$lane_type='alpha';
+				$group_type = 'numeric';
+				$lane_type = 'alpha';
 				break;
 			case 'f3b_duration':
 			case 'f3j_duration':
 			case 'td_duration':
-				$group_type='alpha';
-				$lane_type='numeric';
+				$group_type = 'alpha';
+				$lane_type = 'numeric';
 				break;
 			default:
 				if(preg_match("/^f3k\_/",$this->draw['flight_type_code'])){
-					$group_type='alpha';
-					$lane_type='none';
+					$group_type = 'alpha';
+					$lane_type = 'none';
 				}else{
-					$group_type='alpha';
-					$lane_type='numeric';
+					$group_type = 'alpha';
+					$lane_type = 'numeric';
 				}
 		}
-		$group_labels=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+		$group_labels = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 		
 		# Ok, lets save these rounds to the draw
-		foreach($draw_picked['rounds'] as $round_num=>$r){
-			foreach($r as $group=>$g){
-				if($group_type=='numeric'){
-					$event_draw_round_group=$group;
+		foreach($draw_picked['rounds'] as $round_num => $r){
+			foreach($r as $group => $g){
+				if($group_type == 'numeric'){
+					$event_draw_round_group = $group;
 				}else{
-					$event_draw_round_group=$group_labels[$group-1];
+					$event_draw_round_group = $group_labels[$group-1];
 				}
-				$lane=1;
-				foreach($g as $key=>$p){
-					if($lane_type=='numeric'){
-						$lane=$key+1;
-					}elseif($lane_type=='alpha'){
-						$lane=$group_labels[$key];
+				$lane = 1;
+				foreach($g as $key => $p){
+					if($lane_type == 'numeric'){
+						$lane = $key+1;
+					}elseif($lane_type == 'alpha'){
+						$lane = $group_labels[$key];
 					}else{
-						$lane='';
+						$lane = '';
 					}
 					# Make a new record
-					$stmt=db_prep("
+					$stmt = db_prep("
 						INSERT INTO event_draw_round
-						SET event_draw_id=:event_draw_id,
-							event_draw_round_number=:event_draw_round_number,
-							event_pilot_id=:event_pilot_id,
-							event_draw_round_group=:event_draw_round_group,
-							event_draw_round_lane=:event_draw_round_lane,
-							event_draw_round_status=1
+						SET event_draw_id =:event_draw_id,
+							event_draw_round_number =:event_draw_round_number,
+							event_pilot_id =:event_pilot_id,
+							event_draw_round_group =:event_draw_round_group,
+							event_draw_round_lane =:event_draw_round_lane,
+							event_draw_round_status = 1
 					");
-					$result=db_exec($stmt,array(
-						"event_draw_id"=>$this->event_draw_id,
-						"event_draw_round_number"=>$round_num,
-						"event_pilot_id"=>$p['event_pilot_id'],
-						"event_draw_round_group"=>$event_draw_round_group,
-						"event_draw_round_lane"=>$lane
+					$result = db_exec($stmt,array(
+						"event_draw_id" => $this->event_draw_id,
+						"event_draw_round_number" => $round_num,
+						"event_pilot_id" => $p['event_pilot_id'],
+						"event_draw_round_group" => $event_draw_round_group,
+						"event_draw_round_lane" => $lane
 					));
 				}
 			}
 		}
 		return;
 	}
-	function sd_square($x, $mean){
+	public function sd_square($x, $mean){
 		return pow($x - $mean,2);
 	}
-	function sd($array) {
+	public function sd($array) {
 		// square root of sum of squares devided by N-1
 		return sqrt(array_sum(array_map(array($this,"sd_square"), $array, array_fill(0,count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
 	}
 	
-	function add_round_to_stats($round){
+	public function add_round_to_stats($round){
 		# Function to add a rounds pairings to the stats db
-		foreach($round as $group_num=>$pilots){
-			foreach($pilots as $key=>$p){
-				$event_pilot_id=$p['event_pilot_id'];
-				foreach($pilots as $key2=>$p2){
-					$event_pilot_id2=$p2['event_pilot_id'];
-					if($event_pilot_id==$event_pilot_id2){
+		foreach($round as $group_num => $pilots){
+			foreach($pilots as $key => $p){
+				$event_pilot_id = $p['event_pilot_id'];
+				foreach($pilots as $key2 => $p2){
+					$event_pilot_id2 = $p2['event_pilot_id'];
+					if($event_pilot_id == $event_pilot_id2){
 						continue;
 					}
 					$this->stats[$event_pilot_id][$event_pilot_id2]++;
@@ -789,30 +789,30 @@ class Draw {
 		}		
 		return;
 	}
-	function initialize_stats(){
+	public function initialize_stats(){
 		# Lets create the initial stats array
-		$this->stats=array();
-		foreach($this->pilots as $event_pilot_id=>$pilot){
-			foreach($this->pilots as $event_pilot_id2=>$pilot2){
-				if($event_pilot_id==$event_pilot_id2){
+		$this->stats = array();
+		foreach($this->pilots as $event_pilot_id => $pilot){
+			foreach($this->pilots as $event_pilot_id2 => $pilot2){
+				if($event_pilot_id == $event_pilot_id2){
 					continue;
 				}
-				if($this->draw['event_draw_team_protection']==1 && $pilot['event_pilot_team']==$pilot2['event_pilot_team']){
+				if($this->draw['event_draw_team_protection'] == 1 && $pilot['event_pilot_team'] == $pilot2['event_pilot_team']){
 					continue;
 				}
-				$this->stats[$event_pilot_id][$event_pilot_id2]=0;
+				$this->stats[$event_pilot_id][$event_pilot_id2] = 0;
 			}
 			#arsort($this->stats[$event_pilot_id][$event_pilot_id2]);
 		}
 		return;	
 	}
-	function get_stats(){
+	public function get_stats(){
 		# Lets step through the current rounds and fill up the stats array
-		foreach($this->rounds as $round=>$r){
-			foreach($r as $group=>$g){
-				foreach($g['pilots'] as $event_pilot_id=>$p){
-					foreach($g['pilots'] as $event_pilot_id2=>$p2){
-						if($event_pilot_id==$event_pilot_id2){
+		foreach($this->rounds as $round => $r){
+			foreach($r as $group => $g){
+				foreach($g['pilots'] as $event_pilot_id => $p){
+					foreach($g['pilots'] as $event_pilot_id2 => $p2){
+						if($event_pilot_id == $event_pilot_id2){
 							continue;
 						}
 						$this->stats[$event_pilot_id][$event_pilot_id2]++;
@@ -822,76 +822,75 @@ class Draw {
 		}
 		# Now get the stat totals too
 		# Lets calculate the totals of the stats for this draw
-		$stat_totals=array();
-		$already=array();
-		foreach($this->stats as $epid=>$p){
-			foreach($p as $epid2=>$value){
+		$stat_totals = array();
+		$already = array();
+		foreach($this->stats as $epid => $p){
+			foreach($p as $epid2 => $value){
 				if(!in_array($epid2,$already)){
 					$stat_totals[$value]++;	
 				}
 			}
-			$already[]=$epid;
+			$already[] = $epid;
 		}
 		krsort($stat_totals);
 		
 		# Get the max
-		$max=0;
-		foreach($stat_totals as $key=>$value){
+		$max = 0;
+		foreach($stat_totals as $key => $value){
 			if($value>$max){
-				$max=$value;
+				$max = $value;
 			}
 		}
 		
 		# Now lets calculate the mean of the meetings
-		$samples=0;
-		$total=0;
-		$totals_array=array();
-		foreach($stat_totals as $key=>$value){
-			$samples+=$value;
-			$total+=($value*$key);
-			for($x=1;$x<=$value;$x++){
-				$totals_array[]=$key;
+		$samples = 0;
+		$total = 0;
+		$totals_array = array();
+		foreach($stat_totals as $key => $value){
+			$samples+= $value;
+			$total+= ($value*$key);
+			for($x = 1;$x <= $value;$x++){
+				$totals_array[] = $key;
 			}
 		}
-		$mean=$total/$samples;
+		$mean = $total/$samples;
 			
 		# Lets calculate the standard deviation now
-		$sd=$this->sd($totals_array);
+		$sd = $this->sd($totals_array);
 
-		$this->stat_totals['max_instances']=$max;
-		$this->stat_totals['mean']=$mean;
-		$this->stat_totals['sd']=$sd;
-		$this->stat_totals['totals']=$stat_totals;
+		$this->stat_totals['max_instances'] = $max;
+		$this->stat_totals['mean'] = $mean;
+		$this->stat_totals['sd'] = $sd;
+		$this->stat_totals['totals'] = $stat_totals;
 		return;	
 	}
-	function get_group_array(){
+	public function get_group_array(){
 		# Function to determine the number of groups and members in each group from the settings
-		$num_pilots=count($this->pilots);
-		$num_groups=$this->draw['event_draw_number_groups'];
+		$num_pilots = count($this->pilots);
+		$num_groups = $this->draw['event_draw_number_groups'];
 		if($num_groups){
-			$per_group=floor($num_pilots/$num_groups);
-			$left_over=$num_pilots % $num_groups;
+			$per_group = floor($num_pilots/$num_groups);
+			$left_over = $num_pilots % $num_groups;
 		}else{
 			return array();
 		}
 		
-		$groups=array();
-		if($left_over==0){
-			for($x=1;$x<=$num_groups;$x++){
-				$groups[$x]=$per_group;
+		$groups = array();
+		if($left_over == 0){
+			for($x = 1;$x <= $num_groups;$x++){
+				$groups[$x] = $per_group;
 			}
 		}else{
 			# Set the number of groups at the higher value first
-			for($x=1;$x<=($left_over);$x++){
-				$groups[$x]=$per_group+1;
+			for($x = 1;$x <= ($left_over);$x++){
+				$groups[$x] = $per_group+1;
 			}
-			for($x=$x;$x<=$num_groups;$x++){
-				$groups[$x]=$per_group;
+			for($x = $x;$x <= $num_groups;$x++){
+				$groups[$x] = $per_group;
 			}
 		}
 		return $groups;
 	}
-	
 	
 }
 ?>

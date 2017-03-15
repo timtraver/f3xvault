@@ -48,6 +48,7 @@ EVENT STUFF
 		Ability to make the draw based on Class type (i.e. have all the sportsman go against eachother) ?
 		F3B Combined Draw of the three tasks
 		Make the draw have a non consecutive group function so someone doesn't have to do back to back groups in successive rounds
+		Allow small teams in draws that attempt to not make them fly together
 		
 	Tasks
 		Task list in event info email (edited in custom email settings)

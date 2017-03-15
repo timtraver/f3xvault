@@ -20,12 +20,12 @@ function recaptcha_check(){
 	$port = 443;
 	
 	$data = array(
-		"secret"=>$recaptcha_secret,
-		"response"=>$entered_recaptcha_key,
-		"ip"=>$_SERVER['REMOTE_IP']
+		"secret"	=> $recaptcha_secret,
+		"response"	=> $entered_recaptcha_key,
+		"ip"		=> $_SERVER['REMOTE_IP']
 	);
 	
-	$req = _recaptcha_qsencode ($data);
+	$req = _recaptcha_qsencode($data);
 
 	$http_request  = "POST $uri HTTP/1.1\r\n";
 	$http_request .= "Host: $host\r\n";
@@ -56,7 +56,7 @@ function recaptcha_check(){
 	}
 }
 
-function _recaptcha_qsencode ($data) {
+function _recaptcha_qsencode($data) {
 	$req = "";
 	foreach ( $data as $key => $value ) {
 		$req .= $key . '=' . urlencode( stripslashes($value) ) . '&';
@@ -66,6 +66,5 @@ function _recaptcha_qsencode ($data) {
 	$req=substr($req,0,strlen($req)-1);
 	return $req;
 }
-
 
 ?>

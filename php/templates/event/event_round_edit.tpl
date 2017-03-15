@@ -126,7 +126,7 @@
 				{continue}
 			{/if}
 			{$cols=4}
-			{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group==1}{$cols=$cols+1}{/if}
+			{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group==1}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -150,7 +150,7 @@
 				<th align="left">Pilot Name</th>
 				{if $ft.flight_type_group}
 					<th align="center" style="text-align: center;">Group</th>
-					{if $ft.flight_type_code=='f3f_speed' && $ft.flight_type_group}
+					{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group}
 						<th align="center">Flight Order</th>
 					{/if}
 				{else}
@@ -198,7 +198,7 @@
 							<input type="hidden" name="pilot_lane_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_lane|escape}">
 						</td>
 					{/if}
-					{if $ft.flight_type_code=='f3f_speed' || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
+					{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
 						<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="3" style="width:30px;height: 20px;" name="pilot_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
@@ -234,7 +234,7 @@
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>
-						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+						{if preg_match("/^f3f/",$ft.flight_type_code) OR $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
 						{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
@@ -285,7 +285,7 @@
 						{if $ft.flight_type_group}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:30px;" name="pilot_reflight_group_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_group|escape}" onChange="save_data(this);"></td>
 						{/if}				
-						{if $ft.flight_type_code=='f3f_speed' || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
+						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
 							<td align="center" nowrap><input tabindex="1" autocomplete="off" type="text" size="2" style="width:30px;" name="pilot_reflight_order_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_order|escape}" onChange="save_data(this);"></td>					
 						{/if}
 						{if $ft.flight_type_minutes || $ft.flight_type_seconds}
@@ -321,7 +321,7 @@
 							{$tabindex=$tabindex+1}
 						{/if}
 						<td align="right" nowrap>
-							{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+							{if preg_match("/^f3f/",$ft.flight_type_code) OR $ft.flight_type_code=='f3b_speed'}
 							{$p.event_pilot_round_flight_raw_score}
 							{else}
 							{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}

@@ -4,7 +4,6 @@
 #
 #       Tim Traver
 #       5/21/12
-#       Miva Merchant, Inc.
 #       This is an included bunch of subroutines to perform miscellaneous
 #       functions.
 #
@@ -70,11 +69,13 @@ function start_smarty () {
 	$smarty->compile_dir = $compile_dir;
 	$smarty->compile_check = true;
 	$smarty->auto_literal = false;
-	if($GLOBALS['debug']==1){
-		$smarty->debugging = true;
-	}else{
-		$smarty->debugging = false;
+	$smarty->setDebugging(DEBUG);
+	$smarty->debug_tpl = $template_dir.'/debug.tpl'; // requires a full path
+
+	if (DEBUG && isset($GLOBALS['debugLogger'])) {
+		$smarty->assign('debugLogger', $GLOBALS['debugLogger']);
 	}
+	return;
 }
 function find_template ($input) {
         # Function to find the reseller template or return the default
@@ -99,7 +100,7 @@ function db_prep ($querystring) {
                 $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
         }
         try {
-                $dbh=new PDO("mysql:host=$host;dbname=$dbname",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=>true));
+                $dbh=new PDO("mysql:host=$host;dbname=$dbname",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=> false,'log' => isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger ? $GLOBALS['debugLogger'] : null));
                 $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $stmt = $dbh->prepare($querystring);
@@ -114,6 +115,10 @@ function db_exec ($stmt,$data=array()) {
         global $last_insert_id;
         global $total_queries;
 
+		if(isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger){
+			$GLOBALS['debugLogger']->logQuery($stmt,$data);
+		}
+		
 		# Set the default type of return
 		if(preg_match("/SELECT/i",$stmt->queryString)){
 			$results=array();
@@ -979,4 +984,23 @@ function round_down($number,$precision){
 	$ceil_number= array($numberpart[0],$numberpart[1]);
 	return implode(".",$ceil_number);
 }
+
+/**
+ * debug
+ *
+ * Helper function to write to debug logger which displays in the debugging console toolbar
+ *
+ * @param string $msg
+ *
+ * @return void
+ */
+function debug($msg) {
+        global $debugLogger;
+
+        if (!DEBUG || !is_object($debugLogger)) {
+                return;
+        }
+        $debugLogger->log($msg);
+}
+
 ?>

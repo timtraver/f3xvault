@@ -1,0 +1,163 @@
+<?php
+############################################################################
+#	api.class
+#
+#	Tim Traver
+#	3/11/2017
+#	class to handle API operations
+#
+############################################################################
+#
+
+class API {
+	public $user_id;
+	public $user = array();
+	public $function;
+	public $input_variables = array();
+	public $output_string;
+	public $output_variables = array();
+	public $mandatory_fields = array();
+	public $error_code;
+	public $error_string;
+	public $functions = array();
+	public $process_output;
+	
+	public function __construct() {
+		# Function to initialize variables
+		$this->error_code = 0;
+		$this->error_string = '';
+		$this->api_get_submitted_variables();
+
+		$function = input_filter($_REQUEST['function'],'string');
+		$this->function = $function;
+		$this->set_api_functions();
+		return;
+	}
+	public function set_api_functions(){
+		# This is to set up the available api functions
+		$this->functions = array(
+			"getEventInfo",	
+			"getEventPilots",	
+			"searchPilots",	
+		);
+	}
+
+	public function api_check_login(){
+		# Function to check login credentials and access
+
+		if(!isset($this->input_variables['login'])){
+	        $this->error_code = 1;
+	        $this->error_string = "You must enter a login.";
+	        return 0;
+	    }
+		if(!isset($this->input_variables['password'])){
+	        $this->error_code = 1;
+	        $this->error_string = "You must enter a password.";
+	        return 0;
+	    }
+	    $login = $this->input_variables['login'];
+	    $password = $this->input_variables['password'];
+	
+		$sha1_pass = sha1($password);
+	
+	    # Let's get the user info to check the pass
+	    $stmt = db_prep("
+	        SELECT *
+	        FROM user u
+	        WHERE u.user_name =:login
+	        	OR u.user_email =:login2
+	    ");
+	    $result = db_exec($stmt,array("login" => $login,"login2" => $login));
+	    if(isset($result[0])) {
+	        $user = $result[0];
+	        if($user['user_status'] == 0){
+	        	$this->error_code = 2;
+				$this->error_string = "Unknown user.";
+	            return 0;
+	        }
+	        if($sha1_pass != $user['user_pass']){
+	        	$this->error_code = 2;
+	        	$this->error_string = "User password is not correct.";
+	            return 0;
+	        }
+	    }else{
+	        $this->error_code = 2;
+			$this->error_string = "User does not currently have a login. Please register with us!";
+			return 0;
+	    }
+
+		# If it got here, then the password check was successful
+		$this->user_id = $user['user_id'];
+		$this->user = $user;
+		return 1;
+	}
+	public function api_check_event_access(){
+
+		return 1;
+	}
+
+	public function api_process_request(){
+		# Function to make the call to process the request
+		if(!in_array($this->function, $this->functions)){
+			$this->error_code = 1;
+			$this->error_string = "Function not available.";
+			return 0;
+		}
+		
+		if(!file_exists($GLOBALS['include_paths']['libraries']."/api/{$this->function}.class")){
+			$this->error_code = 1;
+			$this->error_string = "Function not available.";
+			return 0;
+		}
+		include_library("api/{$this->function}.class");
+
+		eval("\$request = new {$this->function}(\$this);");
+		if(!$this->api_check_mandatory_fields()){
+			$this->error_code = 3;
+			$this->error_string = "Not all mandatory fields supplied.";
+			return 0;
+		}
+		
+		if(method_exists($request,'process_request')){
+			$this->process_output = $request->process_request();
+		}else{
+			$this->error_code = 1;
+			$this->error_string = "Method does not exist.";
+			return 0;
+		}
+		return;
+	}
+	public function api_send_response(){
+		# Routine to send the response
+		# Lets first set the variable for the main return code and string
+		if($this->error_code != 0){
+			print "0\n";
+			print $this->error_code . " - " . $this->error_string . "\n";
+		}else{
+			print "1\n";
+			print $this->process_output;
+		}
+		return;
+	}
+
+	public function api_get_submitted_variables(){
+		# Function to set the input variables
+		foreach( $_REQUEST as $name => $value ){
+			$this->input_variables[$name] = $value;
+		}
+		return;
+	}
+	public function api_check_mandatory_fields(){
+		# Method to check for mandatory fields for this function
+		$check = 1;
+		foreach($this->mandatory_fields as $field_name){
+			if(!isset($this->input_variables[$field_name])){
+				$check = 0;
+			}
+		}
+		return $check;
+	}
+
+}
+
+?>
