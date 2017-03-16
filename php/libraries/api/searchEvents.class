@@ -28,7 +28,18 @@ class searchEvents {
 		
 		# This is the method where we process the request
 		$this->string = $_REQUEST['string'];
-
+		if(isset($_REQUEST['string'])){
+			$this->string = $_REQUEST['string'];
+		}else{
+			$this->string = '';
+		}
+		if(isset($_REQUEST['event_type_code'])){
+			$event_type_code = $_REQUEST['event_type_code'];
+			$event_type_string = "AND et.event_type_code = '$event_type_code'";
+		}else{
+			$event_type_code = '';
+			$event_type_string = '';
+		}
 		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
 			$field_separator = $_REQUEST['field_separator'];
 		}else{
@@ -72,8 +83,8 @@ class searchEvents {
 				WHERE (LOWER(e.event_name) LIKE :term1
 					OR LOWER(c.country_name) LIKE :term2
 					OR LOWER(l.location_name) LIKE :term3
-					OR LOWER(et.event_type_name) LIKE :term4)
 					$search_future
+					$event_type_string
 				ORDER BY e.event_start_date DESC
 				LIMIT $page_start,$per_page
 			");
@@ -81,7 +92,6 @@ class searchEvents {
 				"term1"	=> $this->string,
 				"term2"	=> $this->string,
 				"term3"	=> $this->string,
-				"term4"	=> $this->string,
 			));
 		}else{
 			# Give the entire result set
@@ -94,6 +104,7 @@ class searchEvents {
 				LEFT JOIN country c ON l.country_id = c.country_id
 				WHERE 1
 					$search_future
+					$event_type_string
 				ORDER BY event_start_date DESC
 				LIMIT $page_start,$per_page
 			");
