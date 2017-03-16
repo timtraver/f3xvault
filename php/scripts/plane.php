@@ -133,7 +133,7 @@ function plane_list() {
 		}
 		$newplanes[] = $plane;
 	}
-	$planes = show_pages($newplanes,"action = plane&function = plane_list");
+	$planes = show_pages($newplanes,"action=plane&function=plane_list");
 
 	foreach($planes as $key => $plane){
 		# Lets get the plane types
@@ -474,15 +474,15 @@ function plane_view() {
 	");
 	$f3b_distance = db_exec($stmt,array("plane_id" => $plane_id));
 
-	$f3f_records = show_pages($f3f_records,"action = plane&function = plane_view&plane_id = {$plane_id}");
+	$f3f_records = show_pages($f3f_records,"action=plane&function=plane_view&plane_id={$plane_id}");
 	# Now lets save the page info for when we do the next 2 arrays
 	$temp_totalpages = $smarty->getTemplateVars('totalpages');
 	$temp_startrecord = $smarty->getTemplateVars('startrecord');
 	$temp_endrecord = $smarty->getTemplateVars('endrecord');
 	$temp_page = $smarty->getTemplateVars('page');
 	
-	$f3b_records = show_pages($f3b_records,"action = plane&function = plane_view&plane_id = {$plane_id}");
-	$f3b_distance = show_pages($f3b_distance,"action = plane&function = plane_view&plane_id = {$plane_id}");
+	$f3b_records = show_pages($f3b_records,"action=plane&function=plane_view&plane_id={$plane_id}");
+	$f3b_distance = show_pages($f3b_distance,"action=plane&function=plane_view&plane_id={$plane_id}");
 
 	# Now lets reset the page values if needed
 	if($smarty->getTemplateVars('page') == 0){
@@ -507,7 +507,7 @@ function plane_view() {
 	");
 	$events = db_exec($stmt,array("plane_id" => $plane_id));
 	$event_total  = count($events);
-	$events = show_pages($events,"action = plane&function = plane_view&plane_id = {$plane_id}",'events');
+	$events = show_pages($events,"action=plane&function=plane_view&plane_id={$plane_id}",'events');
 
 	# Lets get the pilots that are flying this plane
 	$pilots = array();
@@ -525,7 +525,7 @@ function plane_view() {
 	");
 	$pilots = db_exec($stmt,array("plane_id" => $plane_id));
 	$pilot_total  = count($pilots);
-	$pilots = show_pages($pilots,"action = plane&function = plane_view&plane_id = {$plane_id}",'pilots');
+	$pilots = show_pages($pilots,"action=plane&function=plane_view&plane_id={$plane_id}",'pilots');
 
 	$smarty->assign("f3f_records",$f3f_records);
 	$smarty->assign("f3b_records",$f3b_records);

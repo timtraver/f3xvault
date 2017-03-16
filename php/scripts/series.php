@@ -145,7 +145,7 @@ function series_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$series = show_pages($series,"action = series&function = series_list");
+	$series = show_pages($series,"action=series&function=series_list");
 	
 	$smarty->assign("series",$series);
 	$smarty->assign("countries",$countries);

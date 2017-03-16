@@ -74,7 +74,7 @@ function message_list() {
 		$user_messages = db_exec($stmt,array("user_id" => $GLOBALS['user_id']));
 	}
 	
-	$user_messages = show_pages($user_messages,"action = message&function = message_list");
+	$user_messages = show_pages($user_messages,"action=message&function=message_list");
 	
 	$smarty->assign("message_box",$message_box);
 	$smarty->assign("user_messages",$user_messages);

@@ -816,7 +816,7 @@ function admin_plane_list() {
 		}
 		$newplanes[] = $plane;
 	}
-	$planes = show_pages($newplanes,"action = admin&function = admin_plane_list");
+	$planes = show_pages($newplanes,"action=admin&function=admin_plane_list");
 
 	foreach($planes as $key => $plane){
 		# Lets get the plane types
@@ -1333,7 +1333,7 @@ function admin_activity() {
 	");
 	$entries = db_exec($stmt,array());
 
-	$entries = show_pages($entries,"action = admin&function = admin_activity");
+	$entries = show_pages($entries,"action=admin&function=admin_activity");
 
 	$smarty->assign("entries",$entries);
 
@@ -1462,7 +1462,7 @@ function admin_user_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$pilots = show_pages($pilots,"action = admin&function = admin_user_list");
+	$pilots = show_pages($pilots,"action=admin&function=admin_user_list");
 	
 	$smarty->assign("pilots",$pilots);
 	$smarty->assign("countries",$countries);

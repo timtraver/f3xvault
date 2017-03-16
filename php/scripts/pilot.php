@@ -109,7 +109,7 @@ function pilot_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$pilots = show_pages($pilots,"action = pilot&function = pilot_list");
+	$pilots = show_pages($pilots,"action=pilot&function=pilot_list");
 	
 	$smarty->assign("pilots",$pilots);
 	$smarty->assign("countries",$countries);
@@ -237,7 +237,7 @@ function pilot_view() {
 			ORDER BY eprf.event_pilot_round_flight_seconds
 		");
 		$f3f_records = db_exec($stmt,array("pilot_id" => $pilot['pilot_id']));
-		$f3f_records  = show_pages($f3f_records,"action = pilot&function = pilot_view&pilot_id = $pilot_id");
+		$f3f_records  = show_pages($f3f_records,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 		# Lets get the top speeds in F3B across all of the events
 		$stmt = db_prep("
 			SELECT *
@@ -258,7 +258,7 @@ function pilot_view() {
 			ORDER BY eprf.event_pilot_round_flight_seconds
 		");
 		$f3b_records = db_exec($stmt,array("pilot_id" => $pilot['pilot_id']));
-		$f3b_records  = show_pages($f3b_records,"action = pilot&function = pilot_view&pilot_id = $pilot_id");
+		$f3b_records  = show_pages($f3b_records,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 		# Lets get the top distance runs in F3B across all of the events
 		$stmt = db_prep("
 			SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
@@ -280,7 +280,7 @@ function pilot_view() {
 			ORDER BY eprf.event_pilot_round_flight_laps DESC
 		");
 		$f3b_distance = db_exec($stmt,array("pilot_id" => $pilot['pilot_id']));
-		$f3b_distance  = show_pages($f3b_distance,"action = pilot&function = pilot_view&pilot_id = $pilot_id");
+		$f3b_distance  = show_pages($f3b_distance,"action=pilot&function=pilot_view&pilot_id=$pilot_id");
 	}
 	
 	# Get plane media records

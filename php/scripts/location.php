@@ -198,7 +198,7 @@ function location_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$locations = show_pages($locations,"action = location&function = location_list");
+	$locations = show_pages($locations,"action=location&function=location_list");
 
 	$smarty->assign("locations",$locations);
 	$smarty->assign("countries",$countries);
@@ -436,7 +436,7 @@ function location_view() {
 		ORDER BY e.event_start_date DESC
 	");
 	$events = db_exec($stmt,array("location_id" => $location_id));
-	$events = show_pages($events,"action = location&function = location_view&location_id = {$location_id}");
+	$events = show_pages($events,"action=location&function=location_view&location_id={$location_id}");
 	
 	$smarty->assign("location",$location);
 	$smarty->assign("location_attributes",$location_attributes);

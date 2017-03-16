@@ -231,7 +231,7 @@ function event_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$events = show_pages($events,"action = event&function = event_list");
+	$events = show_pages($events,"action=event&function=event_list");
 
 	# Lets get the number of pilots for this event
 	foreach($events as $key => $e){

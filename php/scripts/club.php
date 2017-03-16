@@ -138,7 +138,7 @@ function club_list() {
 	");
 	$states = db_exec($stmt,array());
 	
-	$clubs = show_pages($clubs,"action = club&function = club_list");
+	$clubs = show_pages($clubs,"action=club&function=club_list");
 	
 	$smarty->assign("clubs",$clubs);
 	$smarty->assign("countries",$countries);
