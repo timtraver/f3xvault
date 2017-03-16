@@ -27,7 +27,6 @@ class searchEvents {
 	public function process_request(){
 		
 		# This is the method where we process the request
-		$this->string = $_REQUEST['string'];
 		if(isset($_REQUEST['string'])){
 			$this->string = $_REQUEST['string'];
 		}else{
@@ -82,7 +81,7 @@ class searchEvents {
 				LEFT JOIN country c ON l.country_id = c.country_id
 				WHERE (LOWER(e.event_name) LIKE :term1
 					OR LOWER(c.country_name) LIKE :term2
-					OR LOWER(l.location_name) LIKE :term3
+					OR LOWER(l.location_name) LIKE :term3)
 					$search_future
 					$event_type_string
 				ORDER BY e.event_start_date DESC
