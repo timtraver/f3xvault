@@ -1,0 +1,124 @@
+<?php
+############################################################################
+#	searchEvents.class
+#
+#	Tim Traver
+#	3/15/2017
+#	class to extend API class to search for events
+#
+############################################################################
+#
+include_library('event.class');
+
+class searchEvents {
+	public $string;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_mandatory_fields();
+	}
+	
+	public function set_mandatory_fields(){
+		# This is where we set the mandatory fields
+		$this->api->mandatory_fields = array();
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+		$this->string = $_REQUEST['string'];
+
+		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+			$field_separator = $_REQUEST['field_separator'];
+		}else{
+			$field_separator = ',';
+		}
+		if(isset($_REQUEST['show_future'])){
+			$show_future = $_REQUEST['show_future'];
+		}else{
+			$show_future = 1;
+		}
+		$search_future = '';
+		if($show_future == 0){
+			$search_future = "AND e.event_start_date <= NOW()";
+		}
+		if(isset($_REQUEST['per_page'])){
+			$per_page = $_REQUEST['per_page'];
+		}else{
+			$per_page = 50;
+		}
+		if(isset($_REQUEST['page'])){
+			$page = $_REQUEST['page'];
+		}else{
+			$page = 1;
+		}
+		# Lets calculate the limit from the page value
+		$show_page = $page - 1;
+		$page_start = $show_page * $per_page;
+		
+		if($this->string){
+			
+			$this->string = trim(urldecode(strtolower($this->string)));
+			$this->string = '%'.$this->string.'%';
+			# Do search
+			$stmt = db_prep("
+				SELECT *
+				FROM event e
+				LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+				LEFT JOIN location l ON e.location_id=l.location_id
+				LEFT JOIN state s ON l.state_id = s.state_id
+				LEFT JOIN country c ON l.country_id = c.country_id
+				WHERE (LOWER(e.event_name) LIKE :term1
+					OR LOWER(c.country_name) LIKE :term2
+					OR LOWER(l.location_name) LIKE :term3
+					OR LOWER(et.event_type_name) LIKE :term4)
+					$search_future
+				ORDER BY e.event_start_date DESC
+				LIMIT $page_start,$per_page
+			");
+			$result = db_exec($stmt,array(
+				"term1"	=> $this->string,
+				"term2"	=> $this->string,
+				"term3"	=> $this->string,
+				"term4"	=> $this->string,
+			));
+		}else{
+			# Give the entire result set
+			$stmt = db_prep("
+				SELECT *
+				FROM event e
+				LEFT JOIN event_type et ON e.event_type_id=et.event_type_id
+				LEFT JOIN location l ON e.location_id=l.location_id
+				LEFT JOIN state s ON l.state_id = s.state_id
+				LEFT JOIN country c ON l.country_id = c.country_id
+				WHERE 1
+					$search_future
+				ORDER BY event_start_date DESC
+				LIMIT $page_start,$per_page
+			");
+			$result = db_exec($stmt,array());
+		}
+		
+		foreach($result as $r){
+			$events[] = array(
+				"event_id"			=> $r['event_id'],
+				"event_name"		=> $r['event_name'],
+				"event_start_date"	=> date("Y-m-d",strtotime($r['event_start_date'])),
+				"location_name"		=> $r['location_name'],
+				"event_type_name"	=> $r['event_type_name'],
+			);
+		}
+		$content = '';
+		
+		foreach($events as $e){
+			$content .= "\"{$e['event_id']}\"{$field_separator}\"{$e['event_start_date']}\"{$field_separator}\"{$e['event_name']}\"{$field_separator}\"{$e['location_name']}\"{$field_separator}\"{$e['event_type_name']}\"\n";
+		}
+		
+		return $content;
+
+	}
+
+}
+
+?>
