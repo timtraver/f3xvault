@@ -63,6 +63,25 @@ class searchEvents {
 		}else{
 			$page = 1;
 		}
+		if(isset($_REQUEST['date_from'])){
+			$date_from = $_REQUEST['date_from'];
+		}else{
+			$date_from = '0000-00-00';
+		}
+		if(isset($_REQUEST['date_to'])){
+			$date_to = $_REQUEST['date_to'];
+		}else{
+			$date_to = '0000-00-00';
+		}
+		$date_range = '';
+		if($date_from != '0000-00-00'){
+			$date_range .= "AND e.event_start_date > '$date_from'";
+		}
+		if($date_to != '0000-00-00'){
+			$date_range .= "AND e.event_start_date < '$date_to'";
+		}
+		
+		
 		# Lets calculate the limit from the page value
 		$show_page = $page - 1;
 		$page_start = $show_page * $per_page;
@@ -84,6 +103,7 @@ class searchEvents {
 					OR LOWER(l.location_name) LIKE :term3)
 					$search_future
 					$event_type_string
+					$date_range
 				ORDER BY e.event_start_date DESC
 				LIMIT $page_start,$per_page
 			");
@@ -104,6 +124,7 @@ class searchEvents {
 				WHERE 1
 					$search_future
 					$event_type_string
+					$date_range
 				ORDER BY event_start_date DESC
 				LIMIT $page_start,$per_page
 			");
