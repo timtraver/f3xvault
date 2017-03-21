@@ -5,3 +5,4 @@ templates_c
 query_errors.log
 /debug
 /htdocs/test2.html
+php/new/libraries/sessionlog.txt
