@@ -252,6 +252,9 @@ class Event {
 		$type = $this->info['event_type_code'];
 		foreach($result as $r){
 			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type == $r['flight_type_code']){
+				if($type == 'f3f' && $r['flight_type_code'] != 'f3f_speed'){
+					continue;
+				}
 				$id = $r['flight_type_id'];
 				# Lets step through each of the options and set the accuracy for this flight type
 				# And whether or not an F3F event has groups
@@ -499,7 +502,7 @@ class Event {
 				
 		# Now lets get the rounds for this event
 		$stmt = db_prep("
-			SELECT er. * ,erf. * 
+			SELECT er.* ,erf.* , er.event_round_id
 			FROM event_round er
 			LEFT JOIN event_round_flight erf ON er.event_round_id=erf.event_round_id
 			WHERE er.event_id=:event_id
@@ -535,7 +538,7 @@ class Event {
 		
 		# Lets get all of the flights for each round in one query and then step through them
 		$stmt = db_prep("
-			SELECT er.event_round_number,erf. * ,epr. * 
+			SELECT er.event_round_number,erf.* ,epr.* 
 			FROM event_pilot_round_flight erf
 			LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id=epr.event_pilot_round_id
 			LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
@@ -621,7 +624,7 @@ class Event {
 		
 		# Now lets do a big query to get the sub flights all in one shot
 		$stmt = db_prep("
-			SELECT er.event_round_number,eprf.flight_type_id,ep.event_pilot_id,epr.event_pilot_round_id,eprf.event_pilot_round_flight_reflight,eprs. * 
+			SELECT er.event_round_number,eprf.flight_type_id,ep.event_pilot_id,epr.event_pilot_round_id,eprf.event_pilot_round_flight_reflight,eprs.* 
 			FROM event_pilot_round_flight_sub eprs
 			LEFT JOIN event_pilot_round_flight eprf ON eprs.event_pilot_round_flight_id=eprf.event_pilot_round_flight_id
 			LEFT JOIN event_pilot_round epr ON epr.event_pilot_round_id=eprf.event_pilot_round_id
@@ -1170,6 +1173,7 @@ class Event {
 				switch($f['flight_type_code']){
 					case 'f3b_speed':
 					case 'f3f_speed':
+					case 'f3f_plus':
 						if(($raw<$max[$flight_type_id][$group]['raw'] || $max[$flight_type_id][$group]['raw'] == 0) && $raw != 0){
 							$max[$flight_type_id][$group]['raw'] = $raw;
 						}
@@ -1202,6 +1206,7 @@ class Event {
 				switch($this->flight_types[$flight_type_id]['flight_type_code']){
 					case 'f3b_speed':
 					case 'f3f_speed':
+					case 'f3f_plus':
 						if($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'] == 0){
 							$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = 0;
 						}else{
@@ -1244,7 +1249,6 @@ class Event {
 				}
 			}
 		}
-		
 		# Now step through each one of the flights and save the flight record
 		foreach($flight as $flight_type_id => $p){
 			foreach($p as $key => $v){

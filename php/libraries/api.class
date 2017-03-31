@@ -16,11 +16,12 @@ class API {
 	public $input_variables = array();
 	public $output_string;
 	public $output_variables = array();
-	public $mandatory_fields = array();
 	public $error_code;
 	public $error_string;
 	public $functions = array();
 	public $process_output;
+	public $function_parameters = array();
+	public $field_separator;
 	
 	public function __construct() {
 		# Function to initialize variables
@@ -36,10 +37,13 @@ class API {
 	public function set_api_functions(){
 		# This is to set up the available api functions
 		$this->functions = array(
-			"getEventInfo",	
-			"getEventPilots",	
-			"searchPilots",	
-			"searchEvents",	
+			"showParameters",
+			"getEventInfo",
+			"getEventPilots",
+			"searchPilots",
+			"searchEvents",
+			"postScore",
+			"viewEventRank",
 		);
 	}
 
@@ -113,10 +117,26 @@ class API {
 		include_library("api/{$this->function}.class");
 
 		eval("\$request = new {$this->function}(\$this);");
-		if(!$this->api_check_mandatory_fields()){
+		if(!$this->api_check_function_parameters()){
 			$this->error_code = 3;
-			$this->error_string = "Not all mandatory fields supplied.";
+			$this->error_string = "Not all mandatory fields supplied.\n";
+			$this->error_string .= "Possible fields are as follows. * fields are mandatory.\n";
+			$this->error_string .= "field_separator - Field Delimeter For Return Lines.\n";
+			foreach($this->function_parameters as $field){
+				if($field['mandatory'] == 1){
+					$this->error_string .= '*';
+				}
+				$this->error_string .= $field['name'];
+				$this->error_string .= " - ".$field['description']."\n";
+				
+			}
 			return 0;
+		}
+		
+		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+			$this->field_separator = $_REQUEST['field_separator'];
+		}else{
+			$this->field_separator = ',';
 		}
 		
 		if(method_exists($request,'process_request')){
@@ -148,11 +168,12 @@ class API {
 		}
 		return;
 	}
-	public function api_check_mandatory_fields(){
-		# Method to check for mandatory fields for this function
+	public function api_check_function_parameters(){
+		# Method to check the input fields for mandatory entries
 		$check = 1;
-		foreach($this->mandatory_fields as $field_name){
-			if(!isset($this->input_variables[$field_name])){
+		foreach($this->function_parameters as $field){
+			$field_name = $field['name'];
+			if($field['mandatory'] == 1 && !isset($this->input_variables[$field_name])){
 				$check = 0;
 			}
 		}

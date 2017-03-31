@@ -16,12 +16,20 @@ class searchEvents {
 	
 	public function __construct($api){
 		$this->api = $api;
-		$this->set_mandatory_fields();
+		$this->set_function_parameters();
 	}
 	
-	public function set_mandatory_fields(){
-		# This is where we set the mandatory fields
-		$this->api->mandatory_fields = array();
+	public function set_function_parameters(){
+		# This is where we set the parameter field list
+		$this->api->function_parameters = array(
+			array("name" => "string",			"description" => "Search String", "mandatory" => 0),
+			array("name" => "event_type_code",	"description" => "Event Type Code (f3f,f3b,f3j,f3k, etc)", "mandatory" => 0),
+			array("name" => "show_future",		"description" => "Show future events (0,1)", "mandatory" => 0),
+			array("name" => "per_page",			"description" => "Results per page (Number)", "mandatory" => 0),
+			array("name" => "page",				"description" => "Page of results (Number)", "mandatory" => 0),
+			array("name" => "date_from",		"description" => "Date Range From (2017-01-01)", "mandatory" => 0),
+			array("name" => "date_to",			"description" => "Date Range To (2017-01-01)", "mandatory" => 0),
+		);
 	}
 
 	public function process_request(){
@@ -38,11 +46,6 @@ class searchEvents {
 		}else{
 			$event_type_code = '';
 			$event_type_string = '';
-		}
-		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
-			$field_separator = $_REQUEST['field_separator'];
-		}else{
-			$field_separator = ',';
 		}
 		if(isset($_REQUEST['show_future'])){
 			$show_future = $_REQUEST['show_future'];
@@ -80,7 +83,7 @@ class searchEvents {
 		if($date_to != '0000-00-00'){
 			$date_range .= "AND e.event_start_date < '$date_to'";
 		}
-		
+		$fs = $this->api->field_separator;
 		
 		# Lets calculate the limit from the page value
 		$show_page = $page - 1;
@@ -143,7 +146,7 @@ class searchEvents {
 		$content = '';
 		
 		foreach($events as $e){
-			$content .= "\"{$e['event_id']}\"{$field_separator}\"{$e['event_start_date']}\"{$field_separator}\"{$e['event_name']}\"{$field_separator}\"{$e['location_name']}\"{$field_separator}\"{$e['event_type_name']}\"\n";
+			$content .= "\"{$e['event_id']}\"{$fs}\"{$e['event_start_date']}\"{$fs}\"{$e['event_name']}\"{$fs}\"{$e['location_name']}\"{$fs}\"{$e['event_type_name']}\"\n";
 		}
 		
 		return $content;

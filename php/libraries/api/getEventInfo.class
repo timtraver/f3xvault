@@ -16,13 +16,13 @@ class getEventInfo {
 	
 	public function __construct($api){
 		$this->api = $api;
-		$this->set_mandatory_fields();
+		$this->set_function_parameters();
 	}
 	
-	public function set_mandatory_fields(){
+	public function set_function_parameters(){
 		# This is where we set the mandatory fields
-		$this->api->mandatory_fields = array(
-			"event_id"
+		$this->api->function_parameters = array(
+			array("name" => "event_id",			"description" => "Event ID", "mandatory" => 1)
 		);
 	}
 
@@ -35,14 +35,9 @@ class getEventInfo {
 
 		$event = new Event($this->event_id);
 		$event->get_draws();
-		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
-			$field_separator = $_REQUEST['field_separator'];
-		}else{
-			$field_separator = ',';
-		}
 
 		$smarty->assign("event",$event);
-		$smarty->assign("fs",$field_separator);
+		$smarty->assign("fs",$this->api->field_separator);
 		
 		# Lets make the draw array easier to use and add it to the pilot array
 		$draws = array();

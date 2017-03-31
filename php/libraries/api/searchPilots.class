@@ -16,13 +16,13 @@ class searchPilots {
 	
 	public function __construct($api){
 		$this->api = $api;
-		$this->set_mandatory_fields();
+		$this->set_function_parameters();
 	}
 	
-	public function set_mandatory_fields(){
-		# This is where we set the mandatory fields
-		$this->api->mandatory_fields = array(
-			"string"
+	public function set_function_parameters(){
+		# This is where we set the parameter field list
+		$this->api->function_parameters = array(
+			array("name" => "string",			"description" => "Search String", "mandatory" => 0)
 		);
 	}
 
@@ -30,13 +30,8 @@ class searchPilots {
 		
 		# This is the method where we process the request
 		$this->string = $_REQUEST['string'];
-
-		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
-			$field_separator = $_REQUEST['field_separator'];
-		}else{
-			$field_separator = ',';
-		}
-
+		$fs = $this->api->field_separator;
+		
 		$string = trim(urldecode(strtolower($this->string)));
 		$string = '%'.$string.'%';
 		# Do search
@@ -65,7 +60,7 @@ class searchPilots {
 		$content = '';
 		
 		foreach($pilots as $p){
-			$content .= "\"{$p['id']}\"{$field_separator}\"{$p['name']}\"{$field_separator}\"{$p['location']}\"\n";
+			$content .= "\"{$p['id']}\"{$fs}\"{$p['name']}\"{$fs}\"{$p['location']}\"\n";
 		}
 		
 		return $content;

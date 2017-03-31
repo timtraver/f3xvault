@@ -1,0 +1,60 @@
+<?php
+############################################################################
+#	showParameters.class
+#
+#	Tim Traver
+#	3/21/2017
+#	class to extend API class to show an API's parameter list
+#
+############################################################################
+#
+include_library('event.class');
+
+class showParameters {
+	public $function_name;
+	public $name;
+	public $api;
+	public $function_parameters = array();
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the parameter field list
+		$this->api->function_parameters = array(
+			array("name" => "function_name",			"description" => "Name of Function to retrieve parameters", "mandatory" => 1)
+		);
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+		$this->function_name = $_REQUEST['function_name'];
+
+		if(!file_exists($GLOBALS['include_paths']['libraries']."/api/{$this->function_name}.class")){
+			$this->error_code = 1;
+			$this->error_string = "Function not available.";
+			return 0;
+		}
+		include_library("api/{$this->function_name}.class");
+		
+		eval("\$name = new {$this->function_name}(\$this);");
+		
+		$content = '';
+		$content .= "Possible fields for {$this->function_name} are as follows. * fields are mandatory.\n";
+		foreach($this->function_parameters as $field){
+			if($field['mandatory'] == 1){
+				$content .= '*';
+			}
+			$content .= $field['name'];
+			$content .= " - ".$field['description']."\n";
+		}
+		
+		return $content;
+	}
+
+}
+
+?>

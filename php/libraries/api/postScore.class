@@ -1,0 +1,485 @@
+<?php
+############################################################################
+#	postScore.class
+#
+#	Tim Traver
+#	3/12/2017
+#	class to extend API class to get a event info
+#
+############################################################################
+#
+include_library('event.class');
+
+class postScore {
+	public $event_id;
+	public $pilot_id;
+	public $round;
+	public $group;
+	public $order;
+	public $minutes;
+	public $seconds;
+	public $over;
+	public $laps;
+	public $dns;
+	public $dnf;
+	public $landing;
+	public $penalty;
+	public $wind_avg;
+	public $dir_avg;
+	public $flight_time;
+	public $flight_type_id;
+	public $event_pilot_id;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "event_id",			"description" => "Event ID", "mandatory" => 1),
+			array("name" => "pilot_id",			"description" => "Pilot ID", "mandatory" => 1),
+			array("name" => "round",			"description" => "Round Number", "mandatory" => 1),
+			array("name" => "penalty",			"description" => "Penalty Points", "mandatory" => 0),
+			array("name" => "flight_time",		"description" => "Timestamp of flight", "mandatory" => 0),
+			array("name" => "wind_avg",			"description" => "Wind Speed Average", "mandatory" => 0),
+			array("name" => "dir_avg",			"description" => "Wind Direction Average", "mandatory" => 0),
+		);
+	}
+
+	public function process_request(){
+		global $smarty;
+
+		# This is the method where we process the request
+		$this->event_id = $_REQUEST['event_id'];
+		$fs = $this->api->field_separator;
+
+		# We must determine new mandatory fields that depend on the type of event that is being posted to
+		$event = new Event($this->event_id);
+		$event->get_rounds();
+		if(!isset($event->info['event_id'])){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
+		$event_type_code = $event->info['event_type_code'];
+
+		switch($event_type_code){
+			case "f3b":
+
+
+
+				break;
+			case "f3b_speed":
+
+
+
+				break;
+			case "f3f":
+				$this->api->function_parameters[] = array("name" => "group",		"description" => "Group", 							"mandatory" => 0);
+				$this->api->function_parameters[] = array("name" => "order",		"description" => "Round Flight Order", 				"mandatory" => 0);
+				$this->api->function_parameters[] = array("name" => "seconds",		"description" => "Total Flight Time in seconds", 	"mandatory" => 1);
+				break;
+			case "f3f_plus":
+				$this->api->function_parameters[] = array("name" => "group",		"description" => "Group", 							"mandatory" => 0);
+				$this->api->function_parameters[] = array("name" => "order",		"description" => "Round Flight Order", 				"mandatory" => 0);
+				$this->api->function_parameters[] = array("name" => "seconds",		"description" => "Total Flight Time in seconds", 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub1",			"description" => "Climb out",					 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub2",			"description" => "Lap 1",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub3",			"description" => "Lap 2",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub4",			"description" => "Lap 3",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub5",			"description" => "Lap 4",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub6",			"description" => "Lap 5",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub7",			"description" => "Lap 6",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub8",			"description" => "Lap 7",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub9",			"description" => "Lap 8",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub10",		"description" => "Lap 9",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "sub11",		"description" => "Lap 10",						 	"mandatory" => 1);
+				$this->api->function_parameters[] = array("name" => "wind_avg",		"description" => "Average Wind Speed",			 	"mandatory" => 0);
+				$this->api->function_parameters[] = array("name" => "dir_avg",		"description" => "Average Wind Direction",		 	"mandatory" => 0);
+				break;
+			case "f3k":
+
+
+
+				break;
+			case "f3j":
+
+
+
+				break;
+			case "td":
+
+
+
+				break;
+		}
+		
+		# Now rerun the main parameter check to see if we have all the information we need.
+		if(!$this->api->api_check_function_parameters()){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Not all mandatory fields supplied.\n";
+			$this->api->error_string .= "Possible fields are as follows. * fields are mandatory.\n";
+			$this->api->error_string .= "field_separator - Field Delimeter For Return Lines.\n";
+			foreach($this->api->function_parameters as $field){
+				if($field['mandatory'] == 1){
+					$this->api->error_string .= '*';
+				}
+				$this->api->error_string .= $field['name'];
+				$this->api->error_string .= " - ".$field['description']."\n";
+			}
+			return 0;
+		}
+		# Lets set the input parameters
+		$this->pilot_id		= $_REQUEST['pilot_id'];
+		$this->round		= $_REQUEST['round'];
+		$this->group		= $_REQUEST['group'];
+		$this->order		= $_REQUEST['order'];
+		$this->flight_time	= $_REQUEST['flight_time'];
+		$this->penalty		= $_REQUEST['penalty'];
+		if(isset($this->api->input_variables['wind_avg'])){
+			$this->wind_avg = $this->api->input_variables['wind_avg'];
+		}else{
+			$this->wind_avg = 0;
+		}
+		if(isset($this->api->input_variables['dir_avg'])){
+			$this->dir_avg = $this->api->input_variables['dir_avg'];
+		}else{
+			$this->dir_avg = 0;
+		}
+		if(isset($this->api->input_variables['minutes'])){
+			$this->minutes = $this->api->input_variables['minutes'];
+		}else{
+			$this->minutes = 0;
+		}
+		if(isset($this->api->input_variables['seconds'])){
+			$this->seconds = $this->api->input_variables['seconds'];
+		}else{
+			$this->seconds = 0;
+		}
+		
+		# Ok, now lets post the score
+		# Lets first figure out the event_pilot_id from the pilot list
+		$this->event_pilot_id = 0;
+		foreach($event->pilots as $epid => $p){
+			if($p['pilot_id'] == $this->api->input_variables['pilot_id']){
+				$this->event_pilot_id = $epid;
+				break;
+			}
+		}
+		if($this->event_pilot_id == 0){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Pilot does not exist in this event.\n";
+			return 0;
+		}
+
+		# Lets fill out the draw info if there is any so we can pre populate the groups if needed
+		$event->get_draws();
+		
+		# Lets make the draw array easier to use and add it to the pilot array
+		$draws = array();
+		
+		# Lets pre-populate it with the pilot list
+		foreach($event->pilots as $event_pilot_id => $p){
+			$draws[$event_pilot_id]['draw'] = array();
+		}
+		
+		# Now lets get the info from the draw
+		foreach($event->draws as $draw_id => $d){
+			if($d['event_draw_active'] == 0){
+				continue;
+			}
+			foreach($d['flights'] as $flight_type_id => $f){
+				foreach($f as $round_number => $r){
+					foreach($r['pilots'] as $event_pilot_id => $p){
+						if($event->flight_types[$flight_type_id]['flight_type_group'] == 1 && $event->flight_types[$flight_type_id]['flight_type_code'] != 'f3f_speed'){
+							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_group'];
+						}else{
+							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_order'];
+						}
+					}
+				}
+			}
+		}
+		
+		# Now Step through the task list to make sure there are the full amount of tasks in the export
+		foreach($draws as $event_pilot_id => $d){
+			foreach($event->tasks as $task_round => $t){
+				if(!isset($draws[$event_pilot_id]['draw'][$task_round])){
+					$draws[$event_pilot_id]['draw'][$task_round] = '';
+				}
+			}
+		}	
+		
+		$rounds = 0;
+		if(count($event->rounds) > 0){
+			$rounds = count($event->rounds);
+		}
+		if($rounds == 0 && isset($event->tasks)){
+			$rounds = count($event->tasks);
+		}
+		if($rounds == 0 && isset($draws) && count($draws) > 0){
+			foreach($draws as $event_pilot_id => $d){
+				$rounds = count($d['draw']);
+			}
+		}
+		
+		
+		# Make sure the values are sorted
+		$newdraws = array();
+		foreach($draws as $event_pilot_id => $d){
+			ksort($d['draw']);
+			$newdraws[$event_pilot_id]['draw'] = $d['draw'];
+		}
+		$draws = $newdraws;
+
+		# Lets check if the round exists
+		if(!isset($event->rounds[$this->round])){
+			# The round doesn't exist yet. Lets see if the previous one does
+			$prev = $this->round - 1;
+			if(!isset($event->rounds[$prev]) && $this->round != 1){
+				# Can't create a round previous to the last one
+				$this->api->error_code = 3;
+				$this->api->error_string = "Cannot create a round that's more than one ahead of the last.\n";
+				return 0;
+			}else{
+				# We need to create this new round and populate it with the pilots
+				$stmt = db_prep("
+					INSERT INTO event_round
+					SET event_id = :event_id,
+						event_round_number = :round,
+						flight_type_id = :flight_type_id,
+						event_round_score_status = 1,
+						event_round_needs_calc = 1,
+						event_round_status = 1
+				");
+				$result = db_exec($stmt,array(
+					"event_id" => $this->event_id,
+					"round" => $this->round,
+					"flight_type_id" => current($event->flight_types)['flight_type_id'],
+					
+				));
+				$event_round_id = $GLOBALS['last_insert_id'];
+				
+				# We also need to create the event round flight
+				$stmt = db_prep("
+					INSERT INTO event_round_flight
+					SET event_round_id = :event_round_id,
+						flight_type_id = :flight_type_id,
+						event_round_flight_score = 1
+				");
+				$result = db_exec($stmt,array(
+					"event_round_id" => $event_round_id,
+					"flight_type_id" => current($event->flight_types)['flight_type_id'],
+				));
+				
+				# Lets add the pilot rounds
+				foreach($event->pilots as $event_pilot_id => $ep){
+					$stmt = db_prep("
+						INSERT INTO event_pilot_round
+						SET event_pilot_id = :event_pilot_id,
+							event_round_id = :event_round_id
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_id" => $event_pilot_id,
+						"event_round_id" => $event_round_id,
+					));
+					if($event_pilot_id = $this->event_pilot_id){
+						$event_pilot_round_id = $GLOBALS['last_insert_id'];
+					}
+				}
+			}
+		}else{
+			# The round is set already, so use it
+			# Lets update the calc status though
+			$stmt = db_prep("
+				UPDATE event_round
+				SET event_round_needs_calc = 1
+				WHERE event_round_id = :event_round_id
+			");
+			$result = db_exec($stmt,array(
+				"event_round_id" => $event->rounds[$this->round]['event_round_id']				
+			));
+			# Check to see if the event_pilot_round is set
+			$stmt = db_prep("
+				SELECT *
+				FROM event_pilot_round
+				WHERE event_pilot_id = :event_pilot_id
+					AND event_round_id = :event_round_id
+			");
+			$result = db_exec($stmt,array(
+				"event_pilot_id" => $this->event_pilot_id,
+				"event_round_id" => $event->rounds[$this->round]['event_round_id']
+			));
+			if(count($result) > 0){
+				$event_pilot_round_id = $result[0]['event_pilot_round_id'];
+			}else{
+				# We need to create a round for this pilot
+				$stmt = db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id = :event_pilot_id,
+						event_round_id = :event_round_id
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_id" => $this->event_pilot_id,
+					"event_round_id" => $$event->rounds[$this->round]['event_round_id']
+				));
+				$event_pilot_round_id = $GLOBALS['last_insert_id'];
+			}
+		}
+		# So, now that we are here, we should have the event_round_id and the event_round_pilot_id, so lets save the flight
+		# Lets reset the event object
+		$event->get_rounds();
+		
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_round
+			WHERE event_pilot_id = :event_pilot_id
+				AND event_round_id = :event_round_id
+		");
+		$result = db_exec($stmt,array(
+			"event_pilot_id" => $this->event_pilot_id,
+			"event_round_id" => $event->rounds[$this->round]['event_round_id']
+		));
+		$event_pilot_round_id = $result[0]['event_pilot_round_id'];
+		
+		$flight_type_id = current($event->flight_types)['flight_type_id'];
+		
+		# Now save the flight, but lets check if there is one first
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_round_flight
+			WHERE event_pilot_round_id = :event_pilot_round_id
+				AND flight_type_id = :flight_type_id
+		");
+		$result = db_exec($stmt,array(
+			"event_pilot_round_id" => $event_pilot_round_id,
+			"flight_type_id" => $flight_type_id
+		));
+
+		if(count($result) > 0){
+			# There is already a flight to overwrite
+			$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
+			$stmt = db_prep("
+				UPDATE event_pilot_round_flight
+				SET event_pilot_round_flight_group = :group,
+					event_pilot_round_flight_order = :order,
+					event_pilot_round_flight_minutes = :minutes,
+					event_pilot_round_flight_seconds = :seconds,
+					event_pilot_round_flight_penalty = :penalty,
+					event_pilot_round_flight_dns = 0,
+					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_wind_avg = :wind_avg,
+					event_pilot_round_flight_dir_avg = :dir_avg,
+					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_status = 1
+				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+			");
+			$result = db_exec($stmt,array(
+				"group" => $this->group,
+				"order" => $this->order,
+				"minutes" => $this->minutes,
+				"seconds" => $this->seconds,
+				"penalty" => $this->penalty,
+				"wind_avg" => $this->wind_avg,
+				"dir_avg" => $this->dir_avg,
+				"flight_time" => $this->flight_time,
+				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
+			));
+		}else{
+			# Create a new one
+			$stmt = db_prep("
+				INSERT INTO event_pilot_round_flight
+				SET event_pilot_round_id = :event_pilot_round_id,
+					flight_type_id = :flight_type_id,
+					event_pilot_round_flight_group = :group,
+					event_pilot_round_flight_order = :order,
+					event_pilot_round_flight_minutes = :minutes,
+					event_pilot_round_flight_seconds = :seconds,
+					event_pilot_round_flight_penalty = :penalty,
+					event_pilot_round_flight_dns = 0,
+					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_wind_avg = :wind_avg,
+					event_pilot_round_flight_dir_avg = :dir_avg,
+					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_pilot_round_id" => $event_pilot_round_id,
+				"flight_type_id" => current($event->flight_types)['flight_type_id'],
+				"group" => $this->group,
+				"order" => $this->order,
+				"minutes" => $this->minutes,
+				"seconds" => $this->seconds,
+				"penalty" => $this->penalty,
+				"wind_avg" => $this->wind_avg,
+				"dir_avg" => $this->dir_avg,
+				"flight_time" => $this->flight_time
+			));
+			$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
+		}
+		
+		# If there are sub flights, then lets set them
+		# how many subflights should there be?
+		$subs = current($event->flight_types)['flight_type_sub_flights'];
+		if($subs){
+			# This has plus flights so lets save the sub flights
+			for($sub = 1;$sub <= $subs; $sub++){
+				# Lets see if one exists already
+				$variable_name = "sub".$sub;
+				$value = $this->api->input_variables[$variable_name];
+				$stmt = db_prep("
+					SELECT *
+					FROM event_pilot_round_flight_sub
+					WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+					AND event_pilot_round_flight_sub_num = :sub
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_round_flight_id" => $event_pilot_round_flight_id,
+					"sub" => $sub
+				));
+				if(count($result) == 0){
+					# Create a new one
+					$stmt = db_prep("
+						INSERT INTO event_pilot_round_flight_sub
+						SET event_pilot_round_flight_id = :event_pilot_round_flight_id,
+							event_pilot_round_flight_sub_num = :sub,
+							event_pilot_round_flight_sub_val = :value
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_flight_id" => $event_pilot_round_flight_id,
+						"sub" => $sub,
+						"value" => $value
+					));
+				}else{
+					# Update the existing one
+					$event_pilot_round_flight_sub_id = $result[0]['event_pilot_round_flight_sub_id'];
+					$stmt = db_prep("
+						UPDATE event_pilot_round_flight_sub
+						SET event_pilot_round_flight_sub_val = :value
+						WHERE event_pilot_round_flight_sub_id = :event_pilot_round_flight_sub_id
+					");
+					$result = db_exec($stmt,array(
+						"value" => $value,
+						"event_pilot_round_flight_sub_id" => $event_pilot_round_flight_sub_id
+					));
+				}
+			}
+		}
+		
+		# Now lets re-calculate things
+		$event = new Event($this->event_id);
+		$event->calculate_round($this->round);		
+		
+		$content = "Posted Score Successfully.";
+		
+		# Get the export content
+		return $content;
+
+	}
+
+}
+
+?>
