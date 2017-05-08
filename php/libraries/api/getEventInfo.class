@@ -110,6 +110,9 @@ class getEventInfo {
 			case "f3f":
 				$template = "api/event_export_f3f.tpl";
 				break;
+			case "f3f_plus":
+				$template = "api/event_export_f3f.tpl";
+				break;
 			case "f3k":
 				$template = "api/event_export_f3k.tpl";
 				break;
