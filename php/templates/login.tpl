@@ -7,6 +7,10 @@
 
 	<div id="container" class="cls-container">
 		<div class="cls-content">
+			
+			<div style="top: 0;width: 100%;">
+				<h1 style="color:#337ab7;">Welcome To F3XVault</h1>
+			</div>
 			<div class="cls-content-sm panel">
 				<div class="panel-body">
 					<p style="font-size: x-large;"><h2 style="color:#337ab7;">F3X Vault Login</h2></p>
@@ -44,6 +48,7 @@
 					</form>
 				</div>
 			</div>
+			
 			<div class="pad-ver">
 				<a href="?action=main&function=forgot" class="btn-link mar-rgt">Forgot password ?</a>
 				<a href="?action=register" class="btn-link mar-lft">Create a new account</a>
@@ -51,6 +56,6 @@
 		</div>
 	</div>
 	<div style="position: fixed;bottom: 0;width: 100%;margin-bottom: 50px;text-align: center;">
-		<h1 style="font-size: 60px;font-weight: 900; color:#337ab7;"><a href="/?">Enter</a></h1>
+		<h1 style="font-size: 60px;font-weight: 900; color:#337ab7;"><a href="/?">or<br>Enter</a></h1>
 	</div>
 {/block}

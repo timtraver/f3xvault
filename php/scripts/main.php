@@ -23,7 +23,7 @@ function view_home() {
 	global $user;
 	global $fsession;
 	$smarty->assign('current_menu','home');
-
+	
 	# If this is their first hit to the site, then show them the welcome screen
 	$maintpl = find_template("home.tpl");
 	if(!isset($fsession['welcome']) || $_REQUEST['slideshow'] == 1){
@@ -33,7 +33,7 @@ function view_home() {
 		if($_REQUEST['slideshow'] == 1){
 			$maintpl = find_template("slideshow.tpl");
 		}else{
-			$maintpl = find_template("welcome.tpl");
+			$maintpl = find_template("login.tpl");
 		}
 		$fsession['welcome'] = 1;
 		return $smarty->fetch($maintpl);
@@ -74,6 +74,14 @@ function view_home() {
 		$smarty->assign("past",$past);
 		$maintpl = find_template("my_home.tpl");
 	}
+	
+	if(! isset($fsession['first_view'])){
+		$first_view = 1;
+		$fsession['first_view'] = 0;
+	}else{
+		$first_view = 0;
+	}
+	$smarty->assign("first_view",$first_view);
 	return $smarty->fetch($maintpl);
 }
 function view_locations() {

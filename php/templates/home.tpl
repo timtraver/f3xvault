@@ -1,5 +1,8 @@
 {extends file='layout/layout_main.tpl'}
 
+{block name="header"}
+{/block}
+
 {block name="content"}
 
 <div class="panel">
