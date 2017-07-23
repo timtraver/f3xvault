@@ -4987,6 +4987,7 @@ function event_export_export() {
 	$event_id = intval($_REQUEST['event_id']);
 	$event = new Event($event_id);
 	$event->get_draws();
+	$event->get_rounds();
 	$export_format = $_REQUEST['export_format'];
 	$field_separator = $_REQUEST['field_separator'];
 
@@ -5042,8 +5043,7 @@ function event_export_export() {
 			$rounds = count($d['draw']);
 		}
 	}
-	$smarty->assign("rounds",$rounds);
-	
+	$smarty->assign("rounds",$rounds);	
 	
 	# Make sure the values are sorted
 	$newdraws = array();
