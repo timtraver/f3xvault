@@ -291,6 +291,16 @@
 											</span>
 										</a>
 									</li>
+									
+									<!--API Docs-->
+									<li>
+										<a href="/?action=api_docs">
+											<i class="fa fa-book"></i>
+											<span class="menu-title">
+												<strong>API Docs</strong>
+											</span>
+										</a>
+									</li>
 
 									<!--Menu list item-->
 									<li>

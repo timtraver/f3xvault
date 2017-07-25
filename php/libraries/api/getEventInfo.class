@@ -22,8 +22,10 @@ class getEventInfo {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id",			"description" => "Event ID", "mandatory" => 1)
+			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
+		$this->api->function_output_description = 
+			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, Team Name, Rounds (Group or flight order for each round if a draw exists)";
 	}
 
 	public function process_request(){

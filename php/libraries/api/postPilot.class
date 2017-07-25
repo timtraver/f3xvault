@@ -1,0 +1,193 @@
+<?php
+############################################################################
+#	postPilot.class
+#
+#	Tim Traver
+#	7/24/2017
+#	class to extend API class to post Pilot info to an event
+#
+############################################################################
+#
+include_library('event.class');
+
+class postPilot {
+	public $event_id;
+	public $event_pilot_id;
+	public $pilot_id;
+	public $event_pilot_entry_order;
+	public $event_pilot_bib;
+	public $class;
+	public $class_id;
+	public $event_pilot_team;
+	public $event_pilot_freq;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "event_id",					"type" => "integer",	"description" => "Event ID",				"mandatory" => 1),
+			array("name" => "pilot_id",					"type" => "integer",	"description" => "Pilot ID",				"mandatory" => 1),
+			array("name" => "event_pilot_entry_order",	"type" => "integer",	"description" => "Pilot Entry Order",		"mandatory" => 0),
+			array("name" => "event_pilot_bib",			"type" => "integer",	"description" => "Pilot Bib Number",		"mandatory" => 0),
+			array("name" => "class",					"type" => "string",		"description" => "Class Name",				"mandatory" => 0),
+			array("name" => "event_pilot_freq",			"type" => "string",		"description" => "Event Pilot Frequency",	"mandatory" => 0),
+			array("name" => "event_pilot_team",			"type" => "string",		"description" => "Event Pilot Team",		"mandatory" => 0),
+		);
+		$this->api->function_output_description = 
+			"Single message of success or failure";
+	}
+
+	public function process_request(){
+		global $smarty;
+
+		# This is the method where we process the request
+		$this->event_id = $_REQUEST['event_id'];
+		$fs = $this->api->field_separator;
+
+		# We must determine new mandatory fields that depend on the type of event that is being posted to
+		$event = new Event($this->event_id);
+		$event->get_rounds();
+		if(!isset($event->info['event_id'])){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
+		$event_type_code = $event->info['event_type_code'];
+
+		
+		# Now rerun the main parameter check to see if we have all the information we need.
+		if(!$this->api->api_check_function_parameters()){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Not all mandatory fields supplied.\n";
+			$this->api->error_string .= "Possible fields are as follows. * fields are mandatory.\n";
+			$this->api->error_string .= "field_separator - Field Delimeter For Return Lines.\n";
+			foreach($this->api->function_parameters as $field){
+				if($field['mandatory'] == 1){
+					$this->api->error_string .= '*';
+				}
+				$this->api->error_string .= $field['name'];
+				$this->api->error_string .= " - ".$field['type'];
+				$this->api->error_string .= " - ".$field['description']."\n";
+			}
+			return 0;
+		}
+		
+		# Lets set the input parameters
+		$this->pilot_id		= $_REQUEST['pilot_id'];
+		
+		if(isset($this->api->input_variables['event_pilot_entry_order'])){
+			$this->event_pilot_entry_order = $this->api->input_variables['event_pilot_entry_order'];
+		}else{
+			$this->event_pilot_entry_order = '';
+		}
+		if(isset($this->api->input_variables['event_pilot_bib'])){
+			$this->event_pilot_bib = $this->api->input_variables['event_pilot_bib'];
+		}else{
+			$this->event_pilot_bib = '';
+		}
+		if(isset($this->api->input_variables['class'])){
+			$this->class = $this->api->input_variables['class'];
+		}else{
+			$this->class = '';
+		}
+		if(isset($this->api->input_variables['event_pilot_freq'])){
+			$this->event_pilot_freq = $this->api->input_variables['event_pilot_freq'];
+		}else{
+			$this->event_pilot_freq = '';
+		}
+		if(isset($this->api->input_variables['event_pilot_team'])){
+			$this->event_pilot_team = $this->api->input_variables['event_pilot_team'];
+		}else{
+			$this->event_pilot_team = '';
+		}
+		
+		# Lets check to see if we can find a class ID with the class name given in the event
+		if($this->class){
+			$stmt = db_prep("
+				SELECT *
+				FROM event_class ec
+				LEFT JOIN class c ON ec.class_id=c.class_id
+				WHERE ec.event_id = :event_id
+					AND (c.class_name = :class OR c.class_description = :class2)
+					AND ec.event_class_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_id" => $this->event_id,
+				"class" => $this->class,
+				"class2" => $this->class
+			));
+			if(isset($result[0])){
+				$this->class_id = $result[0]['class_id'];
+			}else{
+				$this->api->error_code = 3;
+				$this->api->error_string = "Invalid Class Specified.\n";
+				return 0;
+			}
+		}
+		# Ok, now lets look to see if the pilot already exists in the event
+		
+		# Lets first figure out the event_pilot_id from the pilot list
+		$this->event_pilot_id = 0;
+		foreach($event->pilots as $epid => $p){
+			if($p['pilot_id'] == $this->pilot_id){
+				$this->event_pilot_id = $epid;
+				break;
+			}
+		}
+
+		if($this->event_pilot_id){
+			# This pilot exists, so lets just save the data
+			$stmt = db_prep("
+				UPDATE event_pilot
+				SET event_pilot_entry_order = :order,
+					event_pilot_bib = :bib,
+					class_id = :class_id,
+					event_pilot_freq = :freq,
+					event_pilot_team = :team
+				WHERE event_pilot_id = :event_pilot_id
+			");
+			$result = db_exec($stmt,array(
+				"order" => $this->event_pilot_entry_order,
+				"bib" => $this->event_pilot_bib,
+				"class_id" => $this->class_id,
+				"freq" => $this->event_pilot_freq,
+				"team" => $this->event_pilot_team,
+				"event_pilot_id" => $this->event_pilot_id
+			));
+			$content = "Pilot updated Successfully.";
+		}else{
+			# This is a new pilot, so lets add them to the event
+			$stmt = db_prep("
+				INSERT INTO event_pilot
+				SET event_id = :event_id,
+					pilot_id = :pilot_id,
+					event_pilot_entry_order = :order,
+					event_pilot_bib = :bib,
+					class_id = :class_id,
+					event_pilot_freq = :freq,
+					event_pilot_team = :team,
+					event_pilot_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_id" => $this->event_id,
+				"pilot_id" => $this->pilot_id,
+				"order" => $this->event_pilot_entry_order,
+				"bib" => $this->event_pilot_bib,
+				"class_id" => $this->class_id,
+				"freq" => $this->event_pilot_freq,
+				"team" => $this->event_pilot_team
+			));
+			$content = "New Pilot Added Successfully.";
+		}
+		
+		# Get the export content
+		return $content;
+	}
+}
+
+?>

@@ -157,7 +157,24 @@
 					<th align="center" style="text-align: center;">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center" style="text-align: center;">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
+					<th align="center" style="text-align: center;" nowrap>
+						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
+						{if $ft.flight_type_sub_flights!=0}<br>
+							<div>
+							{for $sub=1 to $ft.flight_type_sub_flights}
+								<input type="text" size="6" style="width:45px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
+							{/for}
+							= Total
+							{if $ft.flight_type_minutes}
+								<input type="text" size="7" style="width:{$ft.accuracy*20 + 30}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
+							{/if}
+							{if $ft.flight_type_seconds}
+								<input type="text" size="7" style="width:{$ft.accuracy*20 + 30}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
+							{/if}
+							</div>
+						{/if}
+						
+					</th>
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center" style="text-align: center;">Landing</th>

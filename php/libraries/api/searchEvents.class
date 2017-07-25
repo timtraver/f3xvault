@@ -22,14 +22,16 @@ class searchEvents {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string",			"description" => "Search String", "mandatory" => 0),
-			array("name" => "event_type_code",	"description" => "Event Type Code (f3f,f3b,f3j,f3k, etc)", "mandatory" => 0),
-			array("name" => "show_future",		"description" => "Show future events (0,1)", "mandatory" => 0),
-			array("name" => "per_page",			"description" => "Results per page (Number)", "mandatory" => 0),
-			array("name" => "page",				"description" => "Page of results (Number)", "mandatory" => 0),
-			array("name" => "date_from",		"description" => "Date Range From (2017-01-01)", "mandatory" => 0),
-			array("name" => "date_to",			"description" => "Date Range To (2017-01-01)", "mandatory" => 0),
+			array("name" => "string",			"type" => "string",		"description" => "Search String",							"mandatory" => 0),
+			array("name" => "event_type_code",	"type" => "string",		"description" => "Event Type Code (f3f,f3b,f3j,f3k, etc)",	"mandatory" => 0),
+			array("name" => "show_future",		"type" => "boolean",	"description" => "Show future events (0,1)",				"mandatory" => 0),
+			array("name" => "per_page",			"type" => "integer",	"description" => "Results per page (Number)",				"mandatory" => 0),
+			array("name" => "page",				"type" => "integer",	"description" => "Page of results (Number)",				"mandatory" => 0),
+			array("name" => "date_from",		"type" => "date",		"description" => "Date Range From (2017-01-01)",			"mandatory" => 0),
+			array("name" => "date_to",			"type" => "date",		"description" => "Date Range To (2017-01-01)",				"mandatory" => 0),
 		);
+		$this->api->function_output_description = 
+			"One Per line of the following\nEvent ID, Event Start Date, Event Name, Location Name, Event Type";
 	}
 
 	public function process_request(){

@@ -22,8 +22,10 @@ class searchPilots {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string",			"description" => "Search String", "mandatory" => 0)
+			array("name" => "string", "type" => "integer", "description" => "Search String", "mandatory" => 0)
 		);
+		$this->api->function_output_description = 
+			"One Per line of the following\nPilot ID, Pilot Name, Pilot Location";
 	}
 
 	public function process_request(){

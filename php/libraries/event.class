@@ -750,7 +750,7 @@ class Event {
 		# Lets check to see if there is a draw, and pre-populate the array with the draw numbers
 		$pilots = array();
 		$this->get_draws();
-
+		$this->get_tasks();
 		if(isset($_REQUEST['sort_by'])){
 			$sort_by = $_REQUEST['sort_by'];
 		}else{
@@ -821,6 +821,14 @@ class Event {
 			}
 		}
 		
+		if(!isset($this->f3k_flight_type_id)){
+			# Lets see if it is in the tasks
+			foreach($this->tasks as $key => $t){
+				if($event_round_number == $key){
+					$this->f3k_flight_type_id = $t['flight_type_id'];
+				}
+			}
+		}
 		# ok, that was if they had any draws available, so lets check to see if we need to add pilots after that
 		if($this->info['event_type_code'] == 'f3k'){
 			$flight_type_id = $this->f3k_flight_type_id;
@@ -831,6 +839,7 @@ class Event {
 			}
 			$this->rounds[$event_round_number]['event_round_id']						= 0;
 			$this->rounds[$event_round_number]['event_round_number']					= $event_round_number;
+			$this->rounds[$event_round_number]['flight_type_id']						= $flight_type_id;
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]				= $this->flight_types[$flight_type_id];
 			$this->rounds[$event_round_number]['flights'][$flight_type_id]['pilots']	= $pilots[$flight_type_id];
 		}else{

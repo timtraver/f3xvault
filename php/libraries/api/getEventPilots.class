@@ -22,8 +22,10 @@ class getEventPilots {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id",			"description" => "Event ID", "mandatory" => 1)
+			array("name" => "event_id", "type" => "string", "description" => "Event ID", "mandatory" => 1)
 		);
+		$this->api->function_output_description = 
+			"One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, Team_Name";
 	}
 
 	public function process_request(){

@@ -2483,6 +2483,7 @@ function event_round_edit() {
 	}
 	$event = new Event($event_id);
 	$event->get_rounds();
+	$event->get_tasks();
 
 	$flight_types = $event->flight_types;
 	
@@ -3175,6 +3176,7 @@ function event_round_save() {
 		$_REQUEST['flyoff_round'] = 0;
 		return event_round_edit();
 	}
+	
 	user_message("Saved event round info.");
 	return event_round_edit();
 }

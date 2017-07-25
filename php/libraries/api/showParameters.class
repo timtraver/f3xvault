@@ -24,8 +24,10 @@ class showParameters {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "function_name",			"description" => "Name of Function to retrieve parameters", "mandatory" => 1)
+			array("name" => "function_name", "type" => "integer", "description" => "Name of Function to retrieve parameters", "mandatory" => 1)
 		);
+		$this->api->function_output_description = 
+			"List of the input parameters for the function, one per line.";
 	}
 
 	public function process_request(){
@@ -49,6 +51,7 @@ class showParameters {
 				$content .= '*';
 			}
 			$content .= $field['name'];
+			$content .= " - ".$field['type'];
 			$content .= " - ".$field['description']."\n";
 		}
 		

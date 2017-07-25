@@ -21,6 +21,7 @@ class API {
 	public $functions = array();
 	public $process_output;
 	public $function_parameters = array();
+	public $function_output_description;
 	public $field_separator;
 	
 	public function __construct() {
@@ -37,13 +38,14 @@ class API {
 	public function set_api_functions(){
 		# This is to set up the available api functions
 		$this->functions = array(
-			"showParameters",
-			"getEventInfo",
-			"getEventPilots",
-			"searchPilots",
-			"searchEvents",
-			"postScore",
-			"viewEventRank",
+			"showParameters"	=> array("function_name" => "showParameters",	"function_description" => 'Show All the input parameters for a particular API function call.'),
+			"getEventInfo"		=> array("function_name" => "getEventInfo",		"function_description" => 'Get the basic information for an Event.'),
+			"getEventPilots"	=> array("function_name" => "getEventPilots",	"function_description" => 'Get the pilot list for an Event.'),
+			"searchPilots"		=> array("function_name" => "searchPilots",		"function_description" => 'Search the database for pilot information.'),
+			"searchEvents"		=> array("function_name" => "searchEvents",		"function_description" => 'Search for events'),
+			"postScore"			=> array("function_name" => "postScore",		"function_description" => 'Post a score for a pilot to an event.'),
+			"postPilot"			=> array("function_name" => "postPilot",		"function_description" => 'Add or update pilot information to an event.'),
+			"viewEventRank"		=> array("function_name" => "viewEventRank",	"function_description" => ''),
 		);
 	}
 
@@ -103,7 +105,7 @@ class API {
 
 	public function api_process_request(){
 		# Function to make the call to process the request
-		if(!in_array($this->function, $this->functions)){
+		if(!array_key_exists($this->function, $this->functions)){
 			$this->error_code = 1;
 			$this->error_string = "Function not available.";
 			return 0;
