@@ -19,7 +19,7 @@
 			</td>
 			</tr>
 		{/if}
-		{if $f.flight_type_code|strstr:'speed'}
+		{if $f.flight_type_code|strstr:'speed' || $f.flight_type_code|strstr:'f3f'}
 			<tr><th nowrap="nowrap">{$f.flight_type_name}</th>
 			<td nowrap="nowrap">
 				{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}s
