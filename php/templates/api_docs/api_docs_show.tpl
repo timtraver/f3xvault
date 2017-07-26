@@ -62,10 +62,27 @@
 						<tr>
 							<td nowrap><b>{$p.name|escape}</b></td>
 							<td nowrap>{$p.type|escape}</td>
-							<td>{if $p.mandatory}<font color="red">YES</font>{else}No{/if}</td>
+							<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
 							<td>{$p.description|escape}</td>
 						</tr>
 						{/foreach}
+						{if $f.additional_parameters}
+						{foreach $f.additional_parameters as $type => $a}
+						{if $a}
+						<tr>
+							<th colspan="4">Additional Parameters for {$type|escape} event type</th>
+						</tr>
+						{foreach $a as $p}
+						<tr>
+							<td nowrap><b>{$p.name|escape}</b></td>
+							<td nowrap>{$p.type|escape}</td>
+							<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
+							<td>{$p.description|escape}</td>
+						</tr>
+						{/foreach}
+						{/if}
+						{/foreach}
+						{/if}
 					</table>
 				</td>
 			</tr>

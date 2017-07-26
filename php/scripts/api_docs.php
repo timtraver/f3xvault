@@ -48,10 +48,14 @@ function api_docs_show() {
 		}
 		include_library("api/{$f['function_name']}.class");
 		eval("\$api_func = new {$f['function_name']}(\$api);");
+		if(method_exists($api_func,'get_additional_parameters')){
+			$api_func->get_additional_parameters();
+		}
 		$api_functions[] = array(
 			"function_name" => $f['function_name'],
 			"function_description" => $f['function_description'],
 			"function_parameters" => $api->function_parameters,
+			"additional_parameters" => $api_func->additional_parameters,
 			"function_output_description" => $api->function_output_description
 		);
 	}

@@ -29,6 +29,7 @@ class postScore {
 	public $flight_time;
 	public $flight_type_id;
 	public $event_pilot_id;
+	public $additional_parameters;
 	public $api;
 	
 	public function __construct($api){
@@ -68,57 +69,10 @@ class postScore {
 		}
 		$event_type_code = $event->info['event_type_code'];
 
-		switch($event_type_code){
-			case "f3b":
-
-
-
-				break;
-			case "f3b_speed":
-
-
-
-				break;
-			case "f3f":
-				$this->api->function_parameters[] = array("name" => "group",		"description" => "Group", 							"mandatory" => 0);
-				$this->api->function_parameters[] = array("name" => "order",		"description" => "Round Flight Order", 				"mandatory" => 0);
-				$this->api->function_parameters[] = array("name" => "seconds",		"description" => "Total Flight Time in seconds", 	"mandatory" => 1);
-				break;
-			case "f3f_plus":
-				$this->api->function_parameters[] = array("name" => "group",		"description" => "Group", 							"mandatory" => 0);
-				$this->api->function_parameters[] = array("name" => "order",		"description" => "Round Flight Order", 				"mandatory" => 0);
-				$this->api->function_parameters[] = array("name" => "seconds",		"description" => "Total Flight Time in seconds", 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub1",			"description" => "Climb out",					 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub2",			"description" => "Lap 1",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub3",			"description" => "Lap 2",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub4",			"description" => "Lap 3",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub5",			"description" => "Lap 4",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub6",			"description" => "Lap 5",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub7",			"description" => "Lap 6",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub8",			"description" => "Lap 7",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub9",			"description" => "Lap 8",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub10",		"description" => "Lap 9",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "sub11",		"description" => "Lap 10",						 	"mandatory" => 1);
-				$this->api->function_parameters[] = array("name" => "wind_avg",		"description" => "Average Wind Speed",			 	"mandatory" => 0);
-				$this->api->function_parameters[] = array("name" => "dir_avg",		"description" => "Average Wind Direction",		 	"mandatory" => 0);
-				break;
-			case "f3k":
-
-
-
-				break;
-			case "f3j":
-
-
-
-				break;
-			case "td":
-
-
-
-				break;
-		}
-		
+		$this->get_additional_parameters();
+		# Add the additional parameter fields for the event type
+		$this->api->function_parameters = array_merge($this->api->function_parameters, $this->additional_parameters[$event_type_code]);
+				
 		# Now rerun the main parameter check to see if we have all the information we need.
 		if(!$this->api->api_check_function_parameters()){
 			$this->api->error_code = 3;
@@ -503,7 +457,40 @@ class postScore {
 		return $content;
 
 	}
+	public function get_additional_parameters(){
+		# Function to get the additional api possible fields 
+		
+		$this->additional_parameters = array(
+			"f3b" => array(),
+			"f3b_speed" => array(),
+			"f3f" => array(
+				array("name" => "group",		"type" => "string",		"description" => "Group", 							"mandatory" => 0),
+				array("name" => "order",		"type" => "integer",	"description" => "Round Flight Order", 				"mandatory" => 0),
+				array("name" => "seconds",		"type" => "float",		"description" => "Total Flight Time in Seconds", 	"mandatory" => 1)
+			),
+			"f3f_plus" => array(
+				array("name" => "group",		"type" => "string",		"description" => "Group", 							"mandatory" => 0),
+				array("name" => "order",		"type" => "integer",	"description" => "Round Flight Order", 				"mandatory" => 0),
+				array("name" => "seconds",		"type" => "float",		"description" => "Total Flight Time in Seconds", 	"mandatory" => 1),
+				array("name" => "sub1",			"type" => "float",		"description" => "Climb out",					 	"mandatory" => 1),
+				array("name" => "sub2",			"type" => "float",		"description" => "Lap 1",						 	"mandatory" => 1),
+				array("name" => "sub3",			"type" => "float",		"description" => "Lap 2",						 	"mandatory" => 1),
+				array("name" => "sub4",			"type" => "float",		"description" => "Lap 3",						 	"mandatory" => 1),
+				array("name" => "sub5",			"type" => "float",		"description" => "Lap 4",						 	"mandatory" => 1),
+				array("name" => "sub6",			"type" => "float",		"description" => "Lap 5",						 	"mandatory" => 1),
+				array("name" => "sub7",			"type" => "float",		"description" => "Lap 6",						 	"mandatory" => 1),
+				array("name" => "sub8",			"type" => "float",		"description" => "Lap 7",						 	"mandatory" => 1),
+				array("name" => "sub9",			"type" => "float",		"description" => "Lap 8",						 	"mandatory" => 1),
+				array("name" => "sub10",		"type" => "float",		"description" => "Lap 9",						 	"mandatory" => 1),
+				array("name" => "sub11",		"type" => "float",		"description" => "Lap 10",						 	"mandatory" => 1),
+			),
+			"f3k" => array(),
+			"f3j" => array(),
+			"td" => array(),
+		);
 
+	}
+	
 }
 
 ?>
