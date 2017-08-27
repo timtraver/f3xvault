@@ -99,10 +99,12 @@
 			<th></th>
 			<th>Pilot</th>
 			<th>Wins</th>
+			<th>Perc</th>
 		</tr>
 		{$rank=1}
 		{$oldscore=0}
 		{foreach $round_wins as $event_pilot_id=>$r}
+		{$percent = ($r / $event->rounds|count)*100}
 			<tr>
 				<td>
 					{if $r!=$oldscore}
@@ -113,6 +115,7 @@
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
 				<td align="center">{$r|escape}</td>
+				<td align="center">{$percent|string_format:"%.0f"} %</td>
 			</tr>
 			{$rank=$rank+1}
 			{$oldscore=$r}
