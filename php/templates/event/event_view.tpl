@@ -138,7 +138,7 @@
 					</div>
 				</div>
 				{/if}
-				{if $event->rounds|count>0 && ($event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank)}
+				{if $event->rounds|count>0 && ($event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank || $round_wins)}
 				<div id="pilot-tab-5" class="tab-pane fade{if $tab==5} active in{/if}">
 					<h2 style="float:left;">Rankings</h2>
 					<br style="clear:left;">
