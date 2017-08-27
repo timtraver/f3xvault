@@ -126,6 +126,97 @@
 		</table>
 	</div>
 	{/if}
+	
+	{if $climbout_averages}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Climb Out Average</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Pilot</th>
+			<th>Avg(s)</th>
+		</tr>
+		{foreach $climbout_averages as $event_pilot_id => $p}
+			<tr>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>
+					{$p.average|string_format:$event->event_calc_accuracy_string}
+				</td>
+			</tr>
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+
+	{if $first_lap_speeds}
+		<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Top 20 First Lap Times</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Time</th>
+			<th>Round</th>
+		</tr>
+		{$rank=1}
+		{$oldscore=0}
+		{foreach $first_lap_speeds as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr>
+				<td>
+					{if $p.first_lap_speed!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>{$p.first_lap_speed|string_format:$p.accuracy_string}</td>
+				<td align="center">{$p.event_round_number|escape}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+			{$oldscore=$p.first_lap_speed}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	{if $first_lap_averages}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">First Lap Average</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg(s)</th>
+			<th>m/s</th>
+			<th>mph</th>
+		</tr>
+		{$rank=1}
+		{foreach $first_lap_averages as $event_pilot_id => $p}
+			<tr>
+				<td>
+					{if $p.average!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>
+					{$p.average|string_format:$event->event_calc_accuracy_string}
+				</td>
+				<td>{$p.average_speed_m|escape}</td>
+				<td>{$p.average_speed_mph|escape}</td>
+			</tr>
+			{$oldscore=$p.average}
+			{$rank=$rank+1}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+	
 	{if $top_landing}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
 		<h3 class="post-title">Landing Averages</h3>

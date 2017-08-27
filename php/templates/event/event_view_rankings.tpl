@@ -91,7 +91,35 @@
 		</table>
 	</div>
 	{/if}
-	
+	{if $round_wins}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Round Wins</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th></th>
+			<th>Pilot</th>
+			<th>Wins</th>
+		</tr>
+		{$rank=1}
+		{$oldscore=0}
+		{foreach $round_wins as $event_pilot_id=>$r}
+			<tr>
+				<td>
+					{if $r!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td align="center">{$r|escape}</td>
+			</tr>
+			{$rank=$rank+1}
+			{$oldscore=$r}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
 	{if $duration_rank}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
 		<h3 class="post-title">Duration Ranking</h3>

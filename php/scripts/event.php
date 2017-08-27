@@ -298,6 +298,7 @@ function event_view() {
 	$speed = 0;
 	$landing = 0;
 	$duration = 0;
+	$f3f_plus = 0;
 	foreach($e->pilots as $p){
 		if($p['event_pilot_total_laps'] != 0){
 			$laps = 1;
@@ -315,6 +316,10 @@ function event_view() {
 		}
 		if($ft['flight_type_code'] == 'f3f_speed' || $ft['flight_type_code'] == 'f3b_speed'){
 			$speed = 1;
+		}
+		if($ft['flight_type_code'] == 'f3f_plus'){
+			$speed = 1;
+			$f3f_plus = 1;
 		}
 	}
 	$lap_totals = array();
@@ -352,6 +357,28 @@ function event_view() {
 		$duration_rank = $e->get_duration_rank();
 		$smarty->assign("duration_rank",$duration_rank);
 	}
+	if($f3f_plus){
+		# Lets get all of the cool stats about f3f plus runs
+		$climbout_averages = $e->get_climbout_averages();
+		$smarty->assign("climbout_averages",$climbout_averages);
+		$first_lap_averages = $e->get_first_lap_averages();
+		$smarty->assign("first_lap_averages",$first_lap_averages);
+		$first_lap_speeds = $e->get_top_first_lap_speeds();
+		$smarty->assign("first_lap_speeds",$first_lap_speeds);
+	}
+	# Lets figure out round wins
+	$round_wins = array();
+	foreach($e->rounds as $r){
+		foreach($r['flights'] as $f){
+			foreach($f['pilots'] as $event_pilot_id => $p){
+				if($p['event_pilot_round_flight_score'] == 1000){
+					$round_wins[$event_pilot_id] ++;
+				}
+			}
+		}
+	}
+	arsort($round_wins);
+	$smarty->assign("round_wins",$round_wins);
 	
 	$permission = check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
@@ -3560,70 +3587,7 @@ function event_print_rank() {
 		return event_edit();
 	}
 	
-	$e = new Event($event_id);
-	$e->get_rounds();
-	$e->calculate_event_totals();
-	# Lets determine if we need a laps report and an average speed report
-	$laps = 0;
-	$speed = 0;
-	$landing = 0;
-	$duration = 0;
-	foreach($e->pilots as $p){
-		if($p['event_pilot_total_laps'] != 0){
-			$laps = 1;
-		}
-		if($p['event_pilot_average_speed'] != 0){
-			$speed = 1;
-		}
-	}
-	foreach($e->flight_types as $ft){
-		if($ft['flight_type_landing'] == 1){
-			$landing = 1;
-		}
-		if($ft['flight_type_code'] == 'f3b_duration'){
-			$duration = 1;
-		}
-		if($ft['flight_type_code'] == 'f3f_speed' || $ft['flight_type_code'] == 'f3b_speed'){
-			$speed = 1;
-		}
-	}
-	$lap_totals = array();
-	$speed_averages = array();
-	$speed_times = array();
-	if($laps){
-		# Lets sort the pilots by order of distance laps
-		$lap_totals = $e->get_total_distance();
-		$smarty->assign("lap_totals",$lap_totals);
-		# Lets get the top distance list
-		$distance_laps = $e->get_top_distance();
-		$smarty->assign("distance_laps",$distance_laps);
-		# Lets get the distance ranking
-		$distance_rank = $e->get_distance_rank();
-		$smarty->assign("distance_rank",$distance_rank);
-	}
-	if($speed){
-		# Lets get the speed ranking
-		$speed_rank = $e->get_speed_rank();
-		$smarty->assign("speed_rank",$speed_rank);
-		# Lets sort the pilots by order of speed average
-		$speed_averages = array_msort($e->pilots,array("event_pilot_average_speed_rank" => SORT_ASC));
-		$smarty->assign("speed_averages",$speed_averages);
-		# Lets get the top speed list
-		$speed_times = $e->get_top_speeds();
-		$smarty->assign("speed_times",$speed_times);
-	}
-	if($landing){
-		# Lets get the top landing accuracy list
-		$top_landing = $e->get_top_landing();
-		$smarty->assign("top_landing",$top_landing);
-	}
-	if($duration){
-		# Lets get the duration rank
-		$duration_rank = $e->get_duration_rank();
-		$smarty->assign("duration_rank",$duration_rank);
-	}
-
-	$smarty->assign("event",$e);
+	$event_view = event_view();
 	
 	$maintpl = find_template("print/print_event_rankings.tpl");
 	return $smarty->fetch($maintpl);
@@ -3708,68 +3672,7 @@ function event_print_stats() {
 		user_message("That is not a proper event id to edit.");
 		return event_list();
 	}
-	
-	$e = new Event($event_id);
-	$e->get_rounds();
-
-	# Lets determine if we need a laps report and an average speed report
-	$laps = 0;
-	$speed = 0;
-	$landing = 0;
-	$duration = 0;
-	foreach($e->pilots as $p){
-		if($p['event_pilot_total_laps'] != 0){
-			$laps = 1;
-		}
-		if($p['event_pilot_average_speed'] != 0){
-			$speed = 1;
-		}
-	}
-	foreach($e->flight_types as $ft){
-		if($ft['flight_type_landing'] == 1){
-			$landing = 1;
-		}
-		if($ft['flight_type_code'] == 'f3b_duration'){
-			$duration = 1;
-		}
-	}
-	$lap_totals = array();
-	$speed_averages = array();
-	$speed_times = array();
-	if($laps){
-		# Lets sort the pilots by order of distance laps
-		$lap_totals = array_msort($e->pilots,array("event_pilot_lap_rank" => SORT_ASC));
-		$smarty->assign("lap_totals",$lap_totals);
-		# Lets get the top distance list
-		$distance_laps = $e->get_top_distance();
-		$smarty->assign("distance_laps",$distance_laps);
-		# Lets get the distance ranking
-		$distance_rank = $e->get_distance_rank();
-		$smarty->assign("distance_rank",$distance_rank);
-	}
-	if($speed){
-		# Lets get the speed ranking
-		$speed_rank = $e->get_speed_rank();
-		$smarty->assign("speed_rank",$speed_rank);
-		# Lets sort the pilots by order of speed average
-		$speed_averages = array_msort($e->pilots,array("event_pilot_average_speed_rank" => SORT_ASC));
-		$smarty->assign("speed_averages",$speed_averages);
-		# Lets get the top speed list
-		$speed_times = $e->get_top_speeds();
-		$smarty->assign("speed_times",$speed_times);
-	}
-	if($landing){
-		# Lets get the top landing accuracy list
-		$top_landing = $e->get_top_landing();
-		$smarty->assign("top_landing",$top_landing);
-	}
-	if($duration){
-		# Lets get the duration rank
-		$duration_rank = $e->get_duration_rank();
-		$smarty->assign("duration_rank",$duration_rank);
-	}
-	
-	$smarty->assign("event",$e);
+	$event_view = event_view();
 	
 	$maintpl = find_template("print/print_event_stats.tpl");
 	return $smarty->fetch($maintpl);
