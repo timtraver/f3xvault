@@ -45,7 +45,7 @@
 					</a>
 				</li>
 				{/if}
-				{if $event->rounds|count>0 && ($event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank)}
+				{if $event->rounds|count>0 && ($event->classes|count > 1 || $event->totals.teams || $duration_rank || $speed_rank || $round_wins)}
 				<li{if $tab==5} class="active"{/if}>
 					<a data-toggle="tab" href="#pilot-tab-5" aria-expanded="false" {if $tab==5}aria-selected="true"{/if}>
 						Rankings
