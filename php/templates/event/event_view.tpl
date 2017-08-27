@@ -295,7 +295,7 @@ $(function () {ldelim}
         series: [
         	{foreach $event->totals.pilots as $p}
         	{ldelim}
-            name: '{$p.pilot_first_name} {$p.pilot_last_name}',
+            name: '{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}',
             data: [{foreach $p.rounds as $r}{if $r.event_round_score_status==0}{continue}{/if}[{$r@key},{$r.event_round_upto_rank}]{if !$r@last},{/if}{/foreach}]
         	{rdelim}{if !$p@last},{/if}
         	{/foreach}
