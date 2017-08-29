@@ -163,7 +163,7 @@
 </tr>
 {$previous=$e.total}
 {/foreach}
-{if $event->info.event_type_code=='f3f'}
+{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus'}
 <tr>
 	<th colspan="6" style="text-align: right;">Round Fast Time</th>
 	{foreach $event->rounds as $r}
@@ -187,6 +187,55 @@
 					<img class="callout" src="/images/callout.gif">
 					Fast Time : {$fast}s<br>
 					{$event->pilots.$fast_id.pilot_first_name|escape} {$event->pilots.$fast_id.pilot_last_name|escape}
+				</span>
+				</a>
+			</th>
+		{/if}
+	{/foreach}
+</tr>
+{/if}
+{if $event->info.event_type_code=='f3f_plus'}
+<tr>
+	<th colspan="6" style="text-align: right;">Round Average Wind Speed</th>
+	{foreach $event->rounds as $r}
+		{$round_number=$r.event_round_number}
+		{if $round_number >= $start_round && $round_number <= $end_round}
+			<th align="center" style="text-align: center;">
+				<a href="" class="tooltip_score" onClick="return false;">
+				{$r.average_wind_speed|escape}
+				</a>
+			</th>
+		{/if}
+	{/foreach}
+</tr>
+<tr>
+	<th colspan="6" style="text-align: right;">Round Average Wind Direction</th>
+	{foreach $event->rounds as $r}
+		{$round_number=$r.event_round_number}
+		{if $round_number >= $start_round && $round_number <= $end_round}
+			<th align="center" style="text-align: center;">
+				<a href="" class="tooltip_score" onClick="return false;">
+				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|escape}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-o-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|escape}deg);transform: rotate(135 - {$r.average_wind_dir|escape}deg);
+"></i> 
+				<span>
+					{$r.average_wind_dir|escape} degrees
+				</span>
+				</a>
+			</th>
+		{/if}
+	{/foreach}
+</tr>
+<tr>
+	<th colspan="6" style="text-align: right;">Graphs</th>
+	{foreach $event->rounds as $r}
+		{$round_number=$r.event_round_number}
+		{if $round_number >= $start_round && $round_number <= $end_round}
+			<th align="center" style="text-align: center;">
+				<a href="" class="tooltip_score" onClick="return false;">
+				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|escape}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-o-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|escape}deg);transform: rotate(135 - {$r.average_wind_dir|escape}deg);
+"></i> 
+				<span>
+					{$r.average_wind_dir|escape} degrees
 				</span>
 				</a>
 			</th>

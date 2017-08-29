@@ -2,6 +2,7 @@
 	<div class="panel-heading">
 		<h2 class="heading">{$event->info.event_name|escape}</h2>
 		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Reload " onClick="document.event_view.submit();" class="btn btn-primary btn-rounded" style"float:right;">
 			<input type="button" value=" Back To Event List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
 		</div>
 	</div>
@@ -119,6 +120,11 @@
 	</div>
 </div>
 <!-- All the forms for the action list -->
+<form name="event_view" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">

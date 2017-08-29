@@ -365,6 +365,7 @@ function event_view() {
 		$smarty->assign("first_lap_averages",$first_lap_averages);
 		$first_lap_speeds = $e->get_top_first_lap_speeds();
 		$smarty->assign("first_lap_speeds",$first_lap_speeds);
+		$e->get_wind_averages();
 	}
 	# Lets figure out round wins
 	$round_wins = array();

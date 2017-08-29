@@ -580,6 +580,8 @@ class Event {
 					"event_pilot_round_flight_reflight"			=> $flight['event_pilot_round_flight_reflight'],
 					"event_pilot_round_flight_reflight_dropped"	=> $flight['event_pilot_round_flight_reflight_dropped'],
 					"event_pilot_round_flight_status"			=> $flight['event_pilot_round_flight_status'],
+					"event_pilot_round_flight_wind_avg"			=> $flight['event_pilot_round_flight_wind_avg'],
+					"event_pilot_round_flight_dir_avg"			=> $flight['event_pilot_round_flight_dir_avg'],
 					"event_pilot_id"							=> $flight['event_pilot_id'],
 					"event_round_id"							=> $flight['event_round_id'],
 					"event_pilot_round_raw_score"				=> $flight['event_pilot_round_raw_score'],
@@ -611,6 +613,8 @@ class Event {
 					"event_pilot_round_flight_reflight"			=> $flight['event_pilot_round_flight_reflight'],
 					"event_pilot_round_flight_reflight_dropped"	=> $flight['event_pilot_round_flight_reflight_dropped'],
 					"event_pilot_round_flight_status"			=> $flight['event_pilot_round_flight_status'],
+					"event_pilot_round_flight_wind_avg"			=> $flight['event_pilot_round_flight_wind_avg'],
+					"event_pilot_round_flight_dir_avg"			=> $flight['event_pilot_round_flight_dir_avg'],
 					"event_pilot_id"							=> $flight['event_pilot_id'],
 					"event_round_id"							=> $flight['event_round_id'],
 					"event_pilot_round_raw_score"				=> $flight['event_pilot_round_raw_score'],
@@ -2466,6 +2470,50 @@ class Event {
 
 		$first_lap_speeds = array_msort($temp_first_lap_speeds,array("first_lap_speed" => SORT_ASC));		
 		return $first_lap_speeds;
+	}
+	public function get_wind_averages(){
+		# Function to get the wind averages per round
+		if(count($this->rounds) == 0){
+			$this->get_rounds();
+		}
+		foreach($this->rounds as $event_round_number => $r){
+			$average_wind_speed = 0;
+			$average_wind_dir = 0;
+			$num_wind_flights = 0;
+			$num_dir_flights = 0;
+			foreach($r['flights'] as $flight_type_id => $f){
+				if($f['event_round_flight_score'] == 0){
+					continue;
+				}
+				if($f['flight_type_code'] == 'f3f_plus'){
+					foreach($f['pilots'] as $event_pilot_id => $p){
+						if($p['event_pilot_round_flight_wind_avg'] != 0){
+							$average_wind_speed += $p['event_pilot_round_flight_wind_avg'];
+							$num_wind_flights++;
+						}
+						if($p['event_pilot_round_flight_dir_avg'] != 0){
+							$average_wind_dir += $p['event_pilot_round_flight_dir_avg'];
+							$num_dir_flights++;
+						}
+					}
+				}
+			}	
+			# Now lets set the round average wind speed
+			if($num_wind_flights){
+				$average = round($average_wind_speed/$num_wind_flights,1);
+			}else{
+				$average = 0;
+			}
+			if($num_dir_flights){
+				$average_dir = round($average_wind_dir/$num_dir_flights,1);
+			}else{
+				$average_dir = 0;
+			}
+			$this->rounds[$event_round_number]['average_wind_speed'] = $average;
+			$this->rounds[$event_round_number]['average_wind_dir'] = $average_dir;
+			
+		}
+		return;
 	}
 }
 ?>
