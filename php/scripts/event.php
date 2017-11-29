@@ -366,6 +366,7 @@ function event_view() {
 		$first_lap_speeds = $e->get_top_first_lap_speeds();
 		$smarty->assign("first_lap_speeds",$first_lap_speeds);
 		$e->get_wind_averages();
+#		$smarty->assign("graphs",array("graphs"));
 	}
 	# Lets figure out round wins
 	$round_wins = array();
@@ -1474,6 +1475,103 @@ function event_register_save() {
 		}
 	}
 	return event_register();
+}
+function event_register_cancel() {
+	global $smarty;
+
+	$event_id = intval($_REQUEST['event_id']);
+	$pilot_id = $GLOBALS['user']['pilot_id'];
+	
+	$e = new Event($event_id);
+	$user = array();
+	
+	# Step through the pilots and find the event_pilot id of the person that is trying to cancel
+	$found = 0;
+	$event_pilot_id = 0;
+	foreach($e->pilots as $epid => $p){
+		if($p['pilot_id'] == $pilot_id){
+			$event_pilot_id = $epid;
+			$user = $p;
+		}
+	}
+
+	if($event_pilot_id){
+		# Ok, lets turn off this pilot
+		# We need to check and see if they have paid anything already
+		$payments = array();
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_payment epp
+			WHERE epp.event_pilot_id = :event_pilot_id
+				AND epp.event_pilot_payment_status = 1
+			ORDER BY epp.event_pilot_payment_date
+		");
+		$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
+		foreach($result as $row){
+			$payments[] = $row;
+		}
+		
+		# Get Reg values
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_reg epr
+			LEFT JOIN event_reg_param erp ON epr.event_reg_param_id = erp.event_reg_param_id
+			WHERE epr.event_pilot_id = :event_pilot_id
+				AND epr.event_pilot_reg_status = 1
+		");
+		$reg = db_exec($stmt,array(
+			"event_pilot_id" => $event_pilot_id
+		));
+
+		# Lets notify the event owners
+		$data['info'] = $e->info;
+		$data['user'] = $user;
+		$data['payments'] = $payments;
+		$data['reg'] = $reg;
+			
+		$sent = array(); # array of already sent emails
+
+		if($e->info['user_email'] != ''){
+			send_email('event_registration_cancel',$e->info['user_email'],$data);
+			array_push($sent, $e->info['user_email']);
+		}
+		# Send it to the CD of the event too
+		if($e->info['pilot_email'] != '' && !in_array($e->info['pilot_email'], $sent)){
+			send_email('event_registration_cancel',$e->info['pilot_email'],$data);
+			array_push($sent, $e->info['pilot_email']);
+		}
+			
+		# Send a copy to the admins of the event
+		$stmt = db_prep("
+			SELECT *
+			FROM event_user eu
+			LEFT JOIN pilot p ON eu.pilot_id = p.pilot_id
+			WHERE eu.event_id = :event_id
+				AND eu.event_user_status = 1
+		");
+		$result = db_exec($stmt,array("event_id" => $event_id));
+		foreach($result as $row){
+			$email = $row['pilot_email'];
+			if($email != '' && $email != $GLOBALS['user']['user_email'] && !in_array($email, $sent)){
+				send_email('event_registration_cancel',$email,$data);
+				array_push($sent, $email);
+			}
+		}
+
+		# Now turn off the entry record
+		$stmt = db_prep("
+			UPDATE event_pilot
+			SET event_pilot_status = 0
+			WHERE event_pilot_id = :event_pilot_id
+		");
+		$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
+		user_message("Registration for this event has been cancelled.");
+		
+	}else{
+		user_message("Did not find that user in this event. No action taken.",1);
+	}
+	
+	return event_view();
 }
 function event_registration_report() {
 	global $smarty;

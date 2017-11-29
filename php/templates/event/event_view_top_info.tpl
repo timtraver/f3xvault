@@ -70,6 +70,9 @@
 					<a href="?action=event&function=event_register&event_id={$event->info.event_id}" class="btn btn-success btn-rounded">
 						 Update Your Registration Info Here
 					</a>
+					<a href="?action=event&function=event_register_cancel&event_id={$event->info.event_id}" class="btn btn-danger btn-rounded" onClick="return confirm('Are you sure you wish to unregister yourself from this event?');">
+						 Cancel My Registration
+					</a>
 				{/if}
 			</td>
 		{/if}

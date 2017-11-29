@@ -59,6 +59,13 @@
 					</a>
 				</li>
 				{/if}
+				{if $event->rounds|count>0 && $graphs}
+				<li{if $tab==7} class="active"{/if}>
+					<a data-toggle="tab" href="#pilot-tab-7" aria-expanded="false" {if $tab==7}aria-selected="true"{/if}>
+						Graphs
+					</a>
+				</li>
+				{/if}
 			</ul>
 			<div class="tab-content">
 				<div id="pilot-tab-0" class="tab-pane fade{if $tab==0} active in{/if}">
@@ -150,6 +157,13 @@
 					<h2 style="float:left;">Statistics</h2>
 					<br style="clear:left;">
 					{include file="event/event_view_stats.tpl"}
+				</div>
+				{/if}
+				{if $event->rounds|count>0 && $graphs}
+				<div id="pilot-tab-7" class="tab-pane fade{if $tab==7} active in{/if}">
+					<h2 style="float:left;">Flight Graphs</h2>
+					<br style="clear:left;">
+					{include file="event/event_view_graphs.tpl"}
 				</div>
 				{/if}
 			</div>
