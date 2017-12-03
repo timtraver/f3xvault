@@ -315,6 +315,14 @@ function series_save_multiples() {
 	global $user;
 
 	$series_id = intval($_REQUEST['series_id']);
+	# Let us first clear all of the mandatory values for this series
+	$stmt = db_prep("
+		UPDATE event_series
+		SET event_series_mandatory = 0
+		WHERE series_id = :series_id
+	");
+	$result = db_exec($stmt,array("series_id" => $series_id));
+	
 	# Lets get the array to save the values
 	foreach($_REQUEST as $key => $value){
 		if(preg_match("/^multiple\_(\d+)$/",$key,$match)){
@@ -326,8 +334,17 @@ function series_save_multiples() {
 			");
 			$result = db_exec($stmt,array("event_series_id" => $event_series_id,"multiple" => $value));
 		}
+		if(preg_match("/^mandatory\_(\d+)$/",$key,$match)){
+			$event_series_id = $match[1];
+			$stmt = db_prep("
+				UPDATE event_series
+				SET event_series_mandatory = 1
+				WHERE event_series_id = :event_series_id
+			");
+			$result = db_exec($stmt,array("event_series_id" => $event_series_id));
+		}
 	}
-	user_message("Saved series multiples.");
+	user_message("Saved series parameters.");
 	return series_view();
 }
 function series_param_save() {

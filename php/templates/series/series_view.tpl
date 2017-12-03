@@ -85,14 +85,14 @@
 			<td nowrap>{$e.total_pilots|escape}</td>
 			<td nowrap>
 				<input type="text" name="multiple_{$e.event_series_id}" size="6" value="{$e.event_series_multiple|escape}">
+				<input type="checkbox" name="mandatory_{$e.event_series_id}" {if $e.event_series_mandatory}CHECKED{/if}> Mandatory
 			</td>
 		</tr>
 		{$num=$num+1}
 		{/foreach}
 		</table>
-		<input type="button" value=" Save Multiples " onClick="document.series_save_multiples.submit();" class="btn btn-primary btn-rounded" style="float:right;">
+		<input type="button" value=" Save Series Parameters " onClick="document.series_save_multiples.submit();" class="btn btn-primary btn-rounded" style="float:right;">
 		</form>
-
 
 		{$event_num=1}
 		<h2 class="post-title entry-title">Series Overall Classification</h2>
