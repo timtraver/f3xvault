@@ -176,13 +176,11 @@ class Series {
 		$totals = array();
 		foreach($this->events as $event_id => $e){
 			$multiple = $e['event_series_multiple'];
-			$mandatory = $e['event_series_mandatory'];
 			if($e['total_rounds'] == 0){
 				continue;
 			}
 			foreach($e['pilots'] as $pilot_id => $p){
 				$sub = $p['event_pilot_total_percentage'] * 10 * $multiple;
-				$subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] = $mandatory;
 				$subtotals[$pilot_id]['events'][$event_id]['event_score'] = $sub;
 				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = $p['event_pilot_position'];
 				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
@@ -207,7 +205,7 @@ class Series {
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] != 1){
+				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $e;
@@ -249,13 +247,11 @@ class Series {
 		$totals = array();
 		foreach($this->events as $event_id => $e){
 			$multiple = $e['event_series_multiple'];
-			$mandatory = $e['event_series_mandatory'];
 			if($e['total_rounds'] == 0){
 				continue;
 			}
 			foreach($e['pilots'] as $pilot_id => $p){
 				$sub = $p['event_pilot_position'] * $multiple;
-				$subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] = $mandatory;
 				$subtotals[$pilot_id]['events'][$event_id]['event_score'] = $sub;
 				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = $p['event_pilot_position'];
 				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
@@ -293,7 +289,7 @@ class Series {
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] != 1){
+				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score']-$e;
@@ -337,14 +333,12 @@ class Series {
 			$total_pilots = count($e['pilots']);
 			$number = ceil($total_pilots * 0.3);
 			$multiple = $e['event_series_multiple'];
-			$mandatory = $e['event_series_mandatory'];
 			foreach($e['pilots'] as $pilot_id => $p){
 				if($p['event_pilot_position']<= $number){
 					$sub = 1 * $multiple;
 				}else{
 					$sub = 0;
 				}
-				$subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] = $mandatory;
 				if($e['total_rounds'] > 0){
 					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = $sub;
 					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = $p['event_pilot_position'];
@@ -371,7 +365,7 @@ class Series {
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops  && $subtotals[$pilot_id]['events'][$event_id]['event_series_mandatory'] != 1){
+				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score']-$e;
