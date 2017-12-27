@@ -37,20 +37,16 @@ class searchEvents {
 	public function process_request(){
 		
 		# This is the method where we process the request
-		if(isset($_REQUEST['string'])){
-			$this->string = $_REQUEST['string'];
-		}else{
-			$this->string = '';
-		}
-		if(isset($_REQUEST['event_type_code'])){
-			$event_type_code = $_REQUEST['event_type_code'];
+		$this->string = $this->api->input_variables['string'];
+
+		$event_type_code = $this->api->input_variables['event_type_code'];
+		if($event_type_code != ''){
 			$event_type_string = "AND et.event_type_code = '$event_type_code'";
 		}else{
-			$event_type_code = '';
 			$event_type_string = '';
 		}
-		if(isset($_REQUEST['show_future'])){
-			$show_future = $_REQUEST['show_future'];
+		if(isset($this->api->input_variables['show_future'])){
+			$show_future = $this->api->input_variables['show_future'];
 		}else{
 			$show_future = 1;
 		}
@@ -58,23 +54,23 @@ class searchEvents {
 		if($show_future == 0){
 			$search_future = "AND e.event_start_date <= NOW()";
 		}
-		if(isset($_REQUEST['per_page'])){
-			$per_page = $_REQUEST['per_page'];
+		if(isset($this->api->input_variables['per_page']) && $this->api->input_variables['per_page'] != 0){
+			$per_page = $this->api->input_variables['per_page'];
 		}else{
 			$per_page = 50;
 		}
-		if(isset($_REQUEST['page'])){
-			$page = $_REQUEST['page'];
+		if(isset($this->api->input_variables['page']) && $this->api->input_variables['page'] != 0){
+			$page = $this->api->input_variables['page'];
 		}else{
 			$page = 1;
 		}
-		if(isset($_REQUEST['date_from'])){
-			$date_from = $_REQUEST['date_from'];
+		if(isset($this->api->input_variables['date_from']) && $this->api->input_variables['date_from'] != ''){
+			$date_from = $this->api->input_variables['date_from'];
 		}else{
 			$date_from = '0000-00-00';
 		}
-		if(isset($_REQUEST['date_to'])){
-			$date_to = $_REQUEST['date_to'];
+		if(isset($this->api->input_variables['date_to']) && $this->api->input_variables['date_to'] != ''){
+			$date_to = $this->api->input_variables['date_to'];
 		}else{
 			$date_to = '0000-00-00';
 		}
@@ -86,7 +82,7 @@ class searchEvents {
 			$date_range .= "AND e.event_start_date < '$date_to'";
 		}
 		$fs = $this->api->field_separator;
-		
+
 		# Lets calculate the limit from the page value
 		$show_page = $page - 1;
 		$page_start = $show_page * $per_page;
@@ -95,6 +91,7 @@ class searchEvents {
 			
 			$this->string = trim(urldecode(strtolower($this->string)));
 			$this->string = '%'.$this->string.'%';
+
 			# Do search
 			$stmt = db_prep("
 				SELECT *

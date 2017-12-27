@@ -32,7 +32,7 @@ class getEventPilots {
 		global $smarty;
 		
 		# This is the method where we process the request
-		$this->event_id = $_REQUEST['event_id'];
+		$this->event_id = $this->api->input_variables['event_id'];
 		start_smarty();
 
 		$event = new Event($this->event_id);

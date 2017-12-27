@@ -44,8 +44,9 @@ class API {
 			"searchPilots"		=> array("function_name" => "searchPilots",		"function_description" => 'Search the database for pilot information.'),
 			"searchEvents"		=> array("function_name" => "searchEvents",		"function_description" => 'Search for events'),
 			"postScore"			=> array("function_name" => "postScore",		"function_description" => 'Post a score for a pilot to an event.'),
-			"postPilot"			=> array("function_name" => "postPilot",		"function_description" => 'Add or update pilot information to an event.'),
-			"viewEventRank"		=> array("function_name" => "viewEventRank",	"function_description" => ''),
+			"updateEventPilot"	=> array("function_name" => "updateEventPilot",	"function_description" => 'Add or update pilot information to an event.'),
+			"createEvent"		=> array("function_name" => "createEvent",		"function_description" => 'Create a new event.'),
+			"createPilot"		=> array("function_name" => "createPilot",		"function_description" => 'Create a new pilot in the system. Please use after searching for existing pilots to prevent duplicates.'),
 		);
 	}
 
@@ -171,12 +172,33 @@ class API {
 		return;
 	}
 	public function api_check_function_parameters(){
-		# Method to check the input fields for mandatory entries
+		# Method to check the input fields for mandatory entries and clean them base on their types
 		$check = 1;
 		foreach($this->function_parameters as $field){
 			$field_name = $field['name'];
 			if($field['mandatory'] == 1 && !isset($this->input_variables[$field_name])){
 				$check = 0;
+			}
+			$type = $field['type'];
+			switch($type){
+				case 'integer':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'int');
+					break;
+				case 'string':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'string');
+					break;
+				case 'boolean':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'boolean');
+					break;
+				case 'timestamp':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'int');
+					break;
+				case 'float':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'float');
+					break;
+				case 'date':
+					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'string');
+					break;					
 			}
 		}
 		return $check;

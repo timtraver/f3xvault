@@ -43,8 +43,10 @@ class postScore {
 			array("name" => "event_id",		"type" => "integer",	"description" => "Event ID",				"mandatory" => 1),
 			array("name" => "pilot_id",		"type" => "integer",	"description" => "Pilot ID",				"mandatory" => 1),
 			array("name" => "round",		"type" => "integer",	"description" => "Round Number",			"mandatory" => 1),
+			array("name" => "group",		"type" => "string",		"description" => "Group",					"mandatory" => 0),
+			array("name" => "order",		"type" => "string",		"description" => "Order",					"mandatory" => 0),
 			array("name" => "penalty",		"type" => "integer",	"description" => "Penalty Points",			"mandatory" => 0),
-			array("name" => "flight_time",	"type" => "timestamp",	"description" => "Timestamp of flight",		"mandatory" => 0),
+			array("name" => "flight_time",	"type" => "timestamp",	"description" => "Timestamp of flight (when it took place)",		"mandatory" => 0),
 			array("name" => "wind_avg",		"type" => "float",		"description" => "Wind Speed Average",		"mandatory" => 0),
 			array("name" => "dir_avg",		"type" => "float",		"description" => "Wind Direction Average",	"mandatory" => 0),
 		);
@@ -56,7 +58,7 @@ class postScore {
 		global $smarty;
 
 		# This is the method where we process the request
-		$this->event_id = $_REQUEST['event_id'];
+		$this->event_id = $this->api->input_variables['event_id'];
 		$fs = $this->api->field_separator;
 
 		# We must determine new mandatory fields that depend on the type of event that is being posted to
@@ -78,7 +80,7 @@ class postScore {
 			$this->api->error_code = 3;
 			$this->api->error_string = "Not all mandatory fields supplied.\n";
 			$this->api->error_string .= "Possible fields are as follows. * fields are mandatory.\n";
-			$this->api->error_string .= "field_separator - Field Delimeter For Return Lines.\n";
+			$this->api->error_string .= "field_separator - Field Delimiter For Return Lines.\n";
 			foreach($this->api->function_parameters as $field){
 				if($field['mandatory'] == 1){
 					$this->api->error_string .= '*';
@@ -90,12 +92,12 @@ class postScore {
 			return 0;
 		}
 		# Lets set the input parameters
-		$this->pilot_id		= $_REQUEST['pilot_id'];
-		$this->round		= $_REQUEST['round'];
-		$this->group		= $_REQUEST['group'];
-		$this->order		= $_REQUEST['order'];
-		$this->flight_time	= $_REQUEST['flight_time'];
-		$this->penalty		= $_REQUEST['penalty'];
+		$this->pilot_id		= $this->api->input_variables['pilot_id'];
+		$this->round		= $this->api->input_variables['round'];
+		$this->group		= $this->api->input_variables['group'];
+		$this->order		= $this->api->input_variables['order'];
+		$this->flight_time	= $this->api->input_variables['flight_time'];
+		$this->penalty		= $this->api->input_variables['penalty'];
 		if(isset($this->api->input_variables['wind_avg'])){
 			$this->wind_avg = $this->api->input_variables['wind_avg'];
 		}else{

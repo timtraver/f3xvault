@@ -1,0 +1,182 @@
+<?php
+############################################################################
+#	createEvent.class
+#
+#	Tim Traver
+#	12/26/2017
+#	class to extend API class to create a new event
+#
+############################################################################
+#
+include_library('event.class');
+
+class createEvent {
+	public $event_id;
+	public $api;
+	public $event_name;
+	public $location_id;
+	public $event_start_date;
+	public $event_end_date;
+	public $event_type_id;
+	public $event_cd_id;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "event_name",	 	"type" => "string", "description" => "Event Name",						"mandatory" => 1),
+			array("name" => "location_id",	 	"type" => "string", "description" => "Location (ID or String)",			"mandatory" => 1),
+			array("name" => "event_type",		"type" => "string", "description" => "Event Type Code",					"mandatory" => 1),
+			array("name" => "event_start_date",	"type" => "date",	"description" => "Date From (2018-01-01)",			"mandatory" => 1),
+			array("name" => "event_end_date",	"type" => "date",	"description" => "Date To (2018-01-01)",			"mandatory" => 0),
+			array("name" => "event_cd_id",		"type" => "string", "description" => "Event Contest Director Pilot ID", "mandatory" => 0),
+			array("name" => "location_country",	"type" => "string", "description" => "Location Country Code (If creating new location)",	"mandatory" => 0),
+		);
+		$this->api->function_output_description = 
+			"Event ID integer or 0 if failure with failure description";
+	}
+
+	public function process_request(){
+		global $smarty;
+		
+		# This is the method where we process the request
+		$this->event_name = $this->api->input_variables['event_name'];
+		$content = "";
+
+		# Lets see if an event with that exact name already exists
+		$stmt = db_prep("
+			SELECT *
+			FROM event
+			WHERE event_name = :event_name
+		");
+		$result = db_exec($stmt,array(
+			"event_name" => $this->event_name
+		));
+		if(isset($result[0])){
+			$content = "0\nEvent with that name already exists.\n";
+			return $content;
+		}
+		
+		# Lets determine the location ID if a string is sent
+		if(is_int($this->api->input_variables['location_id'])){
+			# The location is an integer, so lets make sure that we have it in the database
+			$stmt = db_prep("
+				SELECT *
+				FROM location
+				WHERE location_id = :location_id
+			");
+			$result = db_exec($stmt,array(
+				"location_id" => $this->api->input_variables['location_id']
+			));
+			if(!isset($result[0])){
+				$content = "0\nLocation ID not in database.\n";
+				return $content;
+			}
+			$this->location_id = $this->api->input_variables['location_id'];
+		}else{
+			# Lets see if the location name is in the location database
+			$stmt = db_prep("
+				SELECT *
+				FROM location
+				WHERE location_name = :location_id
+			");
+			$result = db_exec($stmt,array(
+				"location_id" => $this->api->input_variables['location_id']
+			));
+			if(!isset($result[0])){
+				# Doesn't appear that we have this location, so lets check if they sent a country code so we can create the location
+				if($this->api->input_variables['location_country']){
+					$stmt = db_prep("
+						SELECT *
+						FROM country
+						WHERE LOWER(country_code) = :code
+							OR LOWER(country_name) = :name
+					");
+					$result = db_exec($stmt,array(
+						"code" => strtolower($this->api->input_variables['location_country']),
+						"name" => strtolower($this->api->input_variables['location_country'])
+					));
+					if(!isset($result[0])){
+						$content = "0\nLocation must have a valid country code if it is to be created.\n";
+						return $content;
+					}else{
+						# Lets create the location
+						$stmt = db_prep("
+							INSERT INTO location
+							SET location_name = :location_name,
+								country_id = :country_id
+						");
+						$result = db_exec($stmt,array(
+							"location_name" => $this->api->input_variables['location_id'],
+							"country_id" => $result[0]['country_id']
+						));
+						$this->location_id = $GLOBALS['last_insert_id'];
+					}
+				}else{
+					$content = "0\nLocation must have country code if it is to be created.\n";
+					return $content;
+				}
+			}else{
+				$this->location_id = $result[0]['location_id'];
+			}
+		}
+		
+		# Lets get the event type code from the given code
+		$stmt = db_prep("
+			SELECT *
+			FROM event_type
+			WHERE event_type_code = :event_type
+		");
+		$result = db_exec($stmt,array("event_type" => $this->api->input_variables['event_type']));
+		if(!isset($result[0])){
+			$content = "0\nEvent code is invalid.\n";
+			return $content;
+		}else{
+			$this->event_type_id = $result[0]['event_type_id'];
+		}
+		
+		# Set the dates
+		$this->event_start_date = date("Y-m-d",strtotime($this->api->input_variables['event_start_date']));
+		if(!isset($this->api->input_variables['event_end_date'])){
+			$this->event_end_date = $this->event_end_date;
+		}else{
+			$this->event_end_date = date("Y-m-d",strtotime($this->api->input_variables['event_end_date']));
+		}
+		
+		# Ok, now that we have everything, lets create the event
+		$stmt = db_prep("
+			INSERT INTO event
+			SET pilot_id = :user_id,
+				event_name = :event_name,
+				location_id = :location_id,
+				event_start_date = :event_start_date,
+				event_end_date = :event_end_date,
+				event_cd = :event_cd,
+				event_type_id = :event_type_id,
+				event_view_status = 1,
+				event_status = 1
+		");
+		$result = db_exec($stmt,array(
+			"user_id" => $this->api->user_id,
+			"event_name" => $this->event_name,
+			"location_id" => $this->location_id,
+			"event_start_date" => $this->event_start_date,
+			"event_end_date" => $this->event_end_date,
+			"event_cd" => $this->api->input_variables['event_cd_id'],
+			"event_type_id" => $this->event_type_id
+		));
+		$event_id = $GLOBALS['last_insert_id'];
+		
+		$content = "$event_id\n";
+		
+		# Get the export content
+		return $content;
+	}
+
+}
+
+?>

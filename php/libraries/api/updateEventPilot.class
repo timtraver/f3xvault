@@ -1,6 +1,6 @@
 <?php
 ############################################################################
-#	postPilot.class
+#	updateEventPilot.class
 #
 #	Tim Traver
 #	7/24/2017
@@ -10,7 +10,7 @@
 #
 include_library('event.class');
 
-class postPilot {
+class updateEventPilot {
 	public $event_id;
 	public $event_pilot_id;
 	public $pilot_id;
@@ -39,14 +39,14 @@ class postPilot {
 			array("name" => "event_pilot_team",			"type" => "string",		"description" => "Event Pilot Team",		"mandatory" => 0),
 		);
 		$this->api->function_output_description = 
-			"Single message of success or failure";
+			"Event Pilot ID on success or failure message.";
 	}
 
 	public function process_request(){
 		global $smarty;
 
 		# This is the method where we process the request
-		$this->event_id = $_REQUEST['event_id'];
+		$this->event_id = $this->api->input_variables['event_id'];
 		$fs = $this->api->field_separator;
 
 		# We must determine new mandatory fields that depend on the type of event that is being posted to
@@ -58,7 +58,6 @@ class postPilot {
 			return 0;
 		}
 		$event_type_code = $event->info['event_type_code'];
-
 		
 		# Now rerun the main parameter check to see if we have all the information we need.
 		if(!$this->api->api_check_function_parameters()){
@@ -78,7 +77,7 @@ class postPilot {
 		}
 		
 		# Lets set the input parameters
-		$this->pilot_id		= $_REQUEST['pilot_id'];
+		$this->pilot_id = $this->api->input_variables['pilot_id'];
 		
 		if(isset($this->api->input_variables['event_pilot_entry_order'])){
 			$this->event_pilot_entry_order = $this->api->input_variables['event_pilot_entry_order'];
@@ -128,6 +127,8 @@ class postPilot {
 				$this->api->error_string = "Invalid Class Specified.\n";
 				return 0;
 			}
+		}else{
+			$this->class_id=0;
 		}
 		# Ok, now lets look to see if the pilot already exists in the event
 		
@@ -139,7 +140,6 @@ class postPilot {
 				break;
 			}
 		}
-
 		if($this->event_pilot_id){
 			# This pilot exists, so lets just save the data
 			$stmt = db_prep("
@@ -159,30 +159,66 @@ class postPilot {
 				"team" => $this->event_pilot_team,
 				"event_pilot_id" => $this->event_pilot_id
 			));
-			$content = "Pilot updated Successfully.";
+			$content = "{$this->event_pilot_id}";
 		}else{
 			# This is a new pilot, so lets add them to the event
+			# First lets see if the pilot already exists but was turned off, so we can turn them back on
 			$stmt = db_prep("
-				INSERT INTO event_pilot
-				SET event_id = :event_id,
-					pilot_id = :pilot_id,
-					event_pilot_entry_order = :order,
-					event_pilot_bib = :bib,
-					class_id = :class_id,
-					event_pilot_freq = :freq,
-					event_pilot_team = :team,
-					event_pilot_status = 1
+				SELECT *
+				FROM event_pilot
+				WHERE event_id = :event_id
+					AND pilot_id = :pilot_id
 			");
 			$result = db_exec($stmt,array(
 				"event_id" => $this->event_id,
-				"pilot_id" => $this->pilot_id,
-				"order" => $this->event_pilot_entry_order,
-				"bib" => $this->event_pilot_bib,
-				"class_id" => $this->class_id,
-				"freq" => $this->event_pilot_freq,
-				"team" => $this->event_pilot_team
+				"pilot_id" => $this->pilot_id
 			));
-			$content = "New Pilot Added Successfully.";
+			if(isset($result[0])){
+				# One exists, so lets update it
+				$this->event_pilot_id = $result[0]['event_pilot_id'];
+				$stmt = db_prep("
+					UPDATE event_pilot
+					SET event_pilot_entry_order = :order,
+						event_pilot_bib = :bib,
+						class_id = :class_id,
+						event_pilot_freq = :freq,
+						event_pilot_team = :team,
+						event_pilot_status = 1
+					WHERE event_pilot_id = :event_pilot_id
+				");
+				$result = db_exec($stmt,array(
+					"order" => $this->event_pilot_entry_order,
+					"bib" => $this->event_pilot_bib,
+					"class_id" => $this->class_id,
+					"freq" => $this->event_pilot_freq,
+					"team" => $this->event_pilot_team,
+					"event_pilot_id" => $this->event_pilot_id
+				));
+				$content = "{$this->event_pilot_id}";
+			}else{
+				$stmt = db_prep("
+					INSERT INTO event_pilot
+					SET event_id = :event_id,
+						pilot_id = :pilot_id,
+						event_pilot_entry_order = :order,
+						event_pilot_bib = :bib,
+						class_id = :class_id,
+						event_pilot_freq = :freq,
+						event_pilot_team = :team,
+						event_pilot_status = 1
+				");
+				$result = db_exec($stmt,array(
+					"event_id" => $this->event_id,
+					"pilot_id" => $this->pilot_id,
+					"order" => $this->event_pilot_entry_order,
+					"bib" => $this->event_pilot_bib,
+					"class_id" => $this->class_id,
+					"freq" => $this->event_pilot_freq,
+					"team" => $this->event_pilot_team
+				));
+				$this->event_pilot_id = $GLOBALS['last_insert_id'];
+				$content = "{$this->event_pilot_id}";
+			}
 		}
 		
 		# Get the export content

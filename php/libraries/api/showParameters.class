@@ -24,7 +24,7 @@ class showParameters {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "function_name", "type" => "integer", "description" => "Name of Function to retrieve parameters", "mandatory" => 1)
+			array("name" => "function_name", "type" => "string", "description" => "Name of Function to retrieve parameters", "mandatory" => 1)
 		);
 		$this->api->function_output_description = 
 			"List of the input parameters for the function, one per line.";
@@ -33,7 +33,7 @@ class showParameters {
 	public function process_request(){
 		
 		# This is the method where we process the request
-		$this->function_name = $_REQUEST['function_name'];
+		$this->function_name = $this->api->input_variables['function_name'];
 
 		if(!file_exists($GLOBALS['include_paths']['libraries']."/api/{$this->function_name}.class")){
 			$this->error_code = 1;

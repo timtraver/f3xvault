@@ -1,0 +1,113 @@
+<?php
+############################################################################
+#	createPilot.class
+#
+#	Tim Traver
+#	12/26/2017
+#	class to extend API class to create a new pilot
+#
+############################################################################
+#
+include_library('event.class');
+
+class createPilot {
+	public $event_id;
+	public $api;
+	public $state_id;
+	public $country_id;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "pilot_first_name",	 	"type" => "string", "description" => "Pilot First Name",			"mandatory" => 1),
+			array("name" => "pilot_last_name",	 	"type" => "string", "description" => "Pilot Last Name",				"mandatory" => 1),
+			array("name" => "pilot_country",		"type" => "string", "description" => "Pilot Country (Code or name)","mandatory" => 1),
+			array("name" => "pilot_email",			"type" => "string", "description" => "Event Type Code",				"mandatory" => 0),
+			array("name" => "pilot_fai",			"type" => "date",	"description" => "Pilot FAI License",			"mandatory" => 0),
+			array("name" => "pilot_ama",			"type" => "date",	"description" => "Pilot AMA License",			"mandatory" => 0),
+			array("name" => "pilot_city",			"type" => "string", "description" => "Pilot City",					"mandatory" => 0),
+			array("name" => "pilot_state",			"type" => "string", "description" => "Pilot state (code or name)",	"mandatory" => 0),
+		);
+		$this->api->function_output_description = 
+			"Pilot ID integer or 0 if failure with failure description";
+	}
+
+	public function process_request(){
+		global $smarty;
+		
+		# This is the method where we process the request
+		$content = "";
+
+		# Lets determine the country ID if a string is sent
+		$stmt = db_prep("
+			SELECT *
+			FROM country
+			WHERE LOWER(country_code) = :country_code
+				OR LOWER(country_name) = :country_name
+		");
+		$result = db_exec($stmt,array(
+			"country_code" => $this->api->input_variables['pilot_country'],
+			"country_name" => $this->api->input_variables['pilot_country']
+		));
+		if(!isset($result[0])){
+			$content = "0\nNot a valid country code.";
+			return $content;
+		}else{
+			$this->country_id = $result[0]['country_id'];
+		}
+		# Lets determine the state ID if a string is sent
+		$stmt = db_prep("
+			SELECT *
+			FROM state
+			WHERE (LOWER(state_code) = :state_code
+				OR LOWER(state_name) = :state_name)
+				AND state_code != ''
+		");
+		$result = db_exec($stmt,array(
+			"state_code" => $this->api->input_variables['pilot_state'],
+			"state_name" => $this->api->input_variables['pilot_state']
+		));
+		if(isset($result[0])){
+			$this->state_id = $result[0]['state_id'];
+		}else{
+			$this->state_id=0;
+		}
+		
+		# Ok, now that we have everything, lets create the pilot
+		$stmt = db_prep("
+			INSERT INTO pilot
+			SET pilot_first_name = :pilot_first_name,
+				pilot_last_name = :pilot_last_name,
+				pilot_email = :pilot_email,
+				pilot_ama = :pilot_ama,
+				pilot_fai = :pilot_fai,
+				pilot_city = :pilot_city,
+				state_id = :state_id,
+				country_id = :country_id
+		");
+		$result = db_exec($stmt,array(
+			"pilot_first_name" => $this->api->input_variables['pilot_first_name'],
+			"pilot_last_name" => $this->api->input_variables['pilot_last_name'],
+			"pilot_email" => $this->api->input_variables['pilot_email'],
+			"pilot_ama" => $this->api->input_variables['pilot_ama'],
+			"pilot_fai" => $this->api->input_variables['pilot_fai'],
+			"pilot_city" => $this->api->input_variables['pilot_city'],
+			"state_id" => $this->state_id,
+			"country_id" => $this->country_id
+		));
+		$pilot_id = $GLOBALS['last_insert_id'];
+		
+		$content = "$pilot_id\n";
+		
+		# Get the export content
+		return $content;
+	}
+
+}
+
+?>

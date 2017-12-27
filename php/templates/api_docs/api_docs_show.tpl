@@ -87,7 +87,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th width="20%">Function Output</th><td><pre>{$f.function_output_description|escape}</pre></td>
+				<th width="20%">Function Output</th><td><pre style="white-space:pre-line;">{$f.function_output_description|escape}</pre></td>
 			</tr>
 		</table>
 		{/foreach}
