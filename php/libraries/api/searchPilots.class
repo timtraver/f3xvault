@@ -22,7 +22,8 @@ class searchPilots {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0)
+			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
+			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0)
 		);
 		$this->api->function_output_description = 
 			"One Per line of the following\nPilot ID, Pilot Name, Pilot Location";
@@ -34,6 +35,24 @@ class searchPilots {
 		$this->string = $this->api->input_variables['string'];
 		$fs = $this->api->field_separator;
 		
+		# If they included a country code, then lets find it so we can add it to the search
+		$country_search = '';
+		if(isset($this->api->input_variables['country']) && $this->api->input_variables['country'] != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM country
+				WHERE LOWER(country_code) = :country_code
+					OR LOWER(country_name) = :country_name
+			");
+			$result = db_exec($stmt,array(
+				"country_code" => $this->api->input_variables['country'],
+				"country_name" => $this->api->input_variables['country']
+			));
+			if(isset($result[0])){
+				$country_search = "AND c.country_id = ".$result[0]['country_id'];
+			}
+		}
+		
 		$string = trim(urldecode(strtolower($this->string)));
 		$string = '%'.$string.'%';
 		# Do search
@@ -42,9 +61,10 @@ class searchPilots {
 			FROM pilot p
 			LEFT JOIN state s ON p.state_id = s.state_id
 			LEFT JOIN country c ON p.country_id = c.country_id
-			WHERE LOWER(p.pilot_first_name) LIKE :term1
+			WHERE ( LOWER(p.pilot_first_name) LIKE :term1
 				OR LOWER(p.pilot_last_name) LIKE :term2
-				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
+				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3 )
+			$country_search
 		");
 		$result = db_exec($stmt,array(
 			"term1"	=> $string,
