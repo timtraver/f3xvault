@@ -38,15 +38,15 @@ class API {
 	public function set_api_functions(){
 		# This is to set up the available api functions
 		$this->functions = array(
-			"showParameters"	=> array("function_name" => "showParameters",	"function_description" => 'Show All the input parameters for a particular API function call.'),
-			"getEventInfo"		=> array("function_name" => "getEventInfo",		"function_description" => 'Get the basic information for an Event.'),
-			"getEventPilots"	=> array("function_name" => "getEventPilots",	"function_description" => 'Get the pilot list for an Event.'),
-			"searchPilots"		=> array("function_name" => "searchPilots",		"function_description" => 'Search the database for pilot information.'),
-			"searchEvents"		=> array("function_name" => "searchEvents",		"function_description" => 'Search for events'),
-			"postScore"			=> array("function_name" => "postScore",		"function_description" => 'Post a score for a pilot to an event.'),
-			"updateEventPilot"	=> array("function_name" => "updateEventPilot",	"function_description" => 'Add or update pilot information to an event.'),
-			"createEvent"		=> array("function_name" => "createEvent",		"function_description" => 'Create a new event.'),
-			"createPilot"		=> array("function_name" => "createPilot",		"function_description" => 'Create a new pilot in the system. Please use after searching for existing pilots to prevent duplicates.'),
+			"showParameters"	=> array("function_name" => "showParameters",	"event_permission" => 0,	"function_description" => 'Show All the input parameters for a particular API function call.'),
+			"getEventInfo"		=> array("function_name" => "getEventInfo",		"event_permission" => 0,	"function_description" => 'Get the basic information for an Event.'),
+			"getEventPilots"	=> array("function_name" => "getEventPilots",	"event_permission" => 0,	"function_description" => 'Get the pilot list for an Event.'),
+			"searchPilots"		=> array("function_name" => "searchPilots",		"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
+			"searchEvents"		=> array("function_name" => "searchEvents",		"event_permission" => 0,	"function_description" => 'Search for events'),
+			"postScore"			=> array("function_name" => "postScore",		"event_permission" => 1,	"function_description" => 'Post a score for a pilot to an event.'),
+			"updateEventPilot"	=> array("function_name" => "updateEventPilot",	"event_permission" => 1,	"function_description" => 'Add or update pilot information to an event.'),
+			"createEvent"		=> array("function_name" => "createEvent",		"event_permission" => 0,	"function_description" => 'Create a new event.'),
+			"createPilot"		=> array("function_name" => "createPilot",		"event_permission" => 0,	"function_description" => 'Create a new pilot in the system. Please use after searching for existing pilots to prevent duplicates.'),
 		);
 	}
 
@@ -97,10 +97,21 @@ class API {
 		# If it got here, then the password check was successful
 		$this->user_id = $user['user_id'];
 		$this->user = $user;
+		$GLOBALS['user'] = $user;
+		$GLOBALS['user_id'] = $user_id;
 		return 1;
 	}
 	public function api_check_event_access(){
-
+		# This is a routine to check and see if they have permission to edit this particular event
+		if($this->functions[$this->function]['event_permission']){
+			# Check access to this event
+			$event_id = $this->input_variables['event_id'];
+			if(!check_event_permission($event_id)){
+				$this->error_code = 1;
+				$this->error_string = "Unable to edit this event. Please adjust event permissions.";
+				return 0;
+			}			
+		}
 		return 1;
 	}
 
