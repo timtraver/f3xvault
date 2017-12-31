@@ -123,14 +123,48 @@ class API {
 			return 0;
 		}
 		
-		if(!file_exists($GLOBALS['include_paths']['libraries']."/api/{$this->function}.class")){
-			$this->error_code = 1;
-			$this->error_string = "Function not available.";
-			return 0;
+		switch($this->function){
+			case 'showParameters':
+				include_library("api/showParameters.class");
+				$request = new showParameters($this);
+				break;
+			case 'getEventInfo':
+				include_library("api/getEventInfo.class");
+				$request = new getEventInfo($this);
+				break;
+			case 'getEventPilots':
+				include_library("api/getEventPilots.class");
+				$request = new getEventPilots($this);
+				break;
+			case 'searchPilots':
+				include_library("api/searchPilots.class");
+				$request = new searchPilots($this);
+				break;
+			case 'searchEvents':
+				include_library("api/searchEvents.class");
+				$request = new searchEvents($this);
+				break;
+			case 'postScore':
+				include_library("api/postScore.class");
+				$request = new postScore($this);
+				break;
+			case 'updateEventPilot':
+				include_library("api/updateEventPilot.class");
+				$request = new updateEventPilot($this);
+				break;
+			case 'createEvent':
+				include_library("api/createEvent.class");
+				$request = new createEvent($this);
+				break;
+			case 'createPilot':
+				include_library("api/createPilot.class");
+				$request = new createPilot($this);
+				break;
+			default :
+				$this->error_code = 1;
+				$this->error_string = "Function not available.";
+				return 0;
 		}
-		include_library("api/{$this->function}.class");
-
-		eval("\$request = new {$this->function}(\$this);");
 		if(!$this->api_check_function_parameters()){
 			$this->error_code = 3;
 			$this->error_string = "Not all mandatory fields supplied.\n";

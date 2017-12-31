@@ -16,12 +16,10 @@ include_library('api.class');
 include_library('smarty/libs/Smarty.class.php');
 
 $api = new API();
-if($api->api_check_login()){
+if($api->api_check_login() && $api->api_check_event_access()){
 	$api->api_process_request();
-	$api->api_send_response();
-}else{
-	$api->api_send_response();
 }
+$api->api_send_response();
 
 exit;
 ?>
