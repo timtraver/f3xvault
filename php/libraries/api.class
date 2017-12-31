@@ -188,7 +188,11 @@ class API {
 					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'string');
 					break;
 				case 'boolean':
-					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'boolean');
+					if(isset($_REQUEST[$field_name])){
+						$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'boolean');
+					}else{
+						$this->input_variables[$field_name] = '';
+					}
 					break;
 				case 'timestamp':
 					$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'int');
