@@ -29,6 +29,7 @@ class searchEvents {
 			array("name" => "page",				"type" => "integer",	"description" => "Page of results (Number)",				"mandatory" => 0),
 			array("name" => "date_from",		"type" => "date",		"description" => "Date Range From (2017-01-01)",			"mandatory" => 0),
 			array("name" => "date_to",			"type" => "date",		"description" => "Date Range To (2017-01-01)",				"mandatory" => 0),
+			array("name" => "country",			"type" => "string",		"description" => "Country (Code or name)",					"mandatory" => 0)
 		);
 		$this->api->function_output_description = 
 			"One Per line of the following\nEvent ID, Event Start Date, Event Name, Location Name, Event Type";
@@ -86,6 +87,24 @@ class searchEvents {
 		# Lets calculate the limit from the page value
 		$show_page = $page - 1;
 		$page_start = $show_page * $per_page;
+
+		# If they included a country code, then lets find it so we can add it to the search
+		$country_search = '';
+		if(isset($this->api->input_variables['country']) && $this->api->input_variables['country'] != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM country
+				WHERE LOWER(country_code) = :country_code
+					OR LOWER(country_name) = :country_name
+			");
+			$result = db_exec($stmt,array(
+				"country_code" => $this->api->input_variables['country'],
+				"country_name" => $this->api->input_variables['country']
+			));
+			if(isset($result[0])){
+				$country_search = "AND c.country_id = ".$result[0]['country_id'];
+			}
+		}
 		
 		if($this->string){
 			
@@ -106,6 +125,7 @@ class searchEvents {
 					$search_future
 					$event_type_string
 					$date_range
+					$country_search
 					AND e.event_status=1
 				ORDER BY e.event_start_date DESC
 				LIMIT $page_start,$per_page
@@ -128,6 +148,7 @@ class searchEvents {
 					$search_future
 					$event_type_string
 					$date_range
+					$country_search
 					AND e.event_status=1
 				ORDER BY event_start_date DESC
 				LIMIT $page_start,$per_page
