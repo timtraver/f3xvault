@@ -13,6 +13,7 @@ include_library('event.class');
 class getEventInfo {
 	public $event_id;
 	public $api;
+	public $rounds;
 	
 	public function __construct($api){
 		$this->api = $api;
@@ -25,7 +26,7 @@ class getEventInfo {
 			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
 		$this->api->function_output_description = 
-			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, Team Name, Rounds (Group or flight order for each round if a draw exists)";
+			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, Team Name, Rounds (Group or flight order for each round if a round or draw exists)\n\nFor F3F, each round has the following fields (Group, Flight Order, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3K, each round has the following fields (Group, Flight Seconds, Penalty) for as many rounds as there are including draws.";
 	}
 
 	public function process_request(){
@@ -37,19 +38,23 @@ class getEventInfo {
 
 		$event = new Event($this->event_id);
 		$event->get_draws();
+		$event->get_rounds();
 
 		$smarty->assign("event",$event);
 		$smarty->assign("fs",$this->api->field_separator);
+				
+		$this->rounds = array();
 		
-		# Lets make the draw array easier to use and add it to the pilot array
-		$draws = array();
-		
-		# Lets pre-populate it with the pilot list
-		foreach($event->pilots as $event_pilot_id => $p){
-			$draws[$event_pilot_id]['draw'] = array();
+		#Let's first fill it up with the current round info
+		foreach($event->rounds as $round_number => $r){
+			foreach($r['flights'] as $flight_type_id => $f){
+				foreach($f['pilots'] as $event_pilot_id => $p){
+					$this->rounds[$event_pilot_id][$round_number] = $p;
+				}
+			}
 		}
-		
-		# Now lets get the info from the draw
+
+		# Now lets step through the draws to fill out the rest of the rounds if any
 		foreach($event->draws as $draw_id => $d){
 			if($d['event_draw_active'] == 0){
 				continue;
@@ -57,50 +62,31 @@ class getEventInfo {
 			foreach($d['flights'] as $flight_type_id => $f){
 				foreach($f as $round_number => $r){
 					foreach($r['pilots'] as $event_pilot_id => $p){
-						if($event->flight_types[$flight_type_id]['flight_type_group'] == 1 && $event->flight_types[$flight_type_id]['flight_type_code'] != 'f3f_speed'){
-							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_group'];
-						}else{
-							$draws[$event_pilot_id]['draw'][$round_number] = $p['event_draw_round_order'];
+						if(!isset($this->rounds[$event_pilot_id][$round_number])){
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_id'] = $p['event_pilot_id'];
+							$this->rounds[$event_pilot_id][$round_number]['event_round_id'] = $p['event_round_id'];
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 						}
 					}
 				}
 			}
 		}
 		
-		# Now Step through the task list to make sure there are the full amount of tasks in the export
-		foreach($draws as $event_pilot_id => $d){
-			foreach($event->tasks as $task_round => $t){
-				if(!isset($draws[$event_pilot_id]['draw'][$task_round])){
-					$draws[$event_pilot_id]['draw'][$task_round] = '';
-				}
-			}
-		}	
-		
 		$rounds = 0;
-		if(count($event->rounds) > 0){
-			$rounds = count($event->rounds);
+		if(count($this->rounds) > 0){
+			$rounds = count($this->rounds);
 		}
 		if($rounds == 0 && isset($event->tasks)){
 			$rounds = count($event->tasks);
 		}
-		if($rounds == 0 && isset($draws) && count($draws) > 0){
-			foreach($draws as $event_pilot_id => $d){
-				$rounds = count($d['draw']);
-			}
-		}
-		$smarty->assign("rounds",$rounds);
-		
-		
-		# Make sure the values are sorted
-		$newdraws = array();
-		foreach($draws as $event_pilot_id => $d){
-			ksort($d['draw']);
-			$newdraws[$event_pilot_id]['draw'] = $d['draw'];
-		}
-		$draws = $newdraws;
-	
-		$smarty->assign("draws",$draws);
-	
+		$smarty->assign("total_rounds",$rounds);
+		$smarty->assign("rounds",$this->rounds);
+
 		$template = '';
 		switch($event->info['event_type_code']){
 			case "f3b":

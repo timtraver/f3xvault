@@ -2612,7 +2612,7 @@ function event_round_edit() {
 	$event->get_tasks();
 
 	$flight_types = $event->flight_types;
-	
+
 	# Now lets look at the rounds to see which is the next round # to add if its a new one
 	$round = array();
 	if($event_round_id == 0){

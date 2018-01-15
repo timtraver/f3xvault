@@ -252,7 +252,7 @@ class Event {
 		$type = $this->info['event_type_code'];
 		foreach($result as $r){
 			if(preg_match("/^$type\_\S+/",$r['flight_type_code']) || $type == $r['flight_type_code']){
-				if($type == 'f3f' && $r['flight_type_code'] != 'f3f_speed'){
+				if($type == 'f3f' && ($r['flight_type_code'] != 'f3f_speed' && $r['flight_type_code'] != 'f3f_plus')){
 					continue;
 				}
 				$id = $r['flight_type_id'];
@@ -266,7 +266,7 @@ class Event {
 					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy'] = $o['event_option_value'];
 					}
-					if(preg_match("/f3f_use_groups/",$o['event_type_option_code'])){
+					if(preg_match("/f3f_use_groups/",$o['event_type_option_code']) || preg_match("/f3f_plus_use_groups/",$o['event_type_option_code'])){
 						$r['flight_type_group'] = $o['event_option_value'];
 					}
 				}
