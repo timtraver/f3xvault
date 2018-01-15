@@ -449,9 +449,10 @@ class postScore {
 		
 		# Now lets re-calculate things
 		$event = new Event($this->event_id);
+		$event->get_rounds();
 		$event->calculate_round($this->round);		
 		$event->calculate_event_totals();		
-		$event->event_save_totals();		
+		$event->event_save_totals();				
 		
 		$content = "Posted Score Successfully.";
 		
