@@ -44,13 +44,16 @@ class getEventInfo {
 		$smarty->assign("fs",$this->api->field_separator);
 				
 		$this->rounds = array();
-		
+		$total_rounds = 0;
 		#Let's first fill it up with the current round info
 		foreach($event->rounds as $round_number => $r){
 			foreach($r['flights'] as $flight_type_id => $f){
 				foreach($f['pilots'] as $event_pilot_id => $p){
 					$this->rounds[$event_pilot_id][$round_number] = $p;
 				}
+			}
+			if($round_number > $total_rounds){
+				$total_rounds = $round_number;
 			}
 		}
 
@@ -73,14 +76,13 @@ class getEventInfo {
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 						}
 					}
+					if($round_number > $total_rounds){
+						$total_rounds = $round_number;
+					}
 				}
 			}
 		}
 		
-		$total_rounds = 0;
-		if(count($this->rounds) > 0){
-			$total_rounds = count($this->rounds);
-		}
 		if($total_rounds == 0 && isset($event->tasks)){
 			$total_rounds = count($event->tasks);
 		}
