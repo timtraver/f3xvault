@@ -77,14 +77,14 @@ class getEventInfo {
 			}
 		}
 		
-		$rounds = 0;
+		$total_rounds = 0;
 		if(count($this->rounds) > 0){
-			$rounds = count($this->rounds);
+			$total_rounds = count($this->rounds);
 		}
-		if($rounds == 0 && isset($event->tasks)){
-			$rounds = count($event->tasks);
+		if($total_rounds == 0 && isset($event->tasks)){
+			$total_rounds = count($event->tasks);
 		}
-		$smarty->assign("total_rounds",$rounds);
+		$smarty->assign("total_rounds",$total_rounds);
 		$smarty->assign("rounds",$this->rounds);
 
 		$template = '';
