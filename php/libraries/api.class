@@ -40,6 +40,7 @@ class API {
 		$this->functions = array(
 			"showParameters"	=> array("function_name" => "showParameters",	"event_permission" => 0,	"function_description" => 'Show All the input parameters for a particular API function call.'),
 			"getEventInfo"		=> array("function_name" => "getEventInfo",		"event_permission" => 0,	"function_description" => 'Get the basic information for an Event.'),
+			"getEventInfoFull"	=> array("function_name" => "getEventInfoFull",	"event_permission" => 0,	"function_description" => 'Get the full information for an Event, including all completed rounds or draws.'),
 			"getEventPilots"	=> array("function_name" => "getEventPilots",	"event_permission" => 0,	"function_description" => 'Get the pilot list for an Event.'),
 			"searchPilots"		=> array("function_name" => "searchPilots",		"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
 			"searchEvents"		=> array("function_name" => "searchEvents",		"event_permission" => 0,	"function_description" => 'Search for events'),
@@ -131,6 +132,10 @@ class API {
 			case 'getEventInfo':
 				include_library("api/getEventInfo.class");
 				$request = new getEventInfo($this);
+				break;
+			case 'getEventInfoFull':
+				include_library("api/getEventInfoFull.class");
+				$request = new getEventInfoFull($this);
 				break;
 			case 'getEventPilots':
 				include_library("api/getEventPilots.class");

@@ -1,0 +1,7 @@
+"{$event->info.event_id}"{$fs}"{$event->info.event_name}"{$fs}"{$event->info.location_name}"{$fs}"{$event->info.event_start_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_end_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_type_name}"{$fs}"{$total_rounds}"
+"Event_Tasks"{$fs}{foreach $event->tasks as $t}{$flight_type_id=$t.flight_type_id}"{$event->flight_types.$flight_type_id.flight_type_code}"{if !$t@last}{$fs}{/if}{/foreach}
+"Pilot_id"{$fs}"Pilot_Bib"{$fs}"First_Name"{$fs}"Last_Name"{$fs}"Pilot_Class"{$fs}"AMA"{$fs}"FAI"{$fs}"Team_Name"
+"group"{$fs}"sub1"{$fs}"sub2"{$fs}"sub3"{$fs}"sub4"{$fs}"sub5"{$fs}"sub6"{$fs}"sub7"{$fs}"minutes"{$fs}"seconds"{$fs}"penalty"
+{foreach $event->pilots as $event_pilot_id=>$p}"{$p.pilot_id}"{$fs}"{$p.event_pilot_bib}"{$fs}"{$p.pilot_first_name}"{$fs}"{$p.pilot_last_name}"{$fs}"{$p.class_description}"{$fs}"{$p.pilot_ama}"{$fs}"{$p.pilot_fai}"{$fs}"{$p.event_pilot_team}"
+{foreach $rounds as $evid=>$round}{if $evid == $event_pilot_id}{foreach $round as $round_number=>$r}"{$r.event_pilot_round_flight_group}"{foreach $r.sub as $s}{$fs}"{$s.event_pilot_round_flight_sub_val}"{/foreach}{$fs}"{$r.event_pilot_round_flight_minutes}"{$fs}"{$r.event_pilot_round_flight_seconds}"{$fs}"{$r.event_pilot_round_flight_penalty}"
+{/foreach}{/if}{/foreach}{/foreach}
