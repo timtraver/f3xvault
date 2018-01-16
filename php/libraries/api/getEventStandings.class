@@ -1,0 +1,59 @@
+<?php
+############################################################################
+#	getEventStandings.class
+#
+#	Tim Traver
+#	1/15/2018
+#	class to extend API class to get a event standings
+#
+############################################################################
+#
+include_library('event.class');
+
+class getEventStandings {
+	public $event_id;
+	public $api;
+	public $rounds;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
+		);
+		$this->api->function_output_description = 
+			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nEach line after has the standings of the event with the following fields :\nPilot Rank, Pilot Name, Total Score, Diff to previous, Subtotal, Drops, Penalties, Percentage";
+	}
+
+	public function process_request(){
+		global $smarty;
+		
+		# This is the method where we process the request
+		$this->event_id = $this->api->input_variables['event_id'];
+		start_smarty();
+
+		$event = new Event($this->event_id);
+		$event->get_pilots();
+		$event->get_rounds();
+		$event->calculate_event_totals();		
+
+		$smarty->assign("event",$event);
+		$smarty->assign("fs",$this->api->field_separator);
+
+		$template = 'api/event_standings.tpl';
+	
+		# Get the export content
+		$content_template = find_template($template);
+		$content = $smarty->fetch($content_template);		
+		
+		return $content;
+
+	}
+
+}
+
+?>

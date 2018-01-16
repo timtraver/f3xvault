@@ -1,0 +1,6 @@
+"{$event->info.event_id}"{$fs}"{$event->info.event_name}"{$fs}"{$event->info.location_name}"{$fs}"{$event->info.event_start_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_end_date|date_format:"m/d/y"}"{$fs}"{$event->info.event_type_name}"{$fs}"{count($event->rounds)}"
+"Rank"{$fs}"Pilot Name"{$fs}"Total_Score"{$fs}"Difference"{$fs}"Subtotal"{$fs}"Drops"{$fs}"Penalties"{$fs}"Percentage"
+{$previous=0}{$diff_to_lead=0}{$diff=0}{foreach $event->totals.pilots as $e}{if $e.total>$previous}{$previous=$e.total}{else}{$diff=$previous-$e.total}{/if}
+"{$e.overall_rank|escape}"{$fs}"{$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}"{$fs}"{$e.total|string_format:$event->event_calc_accuracy_string}"{$fs}{if $diff == 0}"0.00"{else}"-{$diff|string_format:$event->event_calc_accuracy_string}"{/if}{$fs}"{$e.subtotal|string_format:$event->event_calc_accuracy_string}"{$fs}"{$e.drop|string_format:$event->event_calc_accuracy_string}"{$fs}"{$e.penalties|escape}"{$fs}"{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}"{$previous=$e.total}
+
+{/foreach}
