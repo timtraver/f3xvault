@@ -1,0 +1,3 @@
+"Pilot_id"{$fs}"First_Name"{$fs}"Last_Name"{$fs}"group"{$fs}"order"{$fs}"seconds"{$fs}"penalty"
+{foreach $rounds as $epid => $round}{foreach $round as $round_num => $r}{if $round_number == $round_num}"{$r.pilot_id}"{$fs}"{$r.pilot_first_name}"{$fs}"{$r.pilot_last_name}"{$fs}"{$r.$round_number.event_pilot_round_flight_group}"{$fs}"{$r.event_pilot_round_flight_order}"{$fs}"{$r.event_pilot_round_flight_seconds}"{$fs}"{$r.event_pilot_round_flight_penalty}"{/if}{/foreach}
+{/foreach}

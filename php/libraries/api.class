@@ -38,17 +38,19 @@ class API {
 	public function set_api_functions(){
 		# This is to set up the available api functions
 		$this->functions = array(
-			"showParameters"	=> array("function_name" => "showParameters",	"event_permission" => 0,	"function_description" => 'Show All the input parameters for a particular API function call.'),
-			"getEventInfo"		=> array("function_name" => "getEventInfo",		"event_permission" => 0,	"function_description" => 'Get the basic information for an Event.'),
-			"getEventInfoFull"	=> array("function_name" => "getEventInfoFull",	"event_permission" => 0,	"function_description" => 'Get the full information for an Event, including all completed rounds or draws.'),
-			"getEventPilots"	=> array("function_name" => "getEventPilots",	"event_permission" => 0,	"function_description" => 'Get the pilot list for an Event.'),
-			"getEventStandings"	=> array("function_name" => "getEventStandings","event_permission" => 0,	"function_description" => 'Get the current event standings.'),
-			"searchPilots"		=> array("function_name" => "searchPilots",		"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
-			"searchEvents"		=> array("function_name" => "searchEvents",		"event_permission" => 0,	"function_description" => 'Search for events'),
-			"postScore"			=> array("function_name" => "postScore",		"event_permission" => 1,	"function_description" => 'Post a score for a pilot to an event.'),
-			"updateEventPilot"	=> array("function_name" => "updateEventPilot",	"event_permission" => 1,	"function_description" => 'Add or update pilot information to an event.'),
-			"createEvent"		=> array("function_name" => "createEvent",		"event_permission" => 0,	"function_description" => 'Create a new event.'),
-			"createPilot"		=> array("function_name" => "createPilot",		"event_permission" => 0,	"function_description" => 'Create a new pilot in the system. Please use after searching for existing pilots to prevent duplicates.'),
+			"showParameters"			=> array("function_name" => "showParameters",			"event_permission" => 0,	"function_description" => 'Show All the input parameters for a particular API function call.'),
+			"getEventInfo"				=> array("function_name" => "getEventInfo",				"event_permission" => 0,	"function_description" => 'Get the basic information for an Event.'),
+			"getEventInfoFull"			=> array("function_name" => "getEventInfoFull",			"event_permission" => 0,	"function_description" => 'Get the full information for an Event, including all completed rounds or draws.'),
+			"getEventPilots"			=> array("function_name" => "getEventPilots",			"event_permission" => 0,	"function_description" => 'Get the pilot list for an Event.'),
+			"getEventRound"				=> array("function_name" => "getEventRound",			"event_permission" => 0,	"function_description" => 'Get flight information for a single round.'),
+			"getEventStandings"			=> array("function_name" => "getEventStandings",		"event_permission" => 0,	"function_description" => 'Get the current event standings.'),
+			"searchPilots"				=> array("function_name" => "searchPilots",				"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
+			"searchEvents"				=> array("function_name" => "searchEvents",				"event_permission" => 0,	"function_description" => 'Search for events'),
+			"postScore"					=> array("function_name" => "postScore",				"event_permission" => 1,	"function_description" => 'Post a score for a pilot to an event.'),
+			"updateEventPilot"			=> array("function_name" => "updateEventPilot",			"event_permission" => 1,	"function_description" => 'Add or update pilot information to an event.'),
+			"updateEventRoundStatus"	=> array("function_name" => "updateEventRoundStatus",	"event_permission" => 1,	"function_description" => 'Update the scoring status of a round.'),
+			"createEvent"				=> array("function_name" => "createEvent",				"event_permission" => 0,	"function_description" => 'Create a new event.'),
+			"createPilot"				=> array("function_name" => "createPilot",				"event_permission" => 0,	"function_description" => 'Create a new pilot in the system. Please use after searching for existing pilots to prevent duplicates.'),
 		);
 	}
 
@@ -142,6 +144,10 @@ class API {
 				include_library("api/getEventPilots.class");
 				$request = new getEventPilots($this);
 				break;
+			case 'getEventRound':
+				include_library("api/getEventRound.class");
+				$request = new getEventRound($this);
+				break;
 			case 'getEventStandings':
 				include_library("api/getEventStandings.class");
 				$request = new getEventStandings($this);
@@ -161,6 +167,10 @@ class API {
 			case 'updateEventPilot':
 				include_library("api/updateEventPilot.class");
 				$request = new updateEventPilot($this);
+				break;
+			case 'updateEventRoundStatus':
+				include_library("api/updateEventRoundStatus.class");
+				$request = new updateEventRoundStatus($this);
 				break;
 			case 'createEvent':
 				include_library("api/createEvent.class");

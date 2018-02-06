@@ -1,0 +1,65 @@
+<?php
+############################################################################
+#	updateEventRoundStatus.class
+#
+#	Tim Traver
+#	2/9/2018
+#	class to extend API class to update the status of the round
+#
+############################################################################
+#
+include_library('event.class');
+
+class updateEventRoundStatus {
+	public $event_id;
+	public $api;
+	public $round_number;
+	public $event_round_score_status;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the mandatory fields
+		$this->api->function_parameters = array(
+			array("name" => "event_id",					"type" => "integer", "description" => "Event ID",						"mandatory" => 1),
+			array("name" => "round_number",				"type" => "integer", "description" => "Round Number",					"mandatory" => 1),
+			array("name" => "event_round_score_status",	"type" => "integer", "description" => "Round Score Status (0 or 1)",	"mandatory" => 1),
+		);
+		$this->api->function_output_description = 
+			"0 or 1 for failure or success.";
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+
+		$this->event_id					= $this->api->input_variables['event_id'];
+		$this->round_number				= $this->api->input_variables['round_number'];
+		$this->event_round_score_status = $this->api->input_variables['event_round_score_status'];
+		
+		# Ok, now that we have everything, lets create the pilot
+		$event = new Event($this->event_id);
+		$event->get_rounds();
+		
+		$event_round_id = $event->rounds[$this->round_number]['event_round_id'];
+
+		$stmt = db_prep("
+			UPDATE event_round
+			SET event_round_score_status = :event_round_score_status,
+				event_round_needs_calc = 1
+			WHERE event_round_id = :event_round_id
+		");
+		$result = db_exec($stmt,array(
+			"event_round_score_status" => $this->event_round_score_status,
+			"event_round_id" => $event_round_id
+		));
+		
+		return;
+	}
+
+}
+
+?>

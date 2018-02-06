@@ -209,7 +209,7 @@ class postScore {
 					SET event_id = :event_id,
 						event_round_number = :round,
 						flight_type_id = :flight_type_id,
-						event_round_score_status = 1,
+						event_round_score_status = 0,
 						event_round_needs_calc = 1,
 						event_round_status = 1
 				");
