@@ -5070,6 +5070,9 @@ function event_export_export() {
 		case "f3f":
 			$template = "event/event_export_f3f.tpl";
 			break;
+		case "f3f_plus":
+			$template = "event/event_export_f3f_plus.tpl";
+			break;
 		case "f3k":
 			$template = "event/event_export_f3k.tpl";
 			break;
