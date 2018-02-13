@@ -2997,19 +2997,7 @@ function event_round_save() {
 				if(is_array($f)){
 					foreach($f as $flight_type_id => $v){
 						$tot = 0;
-						if($flight_type['flight_type_code'] == 'f3f_plus'){
-							# Have to skip the first sub flight because it is the climb out
-							$skip_first = 0;
-							foreach($v['sub'] as $num => $t){
-								if($skip_first == 0){
-									$skip_first = 1;
-									continue;
-								}
-								$tot += $t;
-							}
-							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min'] = 0;
-							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec'] = $tot;
-						}else{
+						if($flight_type['flight_type_code'] != 'f3f_plus'){ # Ignore the f3f_plus sub flights
 							foreach($v['sub'] as $num => $t){
 								$tot = $tot + convert_colon_to_seconds($t);
 							}
@@ -3061,7 +3049,7 @@ function event_round_save() {
 			}
 		}
 	}
-
+debug($data);
 	# Lets do a query to get existing event_pilot_round_id's so we don't have to do it in the loop
 	$eprs = array();
 	$stmt = db_prep("
@@ -3244,8 +3232,6 @@ function event_round_save() {
 								"num"							=> $num
 							));
 							if(isset($result[0])){
-							#if(isset($subs[$event_pilot_round_flight_id_actual][$num])){
-							#	$event_pilot_round_flight_sub_id = $subs[$event_pilot_round_flight_id_actual][$num];
 								$event_pilot_round_flight_sub_id = $result[0]['event_pilot_round_flight_sub_id'];
 							}else{
 								$event_pilot_round_flight_sub_id = 0;
