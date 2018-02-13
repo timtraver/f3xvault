@@ -2936,8 +2936,10 @@ function event_round_save() {
 			$event_pilot_round_flight_id = $match[2];
 			$event_pilot_id = $match[3];
 			$flight_type_id = $match[4];
-			# Now lets massage the value to make sure its entered in colon notation, or insert the colons
-			$value = convert_string_to_colon($value);
+			# Now lets massage the value to make sure its entered in colon notation, or insert the colons if it is an f3k event
+			if($event_code != 'f3f_speed' && $event_code != 'f3f_plus'){
+				$value = convert_string_to_colon($value);
+			}
 			# Lets check to see if this sub flight has a max set up and change it if it does
 			if($flight_type['flight_type_sub_flights_max_time'] != 0){
 				$seconds = convert_colon_to_seconds($value);
@@ -2953,7 +2955,9 @@ function event_round_save() {
 			$event_pilot_id = $match[3];
 			$flight_type_id = $match[4];
 			# Now lets massage the value to make sure its entered in colon notation, or insert the colons
-			$value = convert_string_to_colon($value);
+			if($event_code != 'f3f_speed' && $event_code != 'f3f_plus'){
+				$value = convert_string_to_colon($value);
+			}
 			# Lets check to see if this sub flight has a max set up and change it if it does
 			if($flight_type['flight_type_sub_flights_max_time'] != 0){
 				$seconds = convert_colon_to_seconds($value);
