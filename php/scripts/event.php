@@ -3653,6 +3653,7 @@ function event_print_overall() {
 	global $smarty;
 
 	$event_id = intval($_REQUEST['event_id']);
+	$full = intval($_REQUEST['full']);
 	if($event_id == 0){
 		user_message("That is not a proper event id to print.");
 		return event_list();
@@ -3663,8 +3664,12 @@ function event_print_overall() {
 	$e->calculate_event_totals();
 
 	$smarty->assign("event",$e);
-	
-	$maintpl = find_template("print/print_event_overall.tpl");
+
+	if($full == 1){
+		$maintpl = find_template("print/print_event_overall_full.tpl");
+	}else{
+		$maintpl = find_template("print/print_event_overall.tpl");
+	}
 	return $smarty->fetch($maintpl);
 }
 function event_print_rank() {

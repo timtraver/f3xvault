@@ -102,7 +102,8 @@
 				<li class="dropdown-header">Printing Functions</li>
 				<li><a href="#" onClick="document.print_pilot_list.submit();">Print Pilot List</a></li>
 				{if $event->rounds|count > 0}
-				<li><a href="#" onClick="document.print_overall.submit();">Print Overall Classification</a></li>
+				<li><a href="#" onClick="document.print_overall.submit();">Print Overall Classification (Basic)</a></li>
+				<li><a href="#" onClick="document.print_overall_full.submit();">Print Overall Classification (Full)</a></li>
 				<li><a href="#" onClick="document.print_position.submit();">Print Position Chart</a></li>
 				<li><a href="#" onClick="$('#print_round').dialog('open');">Print Round Detail</a></li>
 				<li><a href="#" onClick="document.print_rank.submit();">Print Class Rankings</a></li>
@@ -168,6 +169,13 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_print_overall">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="full" value="0">
+</form>
+<form name="print_overall_full" method="GET" action="?" target="_blank">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_print_overall">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="full" value="1">
 </form>
 <form name="print_pilot_list" method="GET" action="?" target="_blank">
 <input type="hidden" name="action" value="event">

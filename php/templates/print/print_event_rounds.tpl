@@ -16,7 +16,7 @@
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=8}
+			{$cols=10}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -26,26 +26,31 @@
 				</th>
 			</tr>
 			<tr>
-				<th width="2%" align="left" colspan="2"></th>
+				<th width="2%" align="right"></th>
+				<th width="2%" align="right">Bib</th>
 				<th align="left">Pilot Name</th>
+				<th align="left">FAI</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
+					{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group}
+						<th align="center" style="text-align: center;">Flight Order</th>
+					{/if}
 				{else}
-					<th align="center">Order</th>
+					<th align="center" style="text-align: center;">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
+					<th align="center" style="text-align: right;">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
 				{/if}
 				{if $ft.flight_type_landing}
-					<th align="center">Landing</th>
+					<th align="center" style="text-align: right;">Landing</th>
 				{/if}
 				{if $ft.flight_type_laps}
-					<th align="center">Laps</th>
+					<th align="center" style="text-align: right;">Laps</th>
 				{/if}
-				<th align="center">Raw Score</th>
-				<th align="center">Normalized Score</th>
-				<th align="center">Penalty</th>
-				<th align="center">Flight Rank</th>
+				<th align="center" style="text-align: right;">Raw Score</th>
+				<th align="center" style="text-align: right;">Normalized Score</th>
+				<th align="center" style="text-align: right;">Penalty</th>
+				<th align="center" style="text-align: right;">Flight Rank</th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
@@ -72,8 +77,12 @@
 					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
 					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 				</td>
+				<td>{$event->pilots.$event_pilot_id.pilot_fai}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
+						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
+							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+						{/if}
 					{else}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 					{/if}
@@ -158,8 +167,12 @@
 						{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
 						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 					</td>
+					<td>{$event->pilots.$event_pilot_id.pilot_fai}</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
+							{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
+								<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+							{/if}
 						{else}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 						{/if}
@@ -208,6 +221,16 @@
 		{/foreach}
 		</table>
 
+		<!-- Lets make a signture line -->
+		<br><br><br>
+		<table width="100%">
+			<tr>
+				<td height="20" width="5%" nowrap><b>Signature :</b></td>
+				<td height="20" width="60%" style="border-bottom: 2px solid black;"> &nbsp;</td>
+				<td height="20" width="5%" nowrap><b>Date :</b></td>
+				<td height="20" style="border-bottom: 2px solid black;"> &nbsp;</td>
+			</tr>
+		</table>
 		{if !$r@last && $one_per_page==1}
 			<br style="page-break-after: always;">
 		{/if}
