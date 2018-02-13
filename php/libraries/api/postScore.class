@@ -426,14 +426,14 @@ class postScore {
 					));
 				}
 				# Lets calculate the sub rounds to the total time
-				if($event_type_code == 'f3f_plus' && $sub ==1){
+				if($event_type_code == 'f3f_plus'){
 					continue;
 				}else{
 					$total_seconds +=  floatval($value);
 				}
 			}
 			# Lets save the total seconds if its different than what was sent
-			if($total_seconds != $this->seconds){
+			if($total_seconds != $this->seconds && $event_type_code != 'f3f_plus'){
 				# Update the flight
 				$stmt = db_prep("
 					UPDATE event_pilot_round_flight
