@@ -52,9 +52,9 @@
 					($event->info.event_reg_close_on == 1 && time() > $event->info.event_reg_close_date_stamp) ||
 					($event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp)
 				}
-					<font color="red"><b>Registration Currently Closed {if $event->pilots|count>=$event->info.event_reg_max} Due To Max Pilots{/if}</b></font>
+					<font color="red"><b>Registration Currently Closed {if $event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max != 0} Due To Max Pilots{/if}</b></font>
 					{if $event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp}
-					Registration opens on {date("Y-m-d h:i a",$event->info.event_reg_open_date_stamp)}
+					<font color="green">(Registration opens on {date("Y-m-d h:i a",$event->info.event_reg_open_date_stamp)} - {$event->info.event_reg_open_tz|escape} Tim Zone)</font>
 					{/if}
 				{else}
 					<font color="green"><b>Registration Currently Open</b></font>

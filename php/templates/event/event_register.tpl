@@ -91,7 +91,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: center;">
-				<input type="submit" value=" Save Registration Parameters " class="btn btn-primary btn-rounded" onClick="return check_event();">
+				<input type="button" value=" Save Registration Parameters " class="btn btn-primary btn-rounded" onClick="return check_event() && main.submit();;">
 			</td>
 		</tr>
 		</table>
@@ -272,7 +272,8 @@ $(document).ready(function() {ldelim}
 				{rdelim});
 		{/if}
 	{/foreach}
-{rdelim});			
+{rdelim});
+
 {/if}
 $(function() {ldelim}
 	var teams = [
