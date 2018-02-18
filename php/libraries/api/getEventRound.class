@@ -39,6 +39,7 @@ class getEventRound {
 
 		$event = new Event($this->event_id);
 		$event->get_draws();
+		$_REQUEST['sort_by'] = 'flight_order';
 		$event->get_rounds();
 
 		$smarty->assign("event",$event);
