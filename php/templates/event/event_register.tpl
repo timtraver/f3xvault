@@ -193,7 +193,7 @@
 			{if $event->info.event_reg_paypal_address!='' && $go_to_paypal!=1}
 				<tr>
 					<td colspan="{$cols}" style="text-align: right;">
-						<input type="image" id="paypal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-small.png" alt="Buy now with PayPal"  onClick="calc_totals();document.main.go_to_paypal.value=1;main.submit();" />
+						<input type="image" id="paypal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-small.png" alt="Buy now with PayPal"  onClick="calc_totals();document.main.go_to_paypal.value=1;return check_event() && main.submit();" />
 
 					</td>
 				</tr>
