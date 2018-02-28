@@ -93,7 +93,7 @@
 	{/if}
 	{if $round_wins}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Round Wins</h3>
+		<h3 class="post-title">{if $event->info.event_type_code == 'f3b'}Task{else}Round{/if} Wins</h3>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
 			<th></th>
@@ -102,23 +102,23 @@
 			<th>Perc</th>
 		</tr>
 		{$rank=1}
-		{$oldscore=0}
-		{foreach $round_wins as $event_pilot_id=>$r}
-		{$percent = ($r / $event->rounds|count)*100}
+		{$oldscore = 0}
+		{foreach $round_wins as $event_pilot_id => $r}
+			{$percent = ($r.wins / ($r.total_rounds) )*100}
 			<tr>
 				<td>
-					{if $r!=$oldscore}
+					{if $r.wins != $oldscore}
 						{$rank}
 					{/if}
 				</td>
 				<td nowrap>
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
-				<td align="center">{$r|escape}</td>
+				<td align="center">{$r.wins|escape}</td>
 				<td align="center">{$percent|string_format:"%.0f"} %</td>
 			</tr>
-			{$rank=$rank+1}
-			{$oldscore=$r}
+			{$rank = $rank+1}
+			{$oldscore = $r.wins}
 		{/foreach}
 		</table>
 	</div>

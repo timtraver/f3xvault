@@ -368,18 +368,44 @@ function event_view() {
 		$e->get_wind_averages();
 #		$smarty->assign("graphs",array("graphs"));
 	}
-	# Lets figure out round wins
+	# Lets figure out round wins or task wins
 	$round_wins = array();
+	$total_rounds = 0;
 	foreach($e->rounds as $r){
-		foreach($r['flights'] as $f){
-			foreach($f['pilots'] as $event_pilot_id => $p){
-				if($p['event_pilot_round_flight_score'] == 1000){
-					$round_wins[$event_pilot_id] ++;
+		if($r['event_round_score_status'] == 1){
+			foreach($r['flights'] as $f){
+				if($f['event_round_flight_score'] == 0){
+					continue;
+				}
+				foreach($f['pilots'] as $event_pilot_id => $p){
+					if($p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1){
+						continue;
+					}
+					if($p['event_pilot_round_flight_score'] == 1000){
+						$round_wins[$event_pilot_id]['wins']++;
+					}
+					$round_wins[$event_pilot_id]['total_rounds']++;
+				}
+			}
+			foreach($r['reflights'] as $flight_type_id => $f){
+				if(count($f['pilots'])>0){
+					if($f['event_round_flight_score'] == 0){
+						continue;
+					}
+					foreach($f['pilots'] as $event_pilot_id => $p){
+						if($p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1){
+							continue;
+						}
+						if($p['event_pilot_round_flight_score'] == 1000){
+							$round_wins[$event_pilot_id]['wins']++;
+						}
+						$round_wins[$event_pilot_id]['total_rounds']++;
+					}
 				}
 			}
 		}
 	}
-	arsort($round_wins);
+	$round_wins = array_msort($round_wins,array("wins" => SORT_DESC));
 	$smarty->assign("round_wins",$round_wins);
 	
 	$permission = check_event_permission($event_id);

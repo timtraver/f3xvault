@@ -2103,8 +2103,8 @@ class Event {
 						}
 					}
 				}
-				if(count($r['reflights']['pilots'])>0){
-					foreach($r['reflights'] as $flight_type_id => $f){
+				foreach($r['reflights'] as $flight_type_id => $f){
+					if(count($f['pilots'])>0){
 						if($f['event_round_flight_score'] == 0){
 							continue;
 						}
@@ -2181,8 +2181,8 @@ class Event {
 					}
 				}
 				# Now step through the reflights and do the same
-				if(count($r['reflights']['pilots'])>0){
-					foreach($r['reflights'] as $flight_type_id => $f){
+				foreach($r['reflights'] as $flight_type_id => $f){
+					if(count($f['pilots'])>0){
 						if($f['event_round_flight_score'] == 0){
 							continue;
 						}
@@ -2226,8 +2226,8 @@ class Event {
 					}
 				}
 				# Now step through the reflights and do the same
-				if(count($r['reflights']['pilots'])>0){
-					foreach($r['reflights'] as $flight_type_id => $f){
+				foreach($r['reflights'] as $flight_type_id => $f){
+					if(count($f['pilots'])>0){
 						if($f['event_round_flight_score'] == 0){
 							continue;
 						}
