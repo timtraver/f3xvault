@@ -66,27 +66,42 @@
 			</td>
 		</tr>
 		{/if}
+		{if $event->info.event_reg_flag==1}
 		<tr>
-			<th valign="top">Registration Status</th>
-			<td>
-				{if $event->info.event_reg_flag==1}
-					{if $event->info.event_reg_status==0 || 
-						($event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max!=0) ||
-						$event_reg_passed==1
-					}
-						<font color="red"><b>Registration Currently Closed</b></font>
-					{else}
-						<font color="green"><b>Registration Currently Open</b></font>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if}>
+			<th align="right">Registration Status</th>
+			<td colspan="3">
+				{if $event->info.event_reg_status == 0 || 
+					($event->pilots|count >= $event->info.event_reg_max && $event->info.event_reg_max != 0) ||
+					($event->info.event_reg_close_on == 1 && time() > $event->info.event_reg_close_date_stamp) ||
+					($event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp)
+				}
+					<font color="red"><b>Registration Currently Closed {if $event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max != 0} Due To Max Pilots{/if}</b></font>
+					{if $event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp}
+					<font color="green">(Registration opens on {date("Y-m-d h:i a",$event->info.event_reg_open_date_stamp)} - {$event->info.event_reg_open_tz|escape} Tim Zone)</font>
+					{/if}
+				{else}
+					<font color="green"><b>Registration Currently Open</b></font>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					{if $registered==0}
+						<a href="?action=event&function=event_register&event_id={$event->info.event_id}"{if $user.user_id==0} onClick="alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{/if} class="btn btn-success btn-rounded">
 						Register Me Now!
 						</a>
 					{/if}
-				{else}
-					There is no registration required for this event.
+				{/if}
+				{if $registered == 1}
+					You Are Currently Registered For This Event! &nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="?action=event&function=event_register&event_id={$event->info.event_id}" class="btn btn-success btn-rounded">
+						 Update Your Registration Info Here
+					</a>
+					<a href="?action=event&function=event_register_cancel&event_id={$event->info.event_id}" class="btn btn-danger btn-rounded" onClick="return confirm('Are you sure you wish to unregister yourself from this event?');">
+						 Cancel My Registration
+					</a>
 				{/if}
 			</td>
 		</tr>
+		{/if}
+		
+		
 		{if $event->reg_options}
 		<tr>
 			<th valign="top">Available Registration Options</th>
