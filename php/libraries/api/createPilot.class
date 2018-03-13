@@ -28,7 +28,8 @@ class createPilot {
 			array("name" => "pilot_last_name",	 	"type" => "string", "description" => "Pilot Last Name",				"mandatory" => 1),
 			array("name" => "pilot_country",		"type" => "string", "description" => "Pilot Country (Code or name)","mandatory" => 1),
 			array("name" => "pilot_email",			"type" => "string", "description" => "Event Type Code",				"mandatory" => 0),
-			array("name" => "pilot_fai",			"type" => "date",	"description" => "Pilot FAI License",			"mandatory" => 0),
+			array("name" => "pilot_fai",			"type" => "string",	"description" => "Pilot FAI Designation",		"mandatory" => 0),
+			array("name" => "pilot_fai_license",	"type" => "string",	"description" => "Pilot FAI License",			"mandatory" => 0),
 			array("name" => "pilot_ama",			"type" => "date",	"description" => "Pilot AMA License",			"mandatory" => 0),
 			array("name" => "pilot_city",			"type" => "string", "description" => "Pilot City",					"mandatory" => 0),
 			array("name" => "pilot_state",			"type" => "string", "description" => "Pilot state (code or name)",	"mandatory" => 0),
@@ -86,6 +87,7 @@ class createPilot {
 				pilot_email = :pilot_email,
 				pilot_ama = :pilot_ama,
 				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license,
 				pilot_city = :pilot_city,
 				state_id = :state_id,
 				country_id = :country_id
@@ -96,6 +98,7 @@ class createPilot {
 			"pilot_email" => $this->api->input_variables['pilot_email'],
 			"pilot_ama" => $this->api->input_variables['pilot_ama'],
 			"pilot_fai" => $this->api->input_variables['pilot_fai'],
+			"pilot_fai_license" => $this->api->input_variables['pilot_fai_license'],
 			"pilot_city" => $this->api->input_variables['pilot_city'],
 			"state_id" => $this->state_id,
 			"country_id" => $this->country_id

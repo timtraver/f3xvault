@@ -328,6 +328,7 @@ function my_user_save(){
 	$country_id = $_REQUEST['country_id'];
 	$pilot_ama = $_REQUEST['pilot_ama'];
 	$pilot_fai = $_REQUEST['pilot_fai'];
+	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 
 	if($pilot_id == 0){
 		# Insert new pilot info and assign the current user to it
@@ -347,6 +348,7 @@ function my_user_save(){
 				pilot_email = :pilot_email,
 				pilot_ama = :pilot_ama,
 				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license,
 				pilot_city = :pilot_city,
 				state_id = :state_id,
 				country_id = :country_id,
@@ -358,6 +360,7 @@ function my_user_save(){
 			"pilot_email" => $pilot_email,
 			"pilot_ama" => $pilot_ama,
 			"pilot_fai" => $pilot_fai,
+			"pilot_fai_license" => $pilot_fai_license,
 			"pilot_city" => $pilot_city,
 			"state_id" => $state_id,
 			"country_id" => $country_id,
@@ -373,6 +376,7 @@ function my_user_save(){
 				pilot_email = :pilot_email,
 				pilot_ama = :pilot_ama,
 				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license,
 				pilot_city = :pilot_city,
 				state_id = :state_id,
 				country_id = :country_id
@@ -384,6 +388,7 @@ function my_user_save(){
 			"pilot_email" => $pilot_email,
 			"pilot_ama" => $pilot_ama,
 			"pilot_fai" => $pilot_fai,
+			"pilot_fai_license" => $pilot_fai_license,
 			"pilot_city" => $pilot_city,
 			"state_id" => $state_id,
 			"country_id" => $country_id,

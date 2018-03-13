@@ -46,7 +46,7 @@
 		<h2>Event {if $event->flyoff_totals|count >0}Preliminary {/if}Rounds {if $event->rounds}({$start_round}-{$end_round}) {/if} Overall Classification</h2>
 		<table width="100%" cellpadding="2" cellspacing="2" class="table table-condensed table-event table-striped">
 		<tr>
-			<th align="left" colspan="7"></th>
+			<th align="left" colspan="8"></th>
 			<th colspan="{$numrounds+1}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
@@ -57,6 +57,7 @@
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:center;" nowrap>Pilot Name</th>
 			<th width="1%" style="text-align:center;" nowrap>FAI</th>
+			<th width="1%" style="text-align:center;" nowrap>FAI License</th>
 			<th style="text-align:center;" nowrap>Total</th>
 			<th style="text-align:center;" nowrap>Diff</th>
 			<th style="text-align:center;width:2px;" width="2" nowrap></th>
@@ -106,6 +107,11 @@
 			<td width="5%" nowrap align="right">
 				<div style="position:relative;">
 					<b>{$event->pilots.$event_pilot_id.pilot_fai|escape}</b>
+				</div>
+			</td>
+			<td width="5%" nowrap align="right">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.pilot_fai_license|escape}</b>
 				</div>
 			</td>
 			<td width="5%" nowrap align="right">
@@ -163,7 +169,7 @@
 		{/foreach}
 		{if $event->info.event_type_code=='f3f'}
 		<tr>
-			<th colspan="7" align="right">Round Fast Time</th>
+			<th colspan="8" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
 				{$round_number=$r.event_round_number}
 				{if $round_number >= $start_round && $round_number <= $end_round}

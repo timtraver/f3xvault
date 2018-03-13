@@ -46,6 +46,7 @@
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:left;" nowrap>Pilot Name</th>
 			<th width="1%" style="text-align:left;" nowrap>FAI ID</th>
+			<th width="1%" style="text-align:left;" nowrap>FAI License</th>
 			<th width="1%" style="text-align:left;" nowrap>Country</th>
 			<th style="text-align:center;" nowrap>Total Points</th>
 			<th style="text-align:center;" nowrap>Difference</th>
@@ -82,6 +83,11 @@
 			<td width="5%" nowrap align="left">
 				<div style="position:relative;">
 					<b>{$event->pilots.$event_pilot_id.pilot_fai|escape}</b>
+				</div>
+			</td>
+			<td width="5%" nowrap align="left">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.pilot_fai_license|escape}</b>
 				</div>
 			</td>
 			<td width="5%" nowrap align="left">
@@ -130,6 +136,7 @@
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:center;" nowrap>Pilot Name</th>
 			<th width="1%" style="text-align:left;" nowrap>FAI ID</th>
+			<th width="1%" style="text-align:left;" nowrap>FAI License</th>
 			<th width="1%" style="text-align:left;" nowrap>Country</th>
 			<th style="text-align:center;" nowrap>Total Points</th>
 			<th style="text-align:center;" nowrap>Difference</th>
@@ -163,6 +170,11 @@
 			<td width="5%" nowrap align="left">
 				<div style="position:relative;">
 					<b>{$event->pilots.$event_pilot_id.pilot_fai|escape}</b>
+				</div>
+			</td>
+			<td width="5%" nowrap align="left">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.pilot_fai_license|escape}</b>
 				</div>
 			</td>
 			<td width="5%" nowrap align="left">

@@ -1198,6 +1198,7 @@ function event_register_save() {
 	$event_pilot_id = intval($_REQUEST['event_pilot_id']);
 	$pilot_ama = $_REQUEST['pilot_ama'];
 	$pilot_fai = $_REQUEST['pilot_fai'];
+	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 	$class_id = intval($_REQUEST['class_id']);
 	$event_pilot_freq = $_REQUEST['event_pilot_freq'];
 	$event_pilot_team = $_REQUEST['event_pilot_team'];
@@ -1366,15 +1367,21 @@ function event_register_save() {
 	}
 	
 	# Lets see if we need to update the pilot's ama or fai number
-	if($pilot_ama != $GLOBALS['user']['pilot_ama'] || $pilot_fai != $GLOBALS['user']['pilot_fai']){
+	if($pilot_ama != $GLOBALS['user']['pilot_ama'] || $pilot_fai != $GLOBALS['user']['pilot_fai'] || $pilot_fai_license != $GLOBALS['user']['pilot_fai_license']){
 		# lets update the pilot record
 		$stmt = db_prep("
 			UPDATE pilot
 			SET pilot_ama = :pilot_ama,
-				pilot_fai = :pilot_fai
+				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license
 				WHERE pilot_id = :pilot_id
 		");
-		$result = db_exec($stmt,array("pilot_ama" => $pilot_ama,"pilot_fai" => $pilot_fai,"pilot_id" => $GLOBALS['user']['pilot_id']));
+		$result = db_exec($stmt,array(
+			"pilot_ama" => $pilot_ama,
+			"pilot_fai" => $pilot_fai,
+			"pilot_fai_license" => $pilot_fai_license,
+			"pilot_id" => $GLOBALS['user']['pilot_id']
+		));
 	}
 	
 	# Lets see if this pilot has a plane in his my planes area already
@@ -1727,6 +1734,7 @@ function event_pilot_edit() {
 			# They are returning from a plane add, so lets set things the way they were
 			$pilot['pilot_ama'] = $_REQUEST['pilot_ama'];
 			$pilot['pilot_fai'] = $_REQUEST['pilot_fai'];
+			$pilot['pilot_fai_license'] = $_REQUEST['pilot_fai_license'];
 			$pilot['class_id'] = $_REQUEST['class_id'];
 			$pilot['event_pilot_freq'] = $_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team'] = $_REQUEST['event_pilot_team'];
@@ -1750,6 +1758,7 @@ function event_pilot_edit() {
 			# They are returning from a plane add, so lets set things the way they were
 			$pilot['pilot_ama'] = $_REQUEST['pilot_ama'];
 			$pilot['pilot_fai'] = $_REQUEST['pilot_fai'];
+			$pilot['pilot_fai_license'] = $_REQUEST['pilot_fai_license'];
 			$pilot['class_id'] = $_REQUEST['class_id'];
 			$pilot['event_pilot_freq'] = $_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team'] = $_REQUEST['event_pilot_team'];
@@ -1770,6 +1779,7 @@ function event_pilot_edit() {
 			$pilot['pilot_email'] = $_REQUEST['pilot_email'];
 			$pilot['pilot_ama'] = $_REQUEST['pilot_ama'];
 			$pilot['pilot_fai'] = $_REQUEST['pilot_fai'];
+			$pilot['pilot_fai_license'] = $_REQUEST['pilot_fai_license'];
 			$pilot['class_id'] = $_REQUEST['class_id'];
 			$pilot['event_pilot_freq'] = $_REQUEST['event_pilot_freq'];
 			$pilot['event_pilot_team'] = $_REQUEST['event_pilot_team'];
@@ -1901,6 +1911,7 @@ function event_pilot_save() {
 	$country_id = intval($_REQUEST['country_id']);
 	$pilot_ama = $_REQUEST['pilot_ama'];
 	$pilot_fai = $_REQUEST['pilot_fai'];
+	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 	$pilot_email = $_REQUEST['pilot_email'];
 	$class_id = intval($_REQUEST['class_id']);
 	$event_pilot_freq = $_REQUEST['event_pilot_freq'];
@@ -1963,6 +1974,7 @@ function event_pilot_save() {
 				$smarty->assign("country_id",$country_id);
 				$smarty->assign("pilot_ama",$pilot_ama);
 				$smarty->assign("pilot_fai",$pilot_fai);
+				$smarty->assign("pilot_fai_license",$pilot_fai_license);
 				$smarty->assign("pilot_email",$pilot_email);
 				$smarty->assign("class_id",$class_id);
 				$smarty->assign("event_pilot_freq",$event_pilot_freq);
@@ -1998,6 +2010,7 @@ function event_pilot_save() {
 				pilot_email = :pilot_email,
 				pilot_ama = :pilot_ama,
 				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license,
 				pilot_city = :pilot_city,
 				state_id = :state_id,
 				country_id = :country_id
@@ -2008,6 +2021,7 @@ function event_pilot_save() {
 			"pilot_email"		=> $pilot_email,
 			"pilot_ama"			=> $pilot_ama,
 			"pilot_fai"			=> $pilot_fai,
+			"pilot_fai_license"	=> $pilot_fai_license,
 			"pilot_city"		=> $pilot_city,
 			"state_id"			=> $state_id,
 			"country_id"		=> $country_id,
@@ -2123,15 +2137,21 @@ function event_pilot_save() {
 	");
 	$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
 	$pilot = $result[0];
-	if($pilot_ama != $pilot['pilot_ama'] || $pilot_fai != $pilot['pilot_fai']){
+	if($pilot_ama != $pilot['pilot_ama'] || $pilot_fai != $pilot['pilot_fai'] || $pilot_fai_license != $pilot['pilot_fai_license']){
 		# lets update the pilot record
 		$stmt = db_prep("
 			UPDATE pilot
 			SET pilot_ama = :pilot_ama,
-				pilot_fai = :pilot_fai
+				pilot_fai = :pilot_fai,
+				pilot_fai_license = :pilot_fai_license
 				WHERE pilot_id = :pilot_id
 		");
-		$result = db_exec($stmt,array("pilot_ama" => $pilot_ama,"pilot_fai" => $pilot_fai,"pilot_id" => $pilot['pilot_id']));
+		$result = db_exec($stmt,array(
+			"pilot_ama" => $pilot_ama,
+			"pilot_fai" => $pilot_fai,
+			"pilot_fai_license" => $pilot_fai_license,
+			"pilot_id" => $pilot['pilot_id']
+		));
 	}
 	
 	# Lets see if this pilot has a plane in his my planes area already
@@ -2357,6 +2377,7 @@ function event_pilot_save_pilot() {
 	$country_id = intval($_REQUEST['country_id']);
 	$pilot_ama = $_REQUEST['pilot_ama'];
 	$pilot_fai = $_REQUEST['pilot_fai'];
+	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 	$pilot_email = $_REQUEST['pilot_email'];
 
 	# OK, lets save the pilot changes and go back to the event pilot edit
@@ -2369,7 +2390,8 @@ function event_pilot_save_pilot() {
 			country_id = :country_id,
 			pilot_email = :pilot_email,
 			pilot_ama = :pilot_ama,
-			pilot_fai = :pilot_fai
+			pilot_fai = :pilot_fai,
+			pilot_fai_license = :pilot_fai_license
 			WHERE pilot_id = :pilot_id
 	");
 	$result = db_exec($stmt,array(
@@ -2381,6 +2403,7 @@ function event_pilot_save_pilot() {
 		"pilot_email"		=> $pilot_email,
 		"pilot_ama"			=> $pilot_ama,
 		"pilot_fai"			=> $pilot_fai,
+		"pilot_fai_license"	=> $pilot_fai_license,
 		"pilot_id"			=> $pilot_id
 	));
 	user_message("Updated Pilot Info");

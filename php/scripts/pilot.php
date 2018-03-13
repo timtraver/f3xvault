@@ -349,6 +349,7 @@ function pilot_save_cd() {
 	$country_id = intval($_REQUEST['country_id']);
 	$pilot_ama = $_REQUEST['pilot_ama'];
 	$pilot_fai = $_REQUEST['pilot_fai'];
+	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 	$pilot_email = $_REQUEST['pilot_email'];
 
 	# Lets create the pilot
@@ -360,6 +361,7 @@ function pilot_save_cd() {
 			pilot_email = :pilot_email,
 			pilot_ama = :pilot_ama,
 			pilot_fai = :pilot_fai,
+			pilot_fai_license = :pilot_fai_license,
 			pilot_city = :pilot_city,
 			state_id = :state_id,
 			country_id = :country_id
@@ -370,6 +372,7 @@ function pilot_save_cd() {
 		"pilot_email" => $pilot_email,
 		"pilot_ama" => $pilot_ama,
 		"pilot_fai" => $pilot_fai,
+		"pilot_fai_license" => $pilot_fai_license,
 		"pilot_city" => $pilot_city,
 		"state_id" => $state_id,
 		"country_id" => $country_id,

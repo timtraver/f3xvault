@@ -18,7 +18,8 @@
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		<tr>
 			<th width="2%" align="left"></th>
-			<th width="10%" align="center">ORG#</th>
+			<th width="5%" align="center">ORG#</th>
+			<th width="5%" align="center" nowrap>FAI License</th>
 			<th align="left" colspan="2">Pilot Name</th>
 			<th align="left">Pilot Class</th>
 			<th align="left">Pilot Reg Values</th>
@@ -33,12 +34,15 @@
 		{$total=0}
 			<tr>
 				<td valign="top">{$num}</td>
-				<td valign="top" align="left">
+				<td valign="top" align="left" nowrap>
 					{if $p.pilot_fai}
 						{$p.pilot_fai|escape}
 					{else}
 						{$p.pilot_ama|escape}
 					{/if}
+				</td>
+				<td valign="top" align="left" nowrap>
+					{$p.pilot_fai_license|escape}
 				</td>
 				<td valign="top" width="10" nowrap>
 					{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" class="inline_flag" title="{$p.country_code}">{/if}

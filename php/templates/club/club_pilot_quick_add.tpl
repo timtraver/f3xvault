@@ -61,9 +61,15 @@
 			</td>
 		</tr>
 		<tr>
-			<th nowrap>Pilot FAI #</th>
+			<th nowrap>Pilot FAI Designation</th>
 			<td colspan="2">
 				<input type="text" name="pilot_fai" size="15" value="">
+			</td>
+		</tr>
+		<tr>
+			<th nowrap>Pilot FAI License</th>
+			<td colspan="2">
+				<input type="text" name="pilot_fai_license" size="20" value="">
 			</td>
 		</tr>
 		<tr>

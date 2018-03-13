@@ -75,7 +75,7 @@
 		<tr>
 			<th style="text-align: left;"></th>
 			<th style="text-align: left;">Pilot Name</th>
-			<th style="text-align: left;">AMA/FAI</th>
+			<th style="text-align: left;">AMA/FAI/License</th>
 			<th style="text-align: left;">Login Name</th>
 			<th style="text-align: left;">User Full Name</th>
 			<th style="text-align: left;">User Email</th>
@@ -90,7 +90,7 @@
 				<a href="?action=admin&function=admin_user_view&pilot_id={$p.pilot_id|escape}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
 			</td>
 			<td>
-				{$p.pilot_ama} - {$p.pilot_fai}
+				{$p.pilot_ama|escape}/{$p.pilot_fai|escape}/{$p.pilot_fai_license|escape}
 			</td>
 			<td>
 				<a href="?action=admin&function=pilot_view&pilot_id={$p.pilot_id|escape}" class="btn-link">{$p.user_name|escape}</a>

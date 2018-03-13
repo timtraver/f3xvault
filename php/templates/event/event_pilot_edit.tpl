@@ -120,9 +120,15 @@
 			</td>
 		</tr>
 		<tr>
-			<th align="right" nowrap>Pilot FAI #</th>
+			<th align="right" nowrap>Pilot FAI Designation</th>
 			<td colspan="2">
-				<input type="text" name="pilot_fai" size="15" value="{$pilot.pilot_fai|escape}">
+				<input type="text" name="pilot_fai" size="20" value="{$pilot.pilot_fai|escape}">
+			</td>
+		</tr>
+		<tr>
+			<th align="right" nowrap>Pilot FAI License Number</th>
+			<td colspan="2">
+				<input type="text" name="pilot_fai_license" size="20" value="{$pilot.pilot_fai_license|escape}">
 			</td>
 		</tr>
 		<tr>
@@ -298,6 +304,7 @@
 <input type="hidden" name="from_pilot_email" value="">
 <input type="hidden" name="from_pilot_ama" value="">
 <input type="hidden" name="from_pilot_fai" value="">
+<input type="hidden" name="from_pilot_fai_license" value="">
 <input type="hidden" name="from_class_id" value="">
 <input type="hidden" name="from_event_pilot_freq" value="">
 <input type="hidden" name="from_event_pilot_team" value="">
@@ -441,6 +448,7 @@ function copy_plane_values(){ldelim}
 	{/if}
 	document.add_plane.from_pilot_ama.value=document.main.pilot_ama.value;
 	document.add_plane.from_pilot_fai.value=document.main.pilot_fai.value;
+	document.add_plane.from_pilot_fai_license.value=document.main.pilot_fai_license.value;
 	document.add_plane.from_class_id.value=document.main.class_id.value;
 	document.add_plane.from_event_pilot_freq.value=document.main.event_pilot_freq.value;
 	document.add_plane.from_event_pilot_team.value=document.main.event_pilot_team.value;

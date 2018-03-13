@@ -11,7 +11,8 @@
 <tr>
 	<th width="2%" align="left">#</th>
 	<th align="left" colspan="2">Pilot Name</th>
-	<th width="10%" align="left">AMA/FAI#</th>
+	<th width="5%" align="left">AMA/FAI#</th>
+	<th width="5%" align="left" nowrap>FAI License</th>
 	<th align="left">Pilot Class</th>
 	<th align="left">Pilot Plane</th>
 	<th align="left">Pilot Freq</th>
@@ -36,12 +37,15 @@
 			{/if}
 			&nbsp;{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
 		</td>
-		<td align="left">
+		<td align="left" nowrap>
 			{if $p.pilot_fai}
 				{$p.pilot_fai|escape}
 			{else}
 				{$p.pilot_ama|escape}
 			{/if}
+		</td>
+		<td align="left" nowrap>
+			{$p.pilot_fai_license|escape}
 		</td>
 		<td>{$p.class_description|escape}</td>
 		<td>{$p.plane_name|escape}</td>

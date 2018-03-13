@@ -30,6 +30,7 @@
 				<th width="2%" align="right">Bib</th>
 				<th align="left">Pilot Name</th>
 				<th align="left">FAI</th>
+				<th align="left" nowrap>FAI License</th>
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
 					{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group}
@@ -77,7 +78,8 @@
 					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
 					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 				</td>
-				<td>{$event->pilots.$event_pilot_id.pilot_fai}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai}</td>
+				<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai_license}</td>
 					{if $f.flight_type_group}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}

@@ -33,8 +33,8 @@
 			</td>
 		</tr>
 		<tr>
-			<th>Pilot AMA/FAI Number</th>
-			<td>{$pilot.pilot_ama|escape}/{$pilot.pilot_fai|escape}</td>
+			<th>Pilot AMA/FAI Number/License</th>
+			<td>{$pilot.pilot_ama|escape}/{$pilot.pilot_fai|escape}/{$pilot.pilot_fai_license|escape}</td>
 			<th>Pilot FAI Number</th>
 			<td></td>
 		</tr>

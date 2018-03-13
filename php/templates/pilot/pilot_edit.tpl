@@ -88,8 +88,12 @@
 							<td>{$pilot.pilot_ama|escape}</td>
 						</tr>
 						<tr>
-							<th>Pilot FAI Number</th>
+							<th>Pilot FAI Designation</th>
 							<td>{$pilot.pilot_fai|escape}</td>
+						</tr>
+						<tr>
+							<th>Pilot FAI License</th>
+							<td>{$pilot.pilot_fai_license|escape}</td>
 						</tr>
 						</table>
 					</div>

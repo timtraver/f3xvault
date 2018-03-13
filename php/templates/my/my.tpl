@@ -130,8 +130,12 @@
 							<td><input type="text" size="10" name="pilot_ama" value="{$pilot.pilot_ama|escape}"></td>
 						</tr>
 						<tr>
-							<th align="right">FAI Number</th>
+							<th align="right">FAI Designation</th>
 							<td><input type="text" size="10" name="pilot_fai" value="{$pilot.pilot_fai|escape}"></td>
+						</tr>
+						<tr>
+							<th align="right">FAI License</th>
+							<td><input type="text" size="20" name="pilot_fai_license" value="{$pilot.pilot_fai_license|escape}"></td>
 						</tr>
 						</table>
 						<center>

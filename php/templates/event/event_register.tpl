@@ -43,9 +43,15 @@
 			</td>
 		</tr>
 		<tr>
-			<th align="right" nowrap>Pilot FAI #</th>
+			<th align="right" nowrap>Pilot FAI Designation</th>
 			<td>
 				<input type="text" name="pilot_fai" size="15" value="{$user.pilot_fai|escape}">
+			</td>
+		</tr>
+		<tr>
+			<th align="right" nowrap>Pilot FAI License</th>
+			<td>
+				<input type="text" name="pilot_fai_license" size="15" value="{$user.pilot_fai_license|escape}">
 			</td>
 		</tr>
 		<tr>
