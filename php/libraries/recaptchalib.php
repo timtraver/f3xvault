@@ -85,6 +85,7 @@ class ReCaptcha
     {
         $req = $this->_encodeQS($data);
         $response = file_get_contents($path . $req);
+print "<!--".$path.$req."-->\n";
         return $response;
     }
     /**
@@ -111,7 +112,6 @@ class ReCaptcha
             array (
                 'secret' => $this->_secret,
                 'remoteip' => $remoteIp,
-                'v' => self::$_version,
                 'response' => $response
             )
         );
@@ -122,8 +122,8 @@ class ReCaptcha
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = $answers[error-codes];
         }
-        print "<!--".print_r($getResponse,true)."-->\n";
-        print "<!--".print_r($recaptchaResponse,true)."-->\n";
+print "<!--".print_r($getResponse,true)."-->\n";
+print "<!--".print_r($recaptchaResponse,true)."-->\n";
         
         return $recaptchaResponse;
     }
