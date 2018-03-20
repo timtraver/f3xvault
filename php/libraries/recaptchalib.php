@@ -97,13 +97,12 @@ class ReCaptcha
      */
     private function _submitHTTPPost($path, $data)
     {
-print "<!--".print_r($path,true)."-->\n";
 		$curl = curl_init( $path );
-		curl_setopt( $curl, CURLOPT_POST, true );
+		curl_setopt( $curl, CURLOPT_POST, TRUE );
 		curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
 		$response = curl_exec( $curl );
-print "<!--".print_r($curl,true)."-->\n";
+print "<!--response = ".print_r($response,true)."-->\n";
 		curl_close( $curl );
 		return $response;
 
