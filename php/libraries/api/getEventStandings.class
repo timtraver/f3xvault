@@ -37,6 +37,11 @@ class getEventStandings {
 		start_smarty();
 
 		$event = new Event($this->event_id);
+		if(! $event->info['event_id']){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
 		$event->get_pilots();
 		$event->get_rounds();
 		$event->calculate_event_totals();		

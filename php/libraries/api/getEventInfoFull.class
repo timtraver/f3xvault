@@ -26,7 +26,7 @@ class getEventInfoFull {
 			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
 		$this->api->function_output_description = 
-			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, Team Name\nIn between are each of the round flights for that pilot on a separate line. So if there are 4 rounds, then there are 4 lines after each pilot for the round info.\n\nFor F3F, each round has the following fields (Group, Flight Order, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3F, each round has the following fields (Group, Flight Order, sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8, sub9, sub10, sub11, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3K, each round has the following fields (Group, Flight Seconds, Penalty) for as many rounds as there are including draws.";
+			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, FAI License, Team Name\nIn between are each of the round flights for that pilot on a separate line. So if there are 4 rounds, then there are 4 lines after each pilot for the round info.\n\nFor F3F, each round has the following fields (Group, Flight Order, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3F, each round has the following fields (Group, Flight Order, sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8, sub9, sub10, sub11, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3K, each round has the following fields (Group, Flight Seconds, Penalty) for as many rounds as there are including draws.";
 	}
 
 	public function process_request(){
@@ -37,6 +37,11 @@ class getEventInfoFull {
 		start_smarty();
 
 		$event = new Event($this->event_id);
+		if(! $event->info['event_id']){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
 		$event->get_draws();
 		$event->get_rounds();
 

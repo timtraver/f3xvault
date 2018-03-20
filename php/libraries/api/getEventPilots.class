@@ -25,7 +25,7 @@ class getEventPilots {
 			array("name" => "event_id", "type" => "string", "description" => "Event ID", "mandatory" => 1)
 		);
 		$this->api->function_output_description = 
-			"One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, Team_Name";
+			"One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, FAI License, Team_Name";
 	}
 
 	public function process_request(){

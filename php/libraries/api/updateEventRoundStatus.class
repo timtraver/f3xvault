@@ -42,6 +42,11 @@ class updateEventRoundStatus {
 		
 		# Ok, now that we have everything, lets create the pilot
 		$event = new Event($this->event_id);
+		if(! $event->info['event_id']){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
 		$event->get_rounds();
 		
 		$event_round_id = $event->rounds[$this->round_number]['event_round_id'];

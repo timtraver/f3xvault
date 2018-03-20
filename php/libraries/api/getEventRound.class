@@ -38,6 +38,11 @@ class getEventRound {
 		start_smarty();
 
 		$event = new Event($this->event_id);
+		if(! $event->info['event_id']){
+			$this->api->error_code = 3;
+			$this->api->error_string = "Invalid Event ID.\n";
+			return 0;
+		}
 		$event->get_draws();
 		$_REQUEST['sort_by'] = 'flight_order';
 		$event->get_rounds();
