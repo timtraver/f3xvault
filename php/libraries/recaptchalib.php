@@ -124,7 +124,7 @@ class ReCaptcha
         }
         print "<!--".$this->_secret."-->\n";
         print "<!--".$response."-->\n";
-        print "<!--".$recaptchaResponse->success."-->\n";
+        print "<!--".print_r($recaptchaResponse,true)."-->\n";
         
         return $recaptchaResponse;
     }
