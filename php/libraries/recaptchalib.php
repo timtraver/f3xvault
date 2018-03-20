@@ -98,6 +98,7 @@ class ReCaptcha
      */
     public function verifyResponse($remoteIp, $response)
     {
+	    $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
         if ($response == null || strlen($response) == 0) {
             $recaptchaResponse = new ReCaptchaResponse();
@@ -115,15 +116,13 @@ class ReCaptcha
             )
         );
         $answers = json_decode($getResponse, true);
-        $recaptchaResponse = new ReCaptchaResponse();
         if (trim($answers['success']) == true) {
             $recaptchaResponse->success = true;
         } else {
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = $answers[error-codes];
         }
-        print "<!--".$this->_secret."-->\n";
-        print "<!--".$response."-->\n";
+        print "<!--".print_r($getResponse,true)."-->\n";
         print "<!--".print_r($recaptchaResponse,true)."-->\n";
         
         return $recaptchaResponse;
