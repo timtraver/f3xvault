@@ -204,7 +204,6 @@ function main_feedback_save() {
 	
 	$recaptcha_secret = $GLOBALS['recaptcha_secret'];
 	
-print "<!--".$_POST["g-recaptcha-response"]."-->\n";
 	# Check recaptcha entered
 	$reCaptcha = new ReCaptcha($recaptcha_secret);
 	if ($_POST["g-recaptcha-response"]) {

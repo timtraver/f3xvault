@@ -102,25 +102,8 @@ class ReCaptcha
 		curl_setopt( $curl, CURLOPT_POSTFIELDS, http_build_query( $data ) );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, TRUE );
 		$response = curl_exec( $curl );
-print "<!--response = ".print_r($response,true)."-->\n";
 		curl_close( $curl );
 		return $response;
-
-#        $req = http_build_query( $data );
-#        $opts = array('http' =>
-#			array(
-#				'method'  => 'POST',
-#				'header'  => 'Content-type: application/x-www-form-urlencoded',
-#				'content' => $req
-#			)
-#		);
-#        $context  = stream_context_create($opts);
-#print "<!--".print_r($req,true)."-->\n";
-#print "<!--".print_r($opts,true)."-->\n";
-#print "<!--".print_r($context,true)."-->\n";
-#print "<!--".print_r($path,true)."-->\n";
-#        $response = file_get_contents($path, false, $context);
-#        return $response;
     }
     /**
      * Calls the reCAPTCHA siteverify API to verify whether the user passes
@@ -155,10 +138,7 @@ print "<!--response = ".print_r($response,true)."-->\n";
         } else {
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = $answers[error-codes];
-        }
-print "<!--".print_r($getResponse,true)."-->\n";
-print "<!--".print_r($recaptchaResponse,true)."-->\n";
-        
+        }        
         return $recaptchaResponse;
     }
 }
