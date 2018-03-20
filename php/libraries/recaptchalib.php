@@ -85,7 +85,28 @@ class ReCaptcha
     {
         $req = $this->_encodeQS($data);
         $response = file_get_contents($path . $req);
-print "<!--".$path.$req."-->\n";
+        return $response;
+    }
+    /**
+     * Submits an HTTP GET to a reCAPTCHA server.
+     *
+     * @param string $path url path to recaptcha server.
+     * @param array  $data array of parameters to be sent.
+     *
+     * @return array response
+     */
+    private function _submitHTTPPost($path, $data)
+    {
+        $req = http_build_query( $data );
+        $opts = array('http' =>
+			array(
+				'method'  => 'POST',
+				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'content' => $req
+			)
+		);
+        $context  = stream_context_create($opts);
+        $response = file_get_contents($path, false, $context);
         return $response;
     }
     /**
@@ -107,7 +128,7 @@ print "<!--".$path.$req."-->\n";
             $recaptchaResponse->errorCodes = 'missing-input';
             return $recaptchaResponse;
         }
-        $getResponse = $this->_submitHttpGet(
+        $getResponse = $this->_submitHTTPPost(
             self::$_siteVerifyUrl,
             array (
                 'secret' => $this->_secret,
