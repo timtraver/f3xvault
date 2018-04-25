@@ -127,6 +127,7 @@
 					<br style="clear:left;">
 					<div>
 						<div>                
+							<button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="window.open('?action=event&function=event_draw_view&event_draw_id={$draw_info.event_draw_id}&event_id={$event->info.event_id}&use_print_header=1','_blank');"> Print Draw </button>
 							{include file="event/event_view_draw.tpl"}
 							<br>
 						</div>
