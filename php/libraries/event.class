@@ -885,6 +885,7 @@ class Event {
 	public function get_active_draws_and_stats(){
 		# Method to get all of the current active draws and their combined statistics
 		include_library("draw.class");
+		$this->get_tasks();
 		if(count($this->draws) == 0){
 			$this->get_draws();
 		}
@@ -930,11 +931,7 @@ class Event {
 							# Lets create the round info
 							$draw_rounds[$event_round_number]['event_round_number'] = $event_round_number;
 							$draw_rounds[$event_round_number]['event_round_status'] = 1;
-							if($this->info['event_type_code'] == 'f3k'){
-								$draw_rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$round_num];
-							}else{
-								$draw_rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
-							}
+							$draw_rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
 							$draw_rounds[$event_round_number]['flights'][$flight_type_id] = $this->flight_types[$flight_type_id];
 							foreach($v['pilots'] as $event_pilot_id => $p){
 								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
