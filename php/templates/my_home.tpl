@@ -27,7 +27,7 @@
 						<button class="btn btn-block btn-success btn-rounded dropdown-toggle" style="font-size: 20px;" data-toggle="dropdown" aria-expanded="false">
 							<i class="fa fa-hand-o-right" style="float:left;padding-top: 3px;"></i>
 							My Future Events
-							<i class="dropdown-caret fa fa-chevron-down"style="float:right;padding-top: 3px;"></i>
+							<i class="dropdown-caret fa fa-chevron-down"style="padding-top: 3px;padding-left: 15px;"></i>
 						</button>
 						<ul class="dropdown-menu" style="width:100%;position: relative;font-size:16px;">
 							{foreach $future as $f}
@@ -44,7 +44,7 @@
 						<button class="btn btn-block btn-success btn-rounded dropdown-toggle" style="font-size: 20px;" data-toggle="dropdown" aria-expanded="false">
 							<i class="fa fa-hand-o-left" style="float:left;padding-top: 3px;"></i>
 							My Past Events
-							<i class="dropdown-caret fa fa-chevron-down"style="float:right;padding-top: 3px;"></i>
+							<i class="dropdown-caret fa fa-chevron-down"style="padding-top: 3px;padding-left: 15px;"></i>
 						</button>
 						<ul class="dropdown-menu" style="width:100%;position: relative;font-size:16px;">
 							{foreach $past as $p}
