@@ -88,10 +88,10 @@
 					</td>
 					<td nowrap>
 						<div style="overflow: hidden;">
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}"> Delete </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';"> Edit </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> UnApply </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> Apply </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}{rdelim}"> Delete </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> Edit </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> UnApply </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> Apply </button></div>
 						</div>
 					</td>
 					</tr>
@@ -108,7 +108,7 @@
 				{if $f3k_first!=0}
 					{continue}
 				{/if}
-				<input type="button" value=" Create {if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if} Draw " onClick="document.main.flight_type_id.value={$ft.flight_type_id};submit();" class="btn btn-primary btn-rounded">
+				<input type="button" value=" Create {if $event->info.event_type_code=='f3k'}F3K{else}{$ft.flight_type_name}{/if} Draw " onClick="if(check_permission()){ldelim}document.main.flight_type_id.value={$ft.flight_type_id};submit();{rdelim}" class="btn btn-primary btn-rounded">
 				{if $event->info.event_type_code=='f3k'}
 					{$f3k_first=1}
 				{/if}
@@ -210,4 +210,16 @@
 
 	</div>
 </div>
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+function check_permission() {ldelim}
+	{if $permission!=1}
+		alert('Sorry, but you do not have permission to access this function.');
+		return 0;
+	{else}
+		return 1;
+	{/if}
+{rdelim}
+</script>
 {/block}

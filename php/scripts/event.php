@@ -3996,6 +3996,9 @@ function event_draw_edit() {
 		}
 	}
 
+	$permission = check_event_permission($event_id);
+	$smarty->assign("permission",$permission);
+
 	$smarty->assign("event",$e);
 	$smarty->assign("draw",$draw);
 	$smarty->assign("draw_pilots",$draw_pilots);

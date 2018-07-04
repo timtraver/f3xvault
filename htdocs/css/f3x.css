@@ -669,12 +669,11 @@ a.tooltip_stat:hover {
 	text-decoration:none;
 } 
 a.tooltip_stat span { 
-	z-index:10;
+	z-index:100;
 	display:none; 
 	padding:14px 20px; 
-	margin-top:-160px; 
+	margin-top:-260px; 
 	margin-left:28px; 
-	width:280px; 
 	line-height:16px; 
 } 
 a.tooltip_stat:hover span{ 
