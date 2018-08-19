@@ -256,7 +256,7 @@ class API {
 					if(isset($_REQUEST[$field_name])){
 						$this->input_variables[$field_name] = input_filter($this->input_variables[$field_name],'boolean');
 					}else{
-						$this->input_variables[$field_name] = '';
+						$this->input_variables[$field_name] = 0;
 					}
 					break;
 				case 'timestamp':

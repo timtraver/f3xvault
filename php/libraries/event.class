@@ -36,6 +36,7 @@ class Event {
 	public $event_calc_accuracy;
 	public $event_calc_accuracy_string;
 	public $f3k_flight_type_id;
+	public $loaded_rounds;
 	
 	public function __construct($event_id){
 		# Initialization of the class
@@ -62,6 +63,7 @@ class Event {
 		$this->get_pilots();
 		$this->get_flight_types();
 		$this->get_tasks();
+		$this->loaded_rounds = 0;
 		
 		# Lets set the calculation accuracy for the event
 		$this->event_calc_accuracy = $this->find_option_value($this->info['event_type_code']."_calc_accuracy");
@@ -528,6 +530,7 @@ class Event {
 			$rounds[$event_round_number]['event_round_score_second']								= $round['event_round_score_second'];
 			$rounds[$event_round_number]['event_round_needs_calc']									= $round['event_round_needs_calc'];
 			$rounds[$event_round_number]['event_round_flyoff']										= $round['event_round_flyoff'];
+			$rounds[$event_round_number]['event_round_locked']										= $round['event_round_locked'];
 			$rounds[$event_round_number]['event_round_status']										= $round['event_round_status'];
 			$rounds[$event_round_number]['flights'][$flight_type_id]								= $this->flight_types[$flight_type_id];
 			$rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score']	= $round['event_round_flight_score'];
@@ -678,7 +681,9 @@ class Event {
 				}
 			}
 		}
-				
+
+		$this->loaded_rounds = 1;
+						
 		# Lets recalculate any rounds if we need to
 		# Lets see if this is the owner of the event or a person allowed to recalculate rounds
 		# This will cut down on the system recalculating rounds when someone is just viewing while rounds are being entered
@@ -763,7 +768,6 @@ class Event {
 		}else{
 			$sort_by = '';
 		}
-		
 		foreach($this->draws as $event_draw_id => $d){
 			if($d['event_draw_active'] != 1){
 				continue;
@@ -775,7 +779,6 @@ class Event {
 					$flight_type_id = $this->tasks[$event_round_number]['flight_type_id'];
 				}
 				$this->f3k_flight_type_id = $flight_type_id;
-				
 				foreach($d['flights'][$flight_type_id][$event_round_number]['pilots'] as $event_pilot_id => $p){
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group']	= $p['event_draw_round_group'];
 					$pilots[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_order']	= $p['event_draw_round_order'];
@@ -955,7 +958,7 @@ class Event {
 	# Calculation Routines
 	public function calculate_round($event_round_number){
 		# Function to calculate the values in a round given the event round id
-		if(!isset($this->rounds[$event_round_number])){
+		if(!isset($this->rounds[$event_round_number]) && $this->loaded_rounds == 0 ){
 			$this->get_rounds();
 		}
 		

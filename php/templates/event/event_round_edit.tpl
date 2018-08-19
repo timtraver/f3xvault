@@ -84,7 +84,7 @@
 			{if $event->info.event_type_code=='td'}
 				<th nowrap>Round Scoring Points</th>
 				<td>
-					<input type="text" size="2" name="event_round_score_second" value="{$event->rounds.$round_number.event_round_score_second}"> Points Per Second
+					<input type="text" size="3" name="event_round_score_second" value="{$event->rounds.$round_number.event_round_score_second|string_format:"%0.1f"}"> Points Per Second
 				</td>
 		</tr>
 		<tr>
@@ -137,8 +137,13 @@
 					</span>
 					Round {$round_number|escape}
 				</th>
-				<th colspan="{$cols}">
+				<th colspan="{$cols - 2}">
 					{$ft.flight_type_name|escape}
+				</th>
+				<th colspan="2">
+					{if $self_entry}
+						Self Score Locked <input type="checkbox" name="event_round_locked"{if $event->rounds.$round_number.event_round_locked==1} CHECKED{/if}
+					{/if}
 				</th>
 				<th>
 					Score <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>

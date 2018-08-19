@@ -24,14 +24,13 @@
 			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 				{continue}
 			{/if}
-			{if $event->info.event_type_code=="f3k"}
-				{$flight_type_id=$r.flight_type_id}
-			{/if}
+			{$round_number = $r.event_round_number}
+			{$flight_type_id=$r.flight_type_id}
 			{$bgcolor=''}
-			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
-				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
-				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
-				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+			{if $event->flight_types.$flight_type_id.flight_type_code == 'f3b_duration' ||
+				$event->flight_types.$flight_type_id.flight_type_code == 'td_duration' ||
+				$event->flight_types.$flight_type_id.flight_type_code == 'f3b_distance' ||
+				$event->flight_types.$flight_type_id.flight_type_code == 'f3j_duration'}
 				{$size=3}
 			{else}
 				{$size=2}
@@ -46,6 +45,12 @@
 					{$ftid=$r.flight_type_id}
 					<tr bgcolor="white">
 						<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short}</td>
+					</tr>
+				{/if}
+				{if $event->info.event_type_code=='f3j' || $event->info.event_type_code=='td'}
+					{$ftid=$r.flight_type_id}
+					<tr bgcolor="white">
+						<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short} {$event->tasks.$round_number.event_task_time_choice} min</td>
 					</tr>
 				{/if}
 				<tr bgcolor="lightgray">

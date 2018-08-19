@@ -50,12 +50,14 @@
 				{if $event->info.event_reg_status == 0 || 
 					($event->pilots|count >= $event->info.event_reg_max && $event->info.event_reg_max != 0) ||
 					($event->info.event_reg_close_on == 1 && time() > $event->info.event_reg_close_date_stamp) ||
-					($event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp)
+					($event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp) ||
+					time() > $event->info.event_reg_close_date_stamp
 				}
 					<font color="red"><b>Registration Currently Closed {if $event->pilots|count>=$event->info.event_reg_max && $event->info.event_reg_max != 0} Due To Max Pilots{/if}</b></font>
 					{if $event->info.event_reg_status == 2 && time() < $event->info.event_reg_open_date_stamp}
 					<font color="green">(Registration opens on {date("Y-m-d h:i a",$event->info.event_reg_open_date_stamp)} - {$event->info.event_reg_open_tz|escape} Tim Zone)</font>
 					{/if}
+					<br>
 				{else}
 					<font color="green"><b>Registration Currently Open</b></font>
 					&nbsp;&nbsp;&nbsp;&nbsp;
@@ -89,6 +91,13 @@
 				<li><a href="#" onClick="document.event_view_info.submit();">View Full Event Info</a></li>
 				{if $event->info.event_type_code == 'f3k'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3K Tasks</a></li>
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">F3K Audio Link</a></li>
+				{/if}
+				{if $event->info.event_type_code == 'f3j'}
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3J Tasks</a></li>
+				{/if}
+				{if $event->info.event_type_code == 'td'}
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set TD Tasks</a></li>
 				{/if}
 				{if $active_draws || $event->pilots|count >0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}{rdelim}">Manage Event Draws</a></li>
@@ -124,6 +133,20 @@
 		<br>
 	</div>
 </div>
+<!-- If this event has a self entry, then show a big button for them to use -->
+{if $self_entry == 1}
+<div class="panel">
+	<h2 style="float: left;">Self Score Entry</h2>
+	<div style="float:right;overflow:hidden;margin-top:10px;margin-bottom: 10px;margin-right: 10px;">
+		<input type="button" value=" Enter My Scores " onClick="document.event_self_entry.submit();" class="btn btn-success btn-rounded" style="float:right;font-size: 16px;margin-bottom: 10px;">
+	</div>
+	<br>
+	<br>
+	<br>
+	
+</div>
+{/if}
+
 <!-- All the forms for the action list -->
 <form name="event_view" method="POST">
 <input type="hidden" name="action" value="event">
@@ -221,6 +244,12 @@
 <form name="event_tasks" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_tasks">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+
+<form name="event_self_entry" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_self_entry">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 

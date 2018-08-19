@@ -569,7 +569,7 @@ class PDF_F3X {
 		return;
 	}
 	public function render_cell_td($x,$y,$data){
-		# Function to render a single cell of data at x and y location for F3B
+		# Function to render a single cell of data at x and y location for TD
 		# Lets set the XY for the cell
 		$current_x = $x;
 		$current_y = $y;

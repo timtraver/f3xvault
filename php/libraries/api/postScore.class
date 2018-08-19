@@ -98,6 +98,8 @@ class postScore {
 		$this->order		= $this->api->input_variables['order'];
 		$this->flight_time	= $this->api->input_variables['flight_time'];
 		$this->penalty		= $this->api->input_variables['penalty'];
+		$this->dns			= $this->api->input_variables['dns'];
+		$this->dnf			= $this->api->input_variables['dnf'];
 		if(isset($this->api->input_variables['wind_avg'])){
 			$this->wind_avg = $this->api->input_variables['wind_avg'];
 		}else{
@@ -118,7 +120,6 @@ class postScore {
 		}else{
 			$this->seconds = 0;
 		}
-		
 		# Ok, now lets post the score
 		# Lets first figure out the event_pilot_id from the pilot list
 		$this->event_pilot_id = 0;
@@ -282,7 +283,7 @@ class postScore {
 				");
 				$result = db_exec($stmt,array(
 					"event_pilot_id" => $this->event_pilot_id,
-					"event_round_id" => $$event->rounds[$this->round]['event_round_id']
+					"event_round_id" => $event->rounds[$this->round]['event_round_id']
 				));
 				$event_pilot_round_id = $GLOBALS['last_insert_id'];
 			}
@@ -327,8 +328,8 @@ class postScore {
 					event_pilot_round_flight_minutes = :minutes,
 					event_pilot_round_flight_seconds = :seconds,
 					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = 0,
-					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_dns = :dns,
+					event_pilot_round_flight_dnf = :dnf,
 					event_pilot_round_flight_wind_avg = :wind_avg,
 					event_pilot_round_flight_dir_avg = :dir_avg,
 					event_pilot_round_flight_time = :flight_time,
@@ -341,6 +342,8 @@ class postScore {
 				"minutes" => $this->minutes,
 				"seconds" => $this->seconds,
 				"penalty" => $this->penalty,
+				"dns" => $this->dns,
+				"dnf" => $this->dnf,
 				"wind_avg" => $this->wind_avg,
 				"dir_avg" => $this->dir_avg,
 				"flight_time" => $this->flight_time,
@@ -357,8 +360,8 @@ class postScore {
 					event_pilot_round_flight_minutes = :minutes,
 					event_pilot_round_flight_seconds = :seconds,
 					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = 0,
-					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_dns = :dns,
+					event_pilot_round_flight_dnf = :dnf,
 					event_pilot_round_flight_wind_avg = :wind_avg,
 					event_pilot_round_flight_dir_avg = :dir_avg,
 					event_pilot_round_flight_time = :flight_time,
@@ -372,6 +375,8 @@ class postScore {
 				"minutes" => $this->minutes,
 				"seconds" => $this->seconds,
 				"penalty" => $this->penalty,
+				"dns" => $this->dns,
+				"dnf" => $this->dnf,
 				"wind_avg" => $this->wind_avg,
 				"dir_avg" => $this->dir_avg,
 				"flight_time" => $this->flight_time
@@ -486,6 +491,8 @@ class postScore {
 				array("name" => "sub9",			"type" => "float",		"description" => "Lap 8",						 	"mandatory" => 1),
 				array("name" => "sub10",		"type" => "float",		"description" => "Lap 9",						 	"mandatory" => 1),
 				array("name" => "sub11",		"type" => "float",		"description" => "Lap 10",						 	"mandatory" => 1),
+				array("name" => "dns",			"type" => "boolean",	"description" => "DNS - Did Not Start",			 	"mandatory" => 0),
+				array("name" => "dnf",			"type" => "boolean",	"description" => "DNF - Did Not Finish",		 	"mandatory" => 0),
 			),
 			"f3k" => array(),
 			"f3j" => array(),

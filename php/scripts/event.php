@@ -38,7 +38,8 @@ $need_login = array(
 	"event_round_delete",
 	"event_round_flight_delete",
 	"save_individual_flight",
-	"event_tasks_add_round"
+	"event_tasks_add_round",
+	"event_self_entry"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id'] == 0 && in_array($function, $need_login)){
@@ -52,7 +53,8 @@ if(check_user_function($function)){
 	}else{
 		# Now check to see if they have permission to edit this event
 		if(isset($_REQUEST['event_id']) && $_REQUEST['event_id'] != 0){
-			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_event_permission($_REQUEST['event_id']))){
+			
+			if(!in_array($function, $need_login) || (in_array($function, $need_login) && check_event_permission($_REQUEST['event_id'])) || $function == 'event_self_entry' ){
 				# They are allowed
 				eval("\$actionoutput = $function();");
 			}else{
@@ -462,6 +464,11 @@ function event_view() {
 			$event_reg_past = 1;
 		}
 	}
+	# Lets set whether or not there is a self scoring option
+	$self_entry_param = $e->info['event_type_code']."_self_entry";
+	$self_entry = $e->find_option_value($self_entry_param);
+	$smarty->assign("self_entry",$self_entry);
+	
 	$smarty->assign("group_totals",$group_totals);
 	$smarty->assign("event",$e);
 	$smarty->assign("event_reg_past",$event_reg_past);
@@ -2721,6 +2728,11 @@ function event_round_edit() {
 			}
 		}
 	}
+
+	# Lets set whether or not there is a self scoring option
+	$self_entry_param = $event->info['event_type_code']."_self_entry";
+	$self_entry = $event->find_option_value($self_entry_param);
+	$smarty->assign("self_entry",$self_entry);
 	
 	$smarty->assign("event_round_id",$event_round_id);
 	$smarty->assign("round_number",$round_number);
@@ -2752,10 +2764,16 @@ function event_round_save() {
 	$event_round_flyoff = intval($_REQUEST['event_round_flyoff']);
 	$create_new_round = intval($_REQUEST['create_new_round']);
 	$event_round_score_status = 0;
+	$event_round_locked = 0;
 	if(isset($_REQUEST['event_round_score_status']) && ($_REQUEST['event_round_score_status'] == 'on' || $_REQUEST['event_round_score_status'] == 1)){
 		$event_round_score_status = 1;
 	}else{
 		$event_round_score_status = 0;
+	}
+	if(isset($_REQUEST['event_round_locked']) && ($_REQUEST['event_round_locked'] == 'on' || $_REQUEST['event_round_locked'] == 1)){
+		$event_round_locked = 1;
+	}else{
+		$event_round_locked = 0;
 	}
 	if(isset($_REQUEST['event_round_score_second']) && ($_REQUEST['event_round_score_second'] != '')){
 		$event_round_score_second = $_REQUEST['event_round_score_second'];
@@ -2852,6 +2870,7 @@ function event_round_save() {
 					event_round_time_choice = :event_round_time_choice,
 					event_round_score_status = :event_round_score_status,
 					event_round_score_second = :event_round_score_second,
+					event_round_locked = :event_round_locked,
 					event_round_needs_calc = 0,
 					event_round_flyoff = :event_round_flyoff,
 					event_round_status = 1
@@ -2863,7 +2882,8 @@ function event_round_save() {
 				"event_round_time_choice"	=> $event_round_time_choice,
 				"event_round_flyoff"		=> $event_round_flyoff,
 				"event_round_score_status"	=> $event_round_score_status,
-				"event_round_score_second"	=> $event_round_score_second
+				"event_round_score_second"	=> $event_round_score_second,
+				"event_round_locked"	=> $event_round_locked
 			));
 			$event_round_id = $GLOBALS['last_insert_id'];
 			$_REQUEST['event_round_id'] = $event_round_id;
@@ -2875,7 +2895,8 @@ function event_round_save() {
 			SET flight_type_id = :flight_type_id,
 				event_round_time_choice = :event_round_time_choice,
 				event_round_score_status = :event_round_score_status,
-					event_round_score_second = :event_round_score_second,
+				event_round_score_second = :event_round_score_second,
+				event_round_locked = :event_round_locked,
 				event_round_flyoff = :event_round_flyoff,
 				event_round_needs_calc = 0
 			WHERE event_round_id = :event_round_id
@@ -2885,6 +2906,7 @@ function event_round_save() {
 			"event_round_time_choice"	=> $event_round_time_choice,
 			"event_round_score_status"	=> $event_round_score_status,
 			"event_round_score_second"	=> $event_round_score_second,
+			"event_round_locked"		=> $event_round_locked,
 			"event_round_flyoff"		=> $event_round_flyoff,
 			"event_round_id"			=> $event_round_id
 		));
@@ -3102,7 +3124,7 @@ function event_round_save() {
 			}
 		}
 	}
-debug($data);
+
 	# Lets do a query to get existing event_pilot_round_id's so we don't have to do it in the loop
 	$eprs = array();
 	$stmt = db_prep("
@@ -4500,6 +4522,7 @@ function event_draw_print() {
 								}else{
 									$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
 								}
+								$e->rounds[$event_round_number]['event_round_time_choice'] = $e->tasks[$event_round_number]['event_task_time_choice'];
 								$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
 								foreach($v['pilots'] as $event_pilot_id => $p){
 									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
@@ -4572,9 +4595,8 @@ function event_draw_print() {
 				);
 			}
 		}
-		#print_r($e);
-		#print_r($data);
-		#return;
+#		print_r($e);
+#		return;
 		# Now create the pdf from the above template and save it
 		$pdf = new PDF_F3X();
 		$pdf->render($e->info['event_type_code'],$data);
@@ -4630,7 +4652,7 @@ function event_draw_view() {
 	
 	$e = new Event($event_id);
 	$e->get_teams();
-	
+
 	# Lets set the round flight types from the task list
 	$draw_round_flight_types = array();	
 	foreach($e->tasks as $round => $t){
@@ -5562,6 +5584,14 @@ function event_tasks_save() {
 			$id = $match[1];
 			$rounds[$id]['flight_type_id'] = $value;
 		}
+		if(preg_match("/event_task_time_choice_(\d*)/",$key,$match)){
+			$id = $match[1];
+			$rounds[$id]['event_task_time_choice'] = $value;
+		}
+		if(preg_match("/event_task_score_second_(\d*)/",$key,$match)){
+			$id = $match[1];
+			$rounds[$id]['event_task_score_second'] = $value;
+		}
 	}
 
 	# Now Lets save the round tasks
@@ -5569,13 +5599,17 @@ function event_tasks_save() {
 		$stmt = db_prep("
 			UPDATE event_task
 			SET event_task_round_type = :round_type,
-				flight_type_id = :flight_type_id
+				flight_type_id = :flight_type_id,
+				event_task_time_choice = :event_task_time_choice,
+				event_task_score_second = :event_task_score_second
 			WHERE event_task_id = :event_task_id
 		");
 		$result = db_exec($stmt,array(
-			"round_type"		=> $r['event_task_round_type'],
-			"flight_type_id"	=> $r['flight_type_id'],
-			"event_task_id"		=> $id
+			"round_type"				=> $r['event_task_round_type'],
+			"flight_type_id"			=> $r['flight_type_id'],
+			"event_task_time_choice"	=> $r['event_task_time_choice'],
+			"event_task_score_second"	=> $r['event_task_score_second'],
+			"event_task_id"				=> $id
 		));
 	}
 	
@@ -5598,6 +5632,23 @@ function event_tasks_save() {
 			break;
 		}
 
+		# If its F3J or TD, lets set the default time and point value
+		$event_task_time_choice = 0;
+		$event_task_score_second = 0;
+		if($e->info['event_type_code'] == 'f3j'){
+			$event_task_score_second = 1;
+			if($round_type == 'prelim'){
+				$event_task_time_choice = 10;
+			}else{
+				$event_task_time_choice = 15;
+			}
+			
+		}
+		if($e->info['event_type_code'] == 'td'){
+			$event_task_time_choice = 10;
+			$event_task_score_second = 1;
+		}
+
 		# Now insert the record
 		$stmt = db_prep("
 			INSERT INTO event_task
@@ -5605,13 +5656,17 @@ function event_tasks_save() {
 				event_task_round = :round,
 				event_task_round_type = :round_type,
 				flight_type_id = :flight_type_id,
+				event_task_time_choice = :event_task_time_choice,
+				event_task_score_second = :event_task_score_second,
 				event_task_status = 1
 		");
 		$result = db_exec($stmt,array(
-			"event_id"			=> $event_id,
-			"round"				=> $round,
-			"round_type"		=> $round_type,
-			"flight_type_id"	=> $flight_type_id
+			"event_id"					=> $event_id,
+			"round"						=> $round,
+			"round_type"				=> $round_type,
+			"flight_type_id"			=> $flight_type_id,
+			"event_task_time_choice"	=> $event_task_time_choice,
+			"event_task_score_second"	=> $event_task_score_second
 		));
 		if($round_type = 'prelim'){
 			user_message("Added Preliminary Round #$round.");
@@ -5821,4 +5876,577 @@ function event_print_blank_task() {
 	$pdf->render($e->info['event_type_code'],$data);
 	exit;
 }
+
+# Self Entry Functions
+function event_self_entry() {
+	global $smarty;
+	# Function to Edit a score in your event
+	$event_id = intval($_REQUEST['event_id']);
+	$event_pilot_id = intval($_REQUEST['event_pilot_id']);
+	$flight_type_id = intval($_REQUEST['flight_type_id']);
+	$round_number = intval($_REQUEST['round_number']);
+	$group = $_REQUEST['group'];
+	$minutes = intval($_REQUEST['minutes']);
+	$seconds = intval($_REQUEST['seconds']);
+	$seconds_2 = floatval($_REQUEST['seconds_2']);
+	$over = intval($_REQUEST['over']);
+	$landing = intval($_REQUEST['landing']);
+	$penalty = intval($_REQUEST['penalty']);
+	$save = intval($_REQUEST['save']);
+
+	$full_seconds = $seconds + ( $seconds_2 / 100 );
+
+	$event = new Event($event_id);
+	$event->get_rounds();
+	$event->get_tasks();
+	$event->get_draws();
+
+	# reset the round number if it is at the end
+	if( ( $round_number == 0 && count($event->rounds) == count($event->tasks) ) || $round_number >= count($event->tasks) ){
+		$round_number = count($event->tasks);
+	}
+
+	# If round is set, then reset the flight_type_id
+	if(isset($event->rounds[$round_number])){
+		$flight_type_id = $event->rounds[$round_number]['flight_type_id'];
+	}
+
+	# Get sub flight data if there is any
+	$sub_flights = array();
+	foreach($_REQUEST as $key=>$val){
+		if(preg_match("/sub_min_(\d)/", $key, $m)){
+			$flight = $m[1];
+			$sub_flights[$flight]['minutes'] = $val;
+		}
+		if(preg_match("/sub_sec_(\d)/", $key, $m)){
+			$flight = $m[1];
+			$sub_flights[$flight]['seconds'] = $val;
+		}
+	}
+	# Lets step through the sub flights and see if there are max flight times and enforce them
+	foreach($sub_flights as $sub => $f){
+		$total_seconds = ( $f['minutes'] * 60 ) + $f['seconds'];
+		if($event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'] != 0){
+			if( $total_seconds > $event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'] ){
+				$total_seconds = $event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'];
+				$sub_flights[$sub]['minutes'] = floor( $total_seconds / 60 );
+				$sub_flights[$sub]['seconds'] = sprintf( "%02d", fmod( $total_seconds, 60 ) );
+			}
+		}
+		$sub_flights[$sub]['total_seconds'] = $total_seconds;
+	}
+	# Lets check for 1234 round to truncate properly the times
+	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_h'){
+		# Its a 1234 flight
+		# So we need to sort the times by max to min, then truncate to the max times
+		$temp_sub = array();
+		foreach($sub_flights as $sub => $f){
+			$temp_sub[] = $f['total_seconds'];
+		}
+		sort($temp_sub);
+		if($temp_sub[0]>60){
+			$temp_sub[0] = 60;
+		}
+		if($temp_sub[1]>120){
+			$temp_sub[1] = 120;
+		}
+		if($temp_sub[2]>180){
+			$temp_sub[2] = 180;
+		}
+		if($temp_sub[3]>240){
+			$temp_sub[3] = 240;
+		}					
+		$sub_flights[1]['total_seconds'] = $temp_sub[0];
+		$sub_flights[1]['minutes'] = floor( $temp_sub[0] / 60 );
+		$sub_flights[1]['seconds'] = sprintf( "%02d", fmod( $temp_sub[0], 60 ) );
+		$sub_flights[2]['total_seconds'] = $temp_sub[1];
+		$sub_flights[2]['minutes'] = floor( $temp_sub[1] / 60 );
+		$sub_flights[2]['seconds'] = sprintf( "%02d", fmod( $temp_sub[1], 60 ) );
+		$sub_flights[3]['total_seconds'] = $temp_sub[2];
+		$sub_flights[3]['minutes'] = floor( $temp_sub[2] / 60 );
+		$sub_flights[3]['seconds'] = sprintf( "%02d", fmod( $temp_sub[2], 60 ) );
+		$sub_flights[4]['total_seconds'] = $temp_sub[3];
+		$sub_flights[4]['minutes'] = floor( $temp_sub[3] / 60 );
+		$sub_flights[4]['seconds'] = sprintf( "%02d", fmod( $temp_sub[3], 60 ) );
+	}
+	# Lets check for big ladder round to truncate properly the times
+	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_k'){
+		# Its a big ladder flight
+		# So we need to truncate to the max times
+		$temp_sub = array();
+		foreach($sub_flights as $sub => $f){
+			$temp_sub[] = $f['total_seconds'];
+		}
+		if($temp_sub[0]>60){
+			$temp_sub[0] = 60;
+		}
+		if($temp_sub[1]>90){
+			$temp_sub[1] = 90;
+		}
+		if($temp_sub[2]>120){
+			$temp_sub[2] = 120;
+		}
+		if($temp_sub[3]>150){
+			$temp_sub[3] = 150;
+		}					
+		if($temp_sub[4]>180){
+			$temp_sub[4] = 180;
+		}					
+		$sub_flights[1]['total_seconds'] = $temp_sub[0];
+		$sub_flights[1]['minutes'] = floor( $temp_sub[0] / 60 );
+		$sub_flights[1]['seconds'] = sprintf( "%02d", fmod( $temp_sub[0], 60 ) );
+		$sub_flights[2]['total_seconds'] = $temp_sub[1];
+		$sub_flights[2]['minutes'] = floor( $temp_sub[1] / 60 );
+		$sub_flights[2]['seconds'] = sprintf( "%02d", fmod( $temp_sub[1], 60 ) );
+		$sub_flights[3]['total_seconds'] = $temp_sub[2];
+		$sub_flights[3]['minutes'] = floor( $temp_sub[2] / 60 );
+		$sub_flights[3]['seconds'] = sprintf( "%02d", fmod( $temp_sub[2], 60 ) );
+		$sub_flights[4]['total_seconds'] = $temp_sub[3];
+		$sub_flights[4]['minutes'] = floor( $temp_sub[3] / 60 );
+		$sub_flights[4]['seconds'] = sprintf( "%02d", fmod( $temp_sub[3], 60 ) );
+		$sub_flights[5]['total_seconds'] = $temp_sub[4];
+		$sub_flights[5]['minutes'] = floor( $temp_sub[4] / 60 );
+		$sub_flights[5]['seconds'] = sprintf( "%02d", fmod( $temp_sub[4], 60 ) );
+	}
+	
+	# Lets total up the subflights to calculate the full flight time
+	if(count($sub_flights) != 0){
+		# It has sub flights so get the total times
+		foreach($sub_flights as $flight => $f){
+			$tot += $f['total_seconds'];
+		}
+		$minutes = floor( $tot / 60 );
+		$seconds = sprintf( "%02d", fmod( $tot, 60 ) );
+		$full_seconds = $seconds;
+	}
+
+	# If the event_pilot id is 0, then lets get the event pilot ID from the logged in user
+	if($event_pilot_id == 0){
+		$pilot_id = $GLOBALS['user']['pilot_id'];
+		foreach( $event->pilots as $event_pilot_id => $p ){
+			if( $p['pilot_id'] == $pilot_id ) {
+				$event_pilot_id = $p['event_pilot_id'];
+				break;
+			}
+		}
+	}
+	$current_pilot = $event->pilots[$event_pilot_id];
+
+	# lets get the team members for this event or all members if the parameter says
+	$team_members = array();
+	if($event->find_option_value($event->info['event_type_code']."_self_entry_all")){
+		# They can score for anyone, so lets get that list
+		foreach($event->pilots as $epid => $p){
+			if($event_pilot_id != $epid){
+				$team_members[$epid] = $p;
+			}
+		}
+	}else{
+		# Lets just get the team members to score for
+		$event->get_teams();
+		$team = $event->pilots[$event_pilot_id]['event_pilot_team'];
+		foreach($event->pilots as $epid => $p){
+			if($p['event_pilot_team'] == $team && $event_pilot_id != $epid){
+				$team_members[$epid] = $p;
+			}
+		}
+	}
+	
+	# Now lets look at the rounds to see which is the next round # to add if its a new one
+	$advance_round = 0;
+	$max_rounds = count($event->tasks);
+	if( $round_number == 0 ){
+		# Lets figure out the next round number
+		$max = 0;
+		foreach($event->rounds as $number => $r){
+			if( $number > $max ){
+				$max = $number;
+			}
+		}
+		$round_number = $max + 1;
+	}
+	if( isset( $event->rounds[$round_number] ) ) {
+		$advance_round = 1;
+	}
+	if( $round_number >= $max_rounds ){
+		$advance_round = 0;
+	}
+	
+	if( $save == 1 ) {
+		# Then they have hit the save this flight button, so lets save it.
+		# lets pre populate the round with a new round just in case
+		$event->get_new_round($round_number);
+
+		# First lets see if the round is there and if it is not locked.
+		$stmt = db_prep("
+			SELECT *
+			FROM event_round
+			WHERE event_id = :event_id
+				AND event_round_number = :event_round_number
+				AND event_round_status = 1
+		");
+		$result = db_exec($stmt,array("event_id" => $event_id,"event_round_number" => $round_number));
+		if( isset( $result[0] ) ) {
+			if($result[0]['event_round_locked'] == 1 ){
+				# This event round is locked, so return a cannot edit message
+				user_message("This round is locked. You cannot enter your score anymore.", 1);
+				$_REQUEST['save'] = 0;
+				return event_self_entry();
+			}
+			$event_round_id = $result[0]['event_round_id'];
+			# Need to update it to say that it needs calculation
+			$stmt = db_prep("
+				UPDATE event_round
+				SET event_round_needs_calc = 1
+				WHERE event_round_id = :event_round_id
+			");
+			$result = db_exec($stmt,array(
+				"event_round_id" => $event_round_id
+			));
+		}else{
+			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'td'){
+				$event_round_time_choice = $event->tasks[$round_number]['event_task_time_choice'];
+			}
+			$event_round_flyoff = 0;
+			$event_round_score_status = 1;
+			$event_round_score_second = 1;
+			
+			$stmt = db_prep("
+				INSERT INTO event_round
+				SET event_id = :event_id,
+					event_round_number = :event_round_number,
+					flight_type_id = :flight_type_id,
+					event_round_time_choice = :event_round_time_choice,
+					event_round_score_status = 0,
+					event_round_score_second = :event_round_score_second,
+					event_round_needs_calc = 0,
+					event_round_flyoff = :event_round_flyoff,
+					event_round_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_id"					=> $event_id,
+				"event_round_number"		=> $round_number,
+				"flight_type_id"			=> $flight_type_id,
+				"event_round_time_choice"	=> $event_round_time_choice,
+				"event_round_flyoff"		=> $event_round_flyoff,
+				"event_round_score_second"	=> $event_round_score_second
+			));
+			$event_round_id = $GLOBALS['last_insert_id'];
+		}
+		# Lets create the round flight now
+		# First lets see if it exists
+		$stmt = db_prep("
+			SELECT *
+			FROM event_round_flight
+			WHERE event_round_id = :event_round_id
+			AND flight_type_id = :flight_type_id
+		");
+		$result = db_exec($stmt,array("event_round_id" => $event_round_id,"flight_type_id" => $flight_type_id));
+		if(isset($result[0])){
+			# This one already exists, so lets update it
+			$event_round_flight_id = $result[0]['event_round_flight_id'];
+			$stmt = db_prep("
+				UPDATE event_round_flight
+				SET event_round_flight_score = 1
+				WHERE event_round_flight_id = :event_round_flight_id
+			");
+			$result2 = db_exec($stmt,array("event_round_flight_id" => $event_round_flight_id));
+			# Check to see if the event_pilot_round is set
+			$stmt = db_prep("
+				SELECT *
+				FROM event_pilot_round
+				WHERE event_pilot_id = :event_pilot_id
+					AND event_round_id = :event_round_id
+			");
+			$result = db_exec($stmt,array(
+				"event_pilot_id" => $event_pilot_id,
+				"event_round_id" => $event_round_id
+			));
+			if(count($result) > 0){
+				$event_pilot_round_id = $result[0]['event_pilot_round_id'];
+			}else{
+				# We need to create a round for this pilot
+				$stmt = db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id = :event_pilot_id,
+						event_round_id = :event_round_id
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_id" => $event_pilot_id,
+					"event_round_id" => $event_round_id
+				));
+				$event_pilot_round_id = $GLOBALS['last_insert_id'];
+			}
+		}else{
+			# This record doesn't exist, so lets create a new one
+			$stmt = db_prep("
+				INSERT INTO event_round_flight
+				SET event_round_id = :event_round_id,
+					flight_type_id = :flight_type_id,
+					event_round_flight_score = 1
+			");
+			$result2 = db_exec($stmt,array("event_round_id" => $event_round_id,"flight_type_id" => $flight_type_id));
+			$event_round_flight_id = $GLOBALS['last_insert_id'];
+			# Lets add the pilot rounds
+			foreach($event->pilots as $epid => $ep){
+				$stmt = db_prep("
+					INSERT INTO event_pilot_round
+					SET event_pilot_id = :event_pilot_id,
+						event_round_id = :event_round_id
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_id" => $epid,
+					"event_round_id" => $event_round_id
+				));
+				$eprid = $GLOBALS['last_insert_id'];
+				if($epid == $event_pilot_id){
+					$event_pilot_round_id = $eprid;
+				}
+				# And now lets add the pilot round flight with the default group from the draw
+				$stmt = db_prep("
+					INSERT INTO event_pilot_round_flight
+					SET event_pilot_round_id = :event_pilot_round_id,
+						flight_type_id = :flight_type_id,
+						event_pilot_round_flight_group = :event_pilot_round_flight_group,
+						event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+						event_pilot_round_flight_status = 1
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_round_id" => $eprid,
+					"flight_type_id" => $flight_type_id,
+					"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
+					"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane']
+				));
+			}
+		}
+
+		# So, now that we are here, we should have the event_round_id and the event_round_pilot_id, so lets save the flight
+		# Lets reset the event object
+		$event->get_rounds();
+		$flight_time = time();
+		
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_round
+			WHERE event_pilot_id = :event_pilot_id
+				AND event_round_id = :event_round_id
+		");
+		$result = db_exec($stmt,array(
+			"event_pilot_id" => $event_pilot_id,
+			"event_round_id" => $event_round_id
+		));
+		$event_pilot_round_id = $result[0]['event_pilot_round_id'];
+
+		# Now save the flight, but lets check if there is one first
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot_round_flight
+			WHERE event_pilot_round_id = :event_pilot_round_id
+				AND flight_type_id = :flight_type_id
+		");
+		$result = db_exec($stmt,array(
+			"event_pilot_round_id" => $event_pilot_round_id,
+			"flight_type_id" => $flight_type_id
+		));
+
+		if(count($result) > 0){
+			# There is already a flight to overwrite
+			$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
+			$stmt = db_prep("
+				UPDATE event_pilot_round_flight
+				SET event_pilot_round_flight_group = :group,
+					event_pilot_round_flight_minutes = :minutes,
+					event_pilot_round_flight_seconds = :seconds,
+					event_pilot_round_flight_over = :over,
+					event_pilot_round_flight_landing = :landing,
+					event_pilot_round_flight_penalty = :penalty,
+					event_pilot_round_flight_dns = 0,
+					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_status = 1
+				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+			");
+			$result = db_exec($stmt,array(
+				"group" => $group,
+				"minutes" => $minutes,
+				"seconds" => $full_seconds,
+				"over" => $over,
+				"landing" => $landing,
+				"penalty" => $penalty,
+				"flight_time" => $flight_time,
+				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
+			));
+		}else{
+			# Create a new one
+			$stmt = db_prep("
+				INSERT INTO event_pilot_round_flight
+				SET event_pilot_round_id = :event_pilot_round_id,
+					flight_type_id = :flight_type_id,
+					event_pilot_round_flight_group = :group,
+					event_pilot_round_flight_minutes = :minutes,
+					event_pilot_round_flight_seconds = :seconds,
+					event_pilot_round_flight_over = :over,
+					event_pilot_round_flight_landing = :landing,
+					event_pilot_round_flight_penalty = :penalty,
+					event_pilot_round_flight_dns = 0,
+					event_pilot_round_flight_dnf = 0,
+					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_pilot_round_id" => $event_pilot_round_id,
+				"flight_type_id" => $flight_type_id,
+				"group" => $group,
+				"minutes" => $minutes,
+				"seconds" => $full_seconds,
+				"over" => $over,
+				"landing" => $landing,
+				"penalty" => $penalty,
+				"flight_time" => $flight_time
+			));
+			$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
+		}
+		
+		# If they have sub flights, lets save them
+		if(count($sub_flights) > 0 ){
+			# There are sub flights, so lets save them
+			foreach($sub_flights as $num => $t){
+				# Lets see if one exists already
+				$stmt = db_prep("
+					SELECT *
+					FROM event_pilot_round_flight_sub erfs
+					WHERE erfs.event_pilot_round_flight_id = :event_pilot_round_flight_id
+						AND erfs.event_pilot_round_flight_sub_num = :num
+				");
+				$result = db_exec($stmt,array(
+					"event_pilot_round_flight_id"	=> $event_pilot_round_flight_id,
+					"num"							=> $num
+				));
+				if(isset($result[0])){
+					$event_pilot_round_flight_sub_id = $result[0]['event_pilot_round_flight_sub_id'];
+				}else{
+					$event_pilot_round_flight_sub_id = 0;
+				}
+				# Make the colon string
+				$string = intval($t['minutes']).":";
+				if($t['seconds'] == 0){
+					$string .= "00";
+				}elseif($t['seconds'] > 9){
+					$string .= intval($t['seconds']);
+				}else{
+					$string .= "0".intval($t['seconds']);
+				}
+				if($event_pilot_round_flight_sub_id == 0){
+					# Create a new record
+					$stmt = db_prep("
+						INSERT INTO event_pilot_round_flight_sub
+						SET event_pilot_round_flight_id = :event_pilot_round_flight_id,
+							event_pilot_round_flight_sub_num = :num,
+							event_pilot_round_flight_sub_val = :val
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_flight_id"	=> $event_pilot_round_flight_id,
+						"num"							=> $num,
+						"val"							=> $string
+					));
+				}else{
+					# Save the existing record
+					$stmt = db_prep("
+						UPDATE event_pilot_round_flight_sub
+						SET event_pilot_round_flight_sub_val = :val
+						WHERE event_pilot_round_flight_sub_id = :event_pilot_round_flight_sub_id
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_flight_sub_id"	=> $event_pilot_round_flight_sub_id,
+						"val"								=> $string
+					));
+				}
+			}
+		}		
+		
+		# Now lets re-calculate things
+		$event = new Event($event_id);
+		$event->get_rounds();
+		$event->calculate_round($round_number);		
+		$event->calculate_event_totals();		
+		$event->event_save_totals();				
+		$subs = array();
+		foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
+			$string = $f['event_pilot_round_flight_sub_val'];
+			$sec_converted = convert_colon_to_seconds($string);
+			$min = floor($sec_converted / 60);
+			$sec = sprintf("%02d",fmod($sec_converted,60));
+			$subs[$num]['minutes'] = $min;
+			$subs[$num]['seconds'] = $sec;
+		}
+		# Lets see if we need to be able to advance after the save
+		$advance_round = 0;
+		$max_rounds = count($event->tasks);
+		if( isset( $event->rounds[$round_number] ) ) {
+			$advance_round = 1;
+		}
+		if( $round_number >= $max_rounds ){
+			$advance_round = 0;
+		}
+
+		user_message("Posted Score Successfully.");
+		
+	}else{
+		# Now Lets fill out the round info with default stuff from what type of event this is
+		# We actually need to fill in the default round data for an empty round or existing round
+		$subs = array();
+		if( isset( $event->rounds[$round_number] ) ) {
+			$minutes = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_minutes'];
+			$seconds = intval($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds']);
+			$seconds_2 = ($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] - $seconds) * 100;
+			$landing = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_landing'];
+			$over = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_over'];
+			$penalty = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_penalty'];
+			# Lets fill in the sub flights
+			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
+				$string = $f['event_pilot_round_flight_sub_val'];
+				$sec_converted = convert_colon_to_seconds($string);
+				$min = floor($sec_converted / 60);
+				$sec = sprintf("%02d",fmod($sec_converted,60));
+				$subs[$num]['minutes'] = $min;
+				$subs[$num]['seconds'] = $sec;
+			}
+		}else{
+			$event->get_new_round($round_number);
+			$round_number = count($event->rounds);
+			$flight_type_id = $event->tasks[$round_number]['flight_type_id'];
+		
+			# Lets set the round to be scored or not depending on the zero choice
+			$event->rounds[$round_number]['event_round_score_status'] = 1;
+	
+			$minutes = 0;
+			$seconds = 0;
+			$seconds_2 = 0;
+			$landing = 0;
+			$over = 0;
+			$penalty = 0;
+
+		}
+	}
+		
+	$smarty->assign("event",$event);
+	$smarty->assign("flight_types",$flight_types);
+	$smarty->assign("flight_type_id",$flight_type_id);
+	$smarty->assign("event_pilot_id",$event_pilot_id);
+	$smarty->assign("round_number",$round_number);
+	$smarty->assign("advance_round",$advance_round);
+	$smarty->assign("current_pilot",$current_pilot);
+	$smarty->assign("team_members",$team_members);
+	$smarty->assign("minutes",$minutes);
+	$smarty->assign("seconds",$seconds);
+	$smarty->assign("seconds_2",$seconds_2);
+	$smarty->assign("subs",$subs);
+	$smarty->assign("over",$over);
+	$smarty->assign("landing",$landing);
+	$smarty->assign("penalty",$penalty);
+
+	$maintpl = find_template("event/event_round_self_entry.tpl");
+	return $smarty->fetch($maintpl);
+}
+
 ?>
