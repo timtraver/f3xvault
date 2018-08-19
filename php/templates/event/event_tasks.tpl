@@ -107,7 +107,7 @@
 		<h3 class="post-title entry-title">
 			F3K Audio Link
 		</h3>				
-		<a href="f3kaudio://contest/{$event->info.event_id}"><button class="btn btn-block btn-success btn-rounded" style="font-size: 20px;">
+		<a href="https://www.f3kaudio.com/contest/f3xvault/{$event->info.event_id}"><button class="btn btn-block btn-success btn-rounded" style="font-size: 20px;">
 			<i class="fa fa-play" style="float:left;padding-top: 3px;"></i>
 			Open f3kAudio App With Playlist
 		</button></a>
