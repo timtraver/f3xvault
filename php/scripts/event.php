@@ -5901,6 +5901,32 @@ function event_self_entry() {
 	$event->get_tasks();
 	$event->get_draws();
 
+	# If the event_pilot id is 0, then lets get the event pilot ID from the logged in user
+	if($event_pilot_id == 0){
+		$pilot_id = $GLOBALS['user']['pilot_id'];
+		foreach( $event->pilots as $event_pilot_id => $p ){
+			if( $p['pilot_id'] == $pilot_id ) {
+				$event_pilot_id = $p['event_pilot_id'];
+				break;
+			}
+		}
+	}
+	$current_pilot = $event->pilots[$event_pilot_id];
+
+	# Lets check if this pilot is coming in and hasn't got a score for this round number
+	# lets step through the rounds starting from the beginning and stop at the first round where this pilot doesn't have a score
+	if($round_number == 0){
+		foreach($event->rounds as $number => $r){
+			$ftid = $r['flight_type_id'];
+			if( $r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_minutes'] == 0 &&
+				$r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] == 0
+			){
+				# They haven't scored this round for themselves yet, so lets set it to this round
+				$round_number = $number;
+			}
+		}
+	}
+
 	# reset the round number if it is at the end
 	if( ( $round_number == 0 && count($event->rounds) == count($event->tasks) ) || $round_number >= count($event->tasks) ){
 		$round_number = count($event->tasks);
@@ -6020,18 +6046,6 @@ function event_self_entry() {
 		$full_seconds = $seconds;
 	}
 
-	# If the event_pilot id is 0, then lets get the event pilot ID from the logged in user
-	if($event_pilot_id == 0){
-		$pilot_id = $GLOBALS['user']['pilot_id'];
-		foreach( $event->pilots as $event_pilot_id => $p ){
-			if( $p['pilot_id'] == $pilot_id ) {
-				$event_pilot_id = $p['event_pilot_id'];
-				break;
-			}
-		}
-	}
-	$current_pilot = $event->pilots[$event_pilot_id];
-
 	# lets get the team members for this event or all members if the parameter says
 	$team_members = array();
 	if($event->find_option_value($event->info['event_type_code']."_self_entry_all")){
@@ -6070,7 +6084,7 @@ function event_self_entry() {
 	}
 	if( $round_number >= $max_rounds ){
 		$advance_round = 0;
-	}
+	}	
 	
 	if( $save == 1 ) {
 		# Then they have hit the save this flight button, so lets save it.
