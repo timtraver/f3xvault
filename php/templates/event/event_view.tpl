@@ -191,6 +191,8 @@
 <script src="/includes/jquery-ui/ui/jquery.ui.dialog.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.button.js"></script>
 <script src="/includes/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
+<script src="/includes/highcharts/js/highcharts.js"></script>
+
 <script>
 {literal}
 $(function() {
@@ -274,7 +276,6 @@ function check_permission() {ldelim}
 {/block}
 {block name="footer2"}
 {if $event->rounds|count>0 || $event->draw_rounds|count>0}
-<script src="/includes/highcharts/js/highcharts.js"></script>
 <script>
 {if $event->rounds|count>0}
 $(function () {ldelim} 
@@ -387,6 +388,160 @@ $(function () {ldelim}
     {rdelim});
 {rdelim});
 {/if}
-</script>
+{if $event->rounds|count>0 && $graphs}
+$(function () {ldelim} 
+    $('#event_chart_div').highcharts({ldelim}
+        chart: {ldelim}
+            type: 'line'
+        {rdelim},
+        colors: [
+			'#2f7ed8', 
+			'#8bbc21'
+		],
+        title: {ldelim}
+            text: 'Overall Contest Wind Graph'
+        {rdelim},
+        xAxis: {ldelim}
+            title: {ldelim}
+            	text: 'Round'
+        	{rdelim},
+        	tickInterval: 1,
+        	tickPixelInterval: 10
+        {rdelim},
+        yAxis: [{ldelim}
+            title: {ldelim}
+                text: 'Wind Speed (m/s)'
+            {rdelim},
+            min: 0,
+        	tickInterval: 1
+        {rdelim},
+        {ldelim}
+            title: {ldelim}
+                text: 'Wind Direction (Degrees)'
+            {rdelim},
+			opposite: true,
+            min: -20,
+            max: 20,
+        	tickInterval: 5,
+        	plotLines: [{ldelim}
+        		value: 0,
+        		color: 'green',
+        		width: 2,
+        		zIndex: 40,
+        		label: {ldelim} text: 'Straight In', align: 'right', x: 5, y: 0 {rdelim}
+        	{rdelim}]
+
+        {rdelim}],
+        legend: {ldelim}
+        	align: 'right',
+        	verticalAlign: 'top',
+        	layout: 'vertical',
+        	itemMarginTop: 2
+        {rdelim},
+        series: [
+        	{ldelim}
+        	type: 'areaspline',
+            name: 'Average Wind Speed',
+            yAxis: 0,
+            data: [
+            {foreach $event->rounds as $r}
+				{$round=$r@key}
+						[{$round},{$r.average_wind_speed}]{if !$r@last},{/if}
+			{/foreach}
+				]
+        	{rdelim},
+        	{ldelim}
+        	type: 'areaspline',
+            name: 'Average Wind Direction From Straight In',
+            yAxis: 1,
+            data: [
+            {foreach $event->rounds as $r}
+				{$round=$r@key}
+				[{$round},{$r.average_wind_dir}]{if !$r@last},{/if}
+			{/foreach}
+				]
+        	{rdelim}
+       	]
+    {rdelim});
+    /* Each Round Graph */
+    {foreach $event->rounds as $r}
+    {$round_number = $r.event_round_number}
+    {$flight_type_id = $r.flight_type_id}
+    $('#round{$r.event_round_number}_chart_div').highcharts({ldelim}
+        chart: {ldelim}
+            type: 'line'
+        {rdelim},
+        colors: [
+			'#2f7ed8', 
+			'#8bbc21'
+		],
+        title: {ldelim}
+            text: 'Round Flights'
+        {rdelim},
+        xAxis: {ldelim}
+            title: {ldelim}
+            	text: 'Flight Order'
+        	{rdelim},
+        	tickInterval: 1,
+        	tickPixelInterval: 10,
+			gridLineWidth: 1
+        {rdelim},
+        yAxis: [{ldelim}
+            title: {ldelim}
+                text: 'Wind Speed (m/s)'
+            {rdelim},
+            min: 0,
+        	tickInterval: 1
+        {rdelim},
+        {ldelim}
+            title: {ldelim}
+                text: 'Flight Time (s)'
+            {rdelim},
+			opposite: true,
+            min: {$r.round_min_flight_time -5},
+            max: {$r.round_max_flight_time +5},
+        	tickInterval: 2
+        {rdelim}],
+        legend: {ldelim}
+        	align: 'right',
+        	verticalAlign: 'top',
+        	layout: 'vertical',
+        	itemMarginTop: 2
+        {rdelim},
+        series: [
+        	{ldelim}
+        	type: 'areaspline',
+            name: 'Average Flight Wind Speed',
+            yAxis: 0,
+            data: [
+            {foreach $r.flights.$flight_type_id.pilots as $f}
+				{$flight=$f.event_pilot_round_flight_order}
+				{if $flight}
+						[{$flight},{if $f.event_pilot_round_flight_wind_avg}{$f.event_pilot_round_flight_wind_avg}{else}0{/if}]{if !$f@last},{/if}{/if}
+			{/foreach}
+				]
+        	{rdelim},
+        	{ldelim}
+        	type: 'line',
+            name: 'Flight Time',
+            yAxis: 1,
+            data: [
+            {foreach $r.flights.$flight_type_id.pilots as $f} {$flight=$f.event_pilot_round_flight_order}{$epid = $f.event_pilot_id}
+				{if $flight}
+						{ldelim}name:'{$event->pilots.$epid.pilot_first_name|escape} {$event->pilots.$epid.pilot_last_name|escape}',
+						{if $f.event_pilot_round_flight_seconds == $r.round_min_flight_time}radius: 10,fillColor: '#BF0B23',{/if}
+						x:{if $flight}{$flight}{else}1{/if},
+						y:{if $f.event_pilot_round_flight_seconds}{$f.event_pilot_round_flight_seconds}{else}0{/if}
+						{rdelim}{if !$f@last},{/if}
+				{/if}
+			{/foreach}
+			]
+        	{rdelim}
+       	]
+    {rdelim});
+    {/foreach}
+{rdelim});
 {/if}
+{/if}
+</script>
 {/block}

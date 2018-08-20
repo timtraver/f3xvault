@@ -176,7 +176,7 @@
 		{/foreach}
 		</table>
 		
-		{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed'}
+		{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus' || $event->info.event_type_code=='f3b_speed'}
 			<br>
 			<h1 class="post-title entry-title">Round Performance Chart</h1>
 		
@@ -228,6 +228,19 @@
 		<br>
 		<br>
 	</div>
+	{if $event->info.event_type_code=='f3f_plus'}
+	<div class="panel-body">
+		<h2 class="post-title entry-title">Round Detail Graphs</h2>
+		{foreach $event->rounds as $r}
+			<div>
+				<h4>Round {$r.event_round_number}</h4>
+				<div id="round{$r.event_round_number}_chart_div" style="width: 900px;height: 300px;"></div>
+				<br>
+			</div>
+		{/foreach}
+		<br>
+	</div>
+	{/if}
 </div>
 
 <form name="goback" method="GET">
@@ -251,7 +264,7 @@
 {block name="footer"}
 <script src="/includes/highcharts/js/highcharts.js"></script>
 
-{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed'}
+{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus' || $event->info.event_type_code=='f3b_speed'}
 <script>
 $(function () {ldelim} 
     $('#chart_div').highcharts({ldelim}
@@ -530,6 +543,59 @@ $(function () {ldelim}
         	{rdelim}
        	]
     {rdelim});
+{rdelim});
+</script>
+{/if}
+{if $event->info.event_type_code=='f3f_plus'}
+<script>
+$(function () {ldelim} 
+    {foreach $event->rounds as $r} {$round_number = $r.event_round_number} {$flight_type_id = $r.flight_type_id}
+    $('#round{$r.event_round_number}_chart_div').highcharts({ldelim}
+        chart: {ldelim}
+            type: 'areaspline'
+        {rdelim},
+        colors: [
+			'#2f7ed8'
+		],
+        title: {ldelim}
+            text: 'Flight Lap Times'
+        {rdelim},
+        xAxis: {ldelim}
+            title: {ldelim}
+            	text: 'Laps'
+        	{rdelim},
+        	tickInterval: 1,
+        	tickPixelInterval: 5,
+			gridLineWidth: 1
+        {rdelim},
+        yAxis: [{ldelim}
+            title: {ldelim}
+                text: 'Time (s)'
+            {rdelim},
+            min: 0,
+            max: 10,
+        	tickInterval: 1
+        {rdelim}],
+        legend: {ldelim}
+        	align: 'right',
+        	verticalAlign: 'top',
+        	layout: 'vertical',
+        	itemMarginTop: 2
+        {rdelim},
+        series: [
+        	{ldelim}
+        	type: 'areaspline',
+            name: 'Flight {$r.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}',
+            yAxis: 0,
+            data: [{foreach $r.flights.$flight_type_id.pilots.$event_pilot_id.sub as $s}{$sub=$s.event_pilot_round_flight_sub_num}
+				{ldelim}name:'Lap {$sub - 1}',x:{$sub - 1},y:{if $s.event_pilot_round_flight_sub_val}{$s.event_pilot_round_flight_sub_val}{else}0{/if}{rdelim}{if !$s@last},{/if}
+			{/foreach}
+			]
+        	{rdelim}
+       	]
+    {rdelim});
+    {/foreach}
+
 {rdelim});
 </script>
 {/if}

@@ -417,6 +417,7 @@
 
 	{block name="footer"}{/block}
 	{block name="footer2"}{/block}
+	{block name="footer3"}{/block}
 
 	<script>
 		$( "#main_logo" ).hide();

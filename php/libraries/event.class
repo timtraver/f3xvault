@@ -755,6 +755,26 @@ class Event {
 				}
 			}
 		}
+		# Lets get a max round time and a min round time
+		foreach($this->rounds as $event_round_number => $r){
+			$max=0;
+			$min=0;
+			foreach($r['flights'] as $f){
+				foreach($f['pilots'] as $p){
+					if($p['event_pilot_round_flight_seconds'] != 0){
+						# Lets set the min and the max
+						if($min == 0 || $min > $p['event_pilot_round_flight_seconds']){
+							$min = $p['event_pilot_round_flight_seconds'];
+						}
+						if($max == 0 || $max < $p['event_pilot_round_flight_seconds']){
+							$max = $p['event_pilot_round_flight_seconds'];
+						}
+					}
+				}
+			}
+			$this->rounds[$event_round_number]['round_min_flight_time'] = $min;
+			$this->rounds[$event_round_number]['round_max_flight_time'] = $max;
+		}
 		sub_trace();
 		return;
 	}

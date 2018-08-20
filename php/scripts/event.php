@@ -290,6 +290,7 @@ function event_view() {
 	}
 		
 	$e = new Event($event_id);
+	$_REQUEST['sort_by'] = 'flight_order';
 	$e->get_rounds();
 	$e->get_draws();
 	$e->calculate_event_totals();
@@ -368,7 +369,7 @@ function event_view() {
 		$first_lap_speeds = $e->get_top_first_lap_speeds();
 		$smarty->assign("first_lap_speeds",$first_lap_speeds);
 		$e->get_wind_averages();
-#		$smarty->assign("graphs",array("graphs"));
+		$smarty->assign("graphs",array("graphs"));
 	}
 	# Lets figure out round wins or task wins
 	$round_wins = array();

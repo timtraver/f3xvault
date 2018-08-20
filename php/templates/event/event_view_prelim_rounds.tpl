@@ -225,23 +225,6 @@
 		{/if}
 	{/foreach}
 </tr>
-<tr>
-	<th colspan="6" style="text-align: right;">Graphs</th>
-	{foreach $event->rounds as $r}
-		{$round_number=$r.event_round_number}
-		{if $round_number >= $start_round && $round_number <= $end_round}
-			<th align="center" style="text-align: center;">
-				<a href="" class="tooltip_score" onClick="return false;">
-				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|escape}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-o-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|escape}deg);transform: rotate(135 - {$r.average_wind_dir|escape}deg);
-"></i> 
-				<span>
-					{$r.average_wind_dir|escape} degrees
-				</span>
-				</a>
-			</th>
-		{/if}
-	{/foreach}
-</tr>
 {/if}
 </table>
 {$start_round=$end_round+1}
