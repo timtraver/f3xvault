@@ -33,7 +33,7 @@
 							My Future Events
 							<i class="dropdown-caret fa fa-chevron-down"style="padding-top: 3px;padding-left: 15px;"></i>
 						</button>
-						<ul class="dropdown-menu dropdown-menu-left" style="width:100%;font-size:16px;">
+						<ul class="dropdown-menu dropdown-menu-left" style="width:100%;position: relative;font-size:16px;">
 							{foreach $future as $f}
 								<li><a href="?action=event&function=event_view&event_id={$f.event_id}">{$f.event_start_date|date_format:"%y-%m-%d"} - {$f.event_name|truncate:"28"}</a></li>
 							{/foreach}
