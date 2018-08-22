@@ -3936,13 +3936,14 @@ function event_draw_edit() {
 	# Lets determine the largest team
 	foreach($draw_pilots as $p){
 		$team_name = $p['event_pilot_team'];
-		$teams[$team_name]++;
+		if($team_name != ''){
+			$teams[$team_name]++;
+		}
 	}
 	arsort($teams);
 	$max_on_team = array_shift($teams);
 	$min_groups_p = $max_on_team;
 	$max_groups_p = floor(count($draw_pilots)/2);
-	
 
 	# Lets create the event round array so that we can show the full draw for editing manually
 	# Now lets get the draw rounds

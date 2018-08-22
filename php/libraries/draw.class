@@ -525,7 +525,7 @@ class Draw {
 									if($this->draw['event_draw_team_protection'] == 1){
 										# This draw has team protection, so lets see if this choice is already on a team in this group
 										$test = array_slice($pilots,$rand-1,1);
-										if(!in_array($test[0]['event_pilot_team'],$this_group_teams)){
+										if(!in_array($test[0]['event_pilot_team'],$this_group_teams) || $test[0]['event_pilot_team'] == ''){
 											$clear = 1;
 										}else{
 											$y++;
@@ -610,7 +610,7 @@ class Draw {
 										if(isset($pilots[$epid])){
 											if($this->draw['event_draw_team_protection'] == 1){
 												# This draw has team protection, so lets see if this choice is already on a team in this group
-												if(in_array($pilots[$epid]['event_pilot_team'],$this_group_teams)){
+												if(in_array($pilots[$epid]['event_pilot_team'],$this_group_teams) && $pilots[$epid]['event_pilot_team'] != ''){
 													continue;
 												}
 											}
