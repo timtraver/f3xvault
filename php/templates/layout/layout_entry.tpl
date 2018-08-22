@@ -49,26 +49,13 @@
 		<header id="navbar">
 			<div id="navbar-container" class="boxed">
 
-				<!--Brand logo & name-->
-				<!--================================-->
-				<div class="navbar-header">
-					<a href="#" class="navbar-brand">
-						<img id="main_logo" src="img/logo.png" alt="F3xVault Logo" class="brand-icon mainnav-toggle">
-						<div class="brand-title">
-							<span class="brand-text mainnav-toggle">F3XVault
-							
-
-							</span>
-						</div>
-					</a>
-				</div>
 				<!--================================-->
 				<!--End brand logo & name-->
 				<!--Navbar Dropdown-->
 				<!--================================-->
-				<div class="navbar-content clearfix" style="position: relative;">
-					<h3 style="float: left;margin-left: 10px;">{$event->info.event_name}</h3>
-					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id}';" class="btn btn-primary btn-rounded">
+				<div class="navbar-content clearfix" style="position: relative;height: 60px;">
+					<h2 style="float: left;margin-left: 10px;">Self Score Entry</h2>
+					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id}';" class="btn btn-primary btn-rounded">
 				</div>
 				<!--================================-->
 				<!--End Navbar Dropdown-->
@@ -82,233 +69,15 @@
 
 			<!--CONTENT CONTAINER-->
 			<!--===================================================-->
-			<div id="content-container">
+			<div id="content-container" style="padding-top: 55px;padding-bottom: 5px;padding-left: 0px;padding-right: 0px;">
 				<div id="page-content">
 					{block name="content"}{/block}
 				</div>
 			</div>
 			<!--===================================================-->
-			<!--END CONTENT CONTAINER-->
-			
-			<!--MAIN NAVIGATION-->
-			<!--===================================================-->
-			<nav id="mainnav-container">
-				<div id="mainnav">
-					<!--Menu-->
-					<!--================================-->
-					<div id="mainnav-menu-wrap">
-						<div class="nano">
-							<div class="nano-content">
-								<ul id="mainnav-menu" class="list-group">
-						
-									<!--Home-->
-									<li{if $current_menu == 'home'} class="active-link"{/if}>
-										<a href="/">
-											<i class="fa fa-home"></i>
-											<span class="menu-title">
-												<strong>{if $user.user_name !=''}My {/if}Home</strong>
-											</span>
-										</a>
-									</li>
-									<!--Menu list item-->
-									<li{if $current_menu == 'locations'} class="active-link"{/if}>
-										<a href="#">
-											<i class="fa fa-globe"></i>
-											<span class="menu-title">
-												<strong>Flying Locations</strong>
-												<span class="pull-right badge badge-blue">{$stats.locations}</span>
-											</span>
-											<i class="arrow"></i>
-										</a>
-										<ul class="collapse{if $current_menu == 'locations'} in{/if}">
-											<li{if $current_menu == 'locations' && $function == 'view_locations'} class="active-link"{/if}><a href="/?action=main&function=view_locations"><strong>Location Home</strong></a></li>
-											<li{if $current_menu == 'locations' && $function == ""} class="active-link"{/if}><a href="/?action=location&country_id=0&state_id=0&search="><strong>Location Browse</strong></a></li>
-											<li{if $current_menu == 'locations' && $function == 'location_map'} class="active-link"{/if}><a href="/?action=location&function=location_map&country_id=0&state_id=0&search="><strong>Location Map</strong></a></li>
-										</ul>
-									</li>
-						
-									<!--Menu list item-->
-									<li{if $current_menu == 'planes'} class="active-link"{/if}>
-										<a href="#">
-											<i class="fa fa-plane"></i>
-											<span class="menu-title">
-												<strong>Plane Database</strong>
-												<span class="pull-right badge badge-blue">{$stats.planes}</span>
-											</span>
-											<i class="arrow"></i>
-										</a>
-										<ul class="collapse{if $current_menu == 'planes'} in{/if}">
-											<li{if $current_menu == 'planes' && $function == 'view_planes'} class="active-link"{/if}><a href="/?action=main&function=view_planes"><strong>Plane Home</strong></a></li>
-											<li{if $current_menu == 'planes' && $function != 'view_planes'} class="active-link"{/if}><a href="/?action=plane&search="><strong>Plane Browse</strong></a></li>
-										</ul>
-									</li>
-						
-									<!--Menu list item-->
-									<li{if $current_menu == 'events'} class="active-link"{/if}>
-										<a href="#">
-											<i class="fa fa-trophy"></i>
-											<span class="menu-title">
-												<strong>Competitions</strong>
-												<span class="pull-right badge badge-blue">{$stats.events}</span>
-											</span>
-											<i class="arrow"></i>
-										</a>
-										<ul class="collapse{if $current_menu == 'events' || $current_menu == 'records'} in{/if}">
-											<li{if $current_menu == 'events' && $function == 'view_events'} class="active-link"{/if}><a href="/?action=main&function=view_events"><strong>Competition Home</strong></a></li>
-											<li{if $current_menu == 'events' && ($function == 'event_list' || $function == '')} class="active-link"{/if}><a href="/?action=event&country_id=0&state_id=0&search="><strong>Event Browse</strong></a></li>
-											<li><a href="/?action=event&function=event_edit&event_id=0"><strong>Create New Event</strong></a></li>
-											<li{if $current_menu == 'events' && preg_match("/^series\_/",$function)} class="active-link"{/if}><a href="/?action=series&country_id=0&state_id=0&search="><strong>Series Browse</strong></a></li>
-											<li{if $current_menu == 'records'} class="active-link"{/if}><a href="/?action=records&country_id=0&page=1&perpage=20"><strong>F3F and F3B Records</strong></a></li>
-											<li><a href="/?action=import"><strong>Import Event</strong></a></li>
-										</ul>
-									</li>
-						
-									<!--Menu list item-->
-									<li{if $current_menu == 'pilots' || $current_menu == 'my' || $current_menu == 'messages'} class="active-link"{/if}>
-										<a href="#">
-											<i class="fa fa-user"></i>
-											<span class="menu-title">
-												<strong>Pilot Profiles</strong>
-												<span class="pull-right badge badge-blue">{$stats.pilots}</span>
-											</span>
-											<i class="arrow"></i>
-										</a>
-										<ul class="collapse{if $current_menu == 'pilots' || $current_menu == 'my' || $current_menu == 'messages'} in{/if}">
-											<li{if $current_menu == 'pilots' && $function == 'view_pilots'} class="active-link"{/if}><a href="/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
-											<li{if $current_menu == 'my'} class="active-link"{/if}><a href="/?action=pilot&function=pilot_view&pilot_id={$user.pilot_id}"><strong>My Pilot Profile</strong></a></li>
-											<li{if $current_menu == 'pilots' && $function == ''} class="active-link"{/if}><a href="/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
-											<li{if $current_menu == 'messages'} class="active-link"{/if}><a href="/?action=message"><strong>Message Center</strong></a></li>
-										</ul>
-									</li>
-						
-									<!--Menu list item-->
-									<li{if $current_menu == 'clubs'} class="active-link"{/if}>
-										<a href="#">
-											<i class="fa fa-users"></i>
-											<span class="menu-title">
-												<strong>Clubs</strong>
-												<span class="pull-right badge badge-blue">{$stats.clubs}</span>
-											</span>
-											<i class="arrow"></i>
-										</a>
-										<ul class="collapse{if $current_menu == 'clubs'} in{/if}">
-											<li{if $current_menu == 'clubs' && $function == 'view_clubs'} class="active-link"{/if}><a href="/?action=main&function=view_clubs"><strong>Clubs Home</strong></a></li>
-											<li{if $current_menu == 'clubs' && $function == ''} class="active-link"{/if}><a href="/?action=club&country_id=0&state_id=0&search="><strong>Club Browse</strong></a></li>
-										</ul>
-									</li>
-						
-									<!--Menu list item-->
-									<li>
-										<a href="/?action=main&function=main_feedback">
-											<i class="fa fa-list"></i>
-											<span class="menu-title">
-												<strong>Todo</strong>
-											</span>
-										</a>
-									</li>
-									
-									<!--API Docs-->
-									<li>
-										<a href="/?action=api_docs">
-											<i class="fa fa-book"></i>
-											<span class="menu-title">
-												<strong>API Docs</strong>
-											</span>
-										</a>
-									</li>
+			<!--END CONTENT CONTAINER-->			
 
-									<!--Menu list item-->
-									<li>
-										<a href="/?action=main&function=logout">
-											<i class="fa fa-sign-out"></i>
-											<span class="menu-title">
-												<strong>Logout</strong>
-											</span>
-										</a>
-									</li>
 
-									<br>
-									<br>
-									<br>
-									<br>
-									<br>
-									<br>
-									<li>
-										<a href="/?action=register">
-											<i class="fa fa-hand-o-right"></i>
-											<span class="menu-title">
-												<strong>Register</strong>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="/?action=main&function=main_feedback">
-											<i class="fa fa-thumbs-o-up"></i>
-											<span class="menu-title">
-												<strong>Feedback</strong>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="/?action=main&function=main_privacy">
-											<i class="fa fa-key"></i>
-											<span class="menu-title">
-												<strong>Privacy Policy</strong>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#" onClick="document.donate.submit();">
-											<i class="fa fa-money"></i>
-											<span class="menu-title">
-												<strong>Donate</strong>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<i class="fa fa-copyright"></i>
-											<span class="menu-title">
-												<strong>Tim Traver 2015-17</strong>
-											</span>
-										</a>
-									</li>
-									<li>
-										<a href="?action=main&function=view_home&slideshow=1">
-											<i class="fa fa-picture-o"></i>
-											<span class="menu-title">
-												<strong>Slide Show</strong>
-											</span>
-										</a>
-									</li>
-									{if $user.user_admin == 1}
-									<li>
-										<a href="?action=admin">
-											<i class="fa fa-cogs"></i>
-											<span class="menu-title">
-												<strong>Admin</strong>
-											</span>
-										</a>
-									</li>
-									{/if}
-							</div>
-						</div>
-					</div>
-					<!--================================-->
-					<!--End menu-->
-
-				</div>
-			</nav>
-			<!--===================================================-->
-			<!--END MAIN NAVIGATION-->
-			
-
-		<!-- SCROLL TOP BUTTON -->
-		<!--===================================================-->
-		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
-		<!--===================================================-->
-		<div id="floating-top-right" class="floating-container"></div>
-		
 	</div>
 	<!--===================================================-->
 	<!-- END OF CONTAINER -->
