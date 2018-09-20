@@ -970,6 +970,15 @@ function get_database_stats(){
 	return $db_totals;
 }
 
+function date_stamp_add_offset($stamp,$timezone){
+	# Function to add or subtract the amount of time depending on the time zone
+	date_default_timezone_set( "UTC" );
+	$offset = 0;
+	if($timezone != ''){
+		$offset = timezone_offset_get( timezone_open( $timezone ), new DateTime() );
+	}
+	return $stamp + $offset;
+}
 function round_down($number,$precision){
     $numberpart=explode(".",$number);
     $numberpart[1]=substr_replace($numberpart[1],".",$precision,0);

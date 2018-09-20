@@ -261,6 +261,8 @@ function event_list() {
 		}else{
 			$events[$key]['time_status'] = -1;
 		}
+		$events[$key]['event_reg_open_date_stamp'] = date_stamp_add_offset( $e['event_reg_open_date_stamp'], $e['event_reg_open_tz']);
+		$events[$key]['event_reg_close_date_stamp'] = date_stamp_add_offset( $e['event_reg_close_date_stamp'], $e['event_reg_close_tz']);
 	}
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
@@ -891,23 +893,6 @@ function event_reg_edit() {
 	$event_id = intval($_REQUEST['event_id']);
 	$e = new Event($event_id);
 	
-	# lets get the offset for the timezones for the stamps for showing in the reg edit screen
-	$open_stamp = $e->info['event_reg_open_date_stamp'];
-	$close_stamp = $e->info['event_reg_open_date_stamp'];
-	
-	date_default_timezone_set( "UTC" );
-	$open_offset = 0;
-	if($e->info['event_reg_open_tz'] != ''){
-		$open_offset = timezone_offset_get( timezone_open( $e->info['event_reg_open_tz'] ), new DateTime() );
-	}
-	$close_offset = 0;
-	if($e->info['event_reg_close_tz'] != ''){
-		$close_offset = timezone_offset_get( timezone_open( $e->info['event_reg_close_tz'] ), new DateTime() );
-	}
-	
-	$e->info['event_reg_open_date_stamp'] = $e->info['event_reg_open_date_stamp'] + $open_offset;
-	$e->info['event_reg_close_date_stamp'] = $e->info['event_reg_close_date_stamp'] + $close_offset;
-
 	$smarty->assign("event",$e);
 	$smarty->assign("currencies",get_currencies());
 	$maintpl = find_template("event/event_reg_edit.tpl");
