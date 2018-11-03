@@ -1153,6 +1153,10 @@ class Event {
 		$flight = array();
 		# Lets set the point value for seconds
 		$second_value = $this->rounds[$event_round_number]['event_round_score_second'];
+		
+		# Lets set the average score value
+		$avg = array();
+		
 		# Now lets step through the flight data and set some of the basics
 		foreach($flights as $flight_type_id => $f){
 			if(!isset($f['pilots'])){
@@ -1218,13 +1222,24 @@ class Event {
 						if(($raw<$max[$flight_type_id][$group]['raw'] || $max[$flight_type_id][$group]['raw'] == 0) && $raw != 0){
 							$max[$flight_type_id][$group]['raw'] = $raw;
 						}
+						# Calculate the average
+						if( $raw != 0 ){
+							$avg[$flight_type_id][$group]['total'] += $raw;
+							$avg[$flight_type_id][$group]['total_flights']++;
+						}
 						break;
 					default:
 						if($raw>$max[$flight_type_id][$group]['raw']){
 							$max[$flight_type_id][$group]['raw'] = $raw;
 						}
 				}
-				
+			}
+		}
+
+		# Lets figure out the average time in each group from the avg array
+		foreach( $avg as $flight_type_id => $g ){
+			foreach( $g as $group => $a ){
+				$avg[$flight_type_id][$group]['average_time'] = round( $avg[$flight_type_id][$group]['total'] / $avg[$flight_type_id][$group]['total_flights'], $this->event_calc_accuracy );
 			}
 		}
 		
@@ -1235,6 +1250,13 @@ class Event {
 			$normalize = 0;
 		}else{
 			$normalize = 1;
+		}
+		# Now lets determine if we need to use the average for normalization or the best time
+		if($this->find_option_value($this->info['event_type_code']."_use_average") == 1){
+			# If its check to NOT normalize scores
+			$use_average = 1;
+		}else{
+			$use_average = 0;
 		}
 		
 		foreach($flight as $flight_type_id => $p){
@@ -1252,7 +1274,11 @@ class Event {
 							$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = 0;
 						}else{
 							if($normalize == 1){
-								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']) * 1000,$this->event_calc_accuracy);
+								if( $use_average ){
+									$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round(($avg[$flight_type_id][$group]['average_time']/$flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']) * 1000, $this->event_calc_accuracy);
+								}else{
+									$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round(($max[$flight_type_id][$group]['raw']/$flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']) * 1000, $this->event_calc_accuracy);
+								}
 							}else{
 								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'],$this->event_calc_accuracy);
 							}
