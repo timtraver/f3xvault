@@ -177,7 +177,7 @@ function records_list() {
 		"page" => $page,
 		"startrecord" => $limit_start,
 		"endrecord" => $limit_end,
-		"callback" => 'action = records',
+		"callback" => 'action=records',
 		"perpage" => $perpage,
 		"nextpage" => $page+1,
 		"prevpage" => $prev,

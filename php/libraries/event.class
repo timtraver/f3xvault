@@ -1598,6 +1598,7 @@ class Event {
 			}
 			$drops = count($t['subtotals']);
 		}
+
 		# Now lets build the msort array call string
 		$sort_cols = array('drop_total' => SORT_DESC);
 		$count = 1;
@@ -1644,7 +1645,6 @@ class Event {
 		# Now determine the overall flyoff rank
 		foreach($flyoff_subtotals as $flyoff_number => $s){
 			$at_least_one_score = 0;
-			
 			$scores = array();
 			$max_points = 0;
 			foreach($s as $event_pilot_id => $t){
@@ -1652,9 +1652,9 @@ class Event {
 				$scores[$event_pilot_id]['drop_total'] = $t['total'];
 				$d = 1;
 				if(is_array($t['subtotals'])){
-					foreach($t['subtotals'] as $s){
+					foreach($t['subtotals'] as $st){
 						$key = 'drop'.$d;
-						$scores[$event_pilot_id][$key] = $s;
+						$scores[$event_pilot_id][$key] = $st;
 						$d++;
 					}
 				}
@@ -1664,7 +1664,9 @@ class Event {
 				if($t['total']>0){
 					$at_least_one_score = 1;
 				}
-				$drops = count($t['subtotals']);
+				if( is_array( $t['subtotals'] ) ){
+					$drops = count($t['subtotals']);
+				}
 			}
 			# Now lets build the msort array call string
 			$sort_cols = array('drop_total' => SORT_DESC);
@@ -1674,7 +1676,6 @@ class Event {
 				$sort_cols = array_merge($sort_cols,array("$string" => SORT_DESC));
 			}
 			$scores = array_msort($scores,$sort_cols);
-
 			$count = 1;
 			$last_score = 0;
 			$flyoff_has_tie = 0;

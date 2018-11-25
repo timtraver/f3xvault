@@ -25,7 +25,6 @@
 				{continue}
 			{/if}
 			{$round_number = $r.event_round_number}
-			{$flight_type_id=$r.flight_type_id}
 			{$bgcolor=''}
 			{if $event->flight_types.$flight_type_id.flight_type_code == 'f3b_duration' ||
 				$event->flight_types.$flight_type_id.flight_type_code == 'td_duration' ||
