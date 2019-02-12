@@ -108,7 +108,7 @@ function records_list() {
 		WHERE eprf.event_pilot_round_flight_status = 1
 			AND ep.event_pilot_status = 1
 			AND e.event_status = 1
-			AND e.event_type_id = 1
+			AND (e.event_type_id = 1 || e.event_type_id = 7)
 			AND eprf.event_pilot_round_flight_seconds != 0
 			$addcountry
 		ORDER BY eprf.event_pilot_round_flight_seconds
