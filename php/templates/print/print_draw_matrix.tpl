@@ -21,6 +21,7 @@
 		<table cellspacing="2" cellpadding="1">
 		<tr>
 			{foreach $event->rounds as $r}
+			{$flight_type_id = $r.flight_type_id}
 			{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
 				{continue}
 			{/if}

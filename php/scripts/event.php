@@ -4645,7 +4645,6 @@ function event_draw_view() {
 	foreach($e->tasks as $round => $t){
 		$draw_round_flight_types[$round] = $t['flight_type_id'];
 	}
-	
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
 	for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
