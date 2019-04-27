@@ -1937,6 +1937,7 @@ function event_pilot_save() {
 	}
 
 	# If the pilot doesn't exist, then lets add the new pilot to the pilot table
+	$current_pilot_id = 0;
 	if($pilot_id == 0){
 		# This means that we need to add a new pilot
 		
@@ -2021,6 +2022,15 @@ function event_pilot_save() {
 		));
 		$pilot_id = $GLOBALS['last_insert_id'];
 		user_message("Created new pilot $pilot_first_name $pilot_last_name.");
+	}else{
+		# Lets see if this pilot ID is a new one caused by a change of pilot
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot
+			WHERE event_pilot_id = :event_pilot_id
+		");
+		$result = db_exec($stmt,array( "event_pilot_id" => $event_pilot_id ));
+		$current_pilot_id = $result[0]['pilot_id'];
 	}
 	
 	if($event_pilot_id != 0){
@@ -2120,31 +2130,33 @@ function event_pilot_save() {
 			$event_pilot_id = $GLOBALS['last_insert_id'];
 		}
 	}
-	# Lets see if we need to update the pilot's ama or fai number
-	$stmt = db_prep("
-		SELECT *
-		FROM event_pilot ep
-		LEFT JOIN event e ON ep.event_id = e.event_id
-		LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
-		WHERE ep.event_pilot_id = :event_pilot_id
-	");
-	$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
-	$pilot = $result[0];
-	if($pilot_ama != $pilot['pilot_ama'] || $pilot_fai != $pilot['pilot_fai'] || $pilot_fai_license != $pilot['pilot_fai_license']){
-		# lets update the pilot record
+	# Lets see if we need to update the pilot's ama or fai number, but only if the pilot didn't get changed in this call
+	if( $pilot_id == $current_pilot_id ){
 		$stmt = db_prep("
-			UPDATE pilot
-			SET pilot_ama = :pilot_ama,
-				pilot_fai = :pilot_fai,
-				pilot_fai_license = :pilot_fai_license
-				WHERE pilot_id = :pilot_id
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id = e.event_id
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			WHERE ep.event_pilot_id = :event_pilot_id
 		");
-		$result = db_exec($stmt,array(
-			"pilot_ama" => $pilot_ama,
-			"pilot_fai" => $pilot_fai,
-			"pilot_fai_license" => $pilot_fai_license,
-			"pilot_id" => $pilot['pilot_id']
-		));
+		$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
+		$pilot = $result[0];
+		if($pilot_ama != $pilot['pilot_ama'] || $pilot_fai != $pilot['pilot_fai'] || $pilot_fai_license != $pilot['pilot_fai_license']){
+			# lets update the pilot record
+			$stmt = db_prep("
+				UPDATE pilot
+				SET pilot_ama = :pilot_ama,
+					pilot_fai = :pilot_fai,
+					pilot_fai_license = :pilot_fai_license
+					WHERE pilot_id = :pilot_id
+			");
+			$result = db_exec($stmt,array(
+				"pilot_ama" => $pilot_ama,
+				"pilot_fai" => $pilot_fai,
+				"pilot_fai_license" => $pilot_fai_license,
+				"pilot_id" => $pilot['pilot_id']
+			));
+		}
 	}
 	
 	# Lets see if this pilot has a plane in his my planes area already
