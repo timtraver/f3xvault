@@ -130,6 +130,7 @@
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_position}{$cols=$cols+1}{/if}
 			<tr>
 				<th colspan="2" style="text-align:left;">
 					<span id="toggle_{$flight_type_id}" onClick="toggle('view_flight_type_{$flight_type_id}',this);">
@@ -187,8 +188,11 @@
 				{if $ft.flight_type_laps}
 					<th align="center" style="text-align: center;">Laps</th>
 				{/if}
+				{if $ft.flight_type_position}
+					<th align="center" style="text-align: center;">Flight Position</th>
+				{/if}
 				<th align="center" style="text-align: right;">Raw Score</th>
-				<th align="center" style="text-align: right;">Normalized Score</th>
+				<th align="center" style="text-align: right;">{if $event->info.event_type_score_inverse==0}Normalized{else}Calculated{/if} Score</th>
 				<th align="center" style="text-align: center;">Penalty</th>
 				<th align="center" style="text-align: right;">Flight Rank</th>
 			</tr>
@@ -253,6 +257,10 @@
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:35px;height: 20px;text-align: right;" name="pilot_laps_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_laps|escape}" onChange="save_data(this);"></td>
+						{$tabindex=$tabindex+1}
+					{/if}
+					{if $ft.flight_type_position}
+						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:35px;height: 20px;text-align: right;" name="pilot_position_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_position|escape}{/if}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>

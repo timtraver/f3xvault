@@ -78,16 +78,34 @@
 	<th width="5%" style="text-align: center;" nowrap>Pen</th>
 	<th width="5%" style="text-align: center;" nowrap>Percent</th>
 </tr>
-{$previous=0}
-{$diff_to_lead=0}
-{$diff=0}
-{foreach $event->totals.pilots as $e}
-{if $e.total>$previous}
-	{$previous=$e.total}
+{if $event->info.event_type_score_inverse == 0}
+	{$previous = 0}
+	{$diff_to_lead = 0}
+	{$diff = 0}
 {else}
-	{$diff=$previous-$e.total}
-	{$diff_to_lead=$diff_to_lead+$diff}
+	{$previous = 0}
+	{$diff_to_lead = 0}
+	{$diff = 0}
 {/if}
+{foreach $event->totals.pilots as $e}
+	{if $event->info.event_type_score_inverse == 0}
+		{if $e.total>$previous}
+			{$previous=$e.total}
+		{else}
+			{$diff = $previous-$e.total}
+			{$diff_to_lead=$diff_to_lead+$diff}
+		{/if}
+	{else}
+		{if $previous == 0}
+			{$previous = $e.total}
+		{/if}
+		{if $e.total<$previous}
+			{$previous = $e.total}
+		{else}
+			{$diff = $e.total - $previous}
+			{$diff_to_lead = $diff_to_lead+$diff}
+		{/if}
+	{/if}
 {$event_pilot_id=$e.event_pilot_id}
 <tr>
 	<td>{$e.overall_rank|escape}</td>
@@ -122,7 +140,7 @@
 	{foreach $e.rounds as $r}
 		{$round_number=$r@key}
 		{if $round_number >= $start_round && $round_number <= $end_round}
-		<td align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+		<td align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000) || ($event->info.event_type_code=='mom' && $r.event_pilot_round_total_score==1)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 			<div style="position:relative;">
 			<a href="" class="tooltip_score" onClick="return false;">
 			{$dropval=0}

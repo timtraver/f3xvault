@@ -578,6 +578,7 @@ class Event {
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
+					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
 					"event_pilot_round_flight_landing"			=> $flight['event_pilot_round_flight_landing'],
 					"event_pilot_round_flight_penalty"			=> $flight['event_pilot_round_flight_penalty'],
 					"event_pilot_round_flight_raw_score"		=> $flight['event_pilot_round_flight_raw_score'],
@@ -611,6 +612,7 @@ class Event {
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
+					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
 					"event_pilot_round_flight_landing"			=> $flight['event_pilot_round_flight_landing'],
 					"event_pilot_round_flight_penalty"			=> $flight['event_pilot_round_flight_penalty'],
 					"event_pilot_round_flight_raw_score"		=> $flight['event_pilot_round_flight_raw_score'],
@@ -1162,6 +1164,7 @@ class Event {
 			if(!isset($f['pilots'])){
 				continue;
 			}
+
 			foreach($f['pilots'] as $v){
 				$event_pilot_id = $v['event_pilot_id'];
 				$raw = 0;
@@ -1187,6 +1190,22 @@ class Event {
 				}
 				if($f['flight_type_laps'] == 1){
 					$raw += $v['event_pilot_round_flight_laps'];
+				}
+				if($f['flight_type_position'] == 1){
+					# Let us determine the number in the group and determine a DNF score
+					if( $v['event_pilot_round_flight_dnf'] == 1 ){
+						# Score is one plus number in group
+						$this_group = $v['event_pilot_round_flight_group'];
+						$total_in_group = 0;
+						foreach( $f['pilots'] as $temp ){
+							if( $temp['event_pilot_round_flight_group'] == $this_group ){
+								$total_in_group++;
+							}
+						}
+						$raw += $total_in_group + 1;
+					}else{
+						$raw += $v['event_pilot_round_flight_position'];
+					}
 				}
 				if($f['flight_type_landing'] == 1){
 					$raw += $v['event_pilot_round_flight_landing'];
@@ -1308,7 +1327,11 @@ class Event {
 		}
 		foreach($scores as $flight_type_id => $f){
 			foreach($f as $group => $g){
-				arsort($g);
+				if( $this->info['event_type_score_inverse'] == 1 ){
+					asort($g);
+				}else{
+					arsort($g);
+				}
 				$count = 1;
 				foreach($g as $key => $value){
 					$flight[$flight_type_id][$key]['event_pilot_round_flight_rank'] = $count;
@@ -1495,8 +1518,11 @@ class Event {
 			foreach($subtotals as $event_pilot_id => $temp){
 				$tempranks[$event_pilot_id] = $subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_total_score'];
 			}
-			arsort($tempranks);
-			#print_r($tempranks);
+			if( $this->info['event_type_score_inverse'] == 1 ){
+				asort($tempranks);
+			}else{
+				arsort($tempranks);
+			}
 			$count = 1;
 			foreach($tempranks as $event_pilot_id => $tr){
 				$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank'] = $count;
@@ -1584,6 +1610,7 @@ class Event {
 		# Now determine the overall contest rank
 		$scores = array();
 		$max_points = 0;
+		$min_points = 5000;
 		foreach($subtotals as $event_pilot_id => $t){
 			# Create an array of all of the scores
 			$scores[$event_pilot_id]['drop_total'] = $t['total'];
@@ -1596,11 +1623,18 @@ class Event {
 			if($t['total']>$max_points){
 				$max_points = $t['total'];
 			}
+			if( $t['total'] < $min_points && $t['total'] != 0 ){
+				$min_points = $t['total'];
+			}
 			$drops = count($t['subtotals']);
 		}
 
 		# Now lets build the msort array call string
-		$sort_cols = array('drop_total' => SORT_DESC);
+		if( $this->info['event_type_score_inverse'] == 1 ){
+			$sort_cols = array('drop_total' => SORT_ASC);
+		}else{
+			$sort_cols = array('drop_total' => SORT_DESC);
+		}
 		$count = 1;
 		for($count = 1;$count <= $drops; $count++){
 			$string = "drop".$count;
@@ -1616,7 +1650,11 @@ class Event {
 			if($max_points == 0){
 				$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = 0;
 			}else{
-				$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round(($subtotals[$event_pilot_id]['total']/$max_points) * 100,3);
+				if( $this->info['event_type_score_inverse'] == 1 ){
+					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round( 1 / ($subtotals[$event_pilot_id]['total']/$min_points) * 100,3);
+				}else{
+					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round(($subtotals[$event_pilot_id]['total']/$max_points) * 100,3);
+				}
 			}
 			$totals[] = $subtotals[$event_pilot_id];
 			$count++;
@@ -1647,6 +1685,7 @@ class Event {
 			$at_least_one_score = 0;
 			$scores = array();
 			$max_points = 0;
+			$min_points = 5000;
 			foreach($s as $event_pilot_id => $t){
 				# Create an array of all of the scores
 				$scores[$event_pilot_id]['drop_total'] = $t['total'];
@@ -1661,6 +1700,9 @@ class Event {
 				if($t['total']>$max_points){
 					$max_points = $t['total'];
 				}
+				if( $t['total'] < $min_points && $t['total'] != 0 ){
+					$min_points = $t['total'];
+				}
 				if($t['total']>0){
 					$at_least_one_score = 1;
 				}
@@ -1669,7 +1711,11 @@ class Event {
 				}
 			}
 			# Now lets build the msort array call string
-			$sort_cols = array('drop_total' => SORT_DESC);
+			if( $this->info['event_type_score_inverse'] == 1 ){
+				$sort_cols = array('drop_total' => SORT_ASC);
+			}else{
+				$sort_cols = array('drop_total' => SORT_DESC);
+			}
 			$count = 1;
 			for($count = 1;$count <= $drops; $count++){
 				$string = "drop".$count;
@@ -1690,7 +1736,11 @@ class Event {
 				if($max_points == 0){
 					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = 0;
 				}else{
-					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round(($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $max_points) * 100,$this->event_calc_accuracy);
+					if( $this->info['event_type_score_inverse'] == 1 ){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round( 1 / ($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $min_points) * 100,$this->event_calc_accuracy);
+					}else{
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round(($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $max_points) * 100,$this->event_calc_accuracy);
+					}
 				}
 				$flyoff_totals[$flyoff_number]['total_rounds'] = $flyoff_round_count[$flyoff_number];
 				$flyoff_totals[$flyoff_number]['pilots'][] = $flyoff_subtotals[$flyoff_number][$event_pilot_id];

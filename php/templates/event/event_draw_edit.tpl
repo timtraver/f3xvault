@@ -306,12 +306,12 @@ function check_changed(){ldelim}
 				|| (original_protect==0 && document.main.event_draw_team_protection.checked==true)
 				|| {/if}(original_groups!=document.main.event_draw_number_groups.value)
 			){ldelim}
-				document.getElementById("radio_recalc").checked=true;
+			//	document.getElementById("radio_recalc").checked=true;
 			{rdelim}
 		{else}
 			var original_separation={$draw->draw.event_draw_team_separation};
 			if(original_separation==1 && document.main.event_draw_team_separation.checked==false){ldelim}
-				document.getElementById("radio_recalc").checked=true;
+			//	document.getElementById("radio_recalc").checked=true;
 			{rdelim}
 		{/if}
 	{/if}

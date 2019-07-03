@@ -76,6 +76,7 @@
 							<option value="?action={$action}&function={$function}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
 							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
 							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
+							<option value="?action={$action}&function={$function}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
 						</select>
 						</span>
 					</div>

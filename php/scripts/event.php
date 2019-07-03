@@ -386,8 +386,14 @@ function event_view() {
 					if($p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1){
 						continue;
 					}
-					if($p['event_pilot_round_flight_score'] == 1000){
-						$round_wins[$event_pilot_id]['wins']++;
+					if( $e->info['event_type_score_inverse'] == 1 ){
+						if($p['event_pilot_round_flight_score'] == 1 ){
+							$round_wins[$event_pilot_id]['wins']++;
+						}
+					}else{
+						if($p['event_pilot_round_flight_score'] == 1000){
+							$round_wins[$event_pilot_id]['wins']++;
+						}
 					}
 					$round_wins[$event_pilot_id]['total_rounds']++;
 				}
@@ -2819,6 +2825,9 @@ function event_round_save() {
 			case 'td':
 				$pattern = 'td_duration';
 				break;				
+			case 'mom':
+				$pattern = 'mom_position';
+				break;
 			case 'f3b':
 			case 'f3k':
 			default:
@@ -3210,13 +3219,13 @@ function event_round_save() {
 					# Lets see if the values are DNS or DNF and set the parameters
 					$dns = 0;
 					$dnf = 0;
-					if(strtolower($v['sec']) == 'dns'){
+					if( strtolower( $v['sec'] ) == 'dns' ){
 						$dns = 1;
 						$v['sec'] = 0;
 					}
-					if(strtolower($v['sec']) == 'dnf'){
+					if( strtolower( $v['sec'] ) == 'dnf' || strtolower( $v['position'] ) == 'dnf' ){
 						$dnf = 1;
-						$v['sec'] = 0;
+						$v['position'] = 0;
 					}
 					
 					# Lets see if this flight already exists
@@ -3229,6 +3238,7 @@ function event_round_save() {
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
+								event_pilot_round_flight_position = :event_pilot_round_flight_position,
 								event_pilot_round_flight_landing = :event_pilot_round_flight_landing,
 								event_pilot_round_flight_order = :event_pilot_round_flight_order,
 								event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
@@ -3245,6 +3255,7 @@ function event_round_save() {
 							"event_pilot_round_flight_seconds"	=> $v['sec'],
 							"event_pilot_round_flight_over"		=> $v['over'],
 							"event_pilot_round_flight_laps"		=> $v['laps'],
+							"event_pilot_round_flight_position"	=> $v['position'],
 							"event_pilot_round_flight_landing"	=> $v['land'],
 							"event_pilot_round_flight_order"	=> $v['order'],
 							"event_pilot_round_flight_lane"		=> $v['lane'],
@@ -3263,6 +3274,7 @@ function event_round_save() {
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
+								event_pilot_round_flight_position = :event_pilot_round_flight_position,
 								event_pilot_round_flight_landing = :event_pilot_round_flight_landing,
 								event_pilot_round_flight_order = :event_pilot_round_flight_order,
 								event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
@@ -3279,6 +3291,7 @@ function event_round_save() {
 							"event_pilot_round_flight_seconds"	=> $v['sec'],
 							"event_pilot_round_flight_over"		=> $v['over'],
 							"event_pilot_round_flight_laps"		=> $v['laps'],
+							"event_pilot_round_flight_position"	=> $v['position'],
 							"event_pilot_round_flight_landing"	=> $v['land'],
 							"event_pilot_round_flight_order"	=> $v['order'],
 							"event_pilot_round_flight_lane"		=> $v['lane'],
@@ -3619,6 +3632,9 @@ function save_individual_flight(){
 			break;
 		case "laps":
 			$setline = 'event_pilot_round_flight_laps = :value';
+			break;
+		case "position":
+			$setline = 'event_pilot_round_flight_position = :value';
 			break;
 		case "order":
 			$setline = 'event_pilot_round_flight_order = :value';
