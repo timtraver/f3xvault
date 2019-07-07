@@ -260,7 +260,7 @@
 						{$tabindex=$tabindex+1}
 					{/if}
 					{if $ft.flight_type_position}
-						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:35px;height: 20px;text-align: right;" name="pilot_position_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_position|escape}{/if}" onChange="save_data(this);"></td>
+						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:35px;height: 20px;text-align: right;" name="pilot_position_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_position|escape}{/if}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>
