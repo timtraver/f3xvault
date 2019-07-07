@@ -1192,17 +1192,19 @@ class Event {
 					$raw += $v['event_pilot_round_flight_laps'];
 				}
 				if($f['flight_type_position'] == 1){
-					# Let us determine the number in the group and determine a DNF score
+					# Let us determine the number in the group and determine a DNF or DNS score
+					$this_group = $v['event_pilot_round_flight_group'];
+					$total_in_group = 0;
+					foreach( $f['pilots'] as $temp ){
+						if( $temp['event_pilot_round_flight_group'] == $this_group ){
+							$total_in_group++;
+						}
+					}
 					if( $v['event_pilot_round_flight_dnf'] == 1 ){
 						# Score is one plus number in group
-						$this_group = $v['event_pilot_round_flight_group'];
-						$total_in_group = 0;
-						foreach( $f['pilots'] as $temp ){
-							if( $temp['event_pilot_round_flight_group'] == $this_group ){
-								$total_in_group++;
-							}
-						}
 						$raw += $total_in_group + 1;
+					}elseif( $v['event_pilot_round_flight_dns'] == 1 ){
+						$raw += $total_in_group + 2;
 					}else{
 						$raw += $v['event_pilot_round_flight_position'];
 					}
