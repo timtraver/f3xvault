@@ -3219,12 +3219,14 @@ function event_round_save() {
 					# Lets see if the values are DNS or DNF and set the parameters
 					$dns = 0;
 					$dnf = 0;
-					if( strtolower( $v['sec'] ) == 'dns' ){
+					if( strtolower( $v['sec'] ) == 'dns' || strtolower( $v['position'] ) == 'dns' ){
 						$dns = 1;
 						$v['sec'] = 0;
+						$v['position'] = 0;
 					}
 					if( strtolower( $v['sec'] ) == 'dnf' || strtolower( $v['position'] ) == 'dnf' ){
 						$dnf = 1;
+						$v['sec'] = 0;
 						$v['position'] = 0;
 					}
 					
