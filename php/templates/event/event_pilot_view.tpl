@@ -27,9 +27,11 @@
 			{foreach $event->flight_types as $ft}
 				{$cols=$cols+4}
 				{if $ft.flight_type_group}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
+				{if $ft.flight_type_position}{$cols=$cols+1}{/if}	
 			{/foreach}
 			{else}
 				{$cols=7}
@@ -42,9 +44,11 @@
 			{foreach $event->flight_types as $ft}
 				{$cols=4}
 				{if $ft.flight_type_group}{$cols=$cols+1}{/if}
+				{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
+				{if $ft.flight_type_position}{$cols=$cols+1}{/if}	
 				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
 		</tr>
@@ -57,6 +61,9 @@
 			{foreach $event->flight_types as $ft}
 				{if $ft.flight_type_group}
 					<th align="center">Group</th>
+				{/if}
+				{if $ft.flight_type_start_penalty}
+					<th align="center">Start Penalty</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time</th>
@@ -127,6 +134,11 @@
 						<td align="center" nowrap style="background-color: {$bgcolor};">
 							{$values.event_pilot_round_flight_group|escape}{if $values.event_pilot_round_flight_reflight}(R){/if}
 						</td>					
+					{/if}
+					{if $ft.flight_type_start_penalty}
+						<td align="center" nowrap style="background-color: {$bgcolor};">
+							{$values.event_pilot_round_flight_start_penalty|escape}
+						</td>
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 						<td align="right" nowrap style="background-color: {$bgcolor};">
