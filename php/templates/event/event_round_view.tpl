@@ -183,7 +183,7 @@
 					{/if}
 					{if $ft.flight_type_start_penalty}
 						<td align="center" nowrap>
-							<input tabindex="1" autocomplete="off" type="text" size="6" style="width:35px;height: 20px;" name="pilot_startpen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_start_penalty|escape}" onChange="save_data(this);">
+							{$p.event_pilot_round_flight_start_penalty|escape}
 						</td>
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
