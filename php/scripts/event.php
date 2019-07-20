@@ -2705,9 +2705,6 @@ function event_round_edit() {
 		if($event->info['event_type_code'] == 'f3k'){
 			if($event->f3k_flight_type_id != 0){
 				$flight_type_id = $event->f3k_flight_type_id;
-#				$new_flight_types = $flight_types[$flight_type_id];
-#				$flight_types = array();
-#				$flight_types[$flight_type_id] = $new_flight_types;
 			}
 		}
 		if($event->info['event_type_code'] == 'f3j'){
@@ -2827,6 +2824,9 @@ function event_round_save() {
 				break;				
 			case 'mom':
 				$pattern = 'mom_position';
+				break;
+			case 'gps':
+				$pattern = 'gps_distance';
 				break;
 			case 'f3b':
 			case 'f3k':
@@ -3238,6 +3238,7 @@ function event_round_save() {
 							SET event_pilot_round_flight_group = :event_pilot_round_flight_group,
 								event_pilot_round_flight_minutes = :event_pilot_round_flight_minutes,
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
+								event_pilot_round_flight_start_penalty = :event_pilot_round_flight_start_penalty,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
 								event_pilot_round_flight_position = :event_pilot_round_flight_position,
@@ -3251,19 +3252,20 @@ function event_round_save() {
 							WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
 						");
 						$result2 = db_exec($stmt,array(
-							"event_pilot_round_flight_id"		=> $event_pilot_round_flight_id_actual,
-							"event_pilot_round_flight_group"	=> strtoupper($v['group']),
-							"event_pilot_round_flight_minutes"	=> $v['min'],
-							"event_pilot_round_flight_seconds"	=> $v['sec'],
-							"event_pilot_round_flight_over"		=> $v['over'],
-							"event_pilot_round_flight_laps"		=> $v['laps'],
-							"event_pilot_round_flight_position"	=> $v['position'],
-							"event_pilot_round_flight_landing"	=> $v['land'],
-							"event_pilot_round_flight_order"	=> $v['order'],
-							"event_pilot_round_flight_lane"		=> $v['lane'],
-							"event_pilot_round_flight_dns"		=> $dns,
-							"event_pilot_round_flight_dnf"		=> $dnf,
-							"event_pilot_round_flight_penalty"	=> $v['pen']
+							"event_pilot_round_flight_id"				=> $event_pilot_round_flight_id_actual,
+							"event_pilot_round_flight_group"			=> strtoupper($v['group']),
+							"event_pilot_round_flight_minutes"			=> $v['min'],
+							"event_pilot_round_flight_seconds"			=> $v['sec'],
+							"event_pilot_round_flight_start_penalty"	=> $v['startpen'],
+							"event_pilot_round_flight_over"				=> $v['over'],
+							"event_pilot_round_flight_laps"				=> $v['laps'],
+							"event_pilot_round_flight_position"			=> $v['position'],
+							"event_pilot_round_flight_landing"			=> $v['land'],
+							"event_pilot_round_flight_order"			=> $v['order'],
+							"event_pilot_round_flight_lane"				=> $v['lane'],
+							"event_pilot_round_flight_dns"				=> $dns,
+							"event_pilot_round_flight_dnf"				=> $dnf,
+							"event_pilot_round_flight_penalty"			=> $v['pen']
 						));
 					}else{
 						# There isn't a record, so lets create a new one
@@ -3274,6 +3276,7 @@ function event_round_save() {
 								event_pilot_round_flight_group = :event_pilot_round_flight_group,
 								event_pilot_round_flight_minutes = :event_pilot_round_flight_minutes,
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
+								event_pilot_round_flight_start_penalty = :event_pilot_round_flight_start_penalty,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
 								event_pilot_round_flight_position = :event_pilot_round_flight_position,
@@ -3286,20 +3289,21 @@ function event_round_save() {
 								event_pilot_round_flight_status = 1
 						");
 						$result2 = db_exec($stmt,array(
-							"event_pilot_round_id"				=> $event_pilot_round_id,
-							"flight_type_id"					=> $flight_type_id,
-							"event_pilot_round_flight_group"	=> strtoupper($v['group']),
-							"event_pilot_round_flight_minutes"	=> $v['min'],
-							"event_pilot_round_flight_seconds"	=> $v['sec'],
-							"event_pilot_round_flight_over"		=> $v['over'],
-							"event_pilot_round_flight_laps"		=> $v['laps'],
-							"event_pilot_round_flight_position"	=> $v['position'],
-							"event_pilot_round_flight_landing"	=> $v['land'],
-							"event_pilot_round_flight_order"	=> $v['order'],
-							"event_pilot_round_flight_lane"		=> $v['lane'],
-							"event_pilot_round_flight_dns"		=> $dns,
-							"event_pilot_round_flight_dnf"		=> $dnf,
-							"event_pilot_round_flight_penalty"	=> $v['pen']
+							"event_pilot_round_id"						=> $event_pilot_round_id,
+							"flight_type_id"							=> $flight_type_id,
+							"event_pilot_round_flight_group"			=> strtoupper($v['group']),
+							"event_pilot_round_flight_minutes"			=> $v['min'],
+							"event_pilot_round_flight_seconds"			=> $v['sec'],
+							"event_pilot_round_flight_start_penalty"	=> $v['startpen'],
+							"event_pilot_round_flight_over"				=> $v['over'],
+							"event_pilot_round_flight_laps"				=> $v['laps'],
+							"event_pilot_round_flight_position"			=> $v['position'],
+							"event_pilot_round_flight_landing"			=> $v['land'],
+							"event_pilot_round_flight_order"			=> $v['order'],
+							"event_pilot_round_flight_lane"				=> $v['lane'],
+							"event_pilot_round_flight_dns"				=> $dns,
+							"event_pilot_round_flight_dnf"				=> $dnf,
+							"event_pilot_round_flight_penalty"			=> $v['pen']
 						));
 						$event_pilot_round_flight_id_actual = $GLOBALS['last_insert_id'];
 					}

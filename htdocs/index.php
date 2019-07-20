@@ -65,6 +65,9 @@ if(isset($_REQUEST['disc'])){
 		case "mom":
 			$disc='mom';
 			break;
+		case "gps":
+			$disc='gps';
+			break;
 		case "all":
 		default:
 			$disc='all';

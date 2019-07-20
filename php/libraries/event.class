@@ -576,6 +576,7 @@ class Event {
 					"event_pilot_round_flight_group"			=> $flight['event_pilot_round_flight_group'],
 					"event_pilot_round_flight_minutes"			=> $flight['event_pilot_round_flight_minutes'],
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
+					"event_pilot_round_flight_start_penalty"	=> $flight['event_pilot_round_flight_start_penalty'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
 					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
@@ -610,6 +611,7 @@ class Event {
 					"event_pilot_round_flight_group"			=> $flight['event_pilot_round_flight_group'],
 					"event_pilot_round_flight_minutes"			=> $flight['event_pilot_round_flight_minutes'],
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
+					"event_pilot_round_flight_start_penalty"	=> $flight['event_pilot_round_flight_start_penalty'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
 					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
@@ -799,7 +801,7 @@ class Event {
 			if($d['event_draw_active'] != 1){
 				continue;
 			}
-			if($this->info['event_type_code'] == 'f3k'){
+			if($this->info['event_type_code'] == 'f3k' || $this->info['event_type_code'] == 'gps'){
 				# If this is an F3K event, then lets determine which flight type id this round is
 				$flight_type_id = 0;
 				if(isset($this->tasks[$event_round_number]['flight_type_id'])){
@@ -1168,28 +1170,45 @@ class Event {
 			foreach($f['pilots'] as $v){
 				$event_pilot_id = $v['event_pilot_id'];
 				$raw = 0;
-				if($f['flight_type_minutes'] == 1){
-					$raw += 60 * intval($v['event_pilot_round_flight_minutes']) * $second_value;
-				}
-				if($f['flight_type_seconds'] == 1){
-					$raw += floatval($v['event_pilot_round_flight_seconds']) * $second_value;
-				}
-				# Ok, now we have to subtract the absolute value of the max time (on just the time)
-				switch($f['flight_type_code']){
-					case 'f3b_duration':
-						if($raw > (600 * $second_value)){
-							$raw = (600 * $second_value) - abs((600 * $second_value) - $raw);
-						}
-						break;
-					case 'td_duration':
-					case 'f3j_duration':
-						$round_max_seconds = $this->rounds[$event_round_number]['event_round_time_choice'] * 60 * $second_value;
-						if($raw > $round_max_seconds){
-							$raw = $round_max_seconds - abs($round_max_seconds - $raw);
-						}
+				$total_time = 0;
+				$avg_lap_time = 0;
+				if( $f['flight_type_code'] == 'gps_distance' ){
+					# lets just calculate the total time in seconds of the entered time
+					$total_time = 60 * intval($v['event_pilot_round_flight_minutes']) + floatval($v['event_pilot_round_flight_seconds']);
+				}else{
+					if($f['flight_type_minutes'] == 1){
+						$raw += 60 * intval($v['event_pilot_round_flight_minutes']) * $second_value;
+					}
+					if($f['flight_type_seconds'] == 1){
+						$raw += floatval($v['event_pilot_round_flight_seconds']) * $second_value;
+					}
+					# Ok, now we have to subtract the absolute value of the max time (on just the time)
+					switch($f['flight_type_code']){
+						case 'f3b_duration':
+							if($raw > (600 * $second_value)){
+								$raw = (600 * $second_value) - abs((600 * $second_value) - $raw);
+							}
+							break;
+						case 'td_duration':
+						case 'f3j_duration':
+							$round_max_seconds = $this->rounds[$event_round_number]['event_round_time_choice'] * 60 * $second_value;
+							if($raw > $round_max_seconds){
+								$raw = $round_max_seconds - abs($round_max_seconds - $raw);
+							}
+					}
 				}
 				if($f['flight_type_laps'] == 1){
-					$raw += $v['event_pilot_round_flight_laps'];
+					if( $f['flight_type_code'] == 'gps_distance' ){
+						$raw += $v['event_pilot_round_flight_laps'] * 200;
+						$average_lap_time = $total_time / $v['event_pilot_round_flight_laps'];
+					}else{
+						$raw += $v['event_pilot_round_flight_laps'];
+					}
+				}
+				if($f['flight_type_start_penalty'] == 1){
+					if( $f['flight_type_code'] == 'gps_distance' ){
+						$raw -= $v['event_pilot_round_flight_start_penalty'];
+					}
 				}
 				if($f['flight_type_position'] == 1){
 					# Let us determine the number in the group and determine a DNF or DNS score
@@ -1225,12 +1244,11 @@ class Event {
 				$temp_flight['event_pilot_round_flight_group']		= $v['event_pilot_round_flight_group'];
 				$temp_flight['event_pilot_round_flight_reflight']	= $v['event_pilot_round_flight_reflight'];
 				$temp_flight['event_pilot_id']						= $v['event_pilot_id'];
-				$flight[$flight_type_id][]							= $temp_flight;
-				
-#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] = round($raw,$this->flight_types[$flight_type_id]['accuracy']);
-#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_id'] = $v['event_pilot_round_flight_id'];
-#				$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_group'] = $v['event_pilot_round_flight_group'];
-	
+				$temp_flight['total_time']							= $total_time;
+				$temp_flight['total_laps']							= $v['event_pilot_round_flight_laps'];
+				$temp_flight['average_lap_time']					= $average_lap_time;
+				$flight[$flight_type_id][$event_pilot_id]			= $temp_flight;
+					
 				# ok, now lets find the max score in each group
 				$group = $v['event_pilot_round_flight_group'];
 				if($group == ''){
@@ -1240,6 +1258,7 @@ class Event {
 					case 'f3b_speed':
 					case 'f3f_speed':
 					case 'f3f_plus':
+					case 'gps_speed':
 						if(($raw<$max[$flight_type_id][$group]['raw'] || $max[$flight_type_id][$group]['raw'] == 0) && $raw != 0){
 							$max[$flight_type_id][$group]['raw'] = $raw;
 						}
@@ -1253,6 +1272,36 @@ class Event {
 						if($raw>$max[$flight_type_id][$group]['raw']){
 							$max[$flight_type_id][$group]['raw'] = $raw;
 						}
+				}
+			}
+		}
+
+		if( $this->info['event_type_code'] == 'gps' ){
+			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be ties to the times
+			# So lets sort the scores by the laps and then time in a temp array first
+			$gps_flights = array();
+			foreach( $flight[$flight_type_id] as $key => $g ){
+				$group = $g['event_pilot_round_flight_group'];
+				$gps_flights[$group][$key] = $g;
+			}
+			foreach( $gps_flights as $group => $g ){
+				$sorted = array_orderby($g, 'total_laps', SORT_DESC, 'total_time', SORT_ASC);
+				$gps_flights[$group] = $sorted;
+			}
+			# Now that we have the temp array, step through it and adjust the raw scores for tied numbers
+			$laps = 0;
+			$fast_time = 0;
+			foreach( $gps_flights as $group => $g ){
+				foreach( $g as $f ){
+					if( $f['total_laps'] != $laps ){
+						$laps = $f['total_laps'];
+						$fast_time = $f['total_time'];
+						continue;
+					}
+					# If it made it here, then it means there was a tie, so we have to compare the times
+					$event_pilot_id = $f['event_pilot_id'];
+					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] -= 200;
+					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] += round( ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
 				}
 			}
 		}
@@ -1279,7 +1328,7 @@ class Event {
 		}else{
 			$use_average = 0;
 		}
-		
+
 		foreach($flight as $flight_type_id => $p){
 			foreach($p as $key => $v){
 				$event_pilot_id = $v['event_pilot_id'];
@@ -1291,6 +1340,7 @@ class Event {
 					case 'f3b_speed':
 					case 'f3f_speed':
 					case 'f3f_plus':
+					case 'gps_speed':
 						if($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'] == 0){
 							$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = 0;
 						}else{
@@ -1318,6 +1368,7 @@ class Event {
 				}
 			}
 		}
+
 		$scores = array();
 		# Now determine the flight type rank
 		foreach($flight as $flight_type_id => $p){

@@ -92,6 +92,9 @@
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3K Tasks</a></li>
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">F3K Audio Link</a></li>
 				{/if}
+				{if $event->info.event_type_code == 'gps'}
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set GPS Tasks</a></li>
+				{/if}
 				{if $event->info.event_type_code == 'f3j'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3J Tasks</a></li>
 				{/if}

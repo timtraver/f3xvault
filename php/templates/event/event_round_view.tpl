@@ -107,6 +107,8 @@
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_position}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
 			<tr>
 				<th colspan="2" style="text-align:left;">
 					<span id="toggle_{$flight_type_id}" onClick="toggle('view_flight_type_{$flight_type_id}',this);">
@@ -130,6 +132,9 @@
 				{else}
 					<th align="center">Order</th>
 				{/if}
+				{if $ft.flight_type_start_penalty}
+					<th align="center" style="text-align: center;">Start Penalty</th>
+				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
 				{/if}
@@ -138,6 +143,9 @@
 				{/if}
 				{if $ft.flight_type_laps}
 					<th align="center">Laps</th>
+				{/if}
+				{if $ft.flight_type_position}
+					<th align="center" style="text-align: center;">Flight Position</th>
 				{/if}
 				<th align="center">Raw Score</th>
 				<th align="center">Normalized Score</th>
@@ -173,6 +181,11 @@
 					{else}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 					{/if}
+					{if $ft.flight_type_start_penalty}
+						<td align="center" nowrap>
+							<input tabindex="1" autocomplete="off" type="text" size="6" style="width:35px;height: 20px;" name="pilot_startpen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_start_penalty|escape}" onChange="save_data(this);">
+						</td>
+					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 						<td align="center" nowrap>
 							{if $ft.flight_type_sub_flights!=0}
@@ -203,6 +216,10 @@
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
+						{$tabindex=$tabindex+1}
+					{/if}
+					{if $ft.flight_type_position}
+						<td align="center" nowrap><input tabindex="{$tabindex}" autocomplete="off" type="text" size="2" style="width:35px;height: 20px;text-align: right;" name="pilot_position_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_position|escape}{/if}" onChange="save_data(this);"></td>
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>

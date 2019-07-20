@@ -77,6 +77,7 @@
 							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
 							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
 							<option value="?action={$action}&function={$function}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
+							<option value="?action={$action}&function={$function}&disc=gps"{if $disc=='gps'} SELECTED{/if}>GPS Triangle Racing</option>
 						</select>
 						</span>
 					</div>
