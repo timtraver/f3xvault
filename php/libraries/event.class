@@ -1289,9 +1289,9 @@ class Event {
 				$gps_flights[$group] = $sorted;
 			}
 			# Now that we have the temp array, step through it and adjust the raw scores for tied numbers
-			$laps = 0;
-			$fast_time = 0;
 			foreach( $gps_flights as $group => $g ){
+				$laps = 0;
+				$fast_time = 0;
 				foreach( $g as $f ){
 					if( $f['total_laps'] != $laps ){
 						$laps = $f['total_laps'];
