@@ -1302,7 +1302,19 @@ class Event {
 					$event_pilot_id = $f['event_pilot_id'];
 					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] -= 200;
 					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] += round( ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
+					
 				}
+			}
+			# Reset the max raw values by stepping through them now that they are changed
+			foreach( $gps_flights as $group => $g ){
+				$maxscore = 0;
+				foreach( $g as $f ){
+					$event_pilot_id = $f['event_pilot_id'];
+					if( $flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] > $maxscore ){
+						$maxscore = $flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'];
+					}
+				}
+				$max[$flight_type_id][$group]['raw'] = $maxscore;
 			}
 		}
 
