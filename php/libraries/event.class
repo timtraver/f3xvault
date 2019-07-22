@@ -955,22 +955,25 @@ class Event {
 				$event_draw_id = $d['event_draw_id'];
 				#Step through the draw rounds and see if one exists for this round
 				foreach($d['flights'] as $flight_type_id => $f){
-					if($this->info['event_type_code'] == 'f3k'){
+					$current_flight_type_id = $flight_type_id;
+					if($this->info['event_type_code'] == 'f3k' || $this->flight_types[$flight_type_id]['flight_type_code'] == 'gps_speed' ){
 						$flight_type_id = $this->tasks[$event_round_number]['flight_type_id'];
 					}
-					foreach($f as $round_num => $v){
-						if($round_num == $event_round_number){
-							# Lets create the round info
-							$draw_rounds[$event_round_number]['event_round_number'] = $event_round_number;
-							$draw_rounds[$event_round_number]['event_round_status'] = 1;
-							$draw_rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
-							$draw_rounds[$event_round_number]['flights'][$flight_type_id] = $this->flight_types[$flight_type_id];
-							foreach($v['pilots'] as $event_pilot_id => $p){
-								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
-								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
-								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
-								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = $p['event_draw_round_lane'];
-								$draw_rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
+					if( $flight_type_id == $current_flight_type_id  ){
+						foreach($f as $round_num => $v){
+							if($round_num == $event_round_number){
+								# Lets create the round info
+								$draw_rounds[$event_round_number]['event_round_number'] = $event_round_number;
+								$draw_rounds[$event_round_number]['event_round_status'] = 1;
+								$draw_rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
+								$draw_rounds[$event_round_number]['flights'][$flight_type_id] = $this->flight_types[$flight_type_id];
+								foreach($v['pilots'] as $event_pilot_id => $p){
+									$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
+									$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
+									$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
+									$draw_rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = $p['event_draw_round_lane'];
+									$draw_rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
+								}
 							}
 						}
 					}

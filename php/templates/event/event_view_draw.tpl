@@ -18,7 +18,7 @@
 	<tr>
 		<th colspan="{$size}"><strong>Round {$r.event_round_number}</strong></th>
 	</tr>
-	{if $event->info.event_type_code=='f3k'}
+	{if $event->info.event_type_code=='f3k' || $event->info.event_type_code=='gps'}
 		{$ftid=$r.flight_type_id}
 		<tr bgcolor="white">
 			<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short}</td>
