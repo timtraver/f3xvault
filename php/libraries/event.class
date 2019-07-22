@@ -1248,7 +1248,7 @@ class Event {
 				$temp_flight['total_laps']							= $v['event_pilot_round_flight_laps'];
 				$temp_flight['average_lap_time']					= $average_lap_time;
 				$flight[$flight_type_id][$event_pilot_id]			= $temp_flight;
-					
+
 				# ok, now lets find the max score in each group
 				$group = $v['event_pilot_round_flight_group'];
 				if($group == ''){
@@ -1275,8 +1275,7 @@ class Event {
 				}
 			}
 		}
-
-		if( $this->info['event_type_code'] == 'gps' ){
+		if( $this->info['event_type_code'] == 'gps' && $this->flight_types[$flight_type_id]['flight_type_code'] != 'gps_speed' ){
 			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be ties to the times
 			# So lets sort the scores by the laps and then time in a temp array first
 			$gps_flights = array();
