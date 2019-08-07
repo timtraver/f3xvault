@@ -150,7 +150,7 @@ class createEvent {
 		# Ok, now that we have everything, lets create the event
 		$stmt = db_prep("
 			INSERT INTO event
-			SET pilot_id = :user_id,
+			SET pilot_id = :pilot_id,
 				event_name = :event_name,
 				location_id = :location_id,
 				event_start_date = :event_start_date,
@@ -161,7 +161,7 @@ class createEvent {
 				event_status = 1
 		");
 		$result = db_exec($stmt,array(
-			"user_id" => $this->api->user_id,
+			"pilot_id" => $this->api->user['pilot_id'],
 			"event_name" => $this->event_name,
 			"location_id" => $this->location_id,
 			"event_start_date" => $this->event_start_date,
