@@ -41,7 +41,7 @@
 				<tr>
 					<th colspan="{$size}"><strong>Round {$r.event_round_number}</strong></th>
 				</tr>
-				{if $event->info.event_type_code=='f3k'}
+				{if $event->info.event_type_code=='f3k' || $event->info.event_type_code=='gps'}
 					{$ftid=$r.flight_type_id}
 					<tr bgcolor="white">
 						<td colspan="2">{$event->flight_types.$ftid.flight_type_name_short}</td>
@@ -57,7 +57,7 @@
 					{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 						<td width="30">Group</td>
 					{else}
-						<td>&nbsp;#&nbsp;</td>
+						<td>&nbsp;Order&nbsp;</td>
 					{/if}
 					<td>Pilot</td>
 					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 

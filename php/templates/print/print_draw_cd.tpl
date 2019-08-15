@@ -9,7 +9,7 @@
 		{if $event->info.event_type_code=="f3k"}
 			{$flight_type_id=$r.flight_type_id}
 		{/if}
-		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to}
+		{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || ! $r.flights.$flight_type_id}
 			{continue}
 		{/if}
 		{$num_rounds_printed=$num_rounds_printed+1}
@@ -57,6 +57,9 @@
 			{if $event->flight_types.$flight_type_id.flight_type_laps}
 				<th width="100">Laps</th>
 			{/if}
+			{if $event->info.event_type_code=="gps"}
+				<th width="100">Start Penalty</th>
+			{/if}
 			<th width="100">Penalty</th>
 		</tr>
 		{$oldgroup='1000'}
@@ -73,6 +76,15 @@
 		{/if}
 		<tr>
 			<td align="center" {if $p@first}style="border-top: 2px solid black;"{/if}>{if $p@first}{$r.event_round_number}{/if}</td>
+			{if $event->info.event_type_code=="gps" && $oldgroup!=$p.event_pilot_round_flight_group}
+				<th colspan="2" style="height: 30px;">Window Date/Time</th>
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ </td>
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </td>
+			</tr>
+			<tr>
+				<td></td>
+			{/if}
+
 			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
@@ -104,6 +116,9 @@
 				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_laps}
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
+			{/if}
+			{if $event->info.event_type_code=="gps"}
 				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
 			<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>

@@ -21,17 +21,19 @@ class PDF_F3X {
 	public $num_pages;
 	public $per_page;
 	public $event_type;
+	public $orientation;
 	public $data = array();
 	
-	public function __construct(){
+	public function __construct( $orientation = 'L' ){
 		# Initialization of the class
 		$this->page_margin = 8;
 		$this->page_cols = 3;
 		$this->page_rows = 2;
 		$this->padding = 1;
 		$this->per_page = $this->page_cols*$this->page_rows;
+		$this->orientation = $orientation;
 		
-		$this->pdf = new FPDF('L','mm','Letter');
+		$this->pdf = new FPDF($this->orientation,'mm','Letter');
 		$width = $this->pdf->GetPageWidth();
 		$height = $this->pdf->GetPageHeight();
 		unset($this->pdf);
@@ -41,16 +43,27 @@ class PDF_F3X {
 	}
 	public function render($event_type,$data){
 		# Main routine to render the pages with the data given
+		
 		$num_cells = count($data);
 		$num_pages = ceil($num_cells/$this->per_page);
 		
 		# OK, lets create the pages
-		$this->pdf = new FPDF('L','mm','Letter');
+		$this->pdf = new FPDF($this->orientation,'mm','Letter');
 		$this->pdf->AddPage();
 		$this->pdf->SetFont('Arial','B',16);
 		$this->pdf->SetMargins($this->page_margin,$this->page_margin);
 		$this->pdf->SetAutoPageBreak(FALSE);
 		$this->pdf->SetTitle($data[0]['event_name']." Pilot Recording Sheets");
+		
+		# let us set the columns
+		if( $event_type == 'gps' ){
+			$this->page_cols = 2;
+			$this->per_page = $this->page_cols * $this->page_rows;
+			$width = $this->pdf->GetPageWidth();
+			$height = $this->pdf->GetPageHeight();
+			$this->cell_width = ($width - ($this->page_cols+1)*$this->page_margin)/$this->page_cols;
+			$this->cell_height = ($height - ($this->page_rows+1)*$this->page_margin)/$this->page_rows;
+		}
 		
 		$x = $this->page_margin;
 		$y = $this->page_margin;
@@ -68,6 +81,9 @@ class PDF_F3X {
 					break;
 				case 'td':
 					$this->render_cell_td($x,$y,$d);
+					break;
+				case 'gps':
+					$this->render_cell_gps($x,$y,$d);
 					break;
 			}
 			if($cell % $this->page_cols ==0){
@@ -713,6 +729,230 @@ class PDF_F3X {
 		
 		# Signatures
 		$current_y += 11;
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Pilot Sig',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Timer Sig',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		
+		return;
+	}
+	public function render_cell_gps($x,$y,$data){
+		# Function to render a single cell of data at x and y location for F3J
+		# Lets set the XY for the cell
+		$current_x = $x;
+		$current_y = $y;
+		$this->pdf->SetXY($x,$y);
+		
+		# Outline of the cell
+		$this->pdf->Cell($this->cell_width,$this->cell_height,'',1,0,'C',FALSE);
+		
+		# Event Name header
+		$current_x += $this->padding;
+		$current_y += $this->padding;
+		$inner_cell_width = $this->cell_width - (2*$this->padding);
+		$this->pdf->SetFontSize(8);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($inner_cell_width,5,$data['event_name'],0,0,'L',TRUE);
+		$current_y += 6;
+		
+		# Round Header
+		$this->pdf->SetXY($x + $this->padding,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetFontSize(18);
+		$this->pdf->Cell($inner_cell_width,8,"Round {$data['round']}",0,0,'C',TRUE);
+		$current_y += 9;
+		
+		# Pilot Name and Group
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(10,8,'Pilot',0,0,'C',TRUE);
+		$current_x += 11;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$name_width = $inner_cell_width - 11 - 11 - 12;
+		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		
+		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
+		$this->pdf->SetXY($current_x,$current_y);
+		if( $data['order'] != '' ){
+			$this->pdf->Cell(12,8,'Order',0,0,'C',TRUE);
+		}else{
+			$this->pdf->Cell(12,8,'Group',0,0,'C',TRUE);
+		}
+		
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetFontSize(18);
+		if( $data['order'] != '' ){
+			$this->pdf->Cell(9,8,$data['order'],1,0,'C',TRUE);
+		}else{
+			$this->pdf->Cell(9,8,$data['group'],1,0,'C',TRUE);
+		}
+		
+		$current_x = $x + $this->padding;
+		$current_y += 9;		
+		
+		# Task Description
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($inner_cell_width,8,$data['task'],0,0,'C',TRUE);
+		
+		$current_x = $x + $this->padding;
+		$current_y += 9;
+		
+		# Window Date and Time
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(42,10,'Window Date/Time',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetFontSize(14);
+		$this->pdf->Cell(30,10,'      /      / ',1,0,'L',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(20,10,'      : ',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+		
+		# Total Laps line
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(42,10,'Total Laps',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		if( $data['order'] != '' ){
+			$this->pdf->SetFillColor(211,211,211);
+			$this->pdf->Cell(30,10,'1',1,0,'C',TRUE);
+			$this->pdf->SetFillColor(255,255,255);
+		}else{
+			$this->pdf->Cell(30,10,'',1,0,'C',TRUE);
+		}
+		$this->pdf->SetFontSize(7);
+		$this->pdf->Cell(20,4,"am pm",0,0,'R',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+
+		# Flight Time lines
+		$current_x += 36;
+		$this->pdf->SetFontSize(8);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(20,4,'Min',0,0,'C',TRUE);
+		$current_x += 24;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(30,4,'Sec',0,0,'C',TRUE);
+		$current_x += 31;
+		$current_y += 5;
+
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(35,10,'Total Flight Time',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(20,10,'',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetFontSize(14);
+		$this->pdf->Cell(2,10,':',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(30,10,'',1,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$current_y += 11;
+
+		# Average Speed
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(35,10,'Average Speed',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(54,10,'km/h',1,0,'R',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+		
+		# Landing line
+		if( $data['order'] == '' ){
+			$current_x = $x + $this->padding;
+			$this->pdf->SetFontSize(10);
+			$this->pdf->SetXY($current_x,$current_y);
+			$this->pdf->SetFillColor(211,211,211);
+			$this->pdf->Cell(35,10,'Landing Points',0,0,'C',TRUE);
+			$current_x = $this->pdf->GetX() + 1;
+			$this->pdf->SetXY($current_x,$current_y);
+			$this->pdf->SetFillColor(255,255,255);
+			$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
+			$this->pdf->SetFillColor(211,211,211);
+		}
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+		
+		# Start Penalty line
+		if( $data['order'] == '' ){
+			$current_x = $x + $this->padding;
+			$this->pdf->SetFontSize(10);
+			$this->pdf->SetXY($current_x,$current_y);
+			$this->pdf->SetFillColor(211,211,211);
+			$this->pdf->Cell(35,10,'Start Penalty',0,0,'C',TRUE);
+			$current_x = $this->pdf->GetX() + 1;
+			$this->pdf->SetXY($current_x,$current_y);
+			$this->pdf->SetFillColor(255,255,255);
+			$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
+			$this->pdf->SetFillColor(211,211,211);
+		}
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+		
+		# Safety Penalty line
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(35,10,'Safety Penalty',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+		
+		# Lets do the Signature line		
+
+		# Lets make quarter cells
+		$cell_width = ($inner_cell_width - (4*$this->padding)) / 4;
+
 		$current_x = $x + $this->padding;
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);

@@ -4468,6 +4468,10 @@ function event_draw_print() {
 			$title = "Pilot Score Recording Sheets";
 			$orientation = "L";
 			$sort_by = 'alphabetical_first';
+			if( $e->info['event_type_code'] == 'gps' ){
+				$orientation = "P";
+				$sort_by = 'alphabetical_first';
+			}
 			break;
 		case "table":
 			$template = "print/print_draw_table.tpl";
@@ -4498,7 +4502,7 @@ function event_draw_print() {
 
 	# Lets get the draw round flight types if there are any
 	$draw_round_flight_types = array();
-	if($e->info['event_type_code'] == 'f3k'){
+	if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
 		# Lets set the round flight types from the task list
 		foreach($e->tasks as $round => $t){
 			$draw_round_flight_types[$round] = $t['flight_type_id'];
@@ -4529,16 +4533,21 @@ function event_draw_print() {
 				$event_draw_id = $d['event_draw_id'];
 				if($d['event_draw_active'] == 1){
 					#Step through the draw rounds and see if one exists for this round
-					foreach($d['flights'] as $flight_type_id => $f){
-						if($e->info['event_type_code'] == 'f3k'){
+					foreach($d['flights'] as $ftid => $f){
+						if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
 							$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+						}else{
+							$flight_type_id = $ftid;
 						}
 						foreach($f as $round_num => $v){
 							if($round_num == $event_round_number){
 								# Lets create the round info
+								if( isset( $e->rounds[$event_round_number]['event_round_number'] ) || $ftid != $draw_round_flight_types[$event_round_number] ){
+									continue;
+								}
 								$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
 								$e->rounds[$event_round_number]['event_round_status'] = 1;
-								if($e->info['event_type_code'] == 'f3k'){
+								if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
 									$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$round_num];
 								}else{
 									$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
@@ -4608,6 +4617,7 @@ function event_draw_print() {
 					"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
 					"round"			=> $event_round_number,
 					"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
+					"order"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'],
 					"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
 					"spot"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
 					"lane"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
@@ -4616,10 +4626,11 @@ function event_draw_print() {
 				);
 			}
 		}
-#		print_r($e);
-#		return;
+
+#print_r( $e );
+#print_r( $data );
 		# Now create the pdf from the above template and save it
-		$pdf = new PDF_F3X();
+		$pdf = new PDF_F3X( $orientation );
 		$pdf->render($e->info['event_type_code'],$data);
 		exit;
 		#$file_contents = $pdf->Output("$title.pdf", 'D');

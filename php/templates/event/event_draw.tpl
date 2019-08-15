@@ -88,10 +88,10 @@
 					</td>
 					<td nowrap>
 						<div style="overflow: hidden;">
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}{rdelim}"> Delete </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> Edit </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> UnApply </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> Apply </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to delete this draw?')){ldelim}location.href='?action=event&function=event_draw_delete&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}';{rdelim}{rdelim}"> Delete </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}location.href='?action=event&function=event_draw_edit&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}"> Edit </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to unapply this draw?')){ldelim}location.href='?action=event&function=event_draw_unapply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> UnApply </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}if(confirm('Are you sure you wish to apply this draw to the future rounds? Any current rounds entered will not be changed.')){ldelim}location.href='?action=event&function=event_draw_apply&event_draw_id={$d.event_draw_id}&event_id={$event->info.event_id}&flight_type_id={$d.flight_type_id}';{rdelim}{rdelim}"> Apply </button></div>
 						</div>
 					</td>
 					</tr>
@@ -151,13 +151,13 @@
 						{/for}
 						</select>
 						<div style="overflow: hidden;float: right;">
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();"> Full Draw Matrix </button></div>
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();"> Draw Table </button></div>
-							{if !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance"}
-								<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();"> Pilot Recording Sheets </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='matrix';submit();"> Full Draw Matrix </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='table';submit();"> Draw Table </button></div>
+							{if ( !$ft.flight_type_code|strstr:"speed" && !$ft.flight_type_code|strstr:"distance") || $ft.flight_type_code|strstr:"gps_distance"}
+								<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='pilot';submit();"> Pilot Recording Sheets </button></div>
 							{/if}
 							{if !$ft.flight_type_code|strstr:"f3k"}
-							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" id="change_pilot_info_button" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();"> CD Recording Sheet </button></div>
+							<div class="btn-group btn-group-xs" style="display: inline-block;margin-left: 5px;"><button class="btn btn-primary btn-rounded" type="button" onclick="document.print_{$ft.flight_type_id}.print_type.value='cd';submit();"> CD Recording Sheet </button></div>
 							{/if}
 						</div>
 					</td>

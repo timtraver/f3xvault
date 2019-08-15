@@ -61,7 +61,7 @@
 				{if $r.event_round_number<$print_round_from || $r.event_round_number>$print_round_to || $r.flights.$flight_type_id.event_round_flight_score==0}
 					{continue}
 				{/if}
-				<td align="center">
+				<td align="left">
 				{if $event->flight_types.$flight_type_id.flight_type_group==1 && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
 					{$event->rounds.$event_round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
