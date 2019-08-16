@@ -903,34 +903,30 @@ class PDF_F3X {
 		$current_y += 11;
 		
 		# Landing line
-		if( $data['order'] == '' ){
-			$current_x = $x + $this->padding;
-			$this->pdf->SetFontSize(10);
-			$this->pdf->SetXY($current_x,$current_y);
-			$this->pdf->SetFillColor(211,211,211);
-			$this->pdf->Cell(35,10,'Landing Points',0,0,'C',TRUE);
-			$current_x = $this->pdf->GetX() + 1;
-			$this->pdf->SetXY($current_x,$current_y);
-			$this->pdf->SetFillColor(255,255,255);
-			$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
-			$this->pdf->SetFillColor(211,211,211);
-		}
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(35,10,'Landing Points',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
 		$current_x = $x + $this->padding;
 		$current_y += 11;
 		
 		# Start Penalty line
-		if( $data['order'] == '' ){
-			$current_x = $x + $this->padding;
-			$this->pdf->SetFontSize(10);
-			$this->pdf->SetXY($current_x,$current_y);
-			$this->pdf->SetFillColor(211,211,211);
-			$this->pdf->Cell(35,10,'Start Penalty',0,0,'C',TRUE);
-			$current_x = $this->pdf->GetX() + 1;
-			$this->pdf->SetXY($current_x,$current_y);
-			$this->pdf->SetFillColor(255,255,255);
-			$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
-			$this->pdf->SetFillColor(211,211,211);
-		}
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(35,10,'Start Penalty',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(30,10,'',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
 		$current_x = $x + $this->padding;
 		$current_y += 11;
 		
