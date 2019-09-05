@@ -17,7 +17,7 @@
 		<h2 class="post-title entry-title" style="margin:0px;">CD Recording Sheet - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
 		<table width="600" cellpadding="2" cellspacing="1" 
 			style="border: 1px solid black;
-				{if ($event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed') && $event->pilots|count<=20}
+				{if ($event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed' || $event->info.event_type_code=='f3b_plus') && $event->pilots|count<=20}
 					{* We want to skip every other round for a new page to have two on a page *}
 					{if $num_rounds_printed is div by 2}
 						{if $r.event_round_number!=$print_round_to}
@@ -67,7 +67,7 @@
 		{foreach $r.flights.$flight_type_id.pilots as $p}
 		{$event_pilot_id=$p@key}
 		{if $oldgroup!=$p.event_pilot_round_flight_group}
-			{if $bgcolor=='white' || $r.flights.$flight_type_id.flight_type_code=='f3b_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_speed'}
+			{if $bgcolor=='white' || $r.flights.$flight_type_id.flight_type_code=='f3b_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_speed' || $r.flights.$flight_type_id.flight_type_code=='f3f_plus'}
 				{$bgcolor='lightgray'}
 			{else}
 				{$bgcolor='white'}
@@ -85,7 +85,7 @@
 				<td></td>
 			{/if}
 
-			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed'}
+			{if $event->flight_types.$flight_type_id.flight_type_group && $event->flight_types.$flight_type_id.flight_type_code!='f3f_speed' && $event->flight_types.$flight_type_id.flight_type_code!='f3f_plus'}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_group}</td>
 			{else}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_order}</td>
