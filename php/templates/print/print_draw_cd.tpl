@@ -17,7 +17,7 @@
 		<h2 class="post-title entry-title" style="margin:0px;">CD Recording Sheet - {$event->flight_types.$flight_type_id.flight_type_name}</h2>		
 		<table width="600" cellpadding="2" cellspacing="1" 
 			style="border: 1px solid black;
-				{if ($event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed' || $event->info.event_type_code=='f3b_plus') && $event->pilots|count<=20}
+				{if ($event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3b_speed' || $event->info.event_type_code=='f3f_plus') && $event->pilots|count<=20}
 					{* We want to skip every other round for a new page to have two on a page *}
 					{if $num_rounds_printed is div by 2}
 						{if $r.event_round_number!=$print_round_to}
