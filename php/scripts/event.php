@@ -4542,7 +4542,9 @@ function event_draw_print() {
 						foreach($f as $round_num => $v){
 							if($round_num == $event_round_number){
 								# Lets create the round info
-								if( isset( $e->rounds[$event_round_number]['event_round_number'] ) || $ftid != $draw_round_flight_types[$event_round_number] ){
+								if( isset( $e->rounds[$event_round_number]['event_round_number'] ) || 
+									( $ftid != $draw_round_flight_types[$event_round_number] && ( $e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps' ) )
+								){
 									continue;
 								}
 								$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
