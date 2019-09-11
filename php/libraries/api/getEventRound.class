@@ -97,7 +97,29 @@ class getEventRound {
 			}
 		}
 
-		$smarty->assign("rounds",$this->rounds);
+		# Now lets sort the rounds before we send them
+		$round_number = $this->api->input_variables['round_number'];
+		foreach( $this->rounds as $event_pilot_id => $p ){
+			foreach( $p as $rnumber => $r ){
+				if( $rnumber == $round_number ){
+					$rounds[] = array(
+						"event_pilot_id" => $r['event_pilot_id'],
+						"event_pilot_round_flight_group" => $r['event_pilot_round_flight_group'],
+						"event_pilot_round_flight_order" => $r['event_pilot_round_flight_order'],
+						"pilot_first_name" => $r['pilot_first_name'],
+					);
+				}
+			}
+		}
+		
+		$rounds = array_msort( $rounds, array('event_pilot_round_flight_group' => SORT_ASC, 'event_pilot_round_flight_order' => SORT_ASC ) );
+		$final_round = array();
+		foreach( $rounds as $r ){
+			$event_pilot_id = $r['event_pilot_id'];
+			$final_rounds[$event_pilot_id][$round_number] = $this->rounds[$event_pilot_id][$round_number];
+		}
+
+		$smarty->assign("rounds",$final_rounds);
 		$smarty->assign("round_number",$this->api->input_variables['round_number']);
 
 		$template = '';
