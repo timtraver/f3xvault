@@ -99,7 +99,9 @@
 	<input type="hidden" name="seconds_2" value="{$seconds_2|escape}">
 	<input type="hidden" name="over" value="{$over|escape}">
 	<input type="hidden" name="landing" value="{$landing|escape}">
+	<input type="hidden" name="laps" value="{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}1{else}{$laps|escape}{/if}">
 	<input type="hidden" name="penalty" value="{$penalty|escape}">
+	<input type="hidden" name="startpen" value="{$startpen|escape}">
 	{for $sub=1 to $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights}
 	<input type="hidden" name="sub_min_{$sub}" value="{$subs.$sub.minutes}">
 	<input type="hidden" name="sub_sec_{$sub}" value="{$subs.$sub.seconds}">
@@ -437,7 +439,102 @@
 			</table>
 		{/if} {* End F3K Event *}
 			
-		
+		{* For GPS Event *}
+		{if $event->info.event_type_code == 'gps'}
+			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
+			<table>
+			<tr>
+				<th><h3>Total Laps</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}
+							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" 1 " data-toggle="dropdown" aria-expanded="false">
+						{else}
+							{if $laps == ''}{$laps = 0}{/if}
+							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$laps} " data-toggle="dropdown" aria-expanded="false">
+								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+									{section name=s loop=25 start=0 step=1}
+									<li><a href="#" onClick='document.main.laps.value="{$smarty.section.s.index}";document.getElementById("laps_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+									{/section}
+								</ul>
+						{/if}
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th width="37%" nowrap><h3>Flight Time</h3></th>
+				<td valign="baseline">
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=60 start=0 step=1}
+								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
+								{/section}
+							</ul>
+					</div>
+						min
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=60 start=60 step=-1}
+								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
+								{/section}
+							</ul>
+					</div>&nbsp;&nbsp;
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:".%'.02d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=100 start=100 step=-1}
+								<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:".%'.02d"}";'>{$smarty.section.s.index|string_format:".%'.02d"}</a></li>
+								{/section}
+							</ul>
+					</div>
+						&nbsp;&nbsp;&nbsp;sec
+				</td>
+			</tr>
+			<tr>
+				<th><h3>Landing</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						{if $landing == ''}{$landing = 0}{/if}
+						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=401 start=401 step=-1}
+								<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+								{/section}
+							</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th nowrap><h3>Start Penalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="startpen_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 15px;margin-top: 10px;font-size: 28px;" value=" {$startpen|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=1000 start=0 step=1}
+								<li><a href="#" onClick='document.main.startpen.value="{$smarty.section.s.index}";document.getElementById("startpen_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+								{/section}
+							</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th><h3>Penalty</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="penalty_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$penalty|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								<li><a href="#" onClick='document.main.penalty.value=0;document.getElementById("penalty_button").value="0";'>0</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=100;document.getElementById("penalty_button").value="100";'>100</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=300;document.getElementById("penalty_button").value="300";'>300</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
+							</ul>
+					</div>
+				</td>
+			</tr>
+			</table>
+		{/if} {* End GPS Event *}
 			
 		
 		<br>

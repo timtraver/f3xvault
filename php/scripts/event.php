@@ -5924,6 +5924,8 @@ function event_self_entry() {
 	$seconds_2 = floatval($_REQUEST['seconds_2']);
 	$over = intval($_REQUEST['over']);
 	$landing = intval($_REQUEST['landing']);
+	$laps = intval($_REQUEST['laps']);
+	$startpen = intval($_REQUEST['startpen']);
 	$penalty = intval($_REQUEST['penalty']);
 	$save = intval($_REQUEST['save']);
 
@@ -6305,7 +6307,9 @@ function event_self_entry() {
 					event_pilot_round_flight_minutes = :minutes,
 					event_pilot_round_flight_seconds = :seconds,
 					event_pilot_round_flight_over = :over,
+					event_pilot_round_flight_laps = :laps,
 					event_pilot_round_flight_landing = :landing,
+					event_pilot_round_flight_start_penalty = :startpen,
 					event_pilot_round_flight_penalty = :penalty,
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
@@ -6318,7 +6322,9 @@ function event_self_entry() {
 				"minutes" => $minutes,
 				"seconds" => $full_seconds,
 				"over" => $over,
+				"laps" => $laps,
 				"landing" => $landing,
+				"startpen" => $startpen,
 				"penalty" => $penalty,
 				"flight_time" => $flight_time,
 				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
@@ -6333,7 +6339,9 @@ function event_self_entry() {
 					event_pilot_round_flight_minutes = :minutes,
 					event_pilot_round_flight_seconds = :seconds,
 					event_pilot_round_flight_over = :over,
+					event_pilot_round_flight_laps = :laps,
 					event_pilot_round_flight_landing = :landing,
+					event_pilot_round_flight_start_penalty = :startpen,
 					event_pilot_round_flight_penalty = :penalty,
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
@@ -6347,7 +6355,9 @@ function event_self_entry() {
 				"minutes" => $minutes,
 				"seconds" => $full_seconds,
 				"over" => $over,
+				"laps" => $laps,
 				"landing" => $landing,
+				"startpen" => $startpen,
 				"penalty" => $penalty,
 				"flight_time" => $flight_time
 			));
@@ -6447,7 +6457,9 @@ function event_self_entry() {
 			$seconds = intval($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds']);
 			$seconds_2 = ($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] - $seconds) * 100;
 			$landing = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_landing'];
+			$laps = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_laps'];
 			$over = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_over'];
+			$startpen = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_penalty'];
 			$penalty = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_penalty'];
 			# Lets fill in the sub flights
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
@@ -6469,9 +6481,11 @@ function event_self_entry() {
 			$minutes = 0;
 			$seconds = 0;
 			$seconds_2 = 0;
+			$laps = 0;
 			$landing = 0;
 			$over = 0;
 			$penalty = 0;
+			$startpen = 0;
 
 		}
 	}
@@ -6490,6 +6504,8 @@ function event_self_entry() {
 	$smarty->assign("subs",$subs);
 	$smarty->assign("over",$over);
 	$smarty->assign("landing",$landing);
+	$smarty->assign("laps",$laps);
+	$smarty->assign("startpen",$startpen);
 	$smarty->assign("penalty",$penalty);
 
 	$maintpl = find_template("event/event_round_self_entry.tpl");
