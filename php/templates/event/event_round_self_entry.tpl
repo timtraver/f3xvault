@@ -453,7 +453,7 @@
 							{if $laps == ''}{$laps = 0}{/if}
 							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$laps} " data-toggle="dropdown" aria-expanded="false">
 								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-									{section name=s loop=25 start=0 step=1}
+									{section name=s loop=26 start=0 step=1}
 									<li><a href="#" onClick='document.main.laps.value="{$smarty.section.s.index}";document.getElementById("laps_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 									{/section}
 								</ul>
@@ -467,7 +467,7 @@
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=60 start=0 step=1}
+								{section name=s loop=30 start=0 step=1}
 								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
 							</ul>
@@ -499,9 +499,9 @@
 						{if $landing == ''}{$landing = 0}{/if}
 						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=401 start=401 step=-1}
-								<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-								{/section}
+								<li><a href="#" onClick='document.main.landing.value=0;document.getElementById("landing_button").value="0";'>0</a></li>
+								<li><a href="#" onClick='document.main.landing.value=200;document.getElementById("landing_button").value="200";'>200</a></li>
+								<li><a href="#" onClick='document.main.landing.value=400;document.getElementById("landing_button").value="400";'>400</a></li>
 							</ul>
 					</div>
 				</td>
