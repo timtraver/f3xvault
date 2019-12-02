@@ -1,7 +1,7 @@
 {extends file='layout/layout_main.tpl'}
 
 {block name="header"}
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDYRplmgH2DUnWhVS1WSJCTHYYpELFcG44&sensor=false"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYRplmgH2DUnWhVS1WSJCTHYYpELFcG44&sensor=false"></script>
 
 <script>
 	var map;
