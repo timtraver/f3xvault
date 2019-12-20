@@ -473,6 +473,8 @@ function import_import() {
 	$event['event_type_code'] = $_REQUEST['event_type_code'];
 	$event['f3f_group'] = $_REQUEST['f3f_group'];
 	
+	$event = new Event( $event_id );
+	
 	if(isset($_REQUEST['event_start_dateMonth'])){
 		$event['event_start_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
 	}else{
@@ -1106,15 +1108,16 @@ function import_import() {
 			switch($event['event_type_code']){
 				case 'f3k':
 					foreach($r['sub'] as $sub_num => $sub_time){
-						$subtotal += convert_colon_to_seconds($sub_time);
+						$subtotal += convert_colon_to_seconds($sub_time, $event->find_option_value("f3k_duration_accuracy"));
 					}
 					$min = floor($subtotal/60);
-					$sec = sprintf("%02d",fmod($subtotal,60));
+					$format_string = '%02d.' . $event->find_option_value("f3k_duration_accuracy") . 'f';
+					$sec = sprintf( $format_string , fmod( $subtotal, 60 ) );
 					break;
 				case 'f3f':
 					$min = 0;
 					foreach($r['sub'] as $sub_num => $sub_time){
-						$subtotal += convert_colon_to_seconds($sub_time);
+						$subtotal += convert_colon_to_seconds($sub_time, $event->find_option_value( "f3f_speed_accuracy" ) );
 					}
 					$sec = $subtotal;
 					break;
@@ -1125,10 +1128,14 @@ function import_import() {
 					break;
 				default:
 					foreach($r['sub'] as $sub_num => $sub_time){
-						$subtotal += convert_colon_to_seconds($sub_time);
+						if( preg_match( "/\:/", $sub_time ) ){
+							$subtotal += convert_colon_to_seconds($sub_time, $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy"));
+						}else{
+							$subtotal += $sub_time;
+						}
 					}
 					$min = floor($subtotal/60);
-					$sec = sprintf("%02d",fmod($subtotal,60));
+					$sec = sprintf("%02.f",fmod($subtotal,60));
 					break;
 			}
 			

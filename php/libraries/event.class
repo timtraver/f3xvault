@@ -273,7 +273,7 @@ class Event {
 					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy'] = $o['event_option_value'];
 					}
-					if(preg_match("/f3k_accuracy/",$o['event_type_option_code'])){
+					if(preg_match("/f3k_duration_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy'] = $o['event_option_value'];
 					}
 					if(preg_match("/f3f_use_groups/",$o['event_type_option_code']) || preg_match("/f3f_plus_use_groups/",$o['event_type_option_code'])){
@@ -312,8 +312,17 @@ class Event {
 						case 'f3k_d':
 							$subs = array("0:30","0:45","1:00","1:15","1:30","1:45","2:00");
 							break;
+						case 'f3k_d2':
+							$subs = array("5:00","5:00");
+							break;
 						case 'f3k_e':
 							$subs = array("","Pilot","Nominated","","");
+							break;
+						case 'f3k_e2':
+							$subs = array("Pilot","Nominated","");
+							break;
+						case 'f3k_e3':
+							$subs = array("Pilot","Nominated","");
 							break;
 						case 'f3k_f':
 							$subs = array("3:00","3:00","3:00");
@@ -332,6 +341,12 @@ class Event {
 							break;
 						case 'f3k_k':
 							$subs = array("1:00","1:30","2:00","2:30","3:00");
+							break;
+						case 'f3k_l':
+							$subs = array("9:59 Max");
+							break;
+						case 'f3k_m':
+							$subs = array("3:00","5:00","7:00");
 							break;
 					}
 					$r['subs'] = $subs;

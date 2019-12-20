@@ -746,13 +746,13 @@ function check_unread_messages(){
 	$result=db_exec($stmt,array("user_id"=>$GLOBALS['user']['user_id']));
 	return $result['0']['count'];
 }
-function convert_string_to_colon( $timestring ){
+function convert_string_to_colon( $timestring, $round_to ){
 	# Function to convert a time string from digits only to colon notation
 	if($timestring == '0' || $timestring == '00' || $timestring == '000' || $timestring == '' ){
 		return '0:00';
 	}
 	$timestring = preg_replace("/\;/", ':', $timestring );
-	if( preg_match( "/^(\d+)\:(\d\d)$/", $timestring ) ){
+	if( preg_match( "/^(\d+)\:(\d\d)/", $timestring ) ){
 		# Already in colon notation, so just return it
 		return $timestring;
 	}
@@ -789,12 +789,40 @@ function convert_string_to_colon( $timestring ){
 			$min = $min + 1;
 		}
 		return "$min:$sec";
+	}elseif( preg_match( "/^(\d+)(\d\d\.\d+)$/", $timestring, $match ) ){
+		$min = intval( $match[1] );
+		$sec = $match[2];
+		if( $sec >= 60 ){
+			$sec = $sec - 60;
+			$min = $min + 1;
+		}
+		if( $round_to == 0 ){
+			$leading = 2;
+		}else{
+			$leading = intval( $round_to + 3 );
+		}
+		$format_string = '%d:%0' . $leading . '.' . $round_to . 'f';
+		return sprintf( $format_string, $min, round( $sec, $round_to ) );
+	}elseif( preg_match( "/^(\d\d\.\d+)$/", $timestring, $match ) ){
+		$min = 0;
+		$sec = $match[1];
+		if( $sec >= 60 ){
+			$sec = $sec - 60;
+			$min = $min + 1;
+		}
+		if( $round_to == 0 ){
+			$leading = 2;
+		}else{
+			$leading = intval( $round_to + 3 );
+		}
+		$format_string = '%d:%0' . $leading . '.' . $round_to . 'f';
+		return sprintf( $format_string, $min, round( $sec, $round_to ) );
 	}
 	return $timestring;
 }
-function convert_colon_to_seconds( $timestring ){
+function convert_colon_to_seconds( $timestring, $round_to ){
 	# Function to convert a time string from colon notation to seconds
-	if( !preg_match( "/^(\d+)\:(\d\d)$/", $timestring ) && !preg_match( "/^(\d+)\;(\d\d)$/", $timestring ) ){
+	if( !preg_match( "/^(\d+)\:(\d\d)$/", $timestring ) && !preg_match( "/^(\d+)\;(\d\d)$/", $timestring ) && !preg_match( "/^(\d+)\:(\d\d\.\d+)$/", $timestring ) && !preg_match( "/^(\d+)\;(\d\d\.\d+)$/", $timestring )){
 		# Not in colon notation, so just return it
 		return $timestring;
 	}
@@ -808,14 +836,30 @@ function convert_colon_to_seconds( $timestring ){
 		$total_seconds = ( 60 * $min ) + $sec;
 		return $total_seconds;
 	}
+	if( preg_match( "/^(\d+)\:(\d\d\.\d+)$/", $timestring, $match ) ){
+		$min = $match[1];
+		$sec = $match[2];
+		if( $sec >= 60 ){
+			$sec = $sec - 60;
+			$min = $min + 1;
+		}
+		$total_seconds = ( 60 * $min ) + $sec;
+		$total_seconds = round( $total_seconds, $round_to );
+		return $total_seconds;
+	}
 }
-function convert_seconds_to_colon( $seconds ){
+function convert_seconds_to_colon( $seconds, $round_to ){
 	# Function to convert a number of seconds to colon time string
 	$seconds = floatval( $seconds );
 	$min = floor( $seconds / 60 );
 	$mod = fmod( $seconds, 60 );
-	$sec = sprintf( "%02d", $mod );
-	return sprintf( "%d:%02d", $min, $sec );
+	if( $round_to == 0 ){
+		$leading = 2;
+	}else{
+		$leading = intval( $round_to + 3 );
+	}
+	$format_string = '%d:%0' . $leading . '.' . $round_to . 'f';
+	return sprintf( $format_string, $min, $mod );
 }
 function sub_trace(){
 	# This is a small function to add to the subroutine trace string so I can see which routines I am hitting
