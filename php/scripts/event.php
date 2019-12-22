@@ -925,8 +925,8 @@ function event_reg_save() {
 	$event_reg_add_name = $_REQUEST['event_reg_add_name'];
 	
 	# Get the entered dates
-	$event_reg_open_date_string = $_REQUEST['event_reg_open_dateYear']."-".$_REQUEST['event_reg_open_dateMonth']."-".$_REQUEST['event_reg_open_dateDay']." ".$_REQUEST['event_reg_open_dateHour'].":".$_REQUEST['event_reg_open_dateMinute'].$_REQUEST['event_reg_open_dateMeridian'];
-	$event_reg_close_date_string = $_REQUEST['event_reg_close_dateYear']."-".$_REQUEST['event_reg_close_dateMonth']."-".$_REQUEST['event_reg_close_dateDay']." ".$_REQUEST['event_reg_close_dateHour'].":".$_REQUEST['event_reg_close_dateMinute'].$_REQUEST['event_reg_close_dateMeridian'];
+	$event_reg_open_date_string = $_REQUEST['event_reg_open_dateYear']."-".$_REQUEST['event_reg_open_dateMonth']."-".$_REQUEST['event_reg_open_dateDay']." ".$_REQUEST['event_reg_open_dateHour'].":".$_REQUEST['event_reg_open_dateMinute']." ".$_REQUEST['event_reg_open_dateMeridian'];
+	$event_reg_close_date_string = $_REQUEST['event_reg_close_dateYear']."-".$_REQUEST['event_reg_close_dateMonth']."-".$_REQUEST['event_reg_close_dateDay']." ".$_REQUEST['event_reg_close_dateHour'].":".$_REQUEST['event_reg_close_dateMinute']." ".$_REQUEST['event_reg_close_dateMeridian'];
 	$event_reg_open_tz = $_REQUEST['event_reg_open_tz'];
 	$event_reg_close_tz = $_REQUEST['event_reg_close_tz'];
 	
