@@ -356,7 +356,7 @@
 										<a href="#">
 											<i class="fa fa-copyright"></i>
 											<span class="menu-title">
-												<strong>Tim Traver 2015-17</strong>
+												<strong>Tim Traver 2015-2020</strong>
 											</span>
 										</a>
 									</li>
