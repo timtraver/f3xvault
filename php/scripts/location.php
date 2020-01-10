@@ -432,6 +432,7 @@ function location_view() {
 		LEFT JOIN event_pilot ep ON e.event_id = ep.event_id
 		WHERE e.location_id = :location_id
 			AND ep.event_pilot_status = 1
+			AND e.event_status = 1
 		GROUP by e.event_id
 		ORDER BY e.event_start_date DESC
 	");
@@ -907,53 +908,144 @@ function location_calculate_records(){
 	# Function to look at all of the events and calculate and save the records
 	global $smarty;
 	
-	# Lets get all of the events so we can step through them
+	$results= array();
+	# Lets wipe the f3f and f3b speeds from all of the locations
 	$stmt = db_prep("
-		SELECT e.event_name,e.event_start_date,e.event_type_id,l.location_id,l.location_name
-		FROM event e
-		LEFT JOIN location l ON e.location_id = l.location_id
-		WHERE e.event_status = 1
-			AND e.event_type_id IN (1,2,3)
+		UPDATE location
+		SET location_record_speed=0,
+			location_record_speed_event_pilot_id=0
 	");
-	$results = db_exec($stmt,array());
-	foreach($results as $e){
-		# Ok, depending on the type of event, lets find the fastest time
-		switch($e.event_type_id){
-			case 1:
-				# This is an F3F event
-				$stmt = db_prep("
-					SELECT e.event_name,erf.event_pilot_round_flight_seconds,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,e.location_id
-					FROM event_pilot_round_flight erf
-					LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id = epr.event_pilot_round_id
-					LEFT JOIN event_round er ON epr.event_round_id = er.event_round_id
-					LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
-					LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
-					LEFT JOIN event e ON ep.event_id = e.event_id
-					WHERE er.event_id = :event_id
-						AND er.event_round_status = 1
-						AND erf.event_pilot_round_flight_status = 1
-						AND ep.event_pilot_status = 1
-						AND erf.event_pilot_round_flight_seconds != 0
-					ORDER BY erf.event_pilot_round_flight_seconds
-				");
+	$result = db_exec($stmt,array());
 
-				
-
-
-
-			case 3:
-				
+	# Now lets step through each location and search for all the event flights in that location
+	$stmt = db_prep("
+		SELECT *
+		FROM location l
+	");
+	$result = db_exec( $stmt, array() );
+	foreach( $result as $location ){
+		# Now lets search for all event flights at that location
+		$stmt2 = db_prep("
+			SELECT e.event_name,erf.event_pilot_round_flight_seconds,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,l.location_record_speed
+			FROM event_pilot_round_flight erf
+			LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id = epr.event_pilot_round_id
+			LEFT JOIN event_round er ON epr.event_round_id = er.event_round_id
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			LEFT JOIN event e ON ep.event_id = e.event_id
+			LEFT JOIN location l ON e.location_id = l.location_id
+			WHERE l.location_id = :location_id
+				AND l.location_id != 0
+				AND er.event_round_status = 1
+				AND erf.event_pilot_round_flight_status = 1
+				AND ep.event_pilot_status = 1
+				AND erf.event_pilot_round_flight_seconds != 0
+				AND e.event_type_id IN ( 1, 7 )
+				AND e.event_status = 1
+			ORDER BY erf.event_pilot_round_flight_seconds
+		");
+		$result2 = db_exec( $stmt2, array(
+			"location_id" => $location['location_id']
+		));
+		if( count( $result2 ) > 0 ){
+			$fast_record = $result2[0];
+		}else{
+			continue;
 		}
-		
-		
-		
+		$update_speed = 0;
+		if( $fast_record['location_record_speed'] == 0 ){
+			$update_speed = 1;
+		}
+		if( $fast_record['event_pilot_round_flight_seconds'] < $fast_record['location_record_speed'] ){
+			$update_speed = 1;
+		}
+		if( $update_speed ){
+			# This is a faster speed, so lets update the location record
+			$stmt3 = db_prep("
+				UPDATE location
+				SET location_record_speed = :location_record_speed,
+					location_record_speed_event_pilot_id = :location_record_speed_event_pilot_id
+				WHERE location_id = :location_id
+			");
+			$result3 = db_exec($stmt3,array(
+				"location_record_speed" => $fast_record['event_pilot_round_flight_seconds'],
+				"location_record_speed_event_pilot_id" => $fast_record['event_pilot_id'],
+				"location_id" => $location['location_id']
+			));
+			$results[] = "Updated location " . $location['location_id'] . " to " . $fast_record['event_pilot_round_flight_seconds'] . "\n";
+		}
 	}
 	
+	unset( $stmt );
+	unset( $result );
+	unset( $stmt2 );
+	unset( $result2 );
+	unset( $stmt3 );
+	unset( $result3 );
 	
-	#	SELECT eprf.event_pilot_round_flight_seconds,eprf.event_pilot_round_flight_laps,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,e.event_name
-	#$results = db_exec($stmt,array());
+	# Now lets step through the f3b speed runs too
+	$stmt = db_prep("
+		SELECT *
+		FROM location l
+	");
+	$result = db_exec( $stmt, array() );
+	foreach( $result as $location ){
+		# Now lets search for all event flights at that location
+		$stmt2 = db_prep("
+			SELECT e.event_name,erf.event_pilot_round_flight_seconds,ep.event_pilot_id,p.pilot_first_name,p.pilot_last_name,l.location_record_speed
+			FROM event_pilot_round_flight erf
+			LEFT JOIN flight_type f ON erf.flight_type_id = f.flight_type_id
+			LEFT JOIN event_pilot_round epr ON erf.event_pilot_round_id = epr.event_pilot_round_id
+			LEFT JOIN event_round er ON epr.event_round_id = er.event_round_id
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			LEFT JOIN event e ON ep.event_id = e.event_id
+			LEFT JOIN location l ON e.location_id = l.location_id
+			WHERE l.location_id = :location_id
+				AND l.location_id != 0
+				AND er.event_round_status = 1
+				AND erf.event_pilot_round_flight_status = 1
+				AND ep.event_pilot_status = 1
+				AND erf.event_pilot_round_flight_seconds != 0
+				AND e.event_type_id IN ( 2, 3 )
+				AND f.flight_type_id = 3
+				AND e.event_status = 1
+			ORDER BY erf.event_pilot_round_flight_seconds
+		");
+		$result2 = db_exec( $stmt2, array(
+			"location_id" => $location['location_id']
+		));
+		if( count( $result2 ) > 0 ){
+			$fast_record = $result2[0];
+		}else{
+			continue;
+		}
+
+		$update_speed = 0;
+		if( $fast_record['location_record_speed'] == 0 ){
+			$update_speed = 1;
+		}
+		if( $fast_record['event_pilot_round_flight_seconds'] < $fast_record['location_record_speed'] ){
+			$update_speed = 1;
+		}
+		if( $update_speed ){
+			# This is a faster speed, so lets update the location record
+			$stmt3 = db_prep("
+				UPDATE location
+				SET location_record_speed = :location_record_speed,
+					location_record_speed_event_pilot_id = :location_record_speed_event_pilot_id
+				WHERE location_id = :location_id
+			");
+			$result3 = db_exec($stmt3,array(
+				"location_record_speed" => $fast_record['event_pilot_round_flight_seconds'],
+				"location_record_speed_event_pilot_id" => $fast_record['event_pilot_id'],
+				"location_id" => $location['location_id']
+			));
+			$results[] = "Updated location " . $location['location_id'] . " to " . $fast_record['event_pilot_round_flight_seconds'] . "\n";
+		}
+	}
 	
-	$smarty->assign("results",$results);
+	$smarty->assign("results",print_r($results,true));
 	$maintpl = find_template("admin/admin_results.tpl");
 	return $smarty->fetch($maintpl);
 }
