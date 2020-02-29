@@ -1426,6 +1426,7 @@ class Event {
 					arsort($g);
 				}
 				$count = 1;
+				$total_count = 1;
 				$prev_score = 0;
 				foreach($g as $key => $value){
 					if( $prev_score == 0 ){
@@ -1433,8 +1434,14 @@ class Event {
 					}elseif( $flight[$flight_type_id][$key]['event_pilot_round_flight_score'] != $prev_score ){
 						$count++;
 					}
-					$flight[$flight_type_id][$key]['event_pilot_round_flight_rank'] = $count;
+					if( $flight[$flight_type_id][$key]['event_pilot_round_flight_score'] != $prev_score ){
+						$flight[$flight_type_id][$key]['event_pilot_round_flight_rank'] = $total_count;
+						$count = $total_count;
+					}else{
+						$flight[$flight_type_id][$key]['event_pilot_round_flight_rank'] = $count;
+					}
 					$prev_score = $flight[$flight_type_id][$key]['event_pilot_round_flight_score'];
+					$total_count++;
 				}
 			}
 		}
