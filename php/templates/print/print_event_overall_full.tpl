@@ -154,7 +154,7 @@
 							{/if}
 						{/if}
 					{if $drop==1}</font></del>{/if}
-					{if $event->info.event_type_code=='f3f'}<br><font color="black">{$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}</font>{/if}
+					{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus'}<br><font color="black">{$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}</font>{/if}
 					</div>
 				</td>
 				{/if}
@@ -167,7 +167,7 @@
 		</tr>
 		{$previous=$e.total}
 		{/foreach}
-		{if $event->info.event_type_code=='f3f'}
+		{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus'}
 		<tr>
 			<th colspan="8" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
@@ -294,7 +294,7 @@
 							{$r.event_pilot_round_total_score|string_format:$event->event_calc_accuracy_string}
 						{/if}
 					{if $drop==1}</font></del>{/if}
-					{if $event->info.event_type_code=='f3f'}<br><font color="black">{$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}</font>{/if}
+					{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus'}<br><font color="black">{$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_seconds}</font>{/if}
 					</div>
 				</td>
 				{/if}
@@ -307,7 +307,7 @@
 		</tr>
 		{$previous=$e.total}
 		{/foreach}
-		{if $event->info.event_type_code=='f3f'}
+		{if $event->info.event_type_code=='f3f' || $event->info.event_type_code=='f3f_plus'}
 		<tr>
 			<th colspan="6" align="right">Round Fast Time</th>
 			{foreach $event->rounds as $r}
