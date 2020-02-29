@@ -269,6 +269,7 @@ class Event {
 				# Lets step through each of the options and set the accuracy for this flight type
 				# And whether or not an F3F event has groups
 				$code = $r['flight_type_code'];
+
 				foreach($this->options as $o){
 					if(preg_match("/$code\_accuracy/",$o['event_type_option_code'])){
 						$r['accuracy'] = $o['event_option_value'];
@@ -1023,12 +1024,9 @@ class Event {
 		$all_flights = $this->calculate_flights($event_round_number,$all);
 		
 		$flights = array();
-#		$flights = $this->calculate_flights($event_round_number,$this->rounds[$event_round_number]['flights']);
 		$reflights = array();
-#		$reflights = $this->calculate_flights($event_round_number,$this->rounds[$event_round_number]['reflights']);
-
 		
-		# Lets step through now an separate the flights and reflights
+		# Lets step through now and separate the flights and reflights
 		foreach($all_flights as $flight_type_id => $p){
 			foreach($p as $key => $v){
 				if($v['event_pilot_round_flight_reflight'] == 1){
@@ -1071,7 +1069,7 @@ class Event {
 				$event_pilot_id = $v['event_pilot_id'];
 				$score[$flight_type_id] = $v['event_pilot_round_flight_score'];
 				$goodid = $v['event_pilot_round_flight_id'];
-				
+
 				# Now lets step through each reflight and see if it is a better score
 				foreach($reflights as $rftid => $rp){
 					if($rftid != $flight_type_id){
@@ -1265,7 +1263,7 @@ class Event {
 				$temp_flight['total_time']							= $total_time;
 				$temp_flight['total_laps']							= $v['event_pilot_round_flight_laps'];
 				$temp_flight['average_lap_time']					= $average_lap_time;
-				$flight[$flight_type_id][$event_pilot_id]			= $temp_flight;
+				$flight[$flight_type_id][]							= $temp_flight;
 
 				# ok, now lets find the max score in each group
 				$group = $v['event_pilot_round_flight_group'];
@@ -1294,7 +1292,7 @@ class Event {
 			}
 		}
 		if( $this->info['event_type_code'] == 'gps' && $this->flight_types[$flight_type_id]['flight_type_code'] != 'gps_speed' ){
-			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be ties to the times
+			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be tied to the times
 			# So lets sort the scores by the laps and then time in a temp array first
 			$gps_flights = array();
 			foreach( $flight[$flight_type_id] as $key => $g ){
@@ -1302,14 +1300,14 @@ class Event {
 				$gps_flights[$group][$key] = $g;
 			}
 			foreach( $gps_flights as $group => $g ){
-				$sorted = array_orderby($g, 'total_laps', SORT_DESC, 'total_time', SORT_ASC);
+				$sorted = array_orderby($g, 'total_laps', SORT_DESC, 'total_time', SORT_ASC );
 				$gps_flights[$group] = $sorted;
 			}
 			# Now that we have the temp array, step through it and adjust the raw scores for tied numbers
 			foreach( $gps_flights as $group => $g ){
 				$laps = 0;
 				$fast_time = 0;
-				foreach( $g as $f ){
+				foreach( $g as $key => $f ){
 					if( $f['total_laps'] != $laps ){
 						$laps = $f['total_laps'];
 						$fast_time = $f['total_time'];
@@ -1317,21 +1315,34 @@ class Event {
 					}
 					# If it made it here, then it means there was a tie, so we have to compare the times
 					$event_pilot_id = $f['event_pilot_id'];
-					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] -= 200;
-					$flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] += round( ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
-					
+					$gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] -= 200;
+					$gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] += round( ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
 				}
 			}
+
 			# Reset the max raw values by stepping through them now that they are changed
 			foreach( $gps_flights as $group => $g ){
 				$maxscore = 0;
-				foreach( $g as $f ){
-					$event_pilot_id = $f['event_pilot_id'];
-					if( $flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'] > $maxscore ){
-						$maxscore = $flight[$flight_type_id][$event_pilot_id]['event_pilot_round_flight_raw_score'];
+				foreach( $g as $key => $f ){
+					#$event_pilot_id = $f['event_pilot_id'];
+					if( $gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] > $maxscore ){
+						$maxscore = $gps_flights[$group][$key]['event_pilot_round_flight_raw_score'];
 					}
 				}
 				$max[$flight_type_id][$group]['raw'] = $maxscore;
+			}
+			# Resort by score now that we have adjusted the ties
+			foreach( $gps_flights as $group => $g ){
+				$sorted = array_orderby($g, 'total_laps', SORT_DESC, 'total_time', SORT_ASC );
+				$gps_flights[$group] = $sorted;
+			}
+			
+			# Now reset the flight with the correct values
+			$flight = array();
+			foreach( $gps_flights as $group => $g ){
+				foreach( $g as $f ){
+					$flight[$flight_type_id][] = $f;
+				}
 			}
 		}
 
@@ -1415,9 +1426,15 @@ class Event {
 					arsort($g);
 				}
 				$count = 1;
+				$prev_score = 0;
 				foreach($g as $key => $value){
+					if( $prev_score == 0 ){
+						$prev_score = $flight[$flight_type_id][$key]['event_pilot_round_flight_score'];
+					}elseif( $flight[$flight_type_id][$key]['event_pilot_round_flight_score'] != $prev_score ){
+						$count++;
+					}
 					$flight[$flight_type_id][$key]['event_pilot_round_flight_rank'] = $count;
-					$count++;
+					$prev_score = $flight[$flight_type_id][$key]['event_pilot_round_flight_score'];
 				}
 			}
 		}

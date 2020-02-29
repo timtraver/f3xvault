@@ -276,7 +276,7 @@
 						{if preg_match("/^f3f/",$ft.flight_type_code) OR $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
-						{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
+						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 						{/if}
 					</td>
 					<td align="right" nowrap>
@@ -363,7 +363,7 @@
 							{if preg_match("/^f3f/",$ft.flight_type_code) OR $ft.flight_type_code=='f3b_speed'}
 							{$p.event_pilot_round_flight_raw_score}
 							{else}
-							{$p.event_pilot_round_flight_raw_score|string_format:$ft.accuracy_string}
+							{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
 							{/if}
 						</td>
 						<td align="right" nowrap>

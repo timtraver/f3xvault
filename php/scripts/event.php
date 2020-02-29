@@ -3169,7 +3169,50 @@ function event_round_save() {
 				}
 			}
 		}
-		
+		# Lets check for Big Ladder round to truncate properly the times
+		if($flight_type['flight_type_code'] == 'f3k_k'){
+			# Its a Big Ladder flight
+			# So we need to truncate to the max times
+			foreach($data as $event_pilot_round_flight_id => $p){
+				foreach($p as $event_pilot_id => $f){
+					if(is_array($f)){
+						foreach($f as $flight_type_id => $v){
+							$tot = 0;
+							$temp_sub = array();
+							foreach($v['sub'] as $num => $t){
+								$temp_sub[] = convert_colon_to_seconds($t, $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy"));
+							}
+							if($temp_sub[0]>60){
+								$temp_sub[0] = 60;
+							}
+							if($temp_sub[1]>90){
+								$temp_sub[1] = 90;
+							}
+							if($temp_sub[2]>120){
+								$temp_sub[2] = 120;
+							}
+							if($temp_sub[3]>150){
+								$temp_sub[3] = 150;
+							}
+							if($temp_sub[4]>180){
+								$temp_sub[4] = 180;
+							}
+							$tot = $temp_sub[0]+$temp_sub[1]+$temp_sub[2]+$temp_sub[3]+$temp_sub[4];
+							
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['1'] = convert_seconds_to_colon($temp_sub[0], $event->find_option_value("f3k_duration_accuracy"));
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['2'] = convert_seconds_to_colon($temp_sub[1], $event->find_option_value("f3k_duration_accuracy"));
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['3'] = convert_seconds_to_colon($temp_sub[2], $event->find_option_value("f3k_duration_accuracy"));
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['4'] = convert_seconds_to_colon($temp_sub[3], $event->find_option_value("f3k_duration_accuracy"));
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sub']['5'] = convert_seconds_to_colon($temp_sub[4], $event->find_option_value("f3k_duration_accuracy"));
+							
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['min'] = floor($tot/60);
+							$format_string = '%02.' . $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy") . 'f';
+							$data[$event_pilot_round_flight_id][$event_pilot_id][$flight_type_id]['sec'] = sprintf($format_string,fmod($tot,60));
+						}
+					}
+				}
+			}
+		}
 		
 	}
 
