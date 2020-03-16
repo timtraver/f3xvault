@@ -41,7 +41,7 @@
 				<th colspan="2">Optional Request Parameters for every call (case sensitive parameter names)</th>
 			</tr>
 			<tr>
-				<th width="20%">output_type</th><td>The type of output you want to get back. Defaults to standard text lines, but can be ( standard, xml, json )</td>
+				<th width="20%">output_format</th><td>The type of output you want to get back. Defaults to standard text lines, but can be ( standard, xml, json )</td>
 			</tr>
 		</table>
 		
