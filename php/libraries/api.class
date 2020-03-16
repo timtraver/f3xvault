@@ -23,6 +23,7 @@ class API {
 	public $function_parameters = array();
 	public $function_output_description;
 	public $field_separator;
+	public $output_format;
 	
 	public function __construct() {
 		# Function to initialize variables
@@ -33,6 +34,21 @@ class API {
 		$function = input_filter($_REQUEST['function'],'string');
 		$this->function = $function;
 		$this->set_api_functions();
+		
+		# Let us check how they want the output
+		if( isset( $this->input_variables['output_format'] ) ){
+			switch( $this->input_variables['output_format'] ){
+				case 'xml':
+					$this->output_format = 'xml';
+					break;
+				case 'json':
+					$this->output_format = 'json';
+					break;
+				default:
+					$this->output_format = 'standard';
+					break;
+			}
+		}
 		return;
 	}
 	public function set_api_functions(){
@@ -190,17 +206,23 @@ class API {
 			$this->error_string = "Not all mandatory fields supplied.\n";
 			$this->error_string .= "Possible fields are as follows. * fields are mandatory.\n";
 			$this->error_string .= "field_separator - Field Delimeter For Return Lines.\n";
+			$this->error_string .= "output_type - Type of output format (standard, xml, json).\n";
+			
+			$fields = array();
+			
 			foreach($this->function_parameters as $field){
 				if($field['mandatory'] == 1){
 					$this->error_string .= '*';
 				}
 				$this->error_string .= $field['name'];
 				$this->error_string .= " - ".$field['description']."\n";
-				
+				$fields[] = array( "name" => $field['name'], "description" => $field['description'], "mandatory" => $field['mandatory'] );
 			}
+			$this->api_add_output_variable( "field", $fields );
+
 			return 0;
 		}
-		
+				
 		if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
 			$this->field_separator = $_REQUEST['field_separator'];
 		}else{
@@ -218,17 +240,46 @@ class API {
 	}
 	public function api_send_response(){
 		# Routine to send the response
-		# Lets first set the variable for the main return code and string
+		# Lets add the response codes to the output variables first
+		# Set response array
+		$response_array = array();
 		if($this->error_code != 0){
-			print "0\n";
-			print $this->error_code . " - " . $this->error_string . "\n";
+			# This request has an error
+			$response_array['response_code'] = 0;
+			$response_array['error_string'] = $this->error_code . " - " . $this->error_string;
 		}else{
-			print "1\n";
-			print $this->process_output;
+			$response_array['response_code'] = 1;
+			$response_array['error_string'] = "";
 		}
+			
+		$this->output_variables = array_merge( $response_array, $this->output_variables );
+		if( $this->output_format == 'xml' ){
+			include_library( "xmlarray.class" );
+			# Check for the need of CDATA attributes
+			$this->output_variables = $this->array_check_for_cdata( $this->output_variables );
+			$tempxml = Array2XML::createXML( 'result', $this->output_variables );
+			$this->output_string .= $tempxml->saveXML();
+			print $this->output_string;
+		}elseif( $this->output_format == 'json' ){
+			$this->output_string .= json_encode( $this->output_variables );
+			print $this->output_string;
+		}else{
+			# Lets first set the variable for the main return code and string
+			if($this->error_code != 0){
+				print "0\n";
+				print $this->error_code . " - " . $this->error_string . "\n";
+			}else{
+				print "1\n";
+				print $this->process_output;
+			}
+		}		
 		return;
 	}
 
+	public function api_add_output_variable( $name, $value ){
+		# Method to add a variable to the output
+		$this->output_variables[ $name ] = $value;
+	}
 	public function api_get_submitted_variables(){
 		# Function to set the input variables
 		foreach( $_REQUEST as $name => $value ){
@@ -271,6 +322,16 @@ class API {
 			}
 		}
 		return $check;
+	}
+	public function array_check_for_cdata( $array ){
+		array_walk_recursive( $array, 
+		    function ( &$value ) {
+		        if ( preg_match( '/[^0-9a-zA-Z_\.\:]/', $value ) && $value != '' ){
+		            $value = array( '@cdata' => $value );
+		        }
+		    }
+		);
+		return $array;
 	}
 
 }
