@@ -37,6 +37,12 @@
 			<tr>
 				<th width="20%">function</th><td>the function that you wish to access (See below for function list)</td>
 			</tr>
+			<tr>
+				<th colspan="2">Optional Request Parameters for every call (case sensitive parameter names)</th>
+			</tr>
+			<tr>
+				<th width="20%">output_type</th><td>The type of output you want to get back. Defaults to standard text lines, but can be ( standard, xml, json )</td>
+			</tr>
 		</table>
 		
 		<h1>Function List</h1>
@@ -87,7 +93,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th width="20%">Function Output</th><td><pre style="white-space:pre-line;">{$f.function_output_description|escape}</pre></td>
+				<th width="20%">Function Output</th><td><pre style="white-space:pre-wrap;">{$f.function_output_description|escape}</pre></td>
 			</tr>
 		</table>
 		{/foreach}
