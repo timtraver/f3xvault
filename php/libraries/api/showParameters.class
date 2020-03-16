@@ -28,6 +28,26 @@ class showParameters {
 		);
 		$this->api->function_output_description = 
 			"List of the input parameters for the function, one per line.";
+		$this->api->function_output_description = 
+			"Standard Output :\nList of the input parameters for the function, one per line.\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <function_name>searchEvents</function_name>
+  <fields>
+    <field_name>string</field_name>
+    <field_type>string</field_type>
+    <description><![CDATA[Search String]]></description>
+    <mandatory>0</mandatory>
+  </fields>
+  <fields>
+    <field_name>event_type_code</field_name>
+    <field_type>string</field_type>
+    <description><![CDATA[Event Type Code (f3f,f3b,f3j,f3k, etc)]]></description>
+    <mandatory>0</mandatory>
+  </fields>
+</result>";
 	}
 
 	public function process_request(){
@@ -38,12 +58,13 @@ class showParameters {
 		if(!file_exists($GLOBALS['include_paths']['libraries']."/api/{$this->function_name}.class")){
 			$this->error_code = 1;
 			$this->error_string = "Function not available.";
-			return 0;
+			return "";
 		}
 		include_library("api/{$this->function_name}.class");
 		
 		eval("\$name = new {$this->function_name}(\$this);");
 		
+		$fields = array();
 		$content = '';
 		$content .= "Possible fields for {$this->function_name} are as follows. * fields are mandatory.\n";
 		foreach($this->function_parameters as $field){
@@ -53,7 +74,10 @@ class showParameters {
 			$content .= $field['name'];
 			$content .= " - ".$field['type'];
 			$content .= " - ".$field['description']."\n";
+			$fields[] = array( "field_name" => $field['name'], "field_type" => $field['type'], "description" => $field['description'], "mandatory" => $field['mandatory'] );
 		}
+		$this->api->api_add_output_variable( "function_name", $this->function_name );
+		$this->api->api_add_output_variable( "fields", $fields );
 		
 		return $content;
 	}

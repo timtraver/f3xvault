@@ -50,8 +50,12 @@ class postScore {
 			array("name" => "wind_avg",		"type" => "float",		"description" => "Wind Speed Average",		"mandatory" => 0),
 			array("name" => "dir_avg",		"type" => "float",		"description" => "Wind Direction Average",	"mandatory" => 0),
 		);
-		$this->api->function_output_description = 
-			"Single message of success or failure";
+		$this->api->function_output_description = "Standard Output :\n Event Pilot ID\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+</result>";
 	}
 
 	public function process_request(){
@@ -67,7 +71,7 @@ class postScore {
 		if(!isset($event->info['event_id'])){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Invalid Event ID.\n";
-			return 0;
+			return "";
 		}
 		$event_type_code = $event->info['event_type_code'];
 
@@ -89,7 +93,7 @@ class postScore {
 				$this->api->error_string .= " - ".$field['type'];
 				$this->api->error_string .= " - ".$field['description']."\n";
 			}
-			return 0;
+			return "";
 		}
 		# Lets set the input parameters
 		$this->pilot_id		= $this->api->input_variables['pilot_id'];
@@ -132,7 +136,7 @@ class postScore {
 		if($this->event_pilot_id == 0){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Pilot does not exist in this event.\n";
-			return 0;
+			return "";
 		}
 
 		# Lets fill out the draw info if there is any so we can pre populate the groups if needed
@@ -202,7 +206,7 @@ class postScore {
 				# Can't create a round previous to the last one
 				$this->api->error_code = 3;
 				$this->api->error_string = "Cannot create a round that's more than one ahead of the last.\n";
-				return 0;
+				return "";
 			}else{
 				# We need to create this new round and populate it with the pilots
 				$stmt = db_prep("

@@ -38,8 +38,14 @@ class updateEventPilot {
 			array("name" => "event_pilot_freq",			"type" => "string",		"description" => "Event Pilot Frequency",	"mandatory" => 0),
 			array("name" => "event_pilot_team",			"type" => "string",		"description" => "Event Pilot Team",		"mandatory" => 0),
 		);
-		$this->api->function_output_description = 
-			"Event Pilot ID on success or failure message.";
+		$this->api->function_output_description = "Standard Output :\nEvent Pilot ID\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <event_pilot_id>12945</event_pilot_id>
+</result>";
+			
 	}
 
 	public function process_request(){
@@ -55,7 +61,7 @@ class updateEventPilot {
 		if(!isset($event->info['event_id'])){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Invalid Event ID.\n";
-			return 0;
+			return "";
 		}
 		$event_type_code = $event->info['event_type_code'];
 		
@@ -73,7 +79,7 @@ class updateEventPilot {
 				$this->api->error_string .= " - ".$field['type'];
 				$this->api->error_string .= " - ".$field['description']."\n";
 			}
-			return 0;
+			return "";
 		}
 		
 		# Lets set the input parameters
@@ -125,7 +131,7 @@ class updateEventPilot {
 			}else{
 				$this->api->error_code = 3;
 				$this->api->error_string = "Invalid Class Specified.\n";
-				return 0;
+				return "";
 			}
 		}else{
 			$this->class_id=0;
@@ -220,7 +226,7 @@ class updateEventPilot {
 				$content = "{$this->event_pilot_id}";
 			}
 		}
-		
+		$this->api->api_add_output_variable( "event_pilot_id", $this->event_pilot_id );
 		# Get the export content
 		return $content;
 	}

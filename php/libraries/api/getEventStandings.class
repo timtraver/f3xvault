@@ -26,7 +26,35 @@ class getEventStandings {
 			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
 		$this->api->function_output_description = 
-			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nEach line after has the standings of the event with the following fields :\nPilot Rank, Pilot Name, Total Score, Diff to previous, Subtotal, Drops, Penalties, Percentage";
+			"Standard Output :\nEvent ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nEach line after has the standings of the event with the following fields :\nPilot Rank, Pilot Name, Total Score, Diff to previous, Subtotal, Drops, Penalties, Percentage\n\n";
+
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <event>
+    <event_id></event_id>
+    <event_name><![CDATA[2019 TPG Clinic/Contest Series - June]]></event_name>
+    <location><![CDATA[Poway Glider Field]]></location>
+    <start_date><![CDATA[06/15/2019]]></start_date>
+    <end_date><![CDATA[06/15/2019]]></end_date>
+    <event_type></event_type>
+    <rounds>6</rounds>
+    <pilots>
+      <rank>1</rank>
+      <pilot_name><![CDATA[Gregg Bolton]]></pilot_name>
+      <total_score>4991.48</total_score>
+      <difference>0.00</difference>
+      <subtotal>5963.65</subtotal>
+      <drop>972.17</drop>
+      <penalties>0</penalties>
+      <percentage></percentage>
+    </pilots>
+    <pilots>
+      ...
+    </pilots>
+  </event>
+</result>";
 	}
 
 	public function process_request(){
@@ -40,7 +68,7 @@ class getEventStandings {
 		if(! $event->info['event_id']){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Invalid Event ID.\n";
-			return 0;
+			return "";
 		}
 		$event->get_pilots();
 		$event->get_rounds();
@@ -50,6 +78,39 @@ class getEventStandings {
 		$smarty->assign("fs",$this->api->field_separator);
 
 		$template = 'api/event_standings.tpl';
+
+		$standings = array();
+		$pilots = array();
+		$diff = 0;
+		$prev = 0;
+		foreach( $event->totals['pilots'] as $p ){
+			if( $prev != 0 ){
+				$diff = - ($prev - $p['total']);
+			}
+			$pilots[] = array(
+				"rank" => $p['overall_rank'],
+				"pilot_name" => $p['pilot_first_name'] . " " . $p['pilot_last_name'],
+				"total_score" => sprintf( $event->event_calc_accuracy_string, $p['total'] ),
+				"difference" => sprintf( $event->event_calc_accuracy_string, $diff ),
+				"subtotal" => sprintf( $event->event_calc_accuracy_string, $p['subtotal'] ),
+				"drop" => sprintf( $event->event_calc_accuracy_string, $p['drop'] ),
+				"penalties" => $p['penalties'],
+				"percentage" => $p['percentage']
+			);
+			$prev = $p['total'];
+		}
+		$standings = array(
+			"event_id" => $event_id,
+			"event_name" => $event->info['event_name'],
+			"location" => $event->info['location_name'],
+			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
+			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
+			"event_type" => $event->info['event->info.event_type_name'],
+			"rounds" => count($event->rounds),
+			"pilots" => $pilots
+		);
+			
+		$this->api->api_add_output_variable( "event", $standings );
 	
 		# Get the export content
 		$content_template = find_template($template);

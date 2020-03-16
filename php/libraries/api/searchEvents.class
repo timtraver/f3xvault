@@ -32,7 +32,23 @@ class searchEvents {
 			array("name" => "country",			"type" => "string",		"description" => "Country (Code or name)",					"mandatory" => 0)
 		);
 		$this->api->function_output_description = 
-			"One Per line of the following\nEvent ID, Event Start Date, Event Name, Location Name, Event Type";
+			"Standard Output :\nOne Per line of the following\nEvent ID, Event Start Date, Event Name, Location Name, Event Type\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <events>
+    <event_id>1460</event_id>
+    <event_name><![CDATA[FAI F3F World Cup 2017 Taiwan Open]]></event_name>
+    <event_start_date><![CDATA[2019-11-02]]></event_start_date>
+    <location_name>Lungpan</location_name>
+    <event_type_name><![CDATA[F3F Slope Race]]></event_type_name>
+  </events>
+  <events>
+  	...
+  </events>
+</result>
+\n";
 	}
 
 	public function process_request(){
@@ -165,8 +181,9 @@ class searchEvents {
 				"event_type_name"	=> $r['event_type_name'],
 			);
 		}
-		$content = '';
+		$this->api->api_add_output_variable( "events", $events );
 		
+		$content = '';
 		foreach($events as $e){
 			$content .= "\"{$e['event_id']}\"{$fs}\"{$e['event_start_date']}\"{$fs}\"{$e['event_name']}\"{$fs}\"{$e['location_name']}\"{$fs}\"{$e['event_type_name']}\"\n";
 		}

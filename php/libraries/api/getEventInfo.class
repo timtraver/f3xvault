@@ -25,8 +25,60 @@ class getEventInfo {
 		$this->api->function_parameters = array(
 			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
-		$this->api->function_output_description = 
-			"Event ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, FAI License, Team Name, Rounds (Group or flight order for each round if a round or draw exists)\n\nFor F3F, each round has the following fields (Group, Flight Order, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3K, each round has the following fields (Group, Flight Seconds, Penalty) for as many rounds as there are including draws.";
+		$this->api->function_output_description = "Standard Output :\nEvent ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nOne Per line of the following\nPilot ID, Pilot Bib, Pilot First Name, Pilot Last Name, Class, AMA, FAI, FAI License, Team Name, Rounds (Group or flight order for each round if a round or draw exists)\n\nFor F3F, each round has the following fields (Group, Flight Order, Flight Seconds, Penalty) for as many rounds as there are including draws.\nFor F3K, each round has the following fields (Group, Flight Seconds, Penalty) for as many rounds as there are including draws.\n\n";
+		$this->api->function_output_description .= "
+XML or JSON Object Hierarchy :
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <event>
+    <event_id></event_id>
+    <event_name><![CDATA[El Dorado Cookie Toss - November 2018]]></event_name>
+    <location><![CDATA[El Dorado Regional Park]]></location>
+    <start_date><![CDATA[11/03/2018]]></start_date>
+    <end_date><![CDATA[11/03/2018]]></end_date>
+    <event_type></event_type>
+    <rounds>6</rounds>
+    <tasks>
+      <round_number>1</round_number>
+      <task_code>f3k_a</task_code>
+    </tasks>
+    <tasks>
+      ...
+    </tasks>
+    <pilots>
+      <pilot_id>116</pilot_id>
+      <pilot_bib>1</pilot_bib>
+      <pilot_first_name>Matt</pilot_first_name>
+      <pilot_last_name>Nelson</pilot_last_name>
+      <pilot_class>Open</pilot_class>
+      <pilot_ama>3702</pilot_ama>
+      <pilot_fai></pilot_fai>
+      <pilot_fai_license></pilot_fai_license>
+      <pilot_team></pilot_team>
+      <flights>
+        <round_number>1</round_number>
+        <group>C</group>
+        <order>1</order>
+        <minutes>3</minutes>
+        <seconds>41</seconds>
+        <penalty>0</penalty>
+        <subs>
+          <sub1>28.16</sub1>
+          <subX>...</sub>
+        </subs>
+      </flights>
+      <flights>
+        ...
+      </flights>
+    </pilots>
+    <pilots>
+      ...
+    </pilots>
+</result>";
+		
+		
+		
 	}
 
 	public function process_request(){
@@ -40,7 +92,7 @@ class getEventInfo {
 		if(! $event->info['event_id']){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Invalid Event ID.\n";
-			return 0;
+			return "";
 		}
 		$event->get_draws();
 		$event->get_rounds();
@@ -76,7 +128,6 @@ class getEventInfo {
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 						}
@@ -103,8 +154,6 @@ class getEventInfo {
 				$template = "api/event_export_f3b.tpl";
 				break;
 			case "f3f":
-				$template = "api/event_export_f3f.tpl";
-				break;
 			case "f3f_plus":
 				$template = "api/event_export_f3f.tpl";
 				break;
@@ -118,13 +167,68 @@ class getEventInfo {
 				$template = "api/event_export_f3j.tpl";
 				break;
 		}
-	
+
+		$pilots = array();
+		$tasks = array();
+		if( count( $event->tasks ) > 0 ){
+			foreach( $event->tasks as $i => $t ){
+				$tasks[] = array( "round_number" => $i, "task_code" => $event->flight_types[$t['flight_type_id']]['flight_type_code'] );
+			}
+		}
+		foreach( $event->pilots as $p ){
+			$flights = array();
+			foreach( $this->rounds as $event_pilot_id => $round ){
+				if( $event_pilot_id == $p['event_pilot_id'] ){
+					foreach( $round as $round_number => $r ){
+						$subs = array();
+						if( isset( $r['sub'] ) ){
+							foreach( $r['sub'] as $i => $s ){
+								$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
+							}
+						}
+						$flights[] = array(
+							"round_number" => $round_number,
+							"group" => $r['event_pilot_round_flight_group'],
+							"order" => $r['event_pilot_round_flight_order'],
+							"minutes" => $r['event_pilot_round_flight_minutes'],
+							"seconds" => $r['event_pilot_round_flight_seconds'],
+							"penalty" => $r['event_pilot_round_flight_penalty'],
+							"subs" => $subs
+						);
+					}
+				}
+			}
+			$pilots[] = array(
+				"pilot_id" => $p['pilot_id'],
+				"pilot_bib" => $p['event_pilot_bib'],
+				"pilot_first_name" => $p['pilot_first_name'],
+				"pilot_last_name" => $p['pilot_last_name'],
+				"pilot_class" => $p['class_description'],
+				"pilot_ama" => $p['pilot_ama'],
+				"pilot_fai" => $p['pilot_fai'],
+				"pilot_fai_license" => $p['pilot_fai_license'],
+				"pilot_team" => $p['event_pilot_team'],
+				"flights" => $flights
+			);
+		}
+		$e = array(
+			"event_id" => $event_id,
+			"event_name" => $event->info['event_name'],
+			"location" => $event->info['location_name'],
+			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
+			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
+			"event_type" => $event->info['event->info.event_type_name'],
+			"rounds" => $total_rounds,
+			"tasks" => $tasks,
+			"pilots" => $pilots
+		);
+		$this->api->api_add_output_variable( "event", $e );
+
 		# Get the export content
 		$content_template = find_template($template);
 		$content = $smarty->fetch($content_template);		
 		
 		return $content;
-
 	}
 
 }

@@ -26,8 +26,59 @@ class getEventRound {
 			array("name" => "event_id",		"type" => "integer", "description" => "Event ID",		"mandatory" => 1),
 			array("name" => "round_number",	"type" => "integer", "description" => "Round Number",	"mandatory" => 1)			
 		);
-		$this->api->function_output_description = 
-			"One Per line of the following\nPilot ID, Pilot First Name, Pilot Last Name, Round Flight Info \n\nFor F3F, each round has the following Flight Info fields (Group, Flight Order, Total Flight Seconds, Penalty) including draw information.\n\nFor F3F Plus, each round has the following Flight Info fields (Group, Flight Order, Climb Out, Sub1, Sub2, Sub3. Sub4, Sub5, Sub6, Sub7, Sub8, Sub9, Sub10, Total Flight Seconds, Penalty, Wind Speed Avg, Wind Dir Avg) including draw information.\n\nFor F3K, each round has the following Flight Info fields (Group, Total Flight Seconds, Penalty) including draws.";
+			
+		$this->api->function_output_description = "Standard Output :\nOne Per line of the following\nPilot ID, Pilot First Name, Pilot Last Name, Round Flight Info \n\nFor F3F, each round has the following Flight Info fields (Group, Flight Order, Total Flight Seconds, Penalty) including draw information.\n\nFor F3F Plus, each round has the following Flight Info fields (Group, Flight Order, Climb Out, Sub1, Sub2, Sub3. Sub4, Sub5, Sub6, Sub7, Sub8, Sub9, Sub10, Total Flight Seconds, Penalty, Wind Speed Avg, Wind Dir Avg) including draw information.\n\nFor F3K, each round has the following Flight Info fields (Group, Total Flight Seconds, Penalty) including draws.\n\n";
+
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy (f3f and f3 plus):
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <flights>
+    <pilot_id>54</pilot_id>
+    <pilot_first_name>Brandon</pilot_first_name>
+    <pilot_last_name>Monte</pilot_last_name>
+    <group>0</group>
+    <order>1</order>
+    <sub1>29.17</sub1>
+    <sub2>3.09</sub2>
+    <sub3>5.88</sub3>
+    <sub4>4.92</sub4>
+    <sub5>6.55</sub5>
+    <sub6>5.23</sub6>
+    <sub7>5.62</sub7>
+    <sub8>4.62</sub8>
+    <sub9>5.09</sub9>
+    <sub10>5.08</sub10>
+    <sub11>5.13</sub11>
+    <seconds>51.21</seconds>
+    <penalty>0</penalty>
+    <wind_speed_avg>3.99</wind_speed_avg>
+    <wind_dir_avg>0</wind_dir_avg>
+  </flights>
+  <flights>
+    ...
+  </flights>
+</result>
+
+For F3K :
+
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <flights>
+    <pilot_id>221</pilot_id>
+    <pilot_first_name>Ray</pilot_first_name>
+    <pilot_last_name>Pili</pilot_last_name>
+    <group>A</group>
+    <total_minutes>2</total_minutes>
+    <total_seconds>49</total_seconds>
+    <penalty>0</penalty>
+    <sub1>2:49</sub1>
+  </flights>
+</result>
+
+
+";
 	}
 
 	public function process_request(){
@@ -41,7 +92,7 @@ class getEventRound {
 		if(! $event->info['event_id']){
 			$this->api->error_code = 3;
 			$this->api->error_string = "Invalid Event ID.\n";
-			return 0;
+			return "";
 		}
 		$event->get_draws();
 		$_REQUEST['sort_by'] = 'flight_order';
@@ -123,6 +174,7 @@ class getEventRound {
 		$smarty->assign("round_number",$this->api->input_variables['round_number']);
 
 		$template = '';
+		$flights = array();
 		switch($event->info['event_type_code']){
 			case "f3b":
 				$template = "api/event_export_round_not_yet.tpl";
@@ -132,12 +184,70 @@ class getEventRound {
 				break;
 			case "f3f":
 				$template = "api/event_export_f3f_round.tpl";
+				foreach( $final_rounds as $event_pilot_id => $round ){
+					foreach( $round as $round_number => $r ){
+						$flights[] = array(
+							"pilot_id" => $r['pilot_id'],
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
+							"group" => $r['event_pilot_round_flight_group'],
+							"order" => $r['event_pilot_round_flight_order'],
+							"seconds" => $r['event_pilot_round_flight_seconds'],
+							"penalty" => $r['event_pilot_round_flight_penalty']
+						);
+					}
+				}
 				break;
 			case "f3f_plus":
 				$template = "api/event_export_f3f_plus_round.tpl";
+				foreach( $final_rounds as $event_pilot_id => $round ){
+					foreach( $round as $round_number => $r ){
+						$flights[] = array(
+							"pilot_id" => $r['pilot_id'],
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
+							"group" => $r['event_pilot_round_flight_group'],
+							"order" => $r['event_pilot_round_flight_order'],
+							"sub1" => $r['sub'][1]['event_pilot_round_flight_sub_val'],
+							"sub2" => $r['sub'][2]['event_pilot_round_flight_sub_val'],
+							"sub3" => $r['sub'][3]['event_pilot_round_flight_sub_val'],
+							"sub4" => $r['sub'][4]['event_pilot_round_flight_sub_val'],
+							"sub5" => $r['sub'][5]['event_pilot_round_flight_sub_val'],
+							"sub6" => $r['sub'][6]['event_pilot_round_flight_sub_val'],
+							"sub7" => $r['sub'][7]['event_pilot_round_flight_sub_val'],
+							"sub8" => $r['sub'][8]['event_pilot_round_flight_sub_val'],
+							"sub9" => $r['sub'][9]['event_pilot_round_flight_sub_val'],
+							"sub10" => $r['sub'][10]['event_pilot_round_flight_sub_val'],
+							"sub11" => $r['sub'][11]['event_pilot_round_flight_sub_val'],
+							"seconds" => $r['event_pilot_round_flight_seconds'],
+							"penalty" => $r['event_pilot_round_flight_penalty'],
+							"wind_speed_avg" => $r['event_pilot_round_flight_wind_avg'],
+							"wind_dir_avg" => $r['event_pilot_round_flight_dir_avg']
+						);
+					}
+				}
 				break;
 			case "f3k":
 				$template = "api/event_export_f3k_round.tpl";
+				foreach( $final_rounds as $event_pilot_id => $round ){
+					foreach( $round as $round_number => $r ){
+						$subs = array();
+						$flight_type_id = $r['flight_type_id'];
+						foreach( $r['sub'] as $i => $s ){
+							$index = "sub$i";
+							$subs[$index] = $s['event_pilot_round_flight_sub_val'];
+						}						
+						$flights[] = array_merge( array(
+							"pilot_id" => $r['pilot_id'],
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
+							"group" => $r['event_pilot_round_flight_group'],
+							"total_minutes" => $r['event_pilot_round_flight_minutes'],
+							"total_seconds" => $r['event_pilot_round_flight_seconds'],
+							"penalty" => $r['event_pilot_round_flight_penalty']							
+						), $subs );	
+					}
+				}
 				break;
 			case "f3j":
 				$template = "api/event_export_round_not_yet.tpl";
@@ -146,6 +256,8 @@ class getEventRound {
 				$template = "api/event_export_round_not_yet.tpl";
 				break;
 		}
+	
+		$this->api->api_add_output_variable( "flights", $flights );
 	
 		# Get the export content
 		$content_template = find_template($template);

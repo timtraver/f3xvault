@@ -26,6 +26,28 @@ class getEventPilots {
 		);
 		$this->api->function_output_description = 
 			"One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, FAI License, Team_Name";
+
+		$this->api->function_output_description = "One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, FAI License, Team_Name\n\n";
+
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <pilots>
+    <pilot_id>176</pilot_id>
+    <pilot_bib></pilot_bib>
+    <pilot_first_name>James</pilot_first_name>
+    <pilot_last_name>Mueller</pilot_last_name>
+    <pilot_class>Open</pilot_class>
+    <pilot_ama>630125</pilot_ama>
+    <pilot_fai></pilot_fai>
+    <pilot_fai_license></pilot_fai_license>
+    <pilot_team></pilot_team>
+  </pilots>
+  <pilots>
+    ...
+  </pilots>
+</result>";
 	}
 
 	public function process_request(){
@@ -42,7 +64,24 @@ class getEventPilots {
 		$smarty->assign("fs",$fs);		
 		
 		$template = "api/event_pilots.tpl";
-	
+
+		# Set the return variable array
+		$pilots = array();
+		foreach( $event->pilots as $event_pilot_id => $p ){
+			$pilots[] = array(
+				"pilot_id" => $p['pilot_id'],
+				"pilot_bib" => $p['event_pilot_bib'],
+				"pilot_first_name" => $p['pilot_first_name'],
+				"pilot_last_name" => $p['pilot_last_name'],
+				"pilot_class" => $p['class_description'],
+				"pilot_ama" => $p['pilot_ama'],
+				"pilot_fai" => $p['pilot_fai'],
+				"pilot_fai_license" => $p['pilot_fai_license'],
+				"pilot_team" => $p['event_pilot_team']
+			);
+		}
+		$this->api->api_add_output_variable( "pilots", $pilots );
+
 		# Get the export content
 		$content_template = find_template($template);
 		$content = $smarty->fetch($content_template);		

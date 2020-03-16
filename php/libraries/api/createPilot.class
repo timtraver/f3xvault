@@ -36,6 +36,13 @@ class createPilot {
 		);
 		$this->api->function_output_description = 
 			"Pilot ID integer or 0 if failure with failure description";
+		$this->api->function_output_description = "Standard Output :\n Pilot ID\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <pilot_id>12945</pilot_id>
+</result>";
 	}
 
 	public function process_request(){
@@ -56,8 +63,9 @@ class createPilot {
 			"country_name" => $this->api->input_variables['pilot_country']
 		));
 		if(!isset($result[0])){
-			$content = "0\nNot a valid country code.";
-			return $content;
+			$this->api->error_code = 1;
+			$this->api->error_string = "Not a valid country code.";
+			return "";
 		}else{
 			$this->country_id = $result[0]['country_id'];
 		}
@@ -105,6 +113,7 @@ class createPilot {
 		));
 		$pilot_id = $GLOBALS['last_insert_id'];
 		
+		$this->api->api_add_output_variable( "pilot_id", $pilot_id );
 		$content = "$pilot_id\n";
 		
 		# Get the export content
