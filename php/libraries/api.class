@@ -54,6 +54,7 @@ class API {
 	public function set_api_functions(){
 		# This is to set up the available api functions
 		$this->functions = array(
+			"checkUser"					=> array("function_name" => "checkUser",				"event_permission" => 0,	"function_description" => 'Check User login and password and return user info. (no need to duplicate the given login and password from the standard API call.'),
 			"showParameters"			=> array("function_name" => "showParameters",			"event_permission" => 0,	"function_description" => 'Show All the input parameters for a particular API function call.'),
 			"getEventInfo"				=> array("function_name" => "getEventInfo",				"event_permission" => 0,	"function_description" => 'Get the basic information for an Event.'),
 			"getEventInfoFull"			=> array("function_name" => "getEventInfoFull",			"event_permission" => 0,	"function_description" => 'Get the full information for an Event, including all completed rounds or draws.'),
@@ -144,6 +145,10 @@ class API {
 		}
 		
 		switch($this->function){
+			case 'checkUser':
+				include_library("api/checkUser.class");
+				$request = new checkUser( $this );
+				break;
 			case 'showParameters':
 				include_library("api/showParameters.class");
 				$request = new showParameters($this);
