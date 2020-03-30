@@ -176,28 +176,6 @@ XML or JSON Object Hierarchy :
 			}
 		}
 		foreach( $event->pilots as $p ){
-			$flights = array();
-			foreach( $this->rounds as $event_pilot_id => $round ){
-				if( $event_pilot_id == $p['event_pilot_id'] ){
-					foreach( $round as $round_number => $r ){
-						$subs = array();
-						if( isset( $r['sub'] ) ){
-							foreach( $r['sub'] as $i => $s ){
-								$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
-							}
-						}
-						$flights[] = array(
-							"round_number" => $round_number,
-							"group" => $r['event_pilot_round_flight_group'],
-							"order" => $r['event_pilot_round_flight_order'],
-							"minutes" => $r['event_pilot_round_flight_minutes'],
-							"seconds" => $r['event_pilot_round_flight_seconds'],
-							"penalty" => $r['event_pilot_round_flight_penalty'],
-							"subs" => $subs
-						);
-					}
-				}
-			}
 			$pilots[] = array(
 				"pilot_id" => $p['pilot_id'],
 				"pilot_bib" => $p['event_pilot_bib'],
@@ -208,7 +186,6 @@ XML or JSON Object Hierarchy :
 				"pilot_fai" => $p['pilot_fai'],
 				"pilot_fai_license" => $p['pilot_fai_license'],
 				"pilot_team" => $p['event_pilot_team'],
-				"flights" => $flights
 			);
 		}
 		$e = array(
