@@ -41,6 +41,7 @@ class checkUser {
     <pilot_ama>9595</pilot_ama>
     <pilot_fai>USA9595</pilot_fai>
     <pilot_fai_license></pilot_fai_license>
+    <pilot_city>Vista</pilot_city>
     <state_code>CA</state_code>
     <country_code>US</country_code>
   </user>
@@ -97,6 +98,7 @@ class checkUser {
 			"pilot_ama" => $user_info['pilot_ama'],
 			"pilot_fai" => $user_info['pilot_fai'],
 			"pilot_fai_license" => $user_info['pilot_fai_license'],
+			"pilot_city" => $user_info['pilot_city'],
 			"state_code" => $user_info['state_code'],
 			"country_code" => $user_info['country_code'],
 		);
