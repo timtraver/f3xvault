@@ -188,8 +188,8 @@ class searchPlanes {
 					"plane_wing_area_units" => $row['plane_wing_area_units'],
 					"plane_manufacturer" => $row['plane_manufacturer'],				
 					"country_code" => $row['country_code'],
-					"plane_max_g" => $max_g,
-					"plane_max_oz" => $max_oz
+					"plane_max_g" => round( $max_g, 1 ),
+					"plane_max_oz" => round( $max_oz, 1 )
 				);
 				$ids[] = $row['plane_id'];
 			}
