@@ -28,6 +28,7 @@ class updateEventRoundStatus {
 			array("name" => "round_number",				"type" => "integer", "description" => "Round Number",					"mandatory" => 1),
 			array("name" => "event_round_score_status",	"type" => "integer", "description" => "Round Score Status (0 or 1)",	"mandatory" => 1),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nOnly success or failure status\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

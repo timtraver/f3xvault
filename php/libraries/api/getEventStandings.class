@@ -25,6 +25,7 @@ class getEventStandings {
 		$this->api->function_parameters = array(
 			array("name" => "event_id",	 "type" => "integer", "description" => "Event ID", "mandatory" => 1)
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = 
 			"Standard Output :\nEvent ID, Event Name, Event_location, Event Start Date, Event End Date, Event Type, Number of Rounds\nEach line after has the standings of the event with the following fields :\nPilot Rank, Pilot Name, Total Score, Diff to previous, Subtotal, Drops, Penalties, Percentage\n\n";
 

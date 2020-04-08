@@ -25,6 +25,7 @@ class searchPilots {
 			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
 			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0)
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = 
 			"Standard Output :\nOne Per line of the following\nPilot ID, Pilot Name, Pilot Location\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:

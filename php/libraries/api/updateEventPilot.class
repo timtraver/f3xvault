@@ -38,6 +38,7 @@ class updateEventPilot {
 			array("name" => "event_pilot_freq",			"type" => "string",		"description" => "Event Pilot Frequency",	"mandatory" => 0),
 			array("name" => "event_pilot_team",			"type" => "string",		"description" => "Event Pilot Team",		"mandatory" => 0),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nEvent Pilot ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

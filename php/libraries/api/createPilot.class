@@ -34,6 +34,7 @@ class createPilot {
 			array("name" => "pilot_city",			"type" => "string", "description" => "Pilot City",					"mandatory" => 0),
 			array("name" => "pilot_state",			"type" => "string", "description" => "Pilot state (code or name)",	"mandatory" => 0),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = 
 			"Pilot ID integer or 0 if failure with failure description";
 		$this->api->function_output_description = "Standard Output :\n Pilot ID\n\n";

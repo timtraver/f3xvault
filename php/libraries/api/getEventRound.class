@@ -27,6 +27,7 @@ class getEventRound {
 			array("name" => "round_number",	"type" => "integer", "description" => "Round Number",	"mandatory" => 1)			
 		);
 			
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nOne Per line of the following\nPilot ID, Pilot First Name, Pilot Last Name, Round Flight Info \n\nFor F3F, each round has the following Flight Info fields (Group, Flight Order, Total Flight Seconds, Penalty) including draw information.\n\nFor F3F Plus, each round has the following Flight Info fields (Group, Flight Order, Climb Out, Sub1, Sub2, Sub3. Sub4, Sub5, Sub6, Sub7, Sub8, Sub9, Sub10, Total Flight Seconds, Penalty, Wind Speed Avg, Wind Dir Avg) including draw information.\n\nFor F3K, each round has the following Flight Info fields (Group, Total Flight Seconds, Penalty) including draws.\n\n";
 
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy (f3f and f3 plus):

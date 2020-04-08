@@ -36,6 +36,7 @@ class createEvent {
 			array("name" => "event_cd_id",		"type" => "string", "description" => "Event Contest Director Pilot ID", "mandatory" => 0),
 			array("name" => "location_country",	"type" => "string", "description" => "Location Country Code (If creating new location)",	"mandatory" => 0),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nEvent ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

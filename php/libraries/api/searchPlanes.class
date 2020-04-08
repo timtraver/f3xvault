@@ -1,0 +1,207 @@
+<?php
+############################################################################
+#	searchPlanes.class
+#
+#	Tim Traver
+#	4/7/2020
+#	class to extend API class to search for planes
+#
+############################################################################
+#
+include_library('event.class');
+
+class searchPlanes {
+	public $string;
+	public $discipline;
+	public $country;
+	public $page;
+	public $per_page;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the parameter field list
+		$this->api->function_parameters = array(
+			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
+			array("name" => "discipline", "type" => "string", "description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)", "mandatory" => 0),
+			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0),
+			array("name" => "page", "type" => "int", "description" => "Page Number", "mandatory" => 0),
+			array("name" => "per_page", "type" => "int", "description" => "List Items Per Page", "mandatory" => 0)
+		);
+		
+		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_description = 
+			"Standard Output :\nOne Per line of the following\nPilot ID, Pilot Name, Pilot Location\n\n";
+		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
+<result>
+  <response_code>1</response_code>
+  <error_string></error_string>
+  <planes>
+    <plane_id>1</plane_id>
+    <plane_name>Ceres F3F</plane_name>
+	<plane_wing_area>920.00</plane_wing_area>
+	<plane_tail_area>87.40</plane_tail_area>
+	<plane_wing_area_units>in2</plane_wing_area_units>
+	<plane_manufacturer>Baudis</plane_manufacturer>
+	<country_code>CZ</country_code>
+	<plane_max_g>4856.4</plane_max_g>
+	<plane_max_oz>171.3</plane_max_oz>
+  </planes>
+  <planes>
+    ...
+  </planes>
+</result>";
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+		$this->string = $this->api->input_variables['string'];
+		$this->discipline = $this->api->input_variables['discipline'];
+		$this->country = $this->api->input_variables['country'];
+		$this->page = $this->api->input_variables['page'];
+		$this->per_page = $this->api->input_variables['per_page'];
+		$fs = $this->api->field_separator;
+		
+		$start_record = 0;
+		if( $this->per_page == 0 ){
+			$this->per_page = 50;
+		}
+		if( $this->page == 0 ){
+			$this->page = 1;
+		}
+		$start_record = ( $this->page - 1 ) * $this->per_page;
+		
+		$joind = '';
+		$discipline_search = '';
+		if($this->discipline != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM discipline d
+				WHERE LOWER(discipline_code) = :discipline_code
+			");
+			$result = db_exec($stmt,array( "discipline_code" => $this->discipline ) );
+			if( isset( $result[0] ) ){
+				$discipline_id = $result[0]['discipline_id'];
+			}else{
+				# Error
+				$this->api->error_code = 1;
+				$this->api->error_string = "Invalid Discipline ID.\n";
+				return "";
+			}
+			$joind = 'LEFT JOIN plane_discipline pd ON p.plane_id = pd.plane_id';
+			$discipline_search = 'AND pd.discipline_id = ' . $discipline_id . ' AND pd.plane_discipline_status = 1';
+		}
+		
+		# If they included a country code, then lets find it so we can add it to the search
+		$country_search = '';
+		if($this->country != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM country
+				WHERE LOWER(country_code) = :country_code
+					OR LOWER(country_name) = :country_name
+			");
+			$result = db_exec($stmt,array(
+				"country_code" => $this->api->input_variables['country'],
+				"country_name" => $this->api->input_variables['country']
+			));
+			if(isset($result[0])){
+				$country_search = "AND c.country_id = ".$result[0]['country_id'];
+			}
+		}
+		
+		$string = trim( urldecode( strtolower( $this->string ) ) );
+		$string = '%' . $string . '%';
+		# Do search
+		if($string != '%%' && $string != ''){
+			# Get all planes in this plane_type with the search criteria
+			$stmt = db_prep("
+				SELECT *
+				FROM plane p
+				LEFT JOIN country c ON p.country_id = c.country_id
+				$joind
+				WHERE LOWER(p.plane_name) LIKE :search OR LOWER(p.plane_manufacturer) LIKE :search2
+				$country_search
+				$discipline_search
+				ORDER BY p.plane_name
+				LIMIT :start_record, :per_page
+			");
+			$result = db_exec( $stmt, array(
+				"search" => '%' . $string . '%',
+				"search2" => '%' . $string . '%',
+				"start_record" => $start_record,
+				"per_page" => $this->per_page
+			) );
+		}else{
+			# Get all planes
+			$stmt = db_prep("
+				SELECT *
+				FROM plane p
+				LEFT JOIN country c ON p.country_id = c.country_id
+				$joind
+				WHERE 1
+				$country_search
+				$discipline_search
+				ORDER BY p.plane_name
+				LIMIT :start_record, :per_page
+			");
+			$result = db_exec( $stmt, array( 
+				"start_record" => $start_record,
+				"per_page" => $this->per_page
+			) );
+		}
+		$ids = array();
+		foreach( $result as $row ){
+			if( ! in_array($row['plane_id'], $ids ) ){
+				# Let's calculate the max FAI weight to include
+				$max_g = 0;
+				$max_oz = 0;
+				$current_units = $row['plane_wing_area_units'];
+				$current_value = $row['plane_wing_area'] + $row['plane_tail_area'];
+				$multiple = 28.35;
+				if( $current_units == 'in2' ){
+					$calc_value = round( 0.17 * $current_value, 1 );
+					$calc_units = 'oz';
+					$calc_to = round( $multiple * $calc_value, 1 );
+					$calc_to_units = 'gr';
+					$max_oz = $calc_value;
+					$max_g = $calc_to;
+				}else{
+					$calc_value = round( 75 * $current_value, 1 );
+					$calc_units = 'gr';
+					$calc_to = round( $calc_value / $multiple, 1 );
+					$calc_to_units = 'oz';
+					$max_oz = $calc_to;
+					$max_g = $calc_value;
+				}
+				
+				$planes[] = array(
+					"plane_id" => $row['plane_id'],
+					"plane_name" => $row['plane_name'],
+					"plane_wing_area" => $row['plane_wing_area'],
+					"plane_tail_area" => $row['plane_tail_area'],
+					"plane_wing_area_units" => $row['plane_wing_area_units'],
+					"plane_manufacturer" => $row['plane_manufacturer'],				
+					"country_code" => $row['country_code'],
+					"plane_max_g" => $max_g,
+					"plane_max_oz" => $max_oz
+				);
+				$ids[] = $row['plane_id'];
+			}
+		}
+		$this->api->api_add_output_variable( "planes", $planes );
+		
+		$content = '';
+				
+		return $content;
+
+	}
+
+}
+
+?>

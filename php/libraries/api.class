@@ -21,6 +21,7 @@ class API {
 	public $functions = array();
 	public $process_output;
 	public $function_parameters = array();
+	public $function_output_modes;
 	public $function_output_description;
 	public $field_separator;
 	public $output_format;
@@ -63,6 +64,7 @@ class API {
 			"getEventStandings"			=> array("function_name" => "getEventStandings",		"event_permission" => 0,	"function_description" => 'Get the current event standings.'),
 			"getPilotInfo"				=> array("function_name" => "getPilotInfo",				"event_permission" => 0,	"function_description" => 'Get Info for Pilot.'),
 			"searchPilots"				=> array("function_name" => "searchPilots",				"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
+			"searchPlanes"				=> array("function_name" => "searchPlanes",				"event_permission" => 0,	"function_description" => 'Search the database for planes.'),
 			"searchEvents"				=> array("function_name" => "searchEvents",				"event_permission" => 0,	"function_description" => 'Search for events'),
 			"postScore"					=> array("function_name" => "postScore",				"event_permission" => 1,	"function_description" => 'Post a score for a pilot to an event.'),
 			"updateEventPilot"			=> array("function_name" => "updateEventPilot",			"event_permission" => 1,	"function_description" => 'Add or update pilot information to an event.'),
@@ -181,6 +183,10 @@ class API {
 			case 'searchPilots':
 				include_library("api/searchPilots.class");
 				$request = new searchPilots($this);
+				break;
+			case 'searchPlanes':
+				include_library("api/searchPlanes.class");
+				$request = new searchPlanes($this);
 				break;
 			case 'searchEvents':
 				include_library("api/searchEvents.class");

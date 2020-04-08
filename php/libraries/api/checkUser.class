@@ -25,6 +25,7 @@ class checkUser {
 			array("name" => "login",		 	"type" => "string", "description" => "User Login",				"mandatory" => 1),
 			array("name" => "password",		 	"type" => "string", "description" => "User Password",			"mandatory" => 1),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nEvent ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

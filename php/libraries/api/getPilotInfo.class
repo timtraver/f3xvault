@@ -23,6 +23,7 @@ class getPilotInfo {
 		$this->api->function_parameters = array(
 			array("name" => "pilot_id", "type" => "int", "description" => "Pilot ID", "mandatory" => 1)
 		);
+		$this->api->function_output_modes = "JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nSingle line data value pairs similar to the ones in xml\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
 <result>

@@ -50,6 +50,7 @@ class postScore {
 			array("name" => "wind_avg",		"type" => "float",		"description" => "Wind Speed Average",		"mandatory" => 0),
 			array("name" => "dir_avg",		"type" => "float",		"description" => "Wind Direction Average",	"mandatory" => 0),
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\n Event Pilot ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

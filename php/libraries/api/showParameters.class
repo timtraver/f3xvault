@@ -26,6 +26,7 @@ class showParameters {
 		$this->api->function_parameters = array(
 			array("name" => "function_name", "type" => "string", "description" => "Name of Function to retrieve parameters", "mandatory" => 1)
 		);
+		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = 
 			"List of the input parameters for the function, one per line.";
 		$this->api->function_output_description = 
