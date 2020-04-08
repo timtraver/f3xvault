@@ -271,12 +271,14 @@ class API {
 		$this->output_variables = array_merge( $response_array, $this->output_variables );
 		if( $this->output_format == 'xml' ){
 			include_library( "xmlarray.class" );
+			header('Content-Type: application/xml');
 			# Check for the need of CDATA attributes
 			$this->output_variables = $this->array_check_for_cdata( $this->output_variables );
 			$tempxml = Array2XML::createXML( 'result', $this->output_variables );
 			$this->output_string .= $tempxml->saveXML();
 			print $this->output_string;
 		}elseif( $this->output_format == 'json' ){
+			header('Content-type: application/json');
 			$this->output_string .= json_encode( $this->output_variables );
 			print $this->output_string;
 		}else{
