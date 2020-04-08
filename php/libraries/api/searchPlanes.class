@@ -183,13 +183,13 @@ class searchPlanes {
 				$planes[] = array(
 					"plane_id" => $row['plane_id'],
 					"plane_name" => $row['plane_name'],
-					"plane_wing_area" => $row['plane_wing_area'],
-					"plane_tail_area" => $row['plane_tail_area'],
+					"plane_wing_area" => doubleval($row['plane_wing_area']),
+					"plane_tail_area" => doubleval($row['plane_tail_area']),
 					"plane_wing_area_units" => $row['plane_wing_area_units'],
 					"plane_manufacturer" => $row['plane_manufacturer'],				
 					"country_code" => $row['country_code'],
-					"plane_max_g" => $max_g,
-					"plane_max_oz" => $max_oz
+					"plane_max_g" => doubleval($max_g),
+					"plane_max_oz" => doubleval($max_oz)
 				);
 				$ids[] = $row['plane_id'];
 			}
