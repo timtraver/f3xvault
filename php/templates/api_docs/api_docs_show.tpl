@@ -58,6 +58,15 @@
 				<th width="20%">Function Description</th><td>{$f.function_description|escape}</td>
 			</tr>
 			<tr>
+				<th width="20%">Function Call Details</th>
+				<th align="right">
+					<span id="toggle_{$f.function_name}" onClick="toggle('call_{$f.function_name}',this);">
+						<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;"> 
+					</span>
+				</th>
+			</tr>
+			<tbody id="call_{$f.function_name}" style="display: none;">
+			<tr>
 				<th width="20%">Function Input Parameters</th>
 				<td>
 					<table class="table table-condensed table-bordered">
@@ -93,8 +102,12 @@
 				</td>
 			</tr>
 			<tr>
+				<th width="20%">Output Modes</th><td>{$f.function_output_modes|escape}</td>
+			</tr>
+			<tr>
 				<th width="20%">Function Output</th><td><pre style="white-space:pre-wrap;">{$f.function_output_description|escape}</pre></td>
 			</tr>
+			</tbody>
 		</table>
 		{/foreach}
 		
@@ -119,5 +132,18 @@
 <form name="browse_locations" method="GET">
 <input type="hidden" name="action" value="location">
 </form>
- 
+
+{/block}
+{block name="footer"}
+<script>
+function toggle(element,tog) {ldelim}
+	if (document.getElementById(element).style.display == 'none') {ldelim}
+		document.getElementById(element).style.display = 'table-row-group';
+		tog.innerHTML = '<img width="24" height="24" src="/images/arrow-down.png" style="vertical-align:middle;">';
+	{rdelim} else {ldelim}
+		document.getElementById(element).style.display = 'none';
+		tog.innerHTML = '<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;">';
+	{rdelim}
+{rdelim}
+</script>
 {/block}
