@@ -169,15 +169,15 @@ class searchPlanes {
 					$calc_units = 'oz';
 					$calc_to = round( $multiple * $calc_value, 1 );
 					$calc_to_units = 'gr';
-					$max_oz = $calc_value;
-					$max_g = $calc_to;
+					$max_oz = round( $calc_value, 1 );
+					$max_g = round( $calc_to, 1 );
 				}else{
 					$calc_value = round( 75 * $current_value, 1 );
 					$calc_units = 'gr';
 					$calc_to = round( $calc_value / $multiple, 1 );
 					$calc_to_units = 'oz';
-					$max_oz = $calc_to;
-					$max_g = $calc_value;
+					$max_oz = round( $calc_to, 1 );
+					$max_g = round( $calc_value, 1 );
 				}
 				
 				$planes[] = array(
@@ -188,8 +188,8 @@ class searchPlanes {
 					"plane_wing_area_units" => $row['plane_wing_area_units'],
 					"plane_manufacturer" => $row['plane_manufacturer'],				
 					"country_code" => $row['country_code'],
-					"plane_max_g" => round( $max_g, 1 ),
-					"plane_max_oz" => round( $max_oz, 1 )
+					"plane_max_g" => $max_g,
+					"plane_max_oz" => $max_oz
 				);
 				$ids[] = $row['plane_id'];
 			}
