@@ -41,15 +41,23 @@ class searchPlanes {
   <response_code>1</response_code>
   <error_string></error_string>
   <planes>
-    <plane_id>1</plane_id>
-    <plane_name>Ceres F3F</plane_name>
-	<plane_wing_area>920.00</plane_wing_area>
-	<plane_tail_area>87.40</plane_tail_area>
-	<plane_wing_area_units>in2</plane_wing_area_units>
-	<plane_manufacturer>Baudis</plane_manufacturer>
-	<country_code>CZ</country_code>
-	<plane_max_g>4856.4</plane_max_g>
-	<plane_max_oz>171.3</plane_max_oz>
+        <plane_id>12</plane_id>
+        <plane_name>Ceres</plane_name>
+        <plane_wing_area>920</plane_wing_area>
+        <plane_tail_area>87.4</plane_tail_area>
+        <plane_wing_area_units>in2</plane_wing_area_units>
+        <plane_manufacturer>Baudis</plane_manufacturer>
+        <country_code>CZ</country_code>
+        <plane_max_g>4856.4</plane_max_g>
+        <plane_max_oz>171.3</plane_max_oz>
+        <plane_wingspan>120</plane_wingspan>
+        <plane_wingspan_units>in</plane_wingspan_units>
+        <plane_length>59</plane_length>
+        <plane_length_units>in</plane_length_units>
+        <plane_year>2007</plane_year>
+        <plane_website>
+            <![CDATA[http://www.baudismodel.com/]]>
+        </plane_website>
   </planes>
   <planes>
     ...
@@ -69,7 +77,7 @@ class searchPlanes {
 		
 		$start_record = 0;
 		if( $this->per_page == 0 ){
-			$this->per_page = 50;
+			$this->per_page = 100;
 		}
 		if( $this->page == 0 ){
 			$this->page = 1;
@@ -189,7 +197,13 @@ class searchPlanes {
 					"plane_manufacturer" => $row['plane_manufacturer'],				
 					"country_code" => $row['country_code'],
 					"plane_max_g" => doubleval($max_g),
-					"plane_max_oz" => doubleval($max_oz)
+					"plane_max_oz" => doubleval($max_oz),
+					"plane_wingspan" => doubleval($row['plane_wingspan']),
+					"plane_wingspan_units" => $row['plane_wingspan_units'],
+					"plane_length" => doubleval($row['plane_length']),
+					"plane_length_units" => $row['plane_length_units'],
+					"plane_year" => $row['plane_year'],
+					"plane_website" => trim($row['plane_website']),
 				);
 				$ids[] = $row['plane_id'];
 			}
