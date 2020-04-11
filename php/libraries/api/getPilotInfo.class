@@ -176,7 +176,7 @@ class getPilotInfo {
                 "location_city" => $row['location_city'],
                 "state_code" => $row['state_code'],
                 "country_code" => $row['country_code'],
-                "event_start_date" => $row['event_start_date'],
+                "event_start_date" => date("Y-m-d", strtotime( $row['event_start_date'] ) ),
                 "event_pilot_position" => $row['event_pilot_position'],
                 "event_pilot_total_score" => $row['event_pilot_total_score'],
                 "event_pilot_total_percentage" => $row['event_pilot_total_percentage']
