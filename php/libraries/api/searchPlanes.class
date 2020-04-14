@@ -40,6 +40,7 @@ class searchPlanes {
 <result>
   <response_code>1</response_code>
   <error_string></error_string>
+  <total_records>642</total_records>
   <planes>
         <plane_id>12</plane_id>
         <plane_name>Ceres</plane_name>
@@ -83,7 +84,17 @@ class searchPlanes {
 			$this->page = 1;
 		}
 		$start_record = ( $this->page - 1 ) * $this->per_page;
-		
+
+
+		# Get total plane records
+		$stmt = db_prep( "
+			SELECT count(*) as total
+			FROM planes
+		" );
+		$result = db_exec( $stmt, array() );
+		$total_records = $result[0]['total'];		
+
+
 		$joind = '';
 		$discipline_search = '';
 		if($this->discipline != ''){
@@ -208,6 +219,7 @@ class searchPlanes {
 				$ids[] = $row['plane_id'];
 			}
 		}
+		$this->api->api_add_output_variable( "total_records", $total_records );
 		$this->api->api_add_output_variable( "planes", $planes );
 		
 		$content = '';
