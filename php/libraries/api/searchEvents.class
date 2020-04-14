@@ -38,6 +38,7 @@ class searchEvents {
 <result>
   <response_code>1</response_code>
   <error_string></error_string>
+  <total_records>1356</total_records>
   <events>
     <event_id>1460</event_id>
     <event_name><![CDATA[2020 TPG Clinic/Contest Series - July]]></event_name>
@@ -125,6 +126,14 @@ class searchEvents {
 			}
 		}
 		
+		# Get total event records
+		$stmt = db_prep( "
+			SELECT count(*) as total
+			FROM event
+		" );
+		$result = db_exec( $stmt, array() );
+		$total_records = $result[0]['total'];		
+		
 		if($this->string){
 			
 			$this->string = trim(urldecode(strtolower($this->string)));
@@ -186,6 +195,8 @@ class searchEvents {
 				"event_type_code"	=> $r['event_type_code'],
 			);
 		}
+		
+		$this->api->api_add_output_variable( "total_records", $total_records );
 		$this->api->api_add_output_variable( "events", $events );
 		
 		$content = '';
