@@ -89,7 +89,7 @@ class searchPlanes {
 		# Get total plane records
 		$stmt = db_prep( "
 			SELECT count(*) as total
-			FROM planes
+			FROM plane
 		" );
 		$result = db_exec( $stmt, array() );
 		$total_records = $result[0]['total'];		
