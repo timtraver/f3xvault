@@ -1,0 +1,201 @@
+<?php
+############################################################################
+#	searchLocations.class
+#
+#	Tim Traver
+#	4/15/2020
+#	class to extend API class to search for locations
+#
+############################################################################
+#
+include_library('event.class');
+
+class searchLocations {
+	public $string;
+	public $discipline;
+	public $country;
+	public $page;
+	public $per_page;
+	public $api;
+	
+	public function __construct($api){
+		$this->api = $api;
+		$this->set_function_parameters();
+	}
+	
+	public function set_function_parameters(){
+		# This is where we set the parameter field list
+		$this->api->function_parameters = array(
+			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
+			array("name" => "discipline", "type" => "string", "description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)", "mandatory" => 0),
+			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0),
+			array("name" => "page", "type" => "int", "description" => "Page Number", "mandatory" => 0),
+			array("name" => "per_page", "type" => "int", "description" => "List Items Per Page", "mandatory" => 0)
+		);
+		
+		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_description = "XML or JSON Object Hierarchy:
+<result>
+    <response_code>1</response_code>
+    <error_string></error_string>
+    <total_records>464</total_records>
+    <locations>
+        <location_id>2358</location_id>
+        <location_name>
+            <![CDATA[ North Head]]>
+        </location_name>
+        <location_city>
+            <![CDATA[Jurien Bay]]>
+        </location_city>
+        <state_code></state_code>
+        <country_code>AU</country_code>
+        <location_coordinates>
+            <![CDATA[-30.227652,115.000932]]>
+        </location_coordinates>
+        <location_club></location_club>
+        <location_club_url></location_club_url>
+    </locations>
+    <locations>
+    ...
+    </locations>
+</result>";
+	}
+
+	public function process_request(){
+		
+		# This is the method where we process the request
+		$this->string = $this->api->input_variables['string'];
+		$this->discipline = $this->api->input_variables['discipline'];
+		$this->country = $this->api->input_variables['country'];
+		$this->page = $this->api->input_variables['page'];
+		$this->per_page = $this->api->input_variables['per_page'];
+		$fs = $this->api->field_separator;
+		
+		$start_record = 0;
+		if( $this->per_page == 0 ){
+			$this->per_page = 100;
+		}
+		if( $this->page == 0 ){
+			$this->page = 1;
+		}
+		$start_record = ( $this->page - 1 ) * $this->per_page;
+
+
+		# Get total location records
+		$stmt = db_prep( "
+			SELECT count(*) as total
+			FROM location
+		" );
+		$result = db_exec( $stmt, array() );
+		$total_records = $result[0]['total'];		
+
+
+		$joind = '';
+		$discipline_search = '';
+		if($this->discipline != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM discipline d
+				WHERE LOWER(discipline_code) = :discipline_code
+			");
+			$result = db_exec($stmt,array( "discipline_code" => $this->discipline ) );
+			if( isset( $result[0] ) ){
+				$discipline_id = $result[0]['discipline_id'];
+			}else{
+				# Error
+				$this->api->error_code = 1;
+				$this->api->error_string = "Invalid Discipline ID.\n";
+				return "";
+			}
+			$joind = 'LEFT JOIN location_discipline ld ON l.location_id = ld.location_id';
+			$discipline_search = 'AND ld.discipline_id = ' . $discipline_id . ' AND ld.location_discipline_status = 1';
+		}
+		
+		# If they included a country code, then lets find it so we can add it to the search
+		$country_search = '';
+		if($this->country != ''){
+			$stmt = db_prep("
+				SELECT *
+				FROM country
+				WHERE LOWER(country_code) = :country_code
+					OR LOWER(country_name) = :country_name
+			");
+			$result = db_exec($stmt,array(
+				"country_code" => $this->api->input_variables['country'],
+				"country_name" => $this->api->input_variables['country']
+			));
+			if(isset($result[0])){
+				$country_search = "AND c.country_id = ".$result[0]['country_id'];
+			}
+		}
+		
+		$string = trim( urldecode( strtolower( $this->string ) ) );
+		$string = '%' . $string . '%';
+		# Do search
+		if($string != '%%' && $string != ''){
+			# Get all planes in this plane_type with the search criteria
+			$stmt = db_prep("
+				SELECT *
+				FROM location l
+				LEFT JOIN country c ON l.country_id = c.country_id
+				LEFT JOIN state s ON l.state_id = s.state_id
+				$joind
+				WHERE LOWER(l.location_name) LIKE :search
+				$country_search
+				$discipline_search
+				ORDER BY l.location_name
+				LIMIT :start_record, :per_page
+			");
+			$result = db_exec( $stmt, array(
+				"search" => '%' . $string . '%',
+				"start_record" => $start_record,
+				"per_page" => $this->per_page
+			) );
+		}else{
+			# Get all planes
+			$stmt = db_prep("
+				SELECT *
+				FROM location l
+				LEFT JOIN country c ON l.country_id = c.country_id
+				LEFT JOIN state s ON l.state_id = s.state_id
+				$joind
+				WHERE 1
+				$country_search
+				$discipline_search
+				ORDER BY l.location_name
+				LIMIT :start_record, :per_page
+			");
+			$result = db_exec( $stmt, array( 
+				"start_record" => $start_record,
+				"per_page" => $this->per_page
+			) );
+		}
+		$ids = array();
+		foreach( $result as $row ){
+			if( ! in_array( $row['location_id'], $ids ) ){
+				
+				$locations[] = array(
+					"location_id" => $row['location_id'],
+					"location_name" => $row['location_name'],
+					"location_city" => $row['location_city'],
+					"state_code" => $row['state_code'],
+					"country_code" => $row['country_code'],
+					"location_coordinates" => $row['location_coordinates'],
+					"location_club" => $row['location_club'],
+					"location_club_url" => $row['location_club_url'],
+				);
+				$ids[] = $row['location_id'];
+			}
+		}
+		$this->api->api_add_output_variable( "total_records", $total_records );
+		$this->api->api_add_output_variable( "locations", $locations );
+		
+		$content = '';
+				
+		return $content;
+
+	}
+
+}
+
+?>
