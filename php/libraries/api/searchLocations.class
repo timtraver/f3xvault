@@ -8,7 +8,6 @@
 #
 ############################################################################
 #
-include_library('event.class');
 
 class searchLocations {
 	public $string;
@@ -133,7 +132,7 @@ class searchLocations {
 		$string = '%' . $string . '%';
 		# Do search
 		if($string != '%%' && $string != ''){
-			# Get all planes in this plane_type with the search criteria
+			# Get all locations in this with the search criteria
 			$stmt = db_prep("
 				SELECT *
 				FROM location l
@@ -152,7 +151,7 @@ class searchLocations {
 				"per_page" => $this->per_page
 			) );
 		}else{
-			# Get all planes
+			# Get all locations
 			$stmt = db_prep("
 				SELECT *
 				FROM location l
