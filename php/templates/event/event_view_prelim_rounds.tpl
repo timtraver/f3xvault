@@ -220,7 +220,7 @@
 		{if $round_number >= $start_round && $round_number <= $end_round}
 			<th align="center" style="text-align: center;">
 				<a href="" class="tooltip_score" onClick="return false;">
-				{$r.average_wind_speed|string_format:"%.02"}
+				{$r.average_wind_speed|string_format:"%.2f"}
 				</a>
 			</th>
 		{/if}
@@ -233,10 +233,10 @@
 		{if $round_number >= $start_round && $round_number <= $end_round}
 			<th align="center" style="text-align: center;">
 				<a href="" class="tooltip_score" onClick="return false;">
-				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|string_format:"%.02"}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);-o-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);
+				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|string_format:"%.2f"}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.2f"}deg);-o-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.2f"}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.2f"}deg);transform: rotate(135 - {$r.average_wind_dir|string_format:"%.2f"}deg);
 "></i> 
 				<span>
-					{$r.average_wind_dir|string_format:"%.02"} degrees
+					{$r.average_wind_dir|string_format:"%.2f"} degrees
 				</span>
 				</a>
 			</th>
