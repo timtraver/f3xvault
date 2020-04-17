@@ -220,7 +220,7 @@
 		{if $round_number >= $start_round && $round_number <= $end_round}
 			<th align="center" style="text-align: center;">
 				<a href="" class="tooltip_score" onClick="return false;">
-				{$r.average_wind_speed|escape}
+				{$r.average_wind_speed|string_format:"%.02"}
 				</a>
 			</th>
 		{/if}
