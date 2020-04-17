@@ -62,6 +62,7 @@ class API {
 			"getEventPilots"			=> array("function_name" => "getEventPilots",			"event_permission" => 0,	"function_description" => 'Get the pilot list for an Event.'),
 			"getEventRound"				=> array("function_name" => "getEventRound",			"event_permission" => 0,	"function_description" => 'Get flight information for a single round.'),
 			"getEventStandings"			=> array("function_name" => "getEventStandings",		"event_permission" => 0,	"function_description" => 'Get the current event standings.'),
+			"getLocationInfo"			=> array("function_name" => "getLocationInfo",			"event_permission" => 0,	"function_description" => 'Get Info for Location.'),
 			"getPilotInfo"				=> array("function_name" => "getPilotInfo",				"event_permission" => 0,	"function_description" => 'Get Info for Pilot.'),
 			"searchLocations"			=> array("function_name" => "searchLocations",			"event_permission" => 0,	"function_description" => 'Search the database for location information.'),
 			"searchPilots"				=> array("function_name" => "searchPilots",				"event_permission" => 0,	"function_description" => 'Search the database for pilot information.'),
@@ -176,6 +177,10 @@ class API {
 			case 'getEventStandings':
 				include_library("api/getEventStandings.class");
 				$request = new getEventStandings($this);
+				break;
+			case 'getLocationInfo':
+				include_library("api/getLocationInfo.class");
+				$request = new getLocationInfo($this);
 				break;
 			case 'getPilotInfo':
 				include_library("api/getPilotInfo.class");
