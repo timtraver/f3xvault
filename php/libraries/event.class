@@ -2720,8 +2720,8 @@ class Event {
 			}else{
 				$average_dir = 0;
 			}
-			$this->rounds[$event_round_number]['average_wind_speed'] = $average;
-			$this->rounds[$event_round_number]['average_wind_dir'] = $average_dir;
+			$this->rounds[$event_round_number]['average_wind_speed'] = round( $average, 2 );
+			$this->rounds[$event_round_number]['average_wind_dir'] = round( $average_dir, 2 );
 			
 		}
 		return;
