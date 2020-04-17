@@ -233,10 +233,10 @@
 		{if $round_number >= $start_round && $round_number <= $end_round}
 			<th align="center" style="text-align: center;">
 				<a href="" class="tooltip_score" onClick="return false;">
-				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|escape}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-o-transform: rotate(135 - {$r.average_wind_dir|escape}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|escape}deg);transform: rotate(135 - {$r.average_wind_dir|escape}deg);
+				<i class="fa fa-location-arrow" style="-webkit-transform: rotate({135 - $r.average_wind_dir|string_format:"%.02"}deg);-moz-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);-o-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);-ms-transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);transform: rotate(135 - {$r.average_wind_dir|string_format:"%.02"}deg);
 "></i> 
 				<span>
-					{$r.average_wind_dir|escape} degrees
+					{$r.average_wind_dir|string_format:"%.02"} degrees
 				</span>
 				</a>
 			</th>
