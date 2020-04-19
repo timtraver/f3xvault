@@ -97,8 +97,8 @@ class getPilotInfo {
 		$result = db_exec( $stmt, array( "pilot_id" => $this->pilot_id ) );
 		$pilot = array(
 			"pilot_id" => $result[0]['pilot_id'],
-			"pilot_first_name" => $result[0]['pilot_first_name'],
-			"pilot_last_name" => $result[0]['pilot_last_name'],
+			"pilot_first_name" => utf8_encode( $result[0]['pilot_first_name'] ),
+			"pilot_last_name" => utf8_encode( $result[0]['pilot_last_name'] ),
 			"pilot_ama" => $result[0]['pilot_ama'],
 			"pilot_fai" => $result[0]['pilot_fai'],
 			"pilot_fai_license" => $result[0]['pilot_fai_license'],

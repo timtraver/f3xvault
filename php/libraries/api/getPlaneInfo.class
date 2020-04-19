@@ -177,8 +177,8 @@ class getPlaneInfo {
 				");
 				$result2 = db_exec( $stmt2, array( "user_id" => $row['user_id'] ) );
 				if( $result2[0] ){
-					$pilot_first_name = $result2[0]['pilot_first_name'];
-					$pilot_last_name = $result2[0]['pilot_last_name'];
+					$pilot_first_name = utf8_encode( $result2[0]['pilot_first_name'] );
+					$pilot_last_name = utf8_encode( $result2[0]['pilot_last_name'] );
 					$pilot_country = $result2[0]['country_code'];
 				}
 			}
@@ -208,8 +208,8 @@ class getPlaneInfo {
 		foreach( $results as $row ){
 			$plane_pilots[] = array(
 				"pilot_id" => $row['pilot_id'],	
-				"pilot_first_name" => $row['pilot_first_name'],	
-				"pilot_last_name" => $row['pilot_last_name'],	
+				"pilot_first_name" => utf8_encode( $row['pilot_first_name'] ),	
+				"pilot_last_name" => utf8_encode( $row['pilot_last_name'] ),	
 				"country_code" => $row['country_code'],	
 			);
 		}
