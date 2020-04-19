@@ -30,16 +30,25 @@ class searchPilots {
 			"Standard Output :\nOne Per line of the following\nPilot ID, Pilot Name, Pilot Location\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
 <result>
-  <response_code>1</response_code>
-  <error_string></error_string>
-  <pilots>
-    <pilot_id>1</pilot_id>
-    <pilot_name><![CDATA[Tim Traver]]></pilot_name>
-    <location><![CDATA[Vista CA - US]]></location>
-  </pilots>
-  <pilots>
-    ...
-  </pilots>
+    <response_code>1</response_code>
+    <error_string></error_string>
+    <pilots>
+        <pilot_id>1</pilot_id>
+        <pilot_name>
+            <![CDATA[Tim Traver]]>
+        </pilot_name>
+        <pilot_first_name>Tim</pilot_first_name>
+        <pilot_last_name>Traver</pilot_last_name>
+        <pilot_ama>9595</pilot_ama>
+        <pilot_fai>USA9595</pilot_fai>
+        <pilot_fai_license></pilot_fai_license>
+        <pilot_city>Vista</pilot_city>
+        <state_code>CA</state_code>
+        <country_code>US</country_code>
+        <location>
+            <![CDATA[Vista CA - US]]>
+        </location>
+    </pilots>
 </result>";
 	}
 
@@ -88,8 +97,16 @@ class searchPilots {
 		
 		foreach($result as $r){
 			$pilots[] = array(
-				"pilot_id"	=> $r['pilot_id'],
-				"pilot_name"	=> "{$r['pilot_first_name']} {$r['pilot_last_name']}",
+				"pilot_id" => $r['pilot_id'],
+				"pilot_name" => "{$r['pilot_first_name']} {$r['pilot_last_name']}",
+				"pilot_first_name" => $r['pilot_first_name'],
+				"pilot_last_name" => $r['pilot_last_name'],
+				"pilot_ama" => $r['pilot_ama'],
+				"pilot_fai" => $r['pilot_fai'],
+				"pilot_fai_license" => $r['pilot_fai_license'],
+				"pilot_city" => $r['pilot_city'],
+				"state_code" => $r['state_code'],
+				"country_code" => $r['country_code'],
 				"location"	=> "{$r['pilot_city']} {$r['state_code']} - {$r['country_code']}",
 			);
 		}
