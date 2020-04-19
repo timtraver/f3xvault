@@ -96,6 +96,7 @@ class searchPilots {
 				OR LOWER(p.pilot_last_name) LIKE :term2
 				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3 )
 			$country_search
+			ORDER BY p.pilot_first_name, p.pilot_last_name
 		");
 		$result = db_exec($stmt,array(
 			"term1"	=> $string,
