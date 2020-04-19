@@ -294,7 +294,7 @@ class API {
 			print $this->output_string;
 		}elseif( $this->output_format == 'json' ){
 			header('Content-type: application/json');
-			$this->output_string .= json_encode( $this->output_variables );
+			$this->output_string .= json_encode( $this->output_variables, JSON_PARTIAL_OUTPUT_ON_ERROR );
 			print $this->output_string;
 		}else{
 			# Lets first set the variable for the main return code and string
