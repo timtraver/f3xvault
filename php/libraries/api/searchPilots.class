@@ -58,6 +58,14 @@ class searchPilots {
 		$this->string = $this->api->input_variables['string'];
 		$fs = $this->api->field_separator;
 		
+		# Get total plane records
+		$stmt = db_prep( "
+			SELECT count(*) as total
+			FROM pilot
+		" );
+		$result = db_exec( $stmt, array() );
+		$total_records = $result[0]['total'];		
+
 		# If they included a country code, then lets find it so we can add it to the search
 		$country_search = '';
 		if(isset($this->api->input_variables['country']) && $this->api->input_variables['country'] != ''){
@@ -110,6 +118,7 @@ class searchPilots {
 				"location"	=> "{$r['pilot_city']} {$r['state_code']} - {$r['country_code']}",
 			);
 		}
+		$this->api->api_add_output_variable( "total_records", $total_records );
 		$this->api->api_add_output_variable( "pilots", $pilots );
 		
 		$content = '';
