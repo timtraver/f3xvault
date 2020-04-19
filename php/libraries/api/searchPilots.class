@@ -80,7 +80,7 @@ class searchPilots {
 		$string = '%'.$string.'%';
 		# Do search
 		$stmt = db_prep("
-			SELECT *
+			SELECT p.pilot_id, p.pilot_first_name, p.pilot_last_name, p.pilot_ama, p.pilot_fai, p.pilot_fai_license, p.pilot_city, s.state_code, c.country_code
 			FROM pilot p
 			LEFT JOIN state s ON p.state_id = s.state_id
 			LEFT JOIN country c ON p.country_id = c.country_id
