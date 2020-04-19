@@ -39,11 +39,6 @@ class searchPilots {
         </pilot_name>
         <pilot_first_name>Tim</pilot_first_name>
         <pilot_last_name>Traver</pilot_last_name>
-        <pilot_ama>9595</pilot_ama>
-        <pilot_fai>USA9595</pilot_fai>
-        <pilot_fai_license></pilot_fai_license>
-        <pilot_city>Vista</pilot_city>
-        <state_code>CA</state_code>
         <country_code>US</country_code>
         <location>
             <![CDATA[Vista CA - US]]>
@@ -110,11 +105,6 @@ class searchPilots {
 				"pilot_name" => utf8_encode( $r['pilot_first_name'] ) . " " . utf8_encode( $r['pilot_last_name'] ),
 				"pilot_first_name" => utf8_encode( $r['pilot_first_name'] ),
 				"pilot_last_name" => utf8_encode( $r['pilot_last_name'] ),
-				"pilot_ama" => $r['pilot_ama'],
-				"pilot_fai" => $r['pilot_fai'],
-				"pilot_fai_license" => $r['pilot_fai_license'],
-				"pilot_city" => utf8_encode( $r['pilot_city'] ),
-				"state_code" => $r['state_code'],
 				"country_code" => $r['country_code'],
 				"location"	=> utf8_encode( $r['pilot_city'] ) . " {$r['state_code']} - {$r['country_code']}",
 			);
