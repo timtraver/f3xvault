@@ -72,8 +72,8 @@ class getEventPilots {
 			$pilots[] = array(
 				"pilot_id" => $p['pilot_id'],
 				"pilot_bib" => $p['event_pilot_bib'],
-				"pilot_first_name" => utf8_encode( $p['pilot_first_name'] ),
-				"pilot_last_name" => utf8_encode( $p['pilot_last_name'] ),
+				"pilot_first_name" => $p['pilot_first_name'],
+				"pilot_last_name" => $p['pilot_last_name'],
 				"pilot_class" => $p['class_description'],
 				"pilot_ama" => $p['pilot_ama'],
 				"pilot_fai" => $p['pilot_fai'],

@@ -179,8 +179,8 @@ class getLocationInfo {
 				");
 				$result2 = db_exec( $stmt2, array( "user_id" => $row['user_id'] ) );
 				if( $result2[0] ){
-					$pilot_first_name = utf8_encode( $result2[0]['pilot_first_name'] );
-					$pilot_last_name = utf8_encode( $result2[0]['pilot_last_name'] );
+					$pilot_first_name = $result2[0]['pilot_first_name'];
+					$pilot_last_name = $result2[0]['pilot_last_name'];
 					$pilot_country = $result2[0]['country_code'];
 				}
 			}

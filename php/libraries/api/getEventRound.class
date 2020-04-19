@@ -112,8 +112,8 @@ For F3K :
 					if(!isset($this->rounds[$event_pilot_id][$round_number])){
 						$this->rounds[$event_pilot_id][$round_number] = $p;
 						$this->rounds[$event_pilot_id][$round_number]['pilot_id'] = $event->pilots[$event_pilot_id]['pilot_id'];
-						$this->rounds[$event_pilot_id][$round_number]['pilot_first_name'] = utf8_encode( $event->pilots[$event_pilot_id]['pilot_first_name'] );
-						$this->rounds[$event_pilot_id][$round_number]['pilot_last_name'] = utf8_encode( $event->pilots[$event_pilot_id]['pilot_last_name'] );
+						$this->rounds[$event_pilot_id][$round_number]['pilot_first_name'] = $event->pilots[$event_pilot_id]['pilot_first_name'];
+						$this->rounds[$event_pilot_id][$round_number]['pilot_last_name'] = $event->pilots[$event_pilot_id]['pilot_last_name'];
 					}
 				}
 			}
@@ -131,8 +131,8 @@ For F3K :
 						if(!isset($this->rounds[$event_pilot_id][$round_number])){
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_id'] = $p['event_pilot_id'];
 							$this->rounds[$event_pilot_id][$round_number]['pilot_id'] = $event->pilots[$event_pilot_id]['pilot_id'];
-							$this->rounds[$event_pilot_id][$round_number]['pilot_first_name'] = utf8_encode( $event->pilots[$event_pilot_id]['pilot_first_name'] );
-							$this->rounds[$event_pilot_id][$round_number]['pilot_last_name'] = utf8_encode( $event->pilots[$event_pilot_id]['pilot_last_name'] );
+							$this->rounds[$event_pilot_id][$round_number]['pilot_first_name'] = $event->pilots[$event_pilot_id]['pilot_first_name'];
+							$this->rounds[$event_pilot_id][$round_number]['pilot_last_name'] = $event->pilots[$event_pilot_id]['pilot_last_name'];
 							$this->rounds[$event_pilot_id][$round_number]['event_round_id'] = $p['event_round_id'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
@@ -158,7 +158,7 @@ For F3K :
 						"event_pilot_id" => $r['event_pilot_id'],
 						"event_pilot_round_flight_group" => $r['event_pilot_round_flight_group'],
 						"event_pilot_round_flight_order" => $r['event_pilot_round_flight_order'],
-						"pilot_first_name" => utf8_encode( $r['pilot_first_name'] ),
+						"pilot_first_name" => $r['pilot_first_name'],
 					);
 				}
 			}
@@ -189,8 +189,8 @@ For F3K :
 					foreach( $round as $round_number => $r ){
 						$flights[] = array(
 							"pilot_id" => $r['pilot_id'],
-							"pilot_first_name" => utf8_encode( $r['pilot_first_name'] ),
-							"pilot_last_name" => utf8_encode( $r['pilot_last_name'] ),
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
 							"group" => $r['event_pilot_round_flight_group'],
 							"order" => $r['event_pilot_round_flight_order'],
 							"seconds" => $r['event_pilot_round_flight_seconds'],
@@ -205,8 +205,8 @@ For F3K :
 					foreach( $round as $round_number => $r ){
 						$flights[] = array(
 							"pilot_id" => $r['pilot_id'],
-							"pilot_first_name" => utf8_encode( $r['pilot_first_name'] ),
-							"pilot_last_name" => utf8_encode( $r['pilot_last_name'] ),
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
 							"group" => $r['event_pilot_round_flight_group'],
 							"order" => $r['event_pilot_round_flight_order'],
 							"sub1" => $r['sub'][1]['event_pilot_round_flight_sub_val'],
@@ -240,8 +240,8 @@ For F3K :
 						}						
 						$flights[] = array_merge( array(
 							"pilot_id" => $r['pilot_id'],
-							"pilot_first_name" => utf8_encode( $r['pilot_first_name'] ),
-							"pilot_last_name" => utf8_encode( $r['pilot_last_name'] ),
+							"pilot_first_name" => $r['pilot_first_name'],
+							"pilot_last_name" => $r['pilot_last_name'],
 							"group" => $r['event_pilot_round_flight_group'],
 							"total_minutes" => $r['event_pilot_round_flight_minutes'],
 							"total_seconds" => $r['event_pilot_round_flight_seconds'],
