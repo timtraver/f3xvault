@@ -100,7 +100,7 @@ function db_prep ($querystring) {
                 $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
         }
         try {
-                $dbh=new PDO("mysql:host=$host;dbname=$dbname",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=> false,'log' => isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger ? $GLOBALS['debugLogger'] : null));
+                $dbh=new PDO("mysql:host=$host;dbname=$dbname;charset=utf8",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=> false,'log' => isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger ? $GLOBALS['debugLogger'] : null));
                 $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $stmt = $dbh->prepare($querystring);
