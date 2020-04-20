@@ -196,6 +196,7 @@ XML or JSON Object Hierarchy :
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
 			"event_type" => $event->info['event_type_name'],
+			"event_type_code" => $event->info['event_type_code'],
 			"total_rounds" => $total_rounds,
 			"tasks" => $tasks,
 			"pilots" => $pilots
