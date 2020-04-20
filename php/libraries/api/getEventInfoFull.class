@@ -183,7 +183,7 @@ XML or JSON Object Hierarchy :
 								$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
 							}
 						}else{
-							$subs["sub1"] = "0.0"
+							$subs["sub1"] = "0.0";
 						}
 						$flights[] = array(
 							"round_number" => $round_number,
