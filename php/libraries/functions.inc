@@ -95,7 +95,7 @@ function db_prep ($querystring) {
 		# Let's determine if we are local or not
 		$login="f3xvault";
         $host="127.0.0.1";
-        $dbname="9774_f3xvault";
+        $dbname="f3xvault";
         if($admin_pass==''){
                 $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
         }
