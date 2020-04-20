@@ -93,8 +93,8 @@ function db_prep ($querystring) {
         global $dbh;
 
 		# Let's determine if we are local or not
-		$login="9774_f3xvault";
-        $host="mysql1.simplenet.com";
+		$login="f3xvault";
+        $host="localhost";
         $dbname="9774_f3xvault";
         if($admin_pass==''){
                 $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
