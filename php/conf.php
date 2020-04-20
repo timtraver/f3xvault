@@ -24,8 +24,17 @@ global $logsessions;
 global $device;
 global $recaptcha_key;
 global $recaptcha_secret;
+global $database_name;
+global $database_user;
+global $database_host;
+global $database_pass;
 
 $base = '/var/www/f3xvault.com';
+
+$database_name = 'f3xvault';
+$database_user = 'f3xvault';
+$database_host = '127.0.0.1';
+$database_pass = 'h5^#nK;(r2';
 
 $base_webroot			= "$base/htdocs/";
 $base_plane_media		= "/images/pilot_plane_images";

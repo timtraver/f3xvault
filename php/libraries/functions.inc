@@ -93,11 +93,11 @@ function db_prep ($querystring) {
         global $dbh;
 
 		# Let's determine if we are local or not
-		$login="f3xvault";
-        $host="127.0.0.1";
-        $dbname="f3xvault";
+		$login = $GLOBALS['database_user'];
+        $host = $GLOBALS['database_host'];
+        $dbname = $GLOBALS['database_name'];
         if($admin_pass==''){
-                $admin_pass=trim(file_get_contents("{$GLOBALS['include_paths']['libraries']}/db_phrase"));
+                $admin_pass = $GLOBALS['database_pass'];
         }
         try {
                 $dbh=new PDO("mysql:host=$host;dbname=$dbname;charset=utf8",$login,$admin_pass,array(PDO::ATTR_PERSISTENT=> false,'log' => isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger ? $GLOBALS['debugLogger'] : null));
