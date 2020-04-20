@@ -130,6 +130,7 @@ class searchEvents {
 		$stmt = db_prep( "
 			SELECT count(*) as total
 			FROM event
+			WHERE event_status = 1
 		" );
 		$result = db_exec( $stmt, array() );
 		$total_records = $result[0]['total'];		
