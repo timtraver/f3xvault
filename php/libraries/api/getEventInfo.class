@@ -192,11 +192,11 @@ XML or JSON Object Hierarchy :
 		$e = array(
 			"event_id" => $this->event_id,
 			"event_name" => $event->info['event_name'],
-			"location" => $event->info['location_name'],
+			"location_name" => $event->info['location_name'],
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
 			"event_type" => $event->info['event_type_name'],
-			"rounds" => $total_rounds,
+			"total_rounds" => $total_rounds,
 			"tasks" => $tasks,
 			"pilots" => $pilots
 		);
