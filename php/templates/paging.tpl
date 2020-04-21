@@ -13,6 +13,8 @@
 					<li{if $perpage == 25} class="active"{/if}><a href="?{$paging.$label.callback}&tab={$tab}&perpage=25">25</a></li>
 					<li{if $perpage == 50} class="active"{/if}><a href="?{$paging.$label.callback}&tab={$tab}&perpage=50">50</a></li>
 					<li{if $perpage == 100} class="active"{/if}><a href="?{$paging.$label.callback}&tab={$tab}&perpage=100">100</a></li>
+					<li{if $perpage == 500} class="active"{/if}><a href="?{$paging.$label.callback}&tab={$tab}&perpage=500">500</a></li>
+					<li{if $perpage == 1000} class="active"{/if}><a href="?{$paging.$label.callback}&tab={$tab}&perpage=1000">1000</a></li>
 				</ul>
 			</span>
 		</li>
