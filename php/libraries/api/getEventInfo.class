@@ -176,19 +176,25 @@ XML or JSON Object Hierarchy :
 				$tasks[] = array( "round_number" => $i, "task_code" => $event->flight_types[$t['flight_type_id']]['flight_type_code'] );
 			}
 		}
-		foreach( $event->pilots as $p ){
+		$event->calculate_event_totals();
+		foreach( $event->totals['pilots'] as $p ){
 			$pilots[] = array(
-				"pilot_id" => $p['pilot_id'],
-				"pilot_bib" => $p['event_pilot_bib'],
+				"pilot_id" => $event->pilots[ $p['event_pilot_id'] ]['pilot_id'],
+				"event_pilot_position" => $p['overall_rank'],
+				"pilot_bib" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'],
 				"pilot_first_name" => $p['pilot_first_name'],
 				"pilot_last_name" => $p['pilot_last_name'],
-				"pilot_class" => $p['class_description'],
-				"pilot_ama" => $p['pilot_ama'],
-				"pilot_fai" => $p['pilot_fai'],
-				"pilot_fai_license" => $p['pilot_fai_license'],
-				"pilot_team" => $p['event_pilot_team'],
+				"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'],
+				"pilot_class" => $event->pilots[ $p['event_pilot_id'] ]['class_description'],
+				"pilot_ama" => $event->pilots[ $p['event_pilot_id'] ]['pilot_ama'],
+				"pilot_fai" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai'],
+				"pilot_fai_license" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai_license'],
+				"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
+				"event_pilot_total_score" => $p['total'],
+				"event_pilot_total_percentage" => $p['event_pilot_total_percentage'],
 			);
 		}
+						
 		$e = array(
 			"event_id" => $this->event_id,
 			"event_name" => $event->info['event_name'],
