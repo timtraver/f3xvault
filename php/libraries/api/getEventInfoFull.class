@@ -206,10 +206,10 @@ XML or JSON Object Hierarchy :
 						}
 						$flights[] = array(
 							"round_number" => $round_number,
-							"group" => $r['event_pilot_round_flight_group'],
+							"group" => "{$r['event_pilot_round_flight_group']}",
 							"order" => $r['event_pilot_round_flight_order'],
 							"minutes" => $r['event_pilot_round_flight_minutes'],
-							"seconds" => $r['event_pilot_round_flight_seconds'],
+							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
 							"penalty" => $r['event_pilot_round_flight_penalty'],
 							"subs" => $subs
 						);
