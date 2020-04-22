@@ -35,7 +35,8 @@ XML or JSON Object Hierarchy :
   <event>
     <event_id></event_id>
     <event_name><![CDATA[El Dorado Cookie Toss - November 2018]]></event_name>
-    <location><![CDATA[El Dorado Regional Park]]></location>
+    <location_name><![CDATA[El Dorado Regional Park]]></location_name>
+    <country_code>US</country_code>
     <start_date><![CDATA[11/03/2018]]></start_date>
     <end_date><![CDATA[11/03/2018]]></end_date>
     <event_type></event_type>
@@ -246,6 +247,7 @@ XML or JSON Object Hierarchy :
 			"event_id" => $this->event_id,
 			"event_name" => $event->info['event_name'],
 			"location_name" => $event->info['location_name'],
+			"country_code" => $event->info['country_code'],
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
 			"event_type" => $event->info['event_type_name'],
