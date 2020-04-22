@@ -1856,7 +1856,7 @@ class Event {
 				}
 				$last_score = $flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'];
 			}
-			print "<!-- flyoff_has_tie ($flyoff_number)  = $flyoff_has_tie -->\n";
+			#print "<!-- flyoff_has_tie ($flyoff_number)  = $flyoff_has_tie -->\n";
 		}
 		# Lets get the round drops
 		foreach($this->options as $o){
