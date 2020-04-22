@@ -48,31 +48,22 @@ XML or JSON Object Hierarchy :
       ...
     </tasks>
     <pilots>
-      <pilot_id>116</pilot_id>
-      <pilot_bib>1</pilot_bib>
-      <pilot_first_name>Matt</pilot_first_name>
-      <pilot_last_name>Nelson</pilot_last_name>
-      <pilot_class>Open</pilot_class>
-      <pilot_ama>3702</pilot_ama>
-      <pilot_fai></pilot_fai>
-      <pilot_fai_license></pilot_fai_license>
-      <pilot_team></pilot_team>
-      <flights>
-        <round_number>1</round_number>
-        <group>C</group>
-        <order>1</order>
-        <minutes>3</minutes>
-        <seconds>41</seconds>
-        <penalty>0</penalty>
-        <subs>
-          <sub1>28.16</sub1>
-          <subX>...</sub>
-        </subs>
-      </flights>
-      <flights>
-        ...
-      </flights>
-    </pilots>
+        <pilot_id>1</pilot_id>
+        <event_pilot_position>2</event_pilot_position>
+        <pilot_bib>1</pilot_bib>
+        <pilot_first_name>Tim</pilot_first_name>
+        <pilot_last_name>Traver</pilot_last_name>
+        <country_code>US</country_code>
+        <pilot_class></pilot_class>
+        <pilot_ama>9595</pilot_ama>
+        <pilot_fai>USA9595</pilot_fai>
+        <pilot_fai_license></pilot_fai_license>
+        <pilot_team></pilot_team>
+        <total_score>9598.21</total_score>
+        <percentage>98.963</percentage>
+        <drop>98.963</drop>
+        <diff>-100.58</diff>
+	</pilots>
     <pilots>
       ...
     </pilots>
@@ -177,7 +168,13 @@ XML or JSON Object Hierarchy :
 			}
 		}
 		$event->calculate_event_totals();
+		$score = 0;
+		$diff = 0;
 		foreach( $event->totals['pilots'] as $p ){
+			if( $score == 0 ){
+				$score = $p['total'];
+			}
+			$diff = $p['total'] - $score;
 			$pilots[] = array(
 				"pilot_id" => $event->pilots[ $p['event_pilot_id'] ]['pilot_id'],
 				"event_pilot_position" => $p['overall_rank'],
@@ -190,9 +187,12 @@ XML or JSON Object Hierarchy :
 				"pilot_fai" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai'],
 				"pilot_fai_license" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai_license'],
 				"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
-				"event_pilot_total_score" => $p['total'],
-				"event_pilot_total_percentage" => $p['event_pilot_total_percentage'],
+				"total_score" => $p['total'],
+				"percentage" => $p['event_pilot_total_percentage'],
+				"drop" => $p['event_pilot_total_percentage'],
+				"diff" => $diff,
 			);
+			$score = $p['total'];
 		}
 						
 		$e = array(
