@@ -40,7 +40,8 @@ XML or JSON Object Hierarchy :
     <start_date><![CDATA[11/03/2018]]></start_date>
     <end_date><![CDATA[11/03/2018]]></end_date>
     <event_type></event_type>
-    <rounds>6</rounds>
+    <total_rounds>6</total_rounds>
+    <event_calc_accuracy_string>%.2f</event_calc_accuracy_string>
     <tasks>
       <round_number>1</round_number>
       <task_code>f3k_a</task_code>
@@ -253,7 +254,7 @@ XML or JSON Object Hierarchy :
 			"event_type" => $event->info['event_type_name'],
 			"event_type_code" => $event->info['event_type_code'],
 			"total_rounds" => $total_rounds,
-			"event_calc_accuracy_string" => $event->info['event_calc_accuracy_string'],
+			"event_calc_accuracy_string" => $event->event_calc_accuracy_string,
 			"tasks" => $tasks,
 			"pilots" => $pilots
 		);
