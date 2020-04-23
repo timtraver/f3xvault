@@ -253,6 +253,7 @@ XML or JSON Object Hierarchy :
 			"event_type" => $event->info['event_type_name'],
 			"event_type_code" => $event->info['event_type_code'],
 			"total_rounds" => $total_rounds,
+			"event_calc_accuracy_string" => $event->info['event_calc_accuracy_string'],
 			"tasks" => $tasks,
 			"pilots" => $pilots
 		);
