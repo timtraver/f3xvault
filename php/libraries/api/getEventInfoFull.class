@@ -90,6 +90,50 @@ XML or JSON Object Hierarchy :
     <pilots>
       ...
     </pilots>
+    <flyoffs>
+        <flyoff_number>1</flyoff_number>
+        <total_rounds>4</total_rounds>
+        <pilots>
+            <pilot_id>428</pilot_id>
+            <pilot_position>1</pilot_position>
+            <pilot_bib>64</pilot_bib>
+            <pilot_first_name>
+                <![CDATA[Roland ]]>
+            </pilot_first_name>
+            <pilot_last_name>Sommer</pilot_last_name>
+            <country_code>DE</country_code>
+            <pilot_class>Open</pilot_class>
+            <pilot_ama></pilot_ama>
+            <pilot_fai>GER</pilot_fai>
+            <pilot_fai_license>1586</pilot_fai_license>
+            <pilot_team></pilot_team>
+            <total_score>13474</total_score>
+            <percentage>100</percentage>
+            <drop></drop>
+            <diff>0</diff>
+            <flights>
+                <round_number>1</round_number>
+                <group>0</group>
+                <order>1</order>
+                <minutes>0</minutes>
+                <seconds>71.12</seconds>
+                <penalty>0</penalty>
+                <subs>
+                    <sub1>28.01</sub1>
+                    <sub2>4.42</sub2>
+                    <sub3>6.04</sub3>
+                    <sub4>6.13</sub4>
+                    <sub5>6.38</sub5>
+                    <sub6>6.52</sub6>
+                    <sub7>6.36</sub7>
+                    <sub8>6.24</sub8>
+                    <sub9>7.02</sub9>
+                    <sub10>12.60</sub10>
+                    <sub11>9.41</sub11>
+                </subs>
+            </flights>
+        </pilots>
+    </flyoffs>
 </result>";
 
 
@@ -116,10 +160,15 @@ XML or JSON Object Hierarchy :
 				
 		$this->rounds = array();
 		$total_rounds = 0;
+
 		#Let's first fill it up with the current round info
 		foreach($event->rounds as $round_number => $r){
 			foreach($r['flights'] as $flight_type_id => $f){
+				if( $flight_type_id != $r['flight_type_id'] ){
+					continue;
+				}
 				foreach($f['pilots'] as $event_pilot_id => $p){
+					$p['event_round_flyoff'] = $r['event_round_flyoff'];
 					$this->rounds[$event_pilot_id][$round_number] = $p;
 				}
 			}
@@ -143,6 +192,7 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
 						}
 					}
 					if($round_number > $total_rounds){
@@ -187,7 +237,13 @@ XML or JSON Object Hierarchy :
 		$tasks = array();
 		if( count( $event->tasks ) > 0 ){
 			foreach( $event->tasks as $i => $t ){
-				$tasks[] = array( "round_number" => $i, "task_code" => $event->flight_types[$t['flight_type_id']]['flight_type_code'] );
+				$tasks[] = array(
+					"round_number" => $i,
+					"task_code" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_code'],
+					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'],
+					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'],
+					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'],
+				);
 			}
 		}
 		$event->calculate_event_totals();
@@ -198,6 +254,9 @@ XML or JSON Object Hierarchy :
 			foreach( $this->rounds as $event_pilot_id => $round ){
 				if( $event_pilot_id == $p['event_pilot_id'] ){
 					foreach( $round as $round_number => $r ){
+						if( $r['event_round_flyoff'] != 0 ){
+							continue;
+						}
 						$subs = array();
 						if( isset( $r['sub'] ) ){
 							foreach( $r['sub'] as $i => $s ){
@@ -236,11 +295,76 @@ XML or JSON Object Hierarchy :
 				"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
 				"total_score" => $p['total'],
 				"percentage" => $p['event_pilot_total_percentage'],
-				"drop" => $p['event_pilot_total_percentage'],
+				"drop" => $p['drop'],
 				"diff" => round($diff,2),
 				"flights" => $flights
 			);
 			$score = $p['total'];
+			
+		}
+		# Now lets set the flyoff pilot list too
+		$flyoffs = array();
+		$score = 0;
+		$diff = 0;
+		foreach( $event->flyoff_totals as $flyoff_number => $ft ){
+			$temp_pilots = array();
+			foreach( $ft['pilots'] as $p ){
+				$flights = array();
+				foreach( $this->rounds as $event_pilot_id => $round ){
+					if( $event_pilot_id == $p['event_pilot_id'] ){
+						foreach( $round as $round_number => $r ){
+							if( $r['event_round_flyoff'] != $flyoff_number ){
+								continue;
+							}
+							$subs = array();
+							if( isset( $r['sub'] ) ){
+								foreach( $r['sub'] as $i => $s ){
+									$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
+								}
+							}else{
+								$subs["sub1"] = "0.0";
+							}
+							$flights[] = array(
+								"round_number" => $round_number,
+								"group" => "{$r['event_pilot_round_flight_group']}",
+								"order" => $r['event_pilot_round_flight_order'],
+								"minutes" => $r['event_pilot_round_flight_minutes'],
+								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+								"penalty" => $r['event_pilot_round_flight_penalty'],
+								"subs" => $subs
+							);
+						}
+					}
+				}
+				if( $score == 0 ){
+					$score = $p['total'];
+				}
+				$diff = $p['total'] - $score;
+				$temp_pilots[] = array(
+					"pilot_id" => $event->pilots[ $p['event_pilot_id'] ]['pilot_id'],
+					"pilot_position" => $p['overall_rank'],
+					"pilot_bib" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'],
+					"pilot_first_name" => $p['pilot_first_name'],
+					"pilot_last_name" => $p['pilot_last_name'],
+					"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'],
+					"pilot_class" => $event->pilots[ $p['event_pilot_id'] ]['class_description'],
+					"pilot_ama" => $event->pilots[ $p['event_pilot_id'] ]['pilot_ama'],
+					"pilot_fai" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai'],
+					"pilot_fai_license" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai_license'],
+					"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
+					"total_score" => $p['total'],
+					"percentage" => $p['event_pilot_total_percentage'],
+					"drop" => $p['drop'],
+					"diff" => round($diff,2),
+					"flights" => $flights
+				);
+				$score = $p['total'];
+				
+			}
+			
+			$flyoffs[ $flyoff_number ]['flyoff_number'] = $flyoff_number;
+			$flyoffs[ $flyoff_number ]['total_rounds'] = $ft['total_rounds'];
+			$flyoffs[ $flyoff_number ]['pilots'] = $temp_pilots;
 			
 		}
 		
@@ -256,7 +380,8 @@ XML or JSON Object Hierarchy :
 			"total_rounds" => $total_rounds,
 			"event_calc_accuracy_string" => $event->event_calc_accuracy_string,
 			"tasks" => $tasks,
-			"pilots" => $pilots
+			"pilots" => $pilots,
+			"flyoffs" => $flyoffs,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
