@@ -227,7 +227,7 @@ XML or JSON Object Hierarchy :
 				"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
 				"total_score" => $p['total'],
 				"percentage" => $p['event_pilot_total_percentage'],
-				"drop" => $p['event_pilot_total_percentage'],
+				"drop" => $p['drop'],
 				"diff" => $diff,
 			);
 			$score = $p['total'];
