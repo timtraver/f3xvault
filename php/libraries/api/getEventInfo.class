@@ -268,7 +268,11 @@ XML or JSON Object Hierarchy :
 			$flyoffs[ $flyoff_number ]['total_rounds'] = $ft['total_rounds'];
 			$flyoffs[ $flyoff_number ]['pilots'] = $temp_pilots;
 		}
-				
+		# Convert flyoffs to a simple array instead of associative
+		$floyoffs_final = array();
+		foreach( $flyoffs as $f ){
+			$flyoffs_final[] = $f;
+		}
 		$e = array(
 			"event_id" => $this->event_id,
 			"event_name" => $event->info['event_name'],
@@ -282,7 +286,7 @@ XML or JSON Object Hierarchy :
 			"event_calc_accuracy_string" => $event->event_calc_accuracy_string,
 			"tasks" => $tasks,
 			"pilots" => $pilots,
-			"flyoffs" => $flyoffs,
+			"flyoffs" => $flyoffs_final,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
