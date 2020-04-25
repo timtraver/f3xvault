@@ -390,9 +390,12 @@ XML or JSON Object Hierarchy :
 		$this->api->api_add_output_variable( "event", $e );
 
 		# Get the export content
-		$content_template = find_template($template);
-		$content = $smarty->fetch($content_template);		
-		
+		if( $template != '' ){
+			$content_template = find_template($template);
+			$content = $smarty->fetch($content_template);		
+		}else{
+			$content = "";
+		}
 		return $content;
 
 	}
