@@ -1557,6 +1557,9 @@ class Event {
 							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['penalties'] += $penalty;
 							if($p['event_pilot_round_flight_dropped'] == 0 && $p['event_pilot_round_flight_reflight_dropped'] == 0){
 								# This means that this flight was not dropped, and the round is being scored
+								if( ! isset( $flyoff_subtotals[$flyoff_number][$event_pilot_id]['drop'] ) ){
+									$flyoff_subtotals[$flyoff_number][$event_pilot_id]['drop'] = 0;
+								}
 								$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] += $sub;
 							}else{
 								# This means that the round is being scored, but the flight was dropped
