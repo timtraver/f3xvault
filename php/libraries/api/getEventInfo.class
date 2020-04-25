@@ -273,6 +273,32 @@ XML or JSON Object Hierarchy :
 		foreach( $flyoffs as $f ){
 			$flyoffs_final[] = $f;
 		}
+		
+		# If the event hasn't had any scores made yet, then lets create the pilot list from the main pilot list
+		if( count( $pilots ) == 0 ){
+			foreach( $event->pilots as $p ){
+				$flights = array();
+				$pilots[] = array(
+					"pilot_id" => $p['pilot_id'],
+					"pilot_position" => 1,
+					"pilot_bib" => $p['event_pilot_bib'],
+					"pilot_first_name" => $p['pilot_first_name'],
+					"pilot_last_name" => $p['pilot_last_name'],
+					"country_code" => $p['country_code'],
+					"pilot_class" => $p['class_description'],
+					"pilot_ama" => $p['pilot_ama'],
+					"pilot_fai" => $p['pilot_fai'],
+					"pilot_fai_license" => $p['pilot_fai_license'],
+					"pilot_team" => $p['event_pilot_team'],
+					"total_score" => 0.0,
+					"percentage" => 0.0,
+					"drop" => 0.0,
+					"diff" => 0.0,
+					"flights" => $flights
+				);
+			}
+		}
+
 		$e = array(
 			"event_id" => $this->event_id,
 			"event_name" => $event->info['event_name'],
