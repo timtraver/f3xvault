@@ -417,7 +417,6 @@ XML or JSON Object Hierarchy :
 			"tasks" => $tasks,
 			"pilots" => $pilots,
 			"flyoffs" => $flyoffs_final,
-			"rounds" => $this->rounds,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
