@@ -334,7 +334,7 @@ XML or JSON Object Hierarchy :
 								"order" => $r['event_pilot_round_flight_order'],
 								"minutes" => $r['event_pilot_round_flight_minutes'],
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
-								"score" => $r['event_pilot_round_total_score'],
+								"score" => $r['event_pilot_round_total_score'] ? $r['event_pilot_round_total_score'] : 0.0,
 								"penalty" => $r['event_pilot_round_flight_penalty'],
 								"subs" => $subs
 							);
