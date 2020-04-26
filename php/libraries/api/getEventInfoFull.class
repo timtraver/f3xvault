@@ -71,6 +71,7 @@ XML or JSON Object Hierarchy :
                 <order>1</order>
                 <minutes>0</minutes>
                 <seconds>71.12</seconds>
+                <score>872</score>
                 <penalty>0</penalty>
                 <subs>
                     <sub1>28.01</sub1>
@@ -117,6 +118,7 @@ XML or JSON Object Hierarchy :
                 <order>1</order>
                 <minutes>0</minutes>
                 <seconds>71.12</seconds>
+                <score>872</score>
                 <penalty>0</penalty>
                 <subs>
                     <sub1>28.01</sub1>
@@ -193,6 +195,7 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = $p['event_pilot_round_total_score'];
 						}
 					}
 					if($round_number > $total_rounds){
@@ -271,6 +274,7 @@ XML or JSON Object Hierarchy :
 							"order" => $r['event_pilot_round_flight_order'],
 							"minutes" => $r['event_pilot_round_flight_minutes'],
 							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+							"score" => $r['event_pilot_round_total_score'],
 							"penalty" => $r['event_pilot_round_flight_penalty'],
 							"subs" => $subs
 						);
@@ -330,6 +334,7 @@ XML or JSON Object Hierarchy :
 								"order" => $r['event_pilot_round_flight_order'],
 								"minutes" => $r['event_pilot_round_flight_minutes'],
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+								"score" => $r['event_pilot_round_total_score'],
 								"penalty" => $r['event_pilot_round_flight_penalty'],
 								"subs" => $subs
 							);
@@ -412,6 +417,7 @@ XML or JSON Object Hierarchy :
 			"tasks" => $tasks,
 			"pilots" => $pilots,
 			"flyoffs" => $flyoffs_final,
+			"rounds" => $this->rounds,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
