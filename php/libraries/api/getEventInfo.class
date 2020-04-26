@@ -154,7 +154,7 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = $p['event_pilot_round_total_score'];
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
 						}
 					}
 					if($round_number > $total_rounds){
