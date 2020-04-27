@@ -73,6 +73,7 @@ XML or JSON Object Hierarchy :
                 <seconds>71.12</seconds>
                 <score>872</score>
                 <penalty>0</penalty>
+                <dropped>0</dropped>
                 <subs>
                     <sub1>28.01</sub1>
                     <sub2>4.42</sub2>
@@ -120,6 +121,7 @@ XML or JSON Object Hierarchy :
                 <seconds>71.12</seconds>
                 <score>872</score>
                 <penalty>0</penalty>
+                <dropped>0</dropped>
                 <subs>
                     <sub1>28.01</sub1>
                     <sub2>4.42</sub2>
@@ -274,6 +276,7 @@ XML or JSON Object Hierarchy :
 							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
 							"score" => floatval( $r['event_pilot_round_total_score'] ),
 							"penalty" => $r['event_pilot_round_flight_penalty'],
+							"dropped" => $r['event_pilot_round_flight_dropped'],
 							"subs" => $subs
 						);
 					}
@@ -334,6 +337,7 @@ XML or JSON Object Hierarchy :
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
 								"score" => floatval( $r['event_pilot_round_total_score'] ),
 								"penalty" => $r['event_pilot_round_flight_penalty'],
+								"dropped" => $r['event_pilot_round_flight_dropped'],
 								"subs" => $subs
 							);
 						}
