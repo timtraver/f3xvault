@@ -132,8 +132,8 @@ XML or JSON Object Hierarchy :
 					$this->rounds[$event_pilot_id][$round_number] = $p;
 				}
 			}
-			if($round_number > $total_rounds){
-				$total_rounds = $round_number;
+			if( ! $r['event_round_flyoff'] && $round_number > $total_rounds){
+				$total_rounds++;
 			}
 		}
 
@@ -157,8 +157,8 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
 						}
 					}
-					if($round_number > $total_rounds){
-						$total_rounds = $round_number;
+					if(! $r['event_round_flyoff'] && $round_number > $total_rounds){
+						$total_rounds++;
 					}
 				}
 			}
