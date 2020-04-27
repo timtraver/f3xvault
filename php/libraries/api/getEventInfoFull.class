@@ -279,7 +279,7 @@ XML or JSON Object Hierarchy :
 							"score" => floatval( $r['event_pilot_round_total_score'] ),
 							"penalty" => $r['event_pilot_round_flight_penalty'],
 							"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
-							"score_status" => $round['event_round_score_status'] ? 1 : 0,
+							"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
 							"subs" => $subs
 						);
 					}
@@ -341,7 +341,7 @@ XML or JSON Object Hierarchy :
 								"score" => floatval( $r['event_pilot_round_total_score'] ),
 								"penalty" => $r['event_pilot_round_flight_penalty'],
 								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
-								"score_status" => $round['event_round_score_status'] ? 1 : 0,
+								"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
 								"subs" => $subs
 							);
 						}
