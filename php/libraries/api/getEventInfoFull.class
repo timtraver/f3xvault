@@ -174,10 +174,11 @@ XML or JSON Object Hierarchy :
 					$this->rounds[$event_pilot_id][$round_number] = $p;
 				}
 			}
-			if( ! $r['event_round_flyoff'] && $round_number > $total_rounds){
+			if( ! $r['event_round_flyoff'] ){
 				$total_rounds++;
 			}
 		}
+
 		# Now lets step through the draws to fill out the rest of the rounds if any
 		foreach($event->draws as $draw_id => $d){
 			if($d['event_draw_active'] == 0){
@@ -198,13 +199,10 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
 						}
 					}
-					if(! $r['event_round_flyoff'] && $round_number > $total_rounds){
-						$total_rounds++;
-					}
 				}
 			}
 		}
-		
+
 		if($total_rounds == 0 && isset($event->tasks)){
 			$total_rounds = count($event->tasks);
 		}
