@@ -77,17 +77,11 @@ XML or JSON Object Hierarchy :
                 <dropped>0</dropped>
                 <score_status>1</score_status>
                 <subs>
-                    <sub1>28.01</sub1>
-                    <sub2>4.42</sub2>
-                    <sub3>6.04</sub3>
-                    <sub4>6.13</sub4>
-                    <sub5>6.38</sub5>
-                    <sub6>6.52</sub6>
-                    <sub7>6.36</sub7>
-                    <sub8>6.24</sub8>
-                    <sub9>7.02</sub9>
-                    <sub10>12.60</sub10>
-                    <sub11>9.41</sub11>
+                    <sub_num>1</sub_num>
+                    <sub_val>4.42</sub_val>
+                </subs>
+                <subs>
+                	...
                 </subs>
             </flights>
     </pilots>
@@ -127,17 +121,11 @@ XML or JSON Object Hierarchy :
                 <dropped>0</dropped>
                 <score_status>1</score_status>
                 <subs>
-                    <sub1>28.01</sub1>
-                    <sub2>4.42</sub2>
-                    <sub3>6.04</sub3>
-                    <sub4>6.13</sub4>
-                    <sub5>6.38</sub5>
-                    <sub6>6.52</sub6>
-                    <sub7>6.36</sub7>
-                    <sub8>6.24</sub8>
-                    <sub9>7.02</sub9>
-                    <sub10>12.60</sub10>
-                    <sub11>9.41</sub11>
+                    <sub_num>1</sub_num>
+                    <sub_val>4.42</sub_val>
+                </subs>
+                <subs>
+                	...
                 </subs>
             </flights>
         </pilots>
