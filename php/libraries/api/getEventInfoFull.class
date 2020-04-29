@@ -267,10 +267,8 @@ XML or JSON Object Hierarchy :
 						$subs = array();
 						if( isset( $r['sub'] ) ){
 							foreach( $r['sub'] as $i => $s ){
-								$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
+								$subs[] = array("sub_num" => $s['event_pilot_round_flight_sub_num'], "sub_val" => $s['event_pilot_round_flight_sub_val']);
 							}
-						}else{
-							$subs["sub1"] = "0.0";
 						}
 						$flights[] = array(
 							"round_number" => $round_number,
@@ -330,10 +328,8 @@ XML or JSON Object Hierarchy :
 							$subs = array();
 							if( isset( $r['sub'] ) ){
 								foreach( $r['sub'] as $i => $s ){
-									$subs["sub$i"] = $s['event_pilot_round_flight_sub_val'];
+									$subs[] = array("sub_num" => $s['event_pilot_round_flight_sub_num'], "sub_val" => $s['event_pilot_round_flight_sub_val']);
 								}
-							}else{
-								$subs["sub1"] = "0.0";
 							}
 							$flights[] = array(
 								"round_number" => $round_number,
