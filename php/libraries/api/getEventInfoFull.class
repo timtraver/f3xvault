@@ -274,7 +274,7 @@ XML or JSON Object Hierarchy :
 						}
 						$flights[] = array(
 							"round_number" => $round_number,
-							"rank" => "{$r['event_pilot_round_flight_rank']}",
+							"rank" => intval($r['event_pilot_round_flight_rank']),
 							"group" => "{$r['event_pilot_round_flight_group']}",
 							"order" => $r['event_pilot_round_flight_order'],
 							"minutes" => $r['event_pilot_round_flight_minutes'],
@@ -337,7 +337,7 @@ XML or JSON Object Hierarchy :
 							}
 							$flights[] = array(
 								"round_number" => $round_number,
-								"rank" => "{$r['event_pilot_round_flight_rank']}",
+								"rank" => intval($r['event_pilot_round_flight_rank']),
 								"group" => "{$r['event_pilot_round_flight_group']}",
 								"order" => $r['event_pilot_round_flight_order'],
 								"minutes" => $r['event_pilot_round_flight_minutes'],
