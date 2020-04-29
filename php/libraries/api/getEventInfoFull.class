@@ -266,6 +266,7 @@ XML or JSON Object Hierarchy :
 		$event->calculate_event_totals();
 		$score = 0;
 		$diff = 0;
+
 		foreach( $event->totals['pilots'] as $p ){
 			$flights = array();
 			foreach( $this->rounds as $event_pilot_id => $round ){
@@ -282,9 +283,9 @@ XML or JSON Object Hierarchy :
 						}
 						$flights[] = array(
 							"round_number" => $round_number,
-							"rank" => intval($r['event_pilot_round_flight_rank']),
+							"rank" => intval( $r['event_pilot_round_flight_rank'] ),
 							"group" => "{$r['event_pilot_round_flight_group']}",
-							"order" => $r['event_pilot_round_flight_order'],
+							"order" => intval( $r['event_pilot_round_flight_order'] ),
 							"minutes" => $r['event_pilot_round_flight_minutes'],
 							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
 							"score" => floatval( $r['event_pilot_round_total_score'] ),
@@ -296,6 +297,7 @@ XML or JSON Object Hierarchy :
 					}
 				}
 			}
+
 			if( $score == 0 ){
 				$score = $p['total'];
 			}
@@ -343,9 +345,9 @@ XML or JSON Object Hierarchy :
 							}
 							$flights[] = array(
 								"round_number" => $round_number,
-								"rank" => intval($r['event_pilot_round_flight_rank']),
+								"rank" => intval( $r['event_pilot_round_flight_rank'] ),
 								"group" => "{$r['event_pilot_round_flight_group']}",
-								"order" => $r['event_pilot_round_flight_order'],
+								"order" => intval( $r['event_pilot_round_flight_order'] ),
 								"minutes" => $r['event_pilot_round_flight_minutes'],
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
 								"score" => floatval( $r['event_pilot_round_total_score'] ),
@@ -397,7 +399,32 @@ XML or JSON Object Hierarchy :
 		# If the event hasn't had any scores made yet, then lets create the pilot list from the main pilot list
 		if( count( $pilots ) == 0 ){
 			foreach( $event->pilots as $p ){
+				# Lets set the flights to be the draw if there is one
 				$flights = array();
+				foreach( $this->rounds as $event_pilot_id => $round ){
+					if( $event_pilot_id == $p['event_pilot_id'] ){
+						foreach( $round as $round_number => $r ){
+							if( $r['event_round_flyoff'] != 0 ){
+								continue;
+							}
+							$subs = array();
+							$flights[] = array(
+								"round_number" => $round_number,
+								"rank" => intval($r['event_pilot_round_flight_rank']),
+								"group" => "{$r['event_pilot_round_flight_group']}",
+								"order" => intval( $r['event_pilot_round_flight_order'] ),
+								"minutes" => $r['event_pilot_round_flight_minutes'],
+								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+								"score" => floatval( $r['event_pilot_round_total_score'] ),
+								"penalty" => $r['event_pilot_round_flight_penalty'],
+								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
+								"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
+								"subs" => $subs
+							);
+						}
+					}
+				}
+				
 				$pilots[] = array(
 					"pilot_id" => $p['pilot_id'],
 					"pilot_position" => 1,
