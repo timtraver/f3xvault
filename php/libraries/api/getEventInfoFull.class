@@ -72,6 +72,8 @@ XML or JSON Object Hierarchy :
                 <order>1</order>
                 <minutes>0</minutes>
                 <seconds>71.12</seconds>
+                <laps>2</laps>
+                <landing>95</landing>
                 <score>872</score>
                 <penalty>0</penalty>
                 <dropped>0</dropped>
@@ -116,6 +118,8 @@ XML or JSON Object Hierarchy :
                 <order>1</order>
                 <minutes>0</minutes>
                 <seconds>71.12</seconds>
+                <laps>2</laps>
+                <landing>95</landing>
                 <score>872</score>
                 <penalty>0</penalty>
                 <dropped>0</dropped>
@@ -188,6 +192,9 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_laps'] = 0;
+							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_landing'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
 							$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
 							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
@@ -288,6 +295,8 @@ XML or JSON Object Hierarchy :
 							"order" => intval( $r['event_pilot_round_flight_order'] ),
 							"minutes" => $r['event_pilot_round_flight_minutes'],
 							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+							"laps" => intval( $r['event_pilot_round_flight_laps'] ),
+							"landing" => intval( $r['event_pilot_round_flight_landing'] ),
 							"score" => floatval( $r['event_pilot_round_total_score'] ),
 							"penalty" => $r['event_pilot_round_flight_penalty'],
 							"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
@@ -350,6 +359,8 @@ XML or JSON Object Hierarchy :
 								"order" => intval( $r['event_pilot_round_flight_order'] ),
 								"minutes" => $r['event_pilot_round_flight_minutes'],
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+								"laps" => intval( $r['event_pilot_round_flight_laps'] ),
+								"landing" => intval( $r['event_pilot_round_flight_landing'] ),
 								"score" => floatval( $r['event_pilot_round_total_score'] ),
 								"penalty" => $r['event_pilot_round_flight_penalty'],
 								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
@@ -415,6 +426,8 @@ XML or JSON Object Hierarchy :
 								"order" => intval( $r['event_pilot_round_flight_order'] ),
 								"minutes" => $r['event_pilot_round_flight_minutes'],
 								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
+								"laps" => intval( $r['event_pilot_round_flight_laps'] ),
+								"landing" => intval( $r['event_pilot_round_flight_landing'] ),
 								"score" => floatval( $r['event_pilot_round_total_score'] ),
 								"penalty" => $r['event_pilot_round_flight_penalty'],
 								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
