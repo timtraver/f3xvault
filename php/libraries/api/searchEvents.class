@@ -22,16 +22,26 @@ class searchEvents {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string",			"type" => "string",		"description" => "Search String",							"mandatory" => 0),
-			array("name" => "event_type_code",	"type" => "string",		"description" => "Event Type Code (f3f,f3b,f3j,f3k, etc)",	"mandatory" => 0),
-			array("name" => "show_future",		"type" => "boolean",	"description" => "Show future events (0,1)",				"mandatory" => 0),
-			array("name" => "per_page",			"type" => "integer",	"description" => "Results per page (Number)",				"mandatory" => 0),
-			array("name" => "page",				"type" => "integer",	"description" => "Page of results (Number)",				"mandatory" => 0),
-			array("name" => "date_from",		"type" => "date",		"description" => "Date Range From (2017-01-01)",			"mandatory" => 0),
-			array("name" => "date_to",			"type" => "date",		"description" => "Date Range To (2017-01-01)",				"mandatory" => 0),
-			array("name" => "country",			"type" => "string",		"description" => "Country (Code or name)",					"mandatory" => 0)
+			array( "type" => "string",	"mandatory" => 0,	"name" => "string",				"description" => "Search String" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "event_type_code",	"description" => "Event Type Code (f3f,f3b,f3j,f3k, etc)" ),
+			array( "type" => "boolean",	"mandatory" => 0,	"name" => "show_future",		"description" => "Show future events (0,1)" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "per_page",			"description" => "Results per page (Number)" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "page",				"description" => "Page of results (Number)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "date_from",			"description" => "Date Range From (2017-01-01)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "date_to",			"description" => "Date Range To (2017-01-01)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "country",			"description" => "Country (Code or name)" )
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "integer",	"name" => "total_records",		"description" => "Total Event Records" ),
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "events",				"description" => "Event List" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "event_id",			"description" => "Event ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "event_name",			"description" => "Event Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_name",		"description" => "Event Location Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",		"description" => "Event Country Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "event_type_name",	"description" => "Event Type Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "event_type_code",	"description" => "Event Type Code" ),
+		);
 		$this->api->function_output_description = 
 			"Standard Output :\nOne Per line of the following\nEvent ID, Event Start Date, Event Name, Location Name, Event Type\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:

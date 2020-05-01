@@ -21,9 +21,41 @@ class getLocationInfo {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "location_id", "type" => "int", "description" => "Location ID", "mandatory" => 1)
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "location_id",  "description" => "Location ID" )
 		);
 		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "location",				"description" => "Main Location Array" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "location_id",			"description" => "Location ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_name",			"description" => "Location Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_city",			"description" => "Location City" ),
+			array( "level" => 2,	"type" => "string",		"name" => "state_code",				"description" => "Location State Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",			"description" => "Location Country Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_coordinates",	"description" => "Location Map Coordinates" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_club",			"description" => "Location Club Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_club_url",		"description" => "Location Club Web Site URL" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_description",	"description" => "Location Description" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_directions",	"description" => "Location Directions" ),
+
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "disciplines",			"description" => "Location Disciplines List" ),
+			array( "level" => 3,	"type" => "string",		"name" => "discipline_description",	"description" => "Location Disciplines Description" ),
+
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "location_events",		"description" => "Location Events List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "event_id",				"description" => "Location Event ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_name",				"description" => "Location Event Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_start_date",		"description" => "Location Event Start Date" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_type_name",		"description" => "Location Event Type Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_type_code",		"description" => "Location Event Type Code" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "total_pilots",			"description" => "Location Event Total Pilots" ),
+			
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "location_media",			"description" => "Location Media List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "location_media_id",		"description" => "Location Media ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_media_url",		"description" => "Location Media URL" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "user_id",				"description" => "Location Media User ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_first_name",		"description" => "Location Media Pilot First Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_last_name",		"description" => "Location Media Pilot Last Name" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_country",			"description" => "Location Media Country Code" ),
+		);
 		$this->api->function_output_description = "XML or JSON Object Hierarchy:
 <result>
   <response_code>1</response_code>

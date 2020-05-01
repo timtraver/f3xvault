@@ -22,9 +22,22 @@ class getEventPilots {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id", "type" => "string", "description" => "Event ID", "mandatory" => 1)
+			array( "type" => "string",	"mandatory" => 1,		"name" => "event_id",		"description" => "Event ID" )
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "pilots",						"description" => "Pilot List" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "pilot_bib",					"description" => "Pilot Bib Number" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_first_name",			"description" => "Pilot First Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_last_name",			"description" => "Pilot Last Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_class",				"description" => "Pilot Class" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_ama",					"description" => "Pilot AMA Number" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai",					"description" => "Pilot FAI Designtaion" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai_license",			"description" => "Pilot FAI License Number" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_team",					"description" => "Pilot Team" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",				"description" => "Pilot Country Code" ),
+		);
 		$this->api->function_output_description = 
 			"One Per line of the following\nPilot_id, Pilot_Bib, First_Name, Last_Name, Pilot_Class, AMA, FAI, FAI License, Team_Name";
 
@@ -58,11 +71,11 @@ class getEventPilots {
 		$this->event_id = $this->api->input_variables['event_id'];
 		start_smarty();
 
-		$event = new Event($this->event_id);
+		$event = new Event( $this->event_id );
 		$fs = $this->api->field_separator;
 
-		$smarty->assign("event",$event);
-		$smarty->assign("fs",$fs);		
+		$smarty->assign( "event", $event );
+		$smarty->assign( "fs", $fs );		
 		
 		$template = "api/event_pilots.tpl";
 
@@ -78,14 +91,15 @@ class getEventPilots {
 				"pilot_ama" => $p['pilot_ama'],
 				"pilot_fai" => $p['pilot_fai'],
 				"pilot_fai_license" => $p['pilot_fai_license'],
-				"pilot_team" => $p['event_pilot_team']
+				"pilot_team" => $p['event_pilot_team'],
+				"country_code" => $p['country_code'],
 			);
 		}
 		$this->api->api_add_output_variable( "pilots", $pilots );
 
 		# Get the export content
-		$content_template = find_template($template);
-		$content = $smarty->fetch($content_template);		
+		$content_template = find_template( $template );
+		$content = $smarty->fetch( $content_template );		
 		
 		return $content;
 

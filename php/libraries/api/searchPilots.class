@@ -22,10 +22,19 @@ class searchPilots {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
-			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0)
+			array( "type" => "string",	"mandatory" => 0,	"name" => "string",		"description" => "Search String" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "country",	"description" => "Country (Code or name)" )
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "pilots",				"description" => "Pilot List" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "pilot_id",			"description" => "Pilot ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_name",			"description" => "Pilot Full Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_first_name",	"description" => "Pilot First Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_last_name",	"description" => "Pilot Last Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",		"description" => "Pilot Country Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location",			"description" => "Pilot Location String" ),
+		);
 		$this->api->function_output_description = 
 			"Standard Output :\nOne Per line of the following\nPilot ID, Pilot Name, Pilot Location\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:

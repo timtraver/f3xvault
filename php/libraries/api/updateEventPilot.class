@@ -30,15 +30,18 @@ class updateEventPilot {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id",					"type" => "integer",	"description" => "Event ID",				"mandatory" => 1),
-			array("name" => "pilot_id",					"type" => "integer",	"description" => "Pilot ID",				"mandatory" => 1),
-			array("name" => "event_pilot_entry_order",	"type" => "integer",	"description" => "Pilot Entry Order",		"mandatory" => 0),
-			array("name" => "event_pilot_bib",			"type" => "integer",	"description" => "Pilot Bib Number",		"mandatory" => 0),
-			array("name" => "class",					"type" => "string",		"description" => "Class Name",				"mandatory" => 0),
-			array("name" => "event_pilot_freq",			"type" => "string",		"description" => "Event Pilot Frequency",	"mandatory" => 0),
-			array("name" => "event_pilot_team",			"type" => "string",		"description" => "Event Pilot Team",		"mandatory" => 0),
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "event_id",					"description" => "Event ID" ),
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "pilot_id",					"description" => "Pilot ID" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "event_pilot_entry_order",	"description" => "Pilot Entry Order" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "event_pilot_bib",			"description" => "Pilot Bib Number" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "class",						"description" => "Class Name" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "event_pilot_freq",			"description" => "Event Pilot Frequency" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "event_pilot_team",			"description" => "Event Pilot Team" ),
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "integer",	"name" => "event_pilot_id",			"description" => "Event Pilot ID" ),
+		);
 		$this->api->function_output_description = "Standard Output :\nEvent Pilot ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

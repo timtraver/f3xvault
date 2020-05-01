@@ -28,16 +28,19 @@ class createEvent {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_name",	 	"type" => "string", "description" => "Event Name",						"mandatory" => 1),
-			array("name" => "location_id",	 	"type" => "string", "description" => "Location (ID or String)",			"mandatory" => 1),
-			array("name" => "event_type",		"type" => "string", "description" => "Event Type Code",					"mandatory" => 1),
-			array("name" => "event_start_date",	"type" => "date",	"description" => "Date From (2018-01-01)",			"mandatory" => 1),
-			array("name" => "event_end_date",	"type" => "date",	"description" => "Date To (2018-01-01)",			"mandatory" => 0),
-			array("name" => "event_cd_id",		"type" => "string", "description" => "Event Contest Director Pilot ID", "mandatory" => 0),
-			array("name" => "location_country",	"type" => "string", "description" => "Location Country Code (If creating new location)",	"mandatory" => 0),
+			array("type" => "string",	"mandatory" => 1,	"name" => "event_name",	 	 	"description" => "Event Name" ),
+			array("type" => "string",	"mandatory" => 1,	"name" => "location_id",		"description" => "Location (ID or String)" ),
+			array("type" => "string",	"mandatory" => 1,	"name" => "event_type",			"description" => "Event Type Code" ),
+			array("type" => "string",	"mandatory" => 1,	"name" => "event_start_date",	"description" => "Date From (2018-01-01)" ),
+			array("type" => "string",	"mandatory" => 0,	"name" => "event_end_date",		"description" => "Date To (2018-01-01)" ),
+			array("type" => "string",	"mandatory" => 0,	"name" => "event_cd_id",		"description" => "Event Contest Director Pilot ID" ),
+			array("type" => "string",	"mandatory" => 0,	"name" => "location_country",	"description" => "Location Country Code (If creating new location)" ),
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nEvent ID\n\n";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "integer",	"name" => "event_id",			"description" => "Event ID" ),
+		);
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>
   <response_code>1</response_code>

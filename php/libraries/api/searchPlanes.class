@@ -26,14 +26,33 @@ class searchPlanes {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
-			array("name" => "discipline", "type" => "string", "description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)", "mandatory" => 0),
-			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0),
-			array("name" => "page", "type" => "int", "description" => "Page Number", "mandatory" => 0),
-			array("name" => "per_page", "type" => "int", "description" => "List Items Per Page", "mandatory" => 0)
+			array( "type" => "string",	"mandatory" => 0,	"name" => "string",			"description" => "Search String" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "discipline",		"description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "country",		"description" => "Country (Code or name)" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "page",			"description" => "Page Number" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "per_page",		"description" => "List Items Per Page" )
 		);
 		
 		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "integer",	"name" => "total_records",			"description" => "Total Plane Records" ),
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "planes",					"description" => "Planes List" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "plane_id",				"description" => "Plane ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_name",				"description" => "Plane Name" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_wing_area",		"description" => "Plane Wing Area" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_tail_area",		"description" => "Plane Tail Area" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_wing_area_units",	"description" => "Wing Area Units" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_manufacturer",		"description" => "Plane Manufacturer" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",			"description" => "Plane Manufacturer Country Code" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_max_g",			"description" => "Plane Max FAI Weight in grams" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_max_oz",			"description" => "Plane Max FAI Weight in ounces" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_wingspan",			"description" => "Plane Wingspan" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_wingspan_units",	"description" => "Plane Wingspan Units" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_length",			"description" => "Plane Length" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_length_units",		"description" => "Plane Length Units" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "plane_year",				"description" => "Plane Year" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_website",			"description" => "Plane Web Site URL" ),			
+		);
 		$this->api->function_output_description = 
 			"Standard Output :\nOne Per line of the following\nPilot ID, Pilot Name, Pilot Location\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:

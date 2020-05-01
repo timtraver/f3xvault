@@ -21,9 +21,42 @@ class getPlaneInfo {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "plane_id", "type" => "int", "description" => "Plane ID", "mandatory" => 1)
+			array( "type" => "integer", "mandatory" => 1,	"name" => "plane_id",	"description" => "Plane ID" )
 		);
 		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "plane",					"description" => "Plane Main array" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "plane_id",				"description" => "Plane ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_name",				"description" => "Plane Name" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_wing_area",		"description" => "Plane Wing Area" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_tail_area",		"description" => "Plane Tail Area" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_wing_area_units",	"description" => "Plane Wing Area Units" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_manufacturer",		"description" => "Plane Manufacturer" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",			"description" => "Plane Manufacturer Country Code" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_max_g",			"description" => "Plane Max FAI Weight in grams" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_max_oz",			"description" => "Plane Max FAI Weight in ounces" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_wingspan",			"description" => "Plane Wingspan" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_wingspan_units",	"description" => "Plane Wingspan Units" ),
+			array( "level" => 2,	"type" => "float",		"name" => "plane_length",			"description" => "Plane Length" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_length_units",		"description" => "Plane Length Units" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "plane_year",				"description" => "Plane Manufacturer Year" ),
+			array( "level" => 2,	"type" => "string",		"name" => "plane_website",			"description" => "Plane Web Site URL" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "disciplines",			"description" => "Plane Discipline List" ),
+			array( "level" => 3,	"type" => "string",		"name" => "discipline_description",	"description" => "Plane Discipline Description" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "plane_media",			"description" => "Plane Media List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "plane_media_id",			"description" => "Plane Media ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "plane_media_type",		"description" => "Plane Media Type (picture or video)" ),
+			array( "level" => 3,	"type" => "string",		"name" => "plane_media_url",		"description" => "Plane Media URL" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "user_id",				"description" => "Plane Media User ID (that posted it)" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_first_name",		"description" => "Plane Media Pilot First Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_last_name",		"description" => "Plane Media Pilot Last Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_country",			"description" => "Plane Media Pilot Country Code" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "plane_pilots",			"description" => "Plane Pilot List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_id",				"description" => "Plane Pilot ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_first_name",		"description" => "Plane Pilot First Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_last_name",		"description" => "Plane Pilot Last Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "country_code",			"description" => "Plane Pilot Country Code" ),
+		);
 		$this->api->function_output_description = "XML or JSON Object Hierarchy:
 <result>
     <response_code>1</response_code>

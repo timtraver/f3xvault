@@ -40,17 +40,18 @@ class postScore {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id",		"type" => "integer",	"description" => "Event ID",				"mandatory" => 1),
-			array("name" => "pilot_id",		"type" => "integer",	"description" => "Pilot ID",				"mandatory" => 1),
-			array("name" => "round",		"type" => "integer",	"description" => "Round Number",			"mandatory" => 1),
-			array("name" => "group",		"type" => "string",		"description" => "Group",					"mandatory" => 0),
-			array("name" => "order",		"type" => "string",		"description" => "Order",					"mandatory" => 0),
-			array("name" => "penalty",		"type" => "integer",	"description" => "Penalty Points",			"mandatory" => 0),
-			array("name" => "flight_time",	"type" => "timestamp",	"description" => "Timestamp of flight (when it took place)",		"mandatory" => 0),
-			array("name" => "wind_avg",		"type" => "float",		"description" => "Wind Speed Average",		"mandatory" => 0),
-			array("name" => "dir_avg",		"type" => "float",		"description" => "Wind Direction Average",	"mandatory" => 0),
+			array( "type" => "integer",		"mandatory" => 1,	"name" => "event_id",		"description" => "Event ID" ),
+			array( "type" => "integer",		"mandatory" => 1,	"name" => "pilot_id",		"description" => "Pilot ID" ),
+			array( "type" => "integer",		"mandatory" => 1,	"name" => "round",			"description" => "Round Number" ),
+			array( "type" => "string",		"mandatory" => 0,	"name" => "group",			"description" => "Group" ),
+			array( "type" => "string",		"mandatory" => 0,	"name" => "order",			"description" => "Order" ),
+			array( "type" => "integer",		"mandatory" => 0,	"name" => "penalty",		"description" => "Penalty Points" ),
+			array( "type" => "timestamp",	"mandatory" => 0,	"name" => "flight_time",	"description" => "Timestamp of flight (when it took place)" ),
+			array( "type" => "float",		"mandatory" => 0,	"name" => "wind_avg",		"description" => "Wind Speed Average" ),
+			array( "type" => "float",		"mandatory" => 0,	"name" => "dir_avg",		"description" => "Wind Direction Average" ),
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array();
 		$this->api->function_output_description = "Standard Output :\n Event Pilot ID\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>
@@ -477,27 +478,27 @@ class postScore {
 			"f3b" => array(),
 			"f3b_speed" => array(),
 			"f3f" => array(
-				array("name" => "group",		"type" => "string",		"description" => "Group", 							"mandatory" => 0),
-				array("name" => "order",		"type" => "integer",	"description" => "Round Flight Order", 				"mandatory" => 0),
-				array("name" => "seconds",		"type" => "float",		"description" => "Total Flight Time in Seconds", 	"mandatory" => 1)
+				array( "type" => "string",	"mandatory" => 0,	"name" => "group",		"description" => "Group" ),
+				array( "type" => "integer",	"mandatory" => 0,	"name" => "order",		"description" => "Round Flight Order" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "seconds",	"description" => "Total Flight Time in Seconds" )
 			),
 			"f3f_plus" => array(
-				array("name" => "group",		"type" => "string",		"description" => "Group", 							"mandatory" => 0),
-				array("name" => "order",		"type" => "integer",	"description" => "Round Flight Order", 				"mandatory" => 0),
-				array("name" => "seconds",		"type" => "float",		"description" => "Total Flight Time in Seconds", 	"mandatory" => 1),
-				array("name" => "sub1",			"type" => "float",		"description" => "Climb out",					 	"mandatory" => 1),
-				array("name" => "sub2",			"type" => "float",		"description" => "Lap 1",						 	"mandatory" => 1),
-				array("name" => "sub3",			"type" => "float",		"description" => "Lap 2",						 	"mandatory" => 1),
-				array("name" => "sub4",			"type" => "float",		"description" => "Lap 3",						 	"mandatory" => 1),
-				array("name" => "sub5",			"type" => "float",		"description" => "Lap 4",						 	"mandatory" => 1),
-				array("name" => "sub6",			"type" => "float",		"description" => "Lap 5",						 	"mandatory" => 1),
-				array("name" => "sub7",			"type" => "float",		"description" => "Lap 6",						 	"mandatory" => 1),
-				array("name" => "sub8",			"type" => "float",		"description" => "Lap 7",						 	"mandatory" => 1),
-				array("name" => "sub9",			"type" => "float",		"description" => "Lap 8",						 	"mandatory" => 1),
-				array("name" => "sub10",		"type" => "float",		"description" => "Lap 9",						 	"mandatory" => 1),
-				array("name" => "sub11",		"type" => "float",		"description" => "Lap 10",						 	"mandatory" => 1),
-				array("name" => "dns",			"type" => "boolean",	"description" => "DNS - Did Not Start",			 	"mandatory" => 0),
-				array("name" => "dnf",			"type" => "boolean",	"description" => "DNF - Did Not Finish",		 	"mandatory" => 0),
+				array( "type" => "string",	"mandatory" => 0,	"name" => "group",		"description" => "Group" ),
+				array( "type" => "integer",	"mandatory" => 0,	"name" => "order",		"description" => "Round Flight Order" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "seconds",	"description" => "Total Flight Time in Seconds" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub1",		"description" => "Climb out" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub2",		"description" => "Lap 1" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub3",		"description" => "Lap 2" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub4",		"description" => "Lap 3" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub5",		"description" => "Lap 4" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub6",		"description" => "Lap 5" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub7",		"description" => "Lap 6" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub8",		"description" => "Lap 7" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub9",		"description" => "Lap 8" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub10",		"description" => "Lap 9" ),
+				array( "type" => "float",	"mandatory" => 1,	"name" => "sub11",		"description" => "Lap 10" ),
+				array( "type" => "boolean",	"mandatory" => 0,	"name" => "dns",		"description" => "DNS - Did Not Start" ),
+				array( "type" => "boolean",	"mandatory" => 0,	"name" => "dnf",		"description" => "DNF - Did Not Finish" ),
 			),
 			"f3k" => array(),
 			"f3j" => array(),

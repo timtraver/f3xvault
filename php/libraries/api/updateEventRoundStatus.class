@@ -24,11 +24,12 @@ class updateEventRoundStatus {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "event_id",					"type" => "integer", "description" => "Event ID",						"mandatory" => 1),
-			array("name" => "round_number",				"type" => "integer", "description" => "Round Number",					"mandatory" => 1),
-			array("name" => "event_round_score_status",	"type" => "integer", "description" => "Round Score Status (0 or 1)",	"mandatory" => 1),
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "event_id",					"description" => "Event ID" ),
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "round_number",				"description" => "Round Number" ),
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "event_round_score_status",	"description" => "Round Score Status (0 or 1)" ),
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
+		$this->api->function_output_parameters = array();
 		$this->api->function_output_description = "Standard Output :\nOnly success or failure status\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>

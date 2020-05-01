@@ -25,14 +25,25 @@ class searchLocations {
 	public function set_function_parameters(){
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
-			array("name" => "string", "type" => "string", "description" => "Search String", "mandatory" => 0),
-			array("name" => "discipline", "type" => "string", "description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)", "mandatory" => 0),
-			array("name" => "country", "type" => "string", "description" => "Country (Code or name)", "mandatory" => 0),
-			array("name" => "page", "type" => "int", "description" => "Page Number", "mandatory" => 0),
-			array("name" => "per_page", "type" => "int", "description" => "List Items Per Page", "mandatory" => 0)
+			array( "type" => "string",	"mandatory" => 0,	"name" => "string",				"description" => "Search String" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "discipline",			"description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "country",			"description" => "Country (Code or name)" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "page",				"description" => "Page Number" ),
+			array( "type" => "integer",	"mandatory" => 0,	"name" => "per_page",			"description" => "List Items Per Page" )
 		);
 		
 		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "locations",				"description" => "Location List" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "location_id",			"description" => "Location ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_name",			"description" => "Location Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_city",			"description" => "Location City" ),
+			array( "level" => 2,	"type" => "string",		"name" => "state_code",				"description" => "Location State Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",			"description" => "Location Country Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_coordinates",	"description" => "Location Map Coordinates" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_club",			"description" => "Location Club Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "location_club_url",		"description" => "Location Club URL" ),
+		);
 		$this->api->function_output_description = "XML or JSON Object Hierarchy:
 <result>
     <response_code>1</response_code>

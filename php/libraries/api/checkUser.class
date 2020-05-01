@@ -22,11 +22,27 @@ class checkUser {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "login",		 	"type" => "string", "description" => "User Login",				"mandatory" => 1),
-			array("name" => "password",		 	"type" => "string", "description" => "User Password",			"mandatory" => 1),
+			array("type" => "string", 	"mandatory" => 1,	"name" => "login",			"description" => "User Login" ),
+			array("type" => "string", 	"mandatory" => 1,	"name" => "password",		"description" => "User Password" ),
 		);
 		$this->api->function_output_modes = "CSV, JSON, XML";
 		$this->api->function_output_description = "Standard Output :\nEvent ID\n\n";
+		$this->api->function_output_parameters = array(
+			array( "level" => 0,	"type" => "array",		"name" => "user",				"description" => "Main User Array" ),
+			array( "level" => 1,	"type" => "integer",	"name" => "user_id",			"description" => "User ID" ),
+			array( "level" => 1,	"type" => "string",		"name" => "user_name",			"description" => "User Name" ),
+			array( "level" => 1,	"type" => "string",		"name" => "user_first_name",	"description" => "User First Name" ),
+			array( "level" => 1,	"type" => "string",		"name" => "user_last_name",		"description" => "User Last Name" ),
+			array( "level" => 1,	"type" => "integer",	"name" => "pilot_id",			"description" => "Pilot ID" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_first_name",	"description" => "Pilot First Name" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_last_name",	"description" => "Pilot Last Name" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_ama",			"description" => "Pilot AMA Number" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_fai",			"description" => "Pilot FAI Designation" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_fai_license",	"description" => "Pilot FAI License Number" ),
+			array( "level" => 1,	"type" => "string",		"name" => "pilot_city",			"description" => "Pilot City" ),
+			array( "level" => 1,	"type" => "string",		"name" => "state_code",			"description" => "Pilot State Code" ),
+			array( "level" => 1,	"type" => "string",		"name" => "country_code",		"description" => "Pilot Country Code" ),
+		);
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy :
 <result>
   <response_code>1</response_code>

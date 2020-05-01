@@ -57,7 +57,8 @@ function api_docs_show() {
 			"function_parameters" => $api->function_parameters,
 			"additional_parameters" => $api_func->additional_parameters,
 			"function_output_modes" => $api->function_output_modes,
-			"function_output_description" => $api->function_output_description
+			"function_output_description" => $api->function_output_description,
+			"function_output_parameters" => $api->function_output_parameters,
 		);
 	}
 

@@ -21,9 +21,47 @@ class getPilotInfo {
 	public function set_function_parameters(){
 		# This is where we set the mandatory fields
 		$this->api->function_parameters = array(
-			array("name" => "pilot_id", "type" => "int", "description" => "Pilot ID", "mandatory" => 1)
+			array( "type" => "integer",	"mandatory" => 1,	"name" => "pilot_id", "description" => "Pilot ID" )
 		);
 		$this->api->function_output_modes = "JSON, XML";
+		$this->api->function_output_parameters = array(
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "pilot",							"description" => "Pilot Main Array" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "pilot_id",						"description" => "Pilot ID" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_first_name",				"description" => "Pilot First Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_last_name",				"description" => "Pilot Last Name" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_ama",						"description" => "Pilot AMA Number" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai",						"description" => "Pilot FAI Designation" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai_license",				"description" => "Pilot FAI License" ),
+			array( "level" => 2,	"type" => "string",		"name" => "pilot_city",						"description" => "Pilot City" ),
+			array( "level" => 2,	"type" => "string",		"name" => "state_code",						"description" => "Pilot State Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code",					"description" => "Pilot Country Code" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "pilot_planes",					"description" => "Pilot Planes List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "plane_id",						"description" => "Pilot Plane ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "plane_name",						"description" => "Pilot Plane Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_plane_color",				"description" => "Pilot Plane Color" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_plane_serial",				"description" => "Pilot Plane Serial Number" ),
+			array( "level" => 3,	"type" => "float",		"name" => "pilot_plane_auw",				"description" => "Pilot Plane All Up Weight" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_plane_auw_units",			"description" => "Pilot Plane All Up Weight Units" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "pilot_locations",				"description" => "Pilot Locations List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "location_id",					"description" => "Pilot Location ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_name",					"description" => "Pilot Location Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_city",					"description" => "Pilot Location City" ),
+			array( "level" => 3,	"type" => "string",		"name" => "state_code",						"description" => "Pilot Location State Code" ),
+			array( "level" => 3,	"type" => "string",		"name" => "country_code",					"description" => "Pilot Location Country Code" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_coordinates",			"description" => "Pilot Location Coordinates" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "pilot_events",					"description" => "Pilot Events List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "event_id",						"description" => "Pilot Event ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_name",						"description" => "Pilot Event Name" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "location_id",					"description" => "Pilot Event Location ID" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_name",					"description" => "Pilot Event Location Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "location_city",					"description" => "Pilot Event Location City" ),
+			array( "level" => 3,	"type" => "string",		"name" => "state_code",						"description" => "Pilot Event State Code" ),
+			array( "level" => 3,	"type" => "string",		"name" => "country_code",					"description" => "Pilot Event Country Code" ),
+			array( "level" => 3,	"type" => "string",		"name" => "event_start_date",				"description" => "Pilot Event Start Date" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "event_pilot_position",			"description" => "Pilot Event Position" ),
+			array( "level" => 3,	"type" => "float",		"name" => "event_pilot_total_score",		"description" => "Pilot Event Total Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "event_pilot_total_percentage",	"description" => "Pilot Event Percentage to Top Score" ),
+		);
 		$this->api->function_output_description = "Standard Output :\nSingle line data value pairs similar to the ones in xml\n\n";
 		$this->api->function_output_description .= "XML or JSON Object Hierarchy:
 <result>

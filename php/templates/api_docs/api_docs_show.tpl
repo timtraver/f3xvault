@@ -41,7 +41,8 @@
 				<th colspan="2">Optional Request Parameters for every call (case sensitive parameter names)</th>
 			</tr>
 			<tr>
-				<th width="20%">output_format</th><td>The type of output you want to get back. Defaults to standard text lines, but can be ( standard, xml, json )</td>
+				<th width="20%">output_format</th>
+				<td>The type of output you want to get back. Defaults to standard text lines, but can be ( standard, xml, json )<br>It is <b><font color="red">HIGHLY RECEOMMENDED</font></b> that you use the JSON or XML formats, as they are the only ones in current development. The standard text output is depreceated.</td>
 			</tr>
 		</table>
 		
@@ -74,29 +75,29 @@
 							<th width="15%">Variable Name</th><th width="5%">Type</th><th width="5%">Mandatory</th><th>Description</th>
 						</tr>
 						{foreach $f.function_parameters as $p}
-						<tr>
-							<td nowrap><b>{$p.name|escape}</b></td>
-							<td nowrap>{$p.type|escape}</td>
-							<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
-							<td>{$p.description|escape}</td>
-						</tr>
+							<tr>
+								<td nowrap><b>{$p.name|escape}</b></td>
+								<td nowrap>{$p.type|escape}</td>
+								<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
+								<td>{$p.description|escape}</td>
+							</tr>
 						{/foreach}
 						{if $f.additional_parameters}
-						{foreach $f.additional_parameters as $type => $a}
-						{if $a}
-						<tr>
-							<th colspan="4">Additional Parameters for {$type|escape} event type</th>
-						</tr>
-						{foreach $a as $p}
-						<tr>
-							<td nowrap><b>{$p.name|escape}</b></td>
-							<td nowrap>{$p.type|escape}</td>
-							<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
-							<td>{$p.description|escape}</td>
-						</tr>
-						{/foreach}
-						{/if}
-						{/foreach}
+							{foreach $f.additional_parameters as $type => $a}
+								{if $a}
+									<tr>
+										<th colspan="4">Additional Parameters for {$type|escape} event type</th>
+									</tr>
+									{foreach $a as $p}
+										<tr>
+											<td nowrap><b>{$p.name|escape}</b></td>
+											<td nowrap>{$p.type|escape}</td>
+											<td>{if $p.mandatory}<font color="green">YES</font>{else}No{/if}</td>
+											<td>{$p.description|escape}</td>
+										</tr>
+									{/foreach}
+								{/if}
+							{/foreach}
 						{/if}
 					</table>
 				</td>
@@ -105,7 +106,28 @@
 				<th width="20%">Output Modes</th><td>{$f.function_output_modes|escape}</td>
 			</tr>
 			<tr>
-				<th width="20%">Function Output</th><td><pre style="white-space:pre-wrap;">{$f.function_output_description|escape}</pre></td>
+				<th width="20%">Function Output Parameters</th>
+				<td>
+					<table class="table table-condensed table-bordered">
+						<tr>
+							<th width="15%">Variable Name</th><th width="5%">Type</th><th>Description</th>
+						</tr>
+						{$spacer = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}
+						{foreach $f.function_output_parameters as $op}
+							<tr>
+								<td nowrap>
+									{for $i = 1 to $op.level}{$spacer}{/for}
+									<b>{$op.name|escape}</b>
+								</td>
+								<td nowrap>{if $op.type == "ARRAY"}<font color="green">{else}<font color="black">{/if}{$op.type|escape}</font></td>
+								<td>{$op.description|escape}</td>
+							</tr>
+						{/foreach}
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<th width="20%">Example Output</th><td><pre style="white-space:pre-wrap;">{$f.function_output_description|escape}</pre></td>
 			</tr>
 			</tbody>
 		</table>

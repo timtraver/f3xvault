@@ -23,6 +23,7 @@ class API {
 	public $function_parameters = array();
 	public $function_output_modes;
 	public $function_output_description;
+	public $function_output_parameters = array();
 	public $field_separator;
 	public $output_format;
 	
