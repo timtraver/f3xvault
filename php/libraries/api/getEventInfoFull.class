@@ -39,6 +39,7 @@ class getEventInfoFull {
 			array( "level" => 1,	"type" => "string",		"name" => "event_type_code",			"description" => "Event Type Code" ),
 			array( "level" => 1,	"type" => "integer",	"name" => "total_rounds",				"description" => "Event Total Rounds" ),
 			array( "level" => 1,	"type" => "string",		"name" => "event_calc_accuracy_string",	"description" => "Calculation Accuracy String" ),
+
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "tasks",						"description" => "List Of Tasks" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "round_number",				"description" => "Task Round Number" ),
 			array( "level" => 2,	"type" => "string",		"name" => "task_code",					"description" => "Task Flight Type Code" ),
@@ -50,6 +51,7 @@ class getEventInfoFull {
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_over_penalty",	"description" => "Task Flight Type Has Overage Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "flight_type_sub_flights",	"description" => "Task Flight Type Number of Sub Flights" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
+
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "pilots",						"description" => "List Of Pilots" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "pilot_position",				"description" => "Pilot Preliminary Event Position" ),
@@ -66,6 +68,7 @@ class getEventInfoFull {
 			array( "level" => 2,	"type" => "float",		"name" => "percentage",					"description" => "Pilot Percentage of Top Score" ),
 			array( "level" => 2,	"type" => "float",		"name" => "drop",						"description" => "Pilot Dropped Score" ),
 			array( "level" => 2,	"type" => "float",		"name" => "diff",						"description" => "Pilot Difference From Above Pilot" ),
+
 			array( "level" => 2,	"type" => "ARRAY",		"name" => "flights",					"description" => "Pilot Preliminary Flight List" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "round_number",				"description" => "Flight Round Number" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "rank",						"description" => "Flight Rank" ),
@@ -79,12 +82,15 @@ class getEventInfoFull {
 			array( "level" => 3,	"type" => "integer",	"name" => "penalty",					"description" => "Flight Penalty" ),
 			array( "level" => 3,	"type" => "boolean",	"name" => "dropped",					"description" => "Flight Dropped Status (0 = no, 1 = yes)" ),
 			array( "level" => 3,	"type" => "boolean",	"name" => "score_status",				"description" => "Flight Score Status (0 = not scored, 1 = scored)" ),
+
 			array( "level" => 3,	"type" => "ARRAY",		"name" => "subs",						"description" => "Flight Sub Flights List" ),
 			array( "level" => 4,	"type" => "integer",	"name" => "sub_num",					"description" => "Flight Sub Number" ),
 			array( "level" => 4,	"type" => "string",		"name" => "sub_val",					"description" => "Flight Sub Value" ),
+
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "flyoffs",					"description" => "List Of Flyoff Rounds and Standings" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "flyoff_number",				"description" => "Flyoff Number" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "total_rounds",				"description" => "Flyoff Number Rounds" ),
+
 			array( "level" => 2,	"type" => "ARRAY",		"name" => "pilots",						"description" => "List Of Pilots" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "pilot_position",				"description" => "Pilot Preliminary Event Position" ),
@@ -101,6 +107,7 @@ class getEventInfoFull {
 			array( "level" => 3,	"type" => "float",		"name" => "percentage",					"description" => "Pilot Percentage of Top Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "drop",						"description" => "Pilot Dropped Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "diff",						"description" => "Pilot Difference From Above Pilot" ),
+
 			array( "level" => 3,	"type" => "ARRAY",		"name" => "flights",					"description" => "Pilot Preliminary Flight List" ),
 			array( "level" => 4,	"type" => "integer",	"name" => "round_number",				"description" => "Flight Round Number" ),
 			array( "level" => 4,	"type" => "integer",	"name" => "rank",						"description" => "Flight Rank" ),
@@ -342,6 +349,8 @@ XML or JSON Object Hierarchy :
 				"flight_type_laps" => $round['flights'][ $ft ]['flight_type_laps'],
 				"flight_type_landing" => $round['flights'][ $ft ]['flight_type_landing'],
 				"flight_type_over_penalty" => $round['flights'][ $ft ]['flight_type_over_penalty'],
+				"flight_type_sub_flights" => $round['flights'][ $ft ]['flight_type_sub_flights'],
+				"flight_type_start_penalty" => $round['flights'][ $ft ]['flight_type_start_penalty'],
 			);
 		}
 
@@ -360,6 +369,8 @@ XML or JSON Object Hierarchy :
 					"flight_type_laps" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'],
 					"flight_type_landing" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'],
 					"flight_type_over_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'],
+					"flight_type_sub_flights" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'],
+					"flight_type_start_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'],
 				);
 			}
 		}
