@@ -249,18 +249,46 @@ XML or JSON Object Hierarchy :
 		}
 
 		$pilots = array();
+		$temp_tasks = array();
 		$tasks = array();
+		# Figure out the tasks from the existing rounds and then the tasks set up in the event
+
+		foreach( $event->rounds as $round_number => $round ){
+			$ft = $round['flight_type_id'];
+			$temp_tasks[ $round_number ] = array(
+				"round_number" => $round_number,
+				"task_code" => $round['flights'][ $ft ]['flight_type_code'],
+				"flight_type_name" => $round['flights'][ $ft ]['flight_type_name'],
+				"flight_type_name_short" => $round['flights'][ $ft ]['flight_type_name_short'],
+				"flight_type_description" => $round['flights'][ $ft ]['flight_type_description'],
+				"flight_type_laps" => $round['flights'][ $ft ]['flight_type_laps'],
+				"flight_type_landing" => $round['flights'][ $ft ]['flight_type_landing'],
+				"flight_type_over_penalty" => $round['flights'][ $ft ]['flight_type_over_penalty'],
+			);
+		}
+
+		# Now lets fill in the rest of the types if they haven't been run already
 		if( count( $event->tasks ) > 0 ){
 			foreach( $event->tasks as $i => $t ){
-				$tasks[] = array(
+				if( isset( $temp_tasks[ $i ] ) ){
+					continue;
+				}
+				$temp_tasks[ $i ] = array(
 					"round_number" => $i,
 					"task_code" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_code'],
 					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'],
 					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'],
 					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'],
+					"flight_type_laps" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'],
+					"flight_type_landing" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'],
+					"flight_type_over_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'],
 				);
 			}
 		}
+		foreach( $temp_tasks as $t ){
+			$tasks[] = $t;
+		}
+		
 		$event->calculate_event_totals();
 		$score = 0;
 		$diff = 0;

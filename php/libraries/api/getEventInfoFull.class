@@ -339,6 +339,9 @@ XML or JSON Object Hierarchy :
 				"flight_type_name" => $round['flights'][ $ft ]['flight_type_name'],
 				"flight_type_name_short" => $round['flights'][ $ft ]['flight_type_name_short'],
 				"flight_type_description" => $round['flights'][ $ft ]['flight_type_description'],
+				"flight_type_laps" => $round['flights'][ $ft ]['flight_type_laps'],
+				"flight_type_landing" => $round['flights'][ $ft ]['flight_type_landing'],
+				"flight_type_over_penalty" => $round['flights'][ $ft ]['flight_type_over_penalty'],
 			);
 		}
 
@@ -354,6 +357,9 @@ XML or JSON Object Hierarchy :
 					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'],
 					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'],
 					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'],
+					"flight_type_laps" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'],
+					"flight_type_landing" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'],
+					"flight_type_over_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'],
 				);
 			}
 		}
