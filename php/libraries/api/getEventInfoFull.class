@@ -31,30 +31,31 @@ class getEventInfoFull {
 			array( "level" => 0,	"type" => "ARRAY",		"name" => "event",						"description" => "Main Event Array" ),
 			array( "level" => 1,	"type" => "integer",	"name" => "event_id",					"description" => "Event ID" ),
 			array( "level" => 1,	"type" => "string",		"name" => "event_name",					"description" => "Event Name" ),
+			array( "level" => 1,	"type" => "integer",	"name" => "location_id",				"description" => "Location ID" ),
 			array( "level" => 1,	"type" => "string",		"name" => "location_name",				"description" => "Location Name" ),
 			array( "level" => 1,	"type" => "string",		"name" => "country_code",				"description" => "Event Country Code" ),
 			array( "level" => 1,	"type" => "string",		"name" => "start_date",					"description" => "Event Start Date" ),
 			array( "level" => 1,	"type" => "string",		"name" => "end_date",					"description" => "Event End Date" ),
-			array( "level" => 1,	"type" => "string",		"name" => "event_type",					"description" => "Event Type Description" ),
 			array( "level" => 1,	"type" => "string",		"name" => "event_type_code",			"description" => "Event Type Code" ),
-			array( "level" => 1,	"type" => "integer",	"name" => "total_rounds",				"description" => "Event Total Rounds" ),
+			array( "level" => 1,	"type" => "string",		"name" => "event_type_name",			"description" => "Event Type Description" ),
 			array( "level" => 1,	"type" => "string",		"name" => "event_calc_accuracy_string",	"description" => "Calculation Accuracy String" ),
+			array( "level" => 1,	"type" => "integer",	"name" => "total_rounds",				"description" => "Event Total Rounds" ),
 
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "tasks",						"description" => "List Of Tasks" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "round_number",				"description" => "Task Round Number" ),
-			array( "level" => 2,	"type" => "string",		"name" => "task_code",					"description" => "Task Flight Type Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "flight_type_code",			"description" => "Task Flight Type Code" ),
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_name",			"description" => "Task Flight Type Name" ),
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_name_short",		"description" => "Task Flight Type Name (short version)" ),
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_description",	"description" => "Task Flight Type Full Description" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_landing",		"description" => "Task Flight Type Landing Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_laps",			"description" => "Task Flight Type Has Laps Status ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_height",	"description" => "Task Flight Type Has Start Height ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_over_penalty",	"description" => "Task Flight Type Has Overage Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "flight_type_sub_flights",	"description" => "Task Flight Type Number of Sub Flights" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
 
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "pilots",						"description" => "List Of Pilots" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
-			array( "level" => 2,	"type" => "integer",	"name" => "pilot_position",				"description" => "Pilot Preliminary Event Position" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "pilot_bib",					"description" => "Pilot Bib Number" ),
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_first_name",			"description" => "Pilot First Name" ),
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_last_name",			"description" => "Pilot Last Name" ),
@@ -64,176 +65,265 @@ class getEventInfoFull {
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai",					"description" => "Pilot FAI Designtaion" ),
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_fai_license",			"description" => "Pilot FAI License Number" ),
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_team",					"description" => "Pilot Team" ),
-			array( "level" => 2,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
-			array( "level" => 2,	"type" => "float",		"name" => "percentage",					"description" => "Pilot Percentage of Top Score" ),
-			array( "level" => 2,	"type" => "float",		"name" => "drop",						"description" => "Pilot Dropped Score" ),
-			array( "level" => 2,	"type" => "float",		"name" => "diff",						"description" => "Pilot Difference From Above Pilot" ),
+			
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "prelim_standings",			"description" => "Pilot Preliminary Standings" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "total_rounds",				"description" => "Preliminary Total Rounds" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "total_drops",				"description" => "Preliminary Total Drops" ),
 
-			array( "level" => 2,	"type" => "ARRAY",		"name" => "flights",					"description" => "Pilot Preliminary Flight List" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "round_number",				"description" => "Flight Round Number" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "rank",						"description" => "Flight Rank" ),
-			array( "level" => 3,	"type" => "string",		"name" => "group",						"description" => "Flight Group" ),
-			array( "level" => 3,	"type" => "string",		"name" => "order",						"description" => "Flight Order" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "minutes",					"description" => "Flight Time Minutes" ),
-			array( "level" => 3,	"type" => "string",		"name" => "seconds",					"description" => "Flight Time Seconds" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "laps",						"description" => "Flight Number of Laps" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "landing",					"description" => "Flight Landing Score" ),
-			array( "level" => 3,	"type" => "float",		"name" => "score",						"description" => "Flight Score" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "penalty",					"description" => "Flight Penalty" ),
-			array( "level" => 3,	"type" => "boolean",	"name" => "dropped",					"description" => "Flight Dropped Status (0 = no, 1 = yes)" ),
-			array( "level" => 3,	"type" => "boolean",	"name" => "score_status",				"description" => "Flight Score Status (0 = not scored, 1 = scored)" ),
-
-			array( "level" => 3,	"type" => "ARRAY",		"name" => "subs",						"description" => "Flight Sub Flights List" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "sub_num",					"description" => "Flight Sub Number" ),
-			array( "level" => 4,	"type" => "string",		"name" => "sub_val",					"description" => "Flight Sub Value" ),
-
-			array( "level" => 1,	"type" => "ARRAY",		"name" => "flyoffs",					"description" => "List Of Flyoff Rounds and Standings" ),
-			array( "level" => 2,	"type" => "integer",	"name" => "flyoff_number",				"description" => "Flyoff Number" ),
-			array( "level" => 2,	"type" => "integer",	"name" => "total_rounds",				"description" => "Flyoff Number Rounds" ),
-
-			array( "level" => 2,	"type" => "ARRAY",		"name" => "pilots",						"description" => "List Of Pilots" ),
-			array( "level" => 3,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "standings",					"description" => "Standings List" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "pilot_position",				"description" => "Pilot Preliminary Event Position" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
 			array( "level" => 3,	"type" => "integer",	"name" => "pilot_bib",					"description" => "Pilot Bib Number" ),
 			array( "level" => 3,	"type" => "string",		"name" => "pilot_first_name",			"description" => "Pilot First Name" ),
 			array( "level" => 3,	"type" => "string",		"name" => "pilot_last_name",			"description" => "Pilot Last Name" ),
 			array( "level" => 3,	"type" => "string",		"name" => "country_code",				"description" => "Pilot Country Code" ),
-			array( "level" => 3,	"type" => "string",		"name" => "pilot_class",				"description" => "Pilot Class" ),
-			array( "level" => 3,	"type" => "string",		"name" => "pilot_ama",					"description" => "Pilot AMA Number" ),
-			array( "level" => 3,	"type" => "string",		"name" => "pilot_fai",					"description" => "Pilot FAI Designtaion" ),
-			array( "level" => 3,	"type" => "string",		"name" => "pilot_fai_license",			"description" => "Pilot FAI License Number" ),
-			array( "level" => 3,	"type" => "string",		"name" => "pilot_team",					"description" => "Pilot Team" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
-			array( "level" => 3,	"type" => "float",		"name" => "percentage",					"description" => "Pilot Percentage of Top Score" ),
-			array( "level" => 3,	"type" => "float",		"name" => "drop",						"description" => "Pilot Dropped Score" ),
-			array( "level" => 3,	"type" => "float",		"name" => "diff",						"description" => "Pilot Difference From Above Pilot" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
 
-			array( "level" => 3,	"type" => "ARRAY",		"name" => "flights",					"description" => "Pilot Preliminary Flight List" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "round_number",				"description" => "Flight Round Number" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "rank",						"description" => "Flight Rank" ),
-			array( "level" => 4,	"type" => "string",		"name" => "group",						"description" => "Flight Group" ),
-			array( "level" => 4,	"type" => "string",		"name" => "order",						"description" => "Flight Order" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "minutes",					"description" => "Flight Time Minutes" ),
-			array( "level" => 4,	"type" => "string",		"name" => "seconds",					"description" => "Flight Time Seconds" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "laps",						"description" => "Flight Number of Laps" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "landing",					"description" => "Flight Landing Score" ),
-			array( "level" => 4,	"type" => "float",		"name" => "score",						"description" => "Flight Score" ),
-			array( "level" => 4,	"type" => "integer",	"name" => "penalty",					"description" => "Flight Penalty" ),
-			array( "level" => 4,	"type" => "boolean",	"name" => "dropped",					"description" => "Flight Dropped Status (0 = no, 1 = yes)" ),
-			array( "level" => 4,	"type" => "boolean",	"name" => "score_status",				"description" => "Flight Score Status (0 = not scored, 1 = scored)" ),
-			array( "level" => 4,	"type" => "ARRAY",		"name" => "subs",						"description" => "Flight Sub Flights List" ),
-			array( "level" => 5,	"type" => "integer",	"name" => "sub_num",					"description" => "Flight Sub Number" ),
-			array( "level" => 5,	"type" => "string",		"name" => "sub_val",					"description" => "Flight Sub Value" ),
+			array( "level" => 3,	"type" => "ARRAY",		"name" => "rounds",						"description" => "Pilot Preliminary Rounds List" ),
+			array( "level" => 4,	"type" => "integer",	"name" => "round_number",				"description" => "Round Number" ),
+			array( "level" => 4,	"type" => "float",		"name" => "round_score",				"description" => "Round Score" ),
+
+			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_minutes",				"description" => "Round Flight Time Minutes" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_seconds",				"description" => "Round Flight Time Seconds" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_landing",				"description" => "Round Flight Landing Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_height",		"description" => "Round Flight Start Height" ),
+			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
+
+			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
+			array( "level" => 6,	"type" => "integer",	"name" => "sub_num",					"description" => "Round Flight Sub Number" ),
+			array( "level" => 6,	"type" => "string",		"name" => "sub_val",					"description" => "Round Flight Sub Value" ),
+
+			array( "level" => 1,	"type" => "ARRAY",		"name" => "flyoff_standings",			"description" => "Pilot Flyoff Standings" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "flyoff_number",				"description" => "Flyoff Number" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "total_rounds",				"description" => "Flyoff Total Rounds" ),
+			array( "level" => 2,	"type" => "integer",	"name" => "total_drops",				"description" => "Flyoff Total Drops" ),
+
+			array( "level" => 2,	"type" => "ARRAY",		"name" => "standings",					"description" => "Flyoff Standings List" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_position",				"description" => "Pilot Flyoff Event Position" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_id",					"description" => "Pilot ID" ),
+			array( "level" => 3,	"type" => "integer",	"name" => "pilot_bib",					"description" => "Pilot Bib Number" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_first_name",			"description" => "Pilot First Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "pilot_last_name",			"description" => "Pilot Last Name" ),
+			array( "level" => 3,	"type" => "string",		"name" => "country_code",				"description" => "Pilot Country Code" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
+
+			array( "level" => 3,	"type" => "ARRAY",		"name" => "rounds",						"description" => "Pilot Flyoff Rounds List" ),
+			array( "level" => 4,	"type" => "integer",	"name" => "round_number",				"description" => "Round Number" ),
+			array( "level" => 4,	"type" => "float",		"name" => "round_score",				"description" => "Round Score" ),
+
+			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_minutes",				"description" => "Round Flight Time Minutes" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_seconds",				"description" => "Round Flight Time Seconds" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_landing",				"description" => "Round Flight Landing Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_height",		"description" => "Round Flight Start Height" ),
+			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
+
+			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
+			array( "level" => 6,	"type" => "integer",	"name" => "sub_num",					"description" => "Round Flight Sub Number" ),
+			array( "level" => 6,	"type" => "string",		"name" => "sub_val",					"description" => "Round Flight Sub Value" ),
+
 		);
 		$this->api->function_output_description .= "
 XML or JSON Object Hierarchy :
 <result>
   <response_code>1</response_code>
   <error_string></error_string>
-  <event>
-    <event_id></event_id>
-    <event_name><![CDATA[El Dorado Cookie Toss - November 2018]]></event_name>
-    <location_name><![CDATA[El Dorado Regional Park]]></location_name>
-    <country_code>US</country_code>
-    <start_date><![CDATA[11/03/2018]]></start_date>
-    <end_date><![CDATA[11/03/2018]]></end_date>
-    <event_type></event_type>
-    <total_rounds>6</total_rounds>
-    <event_calc_accuracy_string>%.2f</event_calc_accuracy_string>
-    <tasks>
-      <round_number>1</round_number>
-      <task_code>f3k_a</task_code>
-    </tasks>
-    <tasks>
-      ...
-    </tasks>
+    <event>
+        <event_id>1177</event_id>
+        <event_name>
+            <![CDATA[2018 International Hand Launch Glider Festival]]>
+        </event_name>
+        <location_id>2002</location_id>
+        <location_name>
+            <![CDATA[Poway Glider Field]]>
+        </location_name>
+        <country_code>US</country_code>
+        <start_date>
+            <![CDATA[04/27/2018]]>
+        </start_date>
+        <end_date>
+            <![CDATA[04/29/2018]]>
+        </end_date>
+        <event_type>
+            <![CDATA[F3K Hand Launch]]>
+        </event_type>
+        <event_type_code>f3k</event_type_code>
+        <total_rounds>11</total_rounds>
+        <event_calc_accuracy_string>
+            <![CDATA[%.0f]]>
+        </event_calc_accuracy_string>
+        <tasks>
+            <round_number>1</round_number>
+            <flight_type_code>f3k_k</flight_type_code>
+            <flight_type_name>
+                <![CDATA[F3K Task K - Big Ladder]]>
+            </flight_type_name>
+            <flight_type_name_short>
+                <![CDATA[K - Big Ladder]]>
+            </flight_type_name_short>
+            <flight_type_description>
+                <![CDATA[Increasing Time by :30. 1:00, 1:30, 2:00, 2:30, 3:00 in 10 minute window. All time counts.]]>
+            </flight_type_description>
+            <flight_type_laps>0</flight_type_laps>
+            <flight_type_landing>0</flight_type_landing>
+            <flight_type_over_penalty>0</flight_type_over_penalty>
+            <flight_type_sub_flights>5</flight_type_sub_flights>
+            <flight_type_start_penalty>0</flight_type_start_penalty>
+        </tasks>
         <pilots>
-            <pilot_id>1</pilot_id>
-            <pilot_position>2</pilot_position>
+            <pilot_id>2688</pilot_id>
             <pilot_bib>1</pilot_bib>
-            <pilot_first_name>Tim</pilot_first_name>
-            <pilot_last_name>Traver</pilot_last_name>
-            <country_code>US</country_code>
-            <pilot_class></pilot_class>
-            <pilot_ama>9595</pilot_ama>
-            <pilot_fai>USA9595</pilot_fai>
-            <pilot_fai_license></pilot_fai_license>
-            <pilot_team></pilot_team>
-            <total_score>9598.21</total_score>
-            <percentage>98.963</percentage>
-            <drop>98.963</drop>
-            <diff>-100.58</diff>
-            <flights>
-                <round_number>1</round_number>
-                <rank>3</rank>
-                <group>0</group>
-                <order>1</order>
-                <minutes>0</minutes>
-                <seconds>71.12</seconds>
-                <laps>2</laps>
-                <landing>95</landing>
-                <score>872</score>
-                <penalty>0</penalty>
-                <dropped>0</dropped>
-                <score_status>1</score_status>
-                <subs>
-                    <sub_num>1</sub_num>
-                    <sub_val>4.42</sub_val>
-                </subs>
-                <subs>
-                	...
-                </subs>
-            </flights>
-    </pilots>
-    <pilots>
-      ...
-    </pilots>
-    <flyoffs>
-        <flyoff_number>1</flyoff_number>
-        <total_rounds>4</total_rounds>
-        <pilots>
-            <pilot_id>428</pilot_id>
-            <pilot_position>1</pilot_position>
-            <pilot_bib>64</pilot_bib>
-            <pilot_first_name>
-                <![CDATA[Roland ]]>
-            </pilot_first_name>
-            <pilot_last_name>Sommer</pilot_last_name>
+            <pilot_first_name>Walther</pilot_first_name>
+            <pilot_last_name>Bednarz</pilot_last_name>
             <country_code>DE</country_code>
             <pilot_class>Open</pilot_class>
             <pilot_ama></pilot_ama>
-            <pilot_fai>GER</pilot_fai>
-            <pilot_fai_license>1586</pilot_fai_license>
-            <pilot_team></pilot_team>
-            <total_score>13474</total_score>
-            <percentage>100</percentage>
-            <drop></drop>
-            <diff>0</diff>
-            <flights>
-                <round_number>1</round_number>
-                <rank>3</rank>
-                <group>0</group>
-                <order>1</order>
-                <minutes>0</minutes>
-                <seconds>71.12</seconds>
-                <laps>2</laps>
-                <landing>95</landing>
-                <score>872</score>
-                <penalty>0</penalty>
-                <dropped>0</dropped>
-                <score_status>1</score_status>
-                <subs>
-                    <sub_num>1</sub_num>
-                    <sub_val>4.42</sub_val>
-                </subs>
-                <subs>
-                	...
-                </subs>
-            </flights>
+            <pilot_fai>
+                <![CDATA[GER-4053]]>
+            </pilot_fai>
+            <pilot_fai_license>90374</pilot_fai_license>
+            <pilot_team>
+                <![CDATA[German Tornado]]>
+            </pilot_team>
         </pilots>
-    </flyoffs>
+        <prelim_standings>
+            <total_rounds>11</total_rounds>
+            <total_drops>1</total_drops>
+            <standings>
+                <pilot_position>1</pilot_position>
+                <pilot_id>2628</pilot_id>
+                <pilot_bib>54</pilot_bib>
+                <pilot_first_name>James</pilot_first_name>
+                <pilot_last_name>Hohensee</pilot_last_name>
+                <country_code>US</country_code>
+                <total_score>9905</total_score>
+                <total_diff>0</total_diff>
+                <total_drop>771</total_drop>
+                <total_percent>100</total_percent>
+                <rounds>
+                    <round_number>1</round_number>
+                    <round_score>0</round_score>
+                    <flights>
+                        <flight_type_code>f3k_k</flight_type_code>
+                        <flight_rank>5</flight_rank>
+                        <flight_order>0</flight_order>
+                        <flight_group>D</flight_group>
+                        <flight_minutes>9</flight_minutes>
+                        <flight_seconds>49</flight_seconds>
+                        <flight_laps>0</flight_laps>
+                        <flight_landing>0</flight_landing>
+                        <flight_start_height>0</flight_start_height>
+                        <flight_score>988</flight_score>
+                        <flight_penalty>0</flight_penalty>
+                        <flight_dropped>0</flight_dropped>
+                        <score_status>1</score_status>
+                        <flight_subs>
+                            <sub_num>1</sub_num>
+                            <sub_val>0:59</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>2</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>3</sub_num>
+                            <sub_val>1:59</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>4</sub_num>
+                            <sub_val>2:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>5</sub_num>
+                            <sub_val>2:51</sub_val>
+                        </flight_subs>
+                    </flights>
+                </rounds>
+            </standings>
+        </prelim_standings>
+        <flyoff_standings>
+            <flyoff_number>1</flyoff_number>
+            <total_rounds>4</total_rounds>
+            <total_drops>0</total_drops>
+            <standings>
+                <pilot_position>1</pilot_position>
+                <pilot_id>428</pilot_id>
+                <pilot_bib>64</pilot_bib>
+                <pilot_first_name>
+                    <![CDATA[Roland ]]>
+                </pilot_first_name>
+                <pilot_last_name>Sommer</pilot_last_name>
+                <country_code>DE</country_code>
+                <total_score>13474</total_score>
+                <total_diff>0</total_diff>
+                <total_drop>0</total_drop>
+                <total_percent>100</total_percent>
+                <rounds>
+                    <round_number>12</round_number>
+                    <round_score>970</round_score>
+                    <flights>
+                        <flight_type_code>f3k_e</flight_type_code>
+                        <flight_rank>3</flight_rank>
+                        <flight_order>0</flight_order>
+                        <flight_group>A</flight_group>
+                        <flight_minutes>9</flight_minutes>
+                        <flight_seconds>41</flight_seconds>
+                        <flight_laps>0</flight_laps>
+                        <flight_landing>0</flight_landing>
+                        <flight_start_height>0</flight_start_height>
+                        <flight_score>970</flight_score>
+                        <flight_penalty>0</flight_penalty>
+                        <flight_dropped>0</flight_dropped>
+                        <score_status>1</score_status>
+                        <flight_subs>
+                            <sub_num>1</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>2</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>3</sub_num>
+                            <sub_val>3:00</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>4</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>5</sub_num>
+                            <sub_val>2:11</sub_val>
+                        </flight_subs>
+                    </flights>
+                </rounds>
+			</standings>
+		</flyoff_standings>
+  </event>
 </result>";
-
 
 	}
 
@@ -262,12 +352,16 @@ XML or JSON Object Hierarchy :
 		#Let's first fill it up with the current round info
 		foreach($event->rounds as $round_number => $r){
 			foreach($r['flights'] as $flight_type_id => $f){
-				if( $flight_type_id != $r['flight_type_id'] ){
-					continue;
+				if( $f['flight_type_code'] != 'f3b_duration' && $f['flight_type_code'] != 'f3b_distance' && $f['flight_type_code'] != 'f3b_speed'){
+					if( $flight_type_id != $r['flight_type_id'] ){
+						continue;
+					}
 				}
 				foreach($f['pilots'] as $event_pilot_id => $p){
-					$p['event_round_flyoff'] = $r['event_round_flyoff'];
-					$this->rounds[$event_pilot_id][$round_number] = $p;
+					$p['flight_type_code'] = $f['flight_type_code'];
+					$this->rounds[$event_pilot_id][$round_number][$flight_type_id] = $p;
+					$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
+										
 				}
 			}
 			if( ! $r['event_round_flyoff'] ){
@@ -284,18 +378,19 @@ XML or JSON Object Hierarchy :
 				foreach($f as $round_number => $r){
 					foreach($r['pilots'] as $event_pilot_id => $p){
 						if(!isset($this->rounds[$event_pilot_id][$round_number])){
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_id'] = $p['event_pilot_id'];
-							$this->rounds[$event_pilot_id][$round_number]['event_round_id'] = $p['event_round_id'];
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_penalty'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_minutes'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_laps'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_landing'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_flight_seconds'] = 0;
-							$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
-							$this->rounds[$event_pilot_id][$round_number]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['flight_type_code'] = $event->flight_types[ $flight_type_id ]['flight_type_code'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_id'] = $p['event_pilot_id'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_round_id'] = $p['event_round_id'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_penalty'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_minutes'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_seconds'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_laps'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_landing'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_seconds'] = 0;
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_round_flyoff'] = $r['event_round_flyoff'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
 						}
 					}
 				}
@@ -333,7 +428,6 @@ XML or JSON Object Hierarchy :
 				break;
 		}
 
-		$pilots = array();
 		$temp_tasks = array();
 		$tasks = array();
 		# Figure out the tasks from the existing rounds and then the tasks set up in the event
@@ -341,16 +435,16 @@ XML or JSON Object Hierarchy :
 		foreach( $event->rounds as $round_number => $round ){
 			$ft = $round['flight_type_id'];
 			$temp_tasks[ $round_number ] = array(
-				"round_number" => $round_number,
-				"task_code" => $round['flights'][ $ft ]['flight_type_code'],
-				"flight_type_name" => $round['flights'][ $ft ]['flight_type_name'],
-				"flight_type_name_short" => $round['flights'][ $ft ]['flight_type_name_short'],
-				"flight_type_description" => $round['flights'][ $ft ]['flight_type_description'],
-				"flight_type_laps" => $round['flights'][ $ft ]['flight_type_laps'],
-				"flight_type_landing" => $round['flights'][ $ft ]['flight_type_landing'],
-				"flight_type_over_penalty" => $round['flights'][ $ft ]['flight_type_over_penalty'],
-				"flight_type_sub_flights" => $round['flights'][ $ft ]['flight_type_sub_flights'],
-				"flight_type_start_penalty" => $round['flights'][ $ft ]['flight_type_start_penalty'],
+				"round_number" => intval( $round_number ),
+				"flight_type_code" => $round['flights'][ $ft ]['flight_type_code'] ? $round['flights'][ $ft ]['flight_type_code'] : "",
+				"flight_type_name" => $round['flights'][ $ft ]['flight_type_name'] ? $round['flights'][ $ft ]['flight_type_name'] : "",
+				"flight_type_name_short" => $round['flights'][ $ft ]['flight_type_name_short'] ? $round['flights'][ $ft ]['flight_type_name_short'] : "",
+				"flight_type_description" => $round['flights'][ $ft ]['flight_type_description'] ? $round['flights'][ $ft ]['flight_type_description'] : "",
+				"flight_type_laps" => intval( $round['flights'][ $ft ]['flight_type_laps'] ),
+				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
+				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
+				"flight_type_sub_flights" => intval( $round['flights'][ $ft ]['flight_type_sub_flights'] ),
+				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 			);
 		}
 
@@ -361,16 +455,16 @@ XML or JSON Object Hierarchy :
 					continue;
 				}
 				$temp_tasks[ $i ] = array(
-					"round_number" => $i,
-					"task_code" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_code'],
-					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'],
-					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'],
-					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'],
-					"flight_type_laps" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'],
-					"flight_type_landing" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'],
-					"flight_type_over_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'],
-					"flight_type_sub_flights" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'],
-					"flight_type_start_penalty" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'],
+					"round_number" => intval( $i ),
+					"flight_type_code" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_code'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_code'] : "",
+					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'] : "",
+					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'] : "",
+					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'] : "",
+					"flight_type_laps" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'] ),
+					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
+					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
+					"flight_type_sub_flights" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'] ),
+					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 				);
 			}
 		}
@@ -378,40 +472,87 @@ XML or JSON Object Hierarchy :
 			$tasks[] = $t;
 		}
 		
+		# Now lets create the event pilot list
+		$pilots = array();
+		foreach( $event->pilots as $event_pilot_id => $p ){
+			$pilots[] = array(
+				"pilot_id" => intval( $p['pilot_id'] ),
+				"pilot_bib" => intval( $p['event_pilot_bib']),
+				"pilot_first_name" => $p['pilot_first_name'] ? $p['pilot_first_name'] : "",
+				"pilot_last_name" => $p['pilot_last_name'] ? $p['pilot_last_name'] : "",
+				"country_code" => $p['country_code'] ? $p['country_code'] : "",
+				"pilot_class" => $p['class_description'] ? $p['class_description'] : "",
+				"pilot_ama" => $p['pilot_ama'] ? $p['pilot_ama'] : "",
+				"pilot_fai" => $p['pilot_fai'] ? $p['pilot_fai'] : "",
+				"pilot_fai_license" => $p['pilot_fai_license'] ? $p['pilot_fai_license'] : "",
+				"pilot_team" => $p['event_pilot_team'] ? $p['event_pilot_team'] : "",
+			);
+		}
+		
 		$event->calculate_event_totals();
 		$score = 0;
 		$diff = 0;
 
+		$prelim_standings = array();
+		$flyoff_standings = array();
+
+		# If there are no totals yet, then prefill the totals with just the pilots
+		if( count($event->totals['pilots']) == 0 ){
+			$event->totals['total_rounds'] = 0;
+			$event->totals['round_drops'] = 0;
+			$event->totals['pilots'] = $event->pilots;
+		}
+
+		$prelim_standings['total_rounds'] = intval( $event->totals['total_rounds'] );
+		$prelim_standings['total_drops'] = intval( $event->totals['round_drops'] );
+		$prelim_standings['standings'] = array();
+		
 		foreach( $event->totals['pilots'] as $p ){
-			$flights = array();
+			$rounds = array();
 			foreach( $this->rounds as $event_pilot_id => $round ){
 				if( $event_pilot_id == $p['event_pilot_id'] ){
 					foreach( $round as $round_number => $r ){
-						if( $r['event_round_flyoff'] != 0 ){
+						if( $r['event_round_flyoff'] > 0 ){
 							continue;
 						}
-						$subs = array();
-						if( isset( $r['sub'] ) ){
-							foreach( $r['sub'] as $i => $s ){
-								$subs[] = array("sub_num" => $s['event_pilot_round_flight_sub_num'], "sub_val" => $s['event_pilot_round_flight_sub_val']);
+						$flights = array();
+						foreach( $r as $flight_type_id => $f ){
+							if( ! isset( $f['event_pilot_id'] ) ){
+								continue;
 							}
+							$subs = array();
+							if( isset( $f['sub'] ) ){
+								foreach( $f['sub'] as $i => $s ){
+									$subs[] = array(
+										"sub_num" => intval( $s['event_pilot_round_flight_sub_num'] ),
+										"sub_val" => $s['event_pilot_round_flight_sub_val'] ? $s['event_pilot_round_flight_sub_val'] : ""
+									);
+								}
+							}
+							$flights[] = array(
+								"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
+								"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
+								"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
+								"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
+								"flight_minutes" => intval( $f['event_pilot_round_flight_minutes'] ),
+								"flight_seconds" => $f['event_pilot_round_flight_seconds'] ? "{$f['event_pilot_round_flight_seconds']}" : "",
+								"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
+								"flight_landing" => intval( $f['event_pilot_round_flight_landing'] ),
+								"flight_start_height" => intval( $f['event_pilot_round_flight_start_height'] ),
+								"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
+								"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
+								"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+								"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
+								"flight_subs" => $subs
+							);
 						}
-						$flights[] = array(
-							"round_number" => $round_number,
-							"rank" => intval( $r['event_pilot_round_flight_rank'] ),
-							"group" => "{$r['event_pilot_round_flight_group']}",
-							"order" => intval( $r['event_pilot_round_flight_order'] ),
-							"minutes" => $r['event_pilot_round_flight_minutes'],
-							"seconds" => "{$r['event_pilot_round_flight_seconds']}",
-							"laps" => intval( $r['event_pilot_round_flight_laps'] ),
-							"landing" => intval( $r['event_pilot_round_flight_landing'] ),
-							"score" => floatval( $r['event_pilot_round_total_score'] ),
-							"penalty" => $r['event_pilot_round_flight_penalty'],
-							"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
-							"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
-							"subs" => $subs
+						$rounds[] = array(
+							"round_number" => intval( $round_number ),
+							"round_score" => floatval( $f['event_pilot_round_total_score'] ),
+							"flights" => $flights,
 						);
 					}
+					
 				}
 			}
 
@@ -419,61 +560,74 @@ XML or JSON Object Hierarchy :
 				$score = $p['total'];
 			}
 			$diff = $p['total'] - $score;
-			$pilots[] = array(
-				"pilot_id" => $event->pilots[ $p['event_pilot_id'] ]['pilot_id'],
-				"pilot_position" => $p['overall_rank'],
-				"pilot_bib" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'],
-				"pilot_first_name" => $p['pilot_first_name'],
-				"pilot_last_name" => $p['pilot_last_name'],
-				"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'],
-				"pilot_class" => $event->pilots[ $p['event_pilot_id'] ]['class_description'],
-				"pilot_ama" => $event->pilots[ $p['event_pilot_id'] ]['pilot_ama'],
-				"pilot_fai" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai'],
-				"pilot_fai_license" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai_license'],
-				"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
-				"total_score" => $p['total'],
-				"percentage" => $p['event_pilot_total_percentage'],
-				"drop" => $p['drop'],
-				"diff" => round($diff,2),
-				"flights" => $flights
+			$prelim_standings['standings'][] = array(
+				"pilot_position" => $p['overall_rank'] ? $p['overall_rank'] : 1,
+				"pilot_id" => intval( $event->pilots[ $p['event_pilot_id'] ]['pilot_id'] ),
+				"pilot_bib" => intval( $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'] ),
+				"pilot_first_name" => $p['pilot_first_name'] ? $p['pilot_first_name'] : "",
+				"pilot_last_name" => $p['pilot_last_name'] ? $p['pilot_last_name'] : "",
+				"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'] ? $event->pilots[ $p['event_pilot_id'] ]['country_code'] : "",
+				"total_score" => $p['total'] ? $p['total'] : 0,
+				"total_diff" => $diff ? round($diff,2) : 0,
+				"total_drop" => $p['drop'] ? $p['drop'] : 0,
+				"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
+				"rounds" => $rounds,
 			);
 			$score = $p['total'];
 			
 		}
+
 		# Now lets set the flyoff pilot list too
-		$flyoffs = array();
+		$flyoff_standings = array();
 		$score = 0;
 		$diff = 0;
 		foreach( $event->flyoff_totals as $flyoff_number => $ft ){
 			$temp_pilots = array();
 			foreach( $ft['pilots'] as $p ){
-				$flights = array();
+				$rounds = array();
 				foreach( $this->rounds as $event_pilot_id => $round ){
 					if( $event_pilot_id == $p['event_pilot_id'] ){
 						foreach( $round as $round_number => $r ){
 							if( $r['event_round_flyoff'] != $flyoff_number ){
 								continue;
 							}
-							$subs = array();
-							if( isset( $r['sub'] ) ){
-								foreach( $r['sub'] as $i => $s ){
-									$subs[] = array("sub_num" => $s['event_pilot_round_flight_sub_num'], "sub_val" => $s['event_pilot_round_flight_sub_val']);
+							$round_score = 0;
+							$flights = array();
+							foreach( $r as $flight_type_id => $f ){
+								if( ! isset( $f['event_pilot_id'] ) ){
+									continue;
 								}
+								$subs = array();
+								if( isset( $f['sub'] ) ){
+									foreach( $f['sub'] as $i => $s ){
+										$subs[] = array(
+											"sub_num" => intval( $s['event_pilot_round_flight_sub_num'] ),
+											"sub_val" => $s['event_pilot_round_flight_sub_val'] ? $s['event_pilot_round_flight_sub_val'] : ""
+										);
+									}
+								}
+								$flights[] = array(
+									"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
+									"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
+									"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
+									"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
+									"flight_minutes" => intval( $f['event_pilot_round_flight_minutes'] ),
+									"flight_seconds" => $f['event_pilot_round_flight_seconds'] ? "{$f['event_pilot_round_flight_seconds']}" : "",
+									"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
+									"flight_landing" => intval( $f['event_pilot_round_flight_landing'] ),
+									"flight_start_height" => intval( $f['event_pilot_round_flight_start_height'] ),
+									"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
+									"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
+									"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+									"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
+									"flight_subs" => $subs
+								);
+								$round_score += $f['event_pilot_round_flight_score'];
 							}
-							$flights[] = array(
-								"round_number" => $round_number,
-								"rank" => intval( $r['event_pilot_round_flight_rank'] ),
-								"group" => "{$r['event_pilot_round_flight_group']}",
-								"order" => intval( $r['event_pilot_round_flight_order'] ),
-								"minutes" => $r['event_pilot_round_flight_minutes'],
-								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
-								"laps" => intval( $r['event_pilot_round_flight_laps'] ),
-								"landing" => intval( $r['event_pilot_round_flight_landing'] ),
-								"score" => floatval( $r['event_pilot_round_total_score'] ),
-								"penalty" => $r['event_pilot_round_flight_penalty'],
-								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
-								"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
-								"subs" => $subs
+							$rounds[] = array(
+								"round_number" => intval( $round_number ),
+								"round_score" => floatval( $round_score ),
+								"flights" => $flights,
 							);
 						}
 					}
@@ -482,105 +636,50 @@ XML or JSON Object Hierarchy :
 					$score = $p['total'];
 				}
 				$diff = $p['total'] - $score;
-				$temp_pilots[] = array(
-					"pilot_id" => $event->pilots[ $p['event_pilot_id'] ]['pilot_id'],
-					"pilot_position" => $p['overall_rank'],
-					"pilot_bib" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'],
-					"pilot_first_name" => $p['pilot_first_name'],
-					"pilot_last_name" => $p['pilot_last_name'],
-					"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'],
-					"pilot_class" => $event->pilots[ $p['event_pilot_id'] ]['class_description'],
-					"pilot_ama" => $event->pilots[ $p['event_pilot_id'] ]['pilot_ama'],
-					"pilot_fai" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai'],
-					"pilot_fai_license" => $event->pilots[ $p['event_pilot_id'] ]['pilot_fai_license'],
-					"pilot_team" => $event->pilots[ $p['event_pilot_id'] ]['event_pilot_team'],
-					"total_score" => $p['total'],
-					"percentage" => $p['event_pilot_total_percentage'],
-					"drop" => $p['drop'],
-					"diff" => round($diff,2),
-					"flights" => $flights
+				$standings[] = array(
+					"pilot_position" => $p['overall_rank'] ? $p['overall_rank'] : 1,
+					"pilot_id" => intval( $event->pilots[ $p['event_pilot_id'] ]['pilot_id'] ),
+					"pilot_bib" => intval( $event->pilots[ $p['event_pilot_id'] ]['event_pilot_bib'] ),
+					"pilot_first_name" => $p['pilot_first_name'] ? $p['pilot_first_name'] : "",
+					"pilot_last_name" => $p['pilot_last_name'] ? $p['pilot_last_name'] : "",
+					"country_code" => $event->pilots[ $p['event_pilot_id'] ]['country_code'] ? $event->pilots[ $p['event_pilot_id'] ]['country_code'] : "",
+					"total_score" => $p['total'] ? $p['total'] : 0,
+					"total_diff" => $diff ? round($diff,2) : 0,
+					"total_drop" => $p['drop'] ? $p['drop'] : 0,
+					"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
+					"rounds" => $rounds,
 				);
 				$score = $p['total'];
-				
 			}
 			
-			$flyoffs[ $flyoff_number ]['flyoff_number'] = $flyoff_number;
-			$flyoffs[ $flyoff_number ]['total_rounds'] = $ft['total_rounds'];
-			$flyoffs[ $flyoff_number ]['pilots'] = $temp_pilots;
+			$flyoff_standings[ $flyoff_number ]['flyoff_number'] = $flyoff_number;
+			$flyoff_standings[ $flyoff_number ]['total_rounds'] = $ft['total_rounds'];
+			$flyoff_standings[ $flyoff_number ]['total_drops'] = $ft['round_drops'];
+			$flyoff_standings[ $flyoff_number ]['standings'] = $standings;
 			
 		}
 		# Convert flyoffs to a simple array instead of associative
 		$floyoffs_final = array();
-		foreach( $flyoffs as $f ){
+		foreach( $flyoff_standings as $f ){
 			$flyoffs_final[] = $f;
 		}
-		
-		# If the event hasn't had any scores made yet, then lets create the pilot list from the main pilot list
-		if( count( $pilots ) == 0 ){
-			foreach( $event->pilots as $p ){
-				# Lets set the flights to be the draw if there is one
-				$flights = array();
-				foreach( $this->rounds as $event_pilot_id => $round ){
-					if( $event_pilot_id == $p['event_pilot_id'] ){
-						foreach( $round as $round_number => $r ){
-							if( $r['event_round_flyoff'] != 0 ){
-								continue;
-							}
-							$subs = array();
-							$flights[] = array(
-								"round_number" => $round_number,
-								"rank" => intval($r['event_pilot_round_flight_rank']),
-								"group" => "{$r['event_pilot_round_flight_group']}",
-								"order" => intval( $r['event_pilot_round_flight_order'] ),
-								"minutes" => $r['event_pilot_round_flight_minutes'],
-								"seconds" => "{$r['event_pilot_round_flight_seconds']}",
-								"laps" => intval( $r['event_pilot_round_flight_laps'] ),
-								"landing" => intval( $r['event_pilot_round_flight_landing'] ),
-								"score" => floatval( $r['event_pilot_round_total_score'] ),
-								"penalty" => $r['event_pilot_round_flight_penalty'],
-								"dropped" => $r['event_pilot_round_flight_dropped'] ? 1 : 0,
-								"score_status" => $r['event_pilot_round_flight_status'] ? 1 : 0,
-								"subs" => $subs
-							);
-						}
-					}
-				}
 				
-				$pilots[] = array(
-					"pilot_id" => $p['pilot_id'],
-					"pilot_position" => 1,
-					"pilot_bib" => $p['event_pilot_bib'],
-					"pilot_first_name" => $p['pilot_first_name'],
-					"pilot_last_name" => $p['pilot_last_name'],
-					"country_code" => $p['country_code'],
-					"pilot_class" => $p['class_description'],
-					"pilot_ama" => $p['pilot_ama'],
-					"pilot_fai" => $p['pilot_fai'],
-					"pilot_fai_license" => $p['pilot_fai_license'],
-					"pilot_team" => $p['event_pilot_team'],
-					"total_score" => 0.0,
-					"percentage" => 0.0,
-					"drop" => 0.0,
-					"diff" => 0.0,
-					"flights" => $flights
-				);
-			}
-		}
-		
 		$e = array(
-			"event_id" => $this->event_id,
-			"event_name" => $event->info['event_name'],
-			"location_name" => $event->info['location_name'],
-			"country_code" => $event->info['country_code'],
+			"event_id" => intval( $this->event_id ),
+			"event_name" => $event->info['event_name'] ? $event->info['event_name'] : "",
+			"location_id" => intval( $event->info['location_id'] ),
+			"location_name" => $event->info['location_name'] ? $event->info['location_name'] : "",
+			"country_code" => $event->info['country_code'] ? $event->info['country_code'] : "",
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
-			"event_type" => $event->info['event_type_name'],
-			"event_type_code" => $event->info['event_type_code'],
-			"total_rounds" => $total_rounds,
-			"event_calc_accuracy_string" => $event->event_calc_accuracy_string,
+			"event_type" => $event->info['event_type_name'] ? $event->info['event_type_name'] : "",
+			"event_type_code" => $event->info['event_type_code'] ? $event->info['event_type_code'] : "",
+			"total_rounds" => intval( $total_rounds ),
+			"event_calc_accuracy_string" => $event->event_calc_accuracy_string ? $event->event_calc_accuracy_string : "",
 			"tasks" => $tasks,
 			"pilots" => $pilots,
-			"flyoffs" => $flyoffs_final,
+			"prelim_standings" => $prelim_standings,
+			"flyoff_standings" => $flyoffs_final,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
