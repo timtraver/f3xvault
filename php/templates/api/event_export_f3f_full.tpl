@@ -2,5 +2,5 @@
 "Pilot_id"{$fs}"Pilot_Bib"{$fs}"First_Name"{$fs}"Last_Name"{$fs}"Pilot_Class"{$fs}"AMA"{$fs}"FAI"{$fs}"FAI License"{$fs}"Team_Name"
 "group"{$fs}"order"{$fs}"seconds"{$fs}"penalty"
 {foreach $event->pilots as $event_pilot_id =>$p}"{$p.pilot_id}"{$fs}"{$p.event_pilot_bib}"{$fs}"{$p.pilot_first_name}"{$fs}"{$p.pilot_last_name}"{$fs}"{$p.class_description}"{$fs}"{$p.pilot_ama}"{$fs}"{$p.pilot_fai}"{$fs}"{$p.pilot_fai_license}"{$fs}"{$p.event_pilot_team}"
-{foreach $rounds as $evid => $round}{if $evid == $event_pilot_id}{foreach $round as $round_number => $r}"{$r.event_pilot_round_flight_group}"{$fs}"{$r.event_pilot_round_flight_order}"{$fs}"{$r.event_pilot_round_flight_seconds}"{$fs}"{$r.event_pilot_round_flight_penalty}"
-{/foreach}{/if}{/foreach}{/foreach}
+{foreach $rounds as $evid => $round}{if $evid == $event_pilot_id}{foreach $round as $round_number => $r}{foreach $r as $flight_type_id => $f}"{$f.event_pilot_round_flight_group}"{$fs}"{$f.event_pilot_round_flight_order}"{$fs}"{$f.event_pilot_round_flight_seconds}"{$fs}"{$f.event_pilot_round_flight_penalty}"
+{/foreach}{/foreach}{/if}{/foreach}{/foreach}
