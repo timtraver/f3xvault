@@ -167,7 +167,7 @@ XML or JSON Object Hierarchy :
         <end_date>
             <![CDATA[04/29/2018]]>
         </end_date>
-        <event_type>
+        <event_type_name>
             <![CDATA[F3K Hand Launch]]>
         </event_type>
         <event_type_code>f3k</event_type_code>
@@ -672,7 +672,7 @@ XML or JSON Object Hierarchy :
 			"country_code" => $event->info['country_code'] ? $event->info['country_code'] : "",
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
-			"event_type" => $event->info['event_type_name'] ? $event->info['event_type_name'] : "",
+			"event_type_name" => $event->info['event_type_name'] ? $event->info['event_type_name'] : "",
 			"event_type_code" => $event->info['event_type_code'] ? $event->info['event_type_code'] : "",
 			"total_rounds" => intval( $total_rounds ),
 			"event_calc_accuracy_string" => $event->event_calc_accuracy_string ? $event->event_calc_accuracy_string : "",

@@ -1306,7 +1306,7 @@ class Event {
 				}
 			}
 		}
-debug($this->flight_types);
+
 		if( $this->info['event_type_code'] == 'gps' && $this->flight_types[$flight_type_id]['flight_type_code'] != 'gps_speed' ){
 			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be tied to the times
 			# So lets sort the scores by the laps and then time in a temp array first
