@@ -663,8 +663,7 @@ XML or JSON Object Hierarchy :
 			
 		}
 		# Convert flyoffs to a simple array instead of associative
-		
-		$floyoffs_final = array();
+		$flyoffs_final = array();
 		if( count( $flyoff_standings ) > 0 ){
 			foreach( $flyoff_standings as $f ){
 				$flyoffs_final[] = $f;
@@ -685,7 +684,7 @@ XML or JSON Object Hierarchy :
 			"tasks" => $tasks,
 			"pilots" => $pilots,
 			"prelim_standings" => $prelim_standings,
-			"flyoff_standings" => $floyoffs_final,
+			"flyoff_standings" => $flyoffs_final,
 		);
 		$this->api->api_add_output_variable( "event", $e );
 
