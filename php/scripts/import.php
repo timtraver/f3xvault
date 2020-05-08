@@ -224,7 +224,7 @@ function import_verify() {
 			$rounds[$x] = $flight_types[$r];
 			$x++;
 		}
-	}elseif($event_type_code == 'f3j' || $event_type_code == 'td'){
+	}elseif($event_type_code == 'f3j' || $event_type_code == 'f5j' || $event_type_code == 'td'){
 		# Lets get all the flight types and the round types
 		$stmt = db_prep("
 			SELECT *
@@ -312,6 +312,21 @@ function import_verify() {
 					}else{
 						$temp_rounds[$r]['over'] = 0;
 					}
+					$x++;
+					$temp_rounds[$r]['penalty'] = $lines[$l][$x];
+					$x++;
+					break;
+				case 'f5j':
+					# F3J special fields
+					$temp_rounds[$r]['group'] = $lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['min'] = $lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['sec'] = $lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['land'] = $lines[$l][$x];
+					$x++;
+					$temp_rounds[$r]['height'] = $lines[$l][$x];
 					$x++;
 					$temp_rounds[$r]['penalty'] = $lines[$l][$x];
 					$x++;
