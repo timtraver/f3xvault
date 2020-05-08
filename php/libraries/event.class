@@ -1270,7 +1270,7 @@ class Event {
 						$raw -= $v['event_pilot_round_flight_landing'];
 					}
 				}
-				$temp_flight['event_pilot_round_flight_raw_score']	= round($raw,$this->flight_types[$flight_type_id]['accuracy']);
+				$temp_flight['event_pilot_round_flight_raw_score']	= round($raw,$this->event_calc_accuracy);
 				$temp_flight['event_pilot_round_flight_id']			= $v['event_pilot_round_flight_id'];
 				$temp_flight['event_pilot_round_flight_group']		= $v['event_pilot_round_flight_group'];
 				$temp_flight['event_pilot_round_flight_reflight']	= $v['event_pilot_round_flight_reflight'];
@@ -1306,6 +1306,7 @@ class Event {
 				}
 			}
 		}
+debug($this->flight_types);
 		if( $this->info['event_type_code'] == 'gps' && $this->flight_types[$flight_type_id]['flight_type_code'] != 'gps_speed' ){
 			# For GPS scoring of tied laps, we need to adjust the scores of the ties to be tied to the times
 			# So lets sort the scores by the laps and then time in a temp array first
