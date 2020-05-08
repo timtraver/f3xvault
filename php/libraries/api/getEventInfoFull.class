@@ -443,6 +443,7 @@ XML or JSON Object Hierarchy :
 				"flight_type_laps" => intval( $round['flights'][ $ft ]['flight_type_laps'] ),
 				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
 				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
+				"flight_type_start_type" => intval( $round['flights'][ $ft ]['flight_type_start_type'] ),
 				"flight_type_sub_flights" => intval( $round['flights'][ $ft ]['flight_type_sub_flights'] ),
 				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 			);
