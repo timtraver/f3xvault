@@ -78,6 +78,7 @@
 							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
 							<option value="?action={$action}&function={$function}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
 							<option value="?action={$action}&function={$function}&disc=gps"{if $disc=='gps'} SELECTED{/if}>GPS Triangle Racing</option>
+							<option value="?action={$action}&function={$function}&disc=f5j"{if $disc=='f5j'} SELECTED{/if}>F5J Electric Duration</option>
 						</select>
 						</span>
 					</div>

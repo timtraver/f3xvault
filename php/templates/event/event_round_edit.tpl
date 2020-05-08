@@ -45,7 +45,7 @@
 					</select>
 				{else}
 					{foreach $flight_types as $ft}
-						{$ft.flight_type_name|escape}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
+						{$ft.flight_type_name|escape}{if $ft.flight_type_start_height} + Start Height{/if}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
 					{/foreach}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
@@ -132,6 +132,7 @@
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_position}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_start_height}{$cols=$cols+1}{/if}
 			<tr>
 				<th colspan="2" style="text-align:left;">
 					<span id="toggle_{$flight_type_id}" onClick="toggle('view_flight_type_{$flight_type_id}',this);">
@@ -165,6 +166,9 @@
 				{/if}
 				{if $ft.flight_type_start_penalty}
 					<th align="center" style="text-align: center;">Start Penalty</th>
+				{/if}
+				{if $ft.flight_type_start_height}
+					<th align="center" style="text-align: center;">Start Height</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center" style="text-align: center;" nowrap>
@@ -234,6 +238,11 @@
 					{if $ft.flight_type_start_penalty}
 						<td align="center" nowrap>
 							<input tabindex="1" autocomplete="off" type="text" size="6" style="width:35px;height: 20px;" name="pilot_startpen_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_start_penalty|escape}" onChange="save_data(this);">
+						</td>
+					{/if}
+					{if $ft.flight_type_start_height}
+						<td align="center" nowrap>
+							<input tabindex="1" autocomplete="off" type="text" size="6" style="width:35px;height: 20px;" name="pilot_startheight_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{$p.event_pilot_round_flight_start_height|escape}" onChange="save_data(this);">
 						</td>
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}

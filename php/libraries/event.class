@@ -593,6 +593,7 @@ class Event {
 					"event_pilot_round_flight_minutes"			=> $flight['event_pilot_round_flight_minutes'],
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
 					"event_pilot_round_flight_start_penalty"	=> $flight['event_pilot_round_flight_start_penalty'],
+					"event_pilot_round_flight_start_height"		=> $flight['event_pilot_round_flight_start_height'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
 					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
@@ -628,6 +629,7 @@ class Event {
 					"event_pilot_round_flight_minutes"			=> $flight['event_pilot_round_flight_minutes'],
 					"event_pilot_round_flight_seconds"			=> $flight['event_pilot_round_flight_seconds'],
 					"event_pilot_round_flight_start_penalty"	=> $flight['event_pilot_round_flight_start_penalty'],
+					"event_pilot_round_flight_start_height"		=> $flight['event_pilot_round_flight_start_height'],
 					"event_pilot_round_flight_over"				=> $flight['event_pilot_round_flight_over'],
 					"event_pilot_round_flight_laps"				=> $flight['event_pilot_round_flight_laps'],
 					"event_pilot_round_flight_position"			=> $flight['event_pilot_round_flight_position'],
@@ -1224,6 +1226,19 @@ class Event {
 				if($f['flight_type_start_penalty'] == 1){
 					if( $f['flight_type_code'] == 'gps_distance' ){
 						$raw -= $v['event_pilot_round_flight_start_penalty'];
+					}
+				}
+				if($f['flight_type_start_height'] == 1){
+					if( $f['flight_type_code'] == 'f5j_duration' ){
+						$height = $v['event_pilot_round_flight_start_height'];
+						if( $height < 0 ){
+						}else if( $height <= 200 ){
+							$raw -= $height * 0.5;
+						}else{
+							# above 200, so subtract 100 + anything over 200
+							$raw -= 100;
+							$raw -= ( $height - 200 ) * 3;
+						}
 					}
 				}
 				if($f['flight_type_position'] == 1){

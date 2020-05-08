@@ -27,7 +27,7 @@ class searchPlanes {
 		# This is where we set the parameter field list
 		$this->api->function_parameters = array(
 			array( "type" => "string",	"mandatory" => 0,	"name" => "string",			"description" => "Search String" ),
-			array( "type" => "string",	"mandatory" => 0,	"name" => "discipline",		"description" => "Flying Discipline Code (f3b, f3f, f3j, f3k, td, mom, gps)" ),
+			array( "type" => "string",	"mandatory" => 0,	"name" => "discipline",		"description" => "Flying Discipline Code (f3b, f3f, f3j, f5j, f3k, td, mom, gps)" ),
 			array( "type" => "string",	"mandatory" => 0,	"name" => "country",		"description" => "Country (Code or name)" ),
 			array( "type" => "integer",	"mandatory" => 0,	"name" => "page",			"description" => "Page Number" ),
 			array( "type" => "integer",	"mandatory" => 0,	"name" => "per_page",		"description" => "List Items Per Page" )

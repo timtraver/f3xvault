@@ -102,6 +102,7 @@
 	<input type="hidden" name="laps" value="{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}1{else}{$laps|escape}{/if}">
 	<input type="hidden" name="penalty" value="{$penalty|escape}">
 	<input type="hidden" name="startpen" value="{$startpen|escape}">
+	<input type="hidden" name="startheight" value="{$startheight|escape}">
 	{for $sub=1 to $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights}
 	<input type="hidden" name="sub_min_{$sub}" value="{$subs.$sub.minutes}">
 	<input type="hidden" name="sub_sec_{$sub}" value="{$subs.$sub.seconds}">
@@ -161,8 +162,8 @@
 		</div>
 
 		
-		{* For F3J Event *}
-		{if $event->info.event_type_code == 'f3j'}
+		{* For F3J and F5J Event *}
+		{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j'}
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
 			<table>
 			<tr>
@@ -196,12 +197,30 @@
 						&nbsp;&nbsp;&nbsp;sec
 				</td>
 			</tr>
+			{if $event->info.event_type_code == 'f3j'}
 			<tr>
 				<th><h3>Over Time</h3></th>
 				<td>
 					<input type="button" id="over_button" class="btn btn-primary btn-rounded" style="margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {if $over == 1}Yes{else}No{/if} " onClick="toggle_over();">
 				</td>
 			</tr>
+			{/if}
+			{if $event->info.event_type_code == 'f5j'}
+			<tr>
+				<th><h3>Start Height</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						{if $startheight == ''}{$startheight = 0}{/if}
+						<input type="button" id="height_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$startheight} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								{section name=s loop=350 start=350 step=-1}
+								<li><a href="#" onClick='document.main.startheight.value="{$smarty.section.s.index}";document.getElementById("height_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+								{/section}
+							</ul>
+					</div>
+				</td>
+			</tr>
+			{/if}
 			<tr>
 				<th><h3>Landing</h3></th>
 				<td>

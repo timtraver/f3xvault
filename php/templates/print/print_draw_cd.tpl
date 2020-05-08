@@ -41,7 +41,8 @@
 				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
 				<th>Spot</th>
 			{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
-				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'}
 				<th>Lane</th>
 			{/if}
 
@@ -50,6 +51,9 @@
 			{/if}
 			{if $event->info.event_type_code=="f3j"}
 				<th width="20">Over</th>
+			{/if}
+			{if $event->info.event_type_code=="f5j"}
+				<th width="60">Start Height</th>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<th width="100">Landing</th>
@@ -102,6 +106,7 @@
 				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'
 			}
 				<td align="center" bgcolor="{$bgcolor}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
 			{/if}
@@ -111,6 +116,9 @@
 			{/if}
 			{if $event->info.event_type_code=="f3j"}
 				<th width="20" style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}"><input type="checkbox" name="box"></th>
+			{/if}
+			{if $event->flight_types.$flight_type_id.flight_type_start_height}
+				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<td style="border: 1px solid black;{if $bottom}border-top: 2px solid black;{/if}">&nbsp;</td>
@@ -137,6 +145,7 @@
 				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'
 			}
 				<td align="center" style="border-bottom: 1px solid black;">&nbsp;</td>
 			{/if}
@@ -145,6 +154,9 @@
 			{/if}
 			{if $event->info.event_type_code=="f3j"}
 				<th width="20"><input type="checkbox" name="box"></th>
+			{/if}
+			{if $event->flight_types.$flight_type_id.flight_type_start_height}
+				<td style="border: 1px solid black;">&nbsp;</td>
 			{/if}
 			{if $event->flight_types.$flight_type_id.flight_type_landing}
 				<td style="border: 1px solid black;">&nbsp;</td>

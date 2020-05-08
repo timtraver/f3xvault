@@ -2707,7 +2707,7 @@ function event_round_edit() {
 				$flight_type_id = $event->f3k_flight_type_id;
 			}
 		}
-		if($event->info['event_type_code'] == 'f3j'){
+		if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j'){
 			if($flyoff_round){
 				$event->rounds[$round_number]['event_round_time_choice'] = 15;
 			}else{
@@ -2819,6 +2819,9 @@ function event_round_save() {
 				break;
 			case 'f3j':
 				$pattern = 'f3j_duration';
+				break;
+			case 'f5j':
+				$pattern = 'f5j_duration';
 				break;
 			case 'td':
 				$pattern = 'td_duration';
@@ -3323,6 +3326,7 @@ function event_round_save() {
 								event_pilot_round_flight_minutes = :event_pilot_round_flight_minutes,
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
 								event_pilot_round_flight_start_penalty = :event_pilot_round_flight_start_penalty,
+								event_pilot_round_flight_start_height = :event_pilot_round_flight_start_height,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
 								event_pilot_round_flight_position = :event_pilot_round_flight_position,
@@ -3341,6 +3345,7 @@ function event_round_save() {
 							"event_pilot_round_flight_minutes"			=> $v['min'],
 							"event_pilot_round_flight_seconds"			=> $v['sec'],
 							"event_pilot_round_flight_start_penalty"	=> $v['startpen'],
+							"event_pilot_round_flight_start_height"		=> $v['startheight'],
 							"event_pilot_round_flight_over"				=> $v['over'],
 							"event_pilot_round_flight_laps"				=> $v['laps'],
 							"event_pilot_round_flight_position"			=> $v['position'],
@@ -3361,6 +3366,7 @@ function event_round_save() {
 								event_pilot_round_flight_minutes = :event_pilot_round_flight_minutes,
 								event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
 								event_pilot_round_flight_start_penalty = :event_pilot_round_flight_start_penalty,
+								event_pilot_round_flight_start_height = :event_pilot_round_flight_start_height,
 								event_pilot_round_flight_over = :event_pilot_round_flight_over,
 								event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
 								event_pilot_round_flight_position = :event_pilot_round_flight_position,
@@ -3379,6 +3385,7 @@ function event_round_save() {
 							"event_pilot_round_flight_minutes"			=> $v['min'],
 							"event_pilot_round_flight_seconds"			=> $v['sec'],
 							"event_pilot_round_flight_start_penalty"	=> $v['startpen'],
+							"event_pilot_round_flight_start_height"		=> $v['startheight'],
 							"event_pilot_round_flight_over"				=> $v['over'],
 							"event_pilot_round_flight_laps"				=> $v['laps'],
 							"event_pilot_round_flight_position"			=> $v['position'],
@@ -4940,6 +4947,7 @@ function event_draw_manual_save(){
 			break;
 		case 'f3b_duration':
 		case 'f3j_duration':
+		case 'f5j_duration':
 		case 'td_duration':
 			$group_type = 'alpha';
 			$lane_type = 'numeric';
@@ -5263,6 +5271,7 @@ function event_export_export() {
 			$template = "event/event_export_f3k.tpl";
 			break;
 		case "f3j":
+		case "f5j":
 			$template = "event/event_export_f3j.tpl";
 			break;
 		case "td":
@@ -5711,6 +5720,7 @@ function event_tasks_save() {
 		}
 	}
 
+
 	# Now Lets save the round tasks
 	foreach($rounds as $id => $r){
 		$stmt = db_prep("
@@ -5752,14 +5762,13 @@ function event_tasks_save() {
 		# If its F3J or TD, lets set the default time and point value
 		$event_task_time_choice = 0;
 		$event_task_score_second = 0;
-		if($e->info['event_type_code'] == 'f3j'){
+		if($e->info['event_type_code'] == 'f3j' | $e->info['event_type_code'] == 'f5j'){
 			$event_task_score_second = 1;
 			if($round_type == 'prelim'){
 				$event_task_time_choice = 10;
 			}else{
 				$event_task_time_choice = 15;
 			}
-			
 		}
 		if($e->info['event_type_code'] == 'td'){
 			$event_task_time_choice = 10;
@@ -6010,6 +6019,7 @@ function event_self_entry() {
 	$landing = intval($_REQUEST['landing']);
 	$laps = intval($_REQUEST['laps']);
 	$startpen = intval($_REQUEST['startpen']);
+	$startheight = intval($_REQUEST['startheight']);
 	$penalty = intval($_REQUEST['penalty']);
 	$save = intval($_REQUEST['save']);
 
@@ -6237,7 +6247,7 @@ function event_self_entry() {
 				"event_round_id" => $event_round_id
 			));
 		}else{
-			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'td'){
+			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j' || $event->info['event_type_code'] == 'td'){
 				$event_round_time_choice = $event->tasks[$round_number]['event_task_time_choice'];
 			}
 			$event_round_flyoff = 0;
@@ -6394,6 +6404,7 @@ function event_self_entry() {
 					event_pilot_round_flight_laps = :laps,
 					event_pilot_round_flight_landing = :landing,
 					event_pilot_round_flight_start_penalty = :startpen,
+					event_pilot_round_flight_start_height = :startheight,
 					event_pilot_round_flight_penalty = :penalty,
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
@@ -6409,6 +6420,7 @@ function event_self_entry() {
 				"laps" => $laps,
 				"landing" => $landing,
 				"startpen" => $startpen,
+				"startheight" => $startheight,
 				"penalty" => $penalty,
 				"flight_time" => $flight_time,
 				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
@@ -6426,6 +6438,7 @@ function event_self_entry() {
 					event_pilot_round_flight_laps = :laps,
 					event_pilot_round_flight_landing = :landing,
 					event_pilot_round_flight_start_penalty = :startpen,
+					event_pilot_round_flight_start_height = :startheight,
 					event_pilot_round_flight_penalty = :penalty,
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
@@ -6442,6 +6455,7 @@ function event_self_entry() {
 				"laps" => $laps,
 				"landing" => $landing,
 				"startpen" => $startpen,
+				"startheight" => $startheight,
 				"penalty" => $penalty,
 				"flight_time" => $flight_time
 			));
@@ -6545,6 +6559,7 @@ function event_self_entry() {
 			$laps = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_laps'];
 			$over = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_over'];
 			$startpen = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_penalty'];
+			$startheight = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_height'];
 			$penalty = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_penalty'];
 			# Lets fill in the sub flights
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
@@ -6571,6 +6586,7 @@ function event_self_entry() {
 			$over = 0;
 			$penalty = 0;
 			$startpen = 0;
+			$startheight = 0;
 
 		}
 	}
@@ -6591,6 +6607,7 @@ function event_self_entry() {
 	$smarty->assign("landing",$landing);
 	$smarty->assign("laps",$laps);
 	$smarty->assign("startpen",$startpen);
+	$smarty->assign("startheight",$startheight);
 	$smarty->assign("penalty",$penalty);
 
 	$maintpl = find_template("event/event_round_self_entry.tpl");
