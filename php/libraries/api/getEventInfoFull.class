@@ -464,6 +464,7 @@ XML or JSON Object Hierarchy :
 					"flight_type_laps" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'] ),
 					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
 					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
+					"flight_type_start_height" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_height'] ),
 					"flight_type_sub_flights" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'] ),
 					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 				);
