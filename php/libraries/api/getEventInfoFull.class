@@ -517,6 +517,7 @@ XML or JSON Object Hierarchy :
 						if( $r['event_round_flyoff'] > 0 ){
 							continue;
 						}
+						$round_score = 0;
 						$flights = array();
 						foreach( $r as $flight_type_id => $f ){
 							if( ! isset( $f['event_pilot_id'] ) ){
@@ -547,10 +548,11 @@ XML or JSON Object Hierarchy :
 								"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
 								"flight_subs" => $subs
 							);
+							$round_score += $f['event_pilot_round_flight_score'];
 						}
 						$rounds[] = array(
 							"round_number" => intval( $round_number ),
-							"round_score" => floatval( $f['event_pilot_round_total_score'] ),
+							"round_score" => floatval( $round_score ),
 							"flights" => $flights,
 						);
 					}
