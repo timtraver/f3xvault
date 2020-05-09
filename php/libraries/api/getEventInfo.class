@@ -317,6 +317,7 @@ XML or JSON Object Hierarchy :
 				"flight_type_laps" => intval( $round['flights'][ $ft ]['flight_type_laps'] ),
 				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
 				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
+				"flight_type_start_height" => intval( $round['flights'][ $ft ]['flight_type_start_height'] ),
 				"flight_type_sub_flights" => intval( $round['flights'][ $ft ]['flight_type_sub_flights'] ),
 				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 			);
@@ -337,6 +338,7 @@ XML or JSON Object Hierarchy :
 					"flight_type_laps" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'] ),
 					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
 					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
+					"flight_type_start_height" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_height'] ),
 					"flight_type_sub_flights" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'] ),
 					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 				);
@@ -434,11 +436,12 @@ XML or JSON Object Hierarchy :
 			
 		}
 		# Convert flyoffs to a simple array instead of associative
-		$floyoffs_final = array();
-		foreach( $flyoff_standings as $f ){
-			$flyoffs_final[] = $f;
+		$flyoffs_final = array();
+		if( count( $flyoff_standings ) > 0 ){
+			foreach( $flyoff_standings as $f ){
+				$flyoffs_final[] = $f;
+			}
 		}
-				
 		$e = array(
 			"event_id" => intval( $this->event_id ),
 			"event_name" => $event->info['event_name'] ? $event->info['event_name'] : "",
@@ -447,7 +450,7 @@ XML or JSON Object Hierarchy :
 			"country_code" => $event->info['country_code'] ? $event->info['country_code'] : "",
 			"start_date" => date( "m/d/Y", strtotime($event->info['event_start_date'] ) ),
 			"end_date" => date( "m/d/Y", strtotime($event->info['event_end_date'] ) ),
-			"event_type" => $event->info['event_type_name'] ? $event->info['event_type_name'] : "",
+			"event_type_name" => $event->info['event_type_name'] ? $event->info['event_type_name'] : "",
 			"event_type_code" => $event->info['event_type_code'] ? $event->info['event_type_code'] : "",
 			"total_rounds" => intval( $total_rounds ),
 			"event_calc_accuracy_string" => $event->event_calc_accuracy_string ? $event->event_calc_accuracy_string : "",
