@@ -6077,19 +6077,26 @@ function event_self_entry() {
 			$flight = $m[1];
 			$sub_flights[$flight]['seconds'] = $val;
 		}
+		if(preg_match("/sub_sec2_(\d)/", $key, $m)){
+			$flight = $m[1];
+			$sub_flights[$flight]['seconds2'] = $val;
+		}
 	}
+	
 	# Lets step through the sub flights and see if there are max flight times and enforce them
 	foreach($sub_flights as $sub => $f){
-		$total_seconds = ( $f['minutes'] * 60 ) + $f['seconds'];
+		$total_seconds = ( $f['minutes'] * 60 ) + $f['seconds'] + ( $f['seconds2'] / 10 );
 		if($event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'] != 0){
 			if( $total_seconds > $event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'] ){
 				$total_seconds = $event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'];
 				$sub_flights[$sub]['minutes'] = floor( $total_seconds / 60 );
 				$sub_flights[$sub]['seconds'] = sprintf( "%02d", fmod( $total_seconds, 60 ) );
+				$sub_flights[$sub]['seconds2'] = round( $sub_flights[$sub]['total_seconds'] - ( $sub_flights[$sub]['minutes'] * 60 ) - $sub_flights[$sub]['seconds'], 1) * 10;
 			}
 		}
 		$sub_flights[$sub]['total_seconds'] = $total_seconds;
 	}
+debug($sub_flights);
 	# Lets check for 1234 round to truncate properly the times
 	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_h'){
 		# Its a 1234 flight
@@ -6114,16 +6121,21 @@ function event_self_entry() {
 		$sub_flights[1]['total_seconds'] = $temp_sub[0];
 		$sub_flights[1]['minutes'] = floor( $temp_sub[0] / 60 );
 		$sub_flights[1]['seconds'] = sprintf( "%02d", fmod( $temp_sub[0], 60 ) );
+		$sub_flights[1]['seconds2'] = round( $sub_flights[1]['total_seconds'] - ( $sub_flights[1]['minutes'] * 60 ) - $sub_flights[1]['seconds'], 1) * 10;
 		$sub_flights[2]['total_seconds'] = $temp_sub[1];
 		$sub_flights[2]['minutes'] = floor( $temp_sub[1] / 60 );
 		$sub_flights[2]['seconds'] = sprintf( "%02d", fmod( $temp_sub[1], 60 ) );
+		$sub_flights[2]['seconds2'] = round( $sub_flights[2]['total_seconds'] - ( $sub_flights[2]['minutes'] * 60 ) - $sub_flights[2]['seconds'], 1) * 10;
 		$sub_flights[3]['total_seconds'] = $temp_sub[2];
 		$sub_flights[3]['minutes'] = floor( $temp_sub[2] / 60 );
 		$sub_flights[3]['seconds'] = sprintf( "%02d", fmod( $temp_sub[2], 60 ) );
+		$sub_flights[3]['seconds2'] = round( $sub_flights[3]['total_seconds'] - ( $sub_flights[3]['minutes'] * 60 ) - $sub_flights[3]['seconds'], 1) * 10;
 		$sub_flights[4]['total_seconds'] = $temp_sub[3];
 		$sub_flights[4]['minutes'] = floor( $temp_sub[3] / 60 );
 		$sub_flights[4]['seconds'] = sprintf( "%02d", fmod( $temp_sub[3], 60 ) );
+		$sub_flights[4]['seconds2'] = round( $sub_flights[4]['total_seconds'] - ( $sub_flights[4]['minutes'] * 60 ) - $sub_flights[4]['seconds'], 1) * 10;
 	}
+debug($sub_flights);
 	# Lets check for big ladder round to truncate properly the times
 	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_k'){
 		# Its a big ladder flight
@@ -6150,18 +6162,23 @@ function event_self_entry() {
 		$sub_flights[1]['total_seconds'] = $temp_sub[0];
 		$sub_flights[1]['minutes'] = floor( $temp_sub[0] / 60 );
 		$sub_flights[1]['seconds'] = sprintf( "%02d", fmod( $temp_sub[0], 60 ) );
+		$sub_flights[1]['seconds2'] = round( $sub_flights[1]['total_seconds'] - ( $sub_flights[1]['minutes'] * 60 ) - $sub_flights[1]['seconds'], 1) * 10;
 		$sub_flights[2]['total_seconds'] = $temp_sub[1];
 		$sub_flights[2]['minutes'] = floor( $temp_sub[1] / 60 );
 		$sub_flights[2]['seconds'] = sprintf( "%02d", fmod( $temp_sub[1], 60 ) );
+		$sub_flights[2]['seconds2'] = round( $sub_flights[2]['total_seconds'] - ( $sub_flights[2]['minutes'] * 60 ) - $sub_flights[2]['seconds'], 1) * 10;
 		$sub_flights[3]['total_seconds'] = $temp_sub[2];
 		$sub_flights[3]['minutes'] = floor( $temp_sub[2] / 60 );
 		$sub_flights[3]['seconds'] = sprintf( "%02d", fmod( $temp_sub[2], 60 ) );
+		$sub_flights[3]['seconds2'] = round( $sub_flights[3]['total_seconds'] - ( $sub_flights[3]['minutes'] * 60 ) - $sub_flights[3]['seconds'], 1) * 10;
 		$sub_flights[4]['total_seconds'] = $temp_sub[3];
 		$sub_flights[4]['minutes'] = floor( $temp_sub[3] / 60 );
 		$sub_flights[4]['seconds'] = sprintf( "%02d", fmod( $temp_sub[3], 60 ) );
+		$sub_flights[4]['seconds2'] = round( $sub_flights[4]['total_seconds'] - ( $sub_flights[4]['minutes'] * 60 ) - $sub_flights[4]['seconds'], 1) * 10;
 		$sub_flights[5]['total_seconds'] = $temp_sub[4];
 		$sub_flights[5]['minutes'] = floor( $temp_sub[4] / 60 );
 		$sub_flights[5]['seconds'] = sprintf( "%02d", fmod( $temp_sub[4], 60 ) );
+		$sub_flights[5]['seconds2'] = round( $sub_flights[5]['total_seconds'] - ( $sub_flights[5]['minutes'] * 60 ) - $sub_flights[5]['seconds'], 1) * 10;
 	}
 	
 	# Lets total up the subflights to calculate the full flight time
@@ -6171,8 +6188,8 @@ function event_self_entry() {
 			$tot += $f['total_seconds'];
 		}
 		$minutes = floor( $tot / 60 );
-		$seconds = sprintf( "%02d", fmod( $tot, 60 ) );
-		$full_seconds = $seconds;
+		$seconds = sprintf( "%1f", fmod( $tot, 60 ) );
+		$full_seconds = floor( $seconds );
 	}
 
 	# lets get the team members for this event or all members if the parameter says
@@ -6415,7 +6432,7 @@ function event_self_entry() {
 			$result = db_exec($stmt,array(
 				"group" => $group,
 				"minutes" => $minutes,
-				"seconds" => $full_seconds,
+				"seconds" => $seconds,
 				"over" => $over,
 				"laps" => $laps,
 				"landing" => $landing,
@@ -6450,7 +6467,7 @@ function event_self_entry() {
 				"flight_type_id" => $flight_type_id,
 				"group" => $group,
 				"minutes" => $minutes,
-				"seconds" => $full_seconds,
+				"seconds" => $seconds,
 				"over" => $over,
 				"laps" => $laps,
 				"landing" => $landing,
@@ -6491,6 +6508,9 @@ function event_self_entry() {
 				}else{
 					$string .= "0".intval($t['seconds']);
 				}
+				if( $t['seconds2'] ){
+					$string .= "." . intval($t['seconds2'] );
+				}
 				if($event_pilot_round_flight_sub_id == 0){
 					# Create a new record
 					$stmt = db_prep("
@@ -6530,10 +6550,11 @@ function event_self_entry() {
 			$string = $f['event_pilot_round_flight_sub_val'];
 			$sec_converted = convert_colon_to_seconds($string, $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy"));
 			$min = floor($sec_converted / 60);
-			
-			$sec = sprintf("%02d.f",fmod($sec_converted,60));
+			$sec = sprintf("%02d",fmod($sec_converted,60));
+			$sec2 = round($sec_converted - ($min * 60) - $sec,1) * 10;
 			$subs[$num]['minutes'] = $min;
 			$subs[$num]['seconds'] = $sec;
+			$subs[$num]['seconds2'] = $sec2;
 		}
 		# Lets see if we need to be able to advance after the save
 		$advance_round = 0;
@@ -6565,10 +6586,14 @@ function event_self_entry() {
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
 				$string = $f['event_pilot_round_flight_sub_val'];
 				$sec_converted = convert_colon_to_seconds($string, $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy"));
+
 				$min = floor($sec_converted / 60);
-				$sec = sprintf("%02d.f",fmod($sec_converted,60));
+				$sec = sprintf("%02d",fmod($sec_converted,60));
+				$sec2 = round($sec_converted - ($min * 60) - $sec,1) * 10;
 				$subs[$num]['minutes'] = $min;
 				$subs[$num]['seconds'] = $sec;
+				$subs[$num]['seconds2'] = $sec2;
+				
 			}
 		}else{
 			$event->get_new_round($round_number);

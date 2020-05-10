@@ -106,6 +106,7 @@
 	{for $sub=1 to $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights}
 	<input type="hidden" name="sub_min_{$sub}" value="{$subs.$sub.minutes}">
 	<input type="hidden" name="sub_sec_{$sub}" value="{$subs.$sub.seconds}">
+	<input type="hidden" name="sub_sec2_{$sub}" value="{$subs.$sub.seconds2}">
 	{/for}
 	
 	<div class="panel-body" style="padding-top: 5px;padding-bottom: 5px;padding-left: 0px;padding-right: 0px;">
@@ -428,7 +429,7 @@
 										{/section}
 									</ul>
 							</div>
-								min
+							&nbsp;&nbsp;min
 							<div class="btn-group" style="width: 50px;">
 								<input type="button" id="sub_{$sub}_seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
 									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
@@ -436,7 +437,17 @@
 										<li><a href="#" onClick='document.main.sub_sec_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 										{/section}
 									</ul>
-							</div>&nbsp;&nbsp;&nbsp;sec <br>
+							</div>&nbsp;&nbsp;
+							
+							<div class="btn-group" style="width: 50px;">
+								<input type="button" id="sub_{$sub}_seconds2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds2|string_format:".%'.1d"} " data-toggle="dropdown" aria-expanded="false">
+									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+										{section name=s loop=10 start=0 step=.1}
+										<li><a href="#" onClick='document.main.sub_sec2_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds2_button").value="{$smarty.section.s.index|string_format:".%'.1d"}";'>{$smarty.section.s.index|string_format:".%'.1d"}</a></li>
+										{/section}
+									</ul>
+							</div>
+							&nbsp;sec<br>
 						{/for}
 					{/if}
 				</td>
