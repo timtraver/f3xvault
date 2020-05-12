@@ -546,6 +546,11 @@ XML or JSON Object Hierarchy :
 									);
 								}
 							}
+							
+							if( preg_match( '/^\d\.\d\d$/', $f['event_pilot_round_flight_seconds'] ) ){
+								$f['event_pilot_round_flight_seconds'] = '0' . $f['event_pilot_round_flight_seconds'];
+							}
+							
 							$flights[] = array(
 								"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
 								"flight_type_name" => $f['flight_type_name'] ? $f['flight_type_name'] : "",
@@ -625,6 +630,9 @@ XML or JSON Object Hierarchy :
 											"sub_val" => $s['event_pilot_round_flight_sub_val'] ? $s['event_pilot_round_flight_sub_val'] : ""
 										);
 									}
+								}
+								if( preg_match( '/^\d\.\d\d$/', $f['event_pilot_round_flight_seconds'] ) ){
+									$f['event_pilot_round_flight_seconds'] = '0' . $f['event_pilot_round_flight_seconds'];
 								}
 								$flights[] = array(
 									"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
