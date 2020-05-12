@@ -527,7 +527,6 @@ XML or JSON Object Hierarchy :
 		$prelim_standings['total_drops'] = intval( $event->totals['round_drops'] );
 		$prelim_standings['standings'] = array();
 		
-print_r($event->totals['pilots']);
 		foreach( $event->totals['pilots'] as $p ){
 			$rounds = array();
 			foreach( $this->rounds as $event_pilot_id => $round ){
