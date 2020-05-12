@@ -82,6 +82,7 @@ class getEventInfo {
 			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_penalties",			"description" => "Pilot Total Penalties" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
 
 			array( "level" => 1,	"type" => "ARRAY",		"name" => "flyoff_standings",			"description" => "Pilot Flyoff Standings" ),
@@ -99,6 +100,7 @@ class getEventInfo {
 			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_penalties",			"description" => "Pilot Total Penalties" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
 
 		);
@@ -180,6 +182,7 @@ XML or JSON Object Hierarchy :
                 <total_score>9905</total_score>
                 <total_diff>0</total_diff>
                 <total_drop>771</total_drop>
+                <total_penalties>0</total_penalties>
                 <total_percent>100</total_percent>
             </standings>
 		</prelim_standings>
@@ -199,6 +202,7 @@ XML or JSON Object Hierarchy :
                 <total_score>13474</total_score>
                 <total_diff>0</total_diff>
                 <total_drop>0</total_drop>
+                <total_penalties>0</total_penalties>
                 <total_percent>100</total_percent>
             </standings>
 		</flyoff_standings>
@@ -406,6 +410,7 @@ XML or JSON Object Hierarchy :
 				"total_score" => $p['total'] ? $p['total'] : 0,
 				"total_diff" => $diff ? round($diff,2) : 0,
 				"total_drop" => $p['drop'] ? $p['drop'] : 0,
+				"total_penalties" => $p['penalties'] ? $p['penalties'] : 0,
 				"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
 			);
 			$score = $p['total'];
@@ -433,6 +438,7 @@ XML or JSON Object Hierarchy :
 					"total_score" => $p['total'] ? $p['total'] : 0,
 					"total_diff" => $diff ? round($diff,2) : 0,
 					"total_drop" => $p['drop'] ? $p['drop'] : 0,
+					"total_penalties" => $p['penalties'] ? $p['penalties'] : 0,
 					"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
 				);
 				$score = $p['total'];

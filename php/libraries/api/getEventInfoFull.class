@@ -82,6 +82,7 @@ class getEventInfoFull {
 			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_penalties",			"description" => "Pilot Total Penalties" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
 
 			array( "level" => 3,	"type" => "ARRAY",		"name" => "rounds",						"description" => "Pilot Preliminary Rounds List" ),
@@ -123,6 +124,7 @@ class getEventInfoFull {
 			array( "level" => 3,	"type" => "float",		"name" => "total_score",				"description" => "Pilot Total Score" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_diff",					"description" => "Pilot Difference From Above Pilot" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_drop",					"description" => "Pilot Total Dropped Score" ),
+			array( "level" => 3,	"type" => "float",		"name" => "total_penalties",			"description" => "Pilot Total Penalties" ),
 			array( "level" => 3,	"type" => "float",		"name" => "total_percent",				"description" => "Pilot Percentage of Top Score" ),
 
 			array( "level" => 3,	"type" => "ARRAY",		"name" => "rounds",						"description" => "Pilot Flyoff Rounds List" ),
@@ -228,6 +230,7 @@ XML or JSON Object Hierarchy :
                 <total_score>9905</total_score>
                 <total_diff>0</total_diff>
                 <total_drop>771</total_drop>
+                <total_penalties>0</total_penalties>
                 <total_percent>100</total_percent>
                 <rounds>
                     <round_number>1</round_number>
@@ -287,6 +290,7 @@ XML or JSON Object Hierarchy :
                 <total_score>13474</total_score>
                 <total_diff>0</total_diff>
                 <total_drop>0</total_drop>
+                <total_penalties>0</total_penalties>
                 <total_percent>100</total_percent>
                 <rounds>
                     <round_number>12</round_number>
@@ -523,6 +527,7 @@ XML or JSON Object Hierarchy :
 		$prelim_standings['total_drops'] = intval( $event->totals['round_drops'] );
 		$prelim_standings['standings'] = array();
 		
+print_r($event->totals['pilots']);
 		foreach( $event->totals['pilots'] as $p ){
 			$rounds = array();
 			foreach( $this->rounds as $event_pilot_id => $round ){
@@ -594,6 +599,7 @@ XML or JSON Object Hierarchy :
 				"total_score" => $p['total'] ? $p['total'] : 0,
 				"total_diff" => $diff ? round($diff,2) : 0,
 				"total_drop" => $p['drop'] ? $p['drop'] : 0,
+				"total_penalties" => $p['penalties'] ? $p['penalties'] : 0,
 				"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
 				"rounds" => $rounds,
 			);
@@ -675,6 +681,7 @@ XML or JSON Object Hierarchy :
 					"total_score" => $p['total'] ? $p['total'] : 0,
 					"total_diff" => $diff ? round($diff,2) : 0,
 					"total_drop" => $p['drop'] ? $p['drop'] : 0,
+					"total_penalties" => $p['penalties'] ? $p['penalties'] : 0,
 					"total_percent" => $p['event_pilot_total_percentage'] ? $p['event_pilot_total_percentage'] : 0,
 					"rounds" => $rounds,
 				);
