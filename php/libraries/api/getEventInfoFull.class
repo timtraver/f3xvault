@@ -48,6 +48,8 @@ class getEventInfoFull {
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_name_short",		"description" => "Task Flight Type Name (short version)" ),
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_description",	"description" => "Task Flight Type Full Description" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_landing",		"description" => "Task Flight Type Landing Status ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_minutes",		"description" => "Task Flight Type Has Minutes Status ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_seconds",		"description" => "Task Flight Type Has Seconds Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_laps",			"description" => "Task Flight Type Has Laps Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_height",	"description" => "Task Flight Type Has Start Height ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_over_penalty",	"description" => "Task Flight Type Has Overage Penalty ( 0 = no, 1 = yes )" ),
@@ -189,6 +191,8 @@ XML or JSON Object Hierarchy :
             <flight_type_description>
                 <![CDATA[Increasing Time by :30. 1:00, 1:30, 2:00, 2:30, 3:00 in 10 minute window. All time counts.]]>
             </flight_type_description>
+            <flight_type_minutes>1</flight_type_minutes>
+            <flight_type_seconds>1</flight_type_seconds>
             <flight_type_laps>0</flight_type_laps>
             <flight_type_landing>0</flight_type_landing>
             <flight_type_over_penalty>0</flight_type_over_penalty>
@@ -446,6 +450,8 @@ XML or JSON Object Hierarchy :
 				"flight_type_name" => $round['flights'][ $ft ]['flight_type_name'] ? $round['flights'][ $ft ]['flight_type_name'] : "",
 				"flight_type_name_short" => $round['flights'][ $ft ]['flight_type_name_short'] ? $round['flights'][ $ft ]['flight_type_name_short'] : "",
 				"flight_type_description" => $round['flights'][ $ft ]['flight_type_description'] ? $round['flights'][ $ft ]['flight_type_description'] : "",
+				"flight_type_minutes" => intval( $round['flights'][ $ft ]['flight_type_minutes'] ),
+				"flight_type_seconds" => intval( $round['flights'][ $ft ]['flight_type_seconds'] ),
 				"flight_type_laps" => intval( $round['flights'][ $ft ]['flight_type_laps'] ),
 				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
 				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
@@ -467,6 +473,8 @@ XML or JSON Object Hierarchy :
 					"flight_type_name" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_name'] : "",
 					"flight_type_name_short" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_name_short'] : "",
 					"flight_type_description" => $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'] ? $event->flight_types[ $t['flight_type_id'] ]['flight_type_description'] : "",
+					"flight_type_minutes" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_minutes'] ),
+					"flight_type_seconds" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_seconds'] ),
 					"flight_type_laps" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_laps'] ),
 					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
 					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
