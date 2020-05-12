@@ -602,6 +602,7 @@ XML or JSON Object Hierarchy :
 		$diff = 0;
 		foreach( $event->flyoff_totals as $flyoff_number => $ft ){
 			$temp_pilots = array();
+			$standings = array();
 			foreach( $ft['pilots'] as $p ){
 				$rounds = array();
 				foreach( $this->rounds as $event_pilot_id => $round ){
