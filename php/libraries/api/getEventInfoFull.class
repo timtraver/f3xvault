@@ -88,6 +88,7 @@ class getEventInfoFull {
 
 			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_name",			"description" => "Round Flight Type Name" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
@@ -128,6 +129,7 @@ class getEventInfoFull {
 
 			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_name",			"description" => "Round Flight Type Name" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
@@ -228,6 +230,7 @@ XML or JSON Object Hierarchy :
                     <round_score>0</round_score>
                     <flights>
                         <flight_type_code>f3k_k</flight_type_code>
+                        <flight_type_name>F3K Task K - Big Ladder</flight_type_name>
                         <flight_rank>5</flight_rank>
                         <flight_order>0</flight_order>
                         <flight_group>D</flight_group>
@@ -286,6 +289,7 @@ XML or JSON Object Hierarchy :
                     <round_score>970</round_score>
                     <flights>
                         <flight_type_code>f3k_e</flight_type_code>
+                        <flight_type_name>F3K Task E - Poker (Pilot Nominated)</flight_type_name>
                         <flight_rank>3</flight_rank>
                         <flight_order>0</flight_order>
                         <flight_group>A</flight_group>
@@ -534,6 +538,7 @@ XML or JSON Object Hierarchy :
 							}
 							$flights[] = array(
 								"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
+								"flight_type_name" => $f['flight_type_name'] ? $f['flight_type_name'] : "",
 								"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
 								"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
 								"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
@@ -612,6 +617,7 @@ XML or JSON Object Hierarchy :
 								}
 								$flights[] = array(
 									"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
+									"flight_type_name" => $f['flight_type_name'] ? $f['flight_type_name'] : "",
 									"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
 									"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
 									"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
