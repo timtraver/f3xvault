@@ -48,10 +48,11 @@ class getEventInfo {
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_name_short",		"description" => "Task Flight Type Name (short version)" ),
 			array( "level" => 2,	"type" => "string",		"name" => "flight_type_description",	"description" => "Task Flight Type Full Description" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_landing",		"description" => "Task Flight Type Landing Status ( 0 = no, 1 = yes )" ),
-			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_laps",			"description" => "Task Flight Type Has Laps Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_minutes",		"description" => "Task Flight Type Has Minutes Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_seconds",		"description" => "Task Flight Type Has Seconds Status ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_laps",			"description" => "Task Flight Type Has Laps Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_height",	"description" => "Task Flight Type Has Start Height ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_over_penalty",	"description" => "Task Flight Type Has Overage Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "flight_type_sub_flights",	"description" => "Task Flight Type Number of Sub Flights" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
@@ -149,6 +150,8 @@ XML or JSON Object Hierarchy :
             <flight_type_seconds>1</flight_type_seconds>
             <flight_type_laps>0</flight_type_laps>
             <flight_type_landing>0</flight_type_landing>
+            <flight_type_start_height>0</flight_type_start_height>
+            <flight_type_start_penalty>0</flight_type_start_penalty>
             <flight_type_over_penalty>0</flight_type_over_penalty>
             <flight_type_sub_flights>5</flight_type_sub_flights>
             <flight_type_start_penalty>0</flight_type_start_penalty>
@@ -328,6 +331,7 @@ XML or JSON Object Hierarchy :
 				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
 				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
 				"flight_type_start_height" => intval( $round['flights'][ $ft ]['flight_type_start_height'] ),
+				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 				"flight_type_sub_flights" => intval( $round['flights'][ $ft ]['flight_type_sub_flights'] ),
 				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 			);
@@ -351,6 +355,7 @@ XML or JSON Object Hierarchy :
 					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
 					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
 					"flight_type_start_height" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_height'] ),
+					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 					"flight_type_sub_flights" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'] ),
 					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 				);

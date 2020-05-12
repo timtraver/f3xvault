@@ -52,6 +52,7 @@ class getEventInfoFull {
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_seconds",		"description" => "Task Flight Type Has Seconds Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_laps",			"description" => "Task Flight Type Has Laps Status ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_height",	"description" => "Task Flight Type Has Start Height ( 0 = no, 1 = yes )" ),
+			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_over_penalty",	"description" => "Task Flight Type Has Overage Penalty ( 0 = no, 1 = yes )" ),
 			array( "level" => 2,	"type" => "integer",	"name" => "flight_type_sub_flights",	"description" => "Task Flight Type Number of Sub Flights" ),
 			array( "level" => 2,	"type" => "boolean",	"name" => "flight_type_start_penalty",	"description" => "Task Flight Type Has Start Penalty ( 0 = no, 1 = yes )" ),
@@ -100,6 +101,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_landing",				"description" => "Round Flight Landing Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_height",		"description" => "Round Flight Start Height" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_penalty",		"description" => "Round Flight Start Penalty" ),
 			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
@@ -142,6 +144,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_landing",				"description" => "Round Flight Landing Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_height",		"description" => "Round Flight Start Height" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_penalty",		"description" => "Round Flight Start Penalty" ),
 			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
@@ -197,6 +200,8 @@ XML or JSON Object Hierarchy :
             <flight_type_seconds>1</flight_type_seconds>
             <flight_type_laps>0</flight_type_laps>
             <flight_type_landing>0</flight_type_landing>
+            <flight_type_start_height>0</flight_type_start_height>
+            <flight_type_start_penalty>0</flight_type_start_penalty>
             <flight_type_over_penalty>0</flight_type_over_penalty>
             <flight_type_sub_flights>5</flight_type_sub_flights>
             <flight_type_start_penalty>0</flight_type_start_penalty>
@@ -246,6 +251,7 @@ XML or JSON Object Hierarchy :
                         <flight_laps>0</flight_laps>
                         <flight_landing>0</flight_landing>
                         <flight_start_height>0</flight_start_height>
+                        <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>988</flight_score>
                         <flight_penalty>0</flight_penalty>
                         <flight_dropped>0</flight_dropped>
@@ -306,6 +312,7 @@ XML or JSON Object Hierarchy :
                         <flight_laps>0</flight_laps>
                         <flight_landing>0</flight_landing>
                         <flight_start_height>0</flight_start_height>
+                        <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>970</flight_score>
                         <flight_penalty>0</flight_penalty>
                         <flight_dropped>0</flight_dropped>
@@ -460,6 +467,7 @@ XML or JSON Object Hierarchy :
 				"flight_type_landing" => intval( $round['flights'][ $ft ]['flight_type_landing'] ),
 				"flight_type_over_penalty" => intval( $round['flights'][ $ft ]['flight_type_over_penalty'] ),
 				"flight_type_start_height" => intval( $round['flights'][ $ft ]['flight_type_start_height'] ),
+				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 				"flight_type_sub_flights" => intval( $round['flights'][ $ft ]['flight_type_sub_flights'] ),
 				"flight_type_start_penalty" => intval( $round['flights'][ $ft ]['flight_type_start_penalty'] ),
 			);
@@ -483,6 +491,7 @@ XML or JSON Object Hierarchy :
 					"flight_type_landing" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_landing'] ),
 					"flight_type_over_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_over_penalty'] ),
 					"flight_type_start_height" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_height'] ),
+					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 					"flight_type_sub_flights" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_sub_flights'] ),
 					"flight_type_start_penalty" => intval( $event->flight_types[ $t['flight_type_id'] ]['flight_type_start_penalty'] ),
 				);
@@ -527,6 +536,7 @@ XML or JSON Object Hierarchy :
 		$prelim_standings['total_drops'] = intval( $event->totals['round_drops'] );
 		$prelim_standings['standings'] = array();
 		
+print_r($this->rounds);
 		foreach( $event->totals['pilots'] as $p ){
 			$rounds = array();
 			foreach( $this->rounds as $event_pilot_id => $round ){
@@ -566,6 +576,7 @@ XML or JSON Object Hierarchy :
 								"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
 								"flight_landing" => intval( $f['event_pilot_round_flight_landing'] ),
 								"flight_start_height" => intval( $f['event_pilot_round_flight_start_height'] ),
+								"flight_start_penalty" => intval( $f['event_pilot_round_flight_start_penalty'] ),
 								"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
 								"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
 								"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
@@ -650,6 +661,7 @@ XML or JSON Object Hierarchy :
 									"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
 									"flight_landing" => intval( $f['event_pilot_round_flight_landing'] ),
 									"flight_start_height" => intval( $f['event_pilot_round_flight_start_height'] ),
+									"flight_start_penalty" => intval( $f['event_pilot_round_flight_start_penalty'] ),
 									"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
 									"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
 									"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
