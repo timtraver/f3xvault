@@ -364,7 +364,7 @@ XML or JSON Object Hierarchy :
 			}
 		}
 		foreach( $temp_tasks as $round_number => $t ){
-			$t['event_task_time_choice'] = $event->tasks[ $round_number ]['event_task_time_choice'];
+			$t['event_task_time_choice'] = intval( $event->tasks[ $round_number ]['event_task_time_choice'] );
 			$tasks[] = $t;
 		}
 		
