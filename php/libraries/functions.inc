@@ -694,6 +694,8 @@ function send_email($email_name,$email_to,$data){
 	
 	$mail->setFrom($email['email_from_address'],$email['email_from_name']);
 	$mail->isHTML(true);
+	$mail->CharSet = 'UTF-8';
+
 	$mail->Subject = $email['email_subject'];
 	$mail->Body = $email['email_html'];	
 	$mail->addAddress($email_to);
