@@ -45,7 +45,7 @@
 					</select>
 				{else}
 					{foreach $flight_types as $ft}
-						{$ft.flight_type_name|escape}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
+						{$ft.flight_type_name|escape}{if $ft.flight_type_start_height} + Start Height{/if}{if $ft.flight_type_landing} + Landing{/if}{if !$ft@last},&nbsp;{/if}
 					{/foreach}
 					<input type="hidden" name="flight_type_id" value="0">
 				{/if}
@@ -104,11 +104,13 @@
 				{continue}
 			{/if}
 			{$cols=4}
+			{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group==1}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_position}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_start_height}{$cols=$cols+1}{/if}
 			<tr>
 				<th colspan="2" style="text-align:left;">
 					<span id="toggle_{$flight_type_id}" onClick="toggle('view_flight_type_{$flight_type_id}',this);">
@@ -128,29 +130,46 @@
 				<th width="2%" align="left"></th>
 				<th align="left">Pilot Name</th>
 				{if $ft.flight_type_group}
-					<th align="center">Group</th>
+					<th align="center" style="text-align: center;">Group</th>
+					{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group}
+						<th align="center">Flight Order</th>
+					{/if}
 				{else}
-					<th align="center">Order</th>
+					<th align="center" style="text-align: center;">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_start_penalty}
 					<th align="center" style="text-align: center;">Start Penalty</th>
 				{/if}
+				{if $ft.flight_type_start_height}
+					<th align="center" style="text-align: center;">Start Height</th>
+				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
+					<th align="center" style="text-align: center;" nowrap>
+						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
+						{if $ft.flight_type_sub_flights!=0}<br>
+							<div>
+							{for $sub=1 to $ft.flight_type_sub_flights}
+								<input type="text" size="6" style="width:45px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
+							{/for}
+							= Total
+							</div>
+						{/if}
+						
+					</th>
 				{/if}
 				{if $ft.flight_type_landing}
-					<th align="center">Landing</th>
+					<th align="center" style="text-align: center;">Landing</th>
 				{/if}
 				{if $ft.flight_type_laps}
-					<th align="center">Laps</th>
+					<th align="center" style="text-align: center;">Laps</th>
 				{/if}
 				{if $ft.flight_type_position}
 					<th align="center" style="text-align: center;">Flight Position</th>
 				{/if}
-				<th align="center">Raw Score</th>
-				<th align="center">Normalized Score</th>
-				<th align="center">Penalty</th>
-				<th align="center">Flight Rank</th>
+				<th align="center" style="text-align: right;">Raw Score</th>
+				<th align="center" style="text-align: right;">{if $event->info.event_type_score_inverse==0}Normalized{else}Calculated{/if} Score</th>
+				<th align="center" style="text-align: center;">Penalty</th>
+				<th align="center" style="text-align: right;">Flight Rank</th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
@@ -168,9 +187,9 @@
 			{$time_disabled=0}
 			<tr style="background-color: {$groupcolor};">
 				<td style="background-color: lightgrey;">{$num}</td>
-				<td nowrap>
+				<td valign="center" nowrap>
 					{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
-						<div class="pilot_bib_number">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+						<div class="pilot_bib_number" style="margin-right: 4px;">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
 					{/if}
 					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
 					{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
@@ -186,12 +205,17 @@
 							{$p.event_pilot_round_flight_start_penalty|escape}
 						</td>
 					{/if}
+					{if $ft.flight_type_start_height}
+						<td align="center" nowrap>
+							{$p.event_pilot_round_flight_start_height|escape}
+						</td>
+					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 						<td align="center" nowrap>
-							{if $ft.flight_type_sub_flights!=0}
-								{$time_disabled=1}
+							{if $ft.flight_type_sub_flights != 0}
+								{if $ft.flight_type_code != 'f3f_plus'}{$time_disabled = 1}{/if}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="4" style="width:35px;text-align: right;color:black;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:45px;text-align: right;color:black;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
@@ -223,7 +247,7 @@
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>
-						{if $ft.flight_type_code=='f3f_speed' OR $ft.flight_type_code=='f3b_speed'}
+						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
 						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}

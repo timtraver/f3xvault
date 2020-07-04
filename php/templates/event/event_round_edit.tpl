@@ -282,7 +282,7 @@
 						{$tabindex=$tabindex+1}
 					{/if}
 					<td align="right" nowrap>
-						{if preg_match("/^f3f/",$ft.flight_type_code) OR $ft.flight_type_code=='f3b_speed'}
+						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed'}
 						{$p.event_pilot_round_flight_raw_score|escape}
 						{else}
 						{$p.event_pilot_round_flight_raw_score|string_format:$event->event_calc_accuracy_string}
