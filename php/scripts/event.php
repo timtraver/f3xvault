@@ -6023,7 +6023,6 @@ function event_self_entry() {
 	$penalty = intval($_REQUEST['penalty']);
 	$save = intval($_REQUEST['save']);
 
-	$full_seconds = $seconds + ( $seconds_2 / 100 );
 
 	$event = new Event($event_id);
 	$event->get_rounds();
@@ -6041,6 +6040,29 @@ function event_self_entry() {
 		}
 	}
 	$current_pilot = $event->pilots[$event_pilot_id];
+
+	# Lets set the accuracy strings for duration events or times
+	$seconds_accuracy = 0;
+	foreach( $event->options as $o ){
+		if( $event->info['event_type_code'] == 'f3b' && $o['event_type_option_code'] == 'f3b_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'f3j' && $o['event_type_option_code'] == 'f3j_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'f5j' && $o['event_type_option_code'] == 'f5j_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'f3k' && $o['event_type_option_code'] == 'f3k_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'td' && $o['event_type_option_code'] == 'td_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+	}
+	$seconds_accuracy_string = ".%'.0" . $seconds_accuracy . "d";
+
+	$full_seconds = $seconds + ( $seconds_2 / pow( 10, $seconds_accuracy ) );
 
 	# Lets check if this pilot is coming in and hasn't got a score for this round number
 	# lets step through the rounds starting from the beginning and stop at the first round where this pilot doesn't have a score
@@ -6096,7 +6118,6 @@ function event_self_entry() {
 		}
 		$sub_flights[$sub]['total_seconds'] = $total_seconds;
 	}
-debug($sub_flights);
 	# Lets check for 1234 round to truncate properly the times
 	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_h'){
 		# Its a 1234 flight
@@ -6135,7 +6156,6 @@ debug($sub_flights);
 		$sub_flights[4]['seconds'] = sprintf( "%02d", fmod( $temp_sub[3], 60 ) );
 		$sub_flights[4]['seconds2'] = round( $sub_flights[4]['total_seconds'] - ( $sub_flights[4]['minutes'] * 60 ) - $sub_flights[4]['seconds'], 1) * 10;
 	}
-debug($sub_flights);
 	# Lets check for big ladder round to truncate properly the times
 	if($event->flight_types[$flight_type_id]['flight_type_code'] == 'f3k_k'){
 		# Its a big ladder flight
@@ -6189,7 +6209,6 @@ debug($sub_flights);
 		}
 		$minutes = floor( $tot / 60 );
 		$seconds = sprintf( "%1f", fmod( $tot, 60 ) );
-		$full_seconds = floor( $seconds );
 	}
 
 	# lets get the team members for this event or all members if the parameter says
@@ -6432,7 +6451,7 @@ debug($sub_flights);
 			$result = db_exec($stmt,array(
 				"group" => $group,
 				"minutes" => $minutes,
-				"seconds" => $seconds,
+				"seconds" => $full_seconds,
 				"over" => $over,
 				"laps" => $laps,
 				"landing" => $landing,
@@ -6467,7 +6486,7 @@ debug($sub_flights);
 				"flight_type_id" => $flight_type_id,
 				"group" => $group,
 				"minutes" => $minutes,
-				"seconds" => $seconds,
+				"seconds" => $full_seconds,
 				"over" => $over,
 				"laps" => $laps,
 				"landing" => $landing,
@@ -6575,7 +6594,7 @@ debug($sub_flights);
 		if( isset( $event->rounds[$round_number] ) ) {
 			$minutes = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_minutes'];
 			$seconds = intval($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds']);
-			$seconds_2 = ($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] - $seconds) * 100;
+			$seconds_2 = round( ($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] - $seconds) * pow( 10, $seconds_accuracy ), $seconds_accuracy );
 			$landing = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_landing'];
 			$laps = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_laps'];
 			$over = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_over'];
@@ -6586,14 +6605,12 @@ debug($sub_flights);
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
 				$string = $f['event_pilot_round_flight_sub_val'];
 				$sec_converted = convert_colon_to_seconds($string, $event->find_option_value($event->info['event_type_code'] . "_duration_accuracy"));
-
 				$min = floor($sec_converted / 60);
 				$sec = sprintf("%02d",fmod($sec_converted,60));
 				$sec2 = round($sec_converted - ($min * 60) - $sec,1) * 10;
 				$subs[$num]['minutes'] = $min;
 				$subs[$num]['seconds'] = $sec;
 				$subs[$num]['seconds2'] = $sec2;
-				
 			}
 		}else{
 			$event->get_new_round($round_number);
@@ -6602,7 +6619,6 @@ debug($sub_flights);
 		
 			# Lets set the round to be scored or not depending on the zero choice
 			$event->rounds[$round_number]['event_round_score_status'] = 1;
-	
 			$minutes = 0;
 			$seconds = 0;
 			$seconds_2 = 0;
@@ -6612,10 +6628,9 @@ debug($sub_flights);
 			$penalty = 0;
 			$startpen = 0;
 			$startheight = 0;
-
 		}
 	}
-		
+	
 	$smarty->assign("event",$event);
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("flight_type_id",$flight_type_id);
@@ -6634,6 +6649,8 @@ debug($sub_flights);
 	$smarty->assign("startpen",$startpen);
 	$smarty->assign("startheight",$startheight);
 	$smarty->assign("penalty",$penalty);
+	$smarty->assign("seconds_accuracy",$seconds_accuracy);
+	$smarty->assign("seconds_accuracy_string",$seconds_accuracy_string);
 
 	$maintpl = find_template("event/event_round_self_entry.tpl");
 	return $smarty->fetch($maintpl);

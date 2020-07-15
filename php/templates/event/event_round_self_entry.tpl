@@ -178,24 +178,28 @@
 								{/section}
 							</ul>
 					</div>
-						min
+						&nbsp;&nbsp;&nbsp;Min
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=60 start=60 step=-1}
+						<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							{section name=s loop=60 start=60 step=-1}
 								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
+							{/section}
+						</ul>
 					</div>&nbsp;&nbsp;
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:".%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=100 start=100 step=-1}
-								<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:".%'.02d"}";'>{$smarty.section.s.index|string_format:".%'.02d"}</a></li>
-								{/section}
-							</ul>
-					</div>
-						&nbsp;&nbsp;&nbsp;sec
+					{if $seconds_accuracy > 0}
+						{$loop_val = pow(10,$seconds_accuracy)}
+						<div class="btn-group" style="width: 50px;">
+							<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
+								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+									
+									{section name=s loop=$loop_val start=0 step=1}
+									<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
+									{/section}
+								</ul>
+						</div>
+					{/if}
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sec
 				</td>
 			</tr>
 			{if $event->info.event_type_code == 'f3j'}
@@ -214,11 +218,12 @@
 						{if $startheight == ''}{$startheight = 0}{/if}
 						<input type="button" id="height_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$startheight} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=350 start=350 step=-1}
+								{section name=s loop=350 start=1 step=1}
 								<li><a href="#" onClick='document.main.startheight.value="{$smarty.section.s.index}";document.getElementById("height_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 								{/section}
 							</ul>
 					</div>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meters
 				</td>
 			</tr>
 			{/if}
@@ -229,9 +234,15 @@
 						{if $landing == ''}{$landing = 0}{/if}
 						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								{section name=s loop=101 start=101 step=-1}
-								<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-								{/section}
+								{if $event->info.event_type_code == 'f5j'}
+									{section name=s loop=51 start=51 step=-5}
+									<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+									{/section}
+								{else}
+									{section name=s loop=101 start=101 step=-1}
+									<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
+									{/section}
+								{/if}
 							</ul>
 					</div>
 				</td>
@@ -439,15 +450,18 @@
 									</ul>
 							</div>&nbsp;&nbsp;
 							
-							<div class="btn-group" style="width: 50px;">
-								<input type="button" id="sub_{$sub}_seconds2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds2|string_format:".%'.1d"} " data-toggle="dropdown" aria-expanded="false">
-									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-										{section name=s loop=10 start=0 step=.1}
-										<li><a href="#" onClick='document.main.sub_sec2_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds2_button").value="{$smarty.section.s.index|string_format:".%'.1d"}";'>{$smarty.section.s.index|string_format:".%'.1d"}</a></li>
-										{/section}
-									</ul>
-							</div>
-							&nbsp;sec<br>
+							{if $seconds_accuracy > 0}
+								{$loop_val = pow(10,$seconds_accuracy)}
+								<div class="btn-group" style="width: 50px;">
+									<input type="button" id="sub_{$sub}_seconds2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
+										<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+											{section name=s loop=$loop_val start=0 step=1}
+											<li><a href="#" onClick='document.main.sub_sec2_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
+											{/section}
+										</ul>
+								</div>
+							{/if}
+							&nbsp;&nbsp;&nbsp;&nbsp;sec<br>
 						{/for}
 					{/if}
 				</td>
