@@ -20,6 +20,8 @@
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_start_penalty}{$cols=$cols+1}{/if}
+			{if $ft.flight_type_start_height}{$cols=$cols+1}{/if}
 			<tr>
 				<th align="left" colspan="{$cols}">
 					{$ft.flight_type_name|escape}
@@ -39,8 +41,25 @@
 				{else}
 					<th align="center" style="text-align: center;">Flight Order</th>
 				{/if}
+				{if $ft.flight_type_start_penalty}
+					<th align="center" style="text-align: center;">Start Penalty</th>
+				{/if}
+				{if $ft.flight_type_start_height}
+					<th align="center" style="text-align: center;">Start Height</th>
+				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center" style="text-align: right;">Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}</th>
+					<th align="center" style="text-align: center;" nowrap>
+						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
+						{if $ft.flight_type_sub_flights!=0}<br>
+							<div>
+							{for $sub=1 to $ft.flight_type_sub_flights}
+								<input type="text" size="6" style="width:45px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
+							{/for}
+							= Total
+							</div>
+						{/if}
+						
+					</th>
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center" style="text-align: right;">Landing</th>
@@ -87,6 +106,16 @@
 						{/if}
 					{else}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+					{/if}
+					{if $ft.flight_type_start_penalty}
+						<td align="center" nowrap>
+							{$p.event_pilot_round_flight_start_penalty|escape}
+						</td>
+					{/if}
+					{if $ft.flight_type_start_height}
+						<td align="center" nowrap>
+							{$p.event_pilot_round_flight_start_height|escape} m
+						</td>
 					{/if}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="right" nowrap>
