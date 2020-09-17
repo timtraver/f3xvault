@@ -4633,11 +4633,6 @@ function event_draw_print() {
 						foreach($f as $round_num => $v){
 							if($round_num == $event_round_number){
 								# Lets create the round info
-								if( isset( $e->rounds[$event_round_number]['event_round_number'] ) || 
-									( $ftid != $draw_round_flight_types[$event_round_number] && ( $e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps' ) )
-								){
-									continue;
-								}
 								$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
 								$e->rounds[$event_round_number]['event_round_status'] = 1;
 								if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
@@ -4720,8 +4715,6 @@ function event_draw_print() {
 			}
 		}
 
-#print_r( $e );
-#print_r( $data );
 		# Now create the pdf from the above template and save it
 		$pdf = new PDF_F3X( $orientation );
 		$pdf->render($e->info['event_type_code'],$data);

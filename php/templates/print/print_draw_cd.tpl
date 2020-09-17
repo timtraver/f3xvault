@@ -3,7 +3,6 @@
 {block name="content"}
 
 {include file='print/print_draw_header.tpl'}
-
 		{$num_rounds_printed=0}
 		{foreach $event->rounds as $r}
 		{if $event->info.event_type_code=="f3k"}
