@@ -90,6 +90,7 @@ class getEventInfoFull {
 			array( "level" => 3,	"type" => "ARRAY",		"name" => "rounds",						"description" => "Pilot Preliminary Rounds List" ),
 			array( "level" => 4,	"type" => "integer",	"name" => "round_number",				"description" => "Round Number" ),
 			array( "level" => 4,	"type" => "float",		"name" => "round_score",				"description" => "Round Score" ),
+			array( "level" => 4,	"type" => "boolean",	"name" => "round_score_status",			"description" => "Round Score Status (0 = not scored, 1 = scored)" ),
 
 			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
@@ -242,6 +243,7 @@ XML or JSON Object Hierarchy :
                 <rounds>
                     <round_number>1</round_number>
                     <round_score>0</round_score>
+                    <round_score_status>1</round_score_status>
                     <flights>
                         <flight_type_code>f3k_k</flight_type_code>
                         <flight_type_name>F3K Task K - Big Ladder</flight_type_name>
@@ -383,7 +385,7 @@ XML or JSON Object Hierarchy :
 					$p['flight_type_name'] = $f['flight_type_name'];
 					$this->rounds[$event_pilot_id][$round_number][$flight_type_id] = $p;
 					$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
-										
+					$this->rounds[$event_pilot_id][$round_number]['event_round_score_status'] = $r['event_round_score_status'];
 				}
 			}
 			if( ! $r['event_round_flyoff'] ){
@@ -590,6 +592,7 @@ XML or JSON Object Hierarchy :
 						$rounds[] = array(
 							"round_number" => intval( $round_number ),
 							"round_score" => floatval( $round_score ),
+							"round_score_status" => intval( $r['event_round_score_status'] ),
 							"flights" => $flights,
 						);
 					}
@@ -675,6 +678,7 @@ XML or JSON Object Hierarchy :
 							$rounds[] = array(
 								"round_number" => intval( $round_number ),
 								"round_score" => floatval( $round_score ),
+								"round_score_status" => intval( $r['event_round_score_status'] ),
 								"flights" => $flights,
 							);
 						}
