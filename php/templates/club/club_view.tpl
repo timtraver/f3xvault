@@ -99,9 +99,9 @@
 							<td>{$cl.country_name|escape}
 								{if $cl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$cl.country_code|escape}.png" style="vertical-align: middle;">{/if}
 							</td>
-							<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
+							<td align="center">{if $cl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$cl.location_coordinates|escape:'url'}+({$cl.location_name|escape})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 							<td nowrap>
-								<a href="/?action=club&function=club_location_remove&club_id={$club.club_id}&club_location_id={$cl.club_location_id}" title="Remove Club Location" onClick="{if $user.user_id==0}alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{else}return confirm('Are you sure you want to remove {$cl.location_name} from this club?');"{/if}><img src="/images/del.gif"></a>
+								<a href="/?action=club&function=club_location_remove&club_id={$club.club_id|escape:'url'}&club_location_id={$cl.club_location_id|escape:'url'}" title="Remove Club Location" onClick="{if $user.user_id==0}alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{else}return confirm('Are you sure you want to remove {$cl.location_name|escape} from this club?');"{/if}><img src="/images/del.gif"></a>
 							</td>
 						</tr>
 						{/foreach}
@@ -142,7 +142,7 @@
 							<td>{$p.state_name|escape}</td>
 							<td>{$p.country_name|escape}</td>
 							<td nowrap>
-								<a href="?action=club&function=club_pilot_remove&club_id={$club.club_id}&club_pilot_id={$p.club_pilot_id}&tab=2" title="Remove Club Pilot" onClick="{if $user.user_id==0}alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{else}return confirm('Are you sure you want to remove {$p.pilot_first_name} from the club?');"{/if}><img src="/images/del.gif"></a>
+								<a href="?action=club&function=club_pilot_remove&club_id={$club.club_id|escape:'url'}&club_pilot_id={$p.club_pilot_id|escape:'url'}&tab=2" title="Remove Club Pilot" onClick="{if $user.user_id==0}alert('You must be logged in to Register for this event. Please create an account or log in to your existing account to proceed.');return false;"{else}return confirm('Are you sure you want to remove {$p.pilot_first_name|escape} from the club?');"{/if}><img src="/images/del.gif"></a>
 							</td>
 						</tr>
 						{assign var=num value=$num+1}
@@ -164,13 +164,13 @@
 <form name="edit_club" method="POST">
 <input type="hidden" name="action" value="club">
 <input type="hidden" name="function" value="club_edit">
-<input type="hidden" name="club_id" value="{$club.club_id}">
+<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 <input type="hidden" name="tab" value="0">
 </form>
 <form name="add_pilot" method="POST">
 <input type="hidden" name="action" value="club">
 <input type="hidden" name="function" value="club_add_pilot">
-<input type="hidden" name="club_id" value="{$club.club_id}">
+<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
 <input type="hidden" name="tab" value="2">
@@ -178,7 +178,7 @@
 <form name="add_location" method="POST">
 <input type="hidden" name="action" value="club">
 <input type="hidden" name="function" value="club_location_add">
-<input type="hidden" name="club_id" value="{$club.club_id}">
+<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 <input type="hidden" name="location_id" value="">
 <input type="hidden" name="tab" value="1">
 </form>

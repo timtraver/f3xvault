@@ -11,7 +11,7 @@
 		<form name="main" method="POST">
 		<input type="hidden" name="action" value="club">
 		<input type="hidden" name="function" value="club_save_pilot_quick_add">
-		<input type="hidden" name="club_id" value="{$club.club_id}">
+		<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 		<table width="100%" cellpadding="2" cellspacing="2" class="table table-condensed table-event">
 		<tr>
 			<th colspan="3">Pilot Information</th>
@@ -39,7 +39,7 @@
 			<td colspan="2">
 				<select name="state_id">
 				{foreach $states as $state}
-					<option value="{$state.state_id}">{$state.state_name}</option>
+					<option value="{$state.state_id|escape}">{$state.state_name|escape}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -49,7 +49,7 @@
 			<td colspan="2">
 				<select name="country_id">
 				{foreach $countries as $country}
-					<option value="{$country.country_id}">{$country.country_name}</option>
+					<option value="{$country.country_id|escape}">{$country.country_name|escape}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -89,7 +89,7 @@
 		<form name="goback" method="POST">
 		<input type="hidden" name="action" value="club">
 		<input type="hidden" name="function" value="club_view">
-		<input type="hidden" name="club_id" value="{$club.club_id}">
+		<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 		</form>
 
 	</div>

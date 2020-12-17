@@ -14,18 +14,18 @@
 			<div class="tab-base">
 				<ul class="nav nav-tabs">
 					<li class="active">
-						<a href="?action=club&function=club_view&club_id={$club.club_id}&tab=0" aria-expanded="true" aria-selected="true">
+						<a href="?action=club&function=club_view&club_id={$club.club_id|escape:'url'}&tab=0" aria-expanded="true" aria-selected="true">
 							Club Info
 						</a>
 					</li>
 					<li>
-						<a href="?action=club&function=club_view&club_id={$club.club_id}&tab=1" aria-expanded="false">
+						<a href="?action=club&function=club_view&club_id={$club.club_id|escape:'url'}&tab=1" aria-expanded="false">
 							Club Locations
 							<span class="badge badge-blue">{$club_locations|count}</span>
 						</a>
 					</li>
 					<li>
-						<a href="?action=club&function=club_view&club_id={$club.club_id}&tab=2" aria-expanded="false">
+						<a href="?action=club&function=club_view&club_id={$club.club_id|escape:'url'}&tab=2" aria-expanded="false">
 							Club Members
 							<span class="badge badge-blue">{$pilots|count}</span>
 						</a>
@@ -42,7 +42,7 @@
 						<form name="main" method="POST">
 						<input type="hidden" name="action" value="club">
 						<input type="hidden" name="function" value="club_save">
-						<input type="hidden" name="club_id" value="{$club.club_id}">
+						<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
@@ -62,7 +62,7 @@
 							<td>
 								<select name="state_id">
 								{foreach $states as $s}
-									<option value="{$s.state_id}" {if $club.state_id==$s.state_id}SELECTED{/if}>{$s.state_name}</option>
+									<option value="{$s.state_id|escape}" {if $club.state_id==$s.state_id}SELECTED{/if}>{$s.state_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -72,7 +72,7 @@
 							<td>
 								<select name="country_id">
 								{foreach $countries as $c}
-									<option value="{$c.country_id}" {if $club.country_id==$c.country_id}SELECTED{/if}>{$c.country_name}</option>
+									<option value="{$c.country_id|escape}" {if $club.country_id==$c.country_id}SELECTED{/if}>{$c.country_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -104,7 +104,7 @@
 						<form name="club_user" method="POST">
 						<input type="hidden" name="action" value="club">
 						<input type="hidden" name="function" value="club_user_save">
-						<input type="hidden" name="club_id" value="{$club.club_id}">
+						<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 						<input type="hidden" name="pilot_id" value="">
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 						<tr>
@@ -114,7 +114,7 @@
 						<tr>
 							<td>{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
 							<td width="2%">
-								<a href="?action=club&function=club_user_delete&club_id={$club.club_id}&club_user_id={$u.club_user_id}"{if $user.user_id==0} onClick="alert('You must be logged in to use this function. Please create an account or log in to your existing account to proceed.');return false;"{/if}><img src="/images/del.gif"></a></td>
+								<a href="?action=club&function=club_user_delete&club_id={$club.club_id|escape:'url'}&club_user_id={$u.club_user_id|escape:'url'}"{if $user.user_id==0} onClick="alert('You must be logged in to use this function. Please create an account or log in to your existing account to proceed.');return false;"{/if}><img src="/images/del.gif"></a></td>
 						</tr>
 						{/foreach}
 						<tr>
@@ -138,7 +138,7 @@
 					<input type="hidden" name="function" value="club_list">
 					{else}
 					<input type="hidden" name="function" value="club_view">
-					<input type="hidden" name="club_id" value="{$club.club_id}">
+					<input type="hidden" name="club_id" value="{$club.club_id|escape}">
 					{/if}
 					</form>
 				</div>
