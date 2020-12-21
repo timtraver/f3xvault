@@ -70,15 +70,15 @@
 					<div class="nav navbar-top-links pull-left" style="height: 50px;position: relative;display:inline-block;padding-top: 5px;">
 						<span style="position: relative; display: inline-block;padding-top: 4px;">
 						<select name="disc" class="selectpicker col-lg-4" data-style="btn-primary btn-rounded" data-width="100%" onchange="location = this.value;">
-							<option value="?action={$action}&function={$function}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
-							<option value="?action={$action}&function={$function}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
-							<option value="?action={$action}&function={$function}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
-							<option value="?action={$action}&function={$function}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
-							<option value="?action={$action}&function={$function}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
-							<option value="?action={$action}&function={$function}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
-							<option value="?action={$action}&function={$function}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
-							<option value="?action={$action}&function={$function}&disc=gps"{if $disc=='gps'} SELECTED{/if}>GPS Triangle Racing</option>
-							<option value="?action={$action}&function={$function}&disc=f5j"{if $disc=='f5j'} SELECTED{/if}>F5J Electric Duration</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=gps"{if $disc=='gps'} SELECTED{/if}>GPS Triangle Racing</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f5j"{if $disc=='f5j'} SELECTED{/if}>F5J Electric Duration</option>
 						</select>
 						</span>
 					</div>
@@ -92,14 +92,14 @@
 							<a href="#" data-toggle="dropdown" class="dropdown-toggle">
 								<i class="fa fa-envelope fa-lg"></i>
 								{if $unread_messages>0}
-								<span class="badge badge-header badge-warning">{$unread_messages}</span>
+								<span class="badge badge-header badge-warning">{$unread_messages|escape}</span>
 								{/if}
 							</a>
 
 							<!--Message dropdown menu-->
 							<div class="dropdown-menu dropdown-menu-md dropdown-menu-right with-arrow">
 								<div class="pad-all bord-btm">
-									<p class="text-lg text-muted text-thin mar-no">You have {if $unread_messages>0}{$unread_messages}{else}no{/if} new messages.</p>
+									<p class="text-lg text-muted text-thin mar-no">You have {if $unread_messages>0}{$unread_messages|escape}{else}no{/if} new messages.</p>
 								</div>
 
 								<!--Dropdown footer-->
@@ -135,7 +135,7 @@
 									</li>
 									<li>
 										<a href="?action=message">
-											{if $unread_messages>0}<span class="badge badge-danger pull-right">{$unread_messages}</span>{/if}
+											{if $unread_messages>0}<span class="badge badge-danger pull-right">{$unread_messages|escape}</span>{/if}
 											<i class="fa fa-envelope fa-fw fa-lg"></i> Messages
 										</a>
 									</li>
@@ -204,7 +204,7 @@
 											<i class="fa fa-globe"></i>
 											<span class="menu-title">
 												<strong>Flying Locations</strong>
-												<span class="pull-right badge badge-blue">{$stats.locations}</span>
+												<span class="pull-right badge badge-blue">{$stats.locations|escape}</span>
 											</span>
 											<i class="arrow"></i>
 										</a>
@@ -221,7 +221,7 @@
 											<i class="fa fa-plane"></i>
 											<span class="menu-title">
 												<strong>Plane Database</strong>
-												<span class="pull-right badge badge-blue">{$stats.planes}</span>
+												<span class="pull-right badge badge-blue">{$stats.planes|escape}</span>
 											</span>
 											<i class="arrow"></i>
 										</a>
@@ -237,7 +237,7 @@
 											<i class="fa fa-trophy"></i>
 											<span class="menu-title">
 												<strong>Competitions</strong>
-												<span class="pull-right badge badge-blue">{$stats.events}</span>
+												<span class="pull-right badge badge-blue">{$stats.events|escape}</span>
 											</span>
 											<i class="arrow"></i>
 										</a>
@@ -257,13 +257,13 @@
 											<i class="fa fa-user"></i>
 											<span class="menu-title">
 												<strong>Pilot Profiles</strong>
-												<span class="pull-right badge badge-blue">{$stats.pilots}</span>
+												<span class="pull-right badge badge-blue">{$stats.pilots|escape}</span>
 											</span>
 											<i class="arrow"></i>
 										</a>
 										<ul class="collapse{if $current_menu == 'pilots' || $current_menu == 'my' || $current_menu == 'messages'} in{/if}">
 											<li{if $current_menu == 'pilots' && $function == 'view_pilots'} class="active-link"{/if}><a href="/?action=main&function=view_pilots"><strong>Pilots Home</strong></a></li>
-											<li{if $current_menu == 'my'} class="active-link"{/if}><a href="/?action=pilot&function=pilot_view&pilot_id={$user.pilot_id}"><strong>My Pilot Profile</strong></a></li>
+											<li{if $current_menu == 'my'} class="active-link"{/if}><a href="/?action=pilot&function=pilot_view&pilot_id={$user.pilot_id|escape}"><strong>My Pilot Profile</strong></a></li>
 											<li{if $current_menu == 'pilots' && $function == ''} class="active-link"{/if}><a href="/?action=pilot&country_id=0&state_id=0&search="><strong>Browse Pilot Profiles</strong></a></li>
 											<li{if $current_menu == 'messages'} class="active-link"{/if}><a href="/?action=message"><strong>Message Center</strong></a></li>
 										</ul>
@@ -275,7 +275,7 @@
 											<i class="fa fa-users"></i>
 											<span class="menu-title">
 												<strong>Clubs</strong>
-												<span class="pull-right badge badge-blue">{$stats.clubs}</span>
+												<span class="pull-right badge badge-blue">{$stats.clubs|escape}</span>
 											</span>
 											<i class="arrow"></i>
 										</a>
@@ -444,7 +444,7 @@
 					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
 					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
 					container : 'floating',
-					title : '{$m.message}',
+					title : '{$m.message|escape:"javascript"}',
 					timer : 10000
 				{rdelim});
 			{/foreach}
