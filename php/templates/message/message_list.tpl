@@ -37,16 +37,16 @@
 		{foreach $user_messages as $m}
 		<tr {if $m.user_message_read_status==0}style="background-color:#87CEFA;"{/if}>
 			<td>
-				<input type="checkbox" name="message_{$m.user_message_id}">
+				<input type="checkbox" name="message_{$m.user_message_id|escape}">
 			</td>
 			<td>
-				<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}" class="btn-link">{$m.user_message_date}</a>
+				<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id|escape}" class="btn-link">{$m.user_message_date|escape}</a>
 			</td>
 			<td>
 				<a href="?action=pilot&function=pilot_view&pilot_id={$m.pilot_id|escape}" class="btn-link">{$m.user_first_name|escape} {$m.user_last_name|escape}</a>
 			</td>
 			<td>
-				<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id}" class="btn-link">{$m.user_message_subject|escape}</a>
+				<a href="?action=message&function=message_edit&user_message_id={$m.user_message_id|escape:"URL"}" class="btn-link">{$m.user_message_subject|escape}</a>
 			</td>
 			<td align="center">
 				{if $m.user_message_read_status==0}<b>Unread</b>{else}Read{/if}

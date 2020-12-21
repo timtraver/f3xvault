@@ -13,8 +13,8 @@
 			<form method="POST" name="main" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="message">
 			<input type="hidden" name="function" value="message_save">
-			<input type="hidden" name="user_message_id" value="{$user_message.user_message_id}">
-			<input type="hidden" name="to_user_id" value="{$user_message.to_user_id}">
+			<input type="hidden" name="user_message_id" value="{$user_message.user_message_id|escape}">
+			<input type="hidden" name="to_user_id" value="{$user_message.to_user_id|escape}">
 			<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 			<tr>
 				<th width="20%" align="right">Message From</th>
@@ -83,7 +83,7 @@
 <form name="replyto" method="GET">
 <input type="hidden" name="action" value="message">
 <input type="hidden" name="function" value="message_edit">
-<input type="hidden" name="user_message_id" value="{$user_message.user_message_id}">
+<input type="hidden" name="user_message_id" value="{$user_message.user_message_id|escape}">
 <input type="hidden" name="reply" value="1">
 </form>
 
