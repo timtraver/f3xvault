@@ -29,7 +29,7 @@
 				<th width="30%" valign="top" nowrap>Feedback, Comments, or Feature Requests</th>
 				<td>
 					<textarea cols="75" rows="8" name="feedback_string"></textarea><br>
-					<div class="g-recaptcha" data-sitekey="{$recaptcha_key}"></div>
+					<div class="g-recaptcha" data-sitekey="{$recaptcha_key|escape}"></div>
 				</td>
 			</tr>
 			</table>
