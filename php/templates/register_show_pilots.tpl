@@ -35,7 +35,7 @@
 							{foreach $pilots as $pilot}
 							<tr>
 								<td nowrap>
-									<input type="radio" name="pilot_id" value="{$pilot.pilot_id}">
+									<input type="radio" name="pilot_id" value="{$pilot.pilot_id|escape}">
 								</td>
 								<td>{$pilot.pilot_first_name|escape} {$pilot.pilot_last_name|escape}</td>
 								<td>{$pilot.eventstring|escape}</td>
