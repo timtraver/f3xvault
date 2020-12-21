@@ -21,7 +21,7 @@
 			<select name="country_id" onChange="searchform.submit();">
 			<option value="0">Choose Country to Narrow Search (ALL)</option>
 			{foreach $countries as $country}
-				<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+				<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 			{/foreach}
 			</select>
 			</td>
@@ -32,7 +32,7 @@
 		{if $page==0}
 			{$page=1}
 		{/if}
-		<h3 class="post-title entry-title">Top F3F Speeds ({$start_record} - {$end_record})</h3>
+		<h3 class="post-title entry-title">Top F3F Speeds ({$start_record|escape} - {$end_record|escape})</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
 		<tr>
 			<th style="text-align: left;"></th>
@@ -49,20 +49,20 @@
 			<tr>
 				<td align="right" bgcolor="lightgrey">
 					{if $f.event_pilot_round_flight_seconds!=$last}
-						{$rank}
+						{$rank|escape}
 					{/if}
 				</td>
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 				<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
 				<td>
-					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:"url"}">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 				</td>
-				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id|escape:"url"}" title="View This Plane">{$f.plane_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
 			</tr>
@@ -77,7 +77,7 @@
 		</table>
 		
 		
-		<h3 class="post-title entry-title">Top F3B Speeds ({$start_record} - {$end_record})</h3>
+		<h3 class="post-title entry-title">Top F3B Speeds ({$start_record|escape} - {$end_record|escape})</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
 		<tr>
 			<th style="text-align: left;"></th>
@@ -100,14 +100,14 @@
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 				<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
 				<td>
-					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:"url"}">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 				</td>
-				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id|escape:"url"}" title="View This Plane">{$f.plane_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
 			</tr>
@@ -121,7 +121,7 @@
 		</tr>
 		</table>
 		
-		<h3 class="post-title entry-title">Top F3B Distance Runs ({$start_record} - {$end_record})</h3>
+		<h3 class="post-title entry-title">Top F3B Distance Runs ({$start_record|escape} - {$end_record|escape})</h3>
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped">
 		<tr>
 			<th style="text-align: left;"></th>
@@ -144,14 +144,14 @@
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 				<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_laps|string_format:"%3.0f"}</b></font></td>
 				<td>
-					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+					{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+					<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:"url"}">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 				</td>
-				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id}" title="View This Plane">{$f.plane_name|escape}</a></td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=plane&function=plane_view&plane_id={$f.plane_id|escape:"url"}" title="View This Plane">{$f.plane_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
 			</tr>
