@@ -61,12 +61,12 @@
 			<tr>
 				<th width="20%">Function Call Details</th>
 				<th align="right">
-					<span id="toggle_{$f.function_name}" onClick="toggle('call_{$f.function_name}',this);">
+					<span id="toggle_{$f.function_name|escape}" onClick="toggle('call_{$f.function_name|escape:"javascript"}',this);">
 						<img width="24" height="24" src="/images/arrow-right.png" style="vertical-align:middle;"> 
 					</span>
 				</th>
 			</tr>
-			<tbody id="call_{$f.function_name}" style="display: none;">
+			<tbody id="call_{$f.function_name|escape}" style="display: none;">
 			<tr>
 				<th width="20%">Function Input Parameters</th>
 				<td>
