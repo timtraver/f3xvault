@@ -30,7 +30,7 @@
 				<li>
 					<a href="?action=location&function=location_view&location_id={$location.location_id|escape}&tab=3" aria-expanded="false">
 						Competitions
-						<span class="badge badge-blue">{$totalrecords}</span>
+						<span class="badge badge-blue">{$totalrecords|escape}</span>
 					</a>
 				</li>
 			</ul>
@@ -46,7 +46,7 @@
 					<form name="main" method="POST">
 					<input type="hidden" name="action" value="location">
 					<input type="hidden" name="function" value="location_comment_save">
-					<input type="hidden" name="location_id" value="{$location.location_id}">
+					<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 					<input type="hidden" name="tab" value="2">
 					
 					<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
@@ -71,7 +71,7 @@
 					<form name="goback" method="GET">
 					<input type="hidden" name="action" value="location">
 					<input type="hidden" name="function" value="location_view">
-					<input type="hidden" name="location_id" value="{$location.location_id}">
+					<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 					<input type="hidden" name="tab" value="2">
 					</form>
 

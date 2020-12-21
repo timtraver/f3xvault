@@ -30,7 +30,7 @@
 					<li{if $tab==3} class="active"{/if}>
 						<a data-toggle="tab" href="#location-tab-4" aria-expanded="true" {if $tab==3}aria-selected="true"{/if}>
 							Competitions
-							<span class="badge badge-blue">{$totalrecords}</span>
+							<span class="badge badge-blue">{$totalrecords|escape}</span>
 						</a>
 					</li>
 				</ul>
@@ -109,7 +109,7 @@
 											{/if}
 										{/if}
 										<tr style="border-style: none;">
-											<th width="20%" nowrap><b>{$la.location_att_cat_name}</b></th> 
+											<th width="20%" nowrap><b>{$la.location_att_cat_name|escape}</b></th> 
 										{assign var='row' value='1'}
 									{else}
 										<th></th>
@@ -117,7 +117,7 @@
 									{if $la.location_att_type == 'boolean'}
 										<td><span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span></td>
 									{else}
-										<td><span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{$la.location_att_value_value|escape}"></td>
+										<td><span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id|escape}" size="{$la.location_att_size|escape}" value="{$la.location_att_value_value|escape}"></td>
 									{/if}
 										</tr>
 									{assign var='cat' value=$la.location_att_cat_name}
@@ -150,11 +150,11 @@
 								<div class="item{if $m@index == 0} active{/if}">
 									<center>
 									{if $m.location_media_type == 'picture'}
-										<img src="{$m.location_media_url}"><br>
+										<img src="{$m.location_media_url|escape:"URL"}"><br>
 									{else}
 										<div class="video-wrapper">
 											<div class="video-container">
-												<iframe src="{$m.location_media_url}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+												<iframe src="{$m.location_media_url|escape:"URL"}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
 											</div>
 										</div>
 									{/if}
@@ -178,7 +178,7 @@
 						<form name="add_media" method="GET">
 						<input type="hidden" name="action" value="location">
 						<input type="hidden" name="function" value="location_media_edit">
-						<input type="hidden" name="location_id" value="{$location.location_id}">
+						<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 						</form>
 						
 					</div>
@@ -190,7 +190,7 @@
 						</div>
 						<br style="clear:left;">
 						
-						<h4 class="comments gutter-left current">{$comments_num} Location Comments</h4>
+						<h4 class="comments gutter-left current">{$comments_num|escape} Location Comments</h4>
 							{foreach $comments as $c}
 							<div class="panel panel-primary">
 					
@@ -200,13 +200,13 @@
 										<em class="text-muted"><small>{$c.location_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</small></em>
 									</div>
 									<h4 class="panel-title"><b>{$c.user_first_name|escape} {$c.user_last_name|escape}</b>
-										{if $c.pilot_city}{$c.pilot_city}, {/if}
+										{if $c.pilot_city}{$c.pilot_city|escape}, {/if}
 										{if $c.state_name && $c.country_code=="US"}
 											<img src="/images/flags/states/24/{$c.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">
 											{$c.state_name|escape}
 										{/if}
 										{if $c.country_code}
-											<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;" title="{$c.country_code}">
+											<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;" title="{$c.country_code|escape}">
 											{$c.country_name|escape}
 										{/if}
 									</h4>
@@ -242,9 +242,9 @@
 							{foreach $events as $e}
 							<tr>
 								<td>{$e.event_start_date|date_format:"Y-m-d"}</td>
-								<td><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$e.event_id|escape:"URL"}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
 								<td align="left">{$e.event_type_name|escape}</td>
-								<td align="left">{$e.total_pilots}</td>
+								<td align="left">{$e.total_pilots|escape}</td>
 							</tr>
 							{/foreach}
 							<tr style="background-color: lightgray;">
@@ -272,13 +272,13 @@
 		<form name="location_edit" method="GET">
 		<input type="hidden" name="action" value="location">
 		<input type="hidden" name="function" value="location_edit">
-		<input type="hidden" name="location_id" value="{$location.location_id}">
+		<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 		</form>
 		
 		<form name="addcomment" method="GET">
 		<input type="hidden" name="action" value="location">
 		<input type="hidden" name="function" value="location_comment_add">
-		<input type="hidden" name="location_id" value="{$location.location_id}">
+		<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 		</form>
 
 	</div>

@@ -30,7 +30,7 @@
 					<li>
 						<a href="?action=location&function=location_view&location_id={$location.location_id|escape}&tab=3" aria-expanded="false">
 							Competitions
-							<span class="badge badge-blue">{$totalrecords}</span>
+							<span class="badge badge-blue">{$totalrecords|escape}</span>
 						</a>
 					</li>
 				</ul>
@@ -59,7 +59,7 @@
 							</td>
 							<td rowspan="6">
 							{foreach $disciplines as $d}
-							<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
+							<input type="checkbox" name="disc_{$d.discipline_id|escape}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
 							{/foreach}
 							</td>
 						</tr>
@@ -68,7 +68,7 @@
 							<td>
 								<select name="state_id">
 								{foreach $states as $state}
-									<option value="{$state.state_id}" {if $state.state_id==$location.state_id}SELECTED{/if}>{$state.state_name}</option>
+									<option value="{$state.state_id|escape}" {if $state.state_id==$location.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -78,14 +78,14 @@
 							<td>
 								<select name="country_id">
 								{foreach $countries as $country}
-									<option value="{$country.country_id}" {if $country.country_id==$location.country_id}SELECTED{/if}>{$country.country_name}</option>
+									<option value="{$country.country_id|escape}" {if $country.country_id==$location.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<th>Map Coordinates</th>
-							<td><input type="text" size="50" name="location_coordinates" value="{$location.location_coordinates}"><br>
+							<td><input type="text" size="50" name="location_coordinates" value="{$location.location_coordinates|escape}"><br>
 								Must be in the format of Lattitude,Longitude (example: 33.781517,-117.197554)
 							</td>
 						</tr>
@@ -121,11 +121,11 @@
 									{/if}
 									{if $la.location_att_type == 'boolean'}
 										<td style="border-style: none;" nowrap>
-											<input type="checkbox" name="location_att_{$la.location_att_id}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> <span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span>
+											<input type="checkbox" name="location_att_{$la.location_att_id|escape}" {if $la.location_att_value_status==1 && $la.location_att_value_value ==1}CHECKED{/if}> <span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span>
 										</td>
 									{else}
 										<td style="border-style: none;" nowrap>
-											<span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id}" size="{$la.location_att_size}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value|escape}{/if}"> 
+											<span title="{$la.location_att_description|escape}">{$la.location_att_name|escape}</span> <input type="text" name="location_att_{$la.location_att_id|escape}" size="{$la.location_att_size|escape}" value="{if $la.location_att_value_status==1}{$la.location_att_value_value|escape}{/if}"> 
 										</td>
 									{/if}
 									{if $col > 2}
@@ -146,7 +146,7 @@
 							<input type="submit" value="Save Location Values{if $from} and Return{/if}" class="btn btn-primary btn-rounded">
 						</center>
 						{foreach $from as $f}
-						<input type="hidden" name="{$f.key}" value="{$f.value}">
+						<input type="hidden" name="{$f.key|escape}" value="{$f.value|escape}">
 						{/foreach}
 						</form>
 						

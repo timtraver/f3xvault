@@ -17,13 +17,13 @@
 		var markers = [];
 		{foreach $locations as $l}
 			{if $l.location_coordinates!=''}
-				latlong=new google.maps.LatLng({$l.location_coordinates});
+				latlong=new google.maps.LatLng({$l.location_coordinates|escape:"javascript"});
 				var marker=new google.maps.Marker({ldelim}
 					position: latlong,
 					map: map
 				{rdelim});
 				var infowindow = new google.maps.InfoWindow({ldelim}
-					content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id}"><b>{$l.location_name|escape}</b></a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:"url"}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id}">View Site Details</a></center></div>'
+					content: '<div id="infowin"><div class="post-title entry-title"><a href="?action=location&function=location_view&location_id={$l.location_id|escape}"><b>{$l.location_name|escape}</b></a></div><br>{$l.location_city|escape}, {$l.state_code|escape} {$l.country_code|escape}<br>Coordinates: <a href="http://maps.google.com/maps?q={$l.location_coordinates|escape:"url"}+({$l.location_name|escape})&t=h&z=14">{$l.location_coordinates|escape}</a><br><center><a href="?action=location&function=location_view&location_id={$l.location_id|escape}">View Site Details</a></center></div>'
 				{rdelim});
 				makeInfoWindowEvent(map, infowindow, marker);
 				markers.push(marker);
@@ -72,7 +72,7 @@
 							<select name="country_id" onChange="document.search_form.state_id.value=0;search_form.submit();">
 							<option value="0">Choose Country to Narrow Search</option>
 							{foreach $countries as $country}
-								<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+								<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 							{/foreach}
 							</select>
 				
@@ -84,7 +84,7 @@
 							<select name="state_id" onChange="search_form.submit();">
 							<option value="0">Choose State to Narrow Search</option>
 							{foreach $states as $state}
-								<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+								<option value="{$state.state_id|escape}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 							{/foreach}
 							</select>
 						</td>

@@ -44,7 +44,7 @@
 					<li>
 						<a href="?action=location&function=location_view&location_id={$location.location_id|escape}&tab=3" aria-expanded="false">
 							Competitions
-							<span class="badge badge-blue">{$totalrecords}</span>
+							<span class="badge badge-blue">{$totalrecords|escape}</span>
 						</a>
 					</li>
 				</ul>
@@ -59,7 +59,7 @@
 						<form name="main" method="POST" enctype="multipart/form-data">
 						<input type="hidden" name="action" value="location">
 						<input type="hidden" name="function" value="location_media_add">
-						<input type="hidden" name="location_id" value="{$location.location_id}">
+						<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 						<input type="hidden" name="tab" value="1">
 						<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 						
@@ -67,7 +67,7 @@
 						<tr>
 							<th>Location</th>
 							<td>
-								{$location.location_name}
+								{$location.location_name|escape}
 							</td>
 						</tr>
 						<tr>
@@ -109,7 +109,7 @@
 						<form name="goback" method="GET">
 						<input type="hidden" name="action" value="location">
 						<input type="hidden" name="function" value="location_view">
-						<input type="hidden" name="location_id" value="{$location.location_id}">
+						<input type="hidden" name="location_id" value="{$location.location_id|escape}">
 						<input type="hidden" name="tab" value="1">
 						</form>
 			
