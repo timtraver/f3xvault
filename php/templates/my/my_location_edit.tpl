@@ -17,7 +17,7 @@
 	<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 	<option value="0">Choose Country to Narrow Search</option>
 	{foreach $countries as $country}
-		<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+		<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -26,7 +26,7 @@
 	<select name="state_id" onChange="searchform.submit();">
 	<option value="0">Choose State to Narrow Search</option>
 	{foreach $states as $state}
-		<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+		<option value="{$state.state_id|escape}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 	{/foreach}
 	</select>
 	</td>
@@ -65,15 +65,15 @@
 </tr>
 <tr style="background-color: lightgray;">
         <td align="left" colspan="3">
-                {if $startrecord>1}[<a href="?action=my&function=my_location_edit&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
-                {if $endrecord<$totalrecords}[<a href="?action=my&function=my_location_edit&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
+                {if $startrecord>1}[<a href="?action=my&function=my_location_edit&page={$prevpage|escape:"url"}"> &lt;&lt; Prev Page</a>]{/if}
+                {if $endrecord<$totalrecords}[<a href="?action=my&function=my_location_edit&page={$nextpage|escape:"url"}">Next Page &gt;&gt</a>]{/if}
         </td>
         <td align="right" colspan="3">PerPage
                 [<a href="?action=my&function=my_location_edit&&perpage=25">25</a>]
                 [<a href="?action=my&function=my_location_edit&&perpage=50">50</a>]
                 [<a href="?action=my&function=my_location_edit&&perpage=100">100</a>]
                 [<a href="?action=my&function=my_location_edit&page=1">First Page</a>]
-                [<a href="?action=my&function=my_location_edit&page={$totalpages|escape}">Last Page</a>]
+                [<a href="?action=my&function=my_location_edit&page={$totalpages|escape:"URL"}">Last Page</a>]
         </td>
 </tr>
 <tr>
@@ -87,26 +87,26 @@
 {foreach $locations as $location}
 <tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
 	<td>
-		<input type="checkbox" name="location_{$location.location_id}">
+		<input type="checkbox" name="location_{$location.location_id|escape}">
 	</td>
 	<td>{$location.location_name|escape}</td>
 	<td>{$location.location_city|escape}</td>
 	<td>{$location.state_name|escape}</td>
 	<td>{$location.country_name|escape}</td>
-	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
+	<td align="center">{if $location.location_coordinates!=''}<a class="fancybox-map" href="https://maps.google.com/maps?q={$location.location_coordinates|escape:'url'}+({$location.location_name|escape:'url'})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps."><img src="/images/icons/world.png"></a>{/if}</td>
 </tr>
 {/foreach}
 <tr style="background-color: lightgray;">
         <td align="left" colspan="3">
-                {if $startrecord>1}[<a href="?action=my&function=my_location_edit&page={$prevpage|escape}"> &lt;&lt; Prev Page</a>]{/if}
-                {if $endrecord<$totalrecords}[<a href="?action=my&function=my_location_edit&page={$nextpage|escape}">Next Page &gt;&gt</a>]{/if}
+                {if $startrecord>1}[<a href="?action=my&function=my_location_edit&page={$prevpage|escape:'url'}"> &lt;&lt; Prev Page</a>]{/if}
+                {if $endrecord<$totalrecords}[<a href="?action=my&function=my_location_edit&page={$nextpage|escape:'url'}">Next Page &gt;&gt</a>]{/if}
         </td>
         <td align="right" colspan="3">PerPage
                 [<a href="?action=my&function=my_location_edit&perpage=25">25</a>]
                 [<a href="?action=my&function=my_location_edit&perpage=50">50</a>]
                 [<a href="?action=my&function=my_location_edit&perpage=100">100</a>]
                 [<a href="?action=my&function=my_location_edit&page=1">First Page</a>]
-                [<a href="?action=my&function=my_location_edit&page={$totalpages|escape}">Last Page</a>]
+                [<a href="?action=my&function=my_location_edit&page={$totalpages|escape:'url'}">Last Page</a>]
         </td>
 </tr>
 </table>

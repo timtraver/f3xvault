@@ -16,7 +16,7 @@
 						<form name="login" method="POST" autocomplete="off">
 						<input type="hidden" name="action" value="my">
 						<input type="hidden" name="function" value="change_password">
-						<input type="hidden" name="user_id" value="{$user_info.user_id}">
+						<input type="hidden" name="user_id" value="{$user_info.user_id|escape}">
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>

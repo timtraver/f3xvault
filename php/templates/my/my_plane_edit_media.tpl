@@ -18,7 +18,7 @@
 <form name="main" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="action" value="{$action|escape}">
 <input type="hidden" name="function" value="my_plane_media_add">
-<input type="hidden" name="pilot_plane_id" value="{$pilot_plane_id}">
+<input type="hidden" name="pilot_plane_id" value="{$pilot_plane_id|escape}">
 <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
 
 <h1 class="post-title entry-title">Plane Media Edit</h1>
@@ -69,7 +69,7 @@
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="my">
 <input type="hidden" name="function" value="my_plane_edit">
-<input type="hidden" name="pilot_plane_id" value="{$pilot_plane_id}">
+<input type="hidden" name="pilot_plane_id" value="{$pilot_plane_id|escape}">
 </form>
 
 </div>

@@ -27,7 +27,7 @@
 			{foreach $pilotlist as $p}
 			<tr>
 				<th nowrap>
-					<input type="radio" name="pilot_id" value="{$p.pilot_id}">
+					<input type="radio" name="pilot_id" value="{$p.pilot_id|escape}">
 				</th>
 				<td>{$p.pilot_last_name|escape}</td>
 				<td>{$p.pilot_first_name|escape}</td>
@@ -85,7 +85,7 @@
 						<form name="main" method="POST">
 						<input type="hidden" name="action" value="my">
 						<input type="hidden" name="function" value="my_user_save">
-						<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
+						<input type="hidden" name="pilot_id" value="{$pilot.pilot_id|escape}">
 						<input type="hidden" name="tab" value="0">
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
@@ -110,7 +110,7 @@
 							<td>
 								<select name="state_id">
 								{foreach $states as $state}
-									<option value="{$state.state_id}" {if $state.state_id==$pilot.state_id}SELECTED{/if}>{$state.state_name}</option>
+									<option value="{$state.state_id|escape}" {if $state.state_id==$pilot.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -120,7 +120,7 @@
 							<td>
 								<select name="country_id">
 								{foreach $countries as $country}
-									<option value="{$country.country_id}" {if $country.country_id==$pilot.country_id}SELECTED{/if}>{$country.country_name}</option>
+									<option value="{$country.country_id|escape}" {if $country.country_id==$pilot.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -162,15 +162,15 @@
 						{if $pilot_planes}
 							{foreach $pilot_planes as $pp}
 							<tr>
-								<td><a href="?action=my&function=my_plane_edit&pilot_plane_id={$pp.pilot_plane_id}" title="Edit My Aircraft" class="btn-link">{$pp.plane_name|escape}</a></td>
+								<td><a href="?action=my&function=my_plane_edit&pilot_plane_id={$pp.pilot_plane_id|escape}" title="Edit My Aircraft" class="btn-link">{$pp.plane_name|escape}</a></td>
 								<td>
 									{foreach $pp.disciplines as $d}
-										{$d.discipline_code_view}{if !$d@last},{/if}
+										{$d.discipline_code_view|escape}{if !$d@last},{/if}
 									{/foreach}
 								</td>
 								<td>{$pp.plane_manufacturer|escape}</td>
 								<td>{$pp.pilot_plane_color|escape}</td>
-								<td> <a href="?action=my&function=my_plane_del&pilot_plane_id={$pp.pilot_plane_id}&tab=1" title="Remove Plane" onClick="confirm('Are you sure you wish to remove this plane?')"><img src="images/del.gif"></a></td>
+								<td> <a href="?action=my&function=my_plane_del&pilot_plane_id={$pp.pilot_plane_id|escape:"URL"}&tab=1" title="Remove Plane" onClick="confirm('Are you sure you wish to remove this plane?')"><img src="images/del.gif"></a></td>
 							</tr>
 							{/foreach}
 						{else}
@@ -200,7 +200,7 @@
 						{if $pilot_clubs}
 							{foreach $pilot_clubs as $pc}
 							<tr>
-								<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club" class="btn-link">{$pc.club_name|escape}</a></td>
+								<td><a href="?action=club&function=club_view&club_id={$pc.club_id|escape:"URL"}" title="View This Club" class="btn-link">{$pc.club_name|escape}</a></td>
 								<td>{$pc.club_city|escape}</td>
 								<td>{$pc.state_name|escape}, {$pc.country_code|escape}
 									{if $pc.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pc.country_code|escape}.png" style="vertical-align: middle;">{/if}
@@ -234,14 +234,14 @@
 						{if $pilot_locations}
 							{foreach $pilot_locations as $pl}
 							<tr>
-								<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location" class="btn-link">{$pl.location_name|escape}</a></td>
+								<td><a href="?action=location&function=location_view&location_id={$pl.location_id|escape:"URL"}" title="View This Location" class="btn-link">{$pl.location_name|escape}</a></td>
 								<td>{$pl.location_city|escape}</td>
 								<td>{$pl.state_name|escape} {$pl.country_code|escape}
 									{if $pl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pl.country_code|escape}.png" style="vertical-align: middle;">{/if}
 									{if $pl.state_name && $pl.country_code=="US"}<img src="/images/flags/states/16/{$pl.state_name|replace:' ':'-'}-Flag-16.png" style="vertical-align: middle;">{/if}
 								</td>
-								<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps." target="_blank"><img src="/images/icons/world.png"></a>{/if}</td>
-								<td> <a href="?action=my&function=my_location_del&pilot_location_id={$pl.pilot_location_id}&tab=3" title="Remove Location" onClick="confirm('Are you sure you wish to remove this location?')"><img src="images/del.gif"></a></td>
+								<td align="center">{if $pl.location_coordinates!=''}<a class="fancybox-map" href="http://maps.google.com/maps?q={$pl.location_coordinates|escape:'url'}+({$pl.location_name|escape:"URL"})&t=h&z=14" title="Press the Powered By Google Logo in the lower left hand corner to go to google maps." target="_blank"><img src="/images/icons/world.png"></a>{/if}</td>
+								<td> <a href="?action=my&function=my_location_del&pilot_location_id={$pl.pilot_location_id|escape:"URL"}&tab=3" title="Remove Location" onClick="confirm('Are you sure you wish to remove this location?')"><img src="images/del.gif"></a></td>
 							</tr>
 							{/foreach}
 						{else}
@@ -282,7 +282,7 @@
 <form name="goback" method="POST">
 <input type="hidden" name="action" value="pilot">
 <input type="hidden" name="function" value="pilot_view">
-<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
+<input type="hidden" name="pilot_id" value="{$pilot.pilot_id|escape}">
 <input type="hidden" name="tab" value="0">
 </form>
 <form name="add_plane" method="POST">

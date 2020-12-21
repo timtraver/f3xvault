@@ -65,8 +65,8 @@
 						<form name="main" method="POST">
 						<input type="hidden" name="action" value="my">
 						<input type="hidden" name="function" value="my_plane_save">
-						<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
-						<input type="hidden" name="plane_id" value="{$pilot_plane.plane_id}">
+						<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id|escape}">
+						<input type="hidden" name="plane_id" value="{$pilot_plane.plane_id|escape}">
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 						{if $pilot_plane.pilot_plane_id==0}
@@ -130,11 +130,11 @@
 							<tr bgcolor="{cycle values="white,lightgray"}">
 								<td>{if $m.pilot_plane_media_type=='picture'}Picture{else}Video{/if}</td>
 								{if $m.location_media_type=='picture'}
-									<td><a href="{$m.pilot_plane_media_url}" title="{$m.location_media_caption|escape}" class="btn-link" target="_blank">{$m.pilot_plane_media_url}</a></td>
+									<td><a href="{$m.pilot_plane_media_url|escape:"URL"}" title="{$m.location_media_caption|escape}" class="btn-link" target="_blank">{$m.pilot_plane_media_url|escape:"URL"}</a></td>
 								{else}
-									<td><a href="{$m.pilot_plane_media_url}" title="{$m.location_media_caption|escape}" class="btn-link" target="_blank">{$m.pilot_plane_media_url}</a></td>
+									<td><a href="{$m.pilot_plane_media_url|escape:"URL"}" title="{$m.location_media_caption|escape}" class="btn-link" target="_blank">{$m.pilot_plane_media_url|escape:"URL"}</a></td>
 								{/if}
-								<td> <a href="?action=my&function=my_plane_media_del&pilot_plane_id={$pilot_plane.pilot_plane_id}&pilot_plane_media_id={$m.pilot_plane_media_id}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
+								<td> <a href="?action=my&function=my_plane_media_del&pilot_plane_id={$pilot_plane.pilot_plane_id|escape:"URL"}&pilot_plane_media_id={$m.pilot_plane_media_id|escape:"URL"}" title="Remove Media" onClick="confirm('Are you sure you wish to remove this media?')"><img src="images/del.gif"></a></td>
 							</tr>
 							{/foreach}
 						{else}
@@ -150,7 +150,7 @@
 						<form name="add_media" method="POST" enctype="multipart/form-data">
 						<input type="hidden" name="action" value="my">
 						<input type="hidden" name="function" value="my_plane_media_add">
-						<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
+						<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id|escape}">
 						<input type="hidden" name="MAX_FILE_SIZE" value="5000000">
 						<input type="hidden" name="pilot_plane_media_id" value="0">
 						<h2 style="float:left;">Add Plane Media</h2>
@@ -199,7 +199,7 @@
 <form name="deleteplane" method="GET">
 <input type="hidden" name="action" value="my">
 <input type="hidden" name="function" value="my_plane_del">
-<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id}">
+<input type="hidden" name="pilot_plane_id" value="{$pilot_plane.pilot_plane_id|escape}">
 </form>
 
 <form name="create_new_plane" method="POST">
