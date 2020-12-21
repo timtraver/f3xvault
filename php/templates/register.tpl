@@ -56,7 +56,7 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<div class="g-recaptcha" data-sitekey="{$recaptcha_key}"></div>
+								<div class="g-recaptcha" data-sitekey="{$recaptcha_key|escape}"></div>
 							</div>
 						</div>
 						<div class="row">
