@@ -13,7 +13,7 @@
 		<form name="main" method="POST">
 		<input type="hidden" name="action" value="admin">
 		<input type="hidden" name="function" value="admin_user_save">
-		<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
+		<input type="hidden" name="pilot_id" value="{$pilot.pilot_id|escape}">
 		
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 		<tr>
@@ -33,7 +33,7 @@
 			<td>
 				<select name="state_id">
 				{foreach $states as $state}
-					<option value="{$state.state_id}" {if $state.state_id==$pilot.state_id}SELECTED{/if}>{$state.state_name}</option>
+					<option value="{$state.state_id|escape}" {if $state.state_id==$pilot.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -43,7 +43,7 @@
 			<td>
 				<select name="country_id">
 				{foreach $countries as $country}
-					<option value="{$country.country_id}" {if $country.country_id==$pilot.country_id}SELECTED{/if}>{$country.country_name}</option>
+					<option value="{$country.country_id|escape}" {if $country.country_id==$pilot.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -51,7 +51,7 @@
 		<tr>
 			<th align="right" nowrap>Pilot Email</th>
 			<td>
-				<input type="text" name="pilot_email" size="40" value="{if $pilot.pilot_email=='' && $pilot.user_email!=''}{$pilot.user_email}{else}{$pilot.pilot_email|escape}{/if}">
+				<input type="text" name="pilot_email" size="40" value="{if $pilot.pilot_email=='' && $pilot.user_email!=''}{$pilot.user_email|escape}{else}{$pilot.pilot_email|escape}{/if}">
 			</td>
 		</tr>
 		<tr>
@@ -81,7 +81,7 @@
 		<form name="deletepilot" method="POST">
 		<input type="hidden" name="action" value="admin">
 		<input type="hidden" name="function" value="admin_user_delete">
-		<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
+		<input type="hidden" name="pilot_id" value="{$pilot.pilot_id|escape}">
 		</form>
 		
 		<h2 class="post-title entry-title">Pilot Aircraft</h2>
@@ -95,10 +95,10 @@
 			{if $pilot_planes}
 				{foreach $pilot_planes as $pp}
 					<tr>
-					<td><a href="?action=plane&function=plane_view&plane_id={$pp.plane_id}" title="View Aircraft">{$pp.plane_name|escape}</a></td>
+					<td><a href="?action=plane&function=plane_view&plane_id={$pp.plane_id|escape:"url"}" title="View Aircraft">{$pp.plane_name|escape}</a></td>
 					<td>
 						{foreach $pp.disciplines as $d}
-							{$d.discipline_code_view}{if !$d@last},{/if}
+							{$d.discipline_code_view|escape}{if !$d@last},{/if}
 						{/foreach}
 					</td>
 					<td>{$pp.plane_manufacturer|escape}</td>
@@ -123,7 +123,7 @@
 		{if $pilot_clubs}
 			{foreach $pilot_clubs as $pc}
 			<tr>
-				<td><a href="?action=club&function=club_view&club_id={$pc.club_id}" title="View This Club">{$pc.club_name|escape}</a></td>
+				<td><a href="?action=club&function=club_view&club_id={$pc.club_id|escape:"url"}" title="View This Club">{$pc.club_name|escape}</a></td>
 				<td>{$pc.club_city|escape}</td>
 				<td>{$pc.state_name|escape}, {$pc.country_code|escape}
 					{if $pc.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pc.country_code|escape}.png" style="vertical-align: middle;">{/if}
@@ -150,7 +150,7 @@
 		{if $pilot_locations}
 			{foreach $pilot_locations as $pl}
 			<tr>
-				<td><a href="?action=location&function=location_view&location_id={$pl.location_id}" title="View This Location">{$pl.location_name|escape}</a></td>
+				<td><a href="?action=location&function=location_view&location_id={$pl.location_id|escape:url""}" title="View This Location">{$pl.location_name|escape}</a></td>
 				<td>{$pl.location_city|escape}</td>
 				<td>{$pl.state_name|escape}, {$pl.country_code|escape}
 					{if $pl.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pl.country_code|escape}.png" style="vertical-align: middle;">{/if}
@@ -179,10 +179,10 @@
 		{foreach $f3f_records as $f}
 			<tr>
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
 				<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
@@ -203,10 +203,10 @@
 		{foreach $f3b_records as $f}
 			<tr>
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
 				<td align="right"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></td>
@@ -226,13 +226,13 @@
 		{foreach $f3b_dist as $f}
 			<tr>
 				<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
-				<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event">{$f.event_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:"url"}" title="View This Event">{$f.event_name|escape}</a></td>
 				<td>
-					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-					<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location">{$f.location_name|escape}</a>,
+					{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+					<a href="?action=location&function=location_view&location_id={$f.location_id|escape:"url"}" title="View This Location">{$f.location_name|escape}</a>,
 					{$f.country_code|escape}
 				</td>
-				<td align="right"><b>{$f.event_pilot_round_flight_laps}</b></td>
+				<td align="right"><b>{$f.event_pilot_round_flight_laps|escape}</b></td>
 			</tr>
 		{/foreach}
 		</table>
@@ -253,9 +253,9 @@
 			{foreach $pilot_events as $pe}
 			<tr>
 				<td>{$pe.event_start_date|date_format:"Y-m-d"}</td>
-				<td><a href="?action=event&function=event_view&event_id={$pe.event_id}" title="View This Event">{$pe.event_name|escape}</a></td>
+				<td><a href="?action=event&function=event_view&event_id={$pe.event_id|escape:"url"}" title="View This Event">{$pe.event_name|escape}</a></td>
 				<td>
-					<a href="?action=location&function=location_view&location_id={$pe.location_id}" title="View This Location">{$pe.location_name|escape}</a>
+					<a href="?action=location&function=location_view&location_id={$pe.location_id:"url"}" title="View This Location">{$pe.location_name|escape}</a>
 				</td>
 				<td>{$pe.state_name|escape}, {$pe.country_code|escape}
 					{if $pe.country_code}<img src="/images/flags/countries-iso/shiny/16/{$pe.country_code|escape}.png" style="vertical-align: middle;">{/if}
