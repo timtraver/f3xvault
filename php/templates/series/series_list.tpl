@@ -23,7 +23,7 @@
 						<select name="country_id" onChange="document.search_form.state_id.value=0;search_form.submit();">
 						<option value="0">Choose Country to Narrow Search</option>
 						{foreach $countries as $country}
-							<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+							<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 						{/foreach}
 						</select>
 			
@@ -35,7 +35,7 @@
 						<select name="state_id" onChange="search_form.submit();">
 						<option value="0">Choose State to Narrow Search</option>
 						{foreach $states as $state}
-							<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+							<option value="{$state.state_id|escape}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 						{/foreach}
 						</select>
 					</td>

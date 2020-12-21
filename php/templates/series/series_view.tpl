@@ -18,7 +18,7 @@
 		<form name="series_save_multiples" method="POST">
 		<input type="hidden" name="action" value="series">
 		<input type="hidden" name="function" value="series_save_multiples">
-		<input type="hidden" name="series_id" value="{$series->info.series_id}">
+		<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 		
 		<table width="100%" cellpadding="0" cellspacing="0" class="table table-condensed table-bordered">
 		<tr>
@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 			<th style="text-align:right;">Series Web URL</th>
-			<td><a href="{$series->info.series_url}" target="_new" class="btn-link">{$series->info.series_url}</a></td>
+			<td><a href="{$series->info.series_url|escape:'url'}" target="_new" class="btn-link">{$series->info.series_url|escape:'url'}</a></td>
 		</tr>
 		<tr>
 			<th style="text-align:right;">Series Scoring Type</th>
@@ -68,10 +68,10 @@
 		{$num=1}
 		{foreach $series->events as $e}
 		<tr>
-			<td align="center">{$num}</td>
+			<td align="center">{$num|escape}</td>
 			<td nowrap>{$e.event_start_date|date_format:"Y-m-d"}</td>
 			<td>
-				<a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">{$e.event_name|escape}</a>
+				<a href="?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">{$e.event_name|escape}</a>
 			</td>
 			<td>{$e.location_name|escape}</td>
 			<td nowrap>
@@ -84,8 +84,8 @@
 			</td>
 			<td nowrap>{$e.total_pilots|escape}</td>
 			<td nowrap>
-				<input type="text" name="multiple_{$e.event_series_id}" size="6" value="{$e.event_series_multiple|escape}">
-				<input type="checkbox" name="mandatory_{$e.event_series_id}" {if $e.event_series_mandatory}CHECKED{/if}> Mandatory
+				<input type="text" name="multiple_{$e.event_series_id|escape}" size="6" value="{$e.event_series_multiple|escape}">
+				<input type="checkbox" name="mandatory_{$e.event_series_id|escape}" {if $e.event_series_mandatory}CHECKED{/if}> Mandatory
 			</td>
 		</tr>
 		{$num=$num+1}
@@ -100,7 +100,7 @@
 		<tr>
 			<th colspan="2" align="right" nowrap></th>
 			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
-				Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events} Completed Events)
+				Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
 			</th>
 			<th width="5%" nowrap>Total Score</th>
 			{if $series->info.series_scoring_type=='standard'}
@@ -116,7 +116,7 @@
 					<span>
 						{$e.event_name|escape}
 					</span>
-					<a href="/?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">E {$event_num}</a>
+					<a href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">E {$event_num|escape}</a>
 					</div>
 				</th>
 				{$event_num=$event_num+1}
@@ -139,10 +139,10 @@
 			{$diff_to_lead=$diff_to_lead+$diff}
 		{/if}
 		<tr>
-			<td>{$p.overall_rank}</td>
-			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id}&series_id={$series->info.series_id}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
+			<td>{$p.overall_rank|escape}</td>
+			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
 			{foreach $series->events as $e}
-				{$event_id=$e.event_id}
+				{$event_id=$e.event_id|escape}
 				<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
 						{$drop=$p.events.$event_id.dropped}
@@ -201,7 +201,7 @@
 <form name="edit_series" method="POST">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_edit">
-<input type="hidden" name="series_id" value="{$series->info.series_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 </form>
 
 {/block}

@@ -15,7 +15,7 @@
 	<form name="main" method="POST">
 	<input type="hidden" name="action" value="series">
 	<input type="hidden" name="function" value="series_save">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 	<tr>
 		<th>Series Name</th>
@@ -34,7 +34,7 @@
 		<td>
 		<select name="state_id">
 		{foreach $states as $s}
-			<option value="{$s.state_id}" {if $series->info.state_id==$s.state_id}SELECTED{/if}>{$s.state_name|escape}</option>
+			<option value="{$s.state_id|escape}" {if $series->info.state_id==$s.state_id}SELECTED{/if}>{$s.state_name|escape}</option>
 		{/foreach}
 		</select>
 		</td>
@@ -44,7 +44,7 @@
 		<td>
 		<select name="country_id">
 		{foreach $countries as $c}
-			<option value="{$c.country_id}" {if $series->info.country_id==$c.country_id}SELECTED{/if}>{$c.country_name|escape}</option>
+			<option value="{$c.country_id|escape}" {if $series->info.country_id==$c.country_id}SELECTED{/if}>{$c.country_name|escape}</option>
 		{/foreach}
 		</select>
 		</td>
@@ -52,7 +52,7 @@
 	<tr>
 		<th>Series Web URL</th>
 		<td>
-			<input type="text" size="60" name="series_url" value="{$series->info.series_url}">
+			<input type="text" size="60" name="series_url" value="{$series->info.series_url|escape}">
 		</td>
 	</tr>
 	</table>
@@ -88,7 +88,7 @@
 	</table>
 	
 	{foreach $from as $f}
-	<input type="hidden" name="{$f.key}" value="{$f.value}">
+	<input type="hidden" name="{$f.key|escape}" value="{$f.value|escape}">
 	{/foreach}
 	</form>
 
@@ -97,7 +97,7 @@
 	<form name="event_options" method="POST">
 	<input type="hidden" name="action" value="series">
 	<input type="hidden" name="function" value="series_param_save">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 	<tr>
 		<th colspan="2" align="left">The Following Specific Parameters Are for this series</th>
@@ -107,12 +107,12 @@
 		<th align="right" width="30%">{$o.series_option_type_name|escape} (<a href="#" title="{$o.series_option_type_description|escape}">?</a>)</th>
 		<td>
 			{if $o.series_option_type_type == 'boolean'}
-				<select name="option_{$o.series_option_type_id}_{$o.series_option_id}">
+				<select name="option_{$o.series_option_type_id|escape}_{$o.series_option_id|escape}">
 				<option value="yes" {if $o.series_option_status==1 && $o.series_option_value ==1}SELECTED{/if}>Yes</option>
 				<option value="no" {if $o.series_option_status==1 && $o.series_option_value ==0}SELECTED{/if}>No</option>
 				</select>
 			{else}
-					<input type="text" name="option_{$o.series_option_type_id}_{$o.series_option_id}" size="{$o.series_option_type_size}" value="{$o.series_option_value|escape}"> 
+					<input type="text" name="option_{$o.series_option_type_id|escape}_{$o.series_option_id|escape}" size="{$o.series_option_type_size|escape}" value="{$o.series_option_value|escape}"> 
 			{/if}
 		</td>
 	</tr>
@@ -131,7 +131,7 @@
 	<form name="series_user" method="POST">
 	<input type="hidden" name="action" value="series">
 	<input type="hidden" name="function" value="series_user_save">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<input type="hidden" name="user_id" value="">
 	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 	<tr>
@@ -141,7 +141,7 @@
 	<tr>
 		<td>{$u.user_first_name|escape} {$u.user_last_name|escape}</td>
 		<td width="2%">
-			<a href="?action=series&function=series_user_delete&series_id={$series->info.series_id}&series_user_id={$u.series_user_id}"><img src="/images/del.gif"></a></td>
+			<a href="?action=series&function=series_user_delete&series_id={$series->info.series_id|escape:'url'}&series_user_id={$u.series_user_id|escape:'url'}"><img src="/images/del.gif"></a></td>
 	</tr>
 	{/foreach}
 	<tr>
@@ -161,7 +161,7 @@
 	<form name="series_event" method="POST">
 	<input type="hidden" name="action" value="series">
 	<input type="hidden" name="function" value="series_event_save">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<input type="hidden" name="event_id" value="">
 	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 	<tr>
@@ -171,7 +171,7 @@
 	<tr>
 		<td>{$e.event_start_date|date_format:"Y-m-d"} - {$e.event_name|escape}</td>
 		<td width="2%">
-			<a href="?action=series&function=series_event_delete&series_id={$series->info.series_id}&event_series_id={$e.event_series_id}" title="Remove Event" onClick="return confirm('Are you sure you wish to remove this event?');"><img src="/images/del.gif"></a></td>
+			<a href="?action=series&function=series_event_delete&series_id={$series->info.series_id|escape:'url'}&event_series_id={$e.event_series_id|escape:'url'}" title="Remove Event" onClick="return confirm('Are you sure you wish to remove this event?');"><img src="/images/del.gif"></a></td>
 	</tr>
 	{/foreach}
 	<tr>
@@ -195,13 +195,13 @@
 		<input type="hidden" name="function" value="series_list">
 	{else}
 	<input type="hidden" name="function" value="series_view">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	{/if}
 	</form>
 	<form name="add_drop" method="POST">
 	<input type="hidden" name="action" value="series">
 	<input type="hidden" name="function" value="series_option_add_drop">
-	<input type="hidden" name="series_id" value="{$series->info.series_id}">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<input type="hidden" name="drop_round" value="0">
 	</form>
 

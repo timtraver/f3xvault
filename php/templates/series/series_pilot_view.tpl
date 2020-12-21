@@ -27,15 +27,15 @@
 			<tr>
 				{$event_id=$e@key}
 				{$bgcolor='#9DCFF0'}
-				<td align="center">{$num}</td>
-				<td align="left"><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link">{$e.event_name|escape}</a></td>
+				<td align="center">{$num|escape}</td>
+				<td align="left"><a href="?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">{$e.event_name|escape}</a></td>
 				<td align="right" nowrap>
 					{if $series->totals.pilots.$pilot_id.events.$event_id.dropped==1}<del><font color="red">{/if}
 						{$series->totals.pilots.$pilot_id.events.$event_id.event_score|string_format:"%06.3f"}
 					{if $series->totals.pilots.$pilot_id.events.$event_id.dropped==1}</font></del>{/if}
 				</td>
 				<td align="right" nowrap>
-					{$series->totals.pilots.$pilot_id.events.$event_id.event_pilot_position}
+					{$series->totals.pilots.$pilot_id.events.$event_id.event_pilot_position|escape}
 				</td>
 			</tr>
 			{$num=$num+1}
@@ -46,7 +46,7 @@
 		<table width="50%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 		<tr>
 			<th>Overall Rank</th>
-			<td>{$series->totals.pilots.$pilot_id.overall_rank}</td>
+			<td>{$series->totals.pilots.$pilot_id.overall_rank|escape}</td>
 		</tr>
 		<tr>
 			<th>Total Points</th>
@@ -65,13 +65,13 @@
 <form name="goback" method="GET">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_view">
-<input type="hidden" name="series_id" value="{$series->info.series_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 </form>
 <form name="print_pilot" action="?" method="GET" target="_blank">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_print_pilot">
-<input type="hidden" name="series_id" value="{$series->info.series_id}">
-<input type="hidden" name="pilot_id" value="{$pilot_id}">
+<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
+<input type="hidden" name="pilot_id" value="{$pilot_id|escape}">
 <input type="hidden" name="use_print_header" value="1">
 </form>
 
