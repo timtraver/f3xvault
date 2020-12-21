@@ -4,7 +4,7 @@
 
 <div class="panel">
 	<div class="panel-heading">
-		<h2 class="heading">Welcome {$user.user_first_name}!</h2>
+		<h2 class="heading">Welcome {$user.user_first_name|escape}!</h2>
 	</div>
 	<div class="panel-body">
 
@@ -13,7 +13,7 @@
 				<h2>Quick Links</h2>
 				
 				<div style="width: 300px;padding-bottom: 7px;">
-					<a href="?action=pilot&function=pilot_view&pilot_id={$user.pilot_id}" class="btn btn-block btn-primary btn-rounded" style="font-size: 20px;"><i class="fa fa-user" style="float:left;padding-top: 3px;"></i>View My Pilot Profile</a>
+					<a href="?action=pilot&function=pilot_view&pilot_id={$user.pilot_id|escape}" class="btn btn-block btn-primary btn-rounded" style="font-size: 20px;"><i class="fa fa-user" style="float:left;padding-top: 3px;"></i>View My Pilot Profile</a>
 				</div>
 				
 				<div style="width: 300px;padding-bottom: 7px;">
@@ -22,7 +22,7 @@
 				
 				{if $current}
 				<div style="width: 300px;padding-bottom: 7px;">
-					<a href="?action=event&function=event_view&event_id={$current.event_id}" class="btn btn-block btn-warning btn-rounded" style="font-size: 20px;"><i class="fa fa-thumbs-o-up" style="float:left;padding-top: 3px;"></i>I Am At This Event Now!</a>
+					<a href="?action=event&function=event_view&event_id={$current.event_id|escape}" class="btn btn-block btn-warning btn-rounded" style="font-size: 20px;"><i class="fa fa-thumbs-o-up" style="float:left;padding-top: 3px;"></i>I Am At This Event Now!</a>
 				</div>
 				{/if}
 				
@@ -35,7 +35,7 @@
 						</button>
 						<ul class="dropdown-menu dropdown-menu-left" style="width:100%;position: relative;font-size:16px;">
 							{foreach $future as $f}
-								<li><a href="?action=event&function=event_view&event_id={$f.event_id}">{$f.event_start_date|date_format:"%y-%m-%d"} - {$f.event_name|truncate:"28"}</a></li>
+								<li><a href="?action=event&function=event_view&event_id={$f.event_id|escape}">{$f.event_start_date|date_format:"%y-%m-%d"} - {$f.event_name|truncate:"28"|escape}</a></li>
 							{/foreach}
 						</ul>
 				</div>
@@ -50,7 +50,7 @@
 						</button>
 						<ul class="dropdown-menu dropdown-menu-left" style="width:100%;position: relative;font-size:16px;">
 							{foreach $past as $p}
-								<li><a href="?action=event&function=event_view&event_id={$p.event_id}">{$p.event_start_date|date_format:"%y-%m-%d"} - {$p.event_name|truncate:"28"}</a></li>
+								<li><a href="?action=event&function=event_view&event_id={$p.event_id|escape}">{$p.event_start_date|date_format:"%y-%m-%d"} - {$p.event_name|truncate:"28"|escape}</a></li>
 							{/foreach}
 						</ul>
 				</div>
