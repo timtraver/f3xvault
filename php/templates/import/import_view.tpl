@@ -16,13 +16,13 @@
 		<form name="main" method="POST" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="import">
 		<input type="hidden" name="function" value="import_verify">
-		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 			{if $event->info.event_id!=0}
 			<tr>
 				<th width="10%" nowrap>Event Name</th>
 				<td>
-					{$event->info.event_name}
+					{$event->info.event_name|escape}
 				</td>
 			</tr>
 			{/if}

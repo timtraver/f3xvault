@@ -13,20 +13,20 @@
 		<form name="main" method="POST">
 		<input type="hidden" name="action" value="import">
 		<input type="hidden" name="function" value="import_import">
-		<input type="hidden" name="event_id" value="{$event.event_id}">
-		<input type="hidden" name="event_type_id" value="{$event.event_type_id}">
-		<input type="hidden" name="event_type_code" value="{$event.event_type_code}">
-		<input type="hidden" name="event_zero_round" value="{$event.event_zero_round}">
-		<input type="hidden" name="event_start_date" value="{$event.event_start_date}">
-		<input type="hidden" name="event_end_date" value="{$event.event_end_date}">
-		<input type="hidden" name="event_cd" value="{$event.event_cd}">
-		<input type="hidden" name="location_id" value="{$event.location_id}">
-		<input type="hidden" name="f3f_group" value="{$event.f3f_group}">
+		<input type="hidden" name="event_id" value="{$event.event_id|escape}">
+		<input type="hidden" name="event_type_id" value="{$event.event_type_id|escape}">
+		<input type="hidden" name="event_type_code" value="{$event.event_type_code|escape}">
+		<input type="hidden" name="event_zero_round" value="{$event.event_zero_round|escape}">
+		<input type="hidden" name="event_start_date" value="{$event.event_start_date|escape}">
+		<input type="hidden" name="event_end_date" value="{$event.event_end_date|escape}">
+		<input type="hidden" name="event_cd" value="{$event.event_cd|escape}">
+		<input type="hidden" name="location_id" value="{$event.location_id|escape}">
+		<input type="hidden" name="f3f_group" value="{$event.f3f_group|escape}">
 		{foreach $rounds as $r}
 		{$round=$r@key}
-		<input type="hidden" name="event_round_{$round}" value="{$r.flight_type_id}">
+		<input type="hidden" name="event_round_{$round|escape}" value="{$r.flight_type_id|escape}">
 		{if $r.target}
-		<input type="hidden" name="event_round_{$round}_target" value="{$r.target}">
+		<input type="hidden" name="event_round_{$round|escape}_target" value="{$r.target|escape}">
 		{/if}
 		{/foreach}
 		
@@ -36,7 +36,7 @@
 		<tr>
 			<th colspan="2">Event Type</th>
 			<td colspan="5">
-				{$event.event_type_code} - {$event.event_type_name} {if $event.f3f_group == 1} (with groups){/if}
+				{$event.event_type_code|escape} - {$event.event_type_name|escape} {if $event.f3f_group == 1} (with groups){/if}
 			</td>
 		</tr>
 		<tr>
@@ -101,7 +101,7 @@
 		{$total_cols = 4 + $num_cols}
 		<tr>
 			<th colspan="4" style="text-align: center">Data Import</th>
-			<th colspan="{$num_cols}" style="text-align: center">Example Import Round 1</th>
+			<th colspan="{$num_cols|escape}" style="text-align: center">Example Import Round 1</th>
 		</tr>
 		<tr>
 			<th></th>
@@ -121,67 +121,67 @@
 		{$line_number=1}
 		{foreach $pilots as $p}
 		<tr>
-			<th>{$line_number}</th>
+			<th>{$line_number|escape}</th>
 			<td>
-				{$p.pilot_name}
-				<input type="hidden" name="pilot_name_{$line_number}" value="{$p.pilot_name}">
-				<input type="hidden" name="pilot_freq_{$line_number}" value="{$p.pilot_freq}">
-				<input type="hidden" name="pilot_team_{$line_number}" value="{$p.pilot_team}">
+				{$p.pilot_name|escape}
+				<input type="hidden" name="pilot_name_{$line_number|escape}" value="{$p.pilot_name|escape}">
+				<input type="hidden" name="pilot_freq_{$line_number|escape}" value="{$p.pilot_freq|escape}">
+				<input type="hidden" name="pilot_team_{$line_number|escape}" value="{$p.pilot_team|escape}">
 				{foreach $p.rounds as $r}
 					{$round=$r@key}
-					<input type="hidden" name="pilot_{$line_number}_round_{$round}_group" value="{$r.group}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_group" value="{$r.group|escape}">
 					{foreach $r.flights.sub as $s}
 						{$subnum=$s@key}
-						<input type="hidden" name="pilot_{$line_number}_round_{$round}_sub_{$subnum}" value="{$s}">
+						<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_sub_{$subnum|escape}" value="{$s|escape}">
 					{/foreach}
-					<input type="hidden" name="pilot_{$line_number}_round_{$round}_min" value="{$r.min}">
-					<input type="hidden" name="pilot_{$line_number}_round_{$round}_sec" value="{$r.sec}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_min" value="{$r.min|escape}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_sec" value="{$r.sec|escape}">
 					{if $rounds.1.flight_type_landing==1}
-						<input type="hidden" name="pilot_{$line_number}_round_{$round}_land" value="{$r.land}">
+						<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_land" value="{$r.land|escape}">
 					{/if}
 					{if $rounds.1.flight_type_over_penalty==1}
-						<input type="hidden" name="pilot_{$line_number}_round_{$round}_over" value="{$r.over}">
+						<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_over" value="{$r.over|escape}">
 					{/if}
-					<input type="hidden" name="pilot_{$line_number}_round_{$round}_pen" value="{$r.penalty}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_pen" value="{$r.penalty|escape}">
 				{/foreach}
 			</td>
 			<td>
 				{if $p.found==1}<img src="/images/icons/accept.png">{else}<img src="/images/icons/exclamation.png">{/if}
-				<select name="pilot_id_{$line_number}">
+				<select name="pilot_id_{$line_number|escape}">
 				{foreach $p.potentials as $pt}
-					<option value="{$pt.pilot_id}" {if $pt.pilot_full_name==$p.pilot_name}SELECTED{/if}>{$pt.pilot_full_name}{if $pt.pilot_id!=0} - {$pt.pilot_city},{$pt.state_code} {$pt.country_code}{/if}</option>
+					<option value="{$pt.pilot_id|escape}" {if $pt.pilot_full_name==$p.pilot_name}SELECTED{/if}>{$pt.pilot_full_name|escape}{if $pt.pilot_id!=0} - {$pt.pilot_city|escape},{$pt.state_code|escape} {$pt.country_code|escape}{/if}</option>
 				{/foreach}
 				</select>
 			</td>
 			<td>
-				<select name="pilot_class_id_{$line_number}">
+				<select name="pilot_class_id_{$line_number|escape}">
 				{foreach $classes as $c}
-					<option value="{$c.class_id}" {if $c.class_id==$p.class_id}SELECTED{/if}>{$c.class_description}</option>
+					<option value="{$c.class_id|escape}" {if $c.class_id==$p.class_id}SELECTED{/if}>{$c.class_description|escape}</option>
 				{/foreach}
 				</select>
 			</td>
 			
-			<td align="center">{$p.rounds.1.group}</td>
+			<td align="center">{$p.rounds.1.group|escape}</td>
 			<td align="center">
 				{if $event.event_type_code=='f3j' || $event.event_type_code=='td'}
 					{$p.rounds.1.min|string_format:"%d"}:{$p.rounds.1.sec|string_format:"%05.2f"}
 				{else}
 					{if $p.rounds.1.flights.sub}
 						{foreach $p.rounds.1.flights.sub as $s}
-							{$s}{if !$s@last},{/if}
+							{$s|escape}{if !$s@last},{/if}
 						{/foreach}
 					{else}
-						{$p.rounds.1.flights.1}
+						{$p.rounds.1.flights.1|escape}
 					{/if}
 				{/if}
 			</td>
 			{if $rounds.1.flight_type_landing==1}
-			<td>{$p.rounds.1.land}</td>
+			<td>{$p.rounds.1.land|escape}</td>
 			{/if}
 			{if $rounds.1.flight_type_over_penalty==1}
 			<td>{if $p.rounds.1.over}YES{/if}</td>
 			{/if}
-			<td align="center">{$p.rounds.1.penalty}</td>
+			<td align="center">{$p.rounds.1.penalty|escape}</td>
 		</tr>
 		{$line_number=$line_number+1}
 		{/foreach}
