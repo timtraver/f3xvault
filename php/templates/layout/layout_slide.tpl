@@ -36,10 +36,10 @@
 	<script src="js/pace.min.js"></script>
 	<style>
 		.cb-slideshow li:nth-child(1) span {ldelim}
-			background-image: url('../rand_img.php?user_id={$user_id}')
+			background-image: url('../rand_img.php?user_id={$user_id|escape}')
 		{rdelim}
 		.cb-slideshow li:nth-child(2) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&2');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&2');
 		    -webkit-animation-delay: 6s;
 		    -moz-animation-delay: 6s;
 		    -o-animation-delay: 6s;
@@ -47,7 +47,7 @@
 		    animation-delay: 6s;
 		{rdelim}
 		.cb-slideshow li:nth-child(3) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&3');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&3');
 		    -webkit-animation-delay: 12s;
 		    -moz-animation-delay: 12s;
 		    -o-animation-delay: 12s;
@@ -55,7 +55,7 @@
 		    animation-delay: 12s;
 		{rdelim}
 		.cb-slideshow li:nth-child(4) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&4');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&4');
 		    -webkit-animation-delay: 18s;
 		    -moz-animation-delay: 18s;
 		    -o-animation-delay: 18s;
@@ -63,7 +63,7 @@
 		    animation-delay: 18s;
 		{rdelim}
 		.cb-slideshow li:nth-child(5) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&5');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&5');
 		    -webkit-animation-delay: 24s;
 		    -moz-animation-delay: 24s;
 		    -o-animation-delay: 24s;
@@ -71,7 +71,7 @@
 		    animation-delay: 24s;
 		{rdelim}
 		.cb-slideshow li:nth-child(6) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&6');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&6');
 		    -webkit-animation-delay: 30s;
 		    -moz-animation-delay: 30s;
 		    -o-animation-delay: 30s;
@@ -79,7 +79,7 @@
 		    animation-delay: 30s;
 		{rdelim}
 		.cb-slideshow li:nth-child(7) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&7');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&7');
 		    -webkit-animation-delay: 36s;
 		    -moz-animation-delay: 36s;
 		    -o-animation-delay: 36s;
@@ -87,7 +87,7 @@
 		    animation-delay: 36s;
 		{rdelim}
 		.cb-slideshow li:nth-child(8) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&8');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&8');
 		    -webkit-animation-delay: 42s;
 		    -moz-animation-delay: 42s;
 		    -o-animation-delay: 42s;
@@ -95,7 +95,7 @@
 		    animation-delay: 42s;
 		{rdelim}
 		.cb-slideshow li:nth-child(9) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&9');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&9');
 		    -webkit-animation-delay: 48s;
 		    -moz-animation-delay: 48s;
 		    -o-animation-delay: 48s;
@@ -103,7 +103,7 @@
 		    animation-delay: 48s;
 		{rdelim}
 		.cb-slideshow li:nth-child(10) span {ldelim}
-		    background-image: url('../rand_img.php?user_id={$user_id}&10');
+		    background-image: url('../rand_img.php?user_id={$user_id|escape}&10');
 		    -webkit-animation-delay: 54s;
 		    -moz-animation-delay: 54s;
 		    -o-animation-delay: 54s;

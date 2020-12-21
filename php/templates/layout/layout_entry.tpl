@@ -55,7 +55,7 @@
 				<!--================================-->
 				<div class="navbar-content clearfix" style="position: relative;height: 60px;">
 					<h2 style="float: left;margin-left: 10px;">Self Score Entry</h2>
-					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id}';" class="btn btn-primary btn-rounded">
+					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';" class="btn btn-primary btn-rounded">
 				</div>
 				<!--================================-->
 				<!--End Navbar Dropdown-->
@@ -124,7 +124,7 @@
 					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
 					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
 					container : 'floating',
-					title : '{$m.message}',
+					title : '{$m.message|escape:"javascript"}',
 					timer : 10000
 				{rdelim});
 			{/foreach}
@@ -173,7 +173,7 @@
 	<form id="goback" name="goback" method="GET">
 	<input type="hidden" name="action" value="event">
 	<input type="hidden" name="function" value="event_view">
-	<input type="hidden" name="event_id" value="{$event->info.event_id}">
+	<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 	</form>
 
 
