@@ -23,7 +23,7 @@
 					<select name="country_id" onChange="search_form.submit();">
 					<option value="0">Choose Country to Narrow Search</option>
 					{foreach $countries as $country}
-						<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+						<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 					{/foreach}
 					</select>
 				</td>
@@ -69,12 +69,12 @@
 	</td>
 	<td>
 	{foreach $plane.disciplines as $d}
-	{$d.discipline_code_view}{if !$d@last},{/if}
+	{$d.discipline_code_view|escape}{if !$d@last},{/if}
 	{/foreach}
 	</td>
 	<td align="center">{if $plane.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
 	<td>
-		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/16/{$plane.country_code|escape}.png" style="vertical-align: middle;" title="{$plane.country_name}">{/if}
+		{if $plane.country_code}<img src="/images/flags/countries-iso/shiny/16/{$plane.country_code|escape}.png" style="vertical-align: middle;" title="{$plane.country_name|escape}">{/if}
 		{$plane.plane_manufacturer|escape}
 	</td>
 	<td>{$plane.plane_year|escape}</td>

@@ -36,8 +36,8 @@ function calc_length(){ldelim}
 	calc_aspect();
 {rdelim}
 function calc_aspect(){ldelim}
-	var length={$plane.plane_wingspan};
-	var area={$plane.plane_wing_area};
+	var length={$plane.plane_wingspan|escape:'javascript'};
+	var area={$plane.plane_wing_area|escape:'javascript'};
 	if(document.main.plane_area_units.value=='dm2'){ldelim}
 		area=area*100;
 	{rdelim}
@@ -121,25 +121,25 @@ function calc_area(){ldelim}
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=1" aria-selected="false">
 							Media
-							<span class="badge badge-blue">{$media_total}</span>
+							<span class="badge badge-blue">{$media_total|escape}</span>
 						</a>
 					</li>
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=2" aria-expanded="false">
 							Comments
-							<span class="badge badge-blue">{$comment_total}</span>
+							<span class="badge badge-blue">{$comment_total|escape}</span>
 						</a>
 					</li>
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=3" aria-expanded="false">
 							Competitions
-							<span class="badge badge-blue">{$event_total}</span>
+							<span class="badge badge-blue">{$event_total|escape}</span>
 						</a>
 					</li>
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=4" aria-expanded="false">
 							Pilots
-							<span class="badge badge-blue">{$pilot_total}</span>
+							<span class="badge badge-blue">{$pilot_total|escape}</span>
 						</a>
 					</li>
 					{if $f3f_records}
@@ -194,7 +194,7 @@ function calc_area(){ldelim}
 							</td>
 							<td rowspan="6">
 							{foreach $disciplines as $d}
-							<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
+							<input type="checkbox" name="disc_{$d.discipline_id|escape}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
 							{/foreach}
 							</td>
 						</tr>
@@ -269,7 +269,7 @@ function calc_area(){ldelim}
 								<select name="country_id">
 								<option value="0">Select A Country</option>
 								{foreach $countries as $country}
-									<option value="{$country.country_id}" {if $country.country_id==$plane.country_id}SELECTED{/if}>{$country.country_name}</option>
+									<option value="{$country.country_id|escape}" {if $country.country_id==$plane.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 								{/foreach}
 								</select>
 							</td>
@@ -295,11 +295,11 @@ function calc_area(){ldelim}
 									{/if}
 									{if $pa.plane_att_type == 'boolean'}
 										<td style="border-style: none;" nowrap>
-											<input type="checkbox" name="plane_att_{$pa.plane_att_id}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
+											<input type="checkbox" name="plane_att_{$pa.plane_att_id|escape}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
 										</td>
 									{else}
 										<td style="border-style: none;" nowrap>
-											{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
+											{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id|escape}" size="{$pa.plane_att_size|escape}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
 										</td>
 									{/if}
 									{if $col > 3}
@@ -320,7 +320,7 @@ function calc_area(){ldelim}
 						</tr>
 						</table>
 						{foreach $from as $f}
-						<input type="hidden" name="{$f.key}" value="{$f.value}">
+						<input type="hidden" name="{$f.key|escape}" value="{$f.value|escape}">
 						{/foreach}
 						</form>
 					
@@ -335,7 +335,7 @@ function calc_area(){ldelim}
 						<form name="goback" method="GET">
 						<input type="hidden" name="action" value="plane">
 						<input type="hidden" name="function" value="plane_view">
-						<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+						<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 						</form>
 
 					</div>

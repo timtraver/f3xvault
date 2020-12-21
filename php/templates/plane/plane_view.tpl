@@ -3,8 +3,8 @@
 {block name="header"}
 <script type="text/javascript">
 function calc_wingspan(){ldelim}
-	var current_units = '{$plane.plane_wingspan_units}';
-	var current_value = {$plane.plane_wingspan};
+	var current_units = '{$plane.plane_wingspan_units|escape:'javascript'}';
+	var current_value = {$plane.plane_wingspan|escape:'javascript'};
 	var multiple = 2.54;
 	var calc_value = 0;
 	var calc_units = '';
@@ -18,8 +18,8 @@ function calc_wingspan(){ldelim}
 	document.getElementById('wingspan').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 function calc_aspect(){ldelim}
-	var length={$plane.plane_wingspan};
-	var area={$plane.plane_wing_area};
+	var length={$plane.plane_wingspan|escape:'javascript'};
+	var area={$plane.plane_wing_area|escape:'javascript'};
 	if('{$plane.plane_wing_area_units}'=='dm2'){ldelim}
 		area=area*100;
 	{rdelim}
@@ -30,8 +30,8 @@ function calc_aspect(){ldelim}
 	document.getElementById('aspect').innerHTML = calc_aspect.toFixed(2);
 {rdelim}
 function calc_length(){ldelim}
-	var current_units = '{$plane.plane_length_units}';
-	var current_value = {$plane.plane_length};
+	var current_units = '{$plane.plane_length_units|escape:'javascript'}';
+	var current_value = {$plane.plane_length|escape:'javascript'};
 	var multiple = 2.54;
 	var calc_value = 0;
 	var calc_units = '';
@@ -45,9 +45,9 @@ function calc_length(){ldelim}
 	document.getElementById('length').innerHTML = ' = ' + calc_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 function calc_auw(){ldelim}
-	var current_units = '{$plane.plane_auw_units}';
-	var current_from_value = {$plane.plane_auw_from};
-	var current_to_value = {$plane.plane_auw_to};
+	var current_units = '{$plane.plane_auw_units|escape:'javascript'}';
+	var current_from_value = {$plane.plane_auw_from|escape:'javascript'};
+	var current_to_value = {$plane.plane_auw_to|escape:'javascript'};
 	var multiple = 28.35;
 	var calc_from_value = 0;
 	var calc_to_value = 0;
@@ -64,7 +64,7 @@ function calc_auw(){ldelim}
 	document.getElementById('auwrange').innerHTML = '  =  ' + calc_from_value.toFixed(2) + ' To ' + calc_to_value.toFixed(2) + ' ' + calc_units;
 {rdelim}
 function calc_max_weight(){ldelim}
-	var current_units = '{$plane.plane_wing_area_units}';
+	var current_units = '{$plane.plane_wing_area_units|escape:'javascript'}';
 	var current_value = {$plane.plane_wing_area + $plane.plane_tail_area};
 	var multiple = 28.35;
 	var calc_value = 0;
@@ -85,9 +85,9 @@ function calc_max_weight(){ldelim}
 	document.getElementById('max_weight').innerHTML = calc_value.toFixed(2) + ' ' + calc_units + ' = ' + calc_to.toFixed(2) + ' ' + calc_to_units;
 {rdelim}
 function calc_area(){ldelim}
-	var current_units = '{$plane.plane_wing_area_units}';
-	var current_wing_value = {$plane.plane_wing_area};
-	var current_tail_value = {$plane.plane_tail_area};
+	var current_units = '{$plane.plane_wing_area_units|escape:'javascript'}';
+	var current_wing_value = {$plane.plane_wing_area|escape:'javascript'};
+	var current_tail_value = {$plane.plane_tail_area|escape:'javascript'};
 	var multiple = .0645;
 	var calc_wing_value = 0;
 	var calc_tail_value = 0;
@@ -133,25 +133,25 @@ function calc_area(){ldelim}
 					<li{if $tab==1} class="active"{/if}>
 						<a data-toggle="tab" href="#plane-tab-1" aria-expanded="false" {if $tab==1}aria-selected="true"{/if}>
 							Media
-							<span class="badge badge-blue">{$media_total}</span>
+							<span class="badge badge-blue">{$media_total|escape}</span>
 						</a>
 					</li>
 					<li{if $tab==2} class="active"{/if}>
 						<a data-toggle="tab" href="#plane-tab-2" aria-expanded="false" {if $tab==2}aria-selected="true"{/if}>
 							Comments
-							<span class="badge badge-blue">{$comment_total}</span>
+							<span class="badge badge-blue">{$comment_total|escape}</span>
 						</a>
 					</li>
 					<li{if $tab==3} class="active"{/if}>
 						<a data-toggle="tab" href="#plane-tab-3" aria-expanded="true" {if $tab==3}aria-selected="true"{/if}>
 							Competitions
-							<span class="badge badge-blue">{$event_total}</span>
+							<span class="badge badge-blue">{$event_total|escape}</span>
 						</a>
 					</li>
 					<li{if $tab==4} class="active"{/if}>
 						<a data-toggle="tab" href="#plane-tab-4" aria-expanded="true" {if $tab==4}aria-selected="true"{/if}>
 							Pilots
-							<span class="badge badge-blue">{$pilot_total}</span>
+							<span class="badge badge-blue">{$pilot_total|escape}</span>
 						</a>
 					</li>
 					{if $f3f_records}
@@ -195,7 +195,7 @@ function calc_area(){ldelim}
 							<td>
 								{$calc_max=0}
 								{foreach $disciplines as $d}
-								{$d.discipline_description}<br>
+								{$d.discipline_description|escape}<br>
 								{if $d.discipline_code=='f3b' || $d.discipline_code=='f3f' || $d.discipline_code=='f3j'}
 									{$calc_max=1}
 								{/if} 
@@ -316,7 +316,7 @@ function calc_area(){ldelim}
 									{if $pa.plane_att_type == 'boolean'}
 										<td><span title="{$pa.plane_att_description|escape}">{$pa.plane_att_name|escape}</span></td>
 									{else}
-										<td><span title="{$pa.plane_att_description|escape}">{$pa.plane_att_name|escape}</span> <input type="text" name="plane_att_{$la.plane_att_id}" size="{$pa.plane_att_size}" value="{$pa.plane_att_value_value|escape}"></td>
+										<td><span title="{$pa.plane_att_description|escape}">{$pa.plane_att_name|escape}</span> <input type="text" name="plane_att_{$la.plane_att_id|escape}" size="{$pa.plane_att_size|escape}" value="{$pa.plane_att_value_value|escape}"></td>
 									{/if}
 										</tr>
 									{assign var='cat' value=$pa.plane_att_cat_name}
@@ -349,11 +349,11 @@ function calc_area(){ldelim}
 								<div class="item{if $m@index == 0} active{/if}">
 									<center>
 									{if $m.plane_media_type == 'picture'}
-										<img src="{$m.plane_media_url}"><br>
+										<img src="{$m.plane_media_url|escape:'url'}"><br>
 									{else}
 										<div class="video-wrapper">
 											<div class="video-container">
-												<iframe src="{$m.plane_media_url}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+												<iframe src="{$m.plane_media_url|escape:'url'}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
 											</div>
 										</div>
 									{/if}
@@ -383,7 +383,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 						
-						<h4 class="comments gutter-left current">{$comments_num} Plane Comments</h4>
+						<h4 class="comments gutter-left current">{$comments_num|escape} Plane Comments</h4>
 							{foreach $comments as $c}
 							<div class="panel panel-primary">
 					
@@ -393,13 +393,13 @@ function calc_area(){ldelim}
 										<em class="text-muted"><small>{$c.plane_comment_date|date_format:"%B %e, %Y - %I:%M %p"}</small></em>
 									</div>
 									<h4 class="panel-title">{$c.user_first_name|escape} {$c.user_last_name|escape}
-										{if $c.pilot_city}{$c.pilot_city}, {/if}
+										{if $c.pilot_city}{$c.pilot_city|escape}, {/if}
 										{if $c.state_name && $c.country_code=="US"}
 											<img src="/images/flags/states/24/{$c.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">
 											{$c.state_name|escape}
 										{/if}
 										{if $c.country_code}
-											<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;" title="{$c.country_code}">
+											<img src="/images/flags/countries-iso/shiny/16/{$c.country_code|escape}.png" style="vertical-align: middle;" title="{$c.country_code|escape}">
 											{$c.country_name|escape}
 										{/if}
 									</h4>
@@ -419,7 +419,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 						
-						<h4 class="comments gutter-left current">{$event_total} Plane Competitions</h4>
+						<h4 class="comments gutter-left current">{$event_total|escape} Plane Competitions</h4>
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr class="table-row-heading-left">
@@ -438,9 +438,9 @@ function calc_area(){ldelim}
 							{foreach $events as $e}
 							<tr>
 								<td>{$e.event_start_date|date_format:"Y-m-d"}</td>
-								<td><a href="?action=event&function=event_view&event_id={$e.event_id}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link" title="View This Event">{$e.event_name|escape}</a></td>
 								<td align="left">{$e.event_type_name|escape}</td>
-								<td align="left">{$e.total_pilots}</td>
+								<td align="left">{$e.total_pilots|escape}</td>
 							</tr>
 							{/foreach}
 							<tr style="background-color: lightgray;">
@@ -463,7 +463,7 @@ function calc_area(){ldelim}
 						</div>
 						<br style="clear:left;">
 						
-						<h4 class="comments gutter-left current">{$pilot_total} Pilots Flying This Plane</h4>
+						<h4 class="comments gutter-left current">{$pilot_total|escape} Pilots Flying This Plane</h4>
 						
 						<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-bordered">
 						<tr>
@@ -478,14 +478,14 @@ function calc_area(){ldelim}
 						{foreach $pilots as $p}
 							<tr>
 								<td align="right">
-									{$rank}
+									{$rank|escape}
 								</td>
 								<td>
-									<a href="?action=pilot&function=pilot_view&pilot_id={$p.pilot_id}" class="btn-link">{$p.pilot_first_name} {$p.pilot_last_name}</a>
+									<a href="?action=pilot&function=pilot_view&pilot_id={$p.pilot_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
 								</td>
 								<td>
 									{if $p.country_code}
-										<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_code}">
+										<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_code|escape}">
 										{$p.country_name|escape}
 									{/if}
 								</td>
@@ -515,7 +515,7 @@ function calc_area(){ldelim}
 					</div>
 					{if $f3f_records}
 					<div id="plane-tab-5" class="tab-pane fade{if $tab==5} active in{/if}">
-						<h2 style="float:left;">Top F3F Speeds ({$paging.main.startrecord} - {$paging.main.endrecord})</h2>
+						<h2 style="float:left;">Top F3F Speeds ({$paging.main.startrecord|escape} - {$paging.main.endrecord|escape})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Plane List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
@@ -536,19 +536,19 @@ function calc_area(){ldelim}
 							<tr>
 								<td align="right">
 									{if $f.event_pilot_round_flight_seconds!=$last}
-										{$rank}
+										{$rank|escape}
 									{/if}
 								</td>
 								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
 								<td>
-									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:'url'}" class="btn-link">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 								</td>
-								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:'url'}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
 								<td>
-									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
+									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+									<a href="?action=location&function=location_view&location_id={$f.location_id|escape:'url'}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
 									{$f.country_code|escape}
 								</td>
 							</tr>
@@ -566,7 +566,7 @@ function calc_area(){ldelim}
 					{/if}
 					{if $f3b_records}
 					<div id="plane-tab-6" class="tab-pane fade{if $tab==6} active in{/if}">
-						<h2 style="float:left;">Top F3B Speeds ({$paging.main.startrecord} - {$paging.main.endrecord})</h2>
+						<h2 style="float:left;">Top F3B Speeds ({$paging.main.startrecord|escape} - {$paging.main.endrecord|escape})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Plane List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
@@ -587,19 +587,19 @@ function calc_area(){ldelim}
 							<tr>
 								<td align="right">
 									{if $f.event_pilot_round_flight_seconds!=$last}
-										{$rank}
+										{$rank|escape}
 									{/if}
 								</td>
 								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_seconds|string_format:"%03.2f"}</b></font></td>
 								<td>
-									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:'url'}" class="btn-link">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 								</td>
-								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:'url'}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
 								<td>
-									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
+									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+									<a href="?action=location&function=location_view&location_id={$f.location_id|escape:'url'}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
 									{$f.country_code|escape}
 								</td>
 							</tr>
@@ -616,7 +616,7 @@ function calc_area(){ldelim}
 					{/if}
 					{if $f3b_distance}
 					<div id="plane-tab-7" class="tab-pane fade{if $tab==7} active in{/if}">
-						<h2 style="float:left;">Top F3B Distance Runs ({$paging.main.startrecord} - {$paging.main.endrecord})</h2>
+						<h2 style="float:left;">Top F3B Distance Runs ({$paging.main.startrecord|escape} - {$paging.main.endrecord|escape})</h2>
 						<div style="float:right;overflow:hidden;">
 							<input type="button" value=" Back To Plane List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 						</div>
@@ -637,19 +637,19 @@ function calc_area(){ldelim}
 							<tr>
 								<td align="right">
 									{if $f.event_pilot_round_flight_laps!=$last}
-										{$rank}
+										{$rank|escape}
 									{/if}
 								</td>
 								<td>{$f.event_start_date|date_format:"Y-m-d"}</td>
 								<td align="left"><font size="+1"><b>{$f.event_pilot_round_flight_laps|string_format:"%d"}</b></font></td>
 								<td>
-									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code}">{/if}
-									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id}" class="btn-link">{$f.pilot_first_name} {$f.pilot_last_name}</a>
+									{if $f.pilot_country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.pilot_country_code|escape}.png" style="vertical-align: middle;" title="{$f.pilot_country_code|escape}">{/if}
+									<a href="?action=pilot&function=pilot_view&pilot_id={$f.record_pilot_id|escape:'url'}" class="btn-link">{$f.pilot_first_name|escape} {$f.pilot_last_name|escape}</a>
 								</td>
-								<td><a href="?action=event&function=event_view&event_id={$f.event_id}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
+								<td><a href="?action=event&function=event_view&event_id={$f.event_id|escape:'url'}" title="View This Event" class="btn-link">{$f.event_name|escape}</a></td>
 								<td>
-									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code}">{/if}
-									<a href="?action=location&function=location_view&location_id={$f.location_id}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
+									{if $f.country_code}<img src="/images/flags/countries-iso/shiny/16/{$f.country_code|escape}.png" style="vertical-align: middle;" title="{$f.country_code|escape}">{/if}
+									<a href="?action=location&function=location_view&location_id={$f.location_id|escape:'url'}" title="View This Location" class="btn-link">{$f.location_name|escape}</a>,
 									{$f.country_code|escape}
 								</td>
 							</tr>
@@ -677,19 +677,19 @@ function calc_area(){ldelim}
 <form name="addcomment" method="GET">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_comment_add">
-<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 <input type="hidden" name="tab" value="2">
 </form>
 <form name="plane_edit" method="GET">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_edit">
-<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 <input type="hidden" name="tab" value="0">
 </form>
 <form name="add_media" method="GET">
 <input type="hidden" name="action" value="plane">
 <input type="hidden" name="function" value="plane_media_edit">
-<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 <input type="hidden" name="tab" value="1">
 </form>
 <form name="goback" method="GET">

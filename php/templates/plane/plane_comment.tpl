@@ -18,25 +18,25 @@
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=1" aria-expanded="false">
 							Media
-							<span class="badge badge-blue">{$media_total}</span>
+							<span class="badge badge-blue">{$media_total|escape}</span>
 						</a>
 					</li>
 					<li class="active">
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=2" aria-selected="true" aria-expanded="true">
 							Comments
-							<span class="badge badge-blue">{$comment_total}</span>
+							<span class="badge badge-blue">{$comment_total|escape}</span>
 						</a>
 					</li>
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=3" aria-expanded="false">
 							Competitions
-							<span class="badge badge-blue">{$event_total}</span>
+							<span class="badge badge-blue">{$event_total|escape}</span>
 						</a>
 					</li>
 					<li>
 						<a href="?action=plane&function=plane_view&plane_id={$plane.plane_id|escape}&tab=4" aria-expanded="false">
 							Pilots
-							<span class="badge badge-blue">{$pilot_total}</span>
+							<span class="badge badge-blue">{$pilot_total|escape}</span>
 						</a>
 					</li>
 					{if $f3f_records}
@@ -72,7 +72,7 @@
 					<form name="main" method="POST">
 					<input type="hidden" name="action" value="plane">
 					<input type="hidden" name="function" value="plane_comment_save">
-					<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+					<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 										
 					<table width="100%" cellpadding="2" cellspacing="1" class="tableborder">
 					<tr>
@@ -96,7 +96,7 @@
 					<form name="goback" method="GET">
 					<input type="hidden" name="action" value="plane">
 					<input type="hidden" name="function" value="plane_view">
-					<input type="hidden" name="plane_id" value="{$plane.plane_id}">
+					<input type="hidden" name="plane_id" value="{$plane.plane_id|escape}">
 					<input type="hidden" name="tab" value="2">
 					</form>
 
