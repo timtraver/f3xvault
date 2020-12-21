@@ -26,23 +26,23 @@
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
 			<td>
 				{if $cat_name!=$a.plane_att_cat_name}
-					<a href="?action=admin&function=admin_plane_cat_edit&plane_att_cat_id={$a.plane_att_cat_id}" class="btn-link">{$a.plane_att_cat_name}</a>
+					<a href="?action=admin&function=admin_plane_cat_edit&plane_att_cat_id={$a.plane_att_cat_id|escape:"URL"}" class="btn-link">{$a.plane_att_cat_name|escape}</a>
 				{/if}
 			</td>
 			<td>
 				{if $cat_name!=$a.plane_att_cat_name}
-					{$a.plane_att_cat_order}
+					{$a.plane_att_cat_order|escape}
 				{/if}
 			</td>
 			<td>
-				<a href="?action=admin&function=admin_plane_att_edit&plane_att_id={$a.plane_att_id}" class="btn-link">{$a.plane_att_name}</a>
+				<a href="?action=admin&function=admin_plane_att_edit&plane_att_id={$a.plane_att_id|escape:"URL"}" class="btn-link">{$a.plane_att_name|escape}</a>
 			</td>
-			<td>{$a.plane_att_description|truncate:"50"}</td>
-			<td>{$a.plane_att_type}</td>
-			<td>{$a.plane_att_size}</td>
-			<td>{$a.plane_att_order}</td>
+			<td>{$a.plane_att_description|truncate:"50"|escape}</td>
+			<td>{$a.plane_att_type|escape}</td>
+			<td>{$a.plane_att_size|escape}</td>
+			<td>{$a.plane_att_order|escape}</td>
 			<td>
-					<a href="?action=admin&function=admin_plane_att_del&plane_att_id={$a.plane_att_id}"><img src="images/del.gif"></a>
+					<a href="?action=admin&function=admin_plane_att_del&plane_att_id={$a.plane_att_id|escape:"URL"}"><img src="images/del.gif"></a>
 			</td>
 		</tr>
 		{$cat_name=$a.plane_att_cat_name}
@@ -69,13 +69,13 @@
 		{foreach $categories as $c}
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
 			<td>
-					<a href="?action=admin&function=admin_plane_cat_edit&plane_att_cat_id={$c.plane_att_cat_id}" class="btn-link">{$c.plane_att_cat_name}</a>
+					<a href="?action=admin&function=admin_plane_cat_edit&plane_att_cat_id={$c.plane_att_cat_id|escape:"URL"}" class="btn-link">{$c.plane_att_cat_name|escape}</a>
 			</td>
 			<td>
-					{$c.plane_att_cat_order}
+					{$c.plane_att_cat_order|escape}
 			</td>
 			<td>
-					<a href="?action=admin&function=admin_plane_cat_del&plane_att_cat_id={$c.plane_att_cat_id}"><img src="images/del.gif"></a>
+					<a href="?action=admin&function=admin_plane_cat_del&plane_att_cat_id={$c.plane_att_cat_id|escape}"><img src="images/del.gif"></a>
 			</td>
 		</tr>
 		{/foreach}

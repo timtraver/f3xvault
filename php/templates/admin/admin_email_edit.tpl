@@ -12,7 +12,7 @@
 		<form method="POST" name="main" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="admin">
 		<input type="hidden" name="function" value="admin_email_save">
-		<input type="hidden" name="email_id" value="{$email.email_id}">
+		<input type="hidden" name="email_id" value="{$email.email_id|escape}">
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 		<tr class="table-row-heading-left">
 			<td colspan="2">Email Edit</td>
@@ -44,7 +44,7 @@
 			<td>
 				{foreach $images as $i}
 				{$i.email_image}
-				{$i.email_image_name} <a href="?action=admin&function=admin_email_del_image&email_id={$email.email_id}&email_image_id={$i.email_image_id}"><img src="/images/del.gif"></a><br>
+				{$i.email_image_name|escape} <a href="?action=admin&function=admin_email_del_image&email_id={$email.email_id|escape:"URL"}&email_image_id={$i.email_image_id|escape:"URL"}"><img src="/images/del.gif"></a><br>
 				{/foreach}
 				<br>
 				Upload an Image : <input type="hidden" name="MAX_FILE_SIZE" value="5000000">

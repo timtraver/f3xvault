@@ -32,7 +32,7 @@
 			</td>
 			<td rowspan="6">
 			{foreach $disciplines as $d}
-			<input type="checkbox" name="disc_{$d.discipline_id}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
+			<input type="checkbox" name="disc_{$d.discipline_id|escape}"{if $d.discipline_selected}CHECKED{/if}> {$d.discipline_description|escape}<br>
 			{/foreach}
 			</td>
 		</tr>
@@ -107,7 +107,7 @@
 				<select name="country_id">
 				<option value="0">Select A Country</option>
 				{foreach $countries as $country}
-					<option value="{$country.country_id}" {if $country.country_id==$plane.country_id}SELECTED{/if}>{$country.country_name}</option>
+					<option value="{$country.country_id|escape}" {if $country.country_id==$plane.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 				{/foreach}
 				</select>
 			</td>
@@ -136,11 +136,11 @@
 					{/if}
 					{if $pa.plane_att_type == 'boolean'}
 						<td style="border-style: none;" nowrap>
-							<input type="checkbox" name="plane_att_{$pa.plane_att_id}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
+							<input type="checkbox" name="plane_att_{$pa.plane_att_id|escape}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
 						</td>
 					{else}
 						<td style="border-style: none;" nowrap>
-							{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
+							{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id|escape}" size="{$pa.plane_att_size|escape}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
 						</td>
 					{/if}
 					{if $col > 3}

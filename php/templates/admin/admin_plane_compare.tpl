@@ -17,11 +17,11 @@
 
 
 		{foreach $planes as $p}
-		<input type="hidden" name="plane_{$p.plane_id}" value="1">
+		<input type="hidden" name="plane_{$p.plane_id|escape}" value="1">
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 		<tr>
 			<th>Make Primary</th>
-			<td colspan="3" bgcolor="lightgrey"><input type="radio" name="make_primary" value="{$p.plane_id}" CHECKED> Plane ID {$p.plane_id}</td>
+			<td colspan="3" bgcolor="lightgrey"><input type="radio" name="make_primary" value="{$p.plane_id|escape}" CHECKED> Plane ID {$p.plane_id|escape}</td>
 		</tr>
 		<tr>
 			<th width="20%">Plane Name</th>
@@ -34,13 +34,13 @@
 		</tr>
 		<tr>
 			<th>Plane Wingspan</th>
-			<td>{$p.plane_wingspan|escape} {$p.plane_wingspan_units}</td>
+			<td>{$p.plane_wingspan|escape} {$p.plane_wingspan_units|escape}</td>
 			<th>Plane Length</th>
-			<td>{$p.plane_length|escape} {$p.plane_length_units}</td>
+			<td>{$p.plane_length|escape} {$p.plane_length_units|escape}</td>
 		</tr>
 		<tr>
 			<th>Plane Wing Area</th>
-			<td>{$p.plane_wing_area|escape} {$p.plane_wing_area_units}</td>
+			<td>{$p.plane_wing_area|escape} {$p.plane_wing_area_units|escape}</td>
 			<th>Plane Tail Area</th>
 			<td>{$p.plane_tail_area|escape} {$p.plane_wing_area_units|escape}</td>
 		</tr>
@@ -60,11 +60,11 @@
 					{/if}
 					{if $pa.plane_att_type == 'boolean'}
 						<td style="border-style: none;" nowrap>
-							<input type="checkbox" name="plane_att_{$pa.plane_att_id}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
+							<input type="checkbox" name="plane_att_{$pa.plane_att_id|escape}" {if $pa.plane_att_value_status==1 && $pa.plane_att_value_value ==1}CHECKED{/if}> {$pa.plane_att_name|escape}
 						</td>
 					{else}
 						<td style="border-style: none;" nowrap>
-							{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id}" size="{$pa.plane_att_size}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
+							{$pa.plane_att_name|escape} <input type="text" name="plane_att_{$pa.plane_att_id|escape}" size="{$pa.plane_att_size|escape}" value="{if $pa.plane_att_value_status==1}{$pa.plane_att_value_value|escape}{/if}"> 
 						</td>
 					{/if}
 					{if $col > 3}

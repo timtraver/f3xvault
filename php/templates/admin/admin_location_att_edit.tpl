@@ -11,7 +11,7 @@
 				<form name="main" method="POST">
 				<input type="hidden" name="action" value="admin">
 				<input type="hidden" name="function" value="admin_location_att_save">
-				<input type="hidden" name="location_att_id" value="{$attribute.location_att_id}">
+				<input type="hidden" name="location_att_id" value="{$attribute.location_att_id|escape}">
 				
 				<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 				<tr class="table-row-heading-left">
@@ -22,7 +22,7 @@
 					<td>
 						<select name="location_att_cat_id">
 						{foreach $categories as $c}
-						<option value="{$c.location_att_cat_id}"{if $c.location_att_cat_id==$attribute.location_att_cat_id} SELECTED{/if}>{$c.location_att_cat_name}</option>
+						<option value="{$c.location_att_cat_id|escape}"{if $c.location_att_cat_id==$attribute.location_att_cat_id} SELECTED{/if}>{$c.location_att_cat_name|escape}</option>
 						{/foreach}
 						</select>
 					</td>
@@ -30,13 +30,13 @@
 				<tr>
 					<th>Attribute Name</th>
 					<td>
-						<input type="text" name="location_att_name" size="40" value="{$attribute.location_att_name}">
+						<input type="text" name="location_att_name" size="40" value="{$attribute.location_att_name|escape}">
 					</td>
 				</tr>
 				<tr>
 					<th>Attribute Description</th>
 					<td>
-						<textarea name="location_att_description" cols="80" rows="3">{$attribute.location_att_description}</textarea>
+						<textarea name="location_att_description" cols="80" rows="3">{$attribute.location_att_description|escape}</textarea>
 					</td>
 				</tr>
 				<tr>
@@ -51,13 +51,13 @@
 				<tr>
 					<th>Attribute Size</th>
 					<td>
-						<input type="text" name="location_att_size" size="5" value="{$attribute.location_att_size}">
+						<input type="text" name="location_att_size" size="5" value="{$attribute.location_att_size|escape}">
 					</td>
 				</tr>
 				<tr>
 					<th>Attribute Order</th>
 					<td>
-						<input type="text" name="location_att_order" size="5" value="{$attribute.location_att_order}">
+						<input type="text" name="location_att_order" size="5" value="{$attribute.location_att_order|escape}">
 					</td>
 				</tr>
 				<tr>

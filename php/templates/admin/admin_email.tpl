@@ -20,14 +20,14 @@
 		</tr>
 		{foreach $emails as $e}
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
-			<td>{$e.email_name}</td>
-			<td>{$e.email_from_name} {$e.email_from_address}</td>
-			<td><a href="?action=admin&function=admin_email_edit&email_id={$e.email_id}" class="btn-link">{$e.email_subject}</a></td>
+			<td>{$e.email_name|escape}</td>
+			<td>{$e.email_from_name|escape} {$e.email_from_address|escape}</td>
+			<td><a href="?action=admin&function=admin_email_edit&email_id={$e.email_id|escape:"URL"}" class="btn-link">{$e.email_subject|escape}</a></td>
 			<td>
 			<input type="button" value="Send Email To All" class="btn btn-primary btn-rounded"
-			 onClick="document.sendmail_all.email_name.value='{$e.email_name}';document.sendmail_all.submit();">
+			 onClick="document.sendmail_all.email_name.value='{$e.email_name|escape:"javascript"}';document.sendmail_all.submit();">
 			<input type="button" value="Send Email Test" class="btn btn-primary btn-rounded"
-			 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail_one.email_to.value=sendto;document.sendmail_one.email_name.value='{$e.email_name}';if(sendto!=null) document.sendmail_one.submit();">
+			 onClick="var sendto=prompt('Enter the email address to send to :','');document.sendmail_one.email_to.value=sendto;document.sendmail_one.email_name.value='{$e.email_name|escape:"javascript"}';if(sendto!=null) document.sendmail_one.submit();">
 			</td>
 		</tr>
 		{/foreach}
@@ -55,13 +55,13 @@
 <form name="sendmail_one" method="POST">
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_email_send_test">
-<input type="hidden" name="email_name" value="{$e.email_name}">
+<input type="hidden" name="email_name" value="{$e.email_name|escape}">
 <input type="hidden" name="email_to" value="">
 </form>
 <form name="sendmail_all" method="POST">
 <input type="hidden" name="action" value="admin">
 <input type="hidden" name="function" value="admin_email_send_all">
-<input type="hidden" name="email_name" value="{$e.email_name}">
+<input type="hidden" name="email_name" value="{$e.email_name|escape}">
 </form>
 
 {/block}

@@ -12,7 +12,7 @@
 		<tr>
 			<th>Results from Admin Function</th>
 			<td>
-				<textarea cols="80" rows="30">{foreach $results as $r}{$r}{/foreach}</textarea>
+				<textarea cols="80" rows="30">{foreach $results as $r}{$r|escape}{/foreach}</textarea>
 			</td>
 		</tr>
 		</table>

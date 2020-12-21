@@ -19,7 +19,7 @@
 			<td colspan="3">
 			<select name="discipline_id" onChange="filter.submit();">
 			{foreach $disciplines as $d}
-				<option value="{$d.discipline_id}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
+				<option value="{$d.discipline_id|escape}" {if $discipline_id==$d.discipline_id}SELECTED{/if}>{$d.discipline_description|escape}</option>
 			{/foreach}
 			</select>
 			</td>
@@ -77,19 +77,19 @@
 		{foreach $planes as $p}
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
 			<td>
-				<input type="checkbox" name="plane_{$p.plane_id}">
+				<input type="checkbox" name="plane_{$p.plane_id|escape}">
 			</td>
 			<td>
 				<a href="?action=admin&function=admin_plane_view&plane_id={$p.plane_id|escape}" class="btn-link">{$p.plane_name|escape}</a>
 			</td>
 			<td>
 			{foreach $p.disciplines as $d}
-			{$d.discipline_code_view}{if !$d@last},{/if}
+			{$d.discipline_code_view|escape}{if !$d@last},{/if}
 			{/foreach}
 			</td>
 			<td align="center">{if $p.plane_info=='good'}<img src="/images/icons/accept.png" title="We Have Good Info On This Model">{else}<img src="/images/icons/exclamation.png" title="We Need More Info About This Model">{/if}</td>
 			<td>
-				{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name}">{/if}
+				{if $p.country_code}<img src="/images/flags/countries-iso/shiny/16/{$p.country_code|escape}.png" style="vertical-align: middle;" title="{$p.country_name|escape}">{/if}
 				{$p.plane_manufacturer|escape}
 			</td>
 			<td>{$p.plane_year|escape}</td>

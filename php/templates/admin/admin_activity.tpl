@@ -28,7 +28,7 @@
 		</tr>
 		{foreach $entries as $e}
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
-			<td>{$e.site_log_date}</td>
+			<td>{$e.site_log_date|escape}</td>
 			<td>{$e.user_first_name|escape} {$e.user_last_name|escape}</td>
 			<td>{$e.site_log_action|escape}</td>
 			<td>{$e.site_log_function|escape}</td>

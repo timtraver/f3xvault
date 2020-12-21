@@ -14,19 +14,19 @@
 		<form name="main" method="POST">
 		<input type="hidden" name="action" value="admin">
 		<input type="hidden" name="function" value="admin_plane_cat_save">
-		<input type="hidden" name="plane_att_id" value="{$category.plane_att_cat_id}">
+		<input type="hidden" name="plane_att_id" value="{$category.plane_att_cat_id|escape}">
 		
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed">
 		<tr>
 			<th>Attribute Category</th>
 			<td>
-				<input type="text" name="plane_att_cat_name" size="40" value="{$category.plane_att_cat_name}">
+				<input type="text" name="plane_att_cat_name" size="40" value="{$category.plane_att_cat_name|escape}">
 			</td>
 		</tr>
 		<tr>
 			<th>Attribute Order</th>
 			<td>
-				<input type="text" name="plane_att_cat_order" size="5" value="{$category.plane_att_cat_order}">
+				<input type="text" name="plane_att_cat_order" size="5" value="{$category.plane_att_cat_order|escape}">
 			</td>
 		</tr>
 		<tr>

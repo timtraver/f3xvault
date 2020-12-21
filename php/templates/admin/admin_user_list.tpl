@@ -21,7 +21,7 @@
 			<select name="country_id" onChange="document.searchform.state_id.value=0;searchform.submit();">
 			<option value="0">Choose Country to Narrow Search</option>
 			{foreach $countries as $country}
-				<option value="{$country.country_id}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name}</option>
+				<option value="{$country.country_id|escape}" {if $country_id==$country.country_id}SELECTED{/if}>{$country.country_name|escape}</option>
 			{/foreach}
 			</select>
 			</td>
@@ -30,7 +30,7 @@
 			<select name="state_id" onChange="searchform.submit();">
 			<option value="0">Choose State to Narrow Search</option>
 			{foreach $states as $state}
-				<option value="{$state.state_id}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name}</option>
+				<option value="{$state.state_id|escape}" {if $state_id==$state.state_id}SELECTED{/if}>{$state.state_name|escape}</option>
 			{/foreach}
 			</select>
 			</td>
@@ -84,7 +84,7 @@
 		{foreach $pilots as $p}
 		<tr bgcolor="{cycle values="#FFFFFF,#E8E8E8"}">
 			<td>
-				<input type="checkbox" name="pilot_{$p.pilot_id}">
+				<input type="checkbox" name="pilot_{$p.pilot_id|escape}">
 			</td>
 			<td>
 				<a href="?action=admin&function=admin_user_view&pilot_id={$p.pilot_id|escape}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
