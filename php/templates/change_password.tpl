@@ -16,8 +16,8 @@
 						<form name="login" method="POST" autocomplete="off">
 						<input type="hidden" name="action" value="main">
 						<input type="hidden" name="function" value="pass_recovery_save">
-						<input type="hidden" name="user_id" value="{$user_info.user_id}">
-						<input type="hidden" name="hash" value="{$hash}">
+						<input type="hidden" name="user_id" value="{$user_info.user_id|escape}">
+						<input type="hidden" name="hash" value="{$hash|escape}">
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
