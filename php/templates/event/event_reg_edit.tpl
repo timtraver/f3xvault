@@ -92,11 +92,25 @@
 						</td>
 					</tr>
 					<tr>
+						<th>Register Teams</th>
+						<td>
+							<input type="checkbox" name="event_reg_teams"{if $event->info.event_reg_teams} CHECKED{/if}> Allow Pilot to Enter Team Names During Registration
+						</td>
+					</tr>
+					<tr>
 						<th>Registration Max Participants</th>
 						<td>
 							<input type="text" size="3" name="event_reg_max" value="{$event->info.event_reg_max}"> 0=unlimited
 						</td>
 					</tr>
+					<!--
+					<tr>
+						<th>Registration Has Wait List</th>
+						<td>
+							<input type="checkbox" name="event_reg_waitlist"{if $event->info.event_reg_waitlist} CHECKED{/if}> Allow registration to have a wait list when full
+						</td>
+					</tr>
+					-->
 					<tr>
 						<th nowrap>Registration Requires Payment</th>
 						<td>
