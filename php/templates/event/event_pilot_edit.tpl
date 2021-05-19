@@ -147,12 +147,14 @@
 				<input type="text" name="event_pilot_freq" size="15" value="{$pilot.event_pilot_freq|escape}">
 			</td>
 		</tr>
+		{if $event->info['event_reg_teams'] == 1}
 		<tr>
 			<th align="right" nowrap>Event Team</th>
 			<td colspan="2">
 				<input type="text" id="event_pilot_team" name="event_pilot_team" size="40" value="{$pilot.event_pilot_team|escape}">
 			</td>
 		</tr>
+		{/if}
 		<tr>
 			<th align="right" nowrap>Event Plane</th>
 			<td colspan="2">
@@ -357,13 +359,13 @@ $(document).ready(function() {ldelim}
 {rdelim});			
 {/if}
 $(function() {ldelim}
+	{if $event->info['event_reg_teams'] == 1}
 	var teams = [
 		{foreach $teams as $t}
 		"{$t.event_pilot_team}"{if !$t@last},{/if}
 		{/foreach}
 	];
-{literal}
-	$("#event_pilot_team").autocomplete({
+	$("#event_pilot_team").autocomplete({ldelim}
 		source: teams,
 		minLength: 0, 
 		highlightItem: true, 
@@ -371,7 +373,9 @@ $(function() {ldelim}
         autoFocus: true,
         scroll: true,
         scrollHeight: 300
-	});
+	{rdelim});
+	{/if}
+{literal}
 	$("#event_plane").autocomplete({
 		source: "/lookup.php?function=lookup_plane",
 		minLength: 2, 
