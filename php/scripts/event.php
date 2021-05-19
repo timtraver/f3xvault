@@ -938,6 +938,14 @@ function event_reg_save() {
 
 	$open_date_stamp = strtotime($event_reg_open_date_string." ".$open_tz_abbr);
 	$close_date_stamp = strtotime($event_reg_close_date_string." ".$close_tz_abbr);
+	$event_reg_teams = 0;
+	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
+		$event_reg_teams = 1;
+	}
+	$event_reg_waitlist = 0;
+	if( isset( $_REQUEST['event_reg_waitlist'] ) && $_REQUEST['event_reg_waitlist'] == 'on' ){
+		$event_reg_waitlist = 1;
+	}
 
 	# Now lets get the existing additional values
 	$params = array();
@@ -961,7 +969,9 @@ function event_reg_save() {
 			event_reg_max = :event_reg_max,
 			event_reg_pay_flag = :event_reg_pay_flag,
 			currency_id = :currency_id,
-			event_reg_paypal_address = :event_reg_paypal_address
+			event_reg_paypal_address = :event_reg_paypal_address,
+			event_reg_teams = :event_reg_teams,
+			event_reg_waitlist = :event_reg_waitlist
 		WHERE event_id = :event_id
 	");
 	$result = db_exec($stmt,array(
@@ -975,6 +985,8 @@ function event_reg_save() {
 		"event_reg_pay_flag"			=> $event_reg_pay_flag,
 		"currency_id"					=> $currency_id,
 		"event_reg_paypal_address"		=> $event_reg_paypal_address,
+		"event_reg_teams"				=> $event_reg_teams,
+		"event_reg_waitlist"			=> $event_reg_waitlist,
 		"event_id"						=> $event_id
 	));
 	
@@ -1200,7 +1212,7 @@ function event_register_save() {
 	$pilot_fai_license = $_REQUEST['pilot_fai_license'];
 	$class_id = intval($_REQUEST['class_id']);
 	$event_pilot_freq = $_REQUEST['event_pilot_freq'];
-	$event_pilot_team = $_REQUEST['event_pilot_team'];
+	$event_pilot_team = isset( $_REQUEST['event_pilot_team'] ) ? $_REQUEST['event_pilot_team'] : '' ;
 	$plane_id = intval($_REQUEST['plane_id']);
 	$event_pilot_reg_note = $_REQUEST['event_pilot_reg_note'];
 	$existing = 0;
@@ -1914,7 +1926,7 @@ function event_pilot_save() {
 	$pilot_email = $_REQUEST['pilot_email'];
 	$class_id = intval($_REQUEST['class_id']);
 	$event_pilot_freq = $_REQUEST['event_pilot_freq'];
-	$event_pilot_team = $_REQUEST['event_pilot_team'];
+	$event_pilot_team = isset( $_REQUEST['event_pilot_team'] ) ? $_REQUEST['event_pilot_team'] : '' ;
 	$plane_id = intval($_REQUEST['plane_id']);
 	$from_confirm = intval($_REQUEST['from_confirm']);
 	$event_pilot_entry_order = intval($_REQUEST['event_pilot_entry_order']);
@@ -6016,7 +6028,6 @@ function event_self_entry() {
 	$penalty = intval($_REQUEST['penalty']);
 	$save = intval($_REQUEST['save']);
 
-
 	$event = new Event($event_id);
 	$event->get_rounds();
 	$event->get_tasks();
@@ -6050,6 +6061,12 @@ function event_self_entry() {
 			$seconds_accuracy = $o['event_option_value'];
 		}
 		if( $event->info['event_type_code'] == 'td' && $o['event_type_option_code'] == 'td_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'gps' && $o['event_type_option_code'] == 'gps_time_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
+		if( $event->info['event_type_code'] == 'gps' && $o['event_type_option_code'] == 'gps_speed_accuracy' ){
 			$seconds_accuracy = $o['event_option_value'];
 		}
 	}
@@ -6097,7 +6114,7 @@ function event_self_entry() {
 			$sub_flights[$flight]['seconds2'] = $val;
 		}
 	}
-	
+
 	# Lets step through the sub flights and see if there are max flight times and enforce them
 	foreach($sub_flights as $sub => $f){
 		$total_seconds = ( $f['minutes'] * 60 ) + $f['seconds'] + ( $f['seconds2'] / 10 );
@@ -6106,7 +6123,7 @@ function event_self_entry() {
 				$total_seconds = $event->flight_types[$flight_type_id]['flight_type_sub_flights_max_time'];
 				$sub_flights[$sub]['minutes'] = floor( $total_seconds / 60 );
 				$sub_flights[$sub]['seconds'] = sprintf( "%02d", fmod( $total_seconds, 60 ) );
-				$sub_flights[$sub]['seconds2'] = round( $sub_flights[$sub]['total_seconds'] - ( $sub_flights[$sub]['minutes'] * 60 ) - $sub_flights[$sub]['seconds'], 1) * 10;
+				$sub_flights[$sub]['seconds2'] = round( $total_seconds - ( $sub_flights[$sub]['minutes'] * 60 ) - $sub_flights[$sub]['seconds'], 1) * 10;
 			}
 		}
 		$sub_flights[$sub]['total_seconds'] = $total_seconds;
