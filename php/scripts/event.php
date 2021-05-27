@@ -1112,6 +1112,14 @@ function event_register() {
 		}
 	}
 	
+	# Let's see if the registration window is open and refuse if it is not
+	$now = date_stamp_add_offset( time(), $e->info['event_reg_open_tz'] );
+	if( $now < date_stamp_add_offset( $e->info['event_reg_open_date_stamp'], $e->info['event_reg_open_tz'] )
+		|| $now > date_stamp_add_offset( $e->info['event_reg_close_date_stamp'], $e->info['event_reg_close_tz'] ) ){
+			user_message("Registration for this event is not within the time constraints. You cannot register for this event at this time.", 1 );
+			return event_view();
+	}
+	
 	# Get classes to choose to be available for this event
 	$stmt = db_prep("
 		SELECT *,c.class_id
