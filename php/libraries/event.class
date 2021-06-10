@@ -1886,6 +1886,7 @@ class Event {
 				$drop_rounds[] = $o['event_option_value'];
 			}
 		}
+
 		# Now lets see how many drops based on those round numbers
 		$number_drops = 0;
 		foreach($drop_rounds as $drop_round_number){
@@ -1908,19 +1909,18 @@ class Event {
 					}
 				}else{
 					# Step through each of the flight types to see if the round is complete
-					foreach($this->flight_types as $flight_type_id => $ft){
-						if($r['flights'][$flight_type_id]['event_round_flight_score'] == 0){
-							# It has a flight type that is not being scored, so set completed to 0
-							$completed = 0;
-						}
-					}
+#					foreach($this->flight_types as $flight_type_id => $ft){
+#						if($r['flights'][$flight_type_id]['event_round_flight_score'] == 0){
+#							# It has a flight type that is not being scored, so set completed to 0
+#							$completed = 0;
+#						}
+#					}
 				}
 				if($completed == 1 && $round_number == $drop_round_number){
 					$number_drops++;
 				}
 			}
 		}
-		
 		# Lets get the flyoff round drops
 		foreach($this->options as $o){
 			if(preg_match("/\_flyoff\_drop\d/",$o['event_type_option_code'])){
