@@ -1898,7 +1898,7 @@ class Event {
 					# If its not a prelim round
 					continue;
 				}
-				if($r['event_round_score_status'] == 0){
+				if($r['event_round_score_status'] == 0 ){
 					continue;
 				}
 				if($this->info['event_type_code'] == 'f3k'){
@@ -1907,14 +1907,26 @@ class Event {
 						# this one is not being scored, so set completed to 0
 						$completed = 0;
 					}
+				}elseif( $this->info['event_type_code'] == 'gps' ){
+					# This is a GPS event, so let's not count all of the flight types
+					$one_completed = 0;
+					foreach($this->flight_types as $flight_type_id => $ft){
+						if($r['flights'][$flight_type_id]['event_round_flight_score'] == 1){
+							# It has a flight type that is being scored, so set one_completed to 1
+							$one_completed = 1;
+						}
+					}
+					if( $one_completed ){
+						$completed = 1;
+					}
 				}else{
 					# Step through each of the flight types to see if the round is complete
-#					foreach($this->flight_types as $flight_type_id => $ft){
-#						if($r['flights'][$flight_type_id]['event_round_flight_score'] == 0){
-#							# It has a flight type that is not being scored, so set completed to 0
-#							$completed = 0;
-#						}
-#					}
+					foreach($this->flight_types as $flight_type_id => $ft){
+						if($r['flights'][$flight_type_id]['event_round_flight_score'] == 0){
+							# It has a flight type that is not being scored, so set completed to 0
+							$completed = 0;
+						}
+					}
 				}
 				if($completed == 1 && $round_number == $drop_round_number){
 					$number_drops++;
