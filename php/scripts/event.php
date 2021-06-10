@@ -1115,9 +1115,12 @@ function event_register() {
 	# Let's see if the registration window is open and refuse if it is not
 	if( $e->info['event_reg_status'] == 2 ){
 		$now = date_stamp_add_offset( time(), $e->info['event_reg_open_tz'] );
-		if( $now < date_stamp_add_offset( $e->info['event_reg_open_date_stamp'], $e->info['event_reg_open_tz'] )
-			|| $now > date_stamp_add_offset( $e->info['event_reg_close_date_stamp'], $e->info['event_reg_close_tz'] ) ){
-				user_message("Registration for this event is not within the time constraints. You cannot register for this event at this time.", 1 );
+		if( $now < date_stamp_add_offset( $e->info['event_reg_open_date_stamp'], $e->info['event_reg_open_tz'] ) ){
+				user_message("Registration for this event is not open yet. You cannot register for this event at this time.", 1 );
+				return event_view();
+		}
+		if( $e->info['event_reg_close_on'] && $now < date_stamp_add_offset( $e->info['event_reg_close_date_stamp'], $e->info['event_reg_close_tz'] ) ){
+				user_message("Registration for this event is now closed. You cannot register for this event at this time.", 1 );
 				return event_view();
 		}
 	}
