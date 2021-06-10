@@ -2792,6 +2792,7 @@ function event_round_save() {
 	$event_round_score_status = 0;
 	$event_round_locked = 0;
 	$event = new Event($event_id);
+	$event->get_rounds();
 	if(isset($_REQUEST['event_round_score_status']) && ($_REQUEST['event_round_score_status'] == 'on' || $_REQUEST['event_round_score_status'] == 1)){
 		$event_round_score_status = 1;
 	}else{
@@ -3022,7 +3023,7 @@ function event_round_save() {
 			}
 		}
 		# If there was a change of flight type, then lets update the flights
-		if($flight_type_id != $ftype_id && $flight_type_id != 0){
+		if($flight_type_id != $event->rounds[$event_round_number]['flight_type_id'] && $flight_type_id != 0){
 			$stmt = db_prep("
 				UPDATE event_round_flight
 				SET flight_type_id = :flight_type_id,
