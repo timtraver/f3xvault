@@ -26,11 +26,11 @@
 			{$prev=$round_number-1}
 			{$next=$round_number+1}
 			{if $event->rounds.$prev}
-			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$prev.event_round_id}"><img src="/images/arrow-left.png" style="vertical-align:text-bottom;"></a>
+			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$prev.event_round_id}&sort_by={$sort_by|escape}"><img src="/images/arrow-left.png" style="vertical-align:text-bottom;"></a>
 			{/if}
 			{$round_number|escape}
 			{if $event->rounds.$next}
-			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$next.event_round_id}"><img src="/images/arrow-right.png" style="vertical-align:text-bottom;"></a>
+			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$event->rounds.$next.event_round_id}&sort_by={$sort_by|escape}"><img src="/images/arrow-right.png" style="vertical-align:text-bottom;"></a>
 			{/if}
 		</h2>
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
