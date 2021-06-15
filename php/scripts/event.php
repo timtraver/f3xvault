@@ -1098,6 +1098,21 @@ function event_register() {
 	$e->get_teams();
 	$smarty->assign("event",$e);
 	
+	# let us check if they are logged in, and if not, send them to the login screen
+
+	if( ! isset( $GLOBALS['fsession']['auth'] ) ){
+		# They are not logged in
+		user_message("You must first log into the system in order to register for an event.");
+		# Now let us redirect them to the login page
+		$smarty->assign('redirect_action','event');
+		$smarty->assign('redirect_function','event_register');
+		$smarty->assign('current_menu','login');
+		$smarty->assign('request', $_REQUEST);
+	
+		$maintpl = find_template("login.tpl");
+		return $smarty->fetch($maintpl);
+	}
+
 	# Lets check to see if they are already registered
 	foreach($e->pilots as $p){
 		if($p['pilot_id'] == $GLOBALS['user']['pilot_id']){
