@@ -6320,7 +6320,7 @@ function event_self_entry() {
 					event_round_number = :event_round_number,
 					flight_type_id = :flight_type_id,
 					event_round_time_choice = :event_round_time_choice,
-					event_round_score_status = 0,
+					event_round_score_status = 1,
 					event_round_score_second = :event_round_score_second,
 					event_round_needs_calc = 0,
 					event_round_flyoff = :event_round_flyoff,
