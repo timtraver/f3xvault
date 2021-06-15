@@ -261,8 +261,6 @@ function event_list() {
 		}else{
 			$events[$key]['time_status'] = -1;
 		}
-#		$events[$key]['event_reg_open_date_stamp'] = date_stamp_add_offset( $e['event_reg_open_date_stamp'], $e['event_reg_open_tz']);
-#		$events[$key]['event_reg_close_date_stamp'] = date_stamp_add_offset( $e['event_reg_close_date_stamp'], $e['event_reg_close_tz']);
 	}
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
@@ -898,6 +896,10 @@ function event_reg_edit() {
 	
 	$event_id = intval($_REQUEST['event_id']);
 	$e = new Event($event_id);
+
+	# make the time stamps be for the time zone
+	$e->info['event_reg_open_date_stamp'] = date_stamp_add_offset( $e->info['event_reg_open_date_stamp'], $e->info['event_reg_open_tz']);
+	$e->info['event_reg_close_date_stamp'] = date_stamp_add_offset( $e->info['event_reg_close_date_stamp'], $e->info['event_reg_close_tz']);
 	
 	$smarty->assign("event",$e);
 	$smarty->assign("currencies",get_currencies());
@@ -1115,12 +1117,12 @@ function event_register() {
 	
 	# Let's see if the registration window is open and refuse if it is not
 	if( $e->info['event_reg_status'] == 2 ){
-		$now = date_stamp_add_offset( time(), $e->info['event_reg_open_tz'] );
-		if( $now < date_stamp_add_offset( $e->info['event_reg_open_date_stamp'], $e->info['event_reg_open_tz'] ) ){
+		$now = time();
+		if( $now < $e->info['event_reg_open_date_stamp'] ){
 				user_message("Registration for this event is not open yet. You cannot register for this event at this time.", 1 );
 				return event_view();
 		}
-		if( $e->info['event_reg_close_on'] && $now < date_stamp_add_offset( $e->info['event_reg_close_date_stamp'], $e->info['event_reg_close_tz'] ) ){
+		if( $e->info['event_reg_close_on'] && $now > $e->info['event_reg_close_date_stamp'] ){
 				user_message("Registration for this event is now closed. You cannot register for this event at this time.", 1 );
 				return event_view();
 		}
