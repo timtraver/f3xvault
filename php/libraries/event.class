@@ -57,11 +57,6 @@ class Event {
 		$result = db_exec($stmt,array("event_id" => $this->event_id));
 		$this->info = $result[0];
 		
-		# Lets set the dates of registration with the offsets for the Time zones here
-		# Cause it is saved as a UTC stamp
-		$this->info['event_reg_open_date_stamp'] = date_stamp_add_offset( $this->info['event_reg_open_date_stamp'], $this->info['event_reg_open_tz']);
-		$this->info['event_reg_close_date_stamp'] = date_stamp_add_offset( $this->info['event_reg_close_date_stamp'], $this->info['event_reg_close_tz']);
-
 		$this->get_options();
 		$this->get_series();
 		$this->get_reg_options();
