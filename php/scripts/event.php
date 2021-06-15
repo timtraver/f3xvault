@@ -261,8 +261,8 @@ function event_list() {
 		}else{
 			$events[$key]['time_status'] = -1;
 		}
-		$events[$key]['event_reg_open_date_stamp'] = date_stamp_add_offset( $e['event_reg_open_date_stamp'], $e['event_reg_open_tz']);
-		$events[$key]['event_reg_close_date_stamp'] = date_stamp_add_offset( $e['event_reg_close_date_stamp'], $e['event_reg_close_tz']);
+#		$events[$key]['event_reg_open_date_stamp'] = date_stamp_add_offset( $e['event_reg_open_date_stamp'], $e['event_reg_open_tz']);
+#		$events[$key]['event_reg_close_date_stamp'] = date_stamp_add_offset( $e['event_reg_close_date_stamp'], $e['event_reg_close_tz']);
 	}
 	# Lets reset the discipline for the top bar if needed
 	set_disipline($discipline_id);
@@ -938,6 +938,7 @@ function event_reg_save() {
 
 	$open_date_stamp = strtotime($event_reg_open_date_string." ".$open_tz_abbr);
 	$close_date_stamp = strtotime($event_reg_close_date_string." ".$close_tz_abbr);
+	
 	$event_reg_teams = 0;
 	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
 		$event_reg_teams = 1;
@@ -1124,7 +1125,7 @@ function event_register() {
 				return event_view();
 		}
 	}
-	
+
 	# Get classes to choose to be available for this event
 	$stmt = db_prep("
 		SELECT *,c.class_id
