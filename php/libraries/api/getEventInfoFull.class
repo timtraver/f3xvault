@@ -417,8 +417,8 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_round_flyoff'] = $r['event_round_flyoff'];
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_total_score'] = floatval( $p['event_pilot_round_total_score'] );
 						}
+						$total_rounds++;
 					}
-					$total_rounds++;
 				}
 			}
 		}
