@@ -235,6 +235,7 @@ class getPlaneInfo {
 			LEFT JOIN country c ON p.country_id = c.country_id
 			WHERE pp.plane_id = :plane_id
 				AND pp.pilot_plane_status = 1
+				AND p.pilot_id IS NOT NULL
 			ORDER BY c.country_code, p.pilot_first_name
 		");
 		$results = db_exec( $stmt, array( "plane_id" => $this->plane_id ) );
