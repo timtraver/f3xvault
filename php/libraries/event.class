@@ -2025,19 +2025,19 @@ class Event {
 				}
 			}
 
+			# Lets clear all of the flights for all of the pilots of their flight dropped status first
+			$stmt = db_prep("
+				UPDATE event_pilot_round_flight eprf
+				LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
+				LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
+				SET eprf.event_pilot_round_flight_dropped=0
+				WHERE er.event_id=:event_id
+					AND er.event_round_status=1
+					AND er.event_round_flyoff=0
+			");
+			$result = db_exec($stmt,array("event_id" => $this->event_id));
+			# Now lets calculate the drops if there are some
 			if($this->totals['round_drops']>0){
-				# Lets clear all of the flights for all of the pilots of their flight dropped status
-				$stmt = db_prep("
-					UPDATE event_pilot_round_flight eprf
-					LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id=epr.event_pilot_round_id
-					LEFT JOIN event_round er ON epr.event_round_id=er.event_round_id
-					SET eprf.event_pilot_round_flight_dropped=0
-					WHERE er.event_id=:event_id
-						AND er.event_round_status=1
-						AND er.event_round_flyoff=0
-				");
-				$result = db_exec($stmt,array("event_id" => $this->event_id));
-			
 				foreach($temp_flights as $event_pilot_id => $ft){
 					foreach($ft as $flight_type_id => $r){
 						$temp2 = array_msort($r,array('event_pilot_round_total_score' => SORT_ASC));
@@ -2058,6 +2058,7 @@ class Event {
 					}
 				}
 			}
+			
 		}else{
 			# This is for all of the other event types, where there is only a single flight type per round, so drops happen to the whole round
 			# Lets make another array to more easily sort the values to drop
