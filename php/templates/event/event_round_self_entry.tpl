@@ -127,13 +127,13 @@
 		
 		
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
-			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 30%;float: left;border-width: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 0px;" onClick="{if $round_number > 1}document.main.round_number.value={$round_number-1}{else}return false;{/if}">
+			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 20%;float: left;border-width: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 0px;" onClick="{if $round_number > 1}document.main.round_number.value={$round_number-1}{else}return false;{/if}">
 				<i class="fa fa-chevron-left" style="float:left;padding-top: 5px;padding-bottom: 5px;{if $round_number == 1}color: grey;{/if}"></i>
 			</button>
-			<button class="btn btn-group btn-primary dropdown-toggle" style="font-size: 24px;width: 40%;border-width: 0px;margin-left: 0px;margin-right: 0px;"  data-toggle="dropdown" aria-expanded="false">
+			<button class="btn btn-group btn-primary dropdown-toggle" style="font-size: 24px;width: 60%;border-width: 0px;margin-left: 0px;margin-right: 0px;"  data-toggle="dropdown" aria-expanded="false">
 				Round {$round_number|escape}
 			</button>
-			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 30%;float: right;border-width: 0px;border-top-left-radius: 0px;border-bottom-left-radius: 0px;" onclick="{if $advance_round == 1}document.main.round_number.value={$round_number+1};document.main.submit();{else}return false;{/if}">
+			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 20%;float: right;border-width: 0px;border-top-left-radius: 0px;border-bottom-left-radius: 0px;" onclick="{if $advance_round == 1}document.main.round_number.value={$round_number+1};document.main.submit();{else}return false;{/if}">
 				<i class="fa fa-chevron-right" style="float: right;padding-top: 5px;padding-bottom: 5px;{if $advance_round == 0}color: grey;{/if}"></i>
 			</button>
 				<ul class="dropdown-menu" style="width:100%;position: relative;font-size:20px;">
@@ -172,7 +172,7 @@
 				<td valign="baseline">
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=$event_round_time start=$event_round_time step=-1}
 								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
@@ -181,7 +181,7 @@
 						&nbsp;&nbsp;&nbsp;Min
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-						<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+						<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 							{section name=s loop=60 start=60 step=-1}
 								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 							{/section}
@@ -191,7 +191,7 @@
 						{$loop_val = pow(10,$seconds_accuracy)}
 						<div class="btn-group" style="width: 50px;">
 							<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
-								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 									
 									{section name=s loop=$loop_val start=0 step=1}
 									<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
@@ -217,7 +217,7 @@
 					<div class="btn-group" style="width: 50px;">
 						{if $startheight == ''}{$startheight = 0}{/if}
 						<input type="button" id="height_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$startheight} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=350 start=1 step=1}
 								<li><a href="#" onClick='document.main.startheight.value="{$smarty.section.s.index}";document.getElementById("height_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 								{/section}
@@ -233,7 +233,7 @@
 					<div class="btn-group" style="width: 50px;">
 						{if $landing == ''}{$landing = 0}{/if}
 						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{if $event->info.event_type_code == 'f5j'}
 									{section name=s loop=51 start=51 step=-5}
 									<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
@@ -273,7 +273,7 @@
 				<td valign="baseline">
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=$event_round_time start=$event_round_time step=-1}
 								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
@@ -282,7 +282,7 @@
 						min
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=60 start=60 step=-1}
 								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
@@ -296,7 +296,7 @@
 					<div class="btn-group" style="width: 50px;">
 						{if $landing == ''}{$landing = 0}{/if}
 						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=101 start=101 step=-1}
 								<li><a href="#" onClick='document.main.landing.value="{$smarty.section.s.index}";document.getElementById("landing_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 								{/section}
@@ -434,7 +434,7 @@
 							</div>&nbsp;
 							<div class="btn-group" style="width: 50px;">
 								<input type="button" id="sub_{$sub}_minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 										{section name=s loop=$max_min+1 start=$max_min+1 step=-1}
 										<li><a href="#" onClick='document.main.sub_min_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 										{/section}
@@ -443,7 +443,7 @@
 							&nbsp;&nbsp;min
 							<div class="btn-group" style="width: 50px;">
 								<input type="button" id="sub_{$sub}_seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 										{section name=s loop=60 start=60 step=-1}
 										<li><a href="#" onClick='document.main.sub_sec_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 										{/section}
@@ -454,7 +454,7 @@
 								{$loop_val = pow(10,$seconds_accuracy)}
 								<div class="btn-group" style="width: 50px;">
 									<input type="button" id="sub_{$sub}_seconds2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
-										<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+										<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 											{section name=s loop=$loop_val start=0 step=1}
 											<li><a href="#" onClick='document.main.sub_sec2_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
 											{/section}
@@ -496,7 +496,7 @@
 						{else}
 							{if $laps == ''}{$laps = 0}{/if}
 							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$laps} " data-toggle="dropdown" aria-expanded="false">
-								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 									{section name=s loop=26 start=0 step=1}
 									<li><a href="#" onClick='document.main.laps.value="{$smarty.section.s.index}";document.getElementById("laps_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 									{/section}
@@ -510,7 +510,7 @@
 				<td valign="baseline">
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=30 start=0 step=1}
 								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
@@ -519,7 +519,7 @@
 						min
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=60 start=60 step=-1}
 								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
 								{/section}
@@ -527,7 +527,7 @@
 					</div>&nbsp;&nbsp;
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:".%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=100 start=100 step=-1}
 								<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:".%'.02d"}";'>{$smarty.section.s.index|string_format:".%'.02d"}</a></li>
 								{/section}
@@ -555,7 +555,7 @@
 				<td>
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="startpen_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 15px;margin-top: 10px;font-size: 28px;" value=" {$startpen|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 200px;overflow-y: auto;">
 								{section name=s loop=1000 start=0 step=1}
 								<li><a href="#" onClick='document.main.startpen.value="{$smarty.section.s.index}";document.getElementById("startpen_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
 								{/section}
@@ -580,8 +580,6 @@
 			</table>
 		{/if} {* End GPS Event *}
 			
-		
-		<br>
 		<br>
 			{if $event->rounds.$round_number.event_round_locked == 1}
 			<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="return false;">
@@ -593,10 +591,94 @@
 				Save This Flight
 			</button>
 			{/if}
-		<br>
-		<br>
 	</div>
 	</form>
+	<div style="background-color: lightgrey;">
+		<span style="font-size: 16px;"><center>Current Round Standings</center></span>
+	</div>
+	<div style="overflow: scroll;">
+		{$num=1}
+		<table width="100%">
+			<tr class="table-heading">
+				<th>#</th>
+				<th>Bib  Pilot Name</th>
+				{if $event->flight_types.$flight_type_id.flight_type_group}
+					<th style="text-align: center;">Group</th>
+					{if preg_match("/^f3f/",$event->flight_types.$flight_type_id.flight_type_code) && $event->flight_types.$flight_type_id.flight_type_group}
+						<th style="text-align: center;">Flight Order</th>
+					{/if}
+				{else}
+					<th style="text-align: center;">Flight Order</th>
+				{/if}
+				<th>Time</th>
+				{if $event->flight_types.$flight_type_id.flight_type_start_height}
+					<th style="text-align: right;">Height</th>
+				{/if}
+				{if $event->flight_types.$flight_type_id.flight_type_landing}
+					<th style="text-align: right;">Land</th>
+				{/if}
+				{if $event->flight_types.$flight_type_id.flight_type_laps}
+					<th style="text-align: right;">Laps</th>
+				{/if}
+				<th style="text-align: right;">Pen</th>
+				<th style="text-align: right;">Score</th>
+			</tr>
+			{$groupcolor='lightgrey'}
+			{$oldgroup=''}
+			{foreach $event->rounds.$round_number.flights as $flight_id => $f}
+				{foreach $f.pilots as $event_pilot_id => $p}
+					{if $oldgroup!=$p.event_pilot_round_flight_group}
+						{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
+						{$oldgroup=$p.event_pilot_round_flight_group|escape}
+					{/if}
+					<tr style="background-color: {$groupcolor};">
+						<td>{$p.event_pilot_round_flight_rank|escape}</td>
+						<td>
+							{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
+								<div class="pilot_bib_number" style="margin-right: 4px;">{$event->pilots.$event_pilot_id.event_pilot_bib}</div>
+							{/if}
+							{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
+							{if $event->pilots.$event_pilot_id.state_name && $event->pilots.$event_pilot_id.country_code=="US"}<img src="/images/flags/states/16/{$event->pilots.$event_pilot_id.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.state_name}">{/if}
+							{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
+						</td>
+						{if $f.flight_type_group}
+							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
+						{else}
+							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+						{/if}
+						<td align="left" nowrap>
+							{if $f.flight_type_minutes}
+								{$p.event_pilot_round_flight_minutes|escape}m
+							{/if}
+							{if $f.flight_type_seconds}
+								{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_seconds|escape}{/if}s
+							{/if}
+						</td>
+						{if $f.flight_type_start_height}
+							<td align="right" nowrap>
+								{$p.event_pilot_round_flight_start_height|escape}
+							</td>
+						{/if}
+						{if $f.flight_type_landing}
+							<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+						{/if}
+						{if $f.flight_type_laps}
+							<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
+						{/if}
+						<td align="right" nowrap>
+							{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}
+						</td>
+						<td align="right" nowrap>
+							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
+							{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
+						</td>
+					<tr>
+					{$num=$num+1}
+				{/foreach}
+			{/foreach}
+		</table>
+	</div>
 </div>
 
 
