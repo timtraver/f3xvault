@@ -2660,6 +2660,7 @@ class Event {
 							$sub1 = $p['sub'][2]['event_pilot_round_flight_sub_val'];
 							$temp_first_lap_averages[$event_pilot_id]['total']+=$sub1;
 							$temp_first_lap_averages[$event_pilot_id]['rounds']++;
+							$temp_first_lap_averages[$event_pilot_id]['accuracy_string'] = $f['accuracy_string'];
 						}
 					}
 				}
@@ -2670,7 +2671,6 @@ class Event {
 			$temp_first_lap_averages[$event_pilot_id]['average_speed_m'] = round(100 / round($a['total']/$a['rounds'],$accuracy),$accuracy);
 			$temp_first_lap_averages[$event_pilot_id]['average_speed_mph'] = round($temp_first_lap_averages[$event_pilot_id]['average_speed_m'] * 2.23694,$accuracy);
 		}
-		
 		
 		$first_lap_averages = array_msort($temp_first_lap_averages,array("average" => SORT_ASC));
 		return $first_lap_averages;
