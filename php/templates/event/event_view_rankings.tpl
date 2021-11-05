@@ -104,7 +104,7 @@
 		{$rank=1}
 		{$oldscore = 0}
 		{foreach $round_wins as $event_pilot_id => $r}
-			{$percent = ($r.wins / ($r.total_rounds) )*100}
+			{$percent = ($r.wins / $event->totals.total_rounds )*100}
 			<tr>
 				<td>
 					{if $r.wins != $oldscore}
