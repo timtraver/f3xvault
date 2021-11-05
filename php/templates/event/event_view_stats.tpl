@@ -207,8 +207,8 @@
 				<td>
 					{$p.average|string_format:$event->event_calc_accuracy_string}
 				</td>
-				<td>{$p.average_speed_m|escape}</td>
-				<td>{$p.average_speed_mph|escape}</td>
+				<td>{$p.average_speed_m|escape|string_format:$p.accuracy_string}</td>
+				<td>{$p.average_speed_mph|escape|string_format:$p.accuracy_string}</td>
 			</tr>
 			{$oldscore=$p.average}
 			{$rank=$rank+1}
