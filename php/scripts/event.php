@@ -4261,6 +4261,24 @@ function event_draw_save(){
 			));
 			$event_draw_id = $GLOBALS['last_insert_id'];
 			$_REQEST['event_draw_id'] = $event_draw_id;
+			# If there is no currently active draw, then make this one active
+			$stmt = db_prep("
+				SELECT *
+				FROM event_draw
+				WHERE event_id = :event_id
+					AND event_draw_status = 1
+					AND event_draw_active = 1
+			");
+			$result = db_exec( $stmt, array( "event_id" => $event_id ) );
+			if( count( $result ) == 0 ){
+				# Let's make this new one active
+				$stmt = db_prep("
+					UPDATE event_draw
+					SET event_draw_active = 1
+					WHERE event_draw_id = :event_draw_id
+				");
+				$result = db_exec( $stmt, array( "event_draw_id" => $event_draw_id ) );
+			}
 		}else{
 			# Save the existing one
 			$stmt = db_prep("
