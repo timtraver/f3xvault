@@ -148,6 +148,9 @@
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
 			<button class="btn btn-block btn-warning btn-rounded" style="font-size: 22px;" onClick="return false;">
 				Flight Group {$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}
+				{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}
+				&nbsp;&nbsp;Lane {$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}
+				{/if}
 			</button>
 		</div>
 		
