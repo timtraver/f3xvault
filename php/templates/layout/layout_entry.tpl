@@ -54,7 +54,10 @@
 				<!--Navbar Dropdown-->
 				<!--================================-->
 				<div class="navbar-content clearfix" style="position: relative;height: 60px;">
-					<h2 style="float: left;margin-left: 10px;">Self Score Entry</h2>
+					<img src="img/logo.png" height="40" width="40" style="float: left;margin-left: 10px;margin-top: 5px;" onClick="document.main.submit();">
+					<h2 style="float: left;margin-left: 10px;font-size: 24px;padding-top: 5px;">
+						Self Score Entry
+					</h2>
 					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';" class="btn btn-primary btn-rounded">
 				</div>
 				<!--================================-->
