@@ -4626,6 +4626,13 @@ function event_draw_print() {
 				$sort_by = 'alphabetical_first';
 			}
 			break;
+		case "pilot_summary":
+			# We are going do a pdf with a summary view
+			$pdf = 1;
+			$title = "Pilot Score Recording Sheets";
+			$orientation = "L";
+			$sort_by = 'alphabetical_first';
+			break;
 		case "table":
 			$template = "print/print_draw_table.tpl";
 			$title = "Draw Table";
@@ -4730,56 +4737,87 @@ function event_draw_print() {
 	$smarty->assign("function",$_REQUEST['function']);
 	$smarty->assign("event",$e);
 	
-	
 	if($pdf == 1){
 		# Create the PDF
 		include_library('pdf_f3x.class');
 
 		# Lets create the proper data string to send to the pdf routine for this event type
 		$data = array();
-		foreach($e->pilots as $event_pilot_id => $p){
-			foreach($e->rounds as $event_round_number => $r){
-				if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
-					continue;
-				}
-				if($e->info['event_type_code'] == 'f3b'){
-					$r['event_round_time_choice'] = 10;
-					$flight_type_id = $print_flight_type_id;
-				}else{
+		if( $print_type == 'pilot_summary'){
+			foreach( $e->pilots as $event_pilot_id => $p ){
+				$data['pilots'][ $event_pilot_id ] = $p;
+				$data['pilots'][ $event_pilot_id ]['event'] = $e->info;
+				foreach( $e->rounds as $event_round_number => $r ){
+					if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
+						continue;
+					}
 					$flight_type_id = $r['flight_type_id'];
+					$flights = array();
+					foreach( $r['flights'][$flight_type_id]['pilots'] as $pilot_id => $f ){
+						if($event_pilot_id == $pilot_id ){
+							$data['pilots'][ $event_pilot_id ]['rounds'][ $event_round_number] = $f;
+							$data['pilots'][ $event_pilot_id ]['rounds'][ $event_round_number]['event_round_time_choice'] = $r['event_round_time_choice'];
+							$data['pilots'][ $event_pilot_id ]['rounds'][ $event_round_number]['flight_type_name'] = $e->flight_types[$flight_type_id]['flight_type_name'];
+							$data['pilots'][ $event_pilot_id ]['rounds'][ $event_round_number]['flight_type_code'] = $e->flight_types[$flight_type_id]['flight_type_code'];
+							# Get sub flights for flight type
+							foreach( $r['flights'][ $flight_type_id ]['subs'] as $s ){
+								$data['pilots'][ $event_pilot_id ]['rounds'][ $event_round_number]['subs'][] = array( "label" => $s );
+							}
+						}
+					}
 				}
-				$type = "time";
-				if($r['flights'][$flight_type_id]['flight_type_code'] == 'f3k_d'){
-					# Special checkboxes for ladder
-					$type = "check";
-				}
-				# Creat the subflight array
-				$flights = array();
-				foreach($r['flights'][$flight_type_id]['subs'] as $s){
-					$flights[] = array(
-						"type"	=> $type,
-						"label"	=> $s
+			}
+			// print_r($data);
+			// exit;
+		}else{
+			foreach($e->pilots as $event_pilot_id => $p){
+				foreach($e->rounds as $event_round_number => $r){
+					if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
+						continue;
+					}
+					if($e->info['event_type_code'] == 'f3b'){
+						$r['event_round_time_choice'] = 10;
+						$flight_type_id = $print_flight_type_id;
+					}else{
+						$flight_type_id = $r['flight_type_id'];
+					}
+					$type = "time";
+					if($r['flights'][$flight_type_id]['flight_type_code'] == 'f3k_d'){
+						# Special checkboxes for ladder
+						$type = "check";
+					}
+					# Create the subflight array
+					$flights = array();
+					foreach($r['flights'][$flight_type_id]['subs'] as $s){
+						$flights[] = array(
+							"type"	=> $type,
+							"label"	=> $s
+						);
+					}
+					
+					$data[] = array(
+						"event_name"	=> $e->info['event_name'],
+						"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
+						"round"			=> $event_round_number,
+						"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
+						"order"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'],
+						"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
+						"spot"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+						"lane"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
+						"target_time"	=> $r['event_round_time_choice']." min",
+						"flights"		=> $flights
 					);
 				}
-				
-				$data[] = array(
-					"event_name"	=> $e->info['event_name'],
-					"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
-					"round"			=> $event_round_number,
-					"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
-					"order"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'],
-					"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
-					"spot"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
-					"lane"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
-					"target_time"	=> $r['event_round_time_choice']." min",
-					"flights"		=> $flights
-				);
-			}
+			}			
 		}
 
 		# Now create the pdf from the above template and save it
 		$pdf = new PDF_F3X( $orientation );
-		$pdf->render($e->info['event_type_code'],$data);
+		if( $print_type == 'pilot_summary' ){
+			$pdf->render_summary( $e->info['event_type_code'], $data );
+		}else{
+			$pdf->render( $e->info['event_type_code'], $data );
+		}
 		exit;
 		#$file_contents = $pdf->Output("$title.pdf", 'D');
 	}else{
