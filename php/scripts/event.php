@@ -4084,7 +4084,7 @@ function event_draw_edit() {
 	}
 
 	$num_teams = count($draw_teams);
-	$min_groups_np = 2;
+	$min_groups_np = 1;
 	$max_groups_np = floor(count($draw_pilots)/2);
 	
 	# Lets determine the largest team
