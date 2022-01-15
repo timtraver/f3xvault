@@ -159,7 +159,7 @@
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
 			<button class="btn btn-block btn-warning btn-rounded" style="font-size: 22px;" onClick="return false;">
 				Task : {$event->rounds.$round_number.flights.$flight_type_id.flight_type_name_short|escape}
-				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'td'}
+				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j'}
 				 ({$event->tasks.$round_number.event_task_time_choice} min)
 				{/if}
 			</button>
