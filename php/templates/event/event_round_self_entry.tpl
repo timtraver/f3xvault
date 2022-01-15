@@ -171,7 +171,7 @@
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice}
 			<table>
 			<tr>
-				<th width="37%" nowrap><h3>Flight Time</h3></th>
+				<th width="45%" nowrap><h3>Flight Time</h3></th>
 				<td valign="baseline">
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
