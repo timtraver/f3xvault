@@ -168,7 +168,7 @@
 		
 		{* For F3J and F5J Event *}
 		{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j'}
-			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
+			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 1}
 			<table>
 			<tr>
 				<th width="37%" nowrap><h3>Flight Time</h3></th>
