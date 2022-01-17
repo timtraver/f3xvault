@@ -9,6 +9,7 @@
 			<td nowrap="nowrap">
 				{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
 				{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
+				{if $f.flight_type_start_height} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_start_height|escape}{/if}
 			</td>
 			</tr>
 		{/if}
