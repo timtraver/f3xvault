@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 			<th style="text-align:right;">Series Web URL</th>
-			<td><a href="{$series->info.series_url|escape:'url'}" target="_new" class="btn-link">{$series->info.series_url|escape:'url'}</a></td>
+			<td><a href="{$series->info.series_url}" target="_new" class="btn-link">{$series->info.series_url}</a></td>
 		</tr>
 		<tr>
 			<th style="text-align:right;">Series Scoring Type</th>
