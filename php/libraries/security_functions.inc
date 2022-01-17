@@ -99,7 +99,7 @@ function get_user_info($user_parameter){
     # Now get the base user info
     if($user_id != 0){
         $stmt = db_prep("
-            SELECT *
+            SELECT *,u.user_id
             FROM user u
             LEFT JOIN pilot p ON u.pilot_id = p.pilot_id
             LEFT JOIN state s ON p.state_id = s.state_id
@@ -109,7 +109,7 @@ function get_user_info($user_parameter){
         $result = db_exec($stmt,array("user_id" => $user_id));
     }else{
         $stmt = db_prep("
-            SELECT *
+            SELECT *,u.user_id
             FROM user u
             LEFT JOIN pilot p ON u.pilot_id = p.pilot_id
             LEFT JOIN state s ON p.state_id = s.state_id
