@@ -52,7 +52,7 @@
 	<tr>
 		<th>Series Web URL</th>
 		<td>
-			<input type="text" size="60" name="series_url" value="{$series->info.series_url}">
+			<input type="text" size="60" name="series_url" value="{$series->info.series_url|escape:'url'}">
 		</td>
 	</tr>
 	</table>
