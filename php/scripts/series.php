@@ -97,7 +97,7 @@ function series_list() {
 	$series = array();
 	if($search != '%%' && $search != ''){
 		$stmt = db_prep("
-			SELECT *
+			SELECT *,se.series_id
 			FROM series se
 			LEFT JOIN state s ON se.state_id = s.state_id
 			LEFT JOIN country c ON se.country_id = c.country_id
@@ -113,7 +113,7 @@ function series_list() {
 	}else{
 		# Get all locations for search
 		$stmt = db_prep("
-			SELECT *
+			SELECT *,se.series_id
 			FROM series se
 			LEFT JOIN state s ON se.state_id = s.state_id
 			LEFT JOIN country c ON se.country_id = c.country_id
