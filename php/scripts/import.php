@@ -1363,8 +1363,8 @@ function import_verify_gliderscore_f5j(){
 	$file = null;
 	
 	# Lets get the info from the first line	
-	if( preg_match( "/^(.*)\[.*(\d+\/\d+\/\d+)]/", $lines[1][0], $m ) ){
-		$event_name = $m[1];
+	if( preg_match( "/^(.*)\[.*\s(\d+\/\d+\/\d+)\]/", $lines[1][0], $m ) ){
+		$event_name = trim( $m[1] );
 		$event_start_date = $m[2];
 		$event_end_date = $event_start_date;
 	}
