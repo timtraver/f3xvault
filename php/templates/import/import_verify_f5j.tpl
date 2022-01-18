@@ -20,6 +20,8 @@
 		<input type="hidden" name="event_end_date" value="{$event.event_end_date|escape}">
 		<input type="hidden" name="event_cd" value="{$event.event_cd|escape}">
 		<input type="hidden" name="location_id" value="{$event.location_id|escape}">
+		<input type="hidden" name="club_id" value="{$event.club_id|escape}">
+		<input type="hidden" name="series_id" value="0">
 		
 		Verify the imported information from the file and set additional information.
 		
@@ -50,20 +52,35 @@
 			</td>
 		</tr>
 		<tr>
-			<th colspan="2">Event Location</th>
-			<td colspan="5">
-				<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name|escape}">
-				<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-				<span id="search_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
-			</td>
-		</tr>
-		
-		<tr>
 			<th colspan="2">Contest Director</th>
 			<td colspan="5">
 				<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{$event.cd_name|escape}">
 				<img id="loading_cd" src="/images/loading.gif" style="vertical-align: middle;display: none;">
 				<span id="cd_message" style="font-style: italic;color: grey;">Start typing to search pilots</span>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Event Location</th>
+			<td colspan="5">
+				<input type="text" id="location_name" name="location_name" size="40" value="{$event.location_name|escape}">
+				<img id="loading_location" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+				<span id="location_message" style="font-style: italic;color: grey;">Start typing to search locations</span>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Event Club</th>
+			<td colspan="5">
+				<input type="text" id="club_name" name="club_name" size="40" value="{$event.club_name|escape}">
+				<img id="loading_club" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+				<span id="club_message" style="font-style: italic;color: grey;">Start typing to search clubs</span>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Event Series</th>
+			<td colspan="5">
+				<input type="text" id="series_name" name="series_name" size="40" value="">
+				<img id="loading_series" src="/images/loading.gif" style="vertical-align: middle;display: none;">
+				<span id="series_message" style="font-style: italic;color: grey;">Start typing to search series</span>
 			</td>
 		</tr>
 		{if $event.event_type_code=='f3k' || $event.event_type_code=='f3j' || $event.event_type_code=='td' || $event.event_type_code=='f5j'}
@@ -184,7 +201,7 @@ $(function() {
    		response: function( event, ui ) {
    			var loading=document.getElementById('loading_location');
 			loading.style.display = "none";
-   			var mes=document.getElementById('search_message');
+   			var mes=document.getElementById('location_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{
@@ -223,8 +240,8 @@ $(function() {
 			}
 		}
 	});
-	$("#event_name").autocomplete({
-		source: "/lookup.php?function=lookup_event",
+	$("#club_name").autocomplete({
+		source: "/lookup.php?function=lookup_club",
 		minLength: 2, 
 		highlightItem: true, 
         matchContains: true,
@@ -232,21 +249,52 @@ $(function() {
         scroll: true,
         scrollHeight: 300,
    		search: function( event, ui ) {
-   			var loading=document.getElementById('loading_event');
+   			var loading=document.getElementById('loading_club');
 			loading.style.display = "inline";
 		},
    		select: function( event, ui ) {
-			document.main.event_id.value = ui.item.id;
+			document.main.club_id.value = ui.item.id;
 		},
    		change: function( event, ui ) {
-   			if(document.main.event_name.value==''){
-				document.main.event_id.value = 0;
+   			if(document.main.club_name.value==''){
+				document.main.club_id.value = 0;
 			}
 		},
    		response: function( event, ui ) {
-   			var loading=document.getElementById('loading_event');
+   			var loading=document.getElementById('loading_club');
 			loading.style.display = "none";
-   			var mes=document.getElementById('event_message');
+   			var mes=document.getElementById('club_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found.';
+			}
+		}
+	});
+	$("#series_name").autocomplete({
+		source: "/lookup.php?function=lookup_series",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_series');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.series_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.series_name.value==''){
+				document.main.series_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_series');
+			loading.style.display = "none";
+   			var mes=document.getElementById('series_message');
 			if(ui.content && ui.content.length){
 				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
 			}else{

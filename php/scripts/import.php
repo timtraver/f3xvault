@@ -1378,9 +1378,11 @@ function import_verify_gliderscore_f5j(){
 
 	# Lets check to make sure there isn't an event with the exact name and dates, and use its id
 	$stmt = db_prep("
-		SELECT *
+		SELECT *,e.event_id
 		FROM event e
 		LEFT JOIN location l ON e.location_id = l.location_id
+		LEFT JOIN club c ON e.club_id = c.club_id
+		LEFT JOIN pilot p ON e.event_cd = p.pilot_id
 		WHERE e.event_name = :event_name
 	");
 	$result = db_exec( $stmt, array(
@@ -1513,6 +1515,9 @@ function import_verify_gliderscore_f5j(){
 	$event['location_id'] = $e['location_id'];
 	$event['location_name'] = $e['location_name'];
 	$event['event_cd'] = $e['event_cd'];
+	$event['cd_name'] = $e['pilot_first_name'] . " " . $e['pilot_last_name'];
+	$event['club_id'] = $e['club_id'];
+	$event['club_name'] = $e['club_name'];
 	
 	$smarty->assign("event",$event);
 	$smarty->assign("pilots",$pilots);
@@ -1533,6 +1538,8 @@ function import_import_gliderscore_f5j() {
 	$event['event_cd'] = $_REQUEST['event_cd'];
 	$event['event_type_id'] = $_REQUEST['event_type_id'];
 	$event['event_type_code'] = $_REQUEST['event_type_code'];
+	$event['club_id'] = $_REQUEST['club_id'];
+	$event['series_id'] = $_REQUEST['series_id'];
 	
 	$e = new Event( $event_id );
 	
@@ -1636,6 +1643,7 @@ function import_import_gliderscore_f5j() {
 				event_start_date = :event_start_date,
 				event_end_date = :event_end_date,
 				event_type_id = :event_type_id,
+				club_id = :club_id,
 				event_view_status = 1,
 				event_status = 1
 			WHERE event_id = :event_id
@@ -1647,6 +1655,7 @@ function import_import_gliderscore_f5j() {
 			"event_start_date" => $event['event_start_date'],
 			"event_end_date" => $event['event_end_date'],
 			"event_type_id" => $event['event_type_id'],
+			"club_id" => $event['club_id'],
 			"event_id" => $event['event_id']
 		));
 		user_message("Update Event information.");
@@ -1681,7 +1690,43 @@ function import_import_gliderscore_f5j() {
 		user_message("Created New Event.");
 		$event['event_id'] = $GLOBALS['last_insert_id'];
 	}
-
+	# Check to see if it is part of the selected series yet
+	if( $event['series_id'] != 0 ){
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_series
+			WHERE event_id = :event_id
+				AND series_id = :series_id
+		" );
+		$result = db_exec( $stmt, array(
+			"event_id" => $event['event_id'],
+			"series_id" => $event['series_id']
+		) );
+		if( count( $result ) == 1 ){
+			# Series exists so update it to on
+			$event_series_id = $result[0]['event_series_id'];
+			$stmt = db_prep( "
+				UPDATE event_series
+				SET event_series_status = 1
+				WHERE event_series_id = :event_series_id 
+			" );
+			$result = db_exec( $stmt, array( "event_series_id" => $event_series_id ) );
+		}else{
+			# Add the series record
+			$stmt = db_prep( "
+				INSERT INTO event_series
+				SET event_id = :event_id,
+					series_id = :series_id,
+					event_series_multiple = 1,
+					event_series_mandatory = 0,
+					event_series_status = 1
+			" );
+			$result = db_exec( $stmt, array(
+				"event_id" => $event['event_id'],
+				"series_id" => $event['series_id']
+			) );
+		}
+	}
 	# If its a flyoff round, then lets get the existing number of rounds
 	if($flyoff == 1){
 		$e = new Event($event['event_id']);
@@ -1799,7 +1844,8 @@ function import_import_gliderscore_f5j() {
 				INSERT INTO pilot
 				SET user_id = 0,
 					pilot_first_name = :pilot_first_name,
-					pilot_last_name = :pilot_last_name
+					pilot_last_name = :pilot_last_name,
+					country_id = 226
 			");
 			$result = db_exec($stmt,array(
 				"pilot_first_name" => $first_name,
