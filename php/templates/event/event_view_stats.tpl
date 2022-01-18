@@ -249,6 +249,38 @@
 	</div>
 	{/if}
 
+	{if $start_height}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Start Height Averages</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg</th>
+		</tr>
+		{$rank=1}
+		{$oldscore=0}
+		{foreach $start_height as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr>
+				<td>
+					{if $p.average_start_height!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>{$p.average_start_height|string_format:$event->event_calc_accuracy_string}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+			{$oldscore=$p.average_start_height}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+
 	{if $event->planes|count>0}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-right: 10px;">                
 		<h3 class="post-title">Plane Distribution</h3>

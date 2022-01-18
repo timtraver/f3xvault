@@ -2395,6 +2395,39 @@ class Event {
 		$landing = array_msort($temp_landing,array("average_landing" => SORT_DESC));
 		return $landing;
 	}
+	public function get_top_start_height(){
+		# Function to get the top start height averages of the contest
+		if(count($this->totals['pilots']) == 0){
+			$this->calculate_event_totals();
+		}
+		$temp_start = array();
+		$start_height = array();
+		foreach( $this->rounds as $event_round_number => $r ){
+			if( $r['event_round_score_status'] == 1 ){
+				foreach( $r['flights'] as $flight_type_id => $f ){
+					if( $f['event_round_flight_score'] == 0 ){
+						continue;
+					}
+					if( $f['flight_type_start_height'] == 1 ){
+						foreach( $f['pilots'] as $event_pilot_id => $p ){
+							if( $p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1 || $p['event_pilot_round_flight_start_height'] == 0 ){
+								continue;
+							}
+							$temp_start[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
+							$temp_start[$event_pilot_id]['event_pilot_round_flight_start_height'] += $p['event_pilot_round_flight_start_height'];
+							$temp_start[$event_pilot_id]['number_rounds']++;
+						}
+					}
+				}
+			}	
+		}
+		foreach( $temp_start as $event_pilot_id => $t ){
+			$temp_start[$event_pilot_id]['average_start_height'] = $t['event_pilot_round_flight_start_height'] / $t['number_rounds'];
+		}
+		
+		$start_height = array_msort( $temp_start, array( "average_start_height" => SORT_ASC ) );
+		return $start_height;
+	}
 	public function get_duration_rank(){
 		# Function to get the duration ranking of the contest
 		if(count($this->totals['pilots']) == 0){

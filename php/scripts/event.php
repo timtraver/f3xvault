@@ -301,6 +301,7 @@ function event_view() {
 	$speed = 0;
 	$landing = 0;
 	$duration = 0;
+	$start_height = 0;
 	$f3f_plus = 0;
 	foreach($e->pilots as $p){
 		if($p['event_pilot_total_laps'] != 0){
@@ -313,6 +314,9 @@ function event_view() {
 	foreach($e->flight_types as $ft){
 		if($ft['flight_type_landing'] == 1){
 			$landing = 1;
+		}
+		if($ft['flight_type_start_height'] == 1){
+			$start_height = 1;
 		}
 		if($ft['flight_type_code'] == 'f3b_duration'){
 			$duration = 1;
@@ -359,6 +363,11 @@ function event_view() {
 		# Lets get the duration rank
 		$duration_rank = $e->get_duration_rank();
 		$smarty->assign("duration_rank",$duration_rank);
+	}
+	if($start_height){
+		# Lets get the start_height rank
+		$start_height_rank = $e->get_top_start_height();
+		$smarty->assign("start_height",$start_height_rank);
 	}
 	if($f3f_plus){
 		# Lets get all of the cool stats about f3f plus runs
