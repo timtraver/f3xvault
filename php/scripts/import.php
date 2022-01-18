@@ -1523,7 +1523,6 @@ function import_verify_gliderscore_f5j(){
 }
 function import_import_gliderscore_f5j() {
 	global $smarty;
-
 	$user = get_user_info($GLOBALS['fsession']['user_id']);
 	
 	$event['event_id'] = $_REQUEST['event_id'];
@@ -1868,22 +1867,44 @@ function import_import_gliderscore_f5j() {
 		");
 		$result = db_exec($stmt,array("event_id" => $event['event_id']));
 		# Now lets step through these and set the flights and rounds to off
+		$event_round_string = '';
+		$event_round_flights_string = '';
+		$first = 1;
 		foreach($result as $r){
-			$event_pilot_round_flight_id = $r['event_pilot_round_flight_id'];
+			if( $first == 1 ){
+				$event_round_flights_string .= $r['event_pilot_round_flight_id'];
+				$first = 0;
+			}else{
+				$event_round_flights_string .= "," . $r['event_pilot_round_flight_id'];
+			}
 			$event_round_id = $r['event_round_id'];
-			$stmt = db_prep("
-				UPDATE event_pilot_round_flight
-				SET event_pilot_round_flight_status = 0 
-				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
-			");
-			$result = db_exec($stmt,array("event_pilot_round_flight_id" => $event_pilot_round_flight_id));
-			$stmt = db_prep("
-				UPDATE event_round
-				SET event_round_status = 0 
-				WHERE event_round_id = :event_round_id
-			");
-			$result = db_exec($stmt,array("event_round_id" => $event_round_id));
+			if( ! in_array( $event_round_id, $event_rounds ) ){
+				$event_rounds[] = $event_round_id;
+			}
 		}
+		$first = 1;
+		foreach( $event_rounds as $event_round_id ){
+			if( $first == 1 ){
+				$event_round_string .= $event_round_id;
+				$first = 0;
+			}else{
+				$event_round_string .= "," . $event_round_id;
+			}
+		}
+		# Now make one update for the event_pilot_round_flight table
+		$stmt = db_prep("
+			UPDATE event_pilot_round_flight
+			SET event_pilot_round_flight_status = 0 
+			WHERE event_pilot_round_flight_id IN ( $event_round_flights_string )
+		");
+		$result = db_exec($stmt,array());
+		# Update just the rounds
+		$stmt = db_prep("
+			UPDATE event_round
+			SET event_round_status = 0 
+			WHERE event_round_id IN ( $event_round_string )
+		");
+		$result = db_exec($stmt,array());
 	}
 	
 	# Step through each pilot and create the round entries (turning on if existing)
@@ -2031,10 +2052,9 @@ function import_import_gliderscore_f5j() {
 			}
 			# OK, now we have the event_pilot_round_id, so lets add the flights
 			
-			# Lets total the sub flights if there are any
 			$min = $r['min'];
 			$sec = sprintf("%02.f",$r['sec']);
-			
+
 			$stmt = db_prep("
 				SELECT *
 				FROM event_pilot_round_flight
@@ -2115,7 +2135,6 @@ function import_import_gliderscore_f5j() {
 				));
 				$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
 			}
-			
 		}
 	}
 	
