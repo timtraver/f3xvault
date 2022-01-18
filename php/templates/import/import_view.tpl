@@ -10,7 +10,7 @@
 
 
 		<h3 class="post-title entry-title">Import File for Event</h3>
-		<p>This import process can currently handle the export files from F3KScore for F3K events, and import files for F3F. They both follow the same format.</p>
+		<p>This import process can currently handle the export files from F3KScore for F3K events, and import files for F3F. They both follow the same format. It can now also handle import files from Gliderscore for F5J.</p>
 		<br>
 		
 		<form name="main" method="POST" enctype="multipart/form-data">
@@ -18,6 +18,15 @@
 		<input type="hidden" name="function" value="import_verify">
 		<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
+			<tr>
+				<th width="10%" nowrap>Type of file</th>
+				<td>
+					<select name="import_file_type">
+						<option value="manual">Manual File</option>
+						<option value="gliderscore_f5j">Gliderscore F5J File</option>
+					</select>
+				</td>
+			</tr>
 			{if $event->info.event_id!=0}
 			<tr>
 				<th width="10%" nowrap>Event Name</th>
@@ -53,7 +62,7 @@
 		</center>
 		</form>
 		
-		<h3 class="post-title entry-title">Import File Format</h3>
+		<h3 class="post-title entry-title">Import Manual File Format</h3>
 		<p>It is important that if you are creating a file format that is to be imported into F3XVault, that it follows these lines and fields <b>EXACTLY</b>.<br>
 			The file is a CSV formatted file, and text fields that may contain odd characters should be enclosed in quotes.
 		</p>
