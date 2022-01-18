@@ -82,6 +82,7 @@
 			</td>
 			<td style="background: white;"></td>
 			{foreach $e.rounds as $r}
+				{$round_number=$r@key}
 				{if $r@iteration <=9}
 				<td align="center"{if $r.event_pilot_round_rank==1 || ($event->info.event_type_code!='f3b' && $r.event_pilot_round_total_score==1000)} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
 					<div style="position:relative;">
