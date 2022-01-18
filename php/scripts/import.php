@@ -503,7 +503,7 @@ function import_import() {
 	$event['event_type_code'] = $_REQUEST['event_type_code'];
 	$event['f3f_group'] = $_REQUEST['f3f_group'];
 	
-	$e = new Event( $event_id );
+	$e = new Event( $event['event_id'] );
 	
 	if(isset($_REQUEST['event_start_dateMonth'])){
 		$event['event_start_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
@@ -1541,7 +1541,19 @@ function import_import_gliderscore_f5j() {
 	$event['club_id'] = $_REQUEST['club_id'];
 	$event['series_id'] = $_REQUEST['series_id'];
 	
-	$e = new Event( $event_id );
+	# Get location if location is specified
+	$location = array();
+	if( $event['location_id'] ){
+		$stmt = db_prep( "
+			SELECT *
+			FROM location
+			WHERE location_id = :location_id
+		" );
+		$result = db_exec( $stmt, array( "location_id" => $event['location_id'] ) );
+		$location = $result[0];
+	}
+	
+	$e = new Event( $event['event_id'] );
 	
 	if(isset($_REQUEST['event_start_dateMonth'])){
 		$event['event_start_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
@@ -1770,7 +1782,6 @@ function import_import_gliderscore_f5j() {
 		}
 		break;
 	}	
-	
 	# Modify event.rounds if its a flyoff
 	if( $flyoff == 1 ){
 		$newrounds = array();
@@ -1780,6 +1791,7 @@ function import_import_gliderscore_f5j() {
 		}
 		$event['rounds'] = $newrounds;
 	}
+
 	# Get list of pilots if there are any existing
 	
 	# Determine event classes to check in the options and set up the classes for the event
@@ -1840,11 +1852,16 @@ function import_import_gliderscore_f5j() {
 			$words = preg_split("/\,\s+/",$p['pilot_name'],2);
 			$last_name = ucwords($words[0]);
 			$first_name = ucwords($words[1]);
+			$location_string = '';
+			if( $location['state_id'] ){
+				$location_string = 'state_id = ' . $location['state_id'] . ",";
+			}
 			$stmt = db_prep("
 				INSERT INTO pilot
 				SET user_id = 0,
 					pilot_first_name = :pilot_first_name,
 					pilot_last_name = :pilot_last_name,
+					$location_string
 					country_id = 226
 			");
 			$result = db_exec($stmt,array(
@@ -1937,20 +1954,25 @@ function import_import_gliderscore_f5j() {
 				$event_round_string .= "," . $event_round_id;
 			}
 		}
+
 		# Now make one update for the event_pilot_round_flight table
-		$stmt = db_prep("
-			UPDATE event_pilot_round_flight
-			SET event_pilot_round_flight_status = 0 
-			WHERE event_pilot_round_flight_id IN ( $event_round_flights_string )
-		");
-		$result = db_exec($stmt,array());
+		if( $event_round_flights_string ){
+			$stmt = db_prep("
+				UPDATE event_pilot_round_flight
+				SET event_pilot_round_flight_status = 0 
+				WHERE event_pilot_round_flight_id IN ( $event_round_flights_string )
+			");
+			$result = db_exec($stmt,array());
+		}
 		# Update just the rounds
-		$stmt = db_prep("
-			UPDATE event_round
-			SET event_round_status = 0 
-			WHERE event_round_id IN ( $event_round_string )
-		");
-		$result = db_exec($stmt,array());
+		if( $event_round_string ){
+			$stmt = db_prep("
+				UPDATE event_round
+				SET event_round_status = 0 
+				WHERE event_round_id IN ( $event_round_string )
+			");
+			$result = db_exec($stmt,array());
+		}
 	}
 	
 	# Step through each pilot and create the round entries (turning on if existing)
@@ -1964,7 +1986,7 @@ function import_import_gliderscore_f5j() {
 			}
 			if($flyoff == 1){
 				# Add the existing rounds
-				$round_number = $round_number+$existing_rounds;
+				$round_number = $round_number + $existing_rounds;
 			}
 			$import_rounds[$round_number][$event_pilot_id] = $r;
 		}
@@ -1972,6 +1994,7 @@ function import_import_gliderscore_f5j() {
 
 	# Now lets step through the rounds and set the flights
 	foreach($import_rounds as $round_number => $ep){
+
 		# Make sure the round is set up
 		if($round_number == 0){
 			$event_round_score_status = 0;
