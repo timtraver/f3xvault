@@ -1554,18 +1554,27 @@ function import_import_gliderscore_f5j() {
 	}
 	
 	$e = new Event( $event['event_id'] );
-	
-	if(isset($_REQUEST['event_start_dateMonth'])){
-		$event['event_start_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
+	if( $event['event_id'] != 0 ){
+		# Lets fill in the data for the event array from the existing event
+		$event['event_name'] = $e->info['event_name'] != '' ? $e->info['event_name'] : $event['event_name'];
+		$event['event_start_date'] = $e->info['event_start_date'] != '' ? $e->info['event_start_date'] : $event['event_start_date'];
+		$event['event_end_date'] = $e->info['event_end_date'] != '' ? $e->info['event_end_date'] : $event['event_end_date'];
+		$event['location_id'] = $e->info['location_id'] != 0 ? $e->info['location_id'] : $event['location_id'];
+		$event['event_cd'] = $e->info['event_cd'] != 0 ? $e->info['event_cd'] : $event['event_cd'];
+		$event['club_id'] = $e->info['club_id'] != 0 ? $e->info['club_id'] : $event['club_id'];
 	}else{
-		$event['event_start_date'] = date("Y-m-d 00:00:00");
+		# Lets use the stuff that was entered
+		if(isset($_REQUEST['event_start_dateMonth'])){
+			$event['event_start_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_start_dateMonth'].'/'.$_REQUEST['event_start_dateDay'].'/'.$_REQUEST['event_start_dateYear']));
+		}else{
+			$event['event_start_date'] = date("Y-m-d 00:00:00");
+		}
+		if(isset($_REQUEST['event_end_dateMonth'])){
+			$event['event_end_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_end_dateMonth'].'/'.$_REQUEST['event_end_dateDay'].'/'.$_REQUEST['event_end_dateYear']));
+		}else{
+			$event['event_end_date'] = date("Y-m-d 00:00:00");
+		}
 	}
-	if(isset($_REQUEST['event_end_dateMonth'])){
-		$event['event_end_date'] = date("Y-m-d 00:00:00",strtotime($_REQUEST['event_end_dateMonth'].'/'.$_REQUEST['event_end_dateDay'].'/'.$_REQUEST['event_end_dateYear']));
-	}else{
-		$event['event_end_date'] = date("Y-m-d 00:00:00");
-	}
-
 	$flyoff = 0;
 	if(isset($_REQUEST['flyoff']) && ($_REQUEST['flyoff'] == 'on' || $_REQUEST['flyoff'] == 1)){
 		$flyoff = 1;
@@ -1741,7 +1750,6 @@ function import_import_gliderscore_f5j() {
 	}
 	# If its a flyoff round, then lets get the existing number of rounds
 	if($flyoff == 1){
-		$e = new Event($event['event_id']);
 		$e->get_rounds();
 		$existing_rounds = count($e->rounds);
 		# Lets figure out the next round flyoff number
@@ -1782,16 +1790,6 @@ function import_import_gliderscore_f5j() {
 		}
 		break;
 	}	
-	# Modify event.rounds if its a flyoff
-	if( $flyoff == 1 ){
-		$newrounds = array();
-		foreach( $event['rounds'] as $round_number => $r ){
-			$round_number += $existing_rounds;
-			$newrounds[$round_number] = $r;
-		}
-		$event['rounds'] = $newrounds;
-	}
-
 	# Get list of pilots if there are any existing
 	
 	# Determine event classes to check in the options and set up the classes for the event
@@ -1994,7 +1992,6 @@ function import_import_gliderscore_f5j() {
 
 	# Now lets step through the rounds and set the flights
 	foreach($import_rounds as $round_number => $ep){
-
 		# Make sure the round is set up
 		if($round_number == 0){
 			$event_round_score_status = 0;
