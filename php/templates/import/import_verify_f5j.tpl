@@ -181,6 +181,37 @@
 {literal}
 <script>
 $(function() {
+	$("#event_name").autocomplete({
+		source: "/lookup.php?function=lookup_event",
+		minLength: 2, 
+		highlightItem: true, 
+        matchContains: true,
+        autoFocus: true,
+        scroll: true,
+        scrollHeight: 300,
+   		search: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "inline";
+		},
+   		select: function( event, ui ) {
+			document.main.event_id.value = ui.item.id;
+		},
+   		change: function( event, ui ) {
+   			if(document.main.event_name.value==''){
+				document.main.event_id.value = 0;
+			}
+		},
+   		response: function( event, ui ) {
+   			var loading=document.getElementById('loading_event');
+			loading.style.display = "none";
+   			var mes=document.getElementById('event_message');
+			if(ui.content && ui.content.length){
+				mes.innerHTML = ' Found ' + ui.content.length + ' results. Use Arrow keys to select';
+			}else{
+				mes.innerHTML = ' No Results Found. Use Add button to add new location.';
+			}
+		}
+	});
 	$("#location_name").autocomplete({
 		source: "/lookup.php?function=lookup_location",
 		minLength: 2, 
