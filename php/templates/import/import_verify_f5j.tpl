@@ -52,6 +52,9 @@
 			</td>
 		</tr>
 		<tr>
+			<th colspan="9">The following fields can be used to automatically link to existing data upon import. They will NOT create new values for any of the fields.</th>
+		</tr>
+		<tr>
 			<th colspan="2">Contest Director</th>
 			<td colspan="5">
 				<input type="text" id="event_cd_name" name="event_cd_name" size="40" value="{$event.cd_name|escape}">
