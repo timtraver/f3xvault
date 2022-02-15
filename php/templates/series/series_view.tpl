@@ -95,12 +95,22 @@
 		</form>
 
 		{$event_num=1}
-		<h2 class="post-title entry-title">Series Overall Classification</h2>
+		<h2 class="post-title entry-title">Series Overall Standings</h2>
 		<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
 		<tr>
 			<th colspan="2" align="right" nowrap></th>
 			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
-				Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
+				{assign var='best' value='0'}
+				{foreach $series->options as $key => $o}
+					{if $o.series_option_type_code == 'best'}
+						{assign var="best" value=$o.series_option_value}
+					{/if}
+				{/foreach}
+				{if $best > 0}
+					Series1 Events ( Best {$best|escape} out of {$series->completed_events|escape} Completed Events )
+				{else}
+					Series2 Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
+				{/if}
 			</th>
 			<th width="5%" nowrap>Total Score</th>
 			{if $series->info.series_scoring_type=='standard'}
