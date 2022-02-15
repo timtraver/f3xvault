@@ -11,12 +11,24 @@
 					{$f.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}
 				</td>
 			</tr>
+			{if $f.flight_type_start_height}
+			<tr>
+				<td></td>
+				<td>Time</td>
+				<td>Land</td>
+				<td>Start</td>
+			</tr>
+			{/if}
 			<tr>
 				<th nowrap="nowrap">{$f.flight_type_name}</th>
-				<td nowrap="nowrap">
+				<td nowrap="nowrap" align="right">
 					{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
-					{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
-					{if $f.flight_type_start_height} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_start_height|escape}{/if}
+				</td>
+				<td nowrap="nowrap" align="right">
+					{if $f.flight_type_landing}{$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
+				</td>
+				<td nowrap="nowrap" align="right">
+					{if $f.flight_type_start_height}{$f.pilots.$event_pilot_id.event_pilot_round_flight_start_height|escape}{/if}
 				</td>
 			</tr>
 		{/if}
