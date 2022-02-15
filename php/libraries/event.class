@@ -1532,6 +1532,7 @@ class Event {
 						}
 					}
 					if($r['event_round_flyoff'] != 0){
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_id']			= $this->pilots[$event_pilot_id]['pilot_id'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_first_name']	= $this->pilots[$event_pilot_id]['pilot_first_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_last_name']	= $this->pilots[$event_pilot_id]['pilot_last_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_code']		= $this->pilots[$event_pilot_id]['country_code'];
@@ -1580,6 +1581,7 @@ class Event {
 							$flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] -= $penalty;
 						}
 					}else{
+						$subtotals[$event_pilot_id]['pilot_id']			= $this->pilots[$event_pilot_id]['pilot_id'];
 						$subtotals[$event_pilot_id]['pilot_first_name']	= $this->pilots[$event_pilot_id]['pilot_first_name'];
 						$subtotals[$event_pilot_id]['pilot_last_name']	= $this->pilots[$event_pilot_id]['pilot_last_name'];
 						$subtotals[$event_pilot_id]['country_code']		= $this->pilots[$event_pilot_id]['country_code'];
