@@ -54,20 +54,32 @@
 		{/if}
 		{$round_number=$r.event_round_number}
 		{if $round_number >= $start_round && $round_number <= $end_round}
-		<th class="info" width="5%" align="center" nowrap>
+		<th width="5%" align="center" nowrap>
 			<div style="position:relative;text-align: center;">
-			<span>
 				{$flight_type_id=$r.flight_type_id}
-				{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}
-					<font color="red"><b>Round Not Currently Scored</b></font><br>
-				{/if}
-				{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
-					View Details of Round<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
-				{else}
-					View Details of Round {$r.event_round_number|escape}
-				{/if}
-			</span>
-			<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="btn-link" title="Edit Round">{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}</a>
+				<a href="?action=event&function=event_round_edit&event_id={$event->info.event_id}&event_round_id={$r.event_round_id}" class="tooltip_score">
+					{if $r.event_round_score_status == 0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score == 0 && $flight_type_id != 0)}
+						<del><font color="red">
+					{/if}
+					Round {$r.event_round_number|escape}
+					{if $r.event_round_score_status == 0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score == 0 && $flight_type_id != 0)}
+						</del></font>
+					{/if}
+					<span>
+						<img class="callout" src="/images/callout.gif">
+						{if $r.event_round_score_status == 0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score == 0 && $flight_type_id != 0)}
+							<font color="red"><b>Round Not Currently Scored</b></font><br>
+						{/if}
+						Click To<br>
+						{if $event->flight_types.$flight_type_id.flight_type_code|strstr:"f3k"}
+							View Details of Round {$r.event_round_number|escape}<br>{$event->flight_types.$flight_type_id.flight_type_name|escape}
+						{else}
+							View Details of Round {$r.event_round_number|escape}
+						{/if}
+						<br>
+					</span>
+
+				</a>
 			</div>
 		</th>
 		{/if}
