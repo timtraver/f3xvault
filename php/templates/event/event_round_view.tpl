@@ -140,9 +140,6 @@
 				{if $ft.flight_type_start_penalty}
 					<th align="center" style="text-align: center;">Start Penalty</th>
 				{/if}
-				{if $ft.flight_type_start_height}
-					<th align="center" style="text-align: center;">Start Height</th>
-				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center" style="text-align: center;" nowrap>
 						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
@@ -159,6 +156,9 @@
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center" style="text-align: center;">Landing</th>
+				{/if}
+				{if $ft.flight_type_start_height}
+					<th align="center" style="text-align: center;">Start Height</th>
 				{/if}
 				{if $ft.flight_type_laps}
 					<th align="center" style="text-align: center;">Laps</th>
@@ -205,11 +205,6 @@
 							{$p.event_pilot_round_flight_start_penalty|escape}
 						</td>
 					{/if}
-					{if $ft.flight_type_start_height}
-						<td align="center" nowrap>
-							{$p.event_pilot_round_flight_start_height|escape}
-						</td>
-					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 						<td align="center" nowrap>
 							{if $ft.flight_type_sub_flights != 0}
@@ -232,6 +227,11 @@
 								<input type="checkbox" tabindex="{$tabindex}" name="pilot_over_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}"{if $p.event_pilot_round_flight_over==1}CHECKED{/if} onChange="save_data(this);">
 								{$tabindex=$tabindex+1}
 							{/if}
+						</td>
+					{/if}
+					{if $ft.flight_type_start_height}
+						<td align="center" nowrap>
+							{$p.event_pilot_round_flight_start_height|escape}
 						</td>
 					{/if}
 					{if $ft.flight_type_landing}
