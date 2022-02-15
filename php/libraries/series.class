@@ -7,6 +7,7 @@
 #       This is the series Class
 #
 ############################################################################
+include_library( "event.class" );
 
 class Series {
 	# Global class to handle series data and manipulation
@@ -44,8 +45,8 @@ class Series {
 		$stmt = db_prep("
 			SELECT  * 
 			FROM series_option so
-			LEFT JOIN series_option_type sot ON so.series_option_type_id
-			WHERE so.series_id  =:series_id
+			LEFT JOIN series_option_type sot ON so.series_option_type_id = sot.series_option_type_id
+			WHERE so.series_id  = :series_id
 				AND so.series_option_status = 1
 		");
 		$options = db_exec($stmt,array("series_id" => $this->series_id));
@@ -91,6 +92,20 @@ class Series {
 			}
 			$events[$event_id]['pilots'] = $pilots;
 			$events[$event_id]['total_pilots'] = count($pilots);
+			
+			# Let us get any flyoff rounds to adjust the final order of the pilots for bonus points in the f5jtour calc type
+			$ev = new Event( $event_id );
+			$ev->get_rounds();
+			$ev->calculate_event_totals();
+			if( $ev->flyoff_totals ){
+				foreach( $ev->flyoff_totals as $flyoff_number => $flyoff ){
+					foreach( $flyoff['pilots'] as $key => $p ){
+						$pilot_id = $p['pilot_id'];
+						# So now change the finishing order for the pilot in the main event pilots array
+						$events[$event_id]['pilots'][$pilot_id]['event_pilot_position'] = $p['overall_rank'];
+					}
+				}
+			}
 		}
 		
 		# Lets get the number of rounds that the events have
@@ -132,9 +147,13 @@ class Series {
 
 		# Lets get the event drops
 		$drop_rounds = array();
+		$best = 0;
 		foreach($this->options as $o){
-			if(preg_match("/drop/",$o['series_option_type_code'])){
+			if( $o['series_option_type_code'] == 'drop' ){
 				$drop_rounds[] = $o['series_option_value'];
+			}
+			if( $o['series_option_type_code'] == 'best' ){
+				$best = $o['series_option_value'];
 			}
 		}
 		# Now lets see how many drops based on the number of events
@@ -145,9 +164,14 @@ class Series {
 			}
 		}
 		$number_drops = 0;
-		foreach($drop_rounds as $event_number){
-			if($number_events >= $event_number){
-				$number_drops++;
+		if( $best ){
+			# This series uses a best of number
+			$number_drops = $number_events - $best;
+		}else{
+			foreach($drop_rounds as $event_number){
+				if($number_events >= $event_number){
+					$number_drops++;
+				}
 			}
 		}
 		switch($this->info['series_scoring_type']){
@@ -159,6 +183,9 @@ class Series {
 				break;
 			case 'teamusa':
 				$totals = $this->calculate_series_totals_teamusa($number_drops);
+				break;
+			case 'f5jtour':
+				$totals = $this->calculate_series_totals_f5jtour($number_drops);
 				break;
 			default :
 				$totals = $this->calculate_series_totals_standard($number_drops);
@@ -381,6 +408,85 @@ class Series {
 			# Create an array of all of the scores
 			$scores[$pilot_id] = $t['total_score'];
 			if($t['total_score']>$max_points){
+				$max_points = $t['total_score'];
+			}
+		}
+		arsort($scores);
+		$count = 1;
+		foreach($scores as $pilot_id => $t){
+			$subtotals[$pilot_id]['overall_rank'] = $count;
+
+			# Lets calculate the percentage from the leader
+			if($max_points == 0){
+				$subtotals[$pilot_id]['pilot_total_percentage'] = 0;
+			}else{
+				$subtotals[$pilot_id]['pilot_total_percentage'] = sprintf("%02.3f",($subtotals[$pilot_id]['total_score'] / $max_points) * 100);
+			}
+			$totals[$pilot_id] = $subtotals[$pilot_id];
+			$count++;
+		}
+		
+		return $totals;
+	}
+	function calculate_series_totals_f5jtour($number_drops){
+		# Function to calculate the f5jtour scores for pilots in series
+		$subtotals = array();
+		$totals = array();
+		foreach($this->events as $event_id => $e){
+			$multiple = $e['event_series_multiple'];
+			if($e['total_rounds'] == 0){
+				continue;
+			}
+			# Get total pilots that have at least one score
+			$total_pilots = 0;
+			foreach( $e['pilots'] as $pilot_id => $p ){
+				if( $p['event_pilot_total_score'] > 0 ){
+					$total_pilots++;
+				}
+			}
+			foreach($e['pilots'] as $pilot_id => $p){
+				$sub = ( $p['event_pilot_total_percentage'] * 10 * $multiple ) + ( $total_pilots - $p['event_pilot_position'] + 1 );
+				$subtotals[$pilot_id]['events'][$event_id]['event_score'] = $sub;
+				$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = $p['event_pilot_position'];
+				
+				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
+				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
+				$subtotals[$pilot_id]['total_score'] += $sub;
+			}
+		}
+
+		# Lets create the array to figure out which to drop
+		$scores = array();
+		foreach($subtotals as $pilot_id => $p){
+			foreach($this->events as $event_id => $e){
+				if($e['total_rounds'] == 0){
+					continue;
+				}
+				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
+			}
+		}
+		# Now lets step through each scores entry and sort it and set the ones to be dropped
+		foreach($scores as $pilot_id => $s){
+			asort($s);
+			# Now lets step through the drop number and set those rounds to be dropped
+			$drop = 0;
+			foreach($s as $event_id => $e){
+				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+					# Set the drop flag for this event and subtract the score
+					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
+					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $e;
+					$drop++;
+				}
+			}
+		}
+
+		# Now determine the overall rank of the pilots
+		$scores = array();
+		$max_points = 0;
+		foreach($subtotals as $pilot_id => $t){
+			# Create an array of all of the scores
+			$scores[$pilot_id] = $t['total_score'];
+			if($t['total_score'] > $max_points){
 				$max_points = $t['total_score'];
 			}
 		}
