@@ -22,7 +22,8 @@ $need_login = array(
 	"series_save",
 	"series_save_multiples",
 	"series_param_save",
-	"series_option_add_drop",
+	"series_option_add_parameter",
+	"series_option_del_parameter",
 	"series_user_save",
 	"series_user_delete",
 	"series_event_save",
@@ -45,7 +46,7 @@ if(check_user_function($function)){
 				eval("\$actionoutput = $function();");
 			}else{
 				# They aren't allowed
-				user_message("Sorry, but you do not have permission to edit this club. Please contact the series creator for access.",1);
+				user_message("Sorry, but you do not have permission to edit this series. Please contact the series creator for access.",1);
 				$actionoutput = series_view();
 			}
 		}else{
@@ -422,30 +423,54 @@ function series_param_save() {
 	user_message("Series Parameters Saved.");
 	return series_edit();
 }
-function series_option_add_drop() {
+function series_option_add_parameter() {
 
 	$series_id = intval($_REQUEST['series_id']);
 	$drop_round = intval($_REQUEST['drop_round']);
+	$best_of = intval($_REQUEST['best_of']);
 
+	if( $best_of != 0 ){
+		$type = 'best';
+	}else{
+		$type = 'drop';
+	}
 	# First get the drop type
 	$stmt = db_prep("
 		SELECT *
 		FROM series_option_type
-		WHERE series_option_type_code = 'drop'
+		WHERE series_option_type_code = :type
 	");
-	$result = db_exec($stmt,array());
+	$result = db_exec( $stmt, array( "type" => $type ) );
 	$series_option_type_id = $result[0]['series_option_type_id'];
 	# Now lets add one
 	$stmt = db_prep("
 		INSERT INTO series_option
 		SET series_id = :series_id,
 			series_option_type_id = :series_option_type_id,
-			series_option_value = :drop_round,
+			series_option_value = :value,
 			series_option_status = 1
 	");
-	$result = db_exec($stmt,array("series_id" => $series_id,"series_option_type_id" => $series_option_type_id,"drop_round" => $drop_round));
+	if( $type == 'drop' ){
+		$result = db_exec( $stmt, array( "series_id" => $series_id, "series_option_type_id" => $series_option_type_id, "value" => $drop_round ) );
+	}else{
+		$result = db_exec( $stmt, array( "series_id" => $series_id, "series_option_type_id" => $series_option_type_id, "value" => $best_of ) );
+	}
+	user_message("Added the option for this series.");
+	return series_edit();
+}
+function series_option_del_parameter() {
 
-	user_message("Added a drop round for this series.");
+	$series_id = intval($_REQUEST['series_id']);
+	$series_option_id = intval($_REQUEST['series_option_id']);
+
+	# Now lets add one
+	$stmt = db_prep("
+		UPDATE series_option
+		SET series_option_status = 0
+		WHERE series_option_id = :series_option_id
+	");
+	$result = db_exec( $stmt, array( "series_option_id" => $series_option_id ) );
+	user_message("Removed the option.");
 	return series_edit();
 }
 function series_user_save() {

@@ -81,6 +81,13 @@
 		</td>
 	</tr>
 	<tr>
+		<th>USA F5J Tour</th>
+		<td>
+			<input type="radio" name="series_scoring_type" value="f5jtour"{if $series->info.series_scoring_type=='f5jtour'} CHECKED{/if}> 
+			This scoring gives the normalized score, plus bonus points based on number of participants.
+		</td>
+	</tr>
+	<tr>
 		<td colspan="3" style="text-align: center;">
 			<input type="submit" value=" Save Series Info{if $from} and Return{/if} " class="btn btn-primary btn-rounded">
 		</td>
@@ -100,7 +107,7 @@
 	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-bordered">
 	<tr>
-		<th colspan="2" align="left">The Following Specific Parameters Are for this series</th>
+		<th colspan="3" align="left">The Following Specific Parameters Are for this series</th>
 	</tr>
 	{foreach $series->options as $o}
 	<tr>
@@ -114,13 +121,18 @@
 			{else}
 					<input type="text" name="option_{$o.series_option_type_id|escape}_{$o.series_option_id|escape}" size="{$o.series_option_type_size|escape}" value="{$o.series_option_value|escape}"> 
 			{/if}
+			
+		</td>
+		<td width="2%">
+			<a href="?action=series&function=series_option_del_parameter&series_id={$series->info.series_id|escape:'url'}&series_option_id={$o.series_option_id|escape:'url'}" title="Remove Option" onClick="return confirm('Are you sure you wish to remove this option?');"><img src="/images/del.gif"></a>
 		</td>
 	</tr>
 	{/foreach}
 	<tr>
-		<td colspan="2">
+		<td colspan="3">
 			<input type="submit" value=" Save These Series Parameters " class="btn btn-primary btn-rounded">
-			<input type="button" value=" Add Drop " class="btn btn-primary btn-rounded" onClick="var round=prompt('Enter Round for new drop :');if(round!=null && round!=''){ldelim}document.add_drop.drop_round.value=round;document.add_drop.submit();{rdelim}">
+			<input type="button" value=" Add Drop " class="btn btn-primary btn-rounded" onClick="var round=prompt('Enter Round for new drop :');if(round!=null && round!=''){ldelim}document.add_parameter.drop_round.value=round;document.add_parameter.submit();{rdelim}">
+			<input type="button" value=" Add Best Number of Events " class="btn btn-primary btn-rounded" onClick="var best=prompt('Enter best X Events :');if(best!=null && best!=''){ldelim}document.add_parameter.best_of.value=best;document.add_parameter.submit();{rdelim}">
 		</td>
 	</tr>
 	
@@ -171,7 +183,8 @@
 	<tr>
 		<td>{$e.event_start_date|date_format:"Y-m-d"} - {$e.event_name|escape}</td>
 		<td width="2%">
-			<a href="?action=series&function=series_event_delete&series_id={$series->info.series_id|escape:'url'}&event_series_id={$e.event_series_id|escape:'url'}" title="Remove Event" onClick="return confirm('Are you sure you wish to remove this event?');"><img src="/images/del.gif"></a></td>
+			<a href="?action=series&function=series_event_delete&series_id={$series->info.series_id|escape:'url'}&event_series_id={$e.event_series_id|escape:'url'}" title="Remove Event" onClick="return confirm('Are you sure you wish to remove this event?');"><img src="/images/del.gif"></a>
+		</td>
 	</tr>
 	{/foreach}
 	<tr>
@@ -198,11 +211,18 @@
 	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	{/if}
 	</form>
-	<form name="add_drop" method="POST">
+	<form name="add_parameter" method="POST">
 	<input type="hidden" name="action" value="series">
-	<input type="hidden" name="function" value="series_option_add_drop">
+	<input type="hidden" name="function" value="series_option_add_parameter">
 	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 	<input type="hidden" name="drop_round" value="0">
+	<input type="hidden" name="best_of" value="0">
+	</form>
+	<form name="del_parameter" method="POST">
+	<input type="hidden" name="action" value="series">
+	<input type="hidden" name="function" value="series_option_del_parameter">
+	<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
+	<input type="hidden" name="series_option_id" value="0">
 	</form>
 
 	</div>
