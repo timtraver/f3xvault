@@ -5,12 +5,19 @@
 	{$event_round_number=$r@key}
 	{foreach $event->rounds.$event_round_number.flights as $f}
 		{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
-			<tr><th nowrap="nowrap">{$f.flight_type_name}</th>
-			<td nowrap="nowrap">
-				{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
-				{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
-				{if $f.flight_type_start_height} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_start_height|escape}{/if}
-			</td>
+			<tr>
+				<th nowrap="nowrap">Group</th>
+				<td nowrap="nowrap">
+					{$f.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}
+				</td>
+			</tr>
+			<tr>
+				<th nowrap="nowrap">{$f.flight_type_name}</th>
+				<td nowrap="nowrap">
+					{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
+					{if $f.flight_type_landing} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
+					{if $f.flight_type_start_height} - {$f.pilots.$event_pilot_id.event_pilot_round_flight_start_height|escape}{/if}
+				</td>
 			</tr>
 		{/if}
 		{if $f.flight_type_code|strstr:'distance'}
