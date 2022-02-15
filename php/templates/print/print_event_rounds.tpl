@@ -44,9 +44,6 @@
 				{if $ft.flight_type_start_penalty}
 					<th align="center" style="text-align: center;">Start Penalty</th>
 				{/if}
-				{if $ft.flight_type_start_height}
-					<th align="center" style="text-align: center;">Start Height</th>
-				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
 					<th align="center" style="text-align: center;" nowrap>
 						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
@@ -63,6 +60,9 @@
 				{/if}
 				{if $ft.flight_type_landing}
 					<th align="center" style="text-align: right;">Landing</th>
+				{/if}
+				{if $ft.flight_type_start_height}
+					<th align="center" style="text-align: center;">Start Height</th>
 				{/if}
 				{if $ft.flight_type_laps}
 					<th align="center" style="text-align: right;">Laps</th>
@@ -112,11 +112,6 @@
 							{$p.event_pilot_round_flight_start_penalty|escape}
 						</td>
 					{/if}
-					{if $ft.flight_type_start_height}
-						<td align="center" nowrap>
-							{$p.event_pilot_round_flight_start_height|escape} m
-						</td>
-					{/if}
 					{if $f.flight_type_minutes || $f.flight_type_seconds}
 						<td align="right" nowrap>
 							{if $ft.flight_type_sub_flights!=0}
@@ -143,6 +138,11 @@
 					{/if}
 					{if $f.flight_type_landing}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+					{/if}
+					{if $ft.flight_type_start_height}
+						<td align="center" nowrap>
+							{$p.event_pilot_round_flight_start_height|escape} m
+						</td>
 					{/if}
 					{if $f.flight_type_laps}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
@@ -199,6 +199,7 @@
 						{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 					</td>
 					<td>{$event->pilots.$event_pilot_id.pilot_fai}</td>
+					<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai_license}</td>
 						{if $f.flight_type_group}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 							{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
@@ -222,6 +223,11 @@
 						{/if}
 						{if $f.flight_type_landing}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+						{/if}
+						{if $f.flight_type_start_height}
+							<td align="center" nowrap>
+								{$p.event_pilot_round_flight_start_height|escape} m
+							</td>
 						{/if}
 						{if $f.flight_type_laps}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>

@@ -185,7 +185,7 @@
 				{$oldgroup=$p.event_pilot_round_flight_group|escape}
 			{/if}
 			{$time_disabled=0}
-			<tr style="background-color: {$groupcolor};">
+			<tr style="background-color: {$groupcolor};height: 20px;">
 				<td style="background-color: lightgrey;">{$num}</td>
 				<td valign="center" nowrap>
 					{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
@@ -329,6 +329,11 @@
 						{if $ft.flight_type_landing}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
 							{$tabindex=$tabindex+1}
+						{/if}
+						{if $ft.flight_type_start_height}
+							<td align="center" nowrap>
+								{$p.event_pilot_round_flight_start_height|escape}
+							</td>
 						{/if}
 						{if $ft.flight_type_laps}
 							<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
