@@ -1710,6 +1710,27 @@ function import_import_gliderscore_f5j() {
 		));
 		user_message("Created New Event.");
 		$event['event_id'] = $GLOBALS['last_insert_id'];
+		
+		# Now lets add an event option to have the truncated calculation on for this type of event
+		# Get the option_type_id for this event type for the truncation
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_type_option
+			WHERE event_type_option_code = 'f5j_calc_truncate'
+		" );
+		$result = db_exec( $stmt, array() );
+		$event_type_option_id = $result[0]['event_type_option_id'];
+		$stmt = db_prep( "
+			INSERT INTO event_option
+			SET event_id = :event_id,
+				event_type_option_id = :event_type_option_id,
+				event_option_vallue = 1,
+				event_option_status = 1 
+		" );
+		$result = db_exec( $stmt, array(
+			"event_id" => $event['event_id'],
+			"event_type_option_id" => $event_type_option_id
+		) );
 	}
 	# Check to see if it is part of the selected series yet
 	if( $event['series_id'] != 0 ){
