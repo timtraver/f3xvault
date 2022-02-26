@@ -3677,6 +3677,16 @@ function save_individual_flight(){
 		}
 		$field_value = preg_replace("/,/",'.',$field_value);
 	}
+	if(preg_match("/^pilot_reflight_(\S+)\_(\d+)\_(\d+)_(\d+)$/",$field_name,$match)){
+		$field = $match[1];
+		$event_pilot_round_flight_id = $match[2];
+		$event_pilot_id = $match[3];
+		$event_round_flight_type_id = $match[4];
+		if($field_value == 'on'){
+			$field_value = 1;
+		}
+		$field_value = preg_replace("/,/",'.',$field_value);
+	}
 
 	# Lets determine if we need to create a new event round record first
 	if($event_round_id == 0){
