@@ -2252,7 +2252,7 @@ function event_pilot_save() {
 			WHERE pilot_id = :pilot_id
 			AND location_id = :location_id
 		");
-		$result = db_exec($stmt,array("pilot_id" => $pilot['pilot_id'],"location_id" => $e->info['location_id']));
+		$result = db_exec($stmt,array("pilot_id" => $pilot_id,"location_id" => $e->info['location_id']));
 		if(!isset($result[0])){
 			# Doesn't have one of these locations, so lets put one in
 			$stmt = db_prep("
@@ -2262,7 +2262,7 @@ function event_pilot_save() {
 					pilot_location_status = 1
 			");
 			$result2 = db_exec($stmt,array(
-				"pilot_id"		=> $pilot['pilot_id'],
+				"pilot_id"		=> $pilot_id,
 				"location_id"	=> $e->info['location_id']
 			));
 		}
@@ -3776,6 +3776,9 @@ function save_individual_flight(){
 				$field_value = 0;
 			}
 			$setline = 'event_pilot_round_flight_seconds = :value ';
+			break;
+		case "startheight":
+			$setline = 'event_pilot_round_flight_start_height = :value';
 			break;
 		case "over":
 			$setline = 'event_pilot_round_flight_over = :value';
