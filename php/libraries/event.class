@@ -1265,7 +1265,7 @@ class Event {
 						$raw -= $v['event_pilot_round_flight_landing'];
 					}
 				}
-				$temp_flight['event_pilot_round_flight_raw_score']	= round($raw,$this->event_calc_accuracy);
+				$temp_flight['event_pilot_round_flight_raw_score']	= round_calculation( $this, $raw, $this->event_calc_accuracy );
 				$temp_flight['event_pilot_round_flight_id']			= $v['event_pilot_round_flight_id'];
 				$temp_flight['event_pilot_round_flight_group']		= $v['event_pilot_round_flight_group'];
 				$temp_flight['event_pilot_round_flight_reflight']	= $v['event_pilot_round_flight_reflight'];
@@ -1327,7 +1327,7 @@ class Event {
 					# If it made it here, then it means there was a tie, so we have to compare the times
 					$event_pilot_id = $f['event_pilot_id'];
 					$gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] -= 200;
-					$gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] += round( ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
+					$gps_flights[$group][$key]['event_pilot_round_flight_raw_score'] += round_calculation( $this,  ( $fast_time / $f['total_time'] ) * 200, $this->event_calc_accuracy );
 				}
 			}
 
@@ -1411,9 +1411,9 @@ class Event {
 							$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = 0;
 						}else{
 							if($normalize == 1){
-								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round(($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']/$max[$flight_type_id][$group]['raw']) * 1000,$this->event_calc_accuracy);
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round_calculation( $this, ($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score']/$max[$flight_type_id][$group]['raw']) * 1000,$this->event_calc_accuracy);
 							}else{
-								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round($flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'],$this->event_calc_accuracy);
+								$flight[$flight_type_id][$key]['event_pilot_round_flight_score'] = round_calculation( $this, $flight[$flight_type_id][$key]['event_pilot_round_flight_raw_score'],$this->event_calc_accuracy);
 							}
 						}
 				}
@@ -1508,7 +1508,7 @@ class Event {
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['event_pilot_round_rank'] = 0;
 						continue;
 					}
-					$sub = round($p['event_pilot_round_flight_score'],$this->event_calc_accuracy);
+					$sub = round_calculation( $this, $p['event_pilot_round_flight_score'],$this->event_calc_accuracy);
 					$penalty = $p['event_pilot_round_flight_penalty'];
 					# Lets step through each of the reflights and see if there is a higher score
 					foreach($r['reflights'] as $rftid => $rp){
@@ -1776,9 +1776,9 @@ class Event {
 				$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = 0;
 			}else{
 				if( $this->info['event_type_score_inverse'] == 1 ){
-					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round( 1 / ($subtotals[$event_pilot_id]['total']/$min_points) * 100,3);
+					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round_calculation( $this,  1 / ($subtotals[$event_pilot_id]['total']/$min_points) * 100,3);
 				}else{
-					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round(($subtotals[$event_pilot_id]['total']/$max_points) * 100,3);
+					$subtotals[$event_pilot_id]['event_pilot_total_percentage'] = round_calculation( $this, ($subtotals[$event_pilot_id]['total']/$max_points) * 100,3);
 				}
 			}
 			$totals[] = $subtotals[$event_pilot_id];
@@ -1862,9 +1862,9 @@ class Event {
 					$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = 0;
 				}else{
 					if( $this->info['event_type_score_inverse'] == 1 ){
-						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round( 1 / ($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $min_points) * 100, 3 );
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round_calculation( $this,  1 / ($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $min_points) * 100, 3 );
 					}else{
-						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round(($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $max_points) * 100, 3 );
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['event_pilot_total_percentage'] = round_calculation( $this, ($flyoff_subtotals[$flyoff_number][$event_pilot_id]['total'] / $max_points) * 100, 3 );
 					}
 				}
 				$flyoff_totals[$flyoff_number]['total_rounds'] = $flyoff_round_count[$flyoff_number];
