@@ -1040,6 +1040,26 @@ function date_stamp_add_offset($stamp,$timezone){
 	}
 	return $stamp + $offset;
 }
+
+function round_calculation( $event, $number, $precision ){
+	# Function to round a calculation value based on the settings for the event
+	# event is the event class
+	# number is the calculated number
+	# precision is the number of decimals to calculate to
+
+	$truncate = 0;
+	foreach( $event->options as $option ){
+		if( preg_match( "/_calc_truncate/", $option['event_type_option_code'] ) ){
+			$truncate = $option['event_option_value'];
+		}
+	}
+	if( $truncate ){
+		$return_value = truncate( $number, $precision );
+	}else{
+		$return_value = round( $number, $precision );
+	}
+	return $return_value;
+}
 function round_down($number,$precision){
     $numberpart=explode(".",$number);
     $numberpart[1]=substr_replace($numberpart[1],".",$precision,0);
@@ -1054,6 +1074,11 @@ function round_down($number,$precision){
     }
 	$ceil_number= array($numberpart[0],$numberpart[1]);
 	return implode(".",$ceil_number);
+}
+function truncate( $number, $precision = 0 ){
+   // warning: precision is limited by the size of the int type
+   $shift = pow( 10, $precision );
+   return intval( $number * $shift ) / $shift;
 }
 
 /**
