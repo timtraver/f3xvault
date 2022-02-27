@@ -30,9 +30,9 @@
 		<tr>
 			<th style="text-align:right;">Location</th>
 			<td>
-			{$series->info.series_area|escape},{$series->info.state_code|escape} {$series->info.country_code|escape}
+			{$series->info.series_area|escape},{if $series->info.state_code != NULL}{$series->info.state_code|escape}{/if} {$series->info.country_code|escape}
 			{if $series->info.country_code}<img src="/images/flags/countries-iso/shiny/24/{$series->info.country_code|escape}.png" style="vertical-align: middle;">{/if}
-			{if $series->info.state_name && $series->info.country_code=="US"}<img src="/images/flags/states/24/{$series->info.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">{/if}
+			{if $series->info.state_name != NULL && $series->info.country_code=="US"}<img src="/images/flags/states/24/{$series->info.state_name|replace:' ':'-'}-Flag-24.png" style="vertical-align: middle;">{/if}
 			</td>
 		</tr>
 		<tr>
@@ -48,6 +48,8 @@
 					Position Scoring - Event position. Lower is better.
 				{elseif $series->info.series_scoring_type=='teamusa'}
 					USA Team Selects Scoring - Top 30% receive a point. Double points for multiple day event.
+				{elseif $series->info.series_scoring_type=='f5jtour'}
+					USA F5J Tour - Event Percentage x 1000 plus bonus points for number of pilots if 2 day event.
 				{/if}
 			</td>
 		</tr>
