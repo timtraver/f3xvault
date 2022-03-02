@@ -72,7 +72,7 @@ class searchEvents {
 
 		$event_type_code = $this->api->input_variables['event_type_code'];
 		if($event_type_code != ''){
-			$event_type_string = "AND et.event_type_code = '$event_type_code'";
+			$event_type_string = "AND et.event_type_code LIKE '$event_type_code" . '%' . "'";
 		}else{
 			$event_type_string = '';
 		}
