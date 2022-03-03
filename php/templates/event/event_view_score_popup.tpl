@@ -1,26 +1,24 @@
 <span>
 	<img class="callout" src="/images/callout.gif">
-	<strong>Flight Detail</strong><br>
 	<table>
 	{$event_round_number=$r@key}
 	{foreach $event->rounds.$event_round_number.flights as $f}
 		{if $f.flight_type_code|strstr:'duration' || $f.flight_type_code|strstr:'f3k'}
 			<tr>
-				<th nowrap="nowrap">Group</th>
-				<td nowrap="nowrap">
-					{$f.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}
-				</td>
+				<th colspan="4" nowrap="nowrap" style="text-align: center;">{$f.flight_type_name}</th>
 			</tr>
 			{if $f.flight_type_start_height}
 			<tr>
-				<td></td>
+				<td>Grp</td>
 				<td>Time</td>
-				<td>Land</td>
-				<td>Start</td>
+				<td>Lnd</td>
+				<td>Hgt</td>
 			</tr>
 			{/if}
 			<tr>
-				<th nowrap="nowrap">{$f.flight_type_name}</th>
+				<td nowrap="nowrap" align="right">
+					{if $f.flight_type_group}{$f.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}{/if}
+				</td>
 				<td nowrap="nowrap" align="right">
 					{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
 				</td>
@@ -64,7 +62,7 @@
 		{/if}
 		{if $drop==1}
 			<tr>
-				<td colspan="2" align="center" nowrap="nowrap"><div style="color:red;">Score Dropped</div></td>
+				<td colspan="4" align="center" nowrap="nowrap"><div style="color:red;">Score Dropped</div></td>
 			</tr>
 		{/if}
 	{/foreach}
