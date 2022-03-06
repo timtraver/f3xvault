@@ -4604,7 +4604,8 @@ function event_draw_delete() {
 		# turn draw off
 		$stmt = db_prep("
 			UPDATE event_draw
-			SET event_draw_status = 0
+			SET event_draw_status = 0,
+				event_draw_active = 0
 			WHERE event_draw_id = :event_draw_id
 		");
 		$result = db_exec($stmt,array("event_draw_id" => $event_draw_id));
