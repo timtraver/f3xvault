@@ -1441,17 +1441,54 @@ function import_verify_gliderscore_f5j(){
 
 	# Lets step through the lines to get the rounds and pilots
 	$pilots = array();
+	$round_pos = 0;
+	$group_pos = 0;
+	$name_pos = 0;
+	$time_pos = 0;
+	$land_pos = 0;
+	$start_pos = 0;
+	$pen_pos = 0;
 	foreach( $lines as $line_number => $line ){
+		if( preg_match( "/^Round/", $line[0] ) ){
+			# This is the header line, so lets get the positions of the columns we want
+			foreach( $line as $pos => $content ){
+				switch( $content ){
+					case "Round":
+						$round_pos = $pos;
+						break;
+					case "Group":
+						$group_pos = $pos;
+						break;
+					case "Name":
+						$name_pos = $pos;
+						break;
+					case "Time":
+						$time_pos = $pos;
+						break;
+					case "Lndg Points":
+						$land_pos = $pos;
+						break;
+					case "Start Height":
+						$start_pos = $pos;
+						break;
+					case "Safety Penalty":
+						$pen_pos = $pos;
+						break;
+					default:
+						break;
+				}
+			}
+		}
 		if( preg_match( "/^\d/", $line[0] ) ){
 			# This is a round line, so lets take it apart
-			$round_number = $line[0];
-			$pilot_name = $line[4];
+			$round_number = $line[$round_pos];
+			$pilot_name = $line[$name_pos];
 			$pilots[$pilot_name]['pilot_name'] = $pilot_name;
-			$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[1];
-			$pilots[$pilot_name]['rounds'][$round_number]['time'] = $line[6];
-			$pilots[$pilot_name]['rounds'][$round_number]['land'] = $line[7];
-			$pilots[$pilot_name]['rounds'][$round_number]['height'] = $line[8];
-			$pilots[$pilot_name]['rounds'][$round_number]['penalty'] = $line[13];
+			$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
+			$pilots[$pilot_name]['rounds'][$round_number]['time'] = $line[$time_pos];
+			$pilots[$pilot_name]['rounds'][$round_number]['land'] = $line[$land_pos];
+			$pilots[$pilot_name]['rounds'][$round_number]['height'] = $line[$start_pos];
+			$pilots[$pilot_name]['rounds'][$round_number]['penalty'] = $line[$pen_pos];
 		}
 	}	
 	
