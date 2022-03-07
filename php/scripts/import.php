@@ -1765,7 +1765,7 @@ function import_import_gliderscore_f5j() {
 			INSERT INTO event_option
 			SET event_id = :event_id,
 				event_type_option_id = :event_type_option_id,
-				event_option_vallue = 1,
+				event_option_value = 1,
 				event_option_status = 1 
 		" );
 		$result = db_exec( $stmt, array(
