@@ -1514,11 +1514,11 @@ function import_verify_gliderscore_f5j(){
 			WHERE LOWER(p.pilot_first_name) LIKE :term1
 				OR LOWER(p.pilot_last_name) LIKE :term2
 				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
-				OR LOWER(CONCAT(p.pilot_first_name,', ',p.pilot_last_name)) LIKE :term3
+				OR LOWER(CONCAT(p.pilot_first_name,', ',p.pilot_last_name)) LIKE :term7
 				OR LOWER(p.pilot_first_name) LIKE :term4
 				OR LOWER(p.pilot_last_name) LIKE :term5
 				OR LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name)) LIKE :term6
-				OR LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name)) LIKE :term7
+				OR LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name)) LIKE :term8
 		");
 		$found_pilots = db_exec( $stmt,array(
 			"term1" => $first_name,
@@ -1527,7 +1527,8 @@ function import_verify_gliderscore_f5j(){
 			"term4" => $last_name,
 			"term5" => $first_name,
 			"term6" => $q,
-			"term7" => $q
+			"term7" => $q,
+			"term8" => $q
 		) );
 		$potentials[] = array( "pilot_id" => 0, "pilot_full_name" => 'Add As New Pilot' );
 		
