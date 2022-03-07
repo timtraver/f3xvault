@@ -196,7 +196,7 @@ function input_filter($value,$type){
 			if(is_null($value)){
 				$value = '';
 			}
-			$return_value = $value;
+			$return_value = trim($value);
 			break;
 		case 'string_lower':
 			if(is_null($value)){
