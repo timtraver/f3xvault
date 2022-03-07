@@ -342,8 +342,8 @@ function pilot_add_cd() {
 function pilot_save_cd() {
 	global $smarty;
 
-	$pilot_first_name = $_REQUEST['pilot_first_name'];
-	$pilot_last_name = $_REQUEST['pilot_last_name'];
+	$pilot_first_name = trim($_REQUEST['pilot_first_name']);
+	$pilot_last_name = trim($_REQUEST['pilot_last_name']);
 	$pilot_city = $_REQUEST['pilot_city'];
 	$state_id = intval($_REQUEST['state_id']);
 	$country_id = intval($_REQUEST['country_id']);
