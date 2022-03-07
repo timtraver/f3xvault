@@ -1511,14 +1511,14 @@ function import_verify_gliderscore_f5j(){
 			FROM pilot p
 			LEFT JOIN state s ON p.state_id = s.state_id
 			LEFT JOIN country c ON p.country_id = c.country_id
-			WHERE LOWER(p.pilot_first_name) LIKE :term1
-				OR LOWER(p.pilot_last_name) LIKE :term2
-				OR LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name)) LIKE :term3
-				OR LOWER(CONCAT(p.pilot_first_name,', ',p.pilot_last_name)) LIKE :term7
-				OR LOWER(p.pilot_first_name) LIKE :term4
-				OR LOWER(p.pilot_last_name) LIKE :term5
-				OR LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name)) LIKE :term6
-				OR LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name)) LIKE :term8
+			WHERE TRIM(LOWER(p.pilot_first_name)) LIKE :term1
+				OR TRIM(LOWER(p.pilot_last_name)) LIKE :term2
+				OR TRIM(LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name))) LIKE :term3
+				OR TRIM(LOWER(CONCAT(p.pilot_first_name,', ',p.pilot_last_name))) LIKE :term7
+				OR TRIM(LOWER(p.pilot_first_name)) LIKE :term4
+				OR TRIM(LOWER(p.pilot_last_name)) LIKE :term5
+				OR TRIM(LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name))) LIKE :term6
+				OR TRIM(LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name))) LIKE :term8
 		");
 		$found_pilots = db_exec( $stmt,array(
 			"term1" => $first_name,
