@@ -1716,15 +1716,15 @@ function admin_user_save() {
 	# Function to merge the pilots into the selected primary pilot
 	global $smarty;
 
-	$pilot_id=$_REQUEST['pilot_id'];
-	$pilot_first_name=$_REQUEST['pilot_first_name'];
-	$pilot_last_name=$_REQUEST['pilot_last_name'];
-	$pilot_city=$_REQUEST['pilot_city'];
+	$pilot_id=intval($_REQUEST['pilot_id']);
+	$pilot_first_name=trim($_REQUEST['pilot_first_name']);
+	$pilot_last_name=trim($_REQUEST['pilot_last_name']);
+	$pilot_city=trim($_REQUEST['pilot_city']);
 	$state_id=intval($_REQUEST['state_id']);
 	$country_id=intval($_REQUEST['country_id']);
-	$pilot_ama=$_REQUEST['pilot_ama'];
-	$pilot_fai=$_REQUEST['pilot_fai'];
-	$pilot_email=$_REQUEST['pilot_email'];
+	$pilot_ama=trim($_REQUEST['pilot_ama']);
+	$pilot_fai=trim($_REQUEST['pilot_fai']);
+	$pilot_email=trim(strtolower($_REQUEST['pilot_email']));
 
 	if($pilot_id==0){
 		# Lets save the pilot

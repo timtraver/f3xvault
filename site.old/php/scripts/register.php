@@ -54,25 +54,25 @@ function save_registration(){
 	}
 	$user=array();
 	if(isset($_REQUEST['user_name']) && $_REQUEST['user_name']!=''){
-		$user_name=$_REQUEST['user_name'];
+		$user_name=trim($_REQUEST['user_name']);
 		$user['user_name']=$user_name;
 	}else{
 		user_message("You must enter a user name",1);
 	}
 	if(isset($_REQUEST['user_first_name']) && $_REQUEST['user_first_name']!=''){
-		$user_first_name=$_REQUEST['user_first_name'];
+		$user_first_name=trim($_REQUEST['user_first_name']);
 		$user['user_first_name']=$user_first_name;
 	}else{
 		user_message("You must enter a first name",1);
 	}
 	if(isset($_REQUEST['user_last_name']) && $_REQUEST['user_last_name']!=''){
-		$user_last_name=$_REQUEST['user_last_name'];
+		$user_last_name=trim($_REQUEST['user_last_name']);
 		$user['user_last_name']=$user_last_name;
 	}else{
 		user_message("You must enter a last name",1);
 	}
 	if(isset($_REQUEST['user_email']) && $_REQUEST['user_email']!=''){
-		$user_email=$_REQUEST['user_email'];
+		$user_email=trim(strtolower($_REQUEST['user_email']));
 		$user['user_email']=$user_email;
 	}else{
 		user_message("You must enter a valid email address as your login",1);

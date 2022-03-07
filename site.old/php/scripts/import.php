@@ -737,8 +737,8 @@ function import_import() {
 		if($pilot_id==0){
 			# Break name into first name and last name
 			$words=preg_split("/\s+/",$p['pilot_name'],2);
-			$first_name=ucwords($words[0]);
-			$last_name=ucwords($words[1]);
+			$first_name=trim(ucwords($words[0]));
+			$last_name=trim(ucwords($words[1]));
 			$stmt=db_prep("
 				INSERT INTO pilot
 				SET user_id=0,

@@ -50,26 +50,26 @@ function save_registration(){
 		$from_show_pilots = 0;
 	}
 	if(isset($_REQUEST['pilot_id']) && $_REQUEST['pilot_id'] != ''){
-		$pilot_id = $_REQUEST['pilot_id'];
+		$pilot_id = intval($_REQUEST['pilot_id']);
 	}else{
 		$pilot_id = 0;
 	}
 	$user = array();
 
 	if(isset($_REQUEST['user_first_name']) && $_REQUEST['user_first_name'] != ''){
-		$user_first_name = $_REQUEST['user_first_name'];
+		$user_first_name = trim($_REQUEST['user_first_name']);
 		$user['user_first_name'] = $user_first_name;
 	}else{
 		user_message("You must enter a first name",1);
 	}
 	if(isset($_REQUEST['user_last_name']) && $_REQUEST['user_last_name'] != ''){
-		$user_last_name = $_REQUEST['user_last_name'];
+		$user_last_name = trim($_REQUEST['user_last_name']);
 		$user['user_last_name'] = $user_last_name;
 	}else{
 		user_message("You must enter a last name",1);
 	}
 	if(isset($_REQUEST['user_email']) && $_REQUEST['user_email'] != ''){
-		$user_email = strtolower($_REQUEST['user_email']);
+		$user_email = trim(strtolower($_REQUEST['user_email']));
 		$user['user_email'] = $user_email;
 	}else{
 		user_message("You must enter a valid email address as your login",1);
@@ -179,7 +179,7 @@ function save_registration(){
 				pilot_last_name = :pilot_last_name,
 				pilot_email = :pilot_email
 		");
-		$result = db_exec($stmt,array("pilot_first_name" => $user_first_name,"pilot_last_name" => $user_last_name,"pilot_email" => $user_email));
+		$result = db_exec($stmt,array("pilot_first_name" => trim($user_first_name),"pilot_last_name" => trim($user_last_name),"pilot_email" => trim($user_email)));
 		$pilot_id = $result;
 	}
 	
