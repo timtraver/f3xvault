@@ -98,6 +98,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_lane",				"description" => "Round Flight Lane" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_minutes",				"description" => "Round Flight Time Minutes" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_seconds",				"description" => "Round Flight Time Seconds" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
@@ -141,6 +142,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_lane",				"description" => "Round Flight Lane" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_minutes",				"description" => "Round Flight Time Minutes" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_seconds",				"description" => "Round Flight Time Seconds" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
@@ -250,6 +252,7 @@ XML or JSON Object Hierarchy :
                         <flight_rank>5</flight_rank>
                         <flight_order>0</flight_order>
                         <flight_group>D</flight_group>
+                        <flight_lane>4</flight_lane>
                         <flight_minutes>9</flight_minutes>
                         <flight_seconds>49</flight_seconds>
                         <flight_laps>0</flight_laps>
@@ -311,6 +314,7 @@ XML or JSON Object Hierarchy :
                         <flight_rank>3</flight_rank>
                         <flight_order>0</flight_order>
                         <flight_group>A</flight_group>
+                        <flight_lane>6</flight_lane>
                         <flight_minutes>9</flight_minutes>
                         <flight_seconds>41</flight_seconds>
                         <flight_laps>0</flight_laps>
@@ -407,6 +411,7 @@ XML or JSON Object Hierarchy :
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_id'] = $p['event_pilot_id'];
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_round_id'] = $p['event_round_id'];
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
+							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_lane'] = $p['event_draw_round_lane'];
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_penalty'] = 0;
 							$this->rounds[$event_pilot_id][$round_number][$flight_type_id]['event_pilot_round_flight_minutes'] = 0;
@@ -576,6 +581,7 @@ XML or JSON Object Hierarchy :
 								"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
 								"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
 								"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
+								"flight_lane" => $f['event_pilot_round_flight_lane'] ? "{$f['event_pilot_round_flight_lane']}" : "",
 								"flight_minutes" => intval( $f['event_pilot_round_flight_minutes'] ),
 								"flight_seconds" => $f['event_pilot_round_flight_seconds'] ? "{$f['event_pilot_round_flight_seconds']}" : "",
 								"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
@@ -662,6 +668,7 @@ XML or JSON Object Hierarchy :
 									"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
 									"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
 									"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
+									"flight_lane" => $f['event_pilot_round_flight_lane'] ? "{$f['event_pilot_round_flight_lane']}" : "",
 									"flight_minutes" => intval( $f['event_pilot_round_flight_minutes'] ),
 									"flight_seconds" => $f['event_pilot_round_flight_seconds'] ? "{$f['event_pilot_round_flight_seconds']}" : "",
 									"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
