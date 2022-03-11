@@ -1,6 +1,34 @@
 {extends file='layout/layout_main.tpl'}
 
 {block name="header"}
+{literal}
+<style>
+table {
+  text-align: left;
+  position: relative;
+  border-collapse: collapse; 
+}
+
+thead {
+  background: white;
+  z-index: 4;
+  position: sticky;
+  top: 0; /* Don't forget this, required for the stickiness */
+}
+thead th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+tbody th:first-child {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 1;
+}
+
+</style>
+{/literal}
 {/block}
 
 {block name="content"}
@@ -56,17 +84,20 @@
 		</table>
 		
 		<h2 class="post-title entry-title">Series Events</h2>
-		<table width="100%" cellpadding="0" cellspacing="0" class="table table-condensed table-striped table-bordered">
-		<tr>
-			<th align="center">#</th>
-			<th align="left" width="10%">Date</th>
-			<th align="left">Event Name</th>
-			<th align="left">Location</th>
-			<th align="left">State</th>
-			<th align="left">Country</th>
-			<th align="left">Pilots</th>
-			<th align="left">Point Multiple</th>
-		</tr>
+		<div style="overflow:auto; height:300px;">
+		<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
+			<thead>
+				<tr>
+					<th align="center">#</th>
+					<th align="left" width="10%">Date</th>
+					<th align="left">Event Name</th>
+					<th align="left">Location</th>
+					<th align="left">State</th>
+					<th align="left">Country</th>
+					<th align="left">Pilots</th>
+					<th align="left">Point Multiple</th>
+				</tr>
+			</thead>
 		{$num=1}
 		{foreach $series->events as $e}
 		<tr>
@@ -93,114 +124,122 @@
 		{$num=$num+1}
 		{/foreach}
 		</table>
+		</div>
+		<br>
 		<input type="button" value=" Save Series Parameters " onClick="document.series_save_multiples.submit();" class="btn btn-primary btn-rounded" style="float:right;">
 		</form>
 
 		{$event_num=1}
 		<h2 class="post-title entry-title">Series Overall Standings</h2>
+		<div style="overflow:auto; height:600px;">
 		<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
-		<tr>
-			<th colspan="2" align="right" nowrap></th>
-			<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
-				{assign var='best' value='0'}
-				{foreach $series->options as $key => $o}
-					{if $o.series_option_type_code == 'best'}
-						{assign var="best" value=$o.series_option_value}
-					{/if}
-				{/foreach}
-				{if $best > 0}
-					Series1 Events ( Best {$best|escape} out of {$series->completed_events|escape} Completed Events )
-				{else}
-					Series2 Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
-				{/if}
-			</th>
-			<th width="5%" nowrap>Total Score</th>
-			{if $series->info.series_scoring_type=='standard'}
-			<th width="5%" nowrap>Percentage</th>
-			{/if}
-		</tr>
-		<tr>
-			<th width="2%" align="left"></th>
-			<th width="10%" align="right" nowrap>Pilot Name</th>
-			{foreach $series->events as $e}
-				<th class="info" width="1%" align="center" style="text-align: center;" nowrap>
-					<div style="position:relative;">
-					<span>
-						{$e.event_name|escape}
-					</span>
-					<a href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">E {$event_num|escape}</a>
-					</div>
-				</th>
-				{$event_num=$event_num+1}
-			{/foreach}
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			{if $series->info.series_scoring_type=='standard'}
-			<th>&nbsp;</th>
-			{/if}
-		</tr>
-		{$previous=0}
-		{$diff_to_lead=0}
-		{$diff=0}
-		{foreach $series->totals.pilots as $p}
-		{$pilot_id=$p@key}
-		{if $p.total_score>$previous}
-			{$previous=$p.total_score}
-		{else}
-			{$diff=$previous-$p.total_score}
-			{$diff_to_lead=$diff_to_lead+$diff}
-		{/if}
-		<tr>
-			<td>{$p.overall_rank|escape}</td>
-			<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
-			{foreach $series->events as $e}
-				{$event_id=$e.event_id|escape}
-				<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
-					<div style="position:relative;">
-						{$drop=$p.events.$event_id.dropped}
-						{if $drop==1}<del><font color="red">{/if}
-						{if $p.events.$event_id.event_score!=0}
-							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-								{$p.events.$event_id.event_score|string_format:"%.1f"}
-							{else}
-								{$p.events.$event_id.event_score|string_format:"%0.2f"}
-							{/if}
-						{else}
-							0
+			<thead>
+			<tr>
+				<th colspan="2" align="right" nowrap></th>
+				<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
+					{assign var='best' value='0'}
+					{foreach $series->options as $key => $o}
+						{if $o.series_option_type_code == 'best'}
+							{assign var="best" value=$o.series_option_value}
 						{/if}
-						{if $drop==1}</font></del>{/if}
-						<span>
-							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-								{$p.events.$event_id.event_score|string_format:"%.1f"}
-							{else}
-								{$p.events.$event_id.event_score|string_format:"%0.3f"}
-							{/if}
-						</span>
-					</div>
-				</td>
-			{/foreach}
-			<td></td>
-			
-			<td width="5%" nowrap align="right">
-				<a href="" class="tooltip_score_left" onClick="return false;">
-					{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-						{$p.total_score|string_format:"%.1f"}
+					{/foreach}
+					{if $best > 0}
+						Series1 Events ( Best {$best|escape} out of {$series->completed_events|escape} Completed Events )
 					{else}
-						{$p.total_score|string_format:"%0.3f"}
+						Series2 Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
 					{/if}
-					<span>
-						<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
-						<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
-					</span>
-				</a>
-			</td>
-			{if $series->info.series_scoring_type=='standard'}
-				<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
-			{/if}
-		</tr>
-		{$previous=$p.total_score}
-		{/foreach}
+				</th>
+				<th width="5%" nowrap>Total Score</th>
+				{if $series->info.series_scoring_type=='standard'}
+				<th width="5%" nowrap>Percentage</th>
+				{/if}
+			</tr>
+			<tr>
+				<th width="2%" align="left"></th>
+				<th width="10%" align="right" nowrap>Pilot Name</th>
+				{foreach $series->events as $e}
+					<th class="info" width="1%" align="center" style="text-align: center;" nowrap>
+						<div style="position:relative;">
+						<span>
+							{$e.event_name|escape}
+						</span>
+						<a href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">E {$event_num|escape}</a>
+						</div>
+					</th>
+					{$event_num=$event_num+1}
+				{/foreach}
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				{if $series->info.series_scoring_type=='standard'}
+				<th>&nbsp;</th>
+				{/if}
+			</tr>
+			</thead>
+			<tbody>
+				{$previous=0}
+				{$diff_to_lead=0}
+				{$diff=0}
+				{foreach $series->totals.pilots as $p}
+				{$pilot_id=$p@key}
+				{if $p.total_score>$previous}
+					{$previous=$p.total_score}
+				{else}
+					{$diff=$previous-$p.total_score}
+					{$diff_to_lead=$diff_to_lead+$diff}
+				{/if}
+				<tr>
+					<td>{$p.overall_rank|escape}</td>
+					<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
+					{foreach $series->events as $e}
+						{$event_id=$e.event_id|escape}
+						<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+							<div style="position:relative;">
+								{$drop=$p.events.$event_id.dropped}
+								{if $drop==1}<del><font color="red">{/if}
+								{if $p.events.$event_id.event_score!=0}
+									{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+										{$p.events.$event_id.event_score|string_format:"%.1f"}
+									{else}
+										{$p.events.$event_id.event_score|string_format:"%0.2f"}
+									{/if}
+								{else}
+									0
+								{/if}
+								{if $drop==1}</font></del>{/if}
+								<span>
+									{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+										{$p.events.$event_id.event_score|string_format:"%.1f"}
+									{else}
+										{$p.events.$event_id.event_score|string_format:"%0.3f"}
+									{/if}
+								</span>
+							</div>
+						</td>
+					{/foreach}
+					<td></td>
+					
+					<td width="5%" nowrap align="right">
+						<a href="" class="tooltip_score_left" onClick="return false;">
+							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+								{$p.total_score|string_format:"%.1f"}
+							{else}
+								{$p.total_score|string_format:"%0.3f"}
+							{/if}
+							<span>
+								<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
+								<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
+							</span>
+						</a>
+					</td>
+					{if $series->info.series_scoring_type=='standard'}
+						<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
+					{/if}
+				</tr>
+				{$previous=$p.total_score}
+				{/foreach}
+			</tbody>
 		</table>
+		</div>
 		<br>
 		<br>
 	</div>
