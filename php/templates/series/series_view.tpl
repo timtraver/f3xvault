@@ -158,13 +158,10 @@ tbody th:first-child {
 				<th width="2%" align="left"></th>
 				<th width="10%" align="right" nowrap>Pilot Name</th>
 				{foreach $series->events as $e}
-					<th class="info" width="1%" align="center" style="text-align: center;" nowrap>
-						<div style="position:relative;">
-						<span>
-							{$e.event_name|escape}
-						</span>
-						<a href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}" class="btn-link">E {$event_num|escape}</a>
-						</div>
+					<th width="1%" align="center" style="text-align: center;" nowrap>
+						<a class="tooltip_score_right_low" href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E {$event_num|escape}
+							<span>{$e.event_name|escape} - {$e.event_start_date|date_format:"Y-m-d"}</span>
+						</a>
 					</th>
 					{$event_num=$event_num+1}
 				{/foreach}
@@ -196,7 +193,6 @@ tbody th:first-child {
 						{$event_id=$e.event_id|escape}
 						<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green ;font-weight:bold;"{/if}>
 							<div style="position:relative;">
-
 								<a href="" class="tooltip_series_score" onClick="return false;">
 									{$drop=$p.events.$event_id.dropped}
 									{if $drop==1}<del><font color="red">{/if}
