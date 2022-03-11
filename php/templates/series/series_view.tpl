@@ -160,7 +160,7 @@ tbody th:first-child {
 				{foreach $series->events as $e}
 					<th width="1%" align="center" style="text-align: center;" nowrap>
 						<a class="tooltip_score_right_low" href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E {$event_num|escape}
-							<span>{$e.event_name|escape} - {$e.event_start_date|date_format:"Y-m-d"}</span>
+							<span style="z-index: 20;">{$e.event_name|escape} - {$e.event_start_date|date_format:"Y-m-d"}</span>
 						</a>
 					</th>
 					{$event_num=$event_num+1}
@@ -206,7 +206,7 @@ tbody th:first-child {
 										0
 									{/if}
 									{if $drop==1}</font></del>{/if}
-									<span>
+									<span {if $series->info.series_scoring_type!='f5jtour'}style="margin-top: -40px; "{/if}>
 										{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
 											{$p.events.$event_id.event_score|string_format:"%.1f"}
 										{else if $series->info.series_scoring_type=='f5jtour'}
@@ -221,7 +221,11 @@ tbody th:first-child {
 												</tr>
 											</table>
 										{else}
-											{$p.events.$event_id.event_score|string_format:"%0.3f"}
+											<table>
+												<tr>
+													<th>{$p.events.$event_id.event_score|string_format:"%0.3f"}</th>
+												</tr>
+											</table>
 										{/if}
 									</span>
 								</a>
