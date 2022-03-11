@@ -584,6 +584,41 @@ a.tooltip_score span {
 	box-shadow: 5px 5px 8px #CCC; 
 }
 
+a.tooltip_series_score {
+	outline: none; 
+	color:black; 
+} 
+a.tooltip_series_score strong {
+	line-height: 36px;
+} 
+a.tooltip_series_score:hover {
+	text-decoration: none;
+} 
+a.tooltip_series_score span { 
+	z-index: 10;
+	display: none; 
+	padding: 10px 10px; 
+	margin-top: -70px; 
+	margin-left: 40px; 
+	line-height: 16px; 
+} 
+a.tooltip_series_score:hover span{ 
+	display: inline; 
+	position: absolute; 
+	color:#111; 
+	border: 1px solid #DCA; 
+	background: #fffAF0;
+} 
+/*CSS3 extras*/ 
+a.tooltip_series_score span { 
+	border-radius: 4px; 
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 5px 5px 8px #CCC; 
+	-webkit-box-shadow: 5px 5px 8px #CCC; 
+	box-shadow: 5px 5px 8px #CCC; 
+}
+
 a.tooltip_score_left {
 	outline:none; 
 	color:black; 
