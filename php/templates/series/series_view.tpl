@@ -189,30 +189,46 @@ tbody th:first-child {
 				{/if}
 				<tr>
 					<td>{$p.overall_rank|escape}</td>
-					<td align="right" nowrap><a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a></td>
+					<td align="right" nowrap>
+						<a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
+					</td>
 					{foreach $series->events as $e}
 						{$event_id=$e.event_id|escape}
-						<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green;font-weight:bold;"{/if}>
+						<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green ;font-weight:bold;"{/if}>
 							<div style="position:relative;">
-								{$drop=$p.events.$event_id.dropped}
-								{if $drop==1}<del><font color="red">{/if}
-								{if $p.events.$event_id.event_score!=0}
-									{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-										{$p.events.$event_id.event_score|string_format:"%.1f"}
+
+								<a href="" class="tooltip_series_score" onClick="return false;">
+									{$drop=$p.events.$event_id.dropped}
+									{if $drop==1}<del><font color="red">{/if}
+									{if $p.events.$event_id.event_score!=0}
+										{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+											{$p.events.$event_id.event_score|string_format:"%.1f"}
+										{else}
+											{$p.events.$event_id.event_score|string_format:"%0.2f"}
+										{/if}
 									{else}
-										{$p.events.$event_id.event_score|string_format:"%0.2f"}
+										0
 									{/if}
-								{else}
-									0
-								{/if}
-								{if $drop==1}</font></del>{/if}
-								<span>
-									{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-										{$p.events.$event_id.event_score|string_format:"%.1f"}
-									{else}
-										{$p.events.$event_id.event_score|string_format:"%0.3f"}
-									{/if}
-								</span>
+									{if $drop==1}</font></del>{/if}
+									<span>
+										{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+											{$p.events.$event_id.event_score|string_format:"%.1f"}
+										{else if $series->info.series_scoring_type=='f5jtour'}
+										<table>
+												<tr>
+													<th>Prelim</th>
+													<td align="right">{$p.events.$event_id.event_score_orig|string_format:"%0.2f"}</td>
+												</tr>
+												<tr>
+													<th>Bonus</th>
+													<td align="right">{$p.events.$event_id.event_score_bonus|string_format:"%0.2f"}</td>
+												</tr>
+											</table>
+										{else}
+											{$p.events.$event_id.event_score|string_format:"%0.3f"}
+										{/if}
+									</span>
+								</a>
 							</div>
 						</td>
 					{/foreach}
@@ -223,7 +239,7 @@ tbody th:first-child {
 							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
 								{$p.total_score|string_format:"%.1f"}
 							{else}
-								{$p.total_score|string_format:"%0.3f"}
+								{$p.total_score|string_format:"%0.2f"}
 							{/if}
 							<span>
 								<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
