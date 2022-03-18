@@ -98,7 +98,7 @@
 				<input type="button" value=" Save Task Rounds " onClick="document.main.submit();" class="btn btn-primary btn-rounded">
 				
 				<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="btn btn-primary btn-rounded">
-				<input type="button" value=" Print Pilot Sheets " onClick="document.print_pilot_tasks.submit();" class="btn btn-primary btn-rounded">
+				<input type="button" value=" Pilot Blank Pilot Sheets (Summary) " onclick="document.print_pilot_blank_summary_tasks.submit();" class="btn btn-primary btn-rounded"> 
 			</td>
 		</tr>
 		</table>
@@ -119,7 +119,6 @@
 		{/if}
 		
 		
-		
 		<form name="goback" method="POST">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_view">
@@ -132,12 +131,12 @@
 		<input type="hidden" name="use_print_header" value="1">
 		<input type="hidden" name="blank" value="1">
 		</form>
-		<form name="print_pilot_tasks" method="POST" target="_blank">
+		<form name="print_pilot_blank_summary_tasks" method="POST" target="_blank">
 		<input type="hidden" name="action" value="event">
-		<input type="hidden" name="function" value="event_print_blank_task">
+		<input type="hidden" name="function" value="event_print_blank_summary_task">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
 		<input type="hidden" name="use_print_header" value="1">
-		<input type="hidden" name="blank" value="0">
+		<input type="hidden" name="blank" value="1">
 		</form>
 
 	</div>
