@@ -66,6 +66,13 @@
 			</td>
 		</tr>
 		{if $ft.flight_type_group==1}
+		<tr>
+			<th nowrap>Group Naming</th>
+			<td>
+				<input type="radio" name="event_draw_group_name" value="alpha"{if $draw->draw.event_draw_group_name == 'alpha' || $draw->draw.event_draw_group_name == NULL} CHECKED{/if}> Use Alpha characters for groups ( A,B,C, etc... )<br>
+				<input type="radio" name="event_draw_group_name" value="numeric"{if $draw->draw.event_draw_group_name == 'numeric'} CHECKED{/if}> Use Numeric characters for groups ( 1,2,3, etc... )
+			</td>
+		</tr>
 		{if $event->teams|count > 0}
 		<tr>
 			<th nowrap>Team Protection</th>

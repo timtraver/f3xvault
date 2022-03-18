@@ -706,11 +706,12 @@ class Draw {
 		# Lets figure out what the group type and lane/buzzer/landing values to use
 		switch($this->draw['flight_type_code']){
 			case 'f3b_distance':
-				$group_type = 'numeric';
-				$lane_type = 'alpha';
+				$group_type = 'alpha';
+				$lane_type = 'numeric';
 				break;
 			case 'f3b_duration':
 			case 'f3j_duration':
+			case 'f5j_duration':
 			case 'td_duration':
 				$group_type = 'alpha';
 				$lane_type = 'numeric';
@@ -724,6 +725,11 @@ class Draw {
 					$lane_type = 'numeric';
 				}
 		}
+		# If this draw has a specific value for the group naming, then overwrite that above defaults to the choice
+		if( $this->draw['event_draw_group_name'] != NULL ){
+			$group_type = $this->draw['event_draw_group_name'];
+		}
+		
 		$group_labels = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 		
 		# Ok, lets save these rounds to the draw

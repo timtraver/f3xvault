@@ -4227,6 +4227,7 @@ function event_draw_save(){
 	$event_draw_number_groups = intval($_REQUEST['event_draw_number_groups']);
 	$event_draw_step_size = intval($_REQUEST['event_draw_step_size']);
 	$event_draw_changed = intval($_REQUEST['event_draw_changed']);
+	$event_draw_group_name = $_REQUEST['event_draw_group_name'];
 
 	$original_event_draw_id = $event_draw_id;
 	
@@ -4267,6 +4268,7 @@ function event_draw_save(){
 					event_draw_step_size = :event_draw_step_size,
 					event_draw_team_protection = :event_draw_team_protection,
 					event_draw_team_separation = :event_draw_team_separation,
+					event_draw_group_name = :event_draw_group_name,
 					event_draw_active = 0,
 					event_draw_status = 1
 			");
@@ -4279,7 +4281,8 @@ function event_draw_save(){
 				"event_draw_number_groups"		=> $event_draw_number_groups,
 				"event_draw_step_size"			=> $event_draw_step_size,
 				"event_draw_team_protection"	=> $event_draw_team_protection,
-				"event_draw_team_separation"	=> $event_draw_team_separation
+				"event_draw_team_separation"	=> $event_draw_team_separation,
+				"event_draw_group_name"			=> $event_draw_group_name
 			));
 			$event_draw_id = $GLOBALS['last_insert_id'];
 			$_REQEST['event_draw_id'] = $event_draw_id;
@@ -4311,8 +4314,9 @@ function event_draw_save(){
 					event_draw_number_groups = :event_draw_number_groups,
 					event_draw_step_size = :event_draw_step_size,
 					event_draw_team_protection = :event_draw_team_protection,
-					event_draw_team_separation = :event_draw_team_separation
-				WHERE event_draw_id = :event_draw_id
+					event_draw_team_separation = :event_draw_team_separation,
+					event_draw_group_name = :event_draw_group_name
+			WHERE event_draw_id = :event_draw_id
 			");
 			$result = db_exec($stmt,array(
 				"event_draw_round_from"			=> $event_draw_round_from,
@@ -4322,6 +4326,7 @@ function event_draw_save(){
 				"event_draw_step_size"			=> $event_draw_step_size,
 				"event_draw_team_protection"	=> $event_draw_team_protection,
 				"event_draw_team_separation"	=> $event_draw_team_separation,
+				"event_draw_group_name"			=> $event_draw_group_name,
 				"event_draw_id"					=> $event_draw_id
 			));
 		}
