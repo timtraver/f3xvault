@@ -131,6 +131,13 @@
 					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_land" value="{$r.land|escape}">
 					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_height" value="{$r.height|escape}">
 					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_pen" value="{$r.penalty|escape}">
+					{foreach $r.reflight as $f}
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_reflight_{$f@key}_group" value="{$f.group|escape}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_reflight_{$f@key}_time" value="{$f.time|escape}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_reflight_{$f@key}_land" value="{$f.land|escape}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_reflight_{$f@key}_height" value="{$f.height|escape}">
+					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_reflight_{$f@key}_pen" value="{$f.penalty|escape}">
+					{/foreach}
 				{/foreach}
 			</td>
 			<td>

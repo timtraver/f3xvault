@@ -1443,6 +1443,7 @@ function import_verify_gliderscore_f5j(){
 	$pilots = array();
 	$round_pos = 0;
 	$group_pos = 0;
+	$reflight_pos = 0;
 	$name_pos = 0;
 	$time_pos = 0;
 	$land_pos = 0;
@@ -1458,6 +1459,9 @@ function import_verify_gliderscore_f5j(){
 						break;
 					case "Group":
 						$group_pos = $pos;
+						break;
+					case "Re-Flight":
+						$reflight_pos = $pos;
 						break;
 					case "Name":
 						$name_pos = $pos;
@@ -1484,14 +1488,24 @@ function import_verify_gliderscore_f5j(){
 			$round_number = $line[$round_pos];
 			$pilot_name = $line[$name_pos];
 			$pilots[$pilot_name]['pilot_name'] = $pilot_name;
-			$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
-			$pilots[$pilot_name]['rounds'][$round_number]['time'] = $line[$time_pos];
-			$pilots[$pilot_name]['rounds'][$round_number]['land'] = $line[$land_pos];
-			$pilots[$pilot_name]['rounds'][$round_number]['height'] = $line[$start_pos];
-			$pilots[$pilot_name]['rounds'][$round_number]['penalty'] = $line[$pen_pos];
+			if( $line[$reflight_pos] == 0 ){
+				# This is a normal group
+				$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['time'] = $line[$time_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['land'] = $line[$land_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['height'] = $line[$start_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['penalty'] = $line[$pen_pos];
+			}else{
+				$reflight_num = $line[$reflight_pos];
+				# This is a reflight group, so lets add it to the array differently
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['group'] = $line[$group_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['time'] = $line[$time_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['land'] = $line[$land_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['height'] = $line[$start_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['penalty'] = $line[$pen_pos];
+			}
 		}
 	}	
-	
 	# Now lets step through the pilots and if they don't have an id, do a search for possible pilot names
 	foreach( $pilots as $key => $p ){
 		$potentials = array();
@@ -1622,6 +1636,7 @@ function import_import_gliderscore_f5j() {
 	}
 
 	# Now lets get the pilot info and put it in an array
+	$groups = array();
 	$pilots = array();
 	foreach($_REQUEST as $key => $value){
 		if(preg_match("/^pilot_name_(\d+)/",$key,$match)){
@@ -1636,6 +1651,7 @@ function import_import_gliderscore_f5j() {
 			$number = $match[1];
 			$round = $match[2];
 			$pilots[$number]['rounds'][$round]['group'] = $value;
+			if( ! in_array($value, $groups)){ $groups[] = $value; }
 		}
 		if(preg_match("/^pilot_(\d+)_round_(\d+)_pen/",$key,$match)){
 			$number = $match[1];
@@ -1664,7 +1680,43 @@ function import_import_gliderscore_f5j() {
 			$number = $match[1];
 			$pilots[$number]['pilot_id'] = $value;
 		}
+		
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_reflight_(\d+)_group/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$reflight = $match[3];
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['group'] = $value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_reflight_(\d+)_time/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$reflight = $match[3];
+			# break it up into minutes and seconds
+			$t = preg_split( '/\:/', $value );
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['min'] = $t[0];
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['sec'] = $t[1];
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_reflight_(\d+)_land/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$reflight = $match[3];
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['land'] = $value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_reflight_(\d+)_height/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$reflight = $match[3];
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['height'] = $value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_reflight_(\d+)_pen/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$reflight = $match[3];
+			$pilots[$number]['rounds'][$round]['reflight'][$reflight]['pen'] = $value;
+		}
 	}
+	$total_groups = count($groups);
+	
 	# OK, now do each of the steps to create or update the event
 	# First check to see if the event exists, and get its info
 	if($event['event_id'] != 0){
@@ -2263,6 +2315,88 @@ function import_import_gliderscore_f5j() {
 				));
 				$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
 			}
+			
+			# Lets see if there are any reflights for this pilot
+			if( count($r['reflight'] ) > 0 ){
+				foreach( $r['reflight'] as $reflight_num => $rf ){
+					$min = $rf['min'];
+					$sec = sprintf("%02.f",$rf['sec']);
+					if( preg_match("/[A-Za-z]/", $rf['group'])){
+						# Group is a letter
+						$group = get_next_group($rf['group'], $total_groups);
+					}else{
+						# Group is a number
+						$group = intval($reflight_num) + $total_groups;
+					}
+					
+					# There is a reflight for this pilot
+					$stmt = db_prep("
+						SELECT *
+						FROM event_pilot_round_flight
+						WHERE event_pilot_round_id = :event_pilot_round_id
+							AND flight_type_id = :flight_type_id
+							AND event_pilot_round_flight_reflight = :reflight_num
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_id" => $event_pilot_round_id,
+						"flight_type_id" => $event['rounds'][$round_number]['flight_type_id'],
+						"reflight_num" => $reflight_num
+					));
+					if(isset($result[0])){
+						$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
+						# It already exists, so update it						
+						$stmt = db_prep("
+							UPDATE event_pilot_round_flight
+							SET event_pilot_round_flight_group = :group,
+								event_pilot_round_flight_minutes = :min,
+								event_pilot_round_flight_seconds = :sec,
+								event_pilot_round_flight_landing = :landing,
+								event_pilot_round_flight_start_height = :height,
+								event_pilot_round_flight_penalty = :penalty,
+								event_pilot_round_flight_reflight = :reflight_num,
+								event_pilot_round_flight_status = 1
+							WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+						");
+						$result = db_exec($stmt,array(
+							"group" => $group,
+							"min" => $min,
+							"sec" => $sec,
+							"landing" => intval($rf['land']),
+							"height" => intval($rf['height']),
+							"penalty" => intval($rf['pen']),
+							"reflight_num" => intval($reflight_num),
+							"event_pilot_round_flight_id" => $event_pilot_round_flight_id
+						));
+					}else{
+						# Need to create it
+						$stmt = db_prep("
+							INSERT INTO event_pilot_round_flight
+							SET event_pilot_round_id = :event_pilot_round_id,
+								flight_type_id = :flight_type_id,
+								event_pilot_round_flight_group = :group,
+								event_pilot_round_flight_minutes = :min,
+								event_pilot_round_flight_seconds = :sec,
+								event_pilot_round_flight_landing = :landing,
+								event_pilot_round_flight_start_height = :height,
+								event_pilot_round_flight_penalty = :penalty,
+								event_pilot_round_flight_reflight = :reflight_num,
+								event_pilot_round_flight_status = 1
+						");
+						$result = db_exec($stmt,array(
+							"event_pilot_round_id" => $event_pilot_round_id,
+							"flight_type_id" => $event['rounds'][$round_number]['flight_type_id'],
+							"group" => $group,
+							"min" => $min,
+							"sec" => $sec,
+							"landing" => intval($rf['land']),
+							"height" => intval($rf['height']),
+							"penalty" => intval($rf['pen']),
+							"reflight_num" => intval($reflight_num)
+						));
+						$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
+					}
+				}
+			}
 		}
 	}
 	
@@ -2284,5 +2418,11 @@ function import_import_gliderscore_f5j() {
 	$_REQUEST['event_id'] = $event['event_id'];
 	include_once("event.php");
 	return event_view();
+}
+function get_next_group($reflight_group, $total_groups){
+	# Function to determine the next group name if the group is alpha
+	$alpha = array( 'A','B','C','D','E','F','G','H','I');
+	$index = $reflight_group + $total_groups - 1;
+	return $alpha[$index];
 }
 ?>
