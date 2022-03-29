@@ -150,7 +150,7 @@ tbody th:first-child {
 					{/if}
 				</th>
 				<th width="5%" nowrap>Total Score</th>
-				{if $series->info.series_scoring_type=='standard'}
+				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
 				<th width="5%" nowrap>Percentage</th>
 				{/if}
 			</tr>
@@ -167,7 +167,7 @@ tbody th:first-child {
 				{/foreach}
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
-				{if $series->info.series_scoring_type=='standard'}
+				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
 				<th>&nbsp;</th>
 				{/if}
 			</tr>
@@ -247,7 +247,7 @@ tbody th:first-child {
 							</span>
 						</a>
 					</td>
-					{if $series->info.series_scoring_type=='standard'}
+					{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
 						<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
 					{/if}
 				</tr>
