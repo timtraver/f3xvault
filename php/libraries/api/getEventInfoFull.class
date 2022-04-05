@@ -14,6 +14,7 @@ class getEventInfoFull {
 	public $event_id;
 	public $api;
 	public $rounds;
+	public $reflight_rounds;
 	
 	public function __construct($api){
 		$this->api = $api;
@@ -93,6 +94,30 @@ class getEventInfoFull {
 			array( "level" => 4,	"type" => "boolean",	"name" => "round_score_status",			"description" => "Round Score Status (0 = not scored, 1 = scored)" ),
 
 			array( "level" => 4,	"type" => "ARRAY",		"name" => "flights",					"description" => "Round Flight List" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_is_reflight",			"description" => "Round Flight Is A Reflight (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_type_name",			"description" => "Round Flight Type Name" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_order",				"description" => "Round Flight Order" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_group",				"description" => "Round Flight Group" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_lane",				"description" => "Round Flight Lane" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_minutes",				"description" => "Round Flight Time Minutes" ),
+			array( "level" => 5,	"type" => "string",		"name" => "flight_seconds",				"description" => "Round Flight Time Seconds" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_laps",				"description" => "Round Flight Number of Laps" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_landing",				"description" => "Round Flight Landing Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_height",		"description" => "Round Flight Start Height" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_start_penalty",		"description" => "Round Flight Start Penalty" ),
+			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
+			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
+
+			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
+			array( "level" => 6,	"type" => "integer",	"name" => "sub_num",					"description" => "Round Flight Sub Number" ),
+			array( "level" => 6,	"type" => "string",		"name" => "sub_val",					"description" => "Round Flight Sub Value" ),
+
+			array( "level" => 4,	"type" => "ARRAY",		"name" => "reflights",					"description" => "Round Reflight List" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_is_reflight",			"description" => "Round Flight Is A Reflight (0 = no, 1 = yes)" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_type_code",			"description" => "Round Flight Type Code" ),
 			array( "level" => 5,	"type" => "string",		"name" => "flight_type_name",			"description" => "Round Flight Type Name" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_rank",				"description" => "Round Flight Rank" ),
@@ -284,6 +309,44 @@ XML or JSON Object Hierarchy :
                             <sub_val>2:51</sub_val>
                         </flight_subs>
                     </flights>
+					<reflights>
+                        <flight_type_code>f3k_k</flight_type_code>
+                        <flight_type_name>F3K Task K - Big Ladder</flight_type_name>
+                        <flight_rank>5</flight_rank>
+                        <flight_order>0</flight_order>
+                        <flight_group>D</flight_group>
+                        <flight_lane>4</flight_lane>
+                        <flight_minutes>9</flight_minutes>
+                        <flight_seconds>49</flight_seconds>
+                        <flight_laps>0</flight_laps>
+                        <flight_landing>0</flight_landing>
+                        <flight_start_height>0</flight_start_height>
+                        <flight_start_penalty>0</flight_start_penalty>
+                        <flight_score>988</flight_score>
+                        <flight_penalty>0</flight_penalty>
+                        <flight_dropped>0</flight_dropped>
+                        <score_status>1</score_status>
+                        <flight_subs>
+                            <sub_num>1</sub_num>
+                            <sub_val>0:59</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>2</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>3</sub_num>
+                            <sub_val>1:59</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>4</sub_num>
+                            <sub_val>2:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>5</sub_num>
+                            <sub_val>2:51</sub_val>
+                        </flight_subs>
+                    </reflights>
                 </rounds>
             </standings>
         </prelim_standings>
@@ -346,6 +409,44 @@ XML or JSON Object Hierarchy :
                             <sub_val>2:11</sub_val>
                         </flight_subs>
                     </flights>
+                    <reflights>
+                        <flight_type_code>f3k_e</flight_type_code>
+                        <flight_type_name>F3K Task E - Poker (Pilot Nominated)</flight_type_name>
+                        <flight_rank>3</flight_rank>
+                        <flight_order>0</flight_order>
+                        <flight_group>A</flight_group>
+                        <flight_lane>6</flight_lane>
+                        <flight_minutes>9</flight_minutes>
+                        <flight_seconds>41</flight_seconds>
+                        <flight_laps>0</flight_laps>
+                        <flight_landing>0</flight_landing>
+                        <flight_start_height>0</flight_start_height>
+                        <flight_start_penalty>0</flight_start_penalty>
+                        <flight_score>970</flight_score>
+                        <flight_penalty>0</flight_penalty>
+                        <flight_dropped>0</flight_dropped>
+                        <score_status>1</score_status>
+                        <flight_subs>
+                            <sub_num>1</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>2</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>3</sub_num>
+                            <sub_val>3:00</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>4</sub_num>
+                            <sub_val>1:30</sub_val>
+                        </flight_subs>
+                        <flight_subs>
+                            <sub_num>5</sub_num>
+                            <sub_val>2:11</sub_val>
+                        </flight_subs>
+                    </reflights>
                 </rounds>
 			</standings>
 		</flyoff_standings>
@@ -374,6 +475,7 @@ XML or JSON Object Hierarchy :
 		$smarty->assign("fs",$this->api->field_separator);
 				
 		$this->rounds = array();
+		$this->reflight_rounds = array();
 		$total_rounds = 0;
 
 		#Let's first fill it up with the current round info
@@ -390,6 +492,21 @@ XML or JSON Object Hierarchy :
 					$this->rounds[$event_pilot_id][$round_number][$flight_type_id] = $p;
 					$this->rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
 					$this->rounds[$event_pilot_id][$round_number]['event_round_score_status'] = $r['event_round_score_status'];
+				}
+			}
+			# make the second array for reflights
+			foreach($r['reflights'] as $flight_type_id => $f ){
+				if( $f['flight_type_code'] != 'f3b_duration' && $f['flight_type_code'] != 'f3b_distance' && $f['flight_type_code'] != 'f3b_speed'){
+					if( $flight_type_id != $r['flight_type_id'] ){
+						continue;
+					}
+				}
+				foreach($f['pilots'] as $event_pilot_id => $p){
+					$p['flight_type_code'] = $f['flight_type_code'];
+					$p['flight_type_name'] = $f['flight_type_name'];
+					$this->reflight_rounds[$event_pilot_id][$round_number][$flight_type_id] = $p;
+					$this->reflight_rounds[$event_pilot_id][$round_number]['event_round_flyoff'] = $r['event_round_flyoff'];
+					$this->reflight_rounds[$event_pilot_id][$round_number]['event_round_score_status'] = $r['event_round_score_status'];
 				}
 			}
 			if( ! $r['event_round_flyoff'] ){
@@ -576,6 +693,7 @@ XML or JSON Object Hierarchy :
 							}
 							
 							$flights[] = array(
+								"flight_is_reflight" => 0,
 								"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
 								"flight_type_name" => $f['flight_type_name'] ? $f['flight_type_name'] : "",
 								"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
@@ -596,11 +714,61 @@ XML or JSON Object Hierarchy :
 							);
 							$round_score += $f['event_pilot_round_flight_score'];
 						}
+						
+						# Figure out if there are any reflights for this pilot in this round
+						$reflights = array();
+						foreach( $this->reflight_rounds as $rf_event_pilot_id => $reflight_round ){
+							if( $rf_event_pilot_id != $event_pilot_id ){ continue; }
+							foreach( $reflight_round as $reflight_round_number => $rf ){
+								if( $reflight_round_number != $round_number ){ continue; }
+								if( $rf['event_round_flyoff'] > 0 ){ continue; }
+								foreach( $rf as $flight_type_id => $f){
+									if( ! isset( $f['event_pilot_id'] ) ){ continue; }
+									$subs = array();
+									if( isset( $f['sub'] ) ){
+										foreach( $f['sub'] as $i => $s ){
+											$subs[] = array(
+												"sub_num" => intval( $s['event_pilot_round_flight_sub_num'] ),
+												"sub_val" => $s['event_pilot_round_flight_sub_val'] ? $s['event_pilot_round_flight_sub_val'] : ""
+											);
+										}
+									}
+							
+									if( preg_match( '/^\d\.\d\d$/', $f['event_pilot_round_flight_seconds'] ) ){
+										$f['event_pilot_round_flight_seconds'] = '0' . $f['event_pilot_round_flight_seconds'];
+									}
+							
+									$reflights[] = array(
+										"flight_is_reflight" => 1,
+										"flight_type_code" => $f['flight_type_code'] ? $f['flight_type_code'] : "",
+										"flight_type_name" => $f['flight_type_name'] ? $f['flight_type_name'] : "",
+										"flight_rank" => intval( $f['event_pilot_round_flight_rank'] ),
+										"flight_order" => intval( $f['event_pilot_round_flight_order'] ),
+										"flight_group" => $f['event_pilot_round_flight_group'] ? "{$f['event_pilot_round_flight_group']}" : "",
+										"flight_lane" => $f['event_pilot_round_flight_lane'] ? "{$f['event_pilot_round_flight_lane']}" : "",
+										"flight_minutes" => intval( $f['event_pilot_round_flight_minutes'] ),
+										"flight_seconds" => $f['event_pilot_round_flight_seconds'] ? "{$f['event_pilot_round_flight_seconds']}" : "",
+										"flight_laps" => intval( $f['event_pilot_round_flight_laps'] ),
+										"flight_landing" => intval( $f['event_pilot_round_flight_landing'] ),
+										"flight_start_height" => intval( $f['event_pilot_round_flight_start_height'] ),
+										"flight_start_penalty" => intval( $f['event_pilot_round_flight_start_penalty'] ),
+										"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
+										"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
+										"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+										"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
+										"flight_subs" => $subs
+									);
+								}
+							}
+							
+						}
+						
 						$rounds[] = array(
 							"round_number" => intval( $round_number ),
 							"round_score" => floatval( $round_score ),
 							"round_score_status" => intval( $r['event_round_score_status'] ),
 							"flights" => $flights,
+							"reflights" => $reflights
 						);
 					}
 					
@@ -688,6 +856,7 @@ XML or JSON Object Hierarchy :
 								"round_score" => floatval( $round_score ),
 								"round_score_status" => intval( $r['event_round_score_status'] ),
 								"flights" => $flights,
+								"reflights" => array()
 							);
 						}
 					}
