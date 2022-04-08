@@ -222,6 +222,7 @@ XML or JSON Object Hierarchy :
 		# This is the method where we process the request
 		$this->event_id = $this->api->input_variables['event_id'];
 		start_smarty();
+		$_REQUEST['sort_by'] = 'draw';
 
 		$event = new Event($this->event_id);
 		if(! $event->info['event_id']){
