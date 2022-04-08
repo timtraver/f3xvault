@@ -388,7 +388,7 @@ class Event {
 				$sort_string = 'ORDER BY edr.event_draw_round_number,p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'draw':
-				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_lane,edr.event_draw_round_order';
+				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,LPAD(LOWER(edr.event_draw_round_lane), 10,0),edr.event_draw_round_order';
 				break;
 			case 'round_rank':
 			default:
