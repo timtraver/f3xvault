@@ -4887,7 +4887,7 @@ function event_draw_view() {
 		FROM event_draw_round 
 		WHERE event_draw_id = :event_draw_id
 			AND event_draw_round_status = 1
-		ORDER BY event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane,event_draw_round_order
+		ORDER BY event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,LPAD(LOWER(event_draw_round_lane), 10,0),event_draw_round_order
 	");
 	$rounds = db_exec($stmt,array("event_draw_id" => $event_draw_id));
 	foreach($rounds as $round){
