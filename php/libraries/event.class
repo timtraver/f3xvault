@@ -367,7 +367,7 @@ class Event {
 				$sort_string = 'ORDER BY edr.event_draw_round_number,ep.event_pilot_team,p.pilot_first_name';
 				break;
 			case 'flight_order':
-				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order,edr.event_draw_round_lane';
+				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order,LPAD(LOWER(edr.event_draw_round_lane), 10,0)';
 				break;
 			case 'bib_order':
 				$sort_string = 'ORDER BY edr.event_draw_round_number,ep.event_pilot_bib';
