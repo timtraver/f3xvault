@@ -1356,7 +1356,7 @@ class PDF_F3X {
 		$this->pdf->SetXY( $x, $y );
 		
 		# Outline of the cell
-		$this->pdf->Cell($this->cell_width,$this->cell_height + 1,'',1,0,'C',FALSE);
+		$this->pdf->Cell($this->cell_width,$this->cell_height,'',1,0,'C',FALSE);
 		
 		# Event Name header
 		$current_x += $this->padding;
