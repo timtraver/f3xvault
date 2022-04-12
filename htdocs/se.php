@@ -15,9 +15,9 @@ include_library('functions.inc');
 # Let us auto log in the pilot before we send them to the self score. That way they don't need to log into the vault
 # let's get the user info
 $stmt = db_prep( "
-	SELECT *
+	SELECT *, u.user_id, u.user_name
 	FROM event_pilot ep
-	LEFT JOIN pilot p ON ep.pilot_id
+	LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
 	LEFT JOIN user u ON p.user_id = u.user_id
 	WHERE ep.event_pilot_id = :event_pilot_id
 		AND u.user_status = 1
