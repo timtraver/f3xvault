@@ -614,11 +614,11 @@
 					<th style="text-align: center;">Flight Order</th>
 				{/if}
 				<th>Time</th>
-				{if $event->flight_types.$flight_type_id.flight_type_start_height}
-					<th style="text-align: right;">Height</th>
-				{/if}
 				{if $event->flight_types.$flight_type_id.flight_type_landing}
 					<th style="text-align: right;">Land</th>
+				{/if}
+				{if $event->flight_types.$flight_type_id.flight_type_start_height}
+					<th style="text-align: right;">Height</th>
 				{/if}
 				{if $event->flight_types.$flight_type_id.flight_type_laps}
 					<th style="text-align: right;">Laps</th>
@@ -657,13 +657,13 @@
 								{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_seconds|escape}{/if}s
 							{/if}
 						</td>
+						{if $f.flight_type_landing}
+							<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+						{/if}
 						{if $f.flight_type_start_height}
 							<td align="right" nowrap>
 								{$p.event_pilot_round_flight_start_height|escape}
 							</td>
-						{/if}
-						{if $f.flight_type_landing}
-							<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
 						{/if}
 						{if $f.flight_type_laps}
 							<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
@@ -681,6 +681,13 @@
 				{/foreach}
 			{/foreach}
 		</table>
+	</div>
+	<div>
+		<br>
+		<button class="btn btn-block btn-info btn-rounded" style="font-size: 24px;" onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';">
+			View Overall Standings
+		</button>
+		<br>
 	</div>
 </div>
 
