@@ -30,6 +30,7 @@ $user = $result[0];
 $path = "/";
 $host = $_SERVER['HTTP_HOST'];
 # New session stuff
+destroy_fsession();
 create_fsession($path,$host);
 $fsession['auth'] = TRUE;
 $fsession['user_id'] = $user['user_id'];
