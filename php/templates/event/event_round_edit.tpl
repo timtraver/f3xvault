@@ -151,6 +151,7 @@
 				<th>
 					Score <input type="checkbox" name="event_round_flight_score_{$ft.flight_type_id}"{if $event->rounds.$round_number.flights.$flight_type_id.event_round_flight_score==1 || $event_round_id==0 || empty($event->rounds.$round_number.flights.$flight_type_id)} CHECKED{/if}>
 				</th>
+				<th align="center" style="text-align: right;"></th>
 			</tr>
 			<tbody id="view_flight_type_{$flight_type_id}" style="display: table-row-group;">
 			<tr>
@@ -203,6 +204,7 @@
 				<th align="center" style="text-align: right;">{if $event->info.event_type_score_inverse==0}Normalized{else}Calculated{/if} Score</th>
 				<th align="center" style="text-align: center;">Penalty</th>
 				<th align="center" style="text-align: right;">Flight Rank</th>
+				<th align="center" style="text-align: right;"></th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
@@ -300,6 +302,8 @@
 					</td>
 					<td align="right" nowrap>
 					{$p.event_pilot_round_flight_rank|escape}
+					</td>
+					<td align="right" nowrap>
 					</td>
 			</tr>
 			{$num=$num+1}

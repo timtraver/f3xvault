@@ -229,14 +229,14 @@
 							{/if}
 						</td>
 					{/if}
+					{if $ft.flight_type_landing}
+						<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+						{$tabindex=$tabindex+1}
+					{/if}
 					{if $ft.flight_type_start_height}
 						<td align="center" nowrap>
 							{$p.event_pilot_round_flight_start_height|escape}
 						</td>
-					{/if}
-					{if $ft.flight_type_landing}
-						<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
-						{$tabindex=$tabindex+1}
 					{/if}
 					{if $ft.flight_type_laps}
 						<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
@@ -356,8 +356,6 @@
 						</td>
 						<td align="right" nowrap>
 						{$p.event_pilot_round_flight_rank|escape}
-						</td>
-						<td align="right" nowrap>
 						</td>
 				</tr>
 				{$num=$num+1}
