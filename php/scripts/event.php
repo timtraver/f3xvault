@@ -6805,7 +6805,9 @@ function event_self_entry() {
 		$event->get_rounds();
 		$event->calculate_round($round_number);		
 		$event->calculate_event_totals();		
-		$event->event_save_totals();				
+		$event->event_save_totals();
+		# Reload rounds now that we have calculated the score for the round			
+		$event->get_rounds();
 		$subs = array();
 		foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
 			$string = $f['event_pilot_round_flight_sub_val'];
