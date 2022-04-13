@@ -459,6 +459,7 @@ class Series {
 				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
 				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
 				$subtotals[$pilot_id]['total_score'] += $total;
+				$subtotals[$pilot_id]['total_events'] += 1;
 			}
 		}
 

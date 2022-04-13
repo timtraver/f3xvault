@@ -135,7 +135,7 @@ tbody th:first-child {
 		<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
 			<thead>
 			<tr>
-				<th colspan="2" align="right" nowrap></th>
+				<th colspan="3" align="right" nowrap></th>
 				<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
 					{assign var='best' value='0'}
 					{foreach $series->options as $key => $o}
@@ -144,9 +144,9 @@ tbody th:first-child {
 						{/if}
 					{/foreach}
 					{if $best > 0}
-						Series1 Events ( Best {$best|escape} out of {$series->completed_events|escape} Completed Events )
+						Series Events ( Best {$best|escape} out of {$series->completed_events|escape} Completed Events )
 					{else}
-						Series2 Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
+						Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
 					{/if}
 				</th>
 				<th width="5%" nowrap>Total Score</th>
@@ -157,6 +157,7 @@ tbody th:first-child {
 			<tr>
 				<th width="2%" align="left"></th>
 				<th width="10%" align="right" nowrap>Pilot Name</th>
+				<th width="2%" align="right" nowrap>Events</th>
 				{foreach $series->events as $e}
 					<th width="1%" align="center" style="text-align: center;" nowrap>
 						<a class="tooltip_score_right_low" href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E {$event_num|escape}
@@ -188,6 +189,9 @@ tbody th:first-child {
 					<td>{$p.overall_rank|escape}</td>
 					<td align="right" nowrap>
 						<a href="?action=series&function=series_pilot_view&pilot_id={$pilot_id|escape:'url'}&series_id={$series->info.series_id|escape:'url'}" class="btn-link">{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}</a>
+					</td>
+					<td align="center" nowrap>
+						{$p.total_events|escape}
 					</td>
 					{foreach $series->events as $e}
 						{$event_id=$e.event_id|escape}
