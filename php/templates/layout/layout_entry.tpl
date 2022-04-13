@@ -58,7 +58,8 @@
 					<h2 style="float: left;margin-left: 10px;font-size: 24px;padding-top: 5px;">
 						Self Score Entry
 					</h2>
-					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back To Event " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';" class="btn btn-primary btn-rounded">
+					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';" class="btn btn-primary btn-rounded">
+					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Refresh " onClick="document.refresh.submit();" class="btn btn-primary btn-rounded">
 				</div>
 				<!--================================-->
 				<!--End Navbar Dropdown-->
@@ -177,6 +178,14 @@
 	<input type="hidden" name="action" value="event">
 	<input type="hidden" name="function" value="event_view">
 	<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
+	</form>
+	<form id="goback" name="refresh" method="GET">
+	<input type="hidden" name="action" value="event">
+	<input type="hidden" name="function" value="event_self_entry">
+	<input type="hidden" name="save" value="0">
+	<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
+	<input type="hidden" name="event_pilot_id" value="{$event_pilot_id|escape}">
+	<input type="hidden" name="round_number" value="{$round_number|escape}">
 	</form>
 
 

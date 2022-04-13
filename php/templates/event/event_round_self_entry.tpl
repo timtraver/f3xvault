@@ -584,7 +584,7 @@
 		{/if} {* End GPS Event *}
 			
 		<br>
-			{if $event->rounds.$round_number.event_round_locked == 1}
+			{if $event->rounds.$round_number.event_round_locked == 1 || $flight_locked == 1}
 			<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="return false;">
 				<i class="fa fa-lock" style="float:left;padding-top: 3px;"></i>
 				Save This Flight ( Locked )
@@ -684,7 +684,7 @@
 	</div>
 	<div>
 		<br>
-		<button class="btn btn-block btn-info btn-rounded" style="font-size: 24px;" onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';">
+		<button class="btn btn-block btn-primary btn-rounded" style="font-size: 24px;" onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';">
 			View Overall Standings
 		</button>
 		<br>
