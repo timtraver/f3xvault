@@ -6493,7 +6493,31 @@ function event_self_entry() {
 		$advance_round = 0;
 	}	
 	
+	# Lets determine if the logged in user is an admin of this event
+	$user_is_admin = 0;
+	if( $event->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $event->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	$stmt = db_prep("
+		SELECT  * 
+		FROM event_user
+		WHERE event_id = :event_id
+			AND pilot_id = :pilot_id
+			AND event_user_status = 1
+	");
+	$results = db_exec( $stmt, array( "event_id" => $event_id, "pilot_id" => $GLOBALS['user']['pilot_id'] ) );
+	if( count( $results ) > 0 ){ $user_is_admin = 1; }
+	
 	if( $save == 1 ) {
+		# Check if the round or flight is locked and this is not one of the admins
+
+		if( isset( $event->rounds[$round_number] ) && 
+			$event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_locked'] == 1 &&
+			$user_is_admin != 1
+		) {
+			user_message("This round is locked. You cannot enter your score anymore. Contact the CD or Organizer", 1);
+			return event_self_entry();
+		}	
+		
 		# Then they have hit the save this flight button, so lets save it.
 		# lets pre populate the round with a new round just in case
 		$event->get_new_round($round_number);
@@ -6670,6 +6694,14 @@ function event_self_entry() {
 			"flight_type_id" => $flight_type_id
 		));
 
+		# Determine if we need to lock the flight on first save
+		$flight_locked = 0;
+		$key = $event->info['event_type_code'] . "_self_entry_lock";
+		if( $event->find_option_value( $key ) == 1 ){
+			# this needs to be locked after it is entered
+			$flight_locked = 1;
+		}
+
 		if(count($result) > 0){
 			# There is already a flight to overwrite
 			$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
@@ -6687,6 +6719,7 @@ function event_self_entry() {
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
 					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_locked = :flight_locked,
 					event_pilot_round_flight_status = 1
 				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
 			");
@@ -6701,6 +6734,7 @@ function event_self_entry() {
 				"startheight" => $startheight,
 				"penalty" => $penalty,
 				"flight_time" => $flight_time,
+				"flight_locked" => $flight_locked,
 				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
 			));
 		}else{
@@ -6721,6 +6755,7 @@ function event_self_entry() {
 					event_pilot_round_flight_dns = 0,
 					event_pilot_round_flight_dnf = 0,
 					event_pilot_round_flight_time = :flight_time,
+					event_pilot_round_flight_locked = :flight_locked,
 					event_pilot_round_flight_status = 1
 			");
 			$result = db_exec($stmt,array(
@@ -6735,7 +6770,8 @@ function event_self_entry() {
 				"startpen" => $startpen,
 				"startheight" => $startheight,
 				"penalty" => $penalty,
-				"flight_time" => $flight_time
+				"flight_time" => $flight_time,
+				"flight_locked" => $flight_locked
 			));
 			$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
 		}
@@ -6845,7 +6881,8 @@ function event_self_entry() {
 			$startpen = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_penalty'];
 			$startheight = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_height'];
 			$penalty = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_penalty'];
-
+			$flight_locked = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_locked'];
+						
 			# Lets fill in the sub flights
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
 				$string = $f['event_pilot_round_flight_sub_val'];
@@ -6873,9 +6910,12 @@ function event_self_entry() {
 			$penalty = 0;
 			$startpen = 0;
 			$startheight = 0;
+			$flight_locked = 0;
 		}
 	}
-	
+	# unlock it if this is an admin of this event
+	if( $user_is_admin == 1 ){ $flight_locked = 0; }
+			
 	$smarty->assign("event",$event);
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("flight_type_id",$flight_type_id);
@@ -6896,6 +6936,7 @@ function event_self_entry() {
 	$smarty->assign("penalty",$penalty);
 	$smarty->assign("seconds_accuracy",$seconds_accuracy);
 	$smarty->assign("seconds_accuracy_string",$seconds_accuracy_string);
+	$smarty->assign("flight_locked",$flight_locked);
 
 	$maintpl = find_template("event/event_round_self_entry.tpl");
 	return $smarty->fetch($maintpl);
