@@ -44,48 +44,48 @@
 			
 				<li>Event Management</li>
 					<ul>
-						<li>Full signup system for event registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Payment methods for registration<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Full signup system for event registration<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Payment methods for registration<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 						<li>Calander system to see upcoming events</li>
 						<li>Registration wait list for events that fill up quickly</li>
 					</ul>
 				<li>Event Scoring</li>
 					<ul>
-						<li>Reflights<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Flyoff Rounds and Calcs <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Create flying draw order for All disciplines<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Full flight time entries for all the flights in F3K<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Printouts for flight orders and groups <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Possibly print to PDF format for easier printing <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Reflights<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Flyoff Rounds and Calcs <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Create flying draw order for All disciplines<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Full flight time entries for all the flights in F3K<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Printouts for flight orders and groups <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Possibly print to PDF format for easier printing <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 						<li>Email link to results for event participants</li>
-						<li>Full Mobile version for tablets and smartphones <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Full Mobile version for tablets and smartphones <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 						<li>Show statistics for F3K events (quick turnaround times, etc)</li>
-						<li>Resolve ties by going back to dropped rounds for event rank <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Create ability to set event calculation accuracy<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Resolve ties by going back to dropped rounds for event rank <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Create ability to set event calculation accuracy<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Location Database</li>
 					<ul>
-						<li>Make a cool map of the locations in the database in a separate locations map screen using google api <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Make a cool map of the locations in the database in a separate locations map screen using google api <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 						<li>Add Map waypoints</li>
-						<li>Recent Event List at that location<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Recent Event List at that location<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Plane Database</li>
 					<ul>
 						<li>Add plane setups to allow pilots to show setup info</li>
 						<li>Plane Reviews</li>
 						<li>Plane links to build logs</li>
-						<li>Plane Speed and Distance Records<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Pilots Flying Model<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Plane Speed and Distance Records<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Pilots Flying Model<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Pilots Area</li>
 					<ul>
-						<li>Show your own Personal Records for F3F, F3B<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Show your own Personal Records for F3F, F3B<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Series</li>
 					<ul>
-						<li>Series preferences and standings<image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Multiple Series assignment (Events can be part of more than one series) <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Allow different types of series scoring such as MOM scoring <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Series preferences and standings<img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Multiple Series assignment (Events can be part of more than one series) <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Allow different types of series scoring such as MOM scoring <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Clubs</li>
 					<ul>
@@ -100,13 +100,13 @@
 					</ul>
 				<li>Mobile Site Access</li>
 					<ul>
-						<li>Create a mobile version of the site to be able to view locations, planes, and events <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
-						<li>Mobile score entry by end user</li>
-						<li>Ability to expand and contract to view mobile site better <image src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Create a mobile version of the site to be able to view locations, planes, and events <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Mobile score entry by end user <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
+						<li>Ability to expand and contract to view mobile site better <img src="/images/icons/accept.png" style="border:0;margin:0;"></li>
 					</ul>
 				<li>Wish List</li>
 					<ul>
-						<li>Live Timing board control</li>
+						<li>Live Timing board control <img src="/images/icons/accept.png" style="border:0;margin:0;"> !!!!!</li>
 					</ul>
 			</ul>
 
