@@ -53,6 +53,12 @@
 		</tr>
 	</table>
 	<br>
+	<h3>Release Version Information</h3>
+	<br>
+	<ul style="font-weight: bold;font-size: 16px;">
+		<li>2022-04-16 : Initial Release 1.0 of software.</li>
+	</ul>
+	<br>
 	<h3>Download Links And Instructions</h3>
 	<br>
 	<ul style="font-weight: bold;font-size: 16px;">
