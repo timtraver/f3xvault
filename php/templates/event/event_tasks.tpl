@@ -104,13 +104,14 @@
 		</table>
 		</form>
 		
-		{if $event->info.event_type_code == 'f3k'}
+		{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f3k' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j' }
 		<h3 class="post-title entry-title">
-			F3K Audio Link
-		</h3>				
-		<a href="https://www.f3kaudio.com/contest/f3xvault/{$event->info.event_id}"><button class="btn btn-block btn-success btn-rounded" style="font-size: 20px;">
+			F3XTiming Audio Application Download
+		</h3>
+		
+		<a href="?action=downloads"><button class="btn btn-block btn-success btn-rounded" style="font-size: 20px;">
 			<i class="fa fa-play" style="float:left;padding-top: 3px;"></i>
-			Open f3kAudio App With Playlist
+			Go To F3XTiming Application Download Page
 		</button></a>
 		<br>
 		<br>

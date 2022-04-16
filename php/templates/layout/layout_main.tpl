@@ -305,6 +305,16 @@
 										</a>
 									</li>
 
+									<!--Downloads-->
+									<li>
+										<a href="/?action=downloads">
+											<i class="fa fa-book"></i>
+											<span class="menu-title">
+												<strong>Downloads</strong>
+											</span>
+										</a>
+									</li>
+
 									<!--Menu list item-->
 									<li>
 										<a href="/?action=main&function=logout">
