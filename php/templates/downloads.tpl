@@ -231,6 +231,11 @@
 											This is which protocol to use when sending data to a particular timing board. If you do not find the protocol on this list that works with your board, then please contact me, and we can create one that works.
 										</p>
 									</li>
+									<li>Baud Rate
+										<p style="font-weight: normal;font-size: 12px;">
+											This is the serial baud rate to use over this connection.
+										</p>
+									</li>
 									<li>Send Time to clock when system is idle
 										<p style="font-weight: normal;font-size: 12px;">
 											If this checkbox is selected, then the time of day will be displayed on the serial board when there is no activity. If you have a Pilot's meeting entry or a contest start entry, then you will want this off to show the remaining times to the pilots list or contest start.
