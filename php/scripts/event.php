@@ -284,6 +284,7 @@ function event_view() {
 	global $smarty;
 
 	$event_id = intval($_REQUEST['event_id']);
+	$recalculate = intval($_REQUEST['recalculate']);
 	if($event_id == 0){
 		user_message("That is not a proper event id to edit.");
 		return event_list();
@@ -294,6 +295,9 @@ function event_view() {
 	$e->get_rounds();
 	$e->get_draws();
 	$e->calculate_event_totals();
+	if( $recalculate ){
+		$e->event_save_totals();
+	}
 	$e->get_running_totals();
 	
 	# Lets determine if we need a laps report and an average speed report

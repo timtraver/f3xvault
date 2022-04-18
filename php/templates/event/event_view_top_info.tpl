@@ -90,7 +90,6 @@
 				<li><a href="#" onClick="document.event_view_info.submit();">View Full Event Info</a></li>
 				{if $event->info.event_type_code == 'f3k'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3K Tasks</a></li>
-				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">F3K Audio Link</a></li>
 				{/if}
 				{if $event->info.event_type_code == 'gps'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set GPS Tasks</a></li>
@@ -103,6 +102,9 @@
 				{/if}
 				{if $event->info.event_type_code == 'td'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set TD Tasks</a></li>
+				{/if}
+				{if ($permission==1 || $user.user_admin==1) && $event->rounds|count > 0}
+				<li><a href="#" onClick="document.recalculate.submit();">Recalculate All Rounds</a></li>
 				{/if}
 				{if $active_draws || $event->pilots|count >0}
 				<li><a href="#" onClick="if(check_permission()){ldelim}{if $event->pilots|count==0}alert('You must enter pilots before you can create a draw for this event.');{else}event_draw.submit();{/if}{rdelim}">Manage Event Draws</a></li>
@@ -193,6 +195,12 @@
 <input type="hidden" name="event_round_id" value="0">
 <input type="hidden" name="zero_round" value="0">
 <input type="hidden" name="flyoff_round" value="0">
+</form>
+<form name="recalculate" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_view">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="recalculate" value="1">
 </form>
 <form name="print_overall" method="GET" action="?" target="_blank">
 <input type="hidden" name="action" value="event">
