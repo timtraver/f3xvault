@@ -206,7 +206,7 @@
 						</td>
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-						<td align="center" nowrap>
+						<td align="left" nowrap>
 							{if $ft.flight_type_sub_flights != 0}
 								{if $ft.flight_type_code != 'f3f_plus'}{$time_disabled = 1}{/if}
 								{for $sub=1 to $ft.flight_type_sub_flights}
