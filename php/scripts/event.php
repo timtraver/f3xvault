@@ -299,6 +299,7 @@ function event_view() {
 		$e->recalculate_all_rounds();
 		$e->calculate_event_totals();
 		$e->event_save_totals();
+		user_message("All rounds recalculated and overall scores saved.");
 	}
 	$e->get_running_totals();
 	
