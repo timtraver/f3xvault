@@ -296,6 +296,8 @@ function event_view() {
 	$e->get_draws();
 	$e->calculate_event_totals();
 	if( $recalculate ){
+		$e->recalculate_all_rounds();
+		$e->calculate_event_totals();
 		$e->event_save_totals();
 	}
 	$e->get_running_totals();
