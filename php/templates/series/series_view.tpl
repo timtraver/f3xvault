@@ -277,7 +277,7 @@ tbody th:first-child {
 </form>
 <form name="reload" method="POST">
 <input type="hidden" name="action" value="series">
-<input type="hidden" name="function" value="series_view">
+<input type="hidden" name="function" value="seriees_view">
 <input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 </form>
 
