@@ -288,6 +288,7 @@ class Series {
 				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
 				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
 				$subtotals[$pilot_id]['total_score'] += $sub;
+				$subtotals[$pilot_id]['total_events'] += 1;
 			}
 		}
 		# Lets give max points to anyone that didn't make an event
@@ -380,6 +381,7 @@ class Series {
 				}
 				$subtotals[$pilot_id]['pilot_first_name'] = $p['pilot_first_name'];
 				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
+				$subtotals[$pilot_id]['total_events'] += 1;
 			}
 		}
 		
