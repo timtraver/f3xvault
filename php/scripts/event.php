@@ -5782,8 +5782,8 @@ function event_import_save() {
 	# Reset the event again
 	$event = new Event($event_id);
 	$event->get_rounds(); # This will do the recalc of all of the rounds
-	$event->get_rounds(); # This refreshes the rounds for the totals
 	$event->recalculate_all_rounds();
+	$event->get_rounds(); # This refreshes the rounds for the totals
 	$event->calculate_event_totals();
 	$event->event_save_totals();
 	
