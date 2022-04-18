@@ -37,6 +37,7 @@ tbody th:first-child {
 	<div class="panel-heading">
 		<h2 class="heading">{$series->info.series_name|escape}</h2>
 		<div style="float:right;overflow:hidden;margin-top:10px;">
+			<input type="button" value=" Reload " onClick="document.reload.submit();" class="btn btn-primary btn-rounded" style"float:right;">
 			<input type="button" value=" Edit Series Parameters " onClick="document.edit_series.submit();" class="btn btn-primary btn-rounded" style"float:right;">
 			<input type="button" value=" Back To Series List " onClick="document.goback.submit();" class="btn btn-primary btn-rounded" style"float:right;">
 		</div>
@@ -272,6 +273,11 @@ tbody th:first-child {
 <form name="edit_series" method="POST">
 <input type="hidden" name="action" value="series">
 <input type="hidden" name="function" value="series_edit">
+<input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
+</form>
+<form name="reload" method="POST">
+<input type="hidden" name="action" value="series">
+<input type="hidden" name="function" value="series_view">
 <input type="hidden" name="series_id" value="{$series->info.series_id|escape}">
 </form>
 
