@@ -141,12 +141,12 @@
 					<th align="center" style="text-align: center;">Start Penalty</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center" style="text-align: center;" nowrap>
+					<th align="left" style="text-align: left;" nowrap>
 						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
 						{if $ft.flight_type_sub_flights!=0}<br>
 							<div>
 							{for $sub=1 to $ft.flight_type_sub_flights}
-								<input type="text" size="6" style="width:{$ft.accuracy*20 + 20}px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
+								<input type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
 							{/for}
 							= Total
 							</div>
@@ -210,7 +210,7 @@
 							{if $ft.flight_type_sub_flights != 0}
 								{if $ft.flight_type_code != 'f3f_plus'}{$time_disabled = 1}{/if}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:{$ft.accuracy*20 + 25}px;text-align: right;color:black;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;text-align: right;color:black;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
@@ -307,7 +307,7 @@
 							{if $ft.flight_type_sub_flights!=0}
 								{$time_disabled=1}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="6" style="width:35px;text-align: right;color: black;" name="pilot_reflight_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;text-align: right;color: black;" name="pilot_reflight_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total

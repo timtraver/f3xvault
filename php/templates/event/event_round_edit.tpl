@@ -169,19 +169,19 @@
 					<th align="center" style="text-align: center;">Start Penalty</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center" style="text-align: center;" nowrap>
+					<th align="left" style="text-align: left;" nowrap>
 						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
 						{if $ft.flight_type_sub_flights!=0}<br>
 							<div>
 							{for $sub=1 to $ft.flight_type_sub_flights}
-								<input type="text" size="8" style="width:{$ft.accuracy*20 + 20}px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
+								<input type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;height: 20px;text-align: right;background-color: lightgrey;" value="{if $ft.flight_type_code == "f3f_plus"}{if $sub == 1}Climb{else}Sub {$sub - 1|escape}{/if}{else}Sub {$sub|escape}{/if}" disabled> {if $sub!=$ft.flight_type_sub_flights},{/if}
 							{/for}
 							= Total
 							{if $ft.flight_type_minutes}
-								<input type="text" size="8" style="width:{$ft.accuracy*20 + 20}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
+								<input type="text" size="10" style="width:{$ft.accuracy*20 + 25}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
 							{/if}
 							{if $ft.flight_type_seconds}
-								<input type="text" size="8" style="width:{$ft.accuracy*20 + 20}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
+								<input type="text" size="10" style="width:{$ft.accuracy*20 + 25}px;height: 20px;text-align: right;background-color: lightgrey;" value="" disabled>
 							{/if}
 							</div>
 						{/if}
@@ -244,11 +244,11 @@
 						</td>
 					{/if}
 					{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-						<td align="center" nowrap>
+						<td align="left" nowrap>
 							{if $ft.flight_type_sub_flights != 0}
 								{if $ft.flight_type_code != 'f3f_plus'}{$time_disabled = 1}{/if}
 								{for $sub=1 to $ft.flight_type_sub_flights}
-									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="8" style="width:{$ft.accuracy*20 + 20}px;height: 18px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" onChange="check_ladder(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
+									<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;height: 18px;text-align: right;" name="pilot_sub_flight_{$sub}_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.sub.$sub.event_pilot_round_flight_sub_val!='0:00'}{$p.sub.$sub.event_pilot_round_flight_sub_val|escape}{/if}" onChange="check_ladder(this);"> {if $sub!=$ft.flight_type_sub_flights},{/if} 
 									{$tabindex=$tabindex+1}
 								{/for}
 								= Total
@@ -258,7 +258,7 @@
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $ft.flight_type_seconds}
-								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="8" style="width:{$ft.accuracy*20 + 30}px;height: 18px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_seconds|escape}{/if}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>s
+								<input tabindex="{$tabindex}" autocomplete="off" type="text" size="10" style="width:{$ft.accuracy*20 + 30}px;height: 18px;text-align: right;" name="pilot_sec_{$p.event_pilot_round_flight_id}_{$event_pilot_id}_{$ft.flight_type_id}" value="{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_seconds|escape}{/if}" onChange="save_data(this);" {if $time_disabled==1}disabled{/if}>s
 								{$tabindex=$tabindex+1}
 							{/if}
 							{if $ft.flight_type_over_penalty}
