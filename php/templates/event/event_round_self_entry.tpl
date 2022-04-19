@@ -625,6 +625,7 @@
 				{/if}
 				<th style="text-align: right;">Pen</th>
 				<th style="text-align: right;">Score</th>
+				<th style="text-align: right;"></th>
 			</tr>
 			{$groupcolor='lightgrey'}
 			{$oldgroup=''}
@@ -675,6 +676,9 @@
 							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
 							{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
 							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
+						</td>
+						<td align="left" valign="center" nowrap>
+							{if $event_self_entry_lock == 1 && $p.event_pilot_round_flight_locked == 1 }<img width="25" src="/images/icons/bullet_green.png" />{else}<img width="25" src="/images/1x1.png" />{/if}
 						</td>
 					<tr>
 					{$num=$num+1}

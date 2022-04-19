@@ -6386,7 +6386,7 @@ function event_self_entry() {
 		}
 		if($temp_sub[3]>240){
 			$temp_sub[3] = 240;
-		}					
+		}
 		$sub_flights[1]['total_seconds'] = $temp_sub[0];
 		$sub_flights[1]['minutes'] = floor( $temp_sub[0] / 60 );
 		$sub_flights[1]['seconds'] = sprintf( "%02d", fmod( $temp_sub[0], 60 ) );
@@ -6563,13 +6563,20 @@ function event_self_entry() {
 			$event_round_score_status = 1;
 			$event_round_score_second = 1;
 			
+			if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 ){
+				# Make the default to not have the round fully scored yet
+				$score = 0;
+			}else{
+				$score = 1;
+			}
+			
 			$stmt = db_prep("
 				INSERT INTO event_round
 				SET event_id = :event_id,
 					event_round_number = :event_round_number,
 					flight_type_id = :flight_type_id,
 					event_round_time_choice = :event_round_time_choice,
-					event_round_score_status = 1,
+					event_round_score_status = 0,
 					event_round_score_second = :event_round_score_second,
 					event_round_needs_calc = 0,
 					event_round_flyoff = :event_round_flyoff,
@@ -6920,6 +6927,35 @@ function event_self_entry() {
 			$flight_locked = 0;
 		}
 	}
+	
+	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score
+	if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 ){
+		$round_complete = 1;
+		foreach( $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'] as $p ){
+			if( $p['event_pilot_round_flight_locked'] == 0 ){
+				$round_complete = 0;
+			}
+		}
+		if( $round_complete ){
+			# Let update this round to now be scored, since it appears all scores have been entered and locked
+			$stmt = db_prep("
+				UPDATE event_round
+				SET event_round_needs_calc = 1,
+					event_round_score_status = 1
+				WHERE event_round_id = :event_round_id
+			");
+			$result = db_exec($stmt,array(
+				"event_round_id" => $event->rounds[$round_number]['event_round_id']
+			));
+			# And now lets do a recalculate
+			$event->calculate_round( $round_number );		
+			$event->calculate_event_totals();		
+			$event->event_save_totals();
+			# Reload rounds now that we have calculated the score for the round			
+			$event->get_rounds();
+		}
+	}
+	
 	# unlock it if this is an admin of this event
 	if( $user_is_admin == 1 ){ $flight_locked = 0; }
 			
@@ -6944,6 +6980,10 @@ function event_self_entry() {
 	$smarty->assign("seconds_accuracy",$seconds_accuracy);
 	$smarty->assign("seconds_accuracy_string",$seconds_accuracy_string);
 	$smarty->assign("flight_locked",$flight_locked);
+	$key = $event->info['event_type_code'] . "_self_entry_lock";
+	if( $event->find_option_value( $key ) == 1 ){
+		$smarty->assign("event_self_entry_lock", 1 );
+	}
 
 	$maintpl = find_template("event/event_round_self_entry.tpl");
 	return $smarty->fetch($maintpl);
