@@ -122,7 +122,7 @@ function import_verify_manual() {
 	$event_start_date = $lines[$line][2];
 	$event_end_date = $lines[$line][3];
 	$event_type_name = $lines[$line][4];
-		
+
 	# Lets set the dates to a usable format
 	# Lets replace the date dashes with slashes so strtotime works
 	$event_start_date = preg_replace("/\-/", '/', $event_start_date);
@@ -172,7 +172,7 @@ function import_verify_manual() {
 			return import_view();
 		}
 	}
-	
+
 	# Lets get the event type id
 	$event_type_code = '';
 	$f3f_group = 0;
@@ -341,7 +341,7 @@ function import_verify_manual() {
 					$x++;
 					$temp_rounds[$r]['land'] = $lines[$l][$x];
 					$x++;
-					$temp_rounds[$r]['height'] = $lines[$l][$x];
+					$temp_rounds[$r]['start_height'] = $lines[$l][$x];
 					$x++;
 					$temp_rounds[$r]['penalty'] = $lines[$l][$x];
 					$x++;
@@ -383,7 +383,7 @@ function import_verify_manual() {
 		$temp_pilot['rounds'] = $temp_rounds;
 		$pilots[] = $temp_pilot;
 	}
-	
+
 	# Now lets step through the pilots and if they don't have an id, do a search for possible pilot names
 	foreach($pilots as $key => $p){
 		$potentials = array();
@@ -574,6 +574,11 @@ function import_import() {
 			$number = $match[1];
 			$round = $match[2];
 			$pilots[$number]['rounds'][$round]['land'] = $value;
+		}
+		if(preg_match("/^pilot_(\d+)_round_(\d+)_start_height/",$key,$match)){
+			$number = $match[1];
+			$round = $match[2];
+			$pilots[$number]['rounds'][$round]['start_height'] = $value;
 		}
 		if(preg_match("/^pilot_(\d+)_round_(\d+)_over/",$key,$match)){
 			$number = $match[1];
@@ -1151,6 +1156,10 @@ function import_import() {
 					}
 					$sec = $subtotal;
 					break;
+				case 'f5j':
+					$min = $r['min'];
+					$sec = $r['sec'];
+					break;
 				case 'f3j':
 				case 'td':
 					$min = $r['min'];
@@ -1197,6 +1206,7 @@ function import_import() {
 						event_pilot_round_flight_minutes = :min,
 						event_pilot_round_flight_seconds = :sec,
 						event_pilot_round_flight_landing = :landing,
+						event_pilot_round_flight_start_height = :start_height,
 						event_pilot_round_flight_over = :over,
 						event_pilot_round_flight_penalty = :penalty,
 						event_pilot_round_flight_order = :order,
@@ -1208,6 +1218,7 @@ function import_import() {
 					"min" => $min,
 					"sec" => $sec,
 					"landing" => intval($r['land']),
+					"start_height" => intval($r['start_height']),
 					"over" => intval($r['over']),
 					"penalty" => intval($r['pen']),
 					"order" => intval($flight_order),
@@ -1231,6 +1242,7 @@ function import_import() {
 						event_pilot_round_flight_minutes = :min,
 						event_pilot_round_flight_seconds = :sec,
 						event_pilot_round_flight_landing = :landing,
+						event_pilot_round_flight_start_height = :start_height,
 						event_pilot_round_flight_over = :over,
 						event_pilot_round_flight_penalty = :penalty,
 						event_pilot_round_flight_order = :order,
@@ -1243,6 +1255,7 @@ function import_import() {
 					"min" => $min,
 					"sec" => $sec,
 					"landing" => intval($r['land']),
+					"start_height" => intval($r['start_height']),
 					"over" => intval($r['over']),
 					"penalty" => intval($r['pen']),
 					"order" => intval($flight_order)

@@ -98,6 +98,9 @@
 		{if $rounds.1.flight_type_over_penalty==1}
 			{$num_cols = $num_cols + 1}
 		{/if}
+		{if $rounds.1.flight_type_start_height==1}
+			{$num_cols = $num_cols + 1}
+		{/if}
 		{$total_cols = 4 + $num_cols}
 		<tr>
 			<th colspan="4" style="text-align: center">Data Import</th>
@@ -108,15 +111,18 @@
 			<th>Pilot Name</th>
 			<th>Pilot Lookup</th>
 			<th>Pilot Class</th>
-			<th style="text-align: center;">Grp</th>
-			<th style="text-align: center;">Flight</th>
+			<th style="text-align: left;">Grp</th>
+			<th style="text-align: left;">Flight</th>
 			{if $rounds.1.flight_type_landing==1}
-			<th style="text-align: center;">Land</th>
+			<th style="text-align: left;">Land</th>
 			{/if}
 			{if $rounds.1.flight_type_over_penalty==1}
-			<th style="text-align: center;">Over</th>
+			<th style="text-align: left;">Over</th>
 			{/if}
-			<th style="text-align: center;">Pen</th>
+			{if $rounds.1.flight_type_start_height==1}
+			<th style="text-align: left;">Start Height</th>
+			{/if}
+			<th style="text-align: left;">Pen</th>
 		</tr>
 		{$line_number=1}
 		{foreach $pilots as $p}
@@ -142,6 +148,9 @@
 					{if $rounds.1.flight_type_over_penalty==1}
 						<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_over" value="{$r.over|escape}">
 					{/if}
+					{if $rounds.1.flight_type_start_height==1}
+						<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_start_height" value="{$r.start_height|escape}">
+					{/if}
 					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_pen" value="{$r.penalty|escape}">
 				{/foreach}
 			</td>
@@ -161,9 +170,9 @@
 				</select>
 			</td>
 			
-			<td align="center">{$p.rounds.1.group|escape}</td>
-			<td align="center">
-				{if $event.event_type_code=='f3j' || $event.event_type_code=='td'}
+			<td align="left">{$p.rounds.1.group|escape}</td>
+			<td align="left">
+				{if $event.event_type_code=='f3j' || $event.event_type_code=='td' || $event.event_type_code=='f5j'}
 					{$p.rounds.1.min|string_format:"%d"}:{$p.rounds.1.sec|string_format:"%05.2f"}
 				{else}
 					{if $p.rounds.1.flights.sub}
@@ -176,12 +185,15 @@
 				{/if}
 			</td>
 			{if $rounds.1.flight_type_landing==1}
-			<td>{$p.rounds.1.land|escape}</td>
+			<td align="left">{$p.rounds.1.land|escape}</td>
 			{/if}
 			{if $rounds.1.flight_type_over_penalty==1}
-			<td>{if $p.rounds.1.over}YES{/if}</td>
+			<td align="left">{if $p.rounds.1.over}YES{/if}</td>
 			{/if}
-			<td align="center">{$p.rounds.1.penalty|escape}</td>
+			{if $rounds.1.flight_type_start_height==1}
+			<td align="left">{if $p.rounds.1.start_height}{$p.rounds.1.start_height|escape}{/if}</td>
+			{/if}
+			<td align="left">{$p.rounds.1.penalty|escape}</td>
 		</tr>
 		{$line_number=$line_number+1}
 		{/foreach}

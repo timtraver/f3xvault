@@ -74,7 +74,7 @@
 		<tr>
 			<th nowrap>Line 1 (Event Info)</th>
 			<td>
-				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3k or f3f or f3f_group)
+				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3k)
 			</td>
 		</tr>
 		<tr>
@@ -108,7 +108,7 @@
 		<tr>
 			<th nowrap>Line 1 (Event Info)</th>
 			<td>
-				Same as Above Line 1
+				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3f or f3f_group)
 			</td>
 		</tr>
 		<tr>
@@ -138,7 +138,7 @@
 		<tr>
 			<th nowrap>Line 1 (Event Info)</th>
 			<td>
-				Same as First Line 1
+				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f3j or td)
 			</td>
 		</tr>
 		<tr>
@@ -156,15 +156,49 @@
 		<tr>
 			<th nowrap>Example</th>
 			<td>
-				0,2015 F3J SoCal,11/7/15,11/8/15,f3j
-				10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,15:00,15:00,15:00,15:00
-				0,Tim Traver,Open,2.4,Slope Rebels,4,9,55.22,93,,,1,9,55.56,97,,,1,6,35.42,99, ,,2,9,55.38,98,,,2,,,,,,2,9,51.46,0,,,4,9,53.9,96,,,2,8,47.04,91,, ,1,9,54.84,90,,,1,9,53.88,90,, 
-				0,Thomas Kiesling,Open,2.4,Team MKS USA,1,9,18.56,0,,,4,9,54.34,99,,,4,9,55.5,96,,,3,9,55.14,95,,,2,9,53.16,96,,,2,9,53.21,100,,,3,9,53.37,96,,,3,9,34.88,100,,,1,7,32.08,94,,,3,9,56.4,91,,
+				0,2015 F3J SoCal,11/7/15,11/8/15,f3j<br>
+				10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,15:00,15:00,15:00,15:00<br>
+				0,Tim Traver,Open,2.4,Slope Rebels,4,9,55.22,93,,,1,9,55.56,97,,,1,6,35.42,99, ,,2,9,55.38,98,,,2,,,,,,2,9,51.46,0,,,4,9,53.9,96,,,2,8,47.04,91,, ,1,9,54.84,90,,,1,9,53.88,90,, <br>
+				0,Thomas Kiesling,Open,2.4,Team MKS USA,1,9,18.56,0,,,4,9,54.34,99,,,4,9,55.5,96,,,3,9,55.14,95,,,2,9,53.16,96,,,2,9,53.21,100,,,3,9,53.37,96,,,3,9,34.88,100,,,1,7,32.08,94,,,3,9,56.4,91,,<br>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
+		<tr>
+			<th align="left" colspan="2">For F5J</th>
+		</tr>
+		<tr>
+			<th nowrap>Line 1 (Event Info)</th>
+			<td>
+				Event_ID(num),Event_Name(text),Event_Date_From(text),Event_Date_To(text),Event_Type(f5j)
+			</td>
+		</tr>
+		<tr>
+			<th nowrap>Line 2 (Round Target Times)</th>
+			<td>
+				Round_1_Target ('10:00'), Round_2_Target ('15:00'), Round_X_Target (time) . . .
+			</td>
+		</tr>
+		<tr>
+			<th nowrap>Line 3 (Pilot Data)</th>
+			<td>
+				Pilot_ID(num or 0), Pilot_Name(text), Pilot_Class(text), Pilot_Freq(text), Pilot_Team(text), Round_1_group(txt), Round_1_min(num), Round_1_sec(num), Round_1_landing(num), Round_1_start_height(num), Round_1_Penalty(num), Round_2_group(txt), Round_2_min(num), Round_2_sec(num), Round_2_landing(num), Round_2_start_height(num), Round_2_Penalty(num), ... Round_X_...
+			</td>
+		</tr>
+		<tr>
+			<th nowrap>Example</th>
+			<td>
+				0,2020 F5J SoCal,11/7/20,11/8/20,f5j<br>
+				10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,10:00,15:00,15:00,15:00,15:00<br>
+				0,Tim Traver,Open,2.4,Slope Rebels,4,9,55,50,127,,1,9,57,45,112,,1,6,36,50,87,,2,9,58,40,92,,2,,,,,,2,9,51,45,89,,4,9,55,50,167,,2,8,48,50,139,,1,9,58,50,112,,1,9,54,50,186,<br>
+				0,Thomas Kiesling,Open,2.4,Team MKS USA,1,9,19,40,112,,4,9,57,45,169,,4,9,58,50,103,,3,9,56,45,172,,2,9,54,50,138,,2,9,57,50,138,,3,9,58,50,112,,3,9,35,45,72,,1,7,34,35,56,,3,9,58,50,64,<br>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		
 		<tr>
 			<th align="left" colspan="2">Glossary of Fields</th>
 		</tr>
