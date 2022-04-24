@@ -6857,8 +6857,6 @@ function event_self_entry() {
 		$event = new Event($event_id);
 		$event->get_rounds();
 		$event->calculate_round($round_number);		
-		$event->calculate_event_totals();		
-		$event->event_save_totals();
 		# Reload rounds now that we have calculated the score for the round			
 		$event->get_rounds();
 		$subs = array();
@@ -6931,7 +6929,7 @@ function event_self_entry() {
 		}
 	}
 	
-	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score
+	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score and recalculate the events
 	if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 ){
 		$round_complete = 1;
 		foreach( $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'] as $p ){
@@ -6957,6 +6955,9 @@ function event_self_entry() {
 			# Reload rounds now that we have calculated the score for the round			
 			$event->get_rounds();
 		}
+	}else{
+		$event->calculate_event_totals();		
+		$event->event_save_totals();
 	}
 	
 	# unlock it if this is an admin of this event
