@@ -6469,6 +6469,8 @@ function event_self_entry() {
 				$team_members[$epid] = $p;
 			}
 		}
+		# Now lets sort that pilot array by first name
+		$team_members = array_msort( $team_members, array( 'pilot_first_name' => SORT_ASC ) );
 	}else{
 		# Lets just get the team members to score for
 		$event->get_teams();
@@ -6478,6 +6480,7 @@ function event_self_entry() {
 				$team_members[$epid] = $p;
 			}
 		}
+		$team_members = array_msort( $team_members, array( 'pilot_first_name' => SORT_ASC ) );
 	}
 	
 	# Now lets look at the rounds to see which is the next round # to add if its a new one
