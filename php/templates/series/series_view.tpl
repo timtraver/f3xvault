@@ -137,6 +137,10 @@ tbody th:first-child {
 			<thead>
 			<tr>
 				<th colspan="3" align="right" nowrap></th>
+				<th width="5%" nowrap>Total Score</th>
+				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
+				<th width="5%" nowrap>Percentage</th>
+				{/if}
 				<th colspan="{$series->totals.total_events + 1}" align="center" nowrap>
 					{assign var='best' value='0'}
 					{foreach $series->options as $key => $o}
@@ -150,15 +154,15 @@ tbody th:first-child {
 						Series Events ({if $series->totals.round_drops==0}No{else}{$series->totals.round_drops|escape}{/if} Drop{if $series->totals.round_drops!=1}s{/if} In Effect over {$series->completed_events|escape} Completed Events)
 					{/if}
 				</th>
-				<th width="5%" nowrap>Total Score</th>
-				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
-				<th width="5%" nowrap>Percentage</th>
-				{/if}
 			</tr>
 			<tr>
 				<th width="2%" align="left"></th>
 				<th width="10%" align="right" nowrap>Pilot Name</th>
 				<th width="2%" align="right" nowrap>Events</th>
+				<th>&nbsp;</th>
+				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
+				<th>&nbsp;</th>
+				{/if}
 				{foreach $series->events as $e}
 					<th width="1%" align="center" style="text-align: center;" nowrap>
 						<a class="tooltip_score_right_low" href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E {$event_num|escape}
@@ -168,10 +172,6 @@ tbody th:first-child {
 					{$event_num=$event_num+1}
 				{/foreach}
 				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
-				<th>&nbsp;</th>
-				{/if}
 			</tr>
 			</thead>
 			<tbody>
@@ -194,6 +194,22 @@ tbody th:first-child {
 					<td align="center" nowrap>
 						{$p.total_events|escape}
 					</td>
+					<td width="5%" nowrap align="right">
+						<a href="" class="tooltip_score_left" onClick="return false;">
+							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+								{$p.total_score|string_format:"%.1f"}
+							{else}
+								{$p.total_score|string_format:"%0.2f"}
+							{/if}
+							<span>
+								<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
+								<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
+							</span>
+						</a>
+					</td>
+					{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
+						<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
+					{/if}
 					{foreach $series->events as $e}
 						{$event_id=$e.event_id|escape}
 						<td class="info" align="right"{if $e.pilots.$pilot_id.event_pilot_position==1} style="border-width: 2px;border-color: green;color:green ;font-weight:bold;"{/if}>
@@ -239,22 +255,6 @@ tbody th:first-child {
 					{/foreach}
 					<td></td>
 					
-					<td width="5%" nowrap align="right">
-						<a href="" class="tooltip_score_left" onClick="return false;">
-							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
-								{$p.total_score|string_format:"%.1f"}
-							{else}
-								{$p.total_score|string_format:"%0.2f"}
-							{/if}
-							<span>
-								<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
-								<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
-							</span>
-						</a>
-					</td>
-					{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
-						<td width="5%" nowrap align="right">{$p.pilot_total_percentage|string_format:"%03.2f"}%</td>
-					{/if}
 				</tr>
 				{$previous=$p.total_score}
 				{/foreach}
