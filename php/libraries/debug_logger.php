@@ -107,11 +107,12 @@ class DebugLogger
 	 * @param array $parameters
 	 * @return DebugLogger
 	 */
-	public function logQuery($query, array $bindParameters = array())
+	public function logQuery($query, array $bindParameters = array(), $diff)
 	{
 		array_push($this->queries, array(
 			'query' 		 => $query,
 			'bindParameters' => $bindParameters,
+			'time' => $diff,
 		));
 
 		return $this;
