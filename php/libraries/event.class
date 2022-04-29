@@ -918,7 +918,7 @@ class Event {
 		}
 		# Lets put them in current standing order if desired
 		if($sort_by == 'current_standing'){
-			$this->calculate_event_totals();
+			#$this->calculate_event_totals();
 			# ok, now lets step through the round and create a new rounds array
 			foreach($this->flight_types as $flight_type_id => $ft){
 				$newpilots = array();
