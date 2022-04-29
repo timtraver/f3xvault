@@ -465,6 +465,7 @@ class Series {
 			foreach($e['pilots'] as $pilot_id => $p){
 				$sub = $p['event_pilot_total_percentage'] * 10 * $multiple;
 				$bonus = $total_pilots - $p['event_pilot_position'] + 1;
+				if( $bonus < 0 ){ $bonus = 0; }
 				$total = $sub + $bonus;
 				$subtotals[$pilot_id]['events'][$event_id]['event_score'] = $total;
 				$subtotals[$pilot_id]['events'][$event_id]['event_score_orig'] = $sub;
