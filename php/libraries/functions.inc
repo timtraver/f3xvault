@@ -115,10 +115,6 @@ function db_exec ($stmt,$data=array()) {
         global $last_insert_id;
         global $total_queries;
 
-		if(isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger){
-			$GLOBALS['debugLogger']->logQuery($stmt,$data);
-		}
-		
 		# Set the default type of return
 		if(preg_match("/SELECT/i",$stmt->queryString)){
 			$results=array();
@@ -128,7 +124,14 @@ function db_exec ($stmt,$data=array()) {
 
         # Function to wrap the query execution
         try {
+			$start = microtime(true);
 	        $stmt->execute($data);
+			$diff = microtime(true) - $start;
+			
+			if(isset($GLOBALS['debugLogger']) && $GLOBALS['debugLogger'] instanceof DebugLogger){
+				$GLOBALS['debugLogger']->logQuery($stmt,$data, $diff);
+			}
+			
 	        if(preg_match("/UPDATE/i",$stmt->queryString) || preg_match("/DELETE/i",$stmt->queryString)){
 				$results=$stmt->rowCount();
 	        }elseif(preg_match("/INSERT/i",$stmt->queryString)){
