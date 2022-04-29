@@ -6269,7 +6269,6 @@ function event_self_entry() {
 
 	$event = new Event($event_id);
 	$event->get_rounds();
-	$event->get_tasks();
 	$event->get_draws();
 
 	# If the event_pilot id is 0, then lets get the event pilot ID from the logged in user
@@ -6533,6 +6532,7 @@ function event_self_entry() {
 		$event->get_new_round($round_number);
 
 		# First lets see if the round is there and if it is not locked.
+		$event_round_reactivated = 0;
 		$stmt = db_prep("
 			SELECT *
 			FROM event_round
@@ -6549,15 +6549,6 @@ function event_self_entry() {
 				return event_self_entry();
 			}
 			$event_round_id = $result[0]['event_round_id'];
-			# Need to update it to say that it needs calculation
-			$stmt = db_prep("
-				UPDATE event_round
-				SET event_round_needs_calc = 1
-				WHERE event_round_id = :event_round_id
-			");
-			$result = db_exec($stmt,array(
-				"event_round_id" => $event_round_id
-			));
 		}else{
 			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j' || $event->info['event_type_code'] == 'td'){
 				$event_round_time_choice = $event->tasks[$round_number]['event_task_time_choice'];
@@ -6579,7 +6570,7 @@ function event_self_entry() {
 					event_round_number = :event_round_number,
 					flight_type_id = :flight_type_id,
 					event_round_time_choice = :event_round_time_choice,
-					event_round_score_status = 0,
+					event_round_score_status = :score,
 					event_round_score_second = :event_round_score_second,
 					event_round_needs_calc = 0,
 					event_round_flyoff = :event_round_flyoff,
@@ -6590,10 +6581,14 @@ function event_self_entry() {
 				"event_round_number"		=> $round_number,
 				"flight_type_id"			=> $flight_type_id,
 				"event_round_time_choice"	=> $event_round_time_choice,
+				"score"						=> $score,
 				"event_round_flyoff"		=> $event_round_flyoff,
 				"event_round_score_second"	=> $event_round_score_second
 			));
 			$event_round_id = $GLOBALS['last_insert_id'];
+			# Now that we've created a new round, lets refresh the rounds
+			// $event->get_rounds();
+			$event_round_reactivated = 1;
 		}
 		# Lets create the round flight now
 		# First lets see if it exists
@@ -6681,10 +6676,88 @@ function event_self_entry() {
 				));
 			}
 		}
+		if( $event_round_reactivated == 1 ){
+			# Let us pre-populate the event_pilot_round_flights again with the default draw values
+			foreach($event->pilots as $epid => $ep){
+				# Lets first see if there is already an event_pilot_round record
+				$stmt = db_prep( "
+					SELECT *
+					FROM event_pilot_round
+					WHERE event_pilot_id = :event_pilot_id
+						AND event_round_id = :event_round_id
+				" );
+				$result = db_exec( $stmt, array(
+					"event_pilot_id" => $epid,
+					"event_round_id" => $event_round_id
+				) );
+				if( count($result) > 0 ){
+					# There already is one, so lets just set its eprid
+					$eprid = $result[0]['event_pilot_round_id'];
+				}else{
+					# We need to add one
+					$stmt = db_prep("
+						INSERT INTO event_pilot_round
+						SET event_pilot_id = :event_pilot_id,
+							event_round_id = :event_round_id
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_id" => $epid,
+						"event_round_id" => $event_round_id
+					));
+					$eprid = $GLOBALS['last_insert_id'];
+				}
+				if($epid == $event_pilot_id){
+					$event_pilot_round_id = $eprid;
+				}
+				# And now lets add the pilot round flight with the default group from the draw if it doesn't exist already
+				$stmt = db_prep( "
+					SELECT *
+					FROM event_pilot_round_flight
+					WHERE event_pilot_round_id = :eprid
+						AND flight_type_id = :flight_type_id
+				" );
+				$result = db_exec( $stmt, array(
+					"eprid" => $eprid,
+					"flight_type_id" => $flight_type_id,
+				) );
+				if( isset($result[0])){
+					# It exists, so lets update it
+					$stmt = db_prep("
+						UPDATE event_pilot_round_flight
+						SET event_pilot_round_flight_group = :event_pilot_round_flight_group,
+							event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+							event_pilot_round_flight_status = 1
+						WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
+						"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane'],
+						"event_pilot_round_flight_id" => $result[0]['event_pilot_round_flight_id']
+					));
+				}else{
+					# Lets create a new one
+					$stmt = db_prep("
+						INSERT INTO event_pilot_round_flight
+						SET event_pilot_round_id = :event_pilot_round_id,
+							flight_type_id = :flight_type_id,
+							event_pilot_round_flight_group = :event_pilot_round_flight_group,
+							event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+							event_pilot_round_flight_status = 1
+					");
+					$result = db_exec($stmt,array(
+						"event_pilot_round_id" => $eprid,
+						"flight_type_id" => $flight_type_id,
+						"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
+						"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane']
+					));
+				}
+			}
+		}
+		# Update the rounds now that we have saved or resaved them
+		$event->get_rounds();
 
 		# So, now that we are here, we should have the event_round_id and the event_round_pilot_id, so lets save the flight
 		# Lets reset the event object
-		$event->get_rounds();
 		$flight_time = time();
 		
 		$stmt = db_prep("
@@ -6855,7 +6928,7 @@ function event_self_entry() {
 		
 		# Now lets re-calculate things
 		$event = new Event($event_id);
-		$event->get_rounds();
+		#$event->get_rounds();
 		$event->calculate_round($round_number);		
 		# Reload rounds now that we have calculated the score for the round			
 		$event->get_rounds();
@@ -6930,14 +7003,14 @@ function event_self_entry() {
 	}
 	
 	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score and recalculate the events
-	if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 ){
+	if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 && $event->rounds[$round_number]['event_round_score_status'] == 0 ){
 		$round_complete = 1;
 		foreach( $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'] as $p ){
 			if( $p['event_pilot_round_flight_locked'] == 0 ){
 				$round_complete = 0;
 			}
 		}
-		if( $round_complete ){
+		if( $round_complete && $event->rounds[$round_number]['event_round_score_status'] == 0 ){
 			# Let update this round to now be scored, since it appears all scores have been entered and locked
 			$stmt = db_prep("
 				UPDATE event_round
@@ -6956,8 +7029,8 @@ function event_self_entry() {
 			$event->get_rounds();
 		}
 	}else{
-		$event->calculate_event_totals();		
-		$event->event_save_totals();
+		#$event->calculate_event_totals();		
+		#$event->event_save_totals();
 	}
 	
 	# unlock it if this is an admin of this event
