@@ -96,7 +96,7 @@ class Series {
 			# Let us get any flyoff rounds to adjust the final order of the pilots for bonus points in the f5jtour calc type
 			$ev = new Event( $event_id );
 			$ev->get_rounds();
-			$ev->calculate_event_totals();
+			#$ev->calculate_event_totals();
 			if( $ev->flyoff_totals ){
 				foreach( $ev->flyoff_totals as $flyoff_number => $flyoff ){
 					foreach( $flyoff['pilots'] as $key => $p ){
@@ -443,13 +443,25 @@ class Series {
 			if($e['total_rounds'] == 0){
 				continue;
 			}
-			# Get total pilots that have at least one score
+			# Get total pilots that have at least four scores
 			$total_pilots = 0;
-			foreach( $e['pilots'] as $pilot_id => $p ){
-				if( $p['event_pilot_total_score'] > 0 ){
+			# Lets make a single query of all of the event_pilot_round scores and group them by pilot and count to see how many have more than four rounds
+			$stmt = db_prep( "
+				SELECT count( ep.event_pilot_id ) as total
+				FROM event_pilot_round epr
+				LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+				WHERE ep.event_id = :event_id
+					AND ep.event_pilot_status = 1
+					AND epr.event_pilot_round_total_score > 0
+				GROUP BY ep.event_pilot_id
+			" );
+			$result = db_exec( $stmt, array( "event_id" => $event_id ) );
+			foreach( $result as $row ){
+				if( $row['total'] > 3 ){
 					$total_pilots++;
 				}
 			}
+						
 			foreach($e['pilots'] as $pilot_id => $p){
 				$sub = $p['event_pilot_total_percentage'] * 10 * $multiple;
 				$bonus = $total_pilots - $p['event_pilot_position'] + 1;
