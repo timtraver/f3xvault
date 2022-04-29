@@ -14,10 +14,8 @@
 				{/if}
 			{/if}
 			{if isset($assigned_vars['debugLogger'])}
-				<li><a href="javascript:;" debug-toggle="query-log">{$assigned_vars['debugLogger']['value']->getQueryCount()|escape} Queries Exe
-cuted</a></li>
-				<li><a href="javascript:;" debug-toggle="message-log">{$assigned_vars['debugLogger']['value']->getLogCount()|escape} Debug Messa
-ges</a></li>
+				<li><a href="javascript:;" debug-toggle="query-log">{$assigned_vars['debugLogger']['value']->getQueryCount()|escape} Queries Executed</a></li>
+				<li><a href="javascript:;" debug-toggle="message-log">{$assigned_vars['debugLogger']['value']->getLogCount()|escape} Debug Messages</a></li>
 			{/if}
 			<li><a href="javascript:;" debug-toggle="template-vars">{count($assigned_vars)} Template Variables</a></li>
 			<li><a href="javascript:;" debug-toggle="template-config">{count($config_vars)} Template Configuration Variables</a></li>
@@ -62,7 +60,7 @@ ges</a></li>
 			<div class="debug-toolbar-pane-content">
 				<ul>
 					{foreach $assigned_vars['debugLogger']['value']->getQueries() as $query}
-						<li>{$query['query']->queryString|escape}</li>
+						<li>{$query['query']->queryString|escape} - {$query['time']|string_format:"%5f"}</li>
 					{/foreach}
 				</ul>
 			</div>
