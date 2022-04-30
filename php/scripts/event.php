@@ -6557,13 +6557,6 @@ function event_self_entry() {
 			$event_round_score_status = 1;
 			$event_round_score_second = 1;
 			
-			if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 ){
-				# Make the default to not have the round fully scored yet
-				$score = 0;
-			}else{
-				$score = 1;
-			}
-			
 			$stmt = db_prep("
 				INSERT INTO event_round
 				SET event_id = :event_id,
@@ -6581,7 +6574,7 @@ function event_self_entry() {
 				"event_round_number"		=> $round_number,
 				"flight_type_id"			=> $flight_type_id,
 				"event_round_time_choice"	=> $event_round_time_choice,
-				"score"						=> $score,
+				"score"						=> 0,
 				"event_round_flyoff"		=> $event_round_flyoff,
 				"event_round_score_second"	=> $event_round_score_second
 			));
@@ -6810,6 +6803,7 @@ function event_self_entry() {
 					event_pilot_round_flight_dnf = 0,
 					event_pilot_round_flight_time = :flight_time,
 					event_pilot_round_flight_locked = :flight_locked,
+					event_pilot_round_flight_entered = 1,
 					event_pilot_round_flight_status = 1
 				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
 			");
@@ -6846,6 +6840,7 @@ function event_self_entry() {
 					event_pilot_round_flight_dnf = 0,
 					event_pilot_round_flight_time = :flight_time,
 					event_pilot_round_flight_locked = :flight_locked,
+					event_pilot_round_flight_entered = 1,
 					event_pilot_round_flight_status = 1
 			");
 			$result = db_exec($stmt,array(
@@ -7003,10 +6998,10 @@ function event_self_entry() {
 	}
 	
 	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score and recalculate the events
-	if( $event->find_option_value( $event->info['event_type_code'] . "_self_entry_lock" ) == 1 && $event->rounds[$round_number]['event_round_score_status'] == 0 ){
+	if( $event->rounds[$round_number]['event_round_score_status'] == 0 ){
 		$round_complete = 1;
 		foreach( $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'] as $p ){
-			if( $p['event_pilot_round_flight_locked'] == 0 ){
+			if( $p['event_pilot_round_flight_entered'] == 0 ){
 				$round_complete = 0;
 			}
 		}
@@ -7028,9 +7023,6 @@ function event_self_entry() {
 			# Reload rounds now that we have calculated the score for the round			
 			$event->get_rounds();
 		}
-	}else{
-		#$event->calculate_event_totals();		
-		#$event->event_save_totals();
 	}
 	
 	# unlock it if this is an admin of this event
