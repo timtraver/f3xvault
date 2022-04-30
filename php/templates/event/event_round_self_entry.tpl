@@ -229,21 +229,6 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meters
 				</td>
 			</tr>
-			<tr>
-				<th><h3>Start Height 2</h3></th>
-				<td>
-					<div class="btn-group" style="width: 50px;">
-						{if $startheight == ''}{$startheight = 0}{/if}
-						<input type="button" id="height_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$startheight} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=350 start=0 step=1}
-								<li><a href="#" onClick='document.main.startheight.value="{$smarty.section.s.index}";document.getElementById("height_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-								{/section}
-							</ul>
-					</div>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meters
-				</td>
-			</tr>
 			{/if}
 			<tr>
 				<th><h3>Landing</h3></th>
