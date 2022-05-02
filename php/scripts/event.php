@@ -376,6 +376,14 @@ function event_view() {
 		$start_height_rank = $e->get_top_start_height();
 		$smarty->assign("start_height",$start_height_rank);
 	}
+	if($e->info['event_type_code'] == 'f5j'){
+		# Lets get the percent made time
+		$made_time_rank = $e->get_top_time_made();
+		$smarty->assign("made_time_rank",$made_time_rank);
+		# Lets get the average height of time made
+		$height_time_rank = $e->get_top_lowest_height_with_time();
+		$smarty->assign("height_time_rank",$height_time_rank);
+	}
 	if($f3f_plus){
 		# Lets get all of the cool stats about f3f plus runs
 		$climbout_averages = $e->get_climbout_averages();

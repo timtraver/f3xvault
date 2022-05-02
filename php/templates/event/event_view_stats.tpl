@@ -281,6 +281,71 @@
 	</div>
 	{/if}
 
+	{if $made_time_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Made 95% Time</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>%</th>
+		</tr>
+		{$rank=1}
+		{$oldscore=0}
+		{foreach $made_time_rank as $p}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr>
+				<td>
+					{if $p.percent_made!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>{$p.percent_made|escape}%</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+			{$oldscore=$p.percent_made}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+
+	{if $height_time_rank}
+	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
+		<h3 class="post-title">Height Avg of 95% Times</h3>
+		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
+		<tr>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Avg(m)</th>
+		</tr>
+		{$rank=1}
+		{$oldscore=0}
+		{foreach $height_time_rank as $p}
+			{if $p.average_height == 0}{continue}{/if}
+			{$event_pilot_id=$p.event_pilot_id}
+			<tr>
+				<td>
+					{if $p.average_height!=$oldscore}
+						{$rank}
+					{/if}
+				</td>
+				<td nowrap>
+					{include file="event/event_view_pilot_popup.tpl"}
+				</td>
+				<td>{$p.average_height|string_format:$event->event_calc_accuracy_string}</td>
+			</tr>
+			{if $rank==20}{break}{/if}
+			{$rank=$rank+1}
+			{$oldscore=$p.average_height}
+		{/foreach}
+		</table>
+	</div>
+	{/if}
+
 	{if $event->planes|count>0}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-right: 10px;">                
 		<h3 class="post-title">Plane Distribution</h3>
