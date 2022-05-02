@@ -309,7 +309,7 @@
 				<td nowrap>
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
-				<td>{$p.percent_made|escape}%</td>
+				<td>{$p.percent_made|string_format:$event->event_calc_accuracy_string}%</td>
 			</tr>
 			{if $rank==20}{break}{/if}
 			{$rank=$rank+1}
