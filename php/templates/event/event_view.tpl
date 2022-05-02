@@ -153,11 +153,35 @@
 					{include file="event/event_view_rankings.tpl"}
 				</div>
 				{/if}
-				{if $event->rounds|count>0 && ($lap_totals || $speed_averages || $top_landing || $event->planes|count>0)}
+				{if $event->rounds|count>0 && ($lap_totals || $speed_averages || $top_landing || $event->planes|count>0 || $start_height || $height_time_rank || $made_time_rank)}
 				<div id="pilot-tab-6" class="tab-pane fade{if $tab==6} active in{/if}">
 					<h2 style="float:left;">Statistics</h2>
 					<br style="clear:left;">
+					<h3 style="float:left;">
+						Show Top
+						<select name="show_top" onChange='document.getElementById("show_top").value = this.value;document.event_view_update_stats.submit();'>
+						<option	value="10"{if $show_top == 10} SELECTED{/if}>10</option>
+						<option	value="20"{if $show_top == 20} SELECTED{/if}>20</option>
+						<option	value="30"{if $show_top == 30} SELECTED{/if}>30</option>
+						<option	value="40"{if $show_top == 40} SELECTED{/if}>40</option>
+						<option	value="50"{if $show_top == 50} SELECTED{/if}>50</option>
+						<option	value="60"{if $show_top == 60} SELECTED{/if}>60</option>
+						<option	value="70"{if $show_top == 70} SELECTED{/if}>70</option>
+						<option	value="80"{if $show_top == 80} SELECTED{/if}>80</option>
+						<option	value="90"{if $show_top == 90} SELECTED{/if}>90</option>
+						<option	value="100"{if $show_top == 100} SELECTED{/if}>100</option>
+						</select>
+					</h3>
+					<br style="clear:left;">
 					{include file="event/event_view_stats.tpl"}
+					<form name="event_view_update_stats" method="POST">
+					<input type="hidden" name="action" value="event">
+					<input type="hidden" name="function" value="event_view">
+					<input type="hidden" name="event_id" value="{$event->info.event_id}">
+					<input type="hidden" id="show_top" name="show_top" value="{$show_top|escape}">
+					<input type="hidden" name="tab" value="6">
+					</form>
+
 				</div>
 				{/if}
 				{if $event->rounds|count>0 && $graphs}

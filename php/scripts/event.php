@@ -285,6 +285,16 @@ function event_view() {
 
 	$event_id = intval($_REQUEST['event_id']);
 	$recalculate = intval($_REQUEST['recalculate']);
+	$show_top = intval($_REQUEST['show_top']);
+	$tab = intval($_REQUEST['tab']);
+	if(isset($_REQUEST['show_top'])){
+		$show_top = intval($_REQUEST['show_top']);
+		$GLOBALS['fsession']['show_top'] = $show_top;
+	}elseif(isset($GLOBALS['fsession']['show_top'])){
+		$show_top = $GLOBALS['fsession']['show_top'];
+	}else{
+		$show_top = 20;
+	}
 	if($event_id == 0){
 		user_message("That is not a proper event id to edit.");
 		return event_list();
@@ -477,11 +487,14 @@ function event_view() {
 			$total_prelim_rounds++;
 		}
 	}
-	$tab = 0;
-	if(count($e->rounds) <= 0){
-		$tab = 2;
+	if( !isset($_REQUEST['tab']) ){
+		if(count($e->rounds) <= 0 ){
+			$tab = 2;
+		}else{
+			$tab = 0;
+		}
 	}
-	$smarty->assign("tab",$tab);
+	$smarty->assign( "tab" ,$tab );
 
 	# Lets set the draw rounds to be able to see them in the tab
 	$e->get_active_draws_and_stats();
@@ -509,6 +522,7 @@ function event_view() {
 	$smarty->assign("draw_info",$e->draw_rounds_stats_info);
 	$smarty->assign("total_prelim_rounds",$total_prelim_rounds);
 	$smarty->assign("total_flyoff_rounds",$total_flyoff_rounds);
+	$smarty->assign("show_top",$show_top);
 	$maintpl = find_template("event/event_view.tpl");
 	return $smarty->fetch($maintpl);
 }

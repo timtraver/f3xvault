@@ -33,7 +33,7 @@
 	{/if}
 	{if $distance_laps}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Top 20 Distance Runs</h3>
+		<h3 class="post-title">Top Distance Runs</h3>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
 			<th>Rank</th>
@@ -57,7 +57,7 @@
 				<td align="center">{$p.event_pilot_round_flight_laps|escape}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_round_flight_laps}
 		{/foreach}
@@ -67,7 +67,7 @@
 	
 	{if $speed_averages}
 		<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Top 20 Speed Runs</h3>
+		<h3 class="post-title">Top Speed Runs</h3>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
 			<th>Rank</th>
@@ -91,7 +91,7 @@
 				<td>{$p.event_pilot_round_flight_seconds|string_format:$p.accuracy_string}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.event_pilot_round_flight_seconds}
 		{/foreach}
@@ -151,7 +151,7 @@
 
 	{if $first_lap_speeds}
 		<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Top 20 First Lap Times</h3>
+		<h3 class="post-title">Top First Lap Times</h3>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
 			<th>Rank</th>
@@ -175,7 +175,7 @@
 				<td>{$p.first_lap_speed|string_format:$p.accuracy_string}</td>
 				<td align="center">{$p.event_round_number|escape}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.first_lap_speed}
 		{/foreach}
@@ -241,7 +241,7 @@
 				</td>
 				<td>{$p.average_landing|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.average_landing}
 		{/foreach}
@@ -273,7 +273,7 @@
 				</td>
 				<td>{$p.average_start_height|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.average_start_height}
 		{/foreach}
@@ -305,7 +305,7 @@
 				</td>
 				<td>{$p.percent_made|string_format:$event->event_calc_accuracy_string}%</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.percent_made}
 		{/foreach}
@@ -338,7 +338,7 @@
 				</td>
 				<td>{$p.average_height|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
-			{if $rank==20}{break}{/if}
+			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
 			{$oldscore=$p.average_height}
 		{/foreach}
