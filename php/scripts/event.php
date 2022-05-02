@@ -393,6 +393,9 @@ function event_view() {
 		# Lets get the average height of time made
 		$height_time_rank = $e->get_top_lowest_height_with_time();
 		$smarty->assign("height_time_rank",$height_time_rank);
+		# Lets get the aggressive index
+		$aggressive_index = $e->get_aggressive_index();
+		$smarty->assign("aggressive_index",$aggressive_index);
 	}
 	if($f3f_plus){
 		# Lets get all of the cool stats about f3f plus runs

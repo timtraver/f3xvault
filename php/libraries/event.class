@@ -2704,6 +2704,69 @@ class Event {
 		$average_and_time = array_orderby( $temp_height_time, "number_rounds", SORT_DESC, "average_height", SORT_ASC );
 		return $average_and_time;
 	}
+	public function get_aggressive_index(){
+		# Function to get the aggressive index for a pilot by stepping through the groups and calculating
+		if(count($this->totals['pilots']) == 0){
+			$this->calculate_event_totals();
+		}
+		# Let's first getthe average launch height for each of the rounds and groups
+		$averages = array();
+		foreach($this->rounds as $event_round_number => $r){
+			if($r['event_round_score_status'] == 1){
+				foreach($r['flights'] as $flight_type_id => $f){
+					if($f['flight_type_seconds'] == 1){
+						foreach($f['pilots'] as $event_pilot_id => $p){
+							$group = $p['event_pilot_round_flight_group'];
+							if( $p['event_pilot_round_flight_start_height'] != 0 ){
+								$averages[$event_round_number][$group]['number']++;
+								$averages[$event_round_number][$group]['total'] += $p['event_pilot_round_flight_start_height'];
+							}
+						}
+					}
+				}
+			}
+		}
+		# Calculate the average inside the groups now
+		foreach( $averages as $event_round_number => $r ){
+			foreach( $r as $group => $g ){
+				$averages[$event_round_number][$group]['average_launch_height'] = $g['total']/$g['number'];
+			}
+		}
+		$temp_aggressive = array();
+		foreach($this->rounds as $event_round_number => $r){
+			if($r['event_round_score_status'] == 1){
+				foreach($r['flights'] as $flight_type_id => $f){
+					if($f['flight_type_seconds'] == 1){
+						foreach($f['pilots'] as $event_pilot_id => $p){
+							if( $p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1){
+								continue;
+							}
+							$group = $p['event_pilot_round_flight_group'];
+							$percent = 0;
+							# let's determine their aggression in this group
+							if( $p['event_pilot_round_flight_start_height'] == 0 ){
+								# Maximum aggression
+								$percent = 0;
+							}else{
+								# Let's calculate their aggressiveness based on the average start height
+								$average_group_height = $averages[$event_round_number][$group]['average_launch_height'];
+								$percent = $p['event_pilot_round_flight_start_height'] / $average_group_height;
+							}
+							$temp_aggressive[$event_pilot_id]['aggressive_percent_total'] += $percent;
+							$temp_aggressive[$event_pilot_id]['number_of_rounds']++;
+						}
+					}
+				}
+			}
+		}
+		# Now lets step through each of the pilots aggressive percents and average them
+		foreach( $temp_aggressive as $event_pilot_id => $a ){
+			$temp_aggressive[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
+			$temp_aggressive[$event_pilot_id]['average'] = $a['aggressive_percent_total'] / $a['number_of_rounds'];
+		}
+		$aggressive = array_orderby( $temp_aggressive, "average", SORT_ASC );
+		return $aggressive;
+	}
 	# F3F Plus statistics
 	public function get_climbout_averages(){
 		# Function to get the average climbout time
