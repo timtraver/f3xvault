@@ -288,6 +288,7 @@
 		<tr>
 			<th>Rank</th>
 			<th>Pilot</th>
+			<th>Rnds</th>
 			<th>%</th>
 		</tr>
 		{$rank=1}
@@ -303,6 +304,7 @@
 				<td nowrap>
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
+				<td>{$p.event_pilot_made_time|escape}</td>
 				<td>{$p.percent_made|string_format:$event->event_calc_accuracy_string}%</td>
 			</tr>
 			{if $rank==$show_top}{break}{/if}
@@ -320,6 +322,7 @@
 		<tr>
 			<th>Rank</th>
 			<th>Pilot</th>
+			<th>Rnds</th>
 			<th>Avg(m)</th>
 		</tr>
 		{$rank=1}
@@ -336,6 +339,7 @@
 				<td nowrap>
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
+				<td>{$p.number_rounds|escape}</td>
 				<td>{$p.average_height|string_format:$event->event_calc_accuracy_string}</td>
 			</tr>
 			{if $rank==$show_top}{break}{/if}

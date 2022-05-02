@@ -2701,7 +2701,7 @@ class Event {
 				$temp_height_time[$event_pilot_id]['average_height'] = $t['event_pilot_round_flight_start_height']/$t['number_rounds'];
 			}
 		}
-		$average_and_time = array_msort($temp_height_time,array("average_height" => SORT_ASC));
+		$average_and_time = array_orderby( $temp_height_time, "number_rounds", SORT_DESC, "average_height", SORT_ASC );
 		return $average_and_time;
 	}
 	# F3F Plus statistics
