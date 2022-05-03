@@ -489,7 +489,7 @@
 		{if $height_time_rank}
 			<tr>
 				<th nowrap>Height Avg of 95% Times</th>
-				<td>Of the pilots rounds where they achieved 95% of the working time, the average of their start height. I believe that the pilot that made more of their total times should score higher in this index, which is why the order is sorted by number of 95% rounds and then start height.</td>
+				<td>Of the pilots rounds where they achieved 95% of the working time, the average of their start height. I believe that the pilot that made more of their total times should score higher in this index, which is why the order is sorted by number of 95% rounds and then start height. This stat doesn't include dropped rounds.</td>
 			</tr>
 		{/if}
 		{if $aggressive_index}
