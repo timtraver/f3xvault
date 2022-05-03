@@ -2738,7 +2738,7 @@ class Event {
 				foreach($r['flights'] as $flight_type_id => $f){
 					if($f['flight_type_seconds'] == 1){
 						foreach($f['pilots'] as $event_pilot_id => $p){
-							if( $p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1){
+							if( $p['event_pilot_round_flight_dropped'] == 1 || $p['event_pilot_round_flight_reflight_dropped'] == 1 || $p['event_pilot_round_flight_start_height'] == 0 ){
 								continue;
 							}
 							$group = $p['event_pilot_round_flight_group'];
