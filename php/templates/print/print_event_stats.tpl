@@ -365,6 +365,7 @@
 			<th>Rank</th>
 			<th>Pilot</th>
 			<th>Avg</th>
+			<th>Pos</th>
 		</tr>
 		{$rank=1}
 		{$oldscore=0}
@@ -381,6 +382,7 @@
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
 				<td>{$p.average|string_format:$event->event_calc_accuracy_string}</td>
+				<td>{$event->pilots.$event_pilot_id.event_pilot_position}</td>
 			</tr>
 			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}

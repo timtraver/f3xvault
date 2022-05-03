@@ -354,11 +354,13 @@
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
 		<h3 class="post-title">Aggressive Index</h3>
 		<h4 class="post-title">Lower = More Aggressive</h4>
+		<h4 class="post-title">Average == 1</h4>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
 			<th>Rank</th>
 			<th>Pilot</th>
 			<th>Avg</th>
+			<th>Pos</th>
 		</tr>
 		{$rank=1}
 		{$oldscore=0}
@@ -375,6 +377,7 @@
 					{include file="event/event_view_pilot_popup.tpl"}
 				</td>
 				<td>{$p.average|string_format:$event->event_calc_accuracy_string}</td>
+				<td>{$event->pilots.$event_pilot_id.event_pilot_position}</td>
 			</tr>
 			{if $rank==$show_top}{break}{/if}
 			{$rank=$rank+1}
