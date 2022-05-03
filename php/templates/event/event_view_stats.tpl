@@ -352,7 +352,7 @@
 
 	{if $aggressive_index}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Aggressive Index</h3>
+		<h3 class="post-title">Aggression Index</h3>
 		<h4 class="post-title">Lower = More Aggressive</h4>
 		<h4 class="post-title">Average == 1</h4>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
@@ -419,6 +419,93 @@
 		</table>
 	</div>
 	{/if}
+	<div style=";padding-left: 10px;">                
+		<h3 class="post-title">Stats Glossary</h3>
+		<table style="border-spacing: 3px;" class="table table-conddensed table-bordered">
+		<tr>
+			<th>Stat Name</th>
+			<th>Description</th>
+		</tr>
+		{if $lap_totals}
+			<tr>
+				<th nowrap>Total Distance Laps</th>
+				<td>The total number of distance laps over the course of the event.</td>
+			</tr>
+		{/if}
+		{if $distance_laps}
+			<tr>
+				<th nowrap>Top Distance Runs</th>
+				<td>Individual distance runs in rounds. Round of recorded flight included.</td>
+			</tr>
+		{/if}
+		{if $speed_averages}
+			<tr>
+				<th nowrap >Top Speed Runs</th>
+				<td>Time of speed round in seconds. Round of recorded time included.</td>
+			</tr>
+		{/if}
+		{if $speed_averages}
+			<tr>
+				<th nowrap >Average Speed</th>
+				<td>Average speeds of all F3F runs for a pilot.</td>
+			</tr>
+		{/if}
+		{if $climbout_averages}
+			<tr>
+				<th nowrap >Climb Out Average</th>
+				<td>Average time taken before coming on course to start an F3F run.</td>
+			</tr>
+		{/if}
+		{if $first_lap_speeds}
+			<tr>
+				<th nowrap >Top First Lap Times</th>
+				<td>Time in seconds of the first lap in an F3F run. Round the speed was recorded in is included.</td>
+			</tr>
+		{/if}
+		{if $first_lap_averages}
+			<tr>
+				<th nowrap >First Lap Average</th>
+				<td>Average time in seconds of the first lap in an F3F run. Meters/second and MPH are calculated</td>
+			</tr>
+		{/if}
+		{if $top_landing}
+			<tr>
+				<th nowrap >Landing Averages</th>
+				<td>Average landing score when a landing was attempted. Does not include zero flights or dropped rounds. It does include rounds where a time is made but the landing is zero.</td>
+			</tr>
+		{/if}
+		{if $start_height}
+			<tr>
+				<th nowrap>Start Height Averages</th>
+				<td>Average start height of rounds. Zero and dropped rounds are not included.</td>
+			</tr>
+		{/if}
+		{if $made_time_rank}
+			<tr>
+				<th nowrap>Made 95% Time</th>
+				<td>Simple statistic of how many rounds a pilot has made 95% of the time. 95% of time is equivalent to 9:30 or better. Does not drop ANY rounds.</td>
+			</tr>
+		{/if}
+		{if $height_time_rank}
+			<tr>
+				<th nowrap>Height Avg of 95% Times</th>
+				<td>Of the pilots rounds where they achieved 95% of the working time, the average of their start height. I believe that the pilot that made more of their total times should score higher in this index, which is why the order is sorted by number of 95% rounds and then start height.</td>
+			</tr>
+		{/if}
+		{if $aggressive_index}
+			<tr>
+				<th nowrap>Aggression Index</th>
+				<td>Average start heights in each group are calculated and the sum of the pilots percentage deviations from the average are calculated and averaged. A score of 1 means the pilot launched to average height. This stat does not include zero flights or dropped rounds.</td>
+			</tr>
+		{/if}
+		{if $event->planes|count>0}
+			<tr>
+				<th nowrap>Plane Distribution</th>
+				<td>How many pilots are flying the specified plane types.</td>
+			</tr>
+		{/if}
+		</table>
+	</div>
 	<br>
 	<input type="button" value=" Print Event Statistics " onClick="print_stats.submit();" class="btn btn-primary btn-rounded">
 	<br>

@@ -358,7 +358,7 @@
 
 	{if $aggressive_index}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Aggressive Index</h3>
+		<h3 class="post-title">Aggression Index</h3>
 		<h4 class="post-title">Lower = More Aggressive</h4>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>
@@ -424,6 +424,21 @@
 		</table>
 	</div>
 	{/if}
+	<div style=";padding-left: 10px;">                
+		<h3 class="post-title">Glossary</h3>
+		<table cellpadding="2" cellspacing="1" class="table_bordered table-event">
+		<tr>
+			<th>Stat Name</th>
+			<th>Description</th>
+		</tr>
+		{if $lap_totals}
+			<tr>
+				<th>Lap Totals</th>
+				<td>The total number of distance laps over the course of the event.</td>
+			</tr>
+		{/if}
+		</table>
+	</div>
 	
 </div>
 {/block}
