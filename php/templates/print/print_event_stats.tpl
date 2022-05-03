@@ -358,7 +358,7 @@
 
 	{if $aggressive_index}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Aggression Index</h3>
+		<h3 class="post-title">Aggressive Index</h3>
 		<h4 class="post-title">Lower = More Aggressive</h4>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
 		<tr>

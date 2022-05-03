@@ -352,7 +352,7 @@
 
 	{if $aggressive_index}
 	<div class="entry clearfix" style="display:inline-block;vertical-align:top;padding-bottom:10px;padding-right: 10px;">                
-		<h3 class="post-title">Aggression Index</h3>
+		<h3 class="post-title">Aggressive Index</h3>
 		<h4 class="post-title">Lower = More Aggressive</h4>
 		<h4 class="post-title">Average == 1</h4>
 		<table align="center" cellpadding="2" cellspacing="1" class="table_bordered table-event table-striped">
@@ -494,7 +494,7 @@
 		{/if}
 		{if $aggressive_index}
 			<tr>
-				<th nowrap>Aggression Index</th>
+				<th nowrap>Aggressive Index</th>
 				<td>Average start heights in each group are calculated and the sum of the pilots percentage deviations from the average are calculated and averaged. A score of 1 means the pilot launched to average height. This stat does not include zero flights or dropped rounds.</td>
 			</tr>
 		{/if}
