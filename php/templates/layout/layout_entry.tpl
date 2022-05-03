@@ -59,7 +59,7 @@
 						Self Score Entry
 					</h2>
 					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Back " onClick="window.location.href='/?action=event&function=event_view&event_id={$event->info.event_id|escape:"javascript"}';" class="btn btn-primary btn-rounded">
-					<input type="button" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Refresh " onClick="document.refresh.submit();" class="btn btn-primary btn-rounded">
+					<input type="submit" form="refresh" style = "float: right;margin-right: 15px;margin-top: 10px;font-size: large;" value=" Refresh " class="btn btn-primary btn-rounded">
 				</div>
 				<!--================================-->
 				<!--End Navbar Dropdown-->
@@ -179,7 +179,7 @@
 	<input type="hidden" name="function" value="event_view">
 	<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 	</form>
-	<form id="goback" name="refresh" method="GET">
+	<form id="refresh" name="refresh" method="GET">
 	<input type="hidden" name="action" value="event">
 	<input type="hidden" name="function" value="event_self_entry">
 	<input type="hidden" name="save" value="0">
