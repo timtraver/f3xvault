@@ -13,6 +13,26 @@
 	{rdelim}
 </script>
 {literal}
+<style>
+	input {
+		touch-action: none;
+	}
+	::-moz-selection { /* Code for Firefox */
+	  color: red;
+	  background-color: yellow;
+	}
+	
+	::selection {
+	  color: red;
+	  background-color: yellow;
+	}
+	::-webkit-selection {
+	  color: red;
+	  background-color: yellow;
+	}
+</style>
+{/literal}
+{literal}
 <script type="text/javascript">
 	function ladder(arg){
 		/* Function to set the ladder values */
@@ -171,62 +191,33 @@
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice}
 			<table>
 			<tr>
-				<th width="50%" nowrap><h3>Flight Time</h3></th>
-				<td valign="baseline">
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=$event_round_time start=$event_round_time step=-1}
-								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
-					</div>
-						&nbsp;&nbsp;&nbsp;Min
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-						<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-							{section name=s loop=60 start=60 step=-1}
-								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-							{/section}
-						</ul>
-					</div>&nbsp;&nbsp;
-					{if $seconds_accuracy > 0}
-						{$loop_val = pow(10,$seconds_accuracy)}
-						<div class="btn-group" style="width: 50px;">
-							<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
-								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-									
-									{section name=s loop=$loop_val start=0 step=1}
-									<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
-									{/section}
-								</ul>
-						</div>
-					{/if}
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sec
-				</td>
-			</tr>
-			{if $event->info.event_type_code == 'f3j'}
-			<tr>
-				<th><h3>Over Time</h3></th>
+				<th valign="top"><h3  style="margin-right: 20px;">Flight Time</h3></th>
 				<td>
-					<input type="button" id="over_button" class="btn btn-primary btn-rounded" style="margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {if $over == 1}Yes{else}No{/if} " onClick="toggle_over();">
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="minutes_button" class="btn-primary btn-rounded" style="{if $event->tasks.$round_number.event_task_time_choice > 10 }width: 70px;{else}width: 50px;{/if}font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{if $minutes == '' || $minutes == null}0{else}{$minutes|escape}{/if}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_5jminute(this);' onChange="document.main.minutes.value=this.value;">
+					</div>
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.seconds.value=this.value;">
+					</div>
+					{if $seconds_accuracy > 0}
+					<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="seconds_2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds_2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);' onChange="document.main.seconds_2.value=this.value;">
+					</div>
+					{/if}
+					<div style="display:inline-block;vertical-align: bottom;">Sec</div>					
 				</td>
 			</tr>
-			{/if}
 			{if $event->info.event_type_code == 'f5j'}
 			<tr>
 				<th><h3>Start Height</h3></th>
-				<td>
-					<div class="btn-group" style="width: 50px;">
+				<td valign="center">
+					<div class="btn-group">
 						{if $startheight == ''}{$startheight = 0}{/if}
-						<input type="button" id="height_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$startheight} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=350 start=0 step=1}
-								<li><a href="#" onClick='document.main.startheight.value="{$smarty.section.s.index}";document.getElementById("height_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-								{/section}
-							</ul>
+						<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="height_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$startheight}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_height(this);' onChange="document.main.startheight.value=this.value;"">
 					</div>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meters
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Meters</div>
 				</td>
 			</tr>
 			{/if}
@@ -235,7 +226,7 @@
 				<td>
 					<div class="btn-group" style="width: 50px;">
 						{if $landing == ''}{$landing = 0}{/if}
-						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
+						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "width: 70px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$landing}" data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
 								{if $event->info.event_type_code == 'f5j'}
 									{section name=s loop=51 start=51 step=-5}
@@ -250,6 +241,14 @@
 					</div>
 				</td>
 			</tr>
+			{if $event->info.event_type_code == 'f3j'}
+			<tr>
+				<th><h3>Over Time</h3></th>
+				<td>
+					<input type="button" id="over_button" class="btn btn-primary btn-rounded" style="margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {if $over == 1}Yes{else}No{/if} " onClick="toggle_over();">
+				</td>
+			</tr>
+			{/if}
 			<tr>
 				<th><h3>Penalty</h3></th>
 				<td>
@@ -272,25 +271,22 @@
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
 			<table>
 			<tr>
-				<th width="37%" nowrap><h3>Flight Time</h3></th>
-				<td valign="baseline">
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=$event_round_time start=$event_round_time step=-1}
-								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
+				<th valign="top"><h3  style="margin-right: 15px;">Flight Time</h3></th>
+				<td>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="minutes_button" class="btn-primary btn-rounded" style="{if $event->tasks.$round_number.event_task_time_choice >= 10 }width: 70px;{else}width: 50px;{/if}font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{if $minutes == '' || $minutes == null}0{else}{$minutes|escape}{/if}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tdminute(this);' onChange="document.main.minutes.value=this.value;">
 					</div>
-						min
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=60 start=60 step=-1}
-								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
-					</div>&nbsp;&nbsp;&nbsp;sec
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 60px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.seconds.value=this.value;">
+					</div>
+					{if $seconds_accuracy > 0}
+					<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="seconds_2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds_2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);' onChange="document.main.seconds_2.value=this.value;">
+					</div>
+					{/if}
+					<div style="display:inline-block;vertical-align: bottom;">Sec</div>					
 				</td>
 			</tr>
 			<tr>
@@ -328,14 +324,14 @@
 		{if $event->info.event_type_code == 'f3k'}
 			<table>
 			<tr>
-				<th width="25%" valign="top"><h3>Details</h3></th>
+				<th valign="top"><h3  style="margin-right: 15px;">Details</h3></th>
 				<td valign="center">
 					{$event->rounds.$round_number.flights.$flight_type_id.flight_type_name|escape}<br>
 					{$event->rounds.$round_number.flights.$flight_type_id.flight_type_description|escape}
 				</td>
 			</tr>
 			<tr>
-				<th width="25%" valign="top"><h3>Flight{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights > 1}s{/if}</h3></th>
+				<th valign="top"><h3>Flight{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights > 1}s{/if}</h3></th>
 				<td valign="baseline">
 					{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time != 0}
 						{$max_min = $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time / 60}
@@ -347,6 +343,7 @@
 						{/if}
 					{/if}
 					{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'f3k_d'}
+							Click on highest achieved flight<br>
 							<div class="btn-group" style="width: 10px;margin-right: 25px;">
 								<input type="button" class="btn btn-success btn-rounded" style = "margin-right: 25px;margin-top: 10px;font-size: 16px;" value=" 1 " onclick="return false;">
 							</div>&nbsp;
@@ -432,39 +429,24 @@
 							<label id="label7" class="form-checkbox form-icon form-no-label btn btn-primary btn-rounded{if $subs.7.minutes == 2 && $subs.7.seconds == "00"} active{/if}" style="margin-top: 10px;font-size: 16px;margin-bottom: 0px;"><input type="checkbox" id="checkbox7" onClick="ladder(7);"{if $subs.7.minutes == 2 && $subs.7.seconds == "00"} checked{/if}></label>
 					{else}
 						{for $sub=1 to $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights}
-							<div class="btn-group" style="width: 10px;margin-right: 25px;">
-								<input type="button" class="btn btn-success btn-rounded" style = "margin-right: 25px;margin-top: 10px;font-size: 16px;" value=" {$sub} " onclick="return false;">
-							</div>&nbsp;
-							<div class="btn-group" style="width: 50px;">
-								<input type="button" id="sub_{$sub}_minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-										{section name=s loop=$max_min+1 start=$max_min+1 step=-1}
-										<li><a href="#" onClick='document.main.sub_min_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-										{/section}
-									</ul>
+							<div class="btn-group">
+								<button class="btn btn-success btn-rounded" style = "margin-right: 15px;margin-top: 10px;font-size: 16px;" onclick="return false;">{$sub}</button>
 							</div>
-							&nbsp;&nbsp;min
-							<div class="btn-group" style="width: 50px;">
-								<input type="button" id="sub_{$sub}_seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-									<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-										{section name=s loop=60 start=60 step=-1}
-										<li><a href="#" onClick='document.main.sub_sec_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-										{/section}
-									</ul>
-							</div>&nbsp;&nbsp;
-							
+							<div class="btn-group">
+								<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="sub_{$sub}_minutes_button" class="btn-primary btn-rounded" style="width: 50px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.minutes|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_minute(this);' onChange="document.main.sub_min_{$sub}.value=this.value;">
+							</div>
+							<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
+							<div class="btn-group">
+								<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="sub_{$sub}_seconds_button" class="btn-primary btn-rounded" style="width: 60px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.sub_sec_{$sub}.value=this.value;">
+							</div>
 							{if $seconds_accuracy > 0}
-								{$loop_val = pow(10,$seconds_accuracy)}
-								<div class="btn-group" style="width: 50px;">
-									<input type="button" id="sub_{$sub}_seconds2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$subs.$sub.seconds2|string_format:$seconds_accuracy_string} " data-toggle="dropdown" aria-expanded="false">
-										<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-											{section name=s loop=$loop_val start=0 step=1}
-											<li><a href="#" onClick='document.main.sub_sec2_{$sub}.value="{$smarty.section.s.index}";document.getElementById("sub_{$sub}_seconds2_button").value="{$smarty.section.s.index|string_format:$seconds_accuracy_string}";'>{$smarty.section.s.index|string_format:$seconds_accuracy_string}</a></li>
-											{/section}
-										</ul>
-								</div>
+							<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
+							<div class="btn-group">
+								<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="sub_{$sub}_seconds2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);' onChange="document.main.sub_sec2_{$sub}.value=this.value;">
+							</div>
 							{/if}
-							&nbsp;&nbsp;&nbsp;&nbsp;sec<br>
+							<div style="display:inline-block;vertical-align: bottom;">Sec</div>
+							<br>
 						{/for}
 					{/if}
 				</td>
@@ -491,52 +473,45 @@
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
 			<table>
 			<tr>
-				<th><h3>Total Laps</h3></th>
+				<th valign="top"><h3  style="margin-right: 15px;">Total Laps</h3></th>
 				<td>
-					<div class="btn-group" style="width: 50px;">
+					<div class="btn-group">
 						{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}
-							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" 1 " data-toggle="dropdown" aria-expanded="false">
+							<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="laps_button" class="btn-primary btn-rounded" style = "width: 70px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="1">
 						{else}
 							{if $laps == ''}{$laps = 0}{/if}
-							<input type="button" id="laps_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$laps} " data-toggle="dropdown" aria-expanded="false">
-								<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-									{section name=s loop=26 start=0 step=1}
-									<li><a href="#" onClick='document.main.laps.value="{$smarty.section.s.index}";document.getElementById("laps_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-									{/section}
-								</ul>
+							<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="laps_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$laps|escape}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_gpslaps(this);' onChange="document.main.laps.value=this.value;"">
 						{/if}
 					</div>
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Laps</div>
+
 				</td>
 			</tr>
 			<tr>
 				<th width="37%" nowrap><h3>Flight Time</h3></th>
 				<td valign="baseline">
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="minutes_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$minutes|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=30 start=0 step=1}
-								<li><a href="#" onClick='document.main.minutes.value="{$smarty.section.s.index}";document.getElementById("minutes_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="minutes_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{if $minutes == '' || $minutes == null}0{else}{$minutes|escape}{/if}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_gpsminute(this);' onChange="document.main.minutes.value=this.value;">
 					</div>
-						min
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="seconds_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds|string_format:"%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=60 start=60 step=-1}
-								<li><a href="#" onClick='document.main.seconds.value="{$smarty.section.s.index}";document.getElementById("seconds_button").value="{$smarty.section.s.index|string_format:"%'.02d"}";'>{$smarty.section.s.index|string_format:"%'.02d"}</a></li>
-								{/section}
-							</ul>
-					</div>&nbsp;&nbsp;
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="seconds_2_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$seconds_2|string_format:".%'.02d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=100 start=100 step=-1}
-								<li><a href="#" onClick='document.main.seconds_2.value="{$smarty.section.s.index}";document.getElementById("seconds_2_button").value="{$smarty.section.s.index|string_format:".%'.02d"}";'>{$smarty.section.s.index|string_format:".%'.02d"}</a></li>
-								{/section}
-							</ul>
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.seconds.value=this.value;">
 					</div>
-						&nbsp;&nbsp;&nbsp;sec
+					{if $seconds_accuracy > 0}
+					<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="seconds_2_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds_2|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_hundredth(this);' onChange="document.main.seconds_2.value=this.value;">
+					</div>
+					{/if}
+					<div style="display:inline-block;vertical-align: bottom;">Sec</div>					
+				</td>
+			</tr>
+			<tr>
+				<th nowrap><h3>Start Penalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="startpen_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$startpen|string_format:"%2d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_startpen(this);' onChange="document.main.startpen.value=this.value;"">
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -546,22 +521,9 @@
 						{if $landing == ''}{$landing = 0}{/if}
 						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$landing} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
-								<li><a href="#" onClick='document.main.landing.value=0;document.getElementById("landing_button").value="0";'>0</a></li>
-								<li><a href="#" onClick='document.main.landing.value=200;document.getElementById("landing_button").value="200";'>200</a></li>
 								<li><a href="#" onClick='document.main.landing.value=400;document.getElementById("landing_button").value="400";'>400</a></li>
-							</ul>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th nowrap><h3>Start Penalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3></th>
-				<td>
-					<div class="btn-group" style="width: 50px;">
-						<input type="button" id="startpen_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 15px;margin-top: 10px;font-size: 28px;" value=" {$startpen|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
-							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
-								{section name=s loop=1000 start=0 step=1}
-								<li><a href="#" onClick='document.main.startpen.value="{$smarty.section.s.index}";document.getElementById("startpen_button").value="{$smarty.section.s.index}";'>{$smarty.section.s.index}</a></li>
-								{/section}
+								<li><a href="#" onClick='document.main.landing.value=200;document.getElementById("landing_button").value="200";'>200</a></li>
+								<li><a href="#" onClick='document.main.landing.value=0;document.getElementById("landing_button").value="0";'>0</a></li>
 							</ul>
 					</div>
 				</td>
@@ -623,6 +585,9 @@
 				{if $event->flight_types.$flight_type_id.flight_type_laps}
 					<th style="text-align: right;">Laps</th>
 				{/if}
+				{if $event->flight_types.$flight_type_id.flight_type_start_penalty}
+					<th style="text-align: right;">StrPen</th>
+				{/if}
 				<th style="text-align: right;">Pen</th>
 				<th style="text-align: right;">Score</th>
 				<th style="text-align: right;"></th>
@@ -669,6 +634,9 @@
 						{if $f.flight_type_laps}
 							<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
 						{/if}
+						{if $f.flight_type_start_penalty}
+							<td align="right" nowrap>{$p.event_pilot_round_flight_start_penalty|escape}</td>
+						{/if}
 						<td align="right" nowrap>
 							{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}
 						</td>
@@ -695,6 +663,172 @@
 	</div>
 </div>
 
+<script type="text/javascript">
+	function make_selected(object){ldelim}
+		object.style.backgroundColor="yellow";
+		object.style.color="black";
+		object.select();
+	{rdelim}
+	function make_unselected(object){ldelim}
+		if( object.value == "" || object.value == null){ldelim}
+			object.value = 0;
+		{rdelim}
+		object.style.backgroundColor = "#579ddb";
+		object.style.color="white";
+	{rdelim}
+	function check_minute(object){ldelim}
+		/* Set max min */
+		max_min = {if $max_min}{$max_min}{else}9{/if};
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( object.value.length == 1 ){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	{if $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'f3j'}
+	function check_5jminute(object){ldelim}
+		/* Set max min */
+		max_min = {if $event->tasks.$round_number.event_task_time_choice > 0}{$event->tasks.$round_number.event_task_time_choice - 1 }{else}0{/if};
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( max_min > 10 ){ldelim}
+			if( object.value.length == 2 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}else{ldelim}
+			if( object.value.length == 1 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	{if $event->info.event_type_code == 'gps'}
+	function check_gpsminute(object){ldelim}
+		/* Set max min */
+		max_min = 29;
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( object.value.length == 2 ){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	{if $event->info.event_type_code == 'td'}
+	function check_tdminute(object){ldelim}
+		/* Set max min */
+		max_min = {if $event->tasks.$round_number.event_task_time_choice > 0}{$event->tasks.$round_number.event_task_time_choice}{else}0{/if};
+		if( max_min >= 10 ){ldelim}
+			if( object.value.length == 2 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}else{ldelim}
+			if( object.value.length == 1 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	function check_second(object){ldelim}
+		max_sec = 59;
+		if( object.value > max_sec ){ldelim}
+			object.value=max_sec;
+		{rdelim}
+		if( object.value.length == 2){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	function check_tenth(object){ldelim}
+		max_sec2 = 9;
+		if( object.value > max_sec2 ){ldelim}
+			object.value=max_sec2;
+		{rdelim}
+		if( object.value.length == 1){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	function check_hundredth(object){ldelim}
+		max_sec2 = 99;
+		if( object.value > max_sec2 ){ldelim}
+			object.value=max_sec2;
+		{rdelim}
+		if( object.value.length == 2){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	{if $event->info.event_type_code == 'f5j'}
+	function check_height(object){ldelim}
+		max_min = 350;
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( object.value.length == 3){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	{if $event->info.event_type_code == 'gps'}
+	function check_gpslaps(object){ldelim}
+		max_min = 99;
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( object.value.length == 2){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	function check_startpen(object){ldelim}
+		max_min = 999;
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+		{rdelim}
+		if( object.value.length == 3){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	{literal}
+	function goToNextTab(element){
+		if(event.code == "Tab"){ return; }
+		var nextEl = findNextTabStop(element);
+		var elementName = nextEl.getAttribute( 'id' );
+		nextEl.focus();
+		if( ! elementName.match("penalty") ){
+			nextEl.click();
+		}
+	}
+	function findNextTabStop(el) {
+		var universe = document.querySelectorAll('input');
+		var list = Array.prototype.filter.call(universe, function(item) {return item.tabIndex >= "0"});
+		var index = list.indexOf(el);
+		return list[index + 1] || list[0];
+	}
+	{/literal}
+</script>
 
 {/block}
 {block name="footer"}
