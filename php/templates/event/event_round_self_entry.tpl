@@ -477,7 +477,7 @@
 				<td>
 					<div class="btn-group">
 						{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}
-							<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="laps_button" class="btn-primary btn-rounded" style = "width: 70px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="1">
+							<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="laps_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="1" disabled>
 						{else}
 							{if $laps == ''}{$laps = 0}{/if}
 							<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="laps_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$laps|escape}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_gpslaps(this);' onChange="document.main.laps.value=this.value;"">
