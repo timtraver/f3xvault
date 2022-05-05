@@ -730,12 +730,21 @@
 		if( object.value > max_min ){ldelim}
 			object.value=max_min;
 			document.getElementById("sub_min_" + flight_num ).value = max_min;
-			goToNextFlight(object);
+			if( object.value * 60 >= max_flight_seconds ){ldelim}
+				goToNextFlight(object);
+			{rdelim}else{ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
 			return;
 		{rdelim}
 		if( object.value.length == 1 ){ldelim}
-			make_unselected(object);
-			goToNextTab(object);
+			if( object.value * 60 >= max_flight_seconds ){ldelim}
+				goToNextFlight(object);
+			{rdelim}else{ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
 		{rdelim}
 		return;
 	{rdelim}
