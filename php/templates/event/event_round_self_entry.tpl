@@ -333,15 +333,6 @@
 			<tr>
 				<th valign="top"><h3>Flight{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights > 1}s{/if}</h3></th>
 				<td valign="baseline">
-					{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time != 0}
-						{$max_min = $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time / 60}
-					{else}
-						{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'f3k_e'}
-							{$max_min = 10}
-						{elseif $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'f3k_h'}
-							{$max_min = 4}
-						{/if}
-					{/if}
 					{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'f3k_d'}
 							Click on highest achieved flight<br>
 							<div class="btn-group" style="width: 10px;margin-right: 25px;">
@@ -433,16 +424,16 @@
 								<button class="btn btn-success btn-rounded" style = "margin-right: 15px;margin-top: 10px;font-size: 16px;" onclick="return false;">{$sub}</button>
 							</div>
 							<div class="btn-group">
-								<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="sub_{$sub}_minutes_button" class="btn-primary btn-rounded" style="width: 50px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.minutes|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_minute(this);' onChange="document.main.sub_min_{$sub}.value=this.value;">
+								<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="sub_{$sub}_minutes_button" class="btn-primary btn-rounded" style="width: 50px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.minutes|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_f3kminute(this);check_flight_total_time(this);' onChange="document.main.sub_min_{$sub}.value=this.value;">
 							</div>
 							<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
 							<div class="btn-group">
-								<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="sub_{$sub}_seconds_button" class="btn-primary btn-rounded" style="width: 60px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.sub_sec_{$sub}.value=this.value;">
+								<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="sub_{$sub}_seconds_button" class="btn-primary btn-rounded" style="width: 60px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);check_flight_total_time(this);' onChange="document.main.sub_sec_{$sub}.value=this.value;">
 							</div>
 							{if $seconds_accuracy > 0}
 							<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
 							<div class="btn-group">
-								<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="sub_{$sub}_seconds2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);' onChange="document.main.sub_sec2_{$sub}.value=this.value;">
+								<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="sub_{$sub}_seconds2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$subs.$sub.seconds2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);check_flight_total_time(this);' onChange="document.main.sub_sec2_{$sub}.value=this.value;">
 							</div>
 							{/if}
 							<div style="display:inline-block;vertical-align: bottom;">Sec</div>
@@ -552,9 +543,15 @@
 				Save This Flight ( Locked )
 			</button>
 			{else}
-			<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="this.disabled=true;document.main.save.value=1;document.main.submit();">
-				Save This Flight
-			</button>
+				{if $event->info.event_type_code == 'f3k'}
+					<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="if(check_total_round_time() == true ){ldelim}this.disabled=true;document.main.save.value=1;document.main.submit();{rdelim}else{ldelim}return false;{rdelim}">
+						Save This Flight
+					</button>
+				{else}
+					<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="this.disabled=true;document.main.save.value=1;document.main.submit();">
+					Save This Flight
+				</button>
+				{/if}
 			{/if}
 	</div>
 	</form>
@@ -671,23 +668,63 @@
 	{rdelim}
 	function make_unselected(object){ldelim}
 		if( object.value == "" || object.value == null){ldelim}
-			object.value = 0;
+			if( object.id.match(/seconds/) && ! object.id.match(/seconds2/) ){ldelim}
+				object.value="00";
+			{rdelim}else{ldelim}
+				object.value = 0;
+			{rdelim}
 		{rdelim}
 		object.style.backgroundColor = "#579ddb";
 		object.style.color="white";
 	{rdelim}
-	function check_minute(object){ldelim}
-		/* Set max min */
-		max_min = {if $max_min}{$max_min}{else}9{/if};
-		if( object.value > max_min ){ldelim}
-			object.value=max_min;
+	
+	{if $event->info.event_type_code == 'f3k'}
+	function check_flight_total_time(object){ldelim}
+		/* Function to check a single sub flight time against the max time and reset it if needed */
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
+		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time}
+		/* Get the current entered time to compare */
+		/* First get the sub flight number from the name of this object */
+		flight_num = object.id.match(/\d+/);
+		current_minutes = parseInt( document.getElementById("sub_" + flight_num + "_minutes_button").value, 10 );
+		current_seconds = parseInt( document.getElementById("sub_" + flight_num + "_seconds_button").value, 10 );
+		current_seconds2 = parseInt( document.getElementById("sub_" + flight_num + "_seconds2_button").value, 10 );
+		current_total_seconds = ( current_minutes * 60 ) + current_seconds + ( current_seconds2 * 0.1 );
+		if( current_total_seconds > max_flight_seconds ){ldelim}
+			/* reset the values for this flight to be the max */
+			calc_min = Math.floor( max_flight_seconds / 60 );
+			calc_sec = Math.floor( max_flight_seconds % 60 );
+			document.getElementById("sub_" + flight_num + "_minutes_button").value = calc_min;
+			document.getElementById("sub_" + flight_num + "_seconds_button").value = zeroPad(calc_sec,2);
+			document.getElementById("sub_" + flight_num + "_seconds2_button").value = 0;
+			alert( "Updated Flight #" + flight_num + " to max flight time." );
 		{rdelim}
+		return;
+	{rdelim}
+	function check_total_round_time(){ldelim}
+		max_round_seconds = {$max_round_seconds};
+		num_subs = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights};
+		calculated_time = 0;
+		for( x = 1; x <= num_subs ; x++ ){ldelim}
+			flight_minutes = parseInt( document.getElementById("sub_" + x + "_minutes_button").value, 10 );
+			flight_seconds = parseInt( document.getElementById("sub_" + x + "_seconds_button").value, 10 );
+			flight_seconds2 = parseInt( document.getElementById("sub_" + x + "_seconds2_button").value, 10 );
+			calculated_time += ( flight_minutes * 60 ) + flight_seconds + ( flight_seconds2 * 0.1 );
+		{rdelim}
+		if( calculated_time > max_round_seconds ){ldelim}
+			alert("Total time greater than the allowed " + max_round_seconds + " seconds time! Please reconsider your flight entries.");
+			return false;
+		{rdelim}
+		return true;
+	{rdelim}
+	function check_f3kminute(object){ldelim}
 		if( object.value.length == 1 ){ldelim}
 			make_unselected(object);
 			goToNextTab(object);
 		{rdelim}
 		return;
 	{rdelim}
+	{/if}
 	{if $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'f3j'}
 	function check_5jminute(object){ldelim}
 		/* Set max min */
