@@ -708,6 +708,9 @@
 		return;
 	{rdelim}
 	function check_total_round_time(){ldelim}
+		var flight_type_code = "{$event->rounds.$round_number.flights.$flight_type_id.flight_type_code}";
+		if( flight_type_code == 'f3k_d' ){ldelim}return true;{rdelim}
+		alert( "flight type = " + flight_type_code );
 		max_round_seconds = {$max_round_seconds};
 		num_subs = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights};
 		calculated_time = 0;
