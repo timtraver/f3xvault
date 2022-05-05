@@ -124,9 +124,9 @@
 	<input type="hidden" name="startpen" value="{$startpen|escape}">
 	<input type="hidden" name="startheight" value="{$startheight|escape}">
 	{for $sub=1 to $event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights}
-	<input type="hidden" name="sub_min_{$sub}" value="{$subs.$sub.minutes}">
-	<input type="hidden" name="sub_sec_{$sub}" value="{$subs.$sub.seconds}">
-	<input type="hidden" name="sub_sec2_{$sub}" value="{$subs.$sub.seconds2}">
+	<input type="hidden" id="sub_min_{$sub}" name="sub_min_{$sub}" value="{$subs.$sub.minutes}">
+	<input type="hidden" id="sub_sec_{$sub}" name="sub_sec_{$sub}" value="{$subs.$sub.seconds}">
+	<input type="hidden" id="sub_sec2_{$sub}" name="sub_sec2_{$sub}" value="{$subs.$sub.seconds2}">
 	{/for}
 	
 	<div class="panel-body" style="padding-top: 5px;padding-bottom: 5px;padding-left: 0px;padding-right: 0px;">
@@ -682,7 +682,7 @@
 	function check_flight_total_time(object){ldelim}
 		/* Function to check a single sub flight time against the max time and reset it if needed */
 		const zeroPad = (num, places) => String(num).padStart(places, '0');
-		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time}
+		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
 		/* Get the current entered time to compare */
 		/* First get the sub flight number from the name of this object */
 		flight_num = object.id.match(/\d+/);
@@ -697,7 +697,13 @@
 			document.getElementById("sub_" + flight_num + "_minutes_button").value = calc_min;
 			document.getElementById("sub_" + flight_num + "_seconds_button").value = zeroPad(calc_sec,2);
 			document.getElementById("sub_" + flight_num + "_seconds2_button").value = 0;
+			/* change the form vars too */
+			document.getElementById("sub_min_" + flight_num ).value = calc_min;
+			document.getElementById("sub_sec_" + flight_num ).value = zeroPad(calc_sec,2);
+			document.getElementById("sub_sec2_" + flight_num ).value = 0;
+			
 			alert( "Updated Flight #" + flight_num + " to max flight time." );
+			goToNextFlight(object);
 		{rdelim}
 		return;
 	{rdelim}
@@ -718,6 +724,15 @@
 		return true;
 	{rdelim}
 	function check_f3kminute(object){ldelim}
+		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
+		max_min = Math.floor( max_flight_seconds / 60 );
+		flight_num = object.id.match(/\d+/);
+		if( object.value > max_min ){ldelim}
+			object.value=max_min;
+			document.getElementById("sub_min_" + flight_num ).value = max_min;
+			goToNextFlight(object);
+			return;
+		{rdelim}
 		if( object.value.length == 1 ){ldelim}
 			make_unselected(object);
 			goToNextTab(object);
@@ -780,8 +795,10 @@
 	{/if}
 	function check_second(object){ldelim}
 		max_sec = 59;
+		flight_num = object.id.match(/\d+/);
 		if( object.value > max_sec ){ldelim}
 			object.value=max_sec;
+			document.getElementById("sub_sec_" + flight_num ).value = max_sec;
 		{rdelim}
 		if( object.value.length == 2){ldelim}
 			make_unselected(object);
@@ -857,6 +874,18 @@
 		if( ! elementName.match("penalty") ){
 			nextEl.click();
 		}
+	}
+	function goToNextFlight(element){
+		flight_num = parseInt( element.id.match(/\d+/), 10 );
+		var next_flight = flight_num + 1;
+		if( document.getElementById( "sub_" + next_flight + "_minutes_button" ) ){
+			/* Go to the next flight minute */
+			document.getElementById( "sub_" + next_flight + "_minutes_button" ).focus();
+			document.getElementById( "sub_" + next_flight + "_minutes_button" ).click();
+		}else{
+			element.blur();
+		}
+		return;
 	}
 	function findNextTabStop(el) {
 		var universe = document.querySelectorAll('input');
