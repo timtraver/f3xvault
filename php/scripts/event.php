@@ -7052,7 +7052,78 @@ function event_self_entry() {
 	
 	# unlock it if this is an admin of this event
 	if( $user_is_admin == 1 ){ $flight_locked = 0; }
-			
+	
+	# Let us figure out the round max time based on the task
+	switch( $event->flight_types[$flight_type_id]['flight_type_code'] ){
+		case 'td':
+		case 'f3j':
+			$max = $event->tasks[$round_number]['event_task_time_choice'] * 60;
+			break;
+		case 'gps':
+			$max = 30 * 60;
+			break;
+		case 'f5j':
+			$max = $event->tasks[$round_number]['event_task_time_choice'] * 60;
+			break;
+		case 'f3k_a':
+		case 'f3k_a2':
+			$max = 300;
+			break;
+		case 'f3k_b':
+			$max = 480;
+			break;
+		case 'f3k_b2':
+			$max = 360;
+			break;
+		case 'f3k_c':
+			$max = 540;
+			break;
+		case 'f3k_c2':
+			$max = 720;
+			break;
+		case 'f3k_c3':
+			$max = 900;
+			break;
+		case 'f3k_d':
+			$max = 525;
+			break;
+		case 'f3k_d2':
+			$max = 599;
+			break;
+		case 'f3k_e':
+			$max = 599;
+			break;
+		case 'f3k_e2':
+			$max = 599;
+			break;			
+		case 'f3k_e3':
+			$max = 899;
+			break;			
+		case 'f3k_f':
+			$max = 540;
+			break;			
+		case 'f3k_g':
+			$max = 599;
+			break;			
+		case 'f3k_h':
+			$max = 599;
+			break;			
+		case 'f3k_i':
+			$max = 599;
+			break;			
+		case 'f3k_j':
+			$max = 540;
+			break;			
+		case 'f3k_k':
+			$max = 599;
+			break;			
+		case 'f3k_l':
+			$max = 599;
+			break;			
+		case 'f3k_m':
+			$max = 899;
+			break;			
+	}
 	$smarty->assign("event",$event);
 	$smarty->assign("flight_types",$flight_types);
 	$smarty->assign("flight_type_id",$flight_type_id);
@@ -7074,6 +7145,7 @@ function event_self_entry() {
 	$smarty->assign("seconds_accuracy",$seconds_accuracy);
 	$smarty->assign("seconds_accuracy_string",$seconds_accuracy_string);
 	$smarty->assign("flight_locked",$flight_locked);
+	$smarty->assign("max_round_seconds",$max);
 	$key = $event->info['event_type_code'] . "_self_entry_lock";
 	if( $event->find_option_value( $key ) == 1 ){
 		$smarty->assign("event_self_entry_lock", 1 );
