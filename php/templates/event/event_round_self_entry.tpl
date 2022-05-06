@@ -680,12 +680,21 @@
 	
 	{if $event->info.event_type_code == 'f3k'}
 	function check_flight_total_time(object){ldelim}
+		var flight_type_code = "{$event->rounds.$round_number.flights.$flight_type_id.flight_type_code}";
+		var flight_num = object.id.match(/\d+/);
+
 		/* Function to check a single sub flight time against the max time and reset it if needed */
 		const zeroPad = (num, places) => String(num).padStart(places, '0');
-		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
+		if( flight_type_code == 'f3k_k' ){ldelim}
+			max_flight_seconds = 30 + (flight_num * 30);
+		{rdelim}else if( flight_type_code == 'f3k_m' ){ldelim}
+			max_flight_seconds = 60 + (flight_num * 120);
+		{rdelim}else{ldelim}
+			max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
+		{rdelim}
 		/* Get the current entered time to compare */
 		/* First get the sub flight number from the name of this object */
-		flight_num = object.id.match(/\d+/);
+		
 		current_minutes = parseInt( document.getElementById("sub_" + flight_num + "_minutes_button").value, 10 );
 		current_seconds = parseInt( document.getElementById("sub_" + flight_num + "_seconds_button").value, 10 );
 		current_seconds2 = parseInt( document.getElementById("sub_" + flight_num + "_seconds2_button").value, 10 );
@@ -726,9 +735,20 @@
 		return true;
 	{rdelim}
 	function check_f3kminute(object){ldelim}
-		max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
+		var flight_type_code = "{$event->rounds.$round_number.flights.$flight_type_id.flight_type_code}";
+		console.log("flight_type_code = " + flight_type_code );
+		var flight_num = object.id.match(/\d+/);
+		console.log("flight_num = " + flight_num );
+		
+		if( flight_type_code == 'f3k_k' ){ldelim}
+			max_flight_seconds = 30 + (flight_num * 30);
+		{rdelim}else if( flight_type_code == 'f3k_m' ){ldelim}
+			max_flight_seconds = 60 + (flight_num * 120);
+		{rdelim}else{ldelim}
+			max_flight_seconds = {$event->rounds.$round_number.flights.$flight_type_id.flight_type_sub_flights_max_time};
+		{rdelim}
+
 		max_min = Math.floor( max_flight_seconds / 60 );
-		flight_num = object.id.match(/\d+/);
 		if( object.value > max_min ){ldelim}
 			object.value=max_min;
 			document.getElementById("sub_min_" + flight_num ).value = max_min;
