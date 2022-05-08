@@ -101,6 +101,11 @@
 				<input type="button" value=" Pilot Blank Pilot Sheets (Summary) " onclick="document.print_pilot_blank_summary_tasks.submit();" class="btn btn-primary btn-rounded"> 
 			</td>
 		</tr>
+		<tr>
+			<td colspan="6" style="text-align: right;padding-top:10px;">
+				<input type="button" value=" Go To Manage Draws " onClick="document.gotodraws.submit();" class="btn btn-primary btn-rounded">
+			</td>
+		</tr>
 		</table>
 		</form>
 		
@@ -123,6 +128,11 @@
 		<form name="goback" method="POST">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_view">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		</form>
+		<form name="gotodraws" method="POST">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_draw">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
 		</form>
 		<form name="print_pilot_blank_tasks" method="POST" target="_blank">
