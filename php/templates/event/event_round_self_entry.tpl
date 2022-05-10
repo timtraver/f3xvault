@@ -146,7 +146,6 @@
 		</div>
 		
 		
-		
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
 			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 20%;float: left;border-width: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 0px;" onClick="{if $round_number > 1}document.main.round_number.value={$round_number-1}{else}return false;{/if}">
 				<i class="fa fa-chevron-left" style="float:left;padding-top: 5px;padding-bottom: 5px;{if $round_number == 1}color: grey;{/if}"></i>
@@ -664,8 +663,12 @@
 	{if $user_is_admin == 1}
 	<div>
 		<br><br>
-		<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="this.disabled=true;document.main.retire.value=1;document.main.save.value=1;document.main.submit();">
-			Toggle Retire Pilot ({if $event->pilots.$event_pilot_id.event_pilot_retired == 1} Retired{else} Active{/if} )
+		<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="if(confirm('Are you sure you wish to {if $event->pilots.$event_pilot_id.event_pilot_retired == 1}reactivate{else}retire{/if} this pilot? This will {if $event->pilots.$event_pilot_id.event_pilot_retired == 1}reactivate this and all future rounds.{else}set a DNS for future unscored rounds.{/if}')){ldelim}this.disabled=true;document.main.retire.value=1;document.main.save.value=1;document.main.submit();{rdelim}">
+			{if $event->pilots.$event_pilot_id.event_pilot_retired == 1}
+				Pilot Retired (Press To Reactivate)
+			{else}
+				Pilot Active (Press to Retire)
+			{/if}
 		</button>
 		<br>
 	</div>
