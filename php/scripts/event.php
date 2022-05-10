@@ -6291,6 +6291,7 @@ function event_self_entry() {
 	$startheight = intval($_REQUEST['startheight']);
 	$penalty = intval($_REQUEST['penalty']);
 	$save = intval($_REQUEST['save']);
+	$retire = intval($_REQUEST['retire']);
 
 	$event = new Event($event_id);
 	$event->get_rounds();
@@ -6531,6 +6532,8 @@ function event_self_entry() {
 	$user_is_admin = 0;
 	if( $event->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
 	if( $event->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $event->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_admin = 1; }
+	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_admin = 1; }
 	$stmt = db_prep("
 		SELECT  * 
 		FROM event_user
@@ -6684,13 +6687,17 @@ function event_self_entry() {
 						flight_type_id = :flight_type_id,
 						event_pilot_round_flight_group = :event_pilot_round_flight_group,
 						event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+						event_pilot_round_flight_dns = :event_pilot_round_flight_dns,
+						event_pilot_round_flight_entered = :event_pilot_round_flight_entered,
 						event_pilot_round_flight_status = 1
 				");
 				$result = db_exec($stmt,array(
 					"event_pilot_round_id" => $eprid,
 					"flight_type_id" => $flight_type_id,
 					"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
-					"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane']
+					"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane'],
+					"event_pilot_round_flight_dns" => $ep['event_pilot_retired'] ? 1 : 0,
+					"event_pilot_round_flight_entered" => $ep['event_pilot_retired'] ? 1 : 0
 				));
 			}
 		}
@@ -6744,12 +6751,16 @@ function event_self_entry() {
 						UPDATE event_pilot_round_flight
 						SET event_pilot_round_flight_group = :event_pilot_round_flight_group,
 							event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+							event_pilot_round_flight_dns = :event_pilot_round_flight_dns,
+							event_pilot_round_flight_entered = :event_pilot_round_flight_entered,
 							event_pilot_round_flight_status = 1
 						WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
 					");
 					$result = db_exec($stmt,array(
 						"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
 						"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane'],
+						"event_pilot_round_flight_dns" => $ep['event_pilot_retired'] ? 1 : 0,
+						"event_pilot_round_flight_entered" => $ep['event_pilot_retired'] ? 1 : 0,
 						"event_pilot_round_flight_id" => $result[0]['event_pilot_round_flight_id']
 					));
 				}else{
@@ -6760,13 +6771,17 @@ function event_self_entry() {
 							flight_type_id = :flight_type_id,
 							event_pilot_round_flight_group = :event_pilot_round_flight_group,
 							event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+							event_pilot_round_flight_dns = :event_pilot_round_flight_dns,
+							event_pilot_round_flight_entered = :event_pilot_round_flight_entered,
 							event_pilot_round_flight_status = 1
 					");
 					$result = db_exec($stmt,array(
 						"event_pilot_round_id" => $eprid,
 						"flight_type_id" => $flight_type_id,
 						"event_pilot_round_flight_group" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_group'],
-						"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane']
+						"event_pilot_round_flight_lane" => $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$epid]['event_pilot_round_flight_lane'],
+						"event_pilot_round_flight_dns" => $ep['event_pilot_retired'] ? 1 : 0,
+						"event_pilot_round_flight_entered" => $ep['event_pilot_retired'] ? 1 : 0
 					));
 				}
 			}
@@ -6990,7 +7005,8 @@ function event_self_entry() {
 			$startheight = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_start_height'];
 			$penalty = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_penalty'];
 			$flight_locked = $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_locked'];
-						
+			$retired = $events->pilots['event_pilot_retired'];
+			
 			# Lets fill in the sub flights
 			foreach($event->rounds[$round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['sub'] as $num => $f){
 				$string = $f['event_pilot_round_flight_sub_val'];
@@ -7019,6 +7035,60 @@ function event_self_entry() {
 			$startpen = 0;
 			$startheight = 0;
 			$flight_locked = 0;
+			$retired = 0;
+		}
+	}
+	
+	# Lets toggle the retire status of the pilot if they choose to
+	if( $retire == 1 ){
+		# Let us see if we are retired already
+		$retired = $event->pilots[$event_pilot_id]['event_pilot_retired'];
+		
+		# Let us update the event pilot retire flag first
+		$stmt = db_prep( "
+			UPDATE event_pilot
+			SET event_pilot_retired = :retired
+			WHERE event_pilot_id = :event_pilot_id 
+		" );
+		$result = db_exec( $stmt, array(
+			"retired" => $retired ? 0 : 1,
+			"event_pilot_id" => $event_pilot_id
+		) );
+
+		# Now let us check if there are any future rounds already in place and set the score as a DNS and the entered as 1
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_pilot_round_flight eprf
+			LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+			LEFT JOIN event_round er ON epr.event_round_id = er.event_round_id
+			WHERE epr.event_pilot_id = :event_pilot_id
+				AND eprf.event_pilot_round_flight_status = 1
+				AND er.event_round_number >= :round_number
+				AND er.event_round_status = 1
+		" );
+		$result = db_exec( $stmt, array(
+			"event_pilot_id" => $event_pilot_id,
+			"round_number" => $round_number
+		) );
+		foreach( $result as $row ){
+			# let's update each event_pilot_round_flight record to be DNS and entered
+			$stmt = db_prep( "
+				UPDATE event_pilot_round_flight
+				SET event_pilot_round_flight_dns = :dns,
+					event_pilot_round_flight_entered = :entered
+				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
+			" );
+			$result = db_exec( $stmt, array(
+				"dns" => $retired ? 0 : 1,
+				"entered" => $retired ? 0 : 1,
+				"event_pilot_round_flight_id" => $row['event_pilot_round_flight_id'],
+			) );		
+		}
+		$event->pilots[$event_pilot_id]['event_pilot_retired'] = $event->pilots[$event_pilot_id]['event_pilot_retired'] ? 0 : 1;
+		if( $retired == 0 ){
+			user_message("Pilot " . $event->pilots[$event_pilot_id]['pilot_first_name'] . " ". $event->pilots[$event_pilot_id]['pilot_last_name'] . " has been retired.", 1 );
+		}else{
+			user_message("Pilot " . $event->pilots[$event_pilot_id]['pilot_first_name'] . " ". $event->pilots[$event_pilot_id]['pilot_last_name'] . " has been resumed for competition.", 1 );
 		}
 	}
 	
@@ -7146,6 +7216,7 @@ function event_self_entry() {
 	$smarty->assign("seconds_accuracy_string",$seconds_accuracy_string);
 	$smarty->assign("flight_locked",$flight_locked);
 	$smarty->assign("max_round_seconds",$max);
+	$smarty->assign("user_is_admin",$user_is_admin);
 	$key = $event->info['event_type_code'] . "_self_entry_lock";
 	if( $event->find_option_value( $key ) == 1 ){
 		$smarty->assign("event_self_entry_lock", 1 );

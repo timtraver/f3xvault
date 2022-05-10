@@ -109,6 +109,7 @@
 	<input type="hidden" name="action" value="event">
 	<input type="hidden" name="function" value="event_self_entry">
 	<input type="hidden" name="save" value="0">
+	<input type="hidden" name="retire" value="0">
 	<input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
 	<input type="hidden" name="event_pilot_id" value="{$event_pilot_id|escape}">
 	<input type="hidden" name="flight_type_id" value="{$flight_type_id|escape}">
@@ -613,11 +614,13 @@
 							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 						{/if}
 						<td align="left" nowrap>
-							{if $f.flight_type_minutes}
-								{$p.event_pilot_round_flight_minutes|escape}m
-							{/if}
-							{if $f.flight_type_seconds}
-								{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}{$p.event_pilot_round_flight_seconds|escape}{/if}s
+							{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}
+								{if $f.flight_type_minutes}
+									{$p.event_pilot_round_flight_minutes|escape}m
+								{/if}
+								{if $f.flight_type_seconds}
+									{$p.event_pilot_round_flight_seconds|escape}s
+								{/if}
 							{/if}
 						</td>
 						{if $f.flight_type_landing}
@@ -658,6 +661,15 @@
 		</button>
 		<br>
 	</div>
+	{if $user_is_admin == 1}
+	<div>
+		<br><br>
+		<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="this.disabled=true;document.main.retire.value=1;document.main.save.value=1;document.main.submit();">
+			Toggle Retire Pilot ({if $event->pilots.$event_pilot_id.event_pilot_retired == 1} Retired{else} Active{/if} )
+		</button>
+		<br>
+	</div>
+	{/if}
 </div>
 
 <script type="text/javascript">
