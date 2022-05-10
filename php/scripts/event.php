@@ -7071,6 +7071,8 @@ function event_self_entry() {
 			"round_number" => $round_number
 		) );
 		foreach( $result as $row ){
+			# Skip the ones that already have entered scores
+			if( $row['event_pilot_round_flight_entered'] == 1 || $row['event_pilot_round_flight_score'] > 0 ){ continue; }
 			# let's update each event_pilot_round_flight record to be DNS and entered
 			$stmt = db_prep( "
 				UPDATE event_pilot_round_flight
@@ -7082,7 +7084,7 @@ function event_self_entry() {
 				"dns" => $retired ? 0 : 1,
 				"entered" => $retired ? 0 : 1,
 				"event_pilot_round_flight_id" => $row['event_pilot_round_flight_id'],
-			) );		
+			) );
 		}
 		$event->pilots[$event_pilot_id]['event_pilot_retired'] = $event->pilots[$event_pilot_id]['event_pilot_retired'] ? 0 : 1;
 		if( $retired == 0 ){
