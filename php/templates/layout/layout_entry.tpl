@@ -134,19 +134,6 @@
 			{/foreach}
 		{rdelim});
 	</script>
-	{if $first_view}
-		<script type="text/javascript">
-			$(document).ready(function() {ldelim}
-				$.niftyNoty({ldelim}
-					type: 'warning',
-					icon: 'fa fa-arrow-left',
-					container : 'floating',
-					title : 'Click on the Blinking <img src="img/logo.png" width="35"> Plane Icon for Menu',
-					timer : 10000
-				{rdelim});
-			{rdelim});
-		</script>
-	{/if}
 
 	<!--
 
