@@ -128,7 +128,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>PayPal Link Email</th>
+						<th>PayPal Email Address (For Payment)</th>
 						<td>
 							<input type="text" size="40" name="event_reg_paypal_address" value="{$event->info.event_reg_paypal_address}">
 						</td>
