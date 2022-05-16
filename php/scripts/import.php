@@ -1504,8 +1504,8 @@ function import_verify_gliderscore_f5j(){
 			# This is a round line, so lets take it apart
 			$round_number = $line[$round_pos];
 			$pilot_name = $line[$name_pos];
-			$pilots[$pilot_name]['pilot_name'] = $pilot_name;
-			$pilots[$pilot_name]['pilot_team'] = $line[$team_pos];
+			$pilots[$pilot_name]['pilot_name'] = trim($pilot_name);
+			$pilots[$pilot_name]['pilot_team'] = trim($line[$team_pos]);
 			if( $line[$reflight_pos] == 0 ){
 				# This is a normal group
 				$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
@@ -1535,8 +1535,8 @@ function import_verify_gliderscore_f5j(){
 		$q = '%' . $q . '%';
 		# lets get the first name and last name out of it
 		$words = preg_split( "/,\s+/", $pilot_entered, 2 );
-		$last_name = $words[0];
-		$first_name = $words[1];
+		$last_name = trim($words[0]);
+		$first_name = trim($words[1]);
 		# Do search
 		$stmt = db_prep("
 			SELECT *
@@ -1551,6 +1551,7 @@ function import_verify_gliderscore_f5j(){
 				OR TRIM(LOWER(p.pilot_last_name)) LIKE :term5
 				OR TRIM(LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name))) LIKE :term6
 				OR TRIM(LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name))) LIKE :term8
+			ORDER BY p.pilot_first_name, p.pilot_last_name
 		");
 		$found_pilots = db_exec( $stmt,array(
 			"term1" => $first_name,
