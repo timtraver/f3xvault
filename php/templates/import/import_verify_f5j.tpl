@@ -124,6 +124,7 @@
 			<td>
 				{$p.pilot_name|escape}
 				<input type="hidden" name="pilot_name_{$line_number|escape}" value="{$p.pilot_name|escape}">
+				<input type="hidden" name="pilot_team_{$line_number|escape}" value="{$p.pilot_team|escape}">
 				{foreach $p.rounds as $r}
 					{$round=$r@key}
 					<input type="hidden" name="pilot_{$line_number|escape}_round_{$round|escape}_group" value="{$r.group|escape}">

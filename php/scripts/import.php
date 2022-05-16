@@ -1462,6 +1462,7 @@ function import_verify_gliderscore_f5j(){
 	$land_pos = 0;
 	$start_pos = 0;
 	$pen_pos = 0;
+	$team_pos = 0;
 	foreach( $lines as $line_number => $line ){
 		if( preg_match( "/^Round/", $line[0] ) ){
 			# This is the header line, so lets get the positions of the columns we want
@@ -1478,6 +1479,9 @@ function import_verify_gliderscore_f5j(){
 						break;
 					case "Name":
 						$name_pos = $pos;
+						break;
+					case "Team":
+						$team_pos = $pos;
 						break;
 					case "Time":
 						$time_pos = $pos;
@@ -1501,6 +1505,7 @@ function import_verify_gliderscore_f5j(){
 			$round_number = $line[$round_pos];
 			$pilot_name = $line[$name_pos];
 			$pilots[$pilot_name]['pilot_name'] = $pilot_name;
+			$pilots[$pilot_name]['pilot_team'] = $line[$team_pos];
 			if( $line[$reflight_pos] == 0 ){
 				# This is a normal group
 				$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
@@ -1656,6 +1661,10 @@ function import_import_gliderscore_f5j() {
 			$number = $match[1];
 			$pilots[$number]['pilot_name'] = $value;
 		}
+		if(preg_match("/^pilot_team_(\d+)/",$key,$match)){
+			$number = $match[1];
+			$pilots[$number]['pilot_team'] = $value;
+		}
 		if(preg_match("/^pilot_class_id_(\d+)/",$key,$match)){
 			$number = $match[1];
 			$pilots[$number]['pilot_class_id'] = $value;
@@ -1771,6 +1780,8 @@ function import_import_gliderscore_f5j() {
 				event_end_date = :event_end_date,
 				event_type_id = :event_type_id,
 				club_id = :club_id,
+				event_reg_flag = 1,
+				event_reg_teams = 1,
 				event_view_status = 1,
 				event_status = 1
 			WHERE event_id = :event_id
@@ -1802,6 +1813,8 @@ function import_import_gliderscore_f5j() {
 				event_start_date = :event_start_date,
 				event_end_date = :event_end_date,
 				event_type_id = :event_type_id,
+				event_reg_flag = 1,
+				event_reg_teams = 1,
 				event_view_status = 1,
 				event_status = 1
 		");
@@ -2013,6 +2026,7 @@ function import_import_gliderscore_f5j() {
 					event_pilot_entry_order = :event_pilot_entry_order,
 					event_pilot_bib = :event_pilot_bib,
 					class_id = :class_id,
+					event_pilot_team = :pilot_team,
 					event_pilot_status = 1
 			");
 			$result = db_exec($stmt,array(
@@ -2020,7 +2034,8 @@ function import_import_gliderscore_f5j() {
 				"pilot_id" => $pilot_id,
 				"event_pilot_entry_order" => $entry_order,
 				"event_pilot_bib" => $entry_order,
-				"class_id" => $p['pilot_class_id']
+				"class_id" => $p['pilot_class_id'],
+				"pilot_team" => $p['pilot_team']
 			));
 			$event_pilot_id = $GLOBALS['last_insert_id'];
 		}else{
@@ -2029,11 +2044,13 @@ function import_import_gliderscore_f5j() {
 			$stmt = db_prep("
 				UPDATE event_pilot
 				SET class_id = :class_id,
+					event_pilot_team = :pilot_team,
 					event_pilot_status = 1
 				WHERE event_pilot_id = :event_pilot_id
 			");
 			$result = db_exec($stmt,array(
 				"class_id" => $p['pilot_class_id'],
+				"pilot_team" => $p['pilot_team'],
 				"event_pilot_id" => $event_pilot_id
 			));
 		}
