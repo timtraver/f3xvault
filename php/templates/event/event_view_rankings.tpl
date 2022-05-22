@@ -50,43 +50,43 @@
 		{$diff_to_lead=0}
 		{$diff=0}
 		{foreach $event->totals.teams as $t}
-		{if $t.total>$previous}
-			{$previous=$t.total}
-		{else}
-			{$diff=$previous-$t.total}
-			{$diff_to_lead=$diff_to_lead+$diff}
-		{/if}
-		<tr style="background-color:#9DCFF0;">
-			<td>{$t.rank}</td>
-			<td nowrap>{$t.team_name|escape}</td>
-			<td>
-				<a href="" class="tooltip_score_left" onClick="return false;">
-				{$t.total|string_format:$event->event_calc_accuracy_string}
-					<span>
-						<b>Behind Prev</b> : {$diff|string_format:$event->event_calc_accuracy_string}<br>
-						<b>Behind Lead</b> : {$diff_to_lead|string_format:$event->event_calc_accuracy_string}<br>
-					</span>
-				</a>
-			</td>
-		</tr>
+			{if $t.total>$previous}
+				{$previous=$t.total}
+			{else}
+				{$diff=$previous-$t.total}
+				{$diff_to_lead=$diff_to_lead+$diff}
+			{/if}
+			<tr style="background-color:#9DCFF0;">
+				<td>{$t.rank}</td>
+				<td nowrap>{$t.team_name|escape}</td>
+				<td>
+					<a href="" class="tooltip_score_left" onClick="return false;">
+					{$t.total|string_format:$event->event_calc_accuracy_string}
+						<span>
+							<b>Behind Prev</b> : {$diff|string_format:$event->event_calc_accuracy_string}<br>
+							<b>Behind Lead</b> : {$diff_to_lead|string_format:$event->event_calc_accuracy_string}<br>
+						</span>
+					</a>
+				</td>
+			</tr>
 			{$num=1}
 			{foreach $event->totals.pilots as $p}
-			{$event_pilot_id=$p.event_pilot_id}
-			{if $event->pilots.$event_pilot_id.event_pilot_team==$t.team_name}
-			<tr>
-				<td>{if $count>0 && $num>$count}<img src="/images/icons/exclamation.png">{/if}</td>
-				<td>
-					{include file="event/event_view_pilot_popup.tpl"}
-				</td>
-				<td align="right">
-						{$p.total|string_format:$event->event_calc_accuracy_string}
-				</td>
-				</a>
-			</tr>
-			{$num=$num+1}
-			{/if}
+				{$event_pilot_id=$p.event_pilot_id}
+				{if $event->pilots.$event_pilot_id.event_pilot_team==$t.team_name}
+					<tr>
+						<td>{if $count>0 && $num>$count}<img src="/images/icons/exclamation.png">{/if}</td>
+						<td>
+							{include file="event/event_view_pilot_popup.tpl"}
+						</td>
+						<td align="right">
+								{$p.total|string_format:$event->event_calc_accuracy_string}
+						</td>
+						</a>
+					</tr>
+					{$num=$num+1}
+				{/if}
 			{/foreach}
-		{$previous=$t.total}
+			{$previous=$t.total}
 		{/foreach}
 		</table>
 	</div>
