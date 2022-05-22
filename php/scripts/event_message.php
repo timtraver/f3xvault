@@ -259,6 +259,15 @@ function event_message_send() {
 		}
 		$recipients = array();
 	}
+	# Lets determine if the user is already registered as a pilot in this event
+	$pilot_id = $GLOBALS['user']['pilot_id'];
+	$registered = 0;
+	foreach($event->pilots as $p){
+		if($p['pilot_id'] == $user['pilot_id']){
+			$registered = 1;
+		}
+	}
+	$smarty->assign("registered",$registered);
 
 	$permission = check_event_permission($event_id);
 	$smarty->assign("permission",$permission);
