@@ -123,6 +123,7 @@ tbody th:first-child {
 							<input type="hidden" name="action" value="event_message">
 							<input type="hidden" name="function" value="event_message_send">
 							<input type="hidden" name="save" value="1">
+							<input type="hidden" name="to" value="">
 
 							<table cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 								<tr>
@@ -507,5 +508,8 @@ function check_permission() {ldelim}
 		return 1;
 	{/if}
 {rdelim}
+{if $to}
+select_recipients( '{$to}' );
+{/if}
 </script>
 {/block}
