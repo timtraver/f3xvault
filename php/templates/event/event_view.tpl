@@ -66,6 +66,11 @@
 					</a>
 				</li>
 				{/if}
+				<li{if $tab==8} class="active"{/if}>
+					<a href="?action=event_message&function=event_message_send&event_id={$event->info.event_id}&tab=8">
+						Send Messages
+					</a>
+				</li>
 			</ul>
 			<div class="tab-content">
 				<div id="pilot-tab-0" class="tab-pane fade{if $tab==0} active in{/if}">
