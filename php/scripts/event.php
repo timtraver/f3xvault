@@ -490,7 +490,7 @@ function event_view() {
 			$total_prelim_rounds++;
 		}
 	}
-	if( !isset($_REQUEST['tab']) ){
+	if( !isset($_REQUEST['tab']) || $_REQUEST['tab'] == '' ){
 		if(count($e->rounds) <= 0 ){
 			$tab = 2;
 		}else{
@@ -2704,36 +2704,6 @@ function event_param_save() {
 	log_action($event_id);
 	user_message("Event Parameters Saved.");
 	return event_edit();
-}
-function calculate_amount_owed($event_pilot_id){
-	# Function to determine the balance owed by a pilot
-	$stmt = db_prep("
-		SELECT *
-		FROM event_pilot_reg epr
-		LEFT JOIN event_reg_param erp ON epr.event_reg_param_id = erp.event_reg_param_id
-		WHERE epr.event_pilot_id = :event_pilot_id
-			AND epr.event_pilot_reg_status = 1
-	");
-	$result = db_exec($stmt,array(
-		"event_pilot_id" => $event_pilot_id
-	));
-	$total_owed = 0;
-	foreach($result as $row){
-		$total_owed  +=  $row['event_pilot_reg_qty']*$row['event_reg_param_cost'];
-	}
-	# Total the paid records
-	$stmt = db_prep("
-		SELECT sum(event_pilot_payment_amount) as total_paid
-		FROM event_pilot_payment
-		WHERE event_pilot_id = :event_pilot_id
-			AND event_pilot_payment_status = 1
-	");
-	$result = db_exec($stmt,array(
-		"event_pilot_id" => $event_pilot_id,
-	));
-	$total_paid = $result[0]['total_paid'];
-	$balance = $total_owed - $total_paid;
-	return $balance;
 }
 
 # Event Round Routines
