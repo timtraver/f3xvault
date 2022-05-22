@@ -42,6 +42,7 @@ function event_message_send() {
 	$message_from = input_filter( $_REQUEST['message_from'], 'boolean');
 	$from_email_address = input_filter( $_REQUEST['from_email_address'], 'string');
 	$message_body = input_filter( $_REQUEST['message_body'], 'string');
+	$to = input_filter( $_REQUEST['to'], 'string');
 	$save = intval( $_REQUEST['save'] );
 	
 	if( $event_id == 0 ){
@@ -249,14 +250,14 @@ function event_message_send() {
 		}
 		user_message( "Messages sent to : <br>" . $sent_to );
 		# clear submit vars now
-		// $message_subject = '';
-		// $message_body = '';
-		// unset( $_REQUEST['message_subject'] );
-		// unset( $_REQUEST['message_body'] );
-		// foreach( $recipients as $r ){
-		// 	unset( $_REQUEST['pilot_'.$r] );
-		// }
-		// $recipients = array();
+		$message_subject = '';
+		$message_body = '';
+		unset( $_REQUEST['message_subject'] );
+		unset( $_REQUEST['message_body'] );
+		foreach( $recipients as $r ){
+			unset( $_REQUEST['pilot_'.$r] );
+		}
+		$recipients = array();
 	}
 
 	$permission = check_event_permission($event_id);
@@ -267,6 +268,7 @@ function event_message_send() {
 	$smarty->assign("from_email_address",$from_email_address);
 	$smarty->assign("message_body",$message_body);
 	$smarty->assign("recipients",$recipients);
+	$smarty->assign("to",$to);
 	$smarty->assign("recaptcha_key",$GLOBALS['recaptcha_key']);
 	$maintpl = find_template("event/event_message.tpl");
 	return $smarty->fetch($maintpl);
