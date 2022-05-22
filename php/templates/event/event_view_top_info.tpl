@@ -26,7 +26,12 @@
 			</td>
 			<th align="right">Contest Director</th>
 			<td>
-			{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape}
+				{if $event->info.pilot_id != 0}
+					{$event->info.pilot_first_name|escape} {$event->info.pilot_last_name|escape} - {$event->info.pilot_city|escape} &nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="?action=event_message&function=event_message_send&event_id={$event->info.event_id}&to=cd" class="btn btn-success btn-rounded" style="height: 20px;margin: 0px;padding-top: 0px;">
+						 Send Message To CD
+					</a>
+				{/if}
 			</td>
 		</tr>
 		{if $event->series || $event->info.club_name}
@@ -164,6 +169,7 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_edit">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="tab" value="0">
 </form>
 <form name="event_view_info" method="POST">
 <input type="hidden" name="action" value="event">
@@ -266,7 +272,7 @@
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 
-<div id="print_round" style="overflow: hidden;">
+<div id="print_round" style="overflow: hidden;display: none;">
 		<form name="printround" method="POST" target="_blank">
 		<input type="hidden" name="action" value="event">
 		<input type="hidden" name="function" value="event_print_round">
