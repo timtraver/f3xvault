@@ -302,6 +302,7 @@
 {else}
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="tab" value="">
 {/if}
 </form>
 

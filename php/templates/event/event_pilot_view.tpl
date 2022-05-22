@@ -269,6 +269,7 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id|escape}">
+<input type="hidden" name="tab" value="">
 </form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">

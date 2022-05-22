@@ -287,6 +287,7 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event_id}">
+<input type="hidden" name="tab" value="">
 </form>
 <form name="add_plane" method="POST">
 <input type="hidden" name="action" value="plane">
