@@ -43,7 +43,7 @@ class Event {
 		# Initialization of the class
 		$this->event_id = $event_id;
 		$stmt = db_prep("
-			SELECT  * ,s.state_id,c.country_id,u.user_id
+			SELECT  * ,s.state_id,c.country_id,u.user_id,p.pilot_id,cl.club_id
 			FROM event e
 			LEFT JOIN location l ON e.location_id=l.location_id
 			LEFT JOIN state s ON l.state_id=s.state_id
