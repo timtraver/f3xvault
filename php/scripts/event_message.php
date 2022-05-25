@@ -176,6 +176,7 @@ function event_message_send() {
 				$smarty1->assign( "event_start_date", $event->info['event_start_date'] );
 				$smarty1->assign( "location_name", $event->info['location_name'] );
 				$smarty1->assign( "event_type_name", $event->info['event_type_name'] );
+				$smarty1->assign( "event", $event );
 				
 				# Send the email
 				include_library('PHPMailer/PHPMailerAutoload.php');
