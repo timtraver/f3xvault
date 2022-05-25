@@ -148,13 +148,13 @@
 		
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
 			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 20%;float: left;border-width: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 0px;" onClick="{if $round_number > 1}document.main.round_number.value={$round_number-1}{else}return false;{/if}">
-				<i class="fa fa-chevron-left" style="float:left;padding-top: 5px;padding-bottom: 5px;{if $round_number == 1}color: grey;{/if}"></i>
+				<i class="fa fa-chevron-left" style="float:left;padding-top: 5px;padding-bottom: 6px;{if $round_number == 1}color: grey;{/if}"></i>
 			</button>
 			<button class="btn btn-group btn-primary dropdown-toggle" style="font-size: 24px;width: 60%;border-width: 0px;margin-left: 0px;margin-right: 0px;"  data-toggle="dropdown" aria-expanded="false">
 				Round {$round_number|escape}
 			</button>
 			<button class="btn btn-group btn-primary btn-rounded" style="font-size: 24px;width: 20%;float: right;border-width: 0px;border-top-left-radius: 0px;border-bottom-left-radius: 0px;" onclick="{if $advance_round == 1}document.main.round_number.value={$round_number+1};document.main.submit();{else}return false;{/if}">
-				<i class="fa fa-chevron-right" style="float: right;padding-top: 5px;padding-bottom: 5px;{if $advance_round == 0}color: grey;{/if}"></i>
+				<i class="fa fa-chevron-right" style="float: right;padding-top: 5px;padding-bottom: 6px;{if $advance_round == 0}color: grey;{/if}"></i>
 			</button>
 				<ul class="dropdown-menu" style="width:100%;position: relative;font-size:20px;">
 				{for $x = 1; $x <= count($event->rounds); $x++ }
@@ -166,12 +166,38 @@
 		
 		
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
-			<button class="btn btn-block btn-warning btn-rounded" style="font-size: 22px;" onClick="return false;">
+			<button class="btn btn-group btn-warning btn-rounded" style="font-size: 24px;width: 10%;float: left;border-width: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 0px;" onClick="return false;">
+				<i class="fa fa-chevron-down" style="float:left;padding-top: 5px;padding-bottom: 5px;"></i>
+			</button>
+			<button class="btn btn-group btn-warning dropdown-toggle" id="flightGroupButton" style="font-size: 24px;width: 80%;border-width: 0px;margin-left: 0px;margin-right: 0px;" data-toggle="dropdown" aria-expanded="false">
 				Flight Group {$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}
 				{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}
 				&nbsp;&nbsp;Lane {$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}
 				{/if}
 			</button>
+			<button class="btn btn-group btn-warning btn-rounded" style="font-size: 24px;width: 10%;float: right;border-width: 0px;border-top-left-radius: 0px;border-bottom-left-radius: 0px;" onclick="return false;">
+				<i class="fa fa-chevron-down" style="float: right;padding-top: 5px;padding-bottom: 5px;"></i>
+			</button>
+			{if $user_is_admin == 1}
+				<ul class="dropdown-menu" style="width:100%;position: relative;font-size:20px;">
+					{assign var=last_group value=''}
+					{foreach $event->rounds.$round_number.flights.$flight_type_id.pilots as $epid => $p}
+						{if $last_group != $p.event_pilot_round_flight_group}
+							<li style="text-align: center;">
+								<a href="#" onClick="document.main.group.value='{$p.event_pilot_round_flight_group}';document.getElementById('flightGroupButton').innerText='Flight Group ' + '{$p.event_pilot_round_flight_group} ' + '{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}&nbsp;&nbsp;Lane {$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_lane}{/if}';">
+								Change To Group {$p.event_pilot_round_flight_group|escape}
+								{if $p.event_pilot_round_flight_group == $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group}
+									(Current)
+								{else}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								{/if}
+								</a>
+							</li>
+						{/if}
+						{assign var=last_group value=$p.event_pilot_round_flight_group}
+					{/foreach}
+				</ul>
+			{/if}
 		</div>
 		
 		
