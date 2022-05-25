@@ -480,7 +480,7 @@ This is a reminder to that the registration payment is due for the following eve
 	</tr>
 	<tr>
 		<th align="right" width="20%" align="right" bgcolor="#1f6eb6" style="color:white;">Amount Owed</th>
-		<td>{if $event->info.currency_symbol != ''}{$event->info.currency_symbol|escape}{else}\${/if}{$amount_due}</td>
+		<td>{if $event->info.currency_symbol != ''}{$event->info.currency_symbol|escape}{else}\${/if} {$amount_due}</td>
 	</tr>
 </table>
 <br>
