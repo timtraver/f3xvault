@@ -186,6 +186,8 @@ function event_message_send() {
 				$subject = $smarty1->fetch('string:'.$message_subject);
 				$body = $smarty1->fetch('string:'.$message_body);
 				
+				$body = "<pre>" . $body . "</pre>";
+				
 				$mail->isSMTP();
 				$mail->Host = 'localhost';
 				$mail->SMTPAuth = false;
