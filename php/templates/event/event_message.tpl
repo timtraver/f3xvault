@@ -426,10 +426,10 @@ function add_template( template ){
 	templateText = '';
 	switch( template ){
 		case 'event_info':
-			templateText = `Dear {$pilot_first_name},<br>
-<br>
-The following additional information for the event : <br>
-<br>
+			templateText = `Dear {$pilot_first_name},
+
+The following additional information for the event :
+
 <table cellpadding="2" cellspacing="1" border="0">
 	<tr>
 		<th align="right" width="20%" align="right" bgcolor="#1f6eb6" style="color:white;">Event Name</th>
@@ -452,19 +452,19 @@ The following additional information for the event : <br>
 		</td>
 	</tr>
 </table>
-<br>
-You can go to the event link <a href="http://www.f3xvault.com/?action=event&function=event_view&event_id={$event_id}">HERE</a><br>
-<br>
-Thank you,<br>
-<br>
+
+You can go to the event link <a href="http://www.f3xvault.com/?action=event&function=event_view&event_id={$event_id}">HERE</a>
+
+Thank you,
+
 Your Event Organizers
 `;
 			break;
 		case 'registration':
-			templateText = `Dear {$pilot_first_name},<br>
-<br>
-This is a reminder to that the registration payment is due for the following event :<br>
-<br>
+			templateText = `Dear {$pilot_first_name},
+
+This is a reminder to that the registration payment is due for the following event :
+
 <table cellpadding="2" cellspacing="1" border="0">
 	<tr>
 		<th align="right" width="20%" align="right" bgcolor="#1f6eb6" style="color:white;">Event Name</th>
@@ -483,13 +483,13 @@ This is a reminder to that the registration payment is due for the following eve
 		<td>{if $event->info.currency_symbol != ''}{$event->info.currency_symbol|escape}{else}\${/if} {$amount_due}</td>
 	</tr>
 </table>
-<br>
-Please log into your F3XVault account and make payment to ensure your spot in the competition.<br>
-<br>
-You can go to the event link <a href="http://www.f3xvault.com/?action=event&function=event_view&event_id={$event_id}">HERE</a><br>
-<br>
-Thank you,<br>
-<br>
+
+Please log into your F3XVault account and make payment to ensure your spot in the competition.
+
+You can go to the event link <a href="http://www.f3xvault.com/?action=event&function=event_view&event_id={$event_id}">HERE</a>
+
+Thank you,
+
 Your Event Organizers
 `;
 			break;
