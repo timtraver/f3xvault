@@ -4826,6 +4826,8 @@ function event_draw_print() {
 					}
 					
 					$data[] = array(
+						"event_id"	=> $e->info['event_id'],
+						"event_pilot_id"=> $event_pilot_id,
 						"event_name"	=> $e->info['event_name'],
 						"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
 						"round"			=> $event_round_number,
@@ -4838,7 +4840,10 @@ function event_draw_print() {
 						"flights"		=> $flights
 					);
 				}
-			}			
+			}
+			 // print_r($data);
+			 // exit;
+		
 		}
 
 		# Now create the pdf from the above template and save it
