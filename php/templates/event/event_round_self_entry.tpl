@@ -922,6 +922,10 @@
 		if( object.value > max_min ){ldelim}
 			object.value=max_min;
 		{rdelim}
+		if( object.value.length == 1 && object.value > 2 ){ldelim}
+			make_unselected(object);
+			goToNextTab(object);
+		{rdelim}
 		if( object.value.length == 2){ldelim}
 			make_unselected(object);
 			goToNextTab(object);
