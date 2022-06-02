@@ -527,7 +527,7 @@
 				<th nowrap><h3>Start Penalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3></th>
 				<td>
 					<div class="btn-group" style="width: 50px;">
-						<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="startpen_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$startpen|string_format:"%2d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_startpen(this);' onChange="document.main.startpen.value=this.value;"">
+						<input type="text" pattern="[0-9]*" inputmode="numeric" size="2" id="startpen_button" class="btn-primary btn-rounded" style="width: 80px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$startpen|string_format:"%1d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_startpen(this);' onChange="document.main.startpen.value=this.value;"">
 					</div>
 				</td>
 			</tr>
@@ -618,6 +618,9 @@
 			{$groupcolor='lightgrey'}
 			{$oldgroup=''}
 			{foreach $event->rounds.$round_number.flights as $flight_id => $f}
+				{if $flight_id != $event->rounds.$round_number.flight_type_id}
+					{continue}
+				{/if}
 				{foreach $f.pilots as $event_pilot_id => $p}
 					{if $oldgroup!=$p.event_pilot_round_flight_group}
 						{if $groupcolor=='white'}{$groupcolor='lightgrey'}{else}{$groupcolor='white'}{/if}
