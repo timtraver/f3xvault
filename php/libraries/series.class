@@ -96,7 +96,7 @@ class Series {
 			# Let us get any flyoff rounds to adjust the final order of the pilots for bonus points in the f5jtour calc type
 			$ev = new Event( $event_id );
 			$ev->get_rounds();
-			#$ev->calculate_event_totals();
+			$ev->calculate_event_totals();
 			if( $ev->flyoff_totals ){
 				foreach( $ev->flyoff_totals as $flyoff_number => $flyoff ){
 					foreach( $flyoff['pilots'] as $key => $p ){
