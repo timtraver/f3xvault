@@ -216,7 +216,7 @@
 		</form>
 		
 		{if $go_to_paypal==1}
-			<form name="paypal" method="GET" action="https://www.paypal.com/cgi-bin/webscr">
+			<form name="paypal" method="POST" action="https://www.paypal.com/cgi-bin/webscr">
 			<input type="hidden" name="cmd" value="_xclick">
 			<input type="hidden" name="business" value="{$event->info.event_reg_paypal_address}">
 			<input type="hidden" name="receiver_email" value="{$event->info.event_reg_paypal_address}">
@@ -227,8 +227,8 @@
 			<input type="hidden" name="currency_code" value="{$event->info.currency_code}">
 			<input type="hidden" name="button_subtype" value="services">
 			<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
-			<input type="hidden" name="notify_url" value="http://www.f3xvault.com/paypal_ipn.php">
-			<input type="hidden" name="return" value="http://www.f3xvault.com/?action=event&function=event_view&event_id={$event->info.event_id}">
+			<input type="hidden" name="notify_url" value="https://www.f3xvault.com/paypal_ipn.php">
+			<input type="hidden" name="return" value="https://www.f3xvault.com/?action=event&function=event_view&event_id={$event->info.event_id}">
 			</form>
 			<script type="text/javascript">
 			<!--
