@@ -50,6 +50,11 @@ foreach ($myPost as $key => $value) {
 	$req .= "&$key=$value";
 }
 
+if(DEBUG == 1) {
+	error_log(date('[Y-m-d H:i e] '). "Entered ipn script: post data : " . print_r($raw_post_data, true) . PHP_EOL, 3, LOG_FILE);
+	error_log(date('[Y-m-d H:i e] '). "req : " . print_r($req, true) . PHP_EOL, 3, LOG_FILE);
+}
+
 // Post IPN data back to PayPal to validate the IPN data is genuine
 // Without this step anyone can fake IPN data
 
@@ -61,6 +66,9 @@ if(USE_SANDBOX == true) {
 
 $ch = curl_init($paypal_url);
 if ($ch == FALSE) {
+	if(DEBUG == 1) {	
+		error_log(date('[Y-m-d H:i e] '). "CURL not initialized: " . curl_error($ch) . PHP_EOL, 3, LOG_FILE);
+	}
 	return FALSE;
 }
 
