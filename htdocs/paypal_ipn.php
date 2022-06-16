@@ -208,7 +208,7 @@ if (preg_match("/VERIFIED/",$res)) {
 	}
 }
 
-function calculate_amount_owed($event_pilot_id){
+function calculate_amount_owed_old($event_pilot_id){
 	# Function to determine the balance owed by a pilot
 	$stmt=db_prep("
 		SELECT *
