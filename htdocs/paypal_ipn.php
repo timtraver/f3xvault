@@ -72,7 +72,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
 
-if(DEBUG == true) {
+if(DEBUG == 1) {
 	curl_setopt($ch, CURLOPT_HEADER, 1);
 	curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
 }
@@ -95,7 +95,7 @@ curl_setopt($ch, CURLOPT_CAINFO, $cert);
 $res = curl_exec($ch);
 if (curl_errno($ch) != 0) // cURL error
 	{
-	if(DEBUG == true) {	
+	if(DEBUG == 1) {	
 		error_log(date('[Y-m-d H:i e] '). "Can't connect to PayPal to validate IPN message: " . curl_error($ch) . PHP_EOL, 3, LOG_FILE);
 	}
 	curl_close($ch);
@@ -103,7 +103,7 @@ if (curl_errno($ch) != 0) // cURL error
 
 } else {
 		// Log the entire HTTP response if debug is switched on.
-		if(DEBUG == true) {
+		if(DEBUG == 1) {
 			error_log(date('[Y-m-d H:i e] '). "New Request ---------------------------------------------------------------------------" . PHP_EOL, 3, LOG_FILE);
 			error_log(date('[Y-m-d H:i e] '). "HTTP request of validation request:". curl_getinfo($ch, CURLINFO_HEADER_OUT) ." for IPN payload: $req" . PHP_EOL, 3, LOG_FILE);
 			error_log(date('[Y-m-d H:i e] '). "HTTP response of validation request: $res" . PHP_EOL, 3, LOG_FILE);
@@ -189,13 +189,13 @@ if (preg_match("/VERIFIED/",$res)) {
 		}
 	}
 	
-	if(DEBUG == true) {
+	if(DEBUG == 1) {
 		error_log(date('[Y-m-d H:i e] '). "Verified IPN: $req ". PHP_EOL, 3, LOG_FILE);
 	}
 } else if (strcmp ($res, "INVALID") == 0) {
 	// log for manual investigation
 	// Add business logic here which deals with invalid IPN messages
-	if(DEBUG == true) {
+	if(DEBUG == 1) {
 		error_log(date('[Y-m-d H:i e] '). "Invalid IPN: $req" . PHP_EOL, 3, LOG_FILE);
 	}
 }
