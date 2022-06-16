@@ -16,7 +16,7 @@ include_library('functions.inc');
 // CONFIG: Enable debug mode. This means we'll log requests into 'ipn.log' in the same directory.
 // Especially useful if you encounter network errors or other intermittent problems with IPN (validation).
 // Set this to 0 once you go live or don't require logging.
-define("DEBUG", 1);
+define("DEBUG", true);
 
 // Set to 0 once you're ready to go live
 define("USE_SANDBOX", 0);
