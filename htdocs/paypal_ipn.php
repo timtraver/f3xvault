@@ -33,8 +33,9 @@ $raw_post_array = explode('&', $raw_post_data);
 $myPost = array();
 foreach ($raw_post_array as $keyval) {
 	$keyval = explode ('=', $keyval);
-	if (count($keyval) == 2)
+	if (count($keyval) == 2){
 		$myPost[$keyval[0]] = urldecode($keyval[1]);
+	}
 }
 // read the post from PayPal system and add 'cmd'
 $req = 'cmd=_notify-validate';
