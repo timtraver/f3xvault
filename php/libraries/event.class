@@ -1952,6 +1952,7 @@ class Event {
 		# Lets get the round drops
 		foreach($this->options as $o){
 			if(preg_match("/\_drop\d/",$o['event_type_option_code']) && !preg_match("/flyoff\_drop/",$o['event_type_option_code'])){
+				if( $o['event_option_value'] == '0' ){ continue; }
 				$drop_rounds[] = $o['event_option_value'];
 			}
 		}
@@ -2005,6 +2006,7 @@ class Event {
 		# Lets get the flyoff round drops
 		foreach($this->options as $o){
 			if(preg_match("/\_flyoff\_drop\d/",$o['event_type_option_code'])){
+				if( $o['event_option_value'] == '0' ){ continue; }
 				$flyoff_drop_rounds[] = $o['event_option_value'];
 			}
 		}
