@@ -123,7 +123,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,7,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 8;
 		
 		# Round Header
@@ -141,7 +141,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -266,7 +266,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,7,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 8;
 		
 		# Round Header
@@ -285,7 +285,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -440,7 +440,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,7,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 8;
 		
 		# Round Header
@@ -459,7 +459,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -625,7 +625,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,7,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 8;
 		
 		# Round Header
@@ -644,7 +644,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -789,7 +789,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,7,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 8;
 		
 		# Round Header
@@ -808,7 +808,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -953,7 +953,7 @@ class PDF_F3X {
 		$this->pdf->SetFontSize(8);
 		$this->pdf->SetFillColor(211,211,211);
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell($inner_cell_width,5,$data['event_name'],0,0,'L',TRUE);
+		$this->pdf->Cell($inner_cell_width,5,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
 		$current_y += 6;
 		
 		# Round Header
@@ -972,7 +972,7 @@ class PDF_F3X {
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$name_width = $inner_cell_width - 11 - 11 - 12;
-		$this->pdf->Cell($name_width,8,$data['pilot'],1,0,'L',TRUE);
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
 		$this->pdf->SetFillColor(211,211,211);
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
@@ -1264,7 +1264,7 @@ class PDF_F3X {
 		$this->pdf->Image( $GLOBALS['base'] . '/htdocs/img/logo.png' , $current_x, $current_y, 6, 6, 'PNG');
 		$current_x += 7;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Cell( $inner_cell_width - 30, 7, 'F3XVault : ' . $data['event']['event_name'], 0, 0, 'L', TRUE );
+		$this->pdf->Cell( $inner_cell_width - 30, 7, 'F3XVault : ' . iconv("UTF-8", "ISO-8859-1", $data['event']['event_name']), 0, 0, 'L', TRUE );
 		
 		# QR Code
 		# First lets build the qr code
@@ -1287,7 +1287,8 @@ class PDF_F3X {
 		$this->pdf->SetXY( $current_x, $current_y );
 		$this->pdf->SetFillColor( 255, 255, 255 );
 		$name_width = $inner_cell_width - 37;
-		$this->pdf->Cell( $name_width, 7, ' ' . $data['pilot_first_name'] . ' ' . $data['pilot_last_name'], 0, 0, 'L', TRUE );
+		
+		$this->pdf->Cell( $name_width, 7, ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_first_name']) . ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_last_name']), 0, 0, 'L', TRUE );
 		$this->pdf->SetFillColor( 211, 211, 211 );
 			
 		$current_y += 12;
@@ -1378,7 +1379,7 @@ class PDF_F3X {
 		$this->pdf->Image( $GLOBALS['base'] . '/htdocs/img/logo.png' , $current_x, $current_y, 6, 6, 'PNG');
 		$current_x += 7;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Cell( $inner_cell_width - 30, 7, 'F3XVault : ' . $data['event']['event_name'], 0, 0, 'L', TRUE );
+		$this->pdf->Cell( $inner_cell_width - 30, 7, 'F3XVault : ' . iconv("UTF-8", "ISO-8859-1", $data['event']['event_name']), 0, 0, 'L', TRUE );
 		
 		# QR Code
 		# First lets build the qr code
@@ -1401,7 +1402,7 @@ class PDF_F3X {
 		$this->pdf->SetXY( $current_x, $current_y );
 		$this->pdf->SetFillColor( 255, 255, 255 );
 		$name_width = $inner_cell_width - 37;
-		$this->pdf->Cell( $name_width, 7, ' ' . $data['pilot_first_name'] . ' ' . $data['pilot_last_name'], 0, 0, 'L', TRUE );
+		$this->pdf->Cell( $name_width, 7, ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_first_name']) . ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_last_name']), 0, 0, 'L', TRUE );
 		$this->pdf->SetFillColor( 211, 211, 211 );
 			
 		$current_y += 7;
@@ -1507,7 +1508,7 @@ class PDF_F3X {
 		$this->pdf->Image( $GLOBALS['base'] . '/htdocs/img/logo.png' , $current_x, $current_y, 6, 6, 'PNG');
 		$current_x += 7;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Cell( $inner_cell_width - 24, 7, 'F3XVault : ' . $data['event']['event_name'], 0, 0, 'L', TRUE );
+		$this->pdf->Cell( $inner_cell_width - 24, 7, 'F3XVault : ' . iconv("UTF-8", "ISO-8859-1", $data['event']['event_name']), 0, 0, 'L', TRUE );
 		
 		# QR Code
 		# First lets build the qr code
@@ -1530,7 +1531,7 @@ class PDF_F3X {
 		$this->pdf->SetXY( $current_x, $current_y );
 		$this->pdf->SetFillColor( 255, 255, 255 );
 		$name_width = $inner_cell_width - 37;
-		$this->pdf->Cell( $name_width, 7, ' ' . $data['pilot_first_name'] . ' ' . $data['pilot_last_name'], 0, 0, 'L', TRUE );
+		$this->pdf->Cell( $name_width, 7, ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_first_name']) . ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_last_name']), 0, 0, 'L', TRUE );
 		$this->pdf->SetFillColor( 211, 211, 211 );
 			
 		$current_y += 7;
