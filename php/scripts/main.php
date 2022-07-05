@@ -44,7 +44,7 @@ function view_home() {
 		$current = array();
 		$future = array();
 		$past = array();
-		$now = strtotime(date("Y-m-d",time()));
+		$now = strtotime( date( "Y-m-d", time() ) );
 		$stmt = db_prep("
 			SELECT *,ep.pilot_id as epilot_id
 			FROM event e
@@ -61,17 +61,45 @@ function view_home() {
 		));
 				
 		foreach($result as $row){
-			if(($row['event_cd'] == $user['pilot_id'] || $row['epilot_id'] == $user['pilot_id']) && ($now >= strtotime($row['event_start_date']) && $now <= strtotime($row['event_end_date']))){
+			$event_start_date = strtotime( $row['event_start_date'] );
+			$event_end_date = strtotime( $row['event_end_date'] ) + 86399;
+			if( ( $row['event_cd'] == $user['pilot_id'] || $row['epilot_id'] == $user['pilot_id'] )
+				&& ( $now >= $event_start_date && $now <= $event_end_date )
+			){
 				$current = $row;
-			}elseif(strtotime($row['event_start_date']) > $now){
+			}elseif( $event_start_date > $now ){
 				$future[] = $row;
 			}else{
 				$past[] = $row;
 			}
 		}
+		
+		# Get any series the pilot is involved in
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_series es
+			LEFT JOIN event e ON es.event_id = e.event_id
+			LEFT JOIN event_pilot ep ON e.event_id = ep.event_id
+			LEFT JOIN series s ON es.series_id = s.series_id
+			WHERE ( ( ep.pilot_id = :pilot_id AND ep.event_pilot_status = 1 ) OR e.pilot_id = :pilot_id2 OR e.event_cd = :pilot_id3)
+				AND e.event_status = 1
+			GROUP BY s.series_id
+			ORDER BY e.event_start_date DESC
+		" );
+		$result = db_exec( $stmt, array(
+			"pilot_id"	=> $user['pilot_id'],
+			"pilot_id2"	=> $user['pilot_id'],
+			"pilot_id3"	=> $user['pilot_id']
+		) );
+		foreach( $result as $row ){
+			$series[] = $row;
+		}
+		
+		
 		$smarty->assign("current",$current);
 		$smarty->assign("future",$future);
 		$smarty->assign("past",$past);
+		$smarty->assign("series",$series);
 		$maintpl = find_template("my_home.tpl");
 	}
 	
