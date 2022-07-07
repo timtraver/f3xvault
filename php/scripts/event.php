@@ -5869,63 +5869,67 @@ function event_tasks_save() {
 	}
 	
 	# Lets see what round I should add and what type
-	if($add_round){
+	if( $add_round > 0 ){
+		# Let's get the first round we need to start at from the existing tasks
 		$round = 0;
 		$round_type = 'prelim';
-		foreach($e->tasks as $t){
-			if($t['event_task_round']>$round){
+		foreach( $e->tasks as $t ){
+			if( $t['event_task_round'] > $round ){
 				$round = $t['event_task_round'];
 			}
-			if($t['event_task_round_type'] != $round_type){
+			if( $t['event_task_round_type'] != $round_type ){
 				$round_type = $t['event_task_round_type'];
 			}
 		}
-		$round++;
 		# Lets get the first flight_type_id
 		foreach($e->flight_types as $id => $ft){
 			$flight_type_id = $id;
 			break;
 		}
-
-		# If its F3J or TD, lets set the default time and point value
-		$event_task_time_choice = 0;
-		$event_task_score_second = 0;
-		if($e->info['event_type_code'] == 'f3j' | $e->info['event_type_code'] == 'f5j'){
-			$event_task_score_second = 1;
-			if($round_type == 'prelim'){
-				$event_task_time_choice = 10;
-			}else{
-				$event_task_time_choice = 15;
+		# Now let's loop overthe number of rounds to add
+		for( $x = 1; $x <= $add_round; $x++ ){
+			$round++;
+	
+			# If its F3J or TD, lets set the default time and point value
+			$event_task_time_choice = 0;
+			$event_task_score_second = 0;
+			if($e->info['event_type_code'] == 'f3j' | $e->info['event_type_code'] == 'f5j'){
+				$event_task_score_second = 1;
+				if($round_type == 'prelim'){
+					$event_task_time_choice = 10;
+				}else{
+					$event_task_time_choice = 15;
+				}
 			}
+			if($e->info['event_type_code'] == 'td'){
+				$event_task_time_choice = 10;
+				$event_task_score_second = 1;
+			}
+	
+			# Now insert the record
+			$stmt = db_prep("
+				INSERT INTO event_task
+				SET event_id = :event_id,
+					event_task_round = :round,
+					event_task_round_type = :round_type,
+					flight_type_id = :flight_type_id,
+					event_task_time_choice = :event_task_time_choice,
+					event_task_score_second = :event_task_score_second,
+					event_task_status = 1
+			");
+			$result = db_exec($stmt,array(
+				"event_id"					=> $event_id,
+				"round"						=> $round,
+				"round_type"				=> $round_type,
+				"flight_type_id"			=> $flight_type_id,
+				"event_task_time_choice"	=> $event_task_time_choice,
+				"event_task_score_second"	=> $event_task_score_second
+			));
 		}
-		if($e->info['event_type_code'] == 'td'){
-			$event_task_time_choice = 10;
-			$event_task_score_second = 1;
-		}
-
-		# Now insert the record
-		$stmt = db_prep("
-			INSERT INTO event_task
-			SET event_id = :event_id,
-				event_task_round = :round,
-				event_task_round_type = :round_type,
-				flight_type_id = :flight_type_id,
-				event_task_time_choice = :event_task_time_choice,
-				event_task_score_second = :event_task_score_second,
-				event_task_status = 1
-		");
-		$result = db_exec($stmt,array(
-			"event_id"					=> $event_id,
-			"round"						=> $round,
-			"round_type"				=> $round_type,
-			"flight_type_id"			=> $flight_type_id,
-			"event_task_time_choice"	=> $event_task_time_choice,
-			"event_task_score_second"	=> $event_task_score_second
-		));
 		if($round_type = 'prelim'){
-			user_message("Added Preliminary Round #$round.");
+			user_message("Added $add_round Preliminary Rounds.");
 		}else{
-			user_message("Added Flyoff Round #$round.");
+			user_message("Added $add_round Flyoff Rounds.");
 		}
 	}
 	user_message("Saved Tasks.");

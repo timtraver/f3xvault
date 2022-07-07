@@ -93,8 +93,27 @@
 			</tr>
 		{/if}
 		<tr>
-			<td colspan="6" style="text-align: right;padding-top:10px;">
-				<input type="button" value=" Add Task Round " onClick="document.main.add_round.value=1;document.main.submit();" class="btn btn-primary btn-rounded">
+			<td colspan="6" style="text-align: right;padding-top:10px;">				
+				<div class="btn-group">
+				<button class="btn btn-primary btn-rounded dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					Add Task Rounds
+					<i class="dropdown-caret fa fa-chevron-down" style="padding-top: 3px;padding-left: 15px;"></i>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-left" style="position: !important;">
+					<li><a href="#" onClick="document.main.add_round.value=1;document.main.submit();">Add 1 Round Task</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=2;document.main.submit();">Add 2 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=3;document.main.submit();">Add 3 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=4;document.main.submit();">Add 4 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=5;document.main.submit();">Add 5 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=6;document.main.submit();">Add 6 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=7;document.main.submit();">Add 7 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=8;document.main.submit();">Add 8 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=9;document.main.submit();">Add 9 Round Tasks</a></li>
+					<li><a href="#" onClick="document.main.add_round.value=10;document.main.submit();">Add 10 Round Tasks</a></li>
+				</ul>
+				</div>
+				
+				
 				<input type="button" value=" Save Task Rounds " onClick="document.main.submit();" class="btn btn-primary btn-rounded">
 				
 				<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="btn btn-primary btn-rounded">
