@@ -6117,6 +6117,7 @@ function event_print_blank_task() {
 			}
 			
 			$data[] = array(
+				"event_id"		=> $e->info['event_id'],
 				"event_name"	=> $e->info['event_name'],
 				"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
 				"round"			=> $event_round_number,
@@ -6218,6 +6219,7 @@ function event_print_blank_summary_task() {
 
 	# Lets create the proper data string to send to the pdf routine for this event type
 	$data = array();
+	$data['event_id'] = $e->info['event_id'];
 	foreach( $e->pilots as $event_pilot_id => $p ){
 		$data['pilots'][ $event_pilot_id ] = $p;
 		$data['pilots'][ $event_pilot_id ]['event'] = $e->info;
