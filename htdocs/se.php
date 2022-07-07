@@ -39,7 +39,7 @@ save_fsession();
 
 $location = "http://www.f3xvault.com/?action=event&function=event_self_entry&event_id=" . $_REQUEST['e'] . "&event_pilot_id=" . $_REQUEST['p'];
 if( isset( $_REQUEST['r'] ) ){
-	$location .= "&round_number=" . $_REQUEST['r'];
+	$location .= "&event_round_number=" . $_REQUEST['r'];
 }
 header( "Location: $location");
 exit;
