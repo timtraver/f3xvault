@@ -132,8 +132,8 @@ class PDF_F3X {
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] . '.png' , NULL, NULL, 22, 22, 'PNG');
-		system("rm /tmp/{$data['event_pilot_id']}.png");
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] ."_" . $data['round'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}_{$data['round']}.png");
 		$current_y += 8;
 		
 		# Round Header
@@ -286,8 +286,8 @@ class PDF_F3X {
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] . '.png' , NULL, NULL, 22, 22, 'PNG');
-		system("rm /tmp/{$data['event_pilot_id']}.png");
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] ."_" . $data['round'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}_{$data['round']}.png");
 		$current_y += 8;
 		
 		# Round Header
@@ -471,8 +471,8 @@ class PDF_F3X {
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] . '.png' , NULL, NULL, 22, 22, 'PNG');
-		system("rm /tmp/{$data['event_pilot_id']}.png");
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] ."_" . $data['round'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}_{$data['round']}.png");
 		$current_y += 8;
 
 		# Round Header
@@ -831,8 +831,8 @@ class PDF_F3X {
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
 		$this->pdf->SetXY( $current_x, $current_y );
-		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] . '.png' , NULL, NULL, 22, 22, 'PNG');
-		system("rm /tmp/{$data['event_pilot_id']}.png");
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] ."_" . $data['round'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}_{$data['round']}.png");
 		$current_y += 8;
 		
 		# Round Header
