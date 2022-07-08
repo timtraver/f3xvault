@@ -127,7 +127,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . "_" . $data['round'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
@@ -281,7 +281,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . "_" . $data['round'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
@@ -466,7 +466,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . "_" . $data['round'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
@@ -826,7 +826,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . "_" . $data['round'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
@@ -1148,7 +1148,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x = $this->pdf->GetX() + 3;
@@ -1312,7 +1312,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 29;
@@ -1427,7 +1427,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 28;
@@ -1556,7 +1556,7 @@ class PDF_F3X {
 		
 		# QR Code
 		# First lets build the qr code
-		$url = "f3xvault.com/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
+		$url = "f3x.link/se.php?e=" . $data['event_id'] . "&p=" . $data['event_pilot_id'];
 		include_library( "phpqrcode/qrlib.php" );
 		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
 		$current_x += $inner_cell_width - 22;
