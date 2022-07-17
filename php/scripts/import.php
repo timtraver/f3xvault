@@ -356,12 +356,8 @@ function import_verify_manual() {
 							# It has a colon in it already so its in colon notation
 							$temp_rounds[$r]['flights']['sub'][$y] = $lines[$l][$x];
 						}else{
-							if( preg_match("/\d/",$lines[$l][$x]) ){
-								# It is in full seconds, so convert it to colon notation
-								$temp_rounds[$r]['flights']['sub'][$y] = convert_seconds_to_colon($lines[$l][$x],1);
-							}else{
-								$temp_rounds[$r]['flights']['sub'][$y] = '';
-							}
+							# It is in full seconds, so convert it to colon notation
+							$temp_rounds[$r]['flights']['sub'][$y] = convert_seconds_to_colon($lines[$l][$x],1);
 						}
 						$x++;
 					}
