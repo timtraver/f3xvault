@@ -358,7 +358,7 @@ function import_verify_manual() {
 						}else{
 							if( preg_match("/\d/",$lines[$l][$x]) ){
 								# It is in full seconds, so convert it to colon notation
-								$temp_rounds[$r]['flights']['sub'][$y] = convert_seconds_to_colon($lines[$l][$x]);
+								$temp_rounds[$r]['flights']['sub'][$y] = convert_seconds_to_colon($lines[$l][$x],1);
 							}else{
 								$temp_rounds[$r]['flights']['sub'][$y] = '';
 							}
