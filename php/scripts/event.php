@@ -2244,7 +2244,7 @@ function event_pilot_save() {
 				"pilot_ama" => $pilot_ama,
 				"pilot_fai" => $pilot_fai,
 				"pilot_fai_license" => $pilot_fai_license,
-				"pilot_id" => $pilot['pilot_id']
+				"pilot_id" => $pilot_id
 			));
 		}
 	}
@@ -2434,19 +2434,29 @@ function event_pilot_edit_pilot() {
 
 	$event_id = intval($_REQUEST['event_id']);
 	$event_pilot_id = intval($_REQUEST['event_pilot_id']);
+	$pilot_id = intval($_REQUEST['pilot_id']);
 
 	$event = new Event($event_id);
 	$event->get_teams();
 	$smarty->assign("event",$event);
 
 	$pilot = array();
-	$stmt = db_prep("
-		SELECT *
-		FROM event_pilot ep
-		LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
-		WHERE ep.event_pilot_id = :event_pilot_id
-	");
-	$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
+	if( $event_pilot_id ){
+		$stmt = db_prep("
+			SELECT *
+			FROM event_pilot ep
+			LEFT JOIN pilot p ON ep.pilot_id = p.pilot_id
+			WHERE ep.event_pilot_id = :event_pilot_id
+		");
+		$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id));
+	}elseif( $pilot_id ){
+		$stmt = db_prep("
+			SELECT *
+			FROM pilot p
+			WHERE p.pilot_id = :pilot_id
+		");
+		$result = db_exec( $stmt,array( "pilot_id" => $pilot_id ) );
+	}
 	$pilot = $result[0];
 	
 	$smarty->assign("states",get_states());

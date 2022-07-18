@@ -319,6 +319,7 @@
 <input type="hidden" name="function" value="event_pilot_edit_pilot">
 <input type="hidden" name="event_id" value="{$event_id}">
 <input type="hidden" name="event_pilot_id" value="{$pilot.event_pilot_id}">
+<input type="hidden" name="pilot_id" value="{$pilot.pilot_id}">
 </form>
 
 {/block}
