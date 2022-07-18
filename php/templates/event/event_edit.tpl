@@ -139,6 +139,12 @@
 						</td>
 					</tr>
 					<tr>
+						<th>Register Teams</th>
+						<td>
+							<input type="checkbox" name="event_reg_teams"{if $event->info.event_reg_teams} CHECKED{/if}> Allow Pilot to Enter Team Names During Registration
+						</td>
+					</tr>
+					<tr>
 						<th nowrap valign="top">Event Notes</th>
 						<td>
 						<textarea cols="100" rows="15" name="event_notes">{$event->info.event_notes}</textarea>

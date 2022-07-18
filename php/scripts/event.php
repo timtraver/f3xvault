@@ -677,6 +677,11 @@ function event_save() {
 	$event_notes = $_REQUEST['event_notes'];
 	$tab = $_REQUEST['tab'];
 
+	$event_reg_teams = 0;
+	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
+		$event_reg_teams = 1;
+	}
+
 	# Get the checkboxes for each class type
 	$classes = array();
 	foreach($_REQUEST as $key => $value){
@@ -699,6 +704,7 @@ function event_save() {
 				club_id = :club_id,
 				event_view_status = :event_view_status,
 				event_reg_flag = :event_reg_flag,
+				event_reg_teams = :event_reg_teams,
 				event_notes = :event_notes,
 				event_status = 1
 		");
@@ -713,6 +719,7 @@ function event_save() {
 			"club_id" => $club_id,
 			"event_view_status" => $event_view_status,
 			"event_reg_flag" => $event_reg_flag,
+			"event_reg_teams" => $event_reg_teams,
 			"event_notes" => $event_notes
 		));
 
@@ -755,6 +762,7 @@ function event_save() {
 				club_id = :club_id,
 				event_view_status = :event_view_status,
 				event_reg_flag = :event_reg_flag,
+				event_reg_teams = :event_reg_teams,
 				event_notes = :event_notes
 			WHERE event_id = :event_id
 		");
@@ -768,6 +776,7 @@ function event_save() {
 			"club_id" => $club_id,
 			"event_view_status" => $event_view_status,
 			"event_reg_flag" => $event_reg_flag,
+			"event_reg_teams" => $event_reg_teams,
 			"event_notes" => $event_notes,
 			"event_id" => $event_id
 		));
@@ -982,10 +991,6 @@ function event_reg_save() {
 	$open_date_stamp = strtotime($event_reg_open_date_string." ".$open_tz_abbr);
 	$close_date_stamp = strtotime($event_reg_close_date_string." ".$close_tz_abbr);
 	
-	$event_reg_teams = 0;
-	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
-		$event_reg_teams = 1;
-	}
 	$event_reg_waitlist = 0;
 	if( isset( $_REQUEST['event_reg_waitlist'] ) && $_REQUEST['event_reg_waitlist'] == 'on' ){
 		$event_reg_waitlist = 1;
@@ -1014,7 +1019,6 @@ function event_reg_save() {
 			event_reg_pay_flag = :event_reg_pay_flag,
 			currency_id = :currency_id,
 			event_reg_paypal_address = :event_reg_paypal_address,
-			event_reg_teams = :event_reg_teams,
 			event_reg_waitlist = :event_reg_waitlist
 		WHERE event_id = :event_id
 	");
@@ -1029,7 +1033,6 @@ function event_reg_save() {
 		"event_reg_pay_flag"			=> $event_reg_pay_flag,
 		"currency_id"					=> $currency_id,
 		"event_reg_paypal_address"		=> $event_reg_paypal_address,
-		"event_reg_teams"				=> $event_reg_teams,
 		"event_reg_waitlist"			=> $event_reg_waitlist,
 		"event_id"						=> $event_id
 	));
