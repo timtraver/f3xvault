@@ -68,6 +68,11 @@
 			<li>Check Big ladder and huge ladder descriptions to make sure they are correct</li>
 			<li>Send NF time code to pandora serial port during No Fly times.</li>
 		</ul>
+		<li>2022-07-19 : Release 1.2 of software.</li>
+		<ul>
+			<li>Update of playlist preferences to include 45 second testing time and 1m no fly queue entries</li>
+			<li>Update of serial output of color codes for F3Kmaster and Pandora for testing and nofly periods</li>
+		</ul>
 	</ul>
 	<br>
 	<h3>Download Links And Instructions</h3>
@@ -76,13 +81,15 @@
 		<li>MacOS (MacOS X 10.12 and above)</li>
 			<ul>
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.0.zip">Download Link</a></li>
-				<li>F3XTiming 1.1 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.1.zip">Download Link</a></li>
+				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.1.zip">Download Link</a></li>
+				<li>F3XTiming 1.2 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.2.zip">Download Link</a></li>
 			</ul>
 		<li>Windows PC (Windows 10 and above?)</li>
 			<ul>
 				<li>Windows US-en Registry File to allow English Windows Cortana Voice - <a style="color: blue;" href="/downloads/windows/windows-10-voices-add.zip">Download Link</a></li>
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.0.zip">Download Link</a></li>
-				<li>F3XTiming 1.1 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.1.zip">Download Link</a></li>
+				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.1.zip">Download Link</a></li>
+				<li>F3XTiming 1.2 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.2.zip">Download Link</a></li>
 			</ul>
 	</ul>
 	<ul style="font-weight: bold;font-size: 16px;">
