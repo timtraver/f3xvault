@@ -212,9 +212,14 @@
 											This is the amount of prep time you wish to have before the working window for the task starts. Changes to this playlist for this parameter will only take effect when the playlist is regenerated.
 										</p>
 									</li>
-									<li>Between Rounds
+									<li>45s Test Flight Window (F3K)
 										<p style="font-weight: normal;font-size: 12px;">
-											If you wish for there to be some time between rounds, this is a selection where you can insert time. Changes to this playlist for this parameter will only take effect when the playlist is regenerated.
+											For F3K, this insert a queue entry of 45 seconds for flight testing time as per the f3k rules of 2020.
+										</p>
+									</li>
+									<li>1m No Fly Window (F3K)
+										<p style="font-weight: normal;font-size: 12px;">
+											For F3K, this will insert a queue entry of 1 minute for a no fly period before the start of the working window.
 										</p>
 									</li>
 									<li>Use Landing Window
@@ -222,9 +227,9 @@
 											For F3K, the landing window is 30 seconds. For F3J, F5J, and TD this allows for a one minute timed window for landing back on the field. Changes to this playlist for this parameter will only take effect when the playlist is regenerated.
 										</p>
 									</li>
-									<li>Announce 1m No Fly (F3K)
+									<li>Between Rounds
 										<p style="font-weight: normal;font-size: 12px;">
-											For F3K, this will announce at 1:20 in the prep time that pilots must start landing for the last minute no fly time. It will then reiterate in the last minute that pilots should no longer be flying any test flights. This can be changed on the fly without regenerating the playlist.
+											If you wish for there to be some time between rounds, this is a selection where you can insert time. Changes to this playlist for this parameter will only take effect when the playlist is regenerated.
 										</p>
 									</li>
 									<li>Announce Pilots In Next Round
