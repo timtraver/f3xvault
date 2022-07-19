@@ -214,7 +214,7 @@
 									</li>
 									<li>45s Test Flight Window (F3K)
 										<p style="font-weight: normal;font-size: 12px;">
-											For F3K, this insert a queue entry of 45 seconds for flight testing time as per the f3k rules of 2020.
+											For F3K, this will insert a queue entry of 45 seconds for flight testing time as per the f3k rules of 2020.
 										</p>
 									</li>
 									<li>1m No Fly Window (F3K)
