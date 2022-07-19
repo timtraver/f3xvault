@@ -563,7 +563,7 @@
 		{/if} {* End GPS Event *}
 			
 		<br>
-			{if $event->rounds.$round_number.event_round_locked == 1 || $flight_locked == 1}
+			{if $event->rounds.$round_number.event_round_locked == 1 || $flight_locked == 1 || ( $user_is_admin == 0 && $self_score_admin_only == 1 )}
 			<button class="btn btn-block btn-danger btn-rounded" style="font-size: 24px;" onClick="return false;">
 				<i class="fa fa-lock" style="float:left;padding-top: 3px;"></i>
 				Save This Flight ( Locked )

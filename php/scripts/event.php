@@ -299,7 +299,7 @@ function event_view() {
 		user_message("That is not a proper event id to edit.");
 		return event_list();
 	}
-		
+
 	$e = new Event($event_id);
 	$_REQUEST['sort_by'] = 'flight_order';
 	$e->get_rounds();
@@ -312,6 +312,22 @@ function event_view() {
 		user_message("All rounds recalculated and overall scores saved.");
 	}
 	$e->get_running_totals();
+
+	# Lets determine if the logged in user is an admin of this event
+	$user_is_admin = 0;
+	if( $e->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $e->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $e->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_admin = 1; }
+	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_admin = 1; }
+	$stmt = db_prep("
+		SELECT  * 
+		FROM event_user
+		WHERE event_id = :event_id
+			AND pilot_id = :pilot_id
+			AND event_user_status = 1
+	");
+	$results = db_exec( $stmt, array( "event_id" => $event_id, "pilot_id" => $GLOBALS['user']['pilot_id'] ) );
+	if( count( $results ) > 0 ){ $user_is_admin = 1; }
 	
 	# Lets determine if we need a laps report and an average speed report
 	$laps = 0;
@@ -514,6 +530,15 @@ function event_view() {
 	# Lets set whether or not there is a self scoring option
 	$self_entry_param = $e->info['event_type_code']."_self_entry";
 	$self_entry = $e->find_option_value($self_entry_param);
+	# Check if it is an admin only self entry
+	$self_entry_param = $e->info['event_type_code']."_self_entry_admin_only";
+	$admin_only = $e->find_option_value($self_entry_param);
+	if( $self_entry == 1 && $admin_only == 1 && $user_is_admin == 0 ){
+		$self_entry = 0;
+	}
+	if( $admin_only == 1 && $user_is_admin == 1 ){
+		$self_entry = 1;
+	}
 	$smarty->assign("self_entry",$self_entry);
 	
 	$smarty->assign("group_totals",$group_totals);
@@ -6289,6 +6314,24 @@ function event_self_entry() {
 	$event->get_rounds();
 	$event->get_draws();
 
+	# Lets determine if the logged in user is an admin of this event
+	$user_is_admin = 0;
+	if( $event->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $event->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
+	if( $event->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_admin = 1; }
+	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_admin = 1; }
+	$stmt = db_prep("
+		SELECT  * 
+		FROM event_user
+		WHERE event_id = :event_id
+			AND pilot_id = :pilot_id
+			AND event_user_status = 1
+	");
+	$results = db_exec( $stmt, array( "event_id" => $event_id, "pilot_id" => $GLOBALS['user']['pilot_id'] ) );
+	if( count( $results ) > 0 ){ $user_is_admin = 1; }
+	$self_score_admin_only = $event->find_option_value($event->info['event_type_code']."_self_entry_admin_only" );
+
+
 	# If the event_pilot id is 0, then lets get the event pilot ID from the logged in user
 	if($event_pilot_id == 0){
 		$pilot_id = $GLOBALS['user']['pilot_id'];
@@ -6479,7 +6522,7 @@ function event_self_entry() {
 
 	# lets get the team members for this event or all members if the parameter says
 	$team_members = array();
-	if($event->find_option_value($event->info['event_type_code']."_self_entry_all")){
+	if($event->find_option_value($event->info['event_type_code']."_self_entry_all") || ( $event->find_option_value($event->info['event_type_code']."_self_entry_admin_only" ) && $user_is_admin ) ){
 		# They can score for anyone, so lets get that list
 		foreach($event->pilots as $epid => $p){
 			if($event_pilot_id != $epid){
@@ -6519,23 +6562,7 @@ function event_self_entry() {
 	if( $round_number >= $max_rounds ){
 		$advance_round = 0;
 	}	
-	
-	# Lets determine if the logged in user is an admin of this event
-	$user_is_admin = 0;
-	if( $event->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
-	if( $event->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
-	if( $event->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_admin = 1; }
-	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_admin = 1; }
-	$stmt = db_prep("
-		SELECT  * 
-		FROM event_user
-		WHERE event_id = :event_id
-			AND pilot_id = :pilot_id
-			AND event_user_status = 1
-	");
-	$results = db_exec( $stmt, array( "event_id" => $event_id, "pilot_id" => $GLOBALS['user']['pilot_id'] ) );
-	if( count( $results ) > 0 ){ $user_is_admin = 1; }
-	
+		
 	if( $save == 1 ) {
 		# Check if the round or flight is locked and this is not one of the admins
 
@@ -7211,6 +7238,7 @@ function event_self_entry() {
 	$smarty->assign("flight_locked",$flight_locked);
 	$smarty->assign("max_round_seconds",$max);
 	$smarty->assign("user_is_admin",$user_is_admin);
+	$smarty->assign("self_score_admin_only",$self_score_admin_only);
 	$key = $event->info['event_type_code'] . "_self_entry_lock";
 	if( $event->find_option_value( $key ) == 1 ){
 		$smarty->assign("event_self_entry_lock", 1 );
