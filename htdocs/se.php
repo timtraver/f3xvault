@@ -12,6 +12,18 @@ require_once("../php/conf.php");
 
 include_library('functions.inc');
 
+# Check the server name first and if its not www.f3xvault.com, then redirect to this script again at the new host
+$server = $_SERVER['HTTP_HOST'];
+if( $server != 'www.f3xvault.com' ){
+	# Redirect to this script again with the right domain
+	$location = "http://www.f3xvault.com/se.php?p=" . $_REQUEST['p'];
+	if( isset( $_REQUEST['r'] ) ){
+		$location .= "&r=" . $_REQUEST['r'];
+	}
+	header( "Location: $location");
+	exit;
+}
+
 # Let us auto log in the pilot before we send them to the self score. That way they don't need to log into the vault
 # let's get the user info
 $stmt = db_prep( "
@@ -28,7 +40,7 @@ $result = db_exec( $stmt, array(
 $user = $result[0];
 
 $path = "/";
-$host = "www.f3xvault.com";
+$host = $_SERVER['HTTP_HOST'];
 # New session stuff
 destroy_fsession();
 create_fsession($path,$host);
