@@ -645,12 +645,12 @@ function event_edit() {
 	");
 	$result = db_exec( $stmt, array( "user_id" => $e->info['user_id'] ) );
 	$event_users[] = array(
-		"user_id" => $GLOBALS['user']['user_id'],
-		"pilot_first_name" => $GLOBALS['user']['pilot_first_name'],
-		"pilot_last_name" => $GLOBALS['user']['pilot_last_name'],
-		"pilot_city" => $GLOBALS['user']['pilot_city'],
-		"state_code" => $GLOBALS['user']['state_code'],
-		"country_code" => $GLOBALS['user']['country_code'],
+		"user_id" => $result[0]['user_id'],
+		"pilot_first_name" => $result[0]['pilot_first_name'],
+		"pilot_last_name" => $result[0]['pilot_last_name'],
+		"pilot_city" => $result[0]['pilot_city'],
+		"state_code" => $result[0]['state_code'],
+		"country_code" => $result[0]['country_code'],
 		"user_type" => 'Contest Owner'
 	);
 	# Now lets add the CD as a secondary user if there is one assigned
