@@ -28,7 +28,7 @@ $result = db_exec( $stmt, array(
 $user = $result[0];
 
 $path = "/";
-$host = $_SERVER['HTTP_HOST'];
+$host = "f3xvault.com";
 # New session stuff
 destroy_fsession();
 create_fsession($path,$host);
