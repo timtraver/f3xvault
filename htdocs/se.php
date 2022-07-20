@@ -37,7 +37,7 @@ $fsession['user_id'] = $user['user_id'];
 $fsession['user_name'] = $user['user_name'];
 save_fsession();
 
-$location = "http://www.f3xvault.com/?action=event&function=event_self_entry&event_id=" . $_REQUEST['e'] . "&event_pilot_id=" . $_REQUEST['p'];
+$location = "http://www.f3xvault.com/?action=event&function=event_self_entry&event_id=" . $user['event_id'] . "&event_pilot_id=" . $_REQUEST['p'];
 if( isset( $_REQUEST['r'] ) ){
 	$location .= "&round_number=" . $_REQUEST['r'];
 }
