@@ -272,12 +272,9 @@
 					{foreach $event_users as $u}
 					<tr>
 						<td bgcolor="white">{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
-						<td width="2%" bgcolor="white">
-							{if $user['user_id'] == $u['user_id']}
-								Event Owner
-							{elseif $u['user_id'] == $event->info.event_cd}
-								Contest Director
-							{else}
+						<td width="30%" bgcolor="white">
+							{$u.user_type|escape}
+							{if $u.user_type != 'Contest Owner' && $u.user_type != 'Contest Director'}
 								<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}&tab=3"><img src="/images/del.gif"></a>
 							{/if}
 						</td>

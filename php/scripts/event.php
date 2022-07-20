@@ -634,6 +634,38 @@ function event_edit() {
 	$event_types = db_exec($stmt,array());
 
 	# Now lets get the users that have additional access
+	# Get the event owner first
+	$stmt = db_prep("
+		SELECT *
+		FROM user u
+		LEFT JOIN pilot p ON u.pilot_id = p.pilot_id
+		LEFT JOIN state s ON p.state_id = s.state_id
+		LEFT JOIN country c ON p.country_id = c.country_id
+		WHERE u.user_id = :user_id
+	");
+	$result = db_exec( $stmt, array( "user_id" => $e->info['user_id'] ) );
+	$event_users[] = array(
+		"user_id" => $GLOBALS['user']['user_id'],
+		"pilot_first_name" => $GLOBALS['user']['pilot_first_name'],
+		"pilot_last_name" => $GLOBALS['user']['pilot_last_name'],
+		"pilot_city" => $GLOBALS['user']['pilot_city'],
+		"state_code" => $GLOBALS['user']['state_code'],
+		"country_code" => $GLOBALS['user']['country_code'],
+		"user_type" => 'Contest Owner'
+	);
+	# Now lets add the CD as a secondary user if there is one assigned
+	if( $e->info['event_cd'] != 0 ){
+		$event_users[] = array(
+			"user_id" => $e->info['event_cd'],
+			"pilot_first_name" => $e->info['pilot_first_name'],
+			"pilot_last_name" => $e->info['pilot_last_name'],
+			"pilot_city" => $e->info['pilot_city'],
+			"state_code" => $e->info['state_code'],
+			"country_code" => $e->info['country_code'],
+			"user_type" => 'Contest Director'
+		);
+	}
+	# Now lets get any assigned users
 	$stmt = db_prep("
 		SELECT *
 		FROM event_user eu
@@ -643,26 +675,18 @@ function event_edit() {
 		WHERE eu.event_id = :event_id
 			AND eu.event_user_status = 1
 	");
-	$result = db_exec($stmt,array("event_id" => $event_id));
-	# Lets first add the current user, which is the owner
-	$event_users[] = array(
-		"user_id" => $GLOBALS['user']['user_id'],
-		"pilot_first_name" => $GLOBALS['user']['pilot_first_name'],
-		"pilot_last_name" => $GLOBALS['user']['pilot_last_name'],
-		"pilot_city" => $GLOBALS['user']['pilot_city'],
-		"state_code" => $GLOBALS['user']['state_code'],
-		"country_code" => $GLOBALS['user']['country_code']
-	);
-	# Now lets add the CD, cause he has access too
-	$event_users[] = array(
-		"user_id" => $e->info['event_cd'],
-		"pilot_first_name" => $e->info['pilot_first_name'],
-		"pilot_last_name" => $e->info['pilot_last_name'],
-		"pilot_city" => $e->info['pilot_city'],
-		"state_code" => $e->info['state_code'],
-		"country_code" => $e->info['country_code']
-	);
-	$event_users = array_merge($event_users,$result);
+	$result = db_exec( $stmt, array( "event_id" => $event_id ) );
+	foreach( $result as $row ){
+		$event_users[] = array(
+			"user_id" => $row['user_id'],
+			"pilot_first_name" => $row['pilot_first_name'],
+			"pilot_last_name" => $row['pilot_last_name'],
+			"pilot_city" => $row['pilot_city'],
+			"state_code" => $row['state_code'],
+			"country_code" => $row['country_code'],
+			"user_type" => 'Event Admin'
+		);
+	}
 	$smarty->assign("event_users",$event_users);
 	
 	# Get classes to choose to be available for this event
