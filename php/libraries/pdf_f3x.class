@@ -1526,7 +1526,7 @@ class PDF_F3X {
 			}
 			$current_y += 6;
 			$round_count++;
-			if( $round_count > 11 ){
+			if( $round_count > 12 ){
 				break;
 			}
 		}
