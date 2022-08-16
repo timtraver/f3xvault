@@ -758,6 +758,10 @@
 			alert( "Updated Flight #" + flight_num + " to max flight time." );
 			goToNextFlight(object);
 		{rdelim}
+		if( current_total_seconds == max_flight_seconds ){ldelim}
+			/* just go to the next flight */
+			goToNextFlight(object);
+		{rdelim}
 		return;
 	{rdelim}
 	function check_total_round_time(){ldelim}
@@ -783,6 +787,7 @@
 		console.log("flight_type_code = " + flight_type_code );
 		var flight_num = object.id.match(/\d+/);
 		console.log("flight_num = " + flight_num );
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
 		
 		if( flight_type_code == 'f3k_k' ){ldelim}
 			max_flight_seconds = 30 + (flight_num * 30);
@@ -794,11 +799,24 @@
 
 		max_min = Math.floor( max_flight_seconds / 60 );
 		if( object.value > max_min ){ldelim}
-			object.value=max_min;
-			document.getElementById("sub_min_" + flight_num ).value = max_min;
-			if( object.value * 60 >= max_flight_seconds ){ldelim}
+			current_min = parseInt( object.value, 10 );
+			if( current_min * 60 >= max_flight_seconds ){ldelim}
+				/* set the seconds to what they should be as well */
+				current_seconds = parseInt( document.getElementById("sub_" + flight_num + "_seconds_button").value, 10 );
+				current_seconds2 = parseInt( document.getElementById("sub_" + flight_num + "_seconds2_button").value, 10 );
+				current_total_seconds = ( object.value * 60 ) + current_seconds + ( current_seconds2 * 0.1 );
+				calc_sec = Math.floor( max_flight_seconds % 60 );
+				document.getElementById("sub_" + flight_num + "_minutes_button").value = max_min;
+				document.getElementById("sub_" + flight_num + "_seconds_button").value = zeroPad(calc_sec,2);
+				document.getElementById("sub_" + flight_num + "_seconds2_button").value = 0;
+				/* change the form vars too */
+				document.getElementById("sub_min_" + flight_num ).value = max_min;
+				document.getElementById("sub_sec_" + flight_num ).value = zeroPad(calc_sec,2);
+				document.getElementById("sub_sec2_" + flight_num ).value = 0;
 				goToNextFlight(object);
 			{rdelim}else{ldelim}
+				object.value=max_min;
+				document.getElementById("sub_min_" + flight_num ).value = max_min;
 				make_unselected(object);
 				goToNextTab(object);
 			{rdelim}
