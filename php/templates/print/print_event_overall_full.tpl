@@ -66,10 +66,13 @@
 					{continue}
 				{/if}
 				{$round_number=$r.event_round_number}
+				{$flight_type_id=$r.flight_type_id}
 				{if $round_number >= $start_round && $round_number <= $end_round}
 				<th width="5%" align="center" nowrap>
 					<div style="position:relative;">
-					{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red">{/if}Round {$r.event_round_number|escape}{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}
+					{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}<del><font color="red"> {/if}
+						Round {$r.event_round_number|escape}
+					{if $r.event_round_score_status==0 || ($event->info.event_type_code != 'f3b' && $r.flights.$flight_type_id.event_round_flight_score ==0 && $flight_type_id!=0)}</del></font>{/if}
 					</div>
 				</th>
 				{/if}
