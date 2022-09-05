@@ -2878,6 +2878,8 @@ function event_round_save() {
 	$event_round_number = $_REQUEST['event_round_number'];
 	$event_round_flyoff = intval($_REQUEST['event_round_flyoff']);
 	$create_new_round = intval($_REQUEST['create_new_round']);
+	$add_reflight = intval($_REQUEST['add_reflight']);	
+	
 	$event_round_score_status = 0;
 	$event_round_locked = 0;
 	$event = new Event($event_id);
@@ -3568,6 +3570,11 @@ function event_round_save() {
 	# OK, now lets call the routine to do the calculation for a single round
 	sub_trace();
 
+	# if they are trying to add a reflight, then let's call that function
+	if( $add_reflight == 1 ){
+		event_round_add_reflight();
+	}
+
 	# First, since we saved the data, reset the $event object
 	$event = new Event($event_id);
 	$event->calculate_round($event_round_number);
@@ -3594,10 +3601,10 @@ function event_round_add_reflight() {
 	# Function to remove a reflight flight
 	$event_id = intval($_REQUEST['event_id']);
 	$event_round_id = intval($_REQUEST['event_round_id']);
-	$flight_type_id = intval($_REQUEST['flight_type_id']);
-	$event_pilot_id = intval($_REQUEST['event_pilot_id']);
+	$flight_type_id = intval($_REQUEST['reflight_flight_type_id']);
+	$event_pilot_id = intval($_REQUEST['reflight_event_pilot_id']);
 	$event_round_number = $_REQUEST['event_round_number'];
-	$group = strtoupper($_REQUEST['group']);
+	$group = strtoupper($_REQUEST['reflight_group']);
 	
 	# Need to find the event_pilot_round_id from the info given
 	$stmt = db_prep("
@@ -3625,12 +3632,8 @@ function event_round_add_reflight() {
 		));
 	}	
 	
-	$event = new Event($event_id);
-	# Refresh the round info
-	$event->get_rounds();
-	log_action($event_round_id);
 	user_message("Added the reflight entry.");
-	return event_round_edit();
+	return;
 }
 function event_round_flight_delete() {
 	# Function to remove a reflight flight
