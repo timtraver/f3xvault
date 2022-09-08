@@ -1085,6 +1085,18 @@ function truncate( $number, $precision = 0 ){
 }
 
 function calculate_amount_owed( $event_pilot_id ){
+	# First get the event info from the pilot
+	$stmt = db_prep( "
+		SELECT *,e.event_id
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE ep.event_pilot_id = :event_pilot_id
+	" );
+	$result = db_exec( $stmt, array( "event_pilot_id" => $event_pilot_id ) );
+	$event_id = $result[0]['event_id'];
+
+	$event = new Event( $event_id );
+	$reg_options = $event->reg_options;
 	# Function to determine the balance owed by a pilot
 	$stmt = db_prep("
 		SELECT *
@@ -1098,8 +1110,19 @@ function calculate_amount_owed( $event_pilot_id ){
 	));
 	$total_owed = 0;
 	foreach($result as $row){
-		$total_owed  +=  $row['event_pilot_reg_qty']*$row['event_reg_param_cost'];
+		$event_reg_param_id = $row['event_reg_param_id'];
+		if( isset( $reg_options[ $event_reg_param_id ] ) ){
+			$total_owed  +=  $row['event_pilot_reg_qty'] * $row['event_reg_param_cost'];
+			unset( $reg_options[ $event_reg_param_id ] );
+		}
 	}
+	# Now step through the remaining reg options to see if there are any mandatory
+	foreach( $reg_options as $r ){
+		if( $r['event_reg_param_mandatory'] == 1 ){
+			$total_owed  +=  $r['event_reg_param_cost'];
+		}
+	}
+	
 	# Total the paid records
 	$stmt = db_prep("
 		SELECT sum(event_pilot_payment_amount) as total_paid
