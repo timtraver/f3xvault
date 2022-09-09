@@ -77,7 +77,7 @@
 		<tr>
 			<th nowrap>Team Protection</th>
 			<td>
-				<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw->draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other.
+				<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw->draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other in the same group.
 			</td>
 		</tr>
 		{/if}
@@ -283,14 +283,6 @@
 		<input type="hidden" name="function" value="event_draw">
 		<input type="hidden" name="event_id" value="{$event_id}">
 		</form>
-		<script>
-			setTimeout(function(){ldelim}
-				{if $event->teams|count > 0}
-				check_protection();
-				{/if}
-				calc_groups();
-			{rdelim});
-		</script>
 	</div>
 </div>
 {/block}
@@ -372,5 +364,13 @@ function calc_groups(){ldelim}
 	{rdelim}
 
 {rdelim}
+</script>
+<script>
+	setTimeout(function(){ldelim}
+		{if $event->teams|count > 0}
+		check_protection();
+		{/if}
+		calc_groups();
+	{rdelim});
 </script>
 {/block}
