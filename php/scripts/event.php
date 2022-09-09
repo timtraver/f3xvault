@@ -4158,6 +4158,11 @@ function event_draw_edit() {
 	$result = db_exec($stmt,array("flight_type_id" => $flight_type_id));
 	$ft = $result[0];
 
+	# If it is an F3F flight type and it has a parameter that says use groups, then let's set the group in the ft var
+	if( $e->find_option_value( "f3f_use_groups" ) == 1 ){
+		$ft['flight_type_group'] = 1;
+	}
+
 	$draw_pilots = array();
 	$draw_teams = array();
 	foreach($e->pilots as $p){
@@ -4318,6 +4323,10 @@ function event_draw_save(){
 	");
 	$result = db_exec($stmt,array("flight_type_id" => $flight_type_id));
 	$ft = $result[0];
+
+	# If it is an F3F flight type and it has a parameter that says use groups, then let's set the group in the ft var
+	$e = new Event( $event_id );
+	$f3f_groups = $e->find_option_value( "f3f_use_groups" ) == 1 ? 1:0;
 	
 	if($event_draw_changed == 1){
 		# Lets save the main draw parameters
@@ -4403,15 +4412,15 @@ function event_draw_save(){
 		switch($event_draw_type){
 			case 'random':
 				# This is an order task (speed)
-				$draw->create_random_rounds($recalc);
+				$draw->create_random_rounds( $recalc );
 				break;
 			case 'random_step':
 				# This is an order task (speed) with a step progression
-				$draw->create_random_step_rounds($recalc);
+				$draw->create_random_step_rounds( $recalc );
 				break;
 			case 'group':
 				# This is an group task
-				$draw->create_group_rounds($recalc);
+				$draw->create_group_rounds( $recalc, $f3f_groups );
 				break;
 		}
 	}
