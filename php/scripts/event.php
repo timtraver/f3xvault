@@ -4196,7 +4196,7 @@ function event_draw_edit() {
 	$drawrounds = array();
 	$sort_string = '';
 	if($ft['flight_type_group'] == 1){
-		$sort_string = 'event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane';
+		$sort_string = 'event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_order,event_draw_round_lane';
 	}else{
 		$sort_string = 'event_draw_round_number,event_draw_round_order';
 	}
@@ -4966,7 +4966,7 @@ function event_draw_view() {
 		FROM event_draw_round 
 		WHERE event_draw_id = :event_draw_id
 			AND event_draw_round_status = 1
-		ORDER BY event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,LPAD(LOWER(event_draw_round_lane), 10,0),event_draw_round_order
+		ORDER BY event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_order,LPAD(LOWER(event_draw_round_lane), 10,0)
 	");
 	$rounds = db_exec($stmt,array("event_draw_id" => $event_draw_id));
 	foreach($rounds as $round){
@@ -5180,7 +5180,7 @@ function event_draw_manual_save(){
 	
 	$sort_string = '';
 	if(count($groups)>0){
-		$sort_string = 'event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_lane';
+		$sort_string = 'event_draw_round_number,event_draw_round_group+0<>0,event_draw_round_group+0,event_draw_round_group,event_draw_round_order,event_draw_round_lane';
 	}else{
 		$sort_string = 'event_draw_round_number,event_draw_round_order';
 	}
