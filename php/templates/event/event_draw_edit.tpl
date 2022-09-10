@@ -170,7 +170,9 @@
 			{else}
 				{$size=2}
 			{/if}
-			
+			{if ( $event->flight_types.$flight_type_id.flight_type_code=='f3f_speed' || $event->flight_types.$flight_type_id.flight_type_code=='f3f_plus' ) &&  $event->flight_types.$flight_type_id.flight_type_group }
+				{$size=3}
+			{/if}
 			<td>
 				<table cellpadding="1" cellspacing="1" style="border: 1px solid black;font-size:12;">
 				<tr bgcolor="lightgray">
@@ -191,6 +193,9 @@
 				<tr bgcolor="lightgray">
 					{if $event->flight_types.$flight_type_id.flight_type_group}
 						<td width="30">Group</td>
+						{if ( $event->flight_types.$flight_type_id.flight_type_code=='f3f_speed' || $event->flight_types.$flight_type_id.flight_type_code=='f3f_plus' ) &&  $event->flight_types.$flight_type_id.flight_type_group}
+							<td>&nbsp;#&nbsp;</td>
+						{/if}
 					{else}
 						<td>&nbsp;#&nbsp;</td>
 					{/if}
@@ -230,7 +235,8 @@
 							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 								<input type="text" size="1" name="draw_group_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_group}">
 							</td>
-						{else}
+						{/if}
+						{if ! $event->flight_types.$flight_type_id.flight_type_group || ( ( $event->flight_types.$flight_type_id.flight_type_code=='f3f_speed' || $event->flight_types.$flight_type_id.flight_type_code=='f3f_plus' ) && $event->flight_types.$flight_type_id.flight_type_group )}
 							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 								<input type="text" size="1" name="draw_order_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_order}">
 							</td>
