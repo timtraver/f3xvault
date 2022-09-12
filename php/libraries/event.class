@@ -583,7 +583,7 @@ class Event {
 				break;
 			case 'round_rank':
 			default:
-				$sort_string = 'ORDER BY er.event_round_number,length(erf.event_pilot_round_flight_group) DESC,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
+				$sort_string = 'ORDER BY er.event_round_number,length(erf.event_pilot_round_flight_group) DESC,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_lane,erf.event_pilot_round_flight_rank';
 				break;
 		}
 				
