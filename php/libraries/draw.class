@@ -729,6 +729,9 @@ class Draw {
 		if( $this->draw['event_draw_group_name'] != NULL ){
 			$group_type = $this->draw['event_draw_group_name'];
 		}
+		if( $this->draw['event_draw_lane_name'] != NULL ){
+			$lane_type = $this->draw['event_draw_lane_name'];
+		}
 		
 		$group_labels = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 		
