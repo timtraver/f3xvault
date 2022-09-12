@@ -73,13 +73,20 @@
 				<input type="radio" name="event_draw_group_name" value="numeric"{if $draw->draw.event_draw_group_name == 'numeric'} CHECKED{/if}> Use Numeric characters for groups ( 1,2,3, etc... )
 			</td>
 		</tr>
-		{if $event->teams|count > 0}
 		<tr>
-			<th nowrap>Team Protection</th>
+			<th nowrap>Lane Naming</th>
 			<td>
-				<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw->draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other in the same group.
+				<input type="radio" name="event_draw_lane_name" value="alpha"{if $draw->draw.event_draw_lane_name == 'alpha' || $draw->draw.event_draw_lane_name == NULL} CHECKED{/if}> Use Alpha characters for lanes ( A,B,C, etc... )<br>
+				<input type="radio" name="event_draw_lane_name" value="numeric"{if $draw->draw.event_draw_lane_name == 'numeric'} CHECKED{/if}> Use Numeric characters for lanes ( 1,2,3, etc... )
 			</td>
 		</tr>
+		{if $event->teams|count > 0}
+			<tr>
+				<th nowrap>Team Protection</th>
+				<td>
+					<input type="checkbox" id="event_draw_team_protection" name="event_draw_team_protection"{if $draw->draw.event_draw_team_protection==1 || $event_draw_id==0} CHECKED{/if} onChange="set_changed();check_protection();calc_groups();"> This will make it so that team pilots will NOT be matched up against each other in the same group.
+				</td>
+			</tr>
 		{/if}
 		<tr>
 			<th nowrap valign="top">Desired Number of Flight Groups</th>
@@ -252,7 +259,9 @@
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
-						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
+						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+							<input type="text" size="1" name="draw_lane_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_lane}">
+						</td>
 					{/if}
 					</tr>
 					{$oldgroup=$p.event_pilot_round_flight_group}

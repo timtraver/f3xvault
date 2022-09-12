@@ -4298,6 +4298,7 @@ function event_draw_save(){
 	$event_draw_step_size = intval($_REQUEST['event_draw_step_size']);
 	$event_draw_changed = intval($_REQUEST['event_draw_changed']);
 	$event_draw_group_name = $_REQUEST['event_draw_group_name'];
+	$event_draw_lane_name = $_REQUEST['event_draw_lane_name'];
 
 	$original_event_draw_id = $event_draw_id;
 	
@@ -4343,6 +4344,7 @@ function event_draw_save(){
 					event_draw_team_protection = :event_draw_team_protection,
 					event_draw_team_separation = :event_draw_team_separation,
 					event_draw_group_name = :event_draw_group_name,
+					event_draw_lane_name = :event_draw_lane_name,
 					event_draw_active = 0,
 					event_draw_status = 1
 			");
@@ -4356,7 +4358,8 @@ function event_draw_save(){
 				"event_draw_step_size"			=> $event_draw_step_size,
 				"event_draw_team_protection"	=> $event_draw_team_protection,
 				"event_draw_team_separation"	=> $event_draw_team_separation,
-				"event_draw_group_name"			=> $event_draw_group_name
+				"event_draw_group_name"			=> $event_draw_group_name,
+				"event_draw_lane_name"			=> $event_draw_lane_name
 			));
 			$event_draw_id = $GLOBALS['last_insert_id'];
 			$_REQEST['event_draw_id'] = $event_draw_id;
@@ -4389,7 +4392,8 @@ function event_draw_save(){
 					event_draw_step_size = :event_draw_step_size,
 					event_draw_team_protection = :event_draw_team_protection,
 					event_draw_team_separation = :event_draw_team_separation,
-					event_draw_group_name = :event_draw_group_name
+					event_draw_group_name = :event_draw_group_name,
+					event_draw_lane_name = :event_draw_lane_name
 			WHERE event_draw_id = :event_draw_id
 			");
 			$result = db_exec($stmt,array(
@@ -4401,6 +4405,7 @@ function event_draw_save(){
 				"event_draw_team_protection"	=> $event_draw_team_protection,
 				"event_draw_team_separation"	=> $event_draw_team_separation,
 				"event_draw_group_name"			=> $event_draw_group_name,
+				"event_draw_lane_name"			=> $event_draw_lane_name,
 				"event_draw_id"					=> $event_draw_id
 			));
 		}
@@ -5161,10 +5166,18 @@ function event_draw_manual_save(){
 				$lane_type = 'numeric';
 			}
 	}
+	# If this draw has a specific value for the group naming, then overwrite that above defaults to the choice
+	if( $d['event_draw_group_name'] != NULL ){
+		$group_type = $d['event_draw_group_name'];
+	}
+	if( $d['event_draw_lane_name'] != NULL ){
+		$lane_type = $d['event_draw_lane_name'];
+	}
 
 	# ok, lets make the array of manual changes
 	$groups = array();
 	$orders = array();
+	$lanes = array();
 	foreach($_REQUEST as $key => $value){
 		if(preg_match("/draw\_group\_(\d+)\_(\d+)/",$key,$match)){
 			$round = $match[1];
@@ -5175,6 +5188,11 @@ function event_draw_manual_save(){
 			$round = $match[1];
 			$pilot = $match[2];
 			$orders[$round][$pilot] = $value;
+		}
+		if(preg_match("/draw\_lane\_(\d+)\_(\d+)/",$key,$match)){
+			$round = $match[1];
+			$pilot = $match[2];
+			$lanes[$round][$pilot] = $value;
 		}
 	}
 	
@@ -5218,6 +5236,20 @@ function event_draw_manual_save(){
 			}
 		}
 		foreach($orders[$round_number] as $event_pilot_id => $p){
+			if(!isset($drawrounds[$round_number][$event_pilot_id])){
+				$drawrounds[$round_number][$event_pilot_id] = array(
+					"event_draw_round_id"		=> 0,
+					"event_draw_id"				=> $round['event_draw_id'],
+					"event_draw_round_number"	=> $round_number,
+					"event_pilot_id"			=> $event_pilot_id,
+					"event_draw_round_group"	=> '',
+					"event_draw_round_order"	=> '',
+					"event_draw_round_lane"		=> '',
+					"event_draw_round_status"	=> 1
+				);
+			}
+		}
+		foreach($lanes[$round_number] as $event_pilot_id => $p){
 			if(!isset($drawrounds[$round_number][$event_pilot_id])){
 				$drawrounds[$round_number][$event_pilot_id] = array(
 					"event_draw_round_id"		=> 0,
@@ -5355,6 +5387,50 @@ function event_draw_manual_save(){
 							"event_draw_round_group"	=> '',
 							"event_draw_round_order"	=> $order,
 							"event_draw_round_lane"		=> ''
+						));
+						$event_draw_round_id = $GLOBALS['last_insert_id'];
+						$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id'] = $event_draw_round_id;
+					}
+				}
+			}
+		}
+	}
+	# For lanes
+	if(count($lanes)>0){
+		foreach($lanes as $round_number => $r){
+			foreach($r as $event_pilot_id => $lane){
+				# Now lets see if its different from the original
+				if($lane != $drawrounds[$round_number][$event_pilot_id]['event_draw_round_lane']){
+					# This one has changed, so lets update it
+					if($drawrounds[$round_number][$event_pilot_id]['event_draw_round_id'] != 0){
+						$stmt = db_prep("
+							UPDATE event_draw_round
+							SET event_draw_round_lane = :lane
+							WHERE event_draw_round_id = :event_draw_round_id
+						");
+						$result = db_exec($stmt,array(
+							"lane" => strtoupper( $lane ),
+							"event_draw_round_id" => $drawrounds[$round_number][$event_pilot_id]['event_draw_round_id']
+						));
+					}else{
+						# Create a new record
+						$stmt = db_prep("
+							INSERT INTO event_draw_round
+							SET event_draw_id = :event_draw_id,
+								event_draw_round_number = :event_draw_round_number,
+								event_pilot_id = :event_pilot_id,
+								event_draw_round_group = :event_draw_round_group,
+								event_draw_round_order = :event_draw_round_order,
+								event_draw_round_lane = :event_draw_round_lane,
+								event_draw_round_status = 1
+						");
+						$result = db_exec($stmt,array(
+							"event_draw_id"				=> $drawrounds[$round_number][$event_pilot_id]['event_draw_id'],
+							"event_draw_round_number"	=> $round_number,
+							"event_pilot_id"			=> $event_pilot_id,
+							"event_draw_round_group"	=> '',
+							"event_draw_round_order"	=> $order,
+							"event_draw_round_lane"		=> $lane
 						));
 						$event_draw_round_id = $GLOBALS['last_insert_id'];
 						$drawrounds[$round_number][$event_pilot_id]['event_draw_round_id'] = $event_draw_round_id;
