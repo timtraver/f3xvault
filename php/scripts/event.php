@@ -39,7 +39,9 @@ $need_login = array(
 	"event_round_flight_delete",
 	"save_individual_flight",
 	"event_tasks_add_round",
-	"event_self_entry"
+	"event_self_entry",
+	"event_copy",
+	"event_delete",
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id'] == 0 && in_array($function, $need_login)){
@@ -983,6 +985,382 @@ function event_series_delete() {
 	return event_edit();
 }
 
+# Copy routine
+function event_copy() {
+	global $smarty;
+	global $user;
+
+	$event_id = intval($_REQUEST['event_id']);
+	$location_id = intval($_REQUEST['location_id']);
+	$event_name = $_REQUEST['event_name'];
+	$event_start_date = $_REQUEST['event_start_dateYear']."-".$_REQUEST['event_start_dateMonth']."-".$_REQUEST['event_start_dateDay'];
+	$event_end_date = $_REQUEST['event_end_dateYear']."-".$_REQUEST['event_end_dateMonth']."-".$_REQUEST['event_end_dateDay'];
+	$event_type_id = intval($_REQUEST['event_type_id']);
+	$event_cd = intval($_REQUEST['event_cd']);
+	$club_id = intval($_REQUEST['club_id']);
+	$event_view_status = intval($_REQUEST['event_view_status']);
+	$event_reg_flag = intval($_REQUEST['event_reg_flag']);
+	$event_notes = $_REQUEST['event_notes'];
+	$copy_event = intval($_REQUEST['copy_event']);
+
+	$event_reg_teams = 0;
+	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
+		$event_reg_teams = 1;
+	}
+	$copy_registration = 0;
+	if( isset( $_REQUEST['copy_registration'] ) && $_REQUEST['copy_registration'] == 'on' ){
+		$copy_registration = 1;
+	}
+	$copy_pilots = 0;
+	if( isset( $_REQUEST['copy_pilots'] ) && $_REQUEST['copy_pilots'] == 'on' ){
+		$copy_pilots = 1;
+	}
+	$copy_tasks = 0;
+	if( isset( $_REQUEST['copy_tasks'] ) && $_REQUEST['copy_tasks'] == 'on' ){
+		$copy_tasks = 1;
+	}
+	$copy_draws = 0;
+	if( isset( $_REQUEST['copy_draws'] ) && $_REQUEST['copy_draws'] == 'on' ){
+		$copy_draws = 1;
+	}
+	$copy_rounds = 0;
+	if( isset( $_REQUEST['copy_rounds'] ) && $_REQUEST['copy_rounds'] == 'on' ){
+		$copy_rounds = 1;
+	}
+	$copy_admin = 0;
+	if( isset( $_REQUEST['copy_admin'] ) && $_REQUEST['copy_admin'] == 'on' ){
+		$copy_admin = 1;
+	}
+	
+	$e = new Event($event_id);
+	$e->get_draws();
+	$e->get_rounds();
+		
+	# Get all event types
+	$stmt = db_prep("
+		SELECT *
+		FROM event_type
+		ORDER BY event_type_code
+	");
+	$event_types = db_exec($stmt,array());
+
+	# Now lets get any assigned users
+	$stmt = db_prep("
+		SELECT *
+		FROM event_user eu
+		LEFT JOIN pilot p ON eu.pilot_id = p.pilot_id
+		WHERE eu.event_id = :event_id
+			AND eu.event_user_status = 1
+	");
+	$result = db_exec( $stmt, array( "event_id" => $event_id ) );
+	foreach( $result as $row ){
+		$event_users[] = array(
+			"user_id" => $row['user_id'],
+			"pilot_id" => $row['pilot_id'],
+		);
+	}
+	
+	if( $copy_event == 1 ){
+		# They have chosen their parameters to copy the event, so Let's do it!
+		
+		# Create a New event with the fields given and save the new event ID
+		$stmt = db_prep("
+			INSERT INTO event
+			SET pilot_id = :pilot_id,
+				event_name = :event_name,
+				location_id = :location_id,
+				event_start_date = :event_start_date,
+				event_end_date = :event_end_date,
+				event_type_id = :event_type_id,
+				event_cd = :event_cd,
+				club_id = :club_id,
+				event_view_status = :event_view_status,
+				event_reg_flag = :event_reg_flag,
+				event_reg_teams = :event_reg_teams,
+				event_notes = :event_notes,
+				currency_id = :currency_id,
+				event_reg_paypal_address = :event_reg_paypal_address,
+				event_permission = :event_permission,
+				event_status = 1
+		");
+		$result = db_exec($stmt,array(
+			"pilot_id" => $user['pilot_id'],
+			"event_name" => $event_name,
+			"location_id" => $location_id,
+			"event_start_date" => $event_start_date,
+			"event_end_date" => $event_end_date,
+			"event_type_id" => $event_type_id,
+			"event_cd" => $event_cd,
+			"club_id" => $club_id,
+			"event_view_status" => $event_view_status,
+			"event_reg_flag" => $event_reg_flag,
+			"event_reg_teams" => $event_reg_teams,
+			"event_notes" => $event_notes,
+			"currency_id" => $e->info['currency_id'],
+			"event_reg_paypal_address" => $e->info['event_reg_paypal_address'],
+			"event_permission" => $e->info['event_permission']
+		));
+		
+		user_message("Added your New Event!");
+		$new_event_id = $GLOBALS['last_insert_id'];
+		
+		# Copy all of the advanced parameter options
+		foreach( $e->options as $o ){
+			$stmt = db_prep( "
+				INSERT INTO event_option
+				SET event_id = :event_id,
+					event_type_option_id = :event_type_option_id,
+					event_option_value = :event_option_value,
+					event_option_status = 1
+			" );
+			$result = db_exec( $stmt, array(
+				"event_id" => $new_event_id,
+				"event_type_option_id" => $o['event_type_option_id'],
+				"event_option_value" => $o['event_option_value']
+			) );
+		}
+		# Copy the class selections
+		foreach( $e->classes as $c ){
+			$stmt = db_prep( "
+				INSERT INTO event_class
+				SET event_id = :event_id,
+					class_id = :class_id,
+					event_class_status = 1
+			" );
+			$result = db_exec( $stmt, array(
+				"event_id" => $new_event_id,
+				"class_id" => $c['class_id']
+			) );
+		}
+		# Copy the admin users
+		if( $copy_admin == 1 ){
+			foreach( $event_users as $u ){
+				$stmt = db_prep( "
+					INSERT INTO event_user
+					SET event_id = :event_id,
+						pilot_id = :pilot_id,
+						event_user_status = 1
+				" );
+				$result = db_exec( $stmt, array(
+					"event_id" => $new_event_id,
+					"pilot_id" => $u['pilot_id']
+				) );
+			}
+		}
+
+		# Copy the registration parameters
+		
+		
+		# Copy the task list
+		
+		# Copy the pilot list
+		if( $copy_pilots == 1 ){
+			$new_pilots_map = array();
+			foreach( $e->pilots as $old_event_pilot_id => $p ){
+				$stmt = db_prep( "
+					INSERT INTO event_pilot
+					SET event_id = :event_id,
+						pilot_id = :pilot_id,
+						event_pilot_entry_order = :event_pilot_entry_order,
+						event_pilot_bib = :event_pilot_bib,
+						class_id = :class_id,
+						event_pilot_team = :event_pilot_team,
+						event_pilot_freq = :event_pilot_freq,
+						event_pilot_status = 1						
+				" );
+				$result = db_exec( $stmt, array(
+					"event_id" => $new_event_id,
+					"pilot_id" => $p['pilot_id'],
+					"event_pilot_entry_order" => $p['event_pilot_entry_order'],
+					"event_pilot_bib" => $p['event_pilot_bib'],
+					"class_id" => $p['class_id'],
+					"event_pilot_team" => $p['event_pilot_team'],
+					"event_pilot_freq" => $p['event_pilot_freq']
+				) );
+				$new_event_pilot_id = $GLOBALS['last_insert_id'];
+				$new_pilots_map[ $old_event_pilot_id ] = $new_event_pilot_id;				
+			}
+		}
+		# Copy the draws
+			# later
+		# Copy the rounds
+		foreach( $e->rounds as $round_number => $r ){
+			# Create the new event round
+			$stmt = db_prep( "
+				INSERT INTO event_round
+				SET event_id = :event_id,
+					event_round_number = :round_number,
+					flight_type_id = :flight_type_id,
+					event_round_time_choice = :event_round_time_choice,
+					event_round_score_status = :event_round_score_status,
+					event_round_flyoff = :event_round_flyoff,
+					event_round_score_second = :event_round_score_second,
+					event_round_locked = :event_round_locked,
+					event_round_status = :event_round_status
+			" );
+			$result = db_exec( $stmt, array(
+				"event_id" => $new_event_id,
+				"round_number" => $round_number,
+				"flight_type_id" => $r['flight_type_id'],
+				"event_round_time_choice" => $r['event_round_time_choice'],
+				"event_round_score_status" => $r['event_round_score_status'],
+				"event_round_flyoff" => $r['event_round_flyoff'],
+				"event_round_score_second" => $r['event_round_score_second'],
+				"event_round_locked" => $r['event_round_locked'],
+				"event_round_status" => $r['event_round_status']
+			) );
+			$new_event_round_id = $GLOBALS['last_insert_id'];
+			
+			# Now create the event_round_flights
+			foreach( $r['flights'] as $flight_type_id => $f ){
+				$stmt = db_prep( "
+					INSERT INTO event_round_flight
+					SET event_round_id = :event_round_id,
+						flight_type_id = :flight_type_id,
+						event_round_flight_score = :event_round_flight_score
+				" );
+				$result = db_exec( $stmt, array(
+					"event_round_id" => $new_event_round_id,
+					"flight_type_id" => $f['flight_type_id'],
+					"event_round_flight_score" => $f['event_round_flight_score']
+				) );
+				$new_event_round_flight_id = $GLOBALS['last_insert_id'];
+				
+				# now step through the pilots
+				
+				foreach( $f['pilots'] as $event_pilot_id => $p ){
+					
+					# Check for an event pilot round and create if needed
+					$stmt = db_prep( "
+						SELECT *
+						FROM event_pilot_round
+						WHERE event_pilot_id = :event_pilot_id
+							AND event_round_id = :event_round_id
+					" );
+					$result = db_exec( $stmt, array(
+						"event_pilot_id" => $new_pilots_map[ $event_pilot_id ],
+						"event_round_id" => $new_event_round_id
+					) );
+					if( isset( $result[0] ) ){
+						# Already exists so use it
+						$new_event_pilot_round_id = $result[0]['event_pilot_round_id'];
+					}else{
+						# Insert a new one
+						$stmt = db_prep( "
+							INSERT INTO event_pilot_round
+							SET event_pilot_id = :event_pilot_id,
+								event_round_id = :event_round_id
+						" );
+						$result = db_exec( $stmt, array(
+							"event_pilot_id" => $new_pilots_map[ $event_pilot_id ],
+							"event_round_id" => $new_event_round_id
+						) );
+						$new_event_pilot_round_id = $GLOBALS['last_insert_id'];
+					}
+					# Now lets create the event_pilot_round_flight record
+					$stmt = db_prep( "
+						INSERT INTO event_pilot_round_flight
+						SET event_pilot_round_id = :event_pilot_round_id,
+							flight_type_id = :flight_type_id,
+							event_pilot_round_flight_group = :event_pilot_round_flight_group,
+							event_pilot_round_flight_minutes = :event_pilot_round_flight_minutes,
+							event_pilot_round_flight_seconds = :event_pilot_round_flight_seconds,
+							event_pilot_round_flight_start_penalty = :event_pilot_round_flight_start_penalty,
+							event_pilot_round_flight_start_height = :event_pilot_round_flight_start_height,
+							event_pilot_round_flight_over = :event_pilot_round_flight_over,
+							event_pilot_round_flight_laps = :event_pilot_round_flight_laps,
+							event_pilot_round_flight_position = :event_pilot_round_flight_position,
+							event_pilot_round_flight_landing = :event_pilot_round_flight_landing,
+							event_pilot_round_flight_penalty = :event_pilot_round_flight_penalty,
+							event_pilot_round_flight_raw_score = :event_pilot_round_flight_raw_score,
+							event_pilot_round_flight_score = :event_pilot_round_flight_score,
+							event_pilot_round_flight_rank = :event_pilot_round_flight_rank,
+							event_pilot_round_flight_dropped = :event_pilot_round_flight_dropped,
+							event_pilot_round_flight_order = :event_pilot_round_flight_order,
+							event_pilot_round_flight_lane = :event_pilot_round_flight_lane,
+							event_pilot_round_flight_dns = :event_pilot_round_flight_dns,
+							event_pilot_round_flight_dnf = :event_pilot_round_flight_dnf,
+							event_pilot_round_flight_reflight = :event_pilot_round_flight_reflight,
+							event_pilot_round_flight_reflight_dropped = :event_pilot_round_flight_reflight_dropped,
+							event_pilot_round_flight_wind_avg = :event_pilot_round_flight_wind_avg,
+							event_pilot_round_flight_dir_avg = :event_pilot_round_flight_dir_avg,
+							event_pilot_round_flight_time = :event_pilot_round_flight_time,
+							event_pilot_round_flight_locked = :event_pilot_round_flight_locked,
+							event_pilot_round_flight_entered = :event_pilot_round_flight_entered,
+							event_pilot_round_flight_status = 1
+					" );
+					$result = db_exec( $stmt, array(
+						"event_pilot_round_id" => $new_event_pilot_round_id,
+						"flight_type_id" => $p['flight_type_id'],
+						"event_pilot_round_flight_group" => $p['event_pilot_round_flight_group'],
+						"event_pilot_round_flight_minutes" => $p['event_pilot_round_flight_minutes'],
+						"event_pilot_round_flight_seconds" => $p['event_pilot_round_flight_seconds'],
+						"event_pilot_round_flight_start_penalty" => $p['event_pilot_round_flight_start_penalty'],
+						"event_pilot_round_flight_start_height" => $p['event_pilot_round_flight_start_height'],
+						"event_pilot_round_flight_over" => $p['event_pilot_round_flight_over'],
+						"event_pilot_round_flight_laps" => $p['event_pilot_round_flight_laps'],
+						"event_pilot_round_flight_position" => $p['event_pilot_round_flight_position'],
+						"event_pilot_round_flight_landing" => $p['event_pilot_round_flight_landing'],
+						"event_pilot_round_flight_penalty" => $p['event_pilot_round_flight_penalty'],
+						"event_pilot_round_flight_raw_score" => $p['event_pilot_round_flight_raw_score'],
+						"event_pilot_round_flight_score" => $p['event_pilot_round_flight_score'],
+						"event_pilot_round_flight_rank" => $p['event_pilot_round_flight_rank'],
+						"event_pilot_round_flight_dropped" => $p['event_pilot_round_flight_dropped'],
+						"event_pilot_round_flight_order" => $p['event_pilot_round_flight_order'],
+						"event_pilot_round_flight_lane" => $p['event_pilot_round_flight_lane'],
+						"event_pilot_round_flight_dns" => $p['event_pilot_round_flight_dns'],
+						"event_pilot_round_flight_dnf" => $p['event_pilot_round_flight_dnf'],
+						"event_pilot_round_flight_reflight" => $p['event_pilot_round_flight_reflight'],
+						"event_pilot_round_flight_reflight_dropped" => $p['event_pilot_round_flight_reflight_dropped'],
+						"event_pilot_round_flight_wind_avg" => $p['event_pilot_round_flight_wind_avg'],
+						"event_pilot_round_flight_dir_avg" => $p['event_pilot_round_flight_dir_avg'],
+						"event_pilot_round_flight_time" => $p['event_pilot_round_flight_time'],
+						"event_pilot_round_flight_locked" => $p['event_pilot_round_flight_locked'],
+						"event_pilot_round_flight_entered" => $p['event_pilot_round_flight_entered']
+					) );
+					$new_event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
+					# Now insert the sub flights
+					foreach( $p['sub'] as $num => $s ){
+						$stmt = db_prep( "
+							INSERT INTO event_pilot_round_flight_sub
+							SET event_pilot_round_flight_id = :event_pilot_round_flight_id,
+								event_pilot_round_flight_sub_num =:num,
+								event_pilot_round_flight_sub_val =:val
+						" );
+						$result = db_exec( $stmt, array(
+							"event_pilot_round_flight_id" => $new_event_pilot_round_flight_id,
+							"num" => $num,
+							"val" => $s['event_pilot_round_flight_sub_val']
+						) );
+					}
+				}
+			}
+			
+			
+		}
+		# Completed copying so send them to the new event
+		# Recalculatethe event first
+		$new_event = new Event( $new_event_id );
+		# for each round, calculate the round totals and scores and then overall
+		foreach( $new_event->rounds as $r ){
+			$new_event->calculate_round( $r['event_round_number'] );
+		}
+		$new_event->calculate_event_totals();
+		$new_event->event_save_totals();
+		
+		$_REQUEST['event_id'] = $new_event_id;
+		return event_view();
+		
+	}else{
+		$smarty->assign("event_users",$event_users);
+	
+		$smarty->assign("event",$e);
+		$smarty->assign("event_types",$event_types);
+	
+		$maintpl = find_template("event/event_copy.tpl");
+		return $smarty->fetch($maintpl);
+	}
+}
 # Registration Routines
 function event_reg_edit() {
 	global $smarty;

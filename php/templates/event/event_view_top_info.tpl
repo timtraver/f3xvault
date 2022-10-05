@@ -136,6 +136,7 @@
 				{/if}
 				{if $user.user_id!=0 && $user.user_id==$event->info.user_id || $user.user_admin==1}
 				<li class="divider"></li>
+				<li><a href="#" onClick="event_copy.submit();">Copy Event</a></li>
 				<li><a href="#" onClick="confirm('Are you sure you wish to delete this event?') && event_delete.submit();">Delete Event</a></li>
 				{/if}
 			</ul>
@@ -184,6 +185,11 @@
 <form name="event_delete" method="POST">
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_delete">
+<input type="hidden" name="event_id" value="{$event->info.event_id}">
+</form>
+<form name="event_copy" method="POST">
+<input type="hidden" name="action" value="event">
+<input type="hidden" name="function" value="event_copy">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 </form>
 <form name="event_pilot_add" method="POST">
