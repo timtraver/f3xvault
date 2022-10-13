@@ -79,6 +79,8 @@ tbody th:first-child {
 					USA Team Selects Scoring - Top 30% receive a point. Double points for multiple day event.
 				{elseif $series->info.series_scoring_type=='f5jtour'}
 					USA F5J Tour - Event Percentage x 1000 plus bonus points for number of pilots if 2 day event.
+				{elseif $series->info.series_scoring_type=='faiwc'}
+					FAI World Cup - Curve based scoring on number of participants.
 				{/if}
 			</td>
 		</tr>
@@ -166,7 +168,7 @@ tbody th:first-child {
 				{foreach $series->events as $e}
 					<th width="1%" align="center" style="text-align: center;" nowrap>
 						<a class="tooltip_score_right_low" href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E {$event_num|escape}
-							<span style="z-index: 20;">{$e.event_name|escape} - {$e.event_start_date|date_format:"Y-m-d"}</span>
+							<span style="z-index: 20;">{$e.event_name|escape} - {$e.event_start_date|date_format:"Y-m-d"}{if $series->info.series_scoring_type=='faiwc'}<br>Total Pilots : {$e.total_pilots}{/if}</span>
 						</a>
 					</th>
 					{$event_num=$event_num+1}
@@ -196,14 +198,21 @@ tbody th:first-child {
 					</td>
 					<td width="5%" nowrap align="right">
 						<a href="" class="tooltip_score_left" onClick="return false;">
-							{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+							{if $series->info.series_scoring_type=='faiwc'}
+								{$p.total_score|string_format:"%d"}
+							{elseif $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
 								{$p.total_score|string_format:"%.1f"}
 							{else}
 								{$p.total_score|string_format:"%0.2f"}
 							{/if}
 							<span>
-								<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
-								<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
+								{if $series->info.series_scoring_type=='faiwc'}
+									<b>Behind Prev</b> : {$diff|string_format:"%d"}<br>
+									<b>Behind Lead</b> : {$diff_to_lead|string_format:"%d"}<br>
+								{else}
+									<b>Behind Prev</b> : {$diff|string_format:"%06.3f"}<br>
+									<b>Behind Lead</b> : {$diff_to_lead|string_format:"%06.3f"}<br>
+								{/if}
 							</span>
 						</a>
 					</td>
@@ -218,7 +227,9 @@ tbody th:first-child {
 									{$drop=$p.events.$event_id.dropped}
 									{if $drop==1}<del><font color="red">{/if}
 									{if $p.events.$event_id.event_score!=0}
-										{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+										{if $series->info.series_scoring_type=='faiwc'}
+											{$p.events.$event_id.event_score|string_format:"%d"}
+										{elseif $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
 											{$p.events.$event_id.event_score|string_format:"%.1f"}
 										{else}
 											{$p.events.$event_id.event_score|string_format:"%0.2f"}
@@ -228,7 +239,9 @@ tbody th:first-child {
 									{/if}
 									{if $drop==1}</font></del>{/if}
 									<span {if $series->info.series_scoring_type!='f5jtour'}style="margin-top: -40px; "{/if}>
-										{if $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
+										{if $series->info.series_scoring_type=='faiwc'}
+											{$p.events.$event_id.event_score|string_format:"%d"}
+										{elseif $series->info.series_scoring_type=='position' || $series->info.series_scoring_type=='teamusa'}
 											{$p.events.$event_id.event_score|string_format:"%.1f"}
 										{else if $series->info.series_scoring_type=='f5jtour'}
 										<table>

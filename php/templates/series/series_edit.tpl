@@ -88,6 +88,13 @@
 		</td>
 	</tr>
 	<tr>
+		<th>FAI World Cup Scoring</th>
+		<td>
+			<input type="radio" name="series_scoring_type" value="faiwc"{if $series->info.series_scoring_type=='faiwc'} CHECKED{/if}> 
+			This scoring gives a custom FAI World Cup Scoring model.
+		</td>
+	</tr>
+	<tr>
 		<td colspan="3" style="text-align: center;">
 			<input type="submit" value=" Save Series Info{if $from} and Return{/if} " class="btn btn-primary btn-rounded">
 		</td>
