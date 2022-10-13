@@ -537,7 +537,6 @@ class Series {
 	function calculate_series_totals_faiwc($number_drops){
 		# Function to calculate the fai world cup scores for pilots in series
 		$points = array( 50, 40, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 );
-		
 		$subtotals = array();
 		$totals = array();
 		foreach($this->events as $event_id => $e){
@@ -574,7 +573,6 @@ class Series {
 				if( $sub < 0 ){
 					$sub = $p['event_pilot_total_percentage'] / 100;
 				}
-				debug( "rank = $pilot_position, points = $sub");
 				$sub = $sub * $multiple;
 
 				$total = $sub;
@@ -604,12 +602,28 @@ class Series {
 			asort($s);
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
-			foreach($s as $event_id => $e){
+			foreach($s as $event_id => $score){
 				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
-					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $e;
+					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
 					$drop++;
+				}
+			}
+		}
+		# Now go through and mark any smaller score duplicate countries as dropped
+		foreach($scores as $pilot_id => $s){
+			arsort($s);
+			# Now lets step through the drop number and set those rounds to be dropped
+			$countries = array();
+			foreach($s as $event_id => $score){
+				$country_id = $this->events[$event_id]['country_id'];
+				if( in_array( $country_id, $countries ) && $this->events[$event_id]['event_series_mandatory'] == 0){
+					# Set the drop flag for this event and subtract the score
+					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
+					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
+				}else{
+					$countries[] = $country_id;
 				}
 			}
 		}
