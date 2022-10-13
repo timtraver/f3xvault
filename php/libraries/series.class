@@ -618,7 +618,7 @@ class Series {
 			$countries = array();
 			foreach($s as $event_id => $score){
 				$country_id = $this->events[$event_id]['country_id'];
-				if( in_array( $country_id, $countries ) && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if( in_array( $country_id, $countries ) && $this->events[$event_id]['event_series_mandatory'] == 0 && $subtotals[$pilot_id]['events'][$event_id]['dropped'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
