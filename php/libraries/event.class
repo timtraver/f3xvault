@@ -454,7 +454,7 @@ class Event {
 				$sort_string = 'ORDER BY edr.event_draw_round_number,p.pilot_last_name,p.pilot_first_name';
 				break;
 			case 'draw':
-				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,LPAD(LOWER(edr.event_draw_round_lane), 10,0),edr.event_draw_round_order';
+				$sort_string = 'ORDER BY edr.event_draw_round_number,edr.event_draw_round_group+0<>0,edr.event_draw_round_group+0,edr.event_draw_round_group,edr.event_draw_round_order,LPAD(LOWER(edr.event_draw_round_lane), 10,0)';
 				break;
 			case 'round_rank':
 			default:
@@ -583,7 +583,7 @@ class Event {
 				break;
 			case 'round_rank':
 			default:
-				$sort_string = 'ORDER BY er.event_round_number,length(erf.event_pilot_round_flight_group) DESC,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank';
+				$sort_string = 'ORDER BY er.event_round_number,length(erf.event_pilot_round_flight_group) DESC,erf.event_pilot_round_flight_group+0<>0,erf.event_pilot_round_flight_group+0,erf.event_pilot_round_flight_group,erf.event_pilot_round_flight_rank,erf.event_pilot_round_flight_order,erf.event_pilot_round_flight_lane';
 				break;
 		}
 				

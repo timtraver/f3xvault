@@ -21,6 +21,10 @@
 		<input type="hidden" name="event_round_id" value="{$event_round_id}">
 		<input type="hidden" name="event_round_number" value="{$round_number}">
 		<input type="hidden" name="create_new_round" value="0">
+		<input type="hidden" name="add_reflight" value="0">
+		<input type="hidden" name="reflight_flight_type_id" value="0">
+		<input type="hidden" name="reflight_event_pilot_id" value="0">
+		<input type="hidden" name="reflight_group" value="">
 
 		<h2 class="post-title entry-title">Event Round 
 			{$prev=$round_number-1}
@@ -585,7 +589,11 @@ $(function() {ldelim}
 		modal: true,
 		buttons: {
 			"Add This Pilot": function() {
-				document.reflight.submit();
+				document.main.add_reflight.value="1";
+				document.main.reflight_flight_type_id.value=document.reflight.flight_type_id.value;
+				document.main.reflight_group.value=document.reflight.group.value;
+				document.main.reflight_event_pilot_id.value=document.reflight.event_pilot_id.value;
+				document.main.submit();
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -615,7 +623,11 @@ $(function() {ldelim}
 			document.reflight.event_pilot_id.value = ui.item.id;
 			var name=document.getElementById('pilot_name');
 			document.reflight.pilot_name.value=name.value;
-			reflight.submit();
+			document.main.add_reflight.value="1";
+			document.main.reflight_flight_type_id.value=document.reflight.flight_type_id.value;
+			document.main.reflight_group.value=document.reflight.group.value;
+			document.main.reflight_event_pilot_id.value=document.reflight.event_pilot_id.value;
+			document.main.submit();
 		},
    		change: function( event, ui ) {
    			var id=document.getElementById('pilot_name');

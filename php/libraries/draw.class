@@ -417,7 +417,7 @@ class Draw {
 		}
 		return;
 	}
-	public function create_group_rounds($recalc = 0){
+	public function create_group_rounds($recalc = 0, $add_order = 0){
 		# Function to create the round array for an order type of group round
 		# We will create a random first round and then iterate through the rounds, adding stats along the way
 		# The $recalc variable is to tell it to recalculate the rounds even if existing, if not, it leaves them alone
@@ -729,11 +729,17 @@ class Draw {
 		if( $this->draw['event_draw_group_name'] != NULL ){
 			$group_type = $this->draw['event_draw_group_name'];
 		}
+		if( $this->draw['event_draw_lane_name'] != NULL ){
+			$lane_type = $this->draw['event_draw_lane_name'];
+		}
 		
 		$group_labels = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 		
 		# Ok, lets save these rounds to the draw
 		foreach($draw_picked['rounds'] as $round_num => $r){
+			if( $add_order == 1 ){
+				$order = 1;
+			}
 			foreach($r as $group => $g){
 				if($group_type == 'numeric'){
 					$event_draw_round_group = $group;
@@ -756,6 +762,7 @@ class Draw {
 							event_draw_round_number =:event_draw_round_number,
 							event_pilot_id =:event_pilot_id,
 							event_draw_round_group =:event_draw_round_group,
+							event_draw_round_order =:event_draw_round_order,
 							event_draw_round_lane =:event_draw_round_lane,
 							event_draw_round_status = 1
 					");
@@ -764,8 +771,10 @@ class Draw {
 						"event_draw_round_number" => $round_num,
 						"event_pilot_id" => $p['event_pilot_id'],
 						"event_draw_round_group" => $event_draw_round_group,
+						"event_draw_round_order" => $add_order == 1 ? $order:'',
 						"event_draw_round_lane" => $lane
 					));
+					$order++;
 				}
 			}
 		}

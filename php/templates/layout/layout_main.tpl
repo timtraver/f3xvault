@@ -305,6 +305,16 @@
 										</a>
 									</li>
 
+									<!--Tutorials-->
+									<li>
+										<a href="/?action=tutorials">
+											<i class="fa fa-book"></i>
+											<span class="menu-title">
+												<strong>Tutorials</strong>
+											</span>
+										</a>
+									</li>
+
 									<!--Downloads-->
 									<li>
 										<a href="/?action=downloads">
