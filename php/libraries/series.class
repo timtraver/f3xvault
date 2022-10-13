@@ -571,11 +571,10 @@ class Series {
 				$pilot_position = intval( $p['event_pilot_position'] );
 				$index = $pilot_position - 1;
 				$sub = intval( $points[ $index ] - 0.5 * ( $points[0] - $total_pilots ) );
-				debug( "rank = $pilot_position, points = $sub");
 				if( $sub < 0 ){
 					$sub = $p['event_pilot_total_percentage'] / 100;
 				}
-				
+				debug( "rank = $pilot_position, points = $sub");
 				$sub = $sub * $multiple;
 
 				$total = $sub;
