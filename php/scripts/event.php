@@ -6860,6 +6860,9 @@ function event_self_entry() {
 		if( $event->info['event_type_code'] == 'f5j' && $o['event_type_option_code'] == 'f5j_duration_accuracy' ){
 			$seconds_accuracy = $o['event_option_value'];
 		}
+		if( $event->info['event_type_code'] == 'f5l' && $o['event_type_option_code'] == 'f5l_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
 		if( $event->info['event_type_code'] == 'f3k' && $o['event_type_option_code'] == 'f3k_duration_accuracy' ){
 			$seconds_accuracy = $o['event_option_value'];
 		}
