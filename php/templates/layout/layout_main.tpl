@@ -68,13 +68,14 @@
 				<div class="navbar-content clearfix" style="position: relative;">
 										
 					<div class="nav navbar-top-links pull-left" style="height: 50px;position: relative;display:inline-block;padding-top: 5px;">
-						<span style="position: relative; display: inline-block;padding-top: 4px;">
+						<span style="width: 270px;position: relative; display: inline-block;padding-top: 4px;">
 						<select name="disc" class="selectpicker col-lg-4" data-style="btn-primary btn-rounded" data-width="100%" onchange="location = this.value;">
 							<option value="?action={$action|escape}&function={$function|escape}&disc=all"{if $disc=='all' || $disc==''} SELECTED{/if}>All Disciplines</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=f3b"{if $disc=='f3b'} SELECTED{/if}>F3B Multi Task</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=f3f"{if $disc=='f3f'} SELECTED{/if}>F3F Slope Racing</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=f3j"{if $disc=='f3j'} SELECTED{/if}>F3J Thermal Duration</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=f3k"{if $disc=='f3k'} SELECTED{/if}>F3K Hand Launch</option>
+							<option value="?action={$action|escape}&function={$function|escape}&disc=f3l"{if $disc=='f3l'} SELECTED{/if}>F3L RES (Rudder, Elevator, Spoiler)</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=td"{if $disc=='td'} SELECTED{/if}>TD Thermal Duration</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=mom"{if $disc=='mom'} SELECTED{/if}>MOM Slope Racing</option>
 							<option value="?action={$action|escape}&function={$function|escape}&disc=gps"{if $disc=='gps'} SELECTED{/if}>GPS Triangle Racing</option>
