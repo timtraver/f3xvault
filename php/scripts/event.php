@@ -5300,7 +5300,6 @@ function event_draw_print() {
 						"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
 						"order"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'],
 						"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
-						"spot"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
 						"lane"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
 						"target_time"	=> $r['event_round_time_choice']." min",
 						"flights"		=> $flights
@@ -6663,7 +6662,6 @@ function event_print_blank_task() {
 				"round"			=> $event_round_number,
 				"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
 				"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
-				"spot"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
 				"lane"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'],
 				"target_time"	=> $r['event_round_time_choice']." min",
 				"flights"		=> $flights
