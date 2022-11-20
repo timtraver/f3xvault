@@ -16,6 +16,7 @@
 		<h3 class="post-title entry-title">
 			{if $event->info.event_type_code == 'f3k'}F3K{/if}
 			{if $event->info.event_type_code == 'f3j'}F3J{/if}
+			{if $event->info.event_type_code == 'f3l'}F3L{/if}
 			{if $event->info.event_type_code == 'f5j'}F5J{/if}
 			{if $event->info.event_type_code == 'td'}TD{/if}
 			Round Tasks
@@ -31,7 +32,7 @@
 			<th width="10%" nowrap style="text-align: center;">Round Number</th>
 			<th width="20%" nowrap>Round Type</th>
 			<th nowrap>Task</th>
-			{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'td'}
+			{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f3l'}
 			<th nowrap>Task Time (min)</th>
 			{else}
 			<th></th>
@@ -66,7 +67,7 @@
 					{/foreach}
 					</select>
 				</th>
-				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'td'}
+				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f3l'}
 				<th>
 				<input type="text" size="4" name="event_task_time_choice_{$t.event_task_id}" value="{$t.event_task_time_choice}">
 				</th>
@@ -128,7 +129,7 @@
 		</table>
 		</form>
 		
-		{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f3k' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j' }
+		{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'f3k' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j' || $event->info.event_type_code == 'f3l' }
 		<h3 class="post-title entry-title">
 			F3XTiming Audio Application Download
 		</h3>
