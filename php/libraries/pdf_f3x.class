@@ -710,13 +710,13 @@ class PDF_F3X {
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell(12,8,'Spot',0,0,'C',TRUE);
+		$this->pdf->Cell(12,8,'Lane',0,0,'C',TRUE);
 		
 		$current_x = $this->pdf->GetX() + 1;
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$this->pdf->SetFontSize(18);
-		$this->pdf->Cell(9,8,$data['spot'],1,0,'C',TRUE);
+		$this->pdf->Cell(9,8,$data['lane'],1,0,'C',TRUE);
 		
 		$current_x = $x + $this->padding;
 		$current_y += 9;
@@ -885,13 +885,13 @@ class PDF_F3X {
 		
 		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
 		$this->pdf->SetXY($current_x,$current_y);
-		$this->pdf->Cell(12,8,'Spot',0,0,'C',TRUE);
+		$this->pdf->Cell(12,8,'Lane',0,0,'C',TRUE);
 		
 		$current_x = $this->pdf->GetX() + 1;
 		$this->pdf->SetXY($current_x,$current_y);
 		$this->pdf->SetFillColor(255,255,255);
 		$this->pdf->SetFontSize(18);
-		$this->pdf->Cell(9,8,$data['spot'],1,0,'C',TRUE);
+		$this->pdf->Cell(9,8,$data['lane'],1,0,'C',TRUE);
 		
 		$current_x = $x + $this->padding;
 		$current_y += 9;
