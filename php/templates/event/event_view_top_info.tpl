@@ -102,6 +102,9 @@
 				{if $event->info.event_type_code == 'f3j'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3J Tasks</a></li>
 				{/if}
+				{if $event->info.event_type_code == 'f3l'}
+				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F3L Tasks</a></li>
+				{/if}
 				{if $event->info.event_type_code == 'f5j'}
 				<li><a href="#" onClick="if(check_permission()){ldelim}document.event_tasks.submit();{rdelim}">Set F5J Tasks</a></li>
 				{/if}
