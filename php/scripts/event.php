@@ -7104,7 +7104,7 @@ function event_self_entry() {
 			}
 			$event_round_id = $result[0]['event_round_id'];
 		}else{
-			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j' || $event->info['event_type_code'] == 'td'){
+			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j' || $event->info['event_type_code'] == 'td'  || $event->info['event_type_code'] == 'f3l'){
 				$event_round_time_choice = $event->tasks[$round_number]['event_task_time_choice'];
 			}
 			$event_round_flyoff = 0;
