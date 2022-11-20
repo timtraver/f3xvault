@@ -3200,10 +3200,21 @@ function event_round_edit() {
 			}
 		}
 		if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j'){
-			if($flyoff_round){
-				$event->rounds[$round_number]['event_round_time_choice'] = 15;
+			if( $event->tasks[$round_number]['event_task_time_choice'] == 0 ){
+				if($flyoff_round){
+					$event->rounds[$round_number]['event_round_time_choice'] = 15;
+				}else{
+					$event->rounds[$round_number]['event_round_time_choice'] = 10;
+				}
 			}else{
-				$event->rounds[$round_number]['event_round_time_choice'] = 10;
+				$event->rounds[$round_number]['event_round_time_choice'] = $event->tasks[$round_number]['event_task_time_choice'];
+			}
+		}
+		if( $event->info['event_type_code'] == 'f3l' ){
+			if( $event->tasks[$round_number]['event_task_time_choice'] == 0 ){
+				$event->rounds[$round_number]['event_round_time_choice'] = 6;
+			}else{
+				$event->rounds[$round_number]['event_round_time_choice'] = $event->tasks[$round_number]['event_task_time_choice'];
 			}
 		}
 		# Lets set the round to be scored or not depending on the zero choice
@@ -6430,6 +6441,9 @@ function event_tasks_save() {
 			if($e->info['event_type_code'] == 'td'){
 				$event_task_time_choice = 10;
 				$event_task_score_second = 1;
+			}
+			if($e->info['event_type_code'] == 'f3l'){
+				$event_task_time_choice = 6;
 			}
 	
 			# Now insert the record
