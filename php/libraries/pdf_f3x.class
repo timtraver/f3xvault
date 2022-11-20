@@ -79,6 +79,9 @@ class PDF_F3X {
 				case 'f5j':
 					$this->render_cell_f5j($x,$y,$d);
 					break;
+				case 'f3l':
+					$this->render_cell_td($x,$y,$d);
+					break;
 				case 'f3b':
 					$this->render_cell_f3b($x,$y,$d);
 					break;
@@ -1264,6 +1267,7 @@ class PDF_F3X {
 					break;
 				case 'f3j':
 				case 'td':
+				case 'f3l':
 					$this->render_cell_summary_f3j( $x, $y, $d );
 					break;
 				case 'f3k':
