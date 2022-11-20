@@ -1251,6 +1251,9 @@ class Event {
 			if(!isset($f['pilots'])){
 				continue;
 			}
+			if( $f['flight_type_code'] == 'f3l_duration'){
+				$second_value = 2;
+			}
 
 			foreach($f['pilots'] as $v){
 				$event_pilot_id = $v['event_pilot_id'];
@@ -1276,6 +1279,11 @@ class Event {
 							break;
 						case 'td_duration':
 						case 'f3j_duration':
+							$round_max_seconds = $this->rounds[$event_round_number]['event_round_time_choice'] * 60 * $second_value;
+							if($raw > $round_max_seconds){
+								$raw = $round_max_seconds - abs($round_max_seconds - $raw);
+							}
+						case 'f3l_duration':
 							$round_max_seconds = $this->rounds[$event_round_number]['event_round_time_choice'] * 60 * $second_value;
 							if($raw > $round_max_seconds){
 								$raw = $round_max_seconds - abs($round_max_seconds - $raw);
