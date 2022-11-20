@@ -59,6 +59,9 @@ if( isset( $_REQUEST['disc'] ) ){
 		case "f3k":
 			$disc = 'f3k';
 			break;
+		case "f3l":
+			$disc = 'f3l';
+			break;
 		case "td":
 			$disc = 'td';
 			break;
