@@ -205,7 +205,7 @@
 		<div style="display:block;padding-right: 5px;padding-bottom: 2px;">
 			<button class="btn btn-block btn-warning btn-rounded" style="font-size: 22px;" onClick="return false;">
 				Task : {$event->rounds.$round_number.flights.$flight_type_id.flight_type_name_short|escape}
-				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j'}
+				{if $event->info.event_type_code == 'f3j' || $event->info.event_type_code == 'td' || $event->info.event_type_code == 'f5j'  || $event->info.event_type_code == 'f3l'}
 				 ({$event->tasks.$round_number.event_task_time_choice} min)
 				{/if}
 			</button>
@@ -291,7 +291,82 @@
 			</tr>
 			</table>
 		{/if} {* End F3J Event *}
-			
+		
+		{* For F3L Event *}
+		{if $event->info.event_type_code == 'f3l'}
+			{$event_round_time = $event->tasks.$round_number.event_task_time_choice}
+			<table>
+			<tr>
+				<th valign="top"><h3  style="margin-right: 20px;">Flight Time</h3></th>
+				<td>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="2" inputmode="numeric" id="minutes_button" class="btn-primary btn-rounded" style="{if $event->tasks.$round_number.event_task_time_choice > 10 }width: 70px;{else}width: 50px;{/if}font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{if $minutes == '' || $minutes == null}0{else}{$minutes|escape}{/if}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_3lminute(this);' onChange="document.main.minutes.value=this.value;">
+					</div>
+					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.seconds.value=this.value;">
+					</div>
+					{if $seconds_accuracy > 0}
+					<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
+					<div class="btn-group">
+						<input type="text" pattern="[0-9]*" size="1" inputmode="numeric" id="seconds_2_button" class="btn-primary btn-rounded" style="width: 45px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds_2|string_format:"%'.01d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_tenth(this);' onChange="document.main.seconds_2.value=this.value;">
+					</div>
+					{/if}
+					<div style="display:inline-block;vertical-align: bottom;">Sec</div>					
+				</td>
+			</tr>
+			<tr>
+				<th><h3>Landing</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						{if $landing == ''}{$landing = 0}{/if}
+						<input type="button" id="landing_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "width: 70px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$landing}" data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;height: 300px;overflow-y: auto;">
+								<li><a href="#" onClick='document.main.landing.value="100";document.getElementById("landing_button").value="100";'>100</a></li>
+								<li><a href="#" onClick='document.main.landing.value="99";document.getElementById("landing_button").value="99";'>99</a></li>
+								<li><a href="#" onClick='document.main.landing.value="98";document.getElementById("landing_button").value="98";'>98</a></li>
+								<li><a href="#" onClick='document.main.landing.value="97";document.getElementById("landing_button").value="97";'>97</a></li>
+								<li><a href="#" onClick='document.main.landing.value="96";document.getElementById("landing_button").value="96";'>96</a></li>
+								<li><a href="#" onClick='document.main.landing.value="95";document.getElementById("landing_button").value="95";'>95</a></li>
+								<li><a href="#" onClick='document.main.landing.value="94";document.getElementById("landing_button").value="94";'>94</a></li>
+								<li><a href="#" onClick='document.main.landing.value="93";document.getElementById("landing_button").value="93";'>93</a></li>
+								<li><a href="#" onClick='document.main.landing.value="92";document.getElementById("landing_button").value="92";'>92</a></li>
+								<li><a href="#" onClick='document.main.landing.value="91";document.getElementById("landing_button").value="91";'>91</a></li>
+								<li><a href="#" onClick='document.main.landing.value="90";document.getElementById("landing_button").value="90";'>90</a></li>
+								<li><a href="#" onClick='document.main.landing.value="85";document.getElementById("landing_button").value="85";'>85</a></li>
+								<li><a href="#" onClick='document.main.landing.value="80";document.getElementById("landing_button").value="80";'>80</a></li>
+								<li><a href="#" onClick='document.main.landing.value="75";document.getElementById("landing_button").value="75";'>75</a></li>
+								<li><a href="#" onClick='document.main.landing.value="70";document.getElementById("landing_button").value="70";'>70</a></li>
+								<li><a href="#" onClick='document.main.landing.value="65";document.getElementById("landing_button").value="65";'>65</a></li>
+								<li><a href="#" onClick='document.main.landing.value="60";document.getElementById("landing_button").value="60";'>60</a></li>
+								<li><a href="#" onClick='document.main.landing.value="55";document.getElementById("landing_button").value="55";'>55</a></li>
+								<li><a href="#" onClick='document.main.landing.value="50";document.getElementById("landing_button").value="50";'>50</a></li>
+								<li><a href="#" onClick='document.main.landing.value="45";document.getElementById("landing_button").value="45";'>45</a></li>
+								<li><a href="#" onClick='document.main.landing.value="40";document.getElementById("landing_button").value="40";'>40</a></li>
+								<li><a href="#" onClick='document.main.landing.value="35";document.getElementById("landing_button").value="35";'>35</a></li>
+								<li><a href="#" onClick='document.main.landing.value="30";document.getElementById("landing_button").value="30";'>30</a></li>
+								<li><a href="#" onClick='document.main.landing.value="0";document.getElementById("landing_button").value="0";'>0</a></li>
+							</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th><h3>Penalty</h3></th>
+				<td>
+					<div class="btn-group" style="width: 50px;">
+						<input type="button" id="penalty_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$penalty|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
+							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
+								<li><a href="#" onClick='document.main.penalty.value=0;document.getElementById("penalty_button").value="0";'>0</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=100;document.getElementById("penalty_button").value="100";'>100</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=300;document.getElementById("penalty_button").value="300";'>300</a></li>
+								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
+							</ul>
+					</div>
+				</td>
+			</tr>
+			</table>
+		{/if} {* End F3L Event *}
+		
 		{* For TD Event *}
 		{if $event->info.event_type_code == 'td'}
 			{$event_round_time = $event->tasks.$round_number.event_task_time_choice + 2}
@@ -870,6 +945,24 @@
 	{/if}
 	{if $event->info.event_type_code == 'td'}
 	function check_tdminute(object){ldelim}
+		/* Set max min */
+		max_min = {if $event->tasks.$round_number.event_task_time_choice > 0}{$event->tasks.$round_number.event_task_time_choice}{else}0{/if};
+		if( max_min >= 10 ){ldelim}
+			if( object.value.length == 2 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}else{ldelim}
+			if( object.value.length == 1 ){ldelim}
+				make_unselected(object);
+				goToNextTab(object);
+			{rdelim}
+		{rdelim}
+		return;
+	{rdelim}
+	{/if}
+	{if $event->info.event_type_code == 'f3l'}
+	function check_3lminute(object){ldelim}
 		/* Set max min */
 		max_min = {if $event->tasks.$round_number.event_task_time_choice > 0}{$event->tasks.$round_number.event_task_time_choice}{else}0{/if};
 		if( max_min >= 10 ){ldelim}
