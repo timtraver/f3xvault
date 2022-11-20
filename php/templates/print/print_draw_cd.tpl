@@ -37,9 +37,8 @@
 			<th width="200" align="left">Pilot</th>
 			
 			{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
-				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
-				<th>Spot</th>
-			{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+				|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
 				|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'}
 				<th>Lane</th>

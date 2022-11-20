@@ -8,6 +8,7 @@
 	$event->flight_types.$flight_type_id.flight_type_code=='td_duration' ||
 	$event->flight_types.$flight_type_id.flight_type_code=='f3b_distance' ||
 	$event->flight_types.$flight_type_id.flight_type_code=='f3j_duration' ||
+	$event->flight_types.$flight_type_id.flight_type_code=='f3l_duration' ||
 	$event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'}
 	{$size=3}
 {else}
@@ -39,10 +40,10 @@
 		{/if}
 		<th>Pilot</th>
 		{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
-			|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'}
-			<th>Spot</th>
-		{elseif $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
+			|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
+			|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 			|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+			|| $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration'
 			|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'}
 			<th>Lane</th>
 		{/if}
@@ -86,6 +87,7 @@
 			|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 			|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 			|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
+			|| $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration'
 			|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'}
 			<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$p.event_pilot_round_flight_lane}</td>
 		{/if}
