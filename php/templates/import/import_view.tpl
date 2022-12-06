@@ -23,7 +23,7 @@
 				<td>
 					<select name="import_file_type">
 						<option value="manual">Manual File</option>
-						<option value="gliderscore_f5j">Gliderscore F5J File</option>
+						<option value="gliderscore_f5j">Gliderscore F5J Web Scores File</option>
 					</select>
 				</td>
 			</tr>

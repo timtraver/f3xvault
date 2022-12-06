@@ -1349,11 +1349,8 @@ function import_verify_gliderscore_f5j(){
 	if($import_file == ''){
 		return import_view();
 	}
-	if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
-		$field_separator = $_REQUEST['field_separator'];
-	}else{
-		$field_separator = ',';
-	}
+	$field_separator = "\t";
+	
 	if(isset($_REQUEST['decimal_type']) && $_REQUEST['decimal_type'] != ''){
 		$decimal_type = $_REQUEST['decimal_type'];
 	}else{
@@ -1364,30 +1361,35 @@ function import_verify_gliderscore_f5j(){
 	$lines = array();
 	$file = new SplFileObject($import_file);
 	$file->setFlags(SplFileObject::READ_CSV | SplFileObject::READ_AHEAD | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
-	$file->setCsvControl($field_separator);
+	$file->setCsvControl( "\t" );
+
 	$l = 1;
 	while (!$file->eof()) {
-		$temparray = $file->fgetcsv();
+		$temparray = $file->fgetcsv( $field_separator );
 		if($temparray){
 			$lines[$l] = $temparray;
 		}
 		$l++;
 	}
 	$file = null;
-	
-	# Lets get the info from the first line	
-	if( preg_match( "/^(.*)\[.*\s(\d+\/\d+\/\d+)\]/", $lines[1][0], $m ) ){
-		$event_name = trim( $m[1] );
-		$event_start_date = $m[2];
-		$event_end_date = $event_start_date;
-	}
 
+	# Lets get the event name from the first line	
+	if( preg_match( "/^Name:\s(.*)/", $lines[1][0], $m ) ){
+		$event_name = trim( $m[1] );
+	}
+	# Lets get the location name from the first line	
+	if( preg_match( "/^Venue:\s(.*)/", $lines[2][0], $m ) ){
+		$location_name = trim( $m[1] );
+	}
+	# Lets get the date from the first line	
+	if( preg_match( "/^Date:\s(.*)/", $lines[3][0], $m ) ){
+		$event_start_date = trim( $m[1] );
+	}
+	
 	# Lets set the dates to a usable format
 	# Lets replace the date dashes with slashes so strtotime works
-	$event_start_date = preg_replace("/\-/", '/', $event_start_date);
-	$event_end_date = preg_replace("/\-/", '/', $event_end_date);	
 	$event_start_date = date("Y-m-d H:i:s",strtotime($event_start_date));
-	$event_end_date = date("Y-m-d H:i:s",strtotime($event_end_date));	
+	$event_end_date = $event_start_date;
 
 	# Lets check to make sure there isn't an event with the exact name and dates, and use its id
 	$stmt = db_prep("
@@ -1452,6 +1454,7 @@ function import_verify_gliderscore_f5j(){
 		$flight_types[$flight_type_code] = $row;
 	}
 
+
 	# Lets step through the lines to get the rounds and pilots
 	$pilots = array();
 	$round_pos = 0;
@@ -1474,7 +1477,7 @@ function import_verify_gliderscore_f5j(){
 					case "Group":
 						$group_pos = $pos;
 						break;
-					case "Re-Flight":
+					case "ReFlight":
 						$reflight_pos = $pos;
 						break;
 					case "Name":
@@ -1486,13 +1489,13 @@ function import_verify_gliderscore_f5j(){
 					case "Time":
 						$time_pos = $pos;
 						break;
-					case "Lndg Points":
+					case "LndgPts":
 						$land_pos = $pos;
 						break;
-					case "Start Height":
+					case "Height":
 						$start_pos = $pos;
 						break;
-					case "Safety Penalty":
+					case "Penalty":
 						$pen_pos = $pos;
 						break;
 					default:
