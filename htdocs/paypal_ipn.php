@@ -11,6 +11,7 @@
 #
 require_once("/var/www/f3xvault.com/php/conf.php");
 include_library('functions.inc');
+include_library('event.class');
 
 
 // CONFIG: Enable debug mode. This means we'll log requests into 'ipn.log' in the same directory.
