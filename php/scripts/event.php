@@ -680,6 +680,7 @@ function event_edit() {
 	$result = db_exec( $stmt, array( "event_id" => $event_id ) );
 	foreach( $result as $row ){
 		$event_users[] = array(
+			"event_user_id" => $row['event_user_id'],
 			"user_id" => $row['user_id'],
 			"pilot_first_name" => $row['pilot_first_name'],
 			"pilot_last_name" => $row['pilot_last_name'],
