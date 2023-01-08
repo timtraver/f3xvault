@@ -6759,13 +6759,13 @@ function event_print_blank_summary_task() {
 		}else{
 			for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
 				foreach( $e->pilots as $event_pilot_id => $p ){
+					# Lets create the event round and enough info from the draw to print
+					#Step through the draw rounds and see if one exists for this round
+					if($e->info['event_type_code'] == 'f3k'){
+						$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+					}
+					# Lets create the round info
 					if(!isset($e->rounds[$event_round_number])){
-						# Lets create the event round and enough info from the draw to print
-						#Step through the draw rounds and see if one exists for this round
-						if($e->info['event_type_code'] == 'f3k'){
-							$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
-						}
-						# Lets create the round info
 						$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
 						$e->rounds[$event_round_number]['event_round_status'] = 1;
 						if($e->info['event_type_code'] == 'f3k'){
@@ -6774,12 +6774,15 @@ function event_print_blank_summary_task() {
 							$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
 						}
 						$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
+					}
+					if(!isset($e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = '';
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = '';
 						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = '';
-						$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
 					}
+					
 				}
 			}
 		}
@@ -6814,9 +6817,11 @@ function event_print_blank_summary_task() {
 			}
 		}
 	}
-	# Let's duplicate the pilot sop two of them get printed at a time
-	for( $x = 1; $x<=3; $x++){
-		$data['pilots'][$x] = $data['pilots'][$event_pilot_id];
+	# Let's duplicate the pilot sop two of them get printed at a time if they are blank
+	if( $blank == 1 && $use_pilots == 0 ){
+		for( $x = 1; $x<=3; $x++){
+			$data['pilots'][$x] = $data['pilots'][$event_pilot_id];
+		}
 	}
 	# Now create the pdf from the above template and save it
 	$pdf = new PDF_F3X( $orientation );
