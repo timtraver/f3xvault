@@ -6723,11 +6723,11 @@ function event_print_blank_summary_task() {
 	if($blank == 1){
 		# Lets add the rounds that don't exist with the draw values for printing
 		# Step through any existing rounds and use those
-		$e->pilots = array();
 		# Lets get an event pilot id from this event
 		foreach( $e->pilots as $event_pilot_id => $p ){
 			break;
 		}
+		$e->pilots = array();
 		$e->pilots[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
 		$e->pilots[$event_pilot_id]['pilot_first_name'] = "";
 
