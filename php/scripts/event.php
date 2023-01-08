@@ -6679,6 +6679,7 @@ function event_print_blank_summary_task() {
 
 	$event_id = intval($_REQUEST['event_id']);
 	$blank = intval($_REQUEST['blank']);
+	$use_pilots = intval($_REQUEST['use_pilots']);
 
 	$e = new Event($event_id);
 	$e->get_teams();
@@ -6723,14 +6724,15 @@ function event_print_blank_summary_task() {
 	if($blank == 1){
 		# Lets add the rounds that don't exist with the draw values for printing
 		# Step through any existing rounds and use those
-		# Lets get an event pilot id from this event
-		foreach( $e->pilots as $event_pilot_id => $p ){
-			break;
+		if( $use_pilots == 0 ){
+			# Lets get an event pilot id from this event
+			foreach( $e->pilots as $event_pilot_id => $p ){
+				break;
+			}
+			$e->pilots = array();
+			$e->pilots[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
+			$e->pilots[$event_pilot_id]['pilot_first_name'] = "";
 		}
-		$e->pilots = array();
-		$e->pilots[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
-		$e->pilots[$event_pilot_id]['pilot_first_name'] = "";
-
 		for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
 			if(!isset($e->rounds[$event_round_number])){
 				# Lets create the event round and enough info from the draw to print
