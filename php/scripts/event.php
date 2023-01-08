@@ -6757,10 +6757,8 @@ function event_print_blank_summary_task() {
 				}
 			}
 		}else{
-			
-			foreach( $e->pilots as $event_pilot_id => $p ){
-				
-				for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
+			for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
+				foreach( $e->pilots as $event_pilot_id => $p ){
 					if(!isset($e->rounds[$event_round_number])){
 						# Lets create the event round and enough info from the draw to print
 						#Step through the draw rounds and see if one exists for this round
@@ -6784,8 +6782,6 @@ function event_print_blank_summary_task() {
 					}
 				}
 			}
-			
-			
 		}
 	}
 
