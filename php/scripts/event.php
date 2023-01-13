@@ -1791,34 +1791,51 @@ function event_register_save() {
 		}
 		$event_pilot_bib = $event_pilot_entry_order;
 
-		# We need to create a new event pilot id
-		$stmt = db_prep("
-			INSERT INTO event_pilot
-			SET event_id = :event_id,
-				pilot_id = :pilot_id,
-				event_pilot_entry_order = :event_pilot_entry_order,
-				event_pilot_bib = :event_pilot_bib,
-				class_id = :class_id,
-				event_pilot_freq = :event_pilot_freq,
-				event_pilot_team = :event_pilot_team,
-				plane_id = :plane_id,
-				event_pilot_reg_note = :event_pilot_reg_note,
-				event_pilot_draw_status = 1,
-				event_pilot_status = 1
-		");
-		$result2 = db_exec($stmt,array(
-			"event_id"					=> $event_id,
-			"pilot_id"					=> $GLOBALS['user']['pilot_id'],
-			"class_id"					=> $class_id,
-			"event_pilot_entry_order"	=> $event_pilot_entry_order,
-			"event_pilot_bib"			=> $event_pilot_bib,
-			"event_pilot_freq"			=> $event_pilot_freq,
-			"event_pilot_team"			=> $event_pilot_team,
-			"plane_id"					=> $plane_id,
-			"event_pilot_reg_note"		=> $event_pilot_reg_note
-		));
-		$event_pilot_id = $GLOBALS['last_insert_id'];
-		user_message("You Have Successfully Registered for this event!");
+		# Let's make absolutely sure that this pilot doesn't exist in the event yet
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_pilot
+			WHERE event_id = :event_id
+				AND pilot_id = :pilot_id
+				AND event_pilot_status = 1
+		" );
+		$result = db_exec( $stmt, array(
+			"event_id" => $event_id,
+			"pilot_id" => $GLOBALS['user']['pilot_id']
+		) );
+		if( isset( $result[0] ) ){
+			# This pilot already exists in this event, so let's not create it
+			$event_pilot_id = $result[0]['event_pilot_id'];
+		}else{
+			# We need to create a new event pilot id
+			$stmt = db_prep("
+				INSERT INTO event_pilot
+				SET event_id = :event_id,
+					pilot_id = :pilot_id,
+					event_pilot_entry_order = :event_pilot_entry_order,
+					event_pilot_bib = :event_pilot_bib,
+					class_id = :class_id,
+					event_pilot_freq = :event_pilot_freq,
+					event_pilot_team = :event_pilot_team,
+					plane_id = :plane_id,
+					event_pilot_reg_note = :event_pilot_reg_note,
+					event_pilot_draw_status = 1,
+					event_pilot_status = 1
+			");
+			$result2 = db_exec($stmt,array(
+				"event_id"					=> $event_id,
+				"pilot_id"					=> $GLOBALS['user']['pilot_id'],
+				"class_id"					=> $class_id,
+				"event_pilot_entry_order"	=> $event_pilot_entry_order,
+				"event_pilot_bib"			=> $event_pilot_bib,
+				"event_pilot_freq"			=> $event_pilot_freq,
+				"event_pilot_team"			=> $event_pilot_team,
+				"plane_id"					=> $plane_id,
+				"event_pilot_reg_note"		=> $event_pilot_reg_note
+			));
+			$event_pilot_id = $GLOBALS['last_insert_id'];
+			user_message("You Have Successfully Registered for this event!");
+		}
 	}
 	
 	# Lets update the pilot registration parameters now
