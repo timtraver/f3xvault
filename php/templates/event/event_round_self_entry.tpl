@@ -816,7 +816,11 @@
 		
 		current_minutes = parseInt( document.getElementById("sub_" + flight_num + "_minutes_button").value, 10 );
 		current_seconds = parseInt( document.getElementById("sub_" + flight_num + "_seconds_button").value, 10 );
+		{if $seconds_accuracy > 0}
 		current_seconds2 = parseInt( document.getElementById("sub_" + flight_num + "_seconds2_button").value, 10 );
+		{else}
+		current_seconds2 = 0;
+		{/if}
 		current_total_seconds = ( current_minutes * 60 ) + current_seconds + ( current_seconds2 * 0.1 );
 		if( current_total_seconds > max_flight_seconds ){ldelim}
 			/* reset the values for this flight to be the max */
@@ -824,7 +828,9 @@
 			calc_sec = Math.floor( max_flight_seconds % 60 );
 			document.getElementById("sub_" + flight_num + "_minutes_button").value = calc_min;
 			document.getElementById("sub_" + flight_num + "_seconds_button").value = zeroPad(calc_sec,2);
+			{if $seconds_accuracy > 0}
 			document.getElementById("sub_" + flight_num + "_seconds2_button").value = 0;
+			{/if}
 			/* change the form vars too */
 			document.getElementById("sub_min_" + flight_num ).value = calc_min;
 			document.getElementById("sub_sec_" + flight_num ).value = zeroPad(calc_sec,2);
@@ -848,7 +854,11 @@
 		for( x = 1; x <= num_subs ; x++ ){ldelim}
 			flight_minutes = parseInt( document.getElementById("sub_" + x + "_minutes_button").value, 10 );
 			flight_seconds = parseInt( document.getElementById("sub_" + x + "_seconds_button").value, 10 );
+			{if $seconds_accuracy > 0}
 			flight_seconds2 = parseInt( document.getElementById("sub_" + x + "_seconds2_button").value, 10 );
+			{else}
+			flight_seconds2 = 0;
+			{/if}
 			calculated_time += ( flight_minutes * 60 ) + flight_seconds + ( flight_seconds2 * 0.1 );
 		{rdelim}
 		if( calculated_time > max_round_seconds ){ldelim}
@@ -878,16 +888,24 @@
 			if( current_min * 60 >= max_flight_seconds ){ldelim}
 				/* set the seconds to what they should be as well */
 				current_seconds = parseInt( document.getElementById("sub_" + flight_num + "_seconds_button").value, 10 );
+				{if $seconds_accuracy > 0}
 				current_seconds2 = parseInt( document.getElementById("sub_" + flight_num + "_seconds2_button").value, 10 );
+				{else}
+				current_seconds2 = 0;
+				{/if}
 				current_total_seconds = ( object.value * 60 ) + current_seconds + ( current_seconds2 * 0.1 );
 				calc_sec = Math.floor( max_flight_seconds % 60 );
 				document.getElementById("sub_" + flight_num + "_minutes_button").value = max_min;
 				document.getElementById("sub_" + flight_num + "_seconds_button").value = zeroPad(calc_sec,2);
+				{if $seconds_accuracy > 0}
 				document.getElementById("sub_" + flight_num + "_seconds2_button").value = 0;
+				{/if}
 				/* change the form vars too */
 				document.getElementById("sub_min_" + flight_num ).value = max_min;
 				document.getElementById("sub_sec_" + flight_num ).value = zeroPad(calc_sec,2);
+				{if $seconds_accuracy > 0}
 				document.getElementById("sub_sec2_" + flight_num ).value = 0;
+				{/if}
 				goToNextFlight(object);
 			{rdelim}else{ldelim}
 				object.value=max_min;
