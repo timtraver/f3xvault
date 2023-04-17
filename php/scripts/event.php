@@ -680,6 +680,7 @@ function event_edit() {
 	$result = db_exec( $stmt, array( "event_id" => $event_id ) );
 	foreach( $result as $row ){
 		$event_users[] = array(
+			"event_user_id" => $row['event_user_id'],
 			"user_id" => $row['user_id'],
 			"pilot_first_name" => $row['pilot_first_name'],
 			"pilot_last_name" => $row['pilot_last_name'],
@@ -1790,34 +1791,51 @@ function event_register_save() {
 		}
 		$event_pilot_bib = $event_pilot_entry_order;
 
-		# We need to create a new event pilot id
-		$stmt = db_prep("
-			INSERT INTO event_pilot
-			SET event_id = :event_id,
-				pilot_id = :pilot_id,
-				event_pilot_entry_order = :event_pilot_entry_order,
-				event_pilot_bib = :event_pilot_bib,
-				class_id = :class_id,
-				event_pilot_freq = :event_pilot_freq,
-				event_pilot_team = :event_pilot_team,
-				plane_id = :plane_id,
-				event_pilot_reg_note = :event_pilot_reg_note,
-				event_pilot_draw_status = 1,
-				event_pilot_status = 1
-		");
-		$result2 = db_exec($stmt,array(
-			"event_id"					=> $event_id,
-			"pilot_id"					=> $GLOBALS['user']['pilot_id'],
-			"class_id"					=> $class_id,
-			"event_pilot_entry_order"	=> $event_pilot_entry_order,
-			"event_pilot_bib"			=> $event_pilot_bib,
-			"event_pilot_freq"			=> $event_pilot_freq,
-			"event_pilot_team"			=> $event_pilot_team,
-			"plane_id"					=> $plane_id,
-			"event_pilot_reg_note"		=> $event_pilot_reg_note
-		));
-		$event_pilot_id = $GLOBALS['last_insert_id'];
-		user_message("You Have Successfully Registered for this event!");
+		# Let's make absolutely sure that this pilot doesn't exist in the event yet
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_pilot
+			WHERE event_id = :event_id
+				AND pilot_id = :pilot_id
+				AND event_pilot_status = 1
+		" );
+		$result = db_exec( $stmt, array(
+			"event_id" => $event_id,
+			"pilot_id" => $GLOBALS['user']['pilot_id']
+		) );
+		if( isset( $result[0] ) ){
+			# This pilot already exists in this event, so let's not create it
+			$event_pilot_id = $result[0]['event_pilot_id'];
+		}else{
+			# We need to create a new event pilot id
+			$stmt = db_prep("
+				INSERT INTO event_pilot
+				SET event_id = :event_id,
+					pilot_id = :pilot_id,
+					event_pilot_entry_order = :event_pilot_entry_order,
+					event_pilot_bib = :event_pilot_bib,
+					class_id = :class_id,
+					event_pilot_freq = :event_pilot_freq,
+					event_pilot_team = :event_pilot_team,
+					plane_id = :plane_id,
+					event_pilot_reg_note = :event_pilot_reg_note,
+					event_pilot_draw_status = 1,
+					event_pilot_status = 1
+			");
+			$result2 = db_exec($stmt,array(
+				"event_id"					=> $event_id,
+				"pilot_id"					=> $GLOBALS['user']['pilot_id'],
+				"class_id"					=> $class_id,
+				"event_pilot_entry_order"	=> $event_pilot_entry_order,
+				"event_pilot_bib"			=> $event_pilot_bib,
+				"event_pilot_freq"			=> $event_pilot_freq,
+				"event_pilot_team"			=> $event_pilot_team,
+				"plane_id"					=> $plane_id,
+				"event_pilot_reg_note"		=> $event_pilot_reg_note
+			));
+			$event_pilot_id = $GLOBALS['last_insert_id'];
+			user_message("You Have Successfully Registered for this event!");
+		}
 	}
 	
 	# Lets update the pilot registration parameters now
@@ -6678,6 +6696,7 @@ function event_print_blank_summary_task() {
 
 	$event_id = intval($_REQUEST['event_id']);
 	$blank = intval($_REQUEST['blank']);
+	$use_pilots = intval($_REQUEST['use_pilots']);
 
 	$e = new Event($event_id);
 	$e->get_teams();
@@ -6722,32 +6741,66 @@ function event_print_blank_summary_task() {
 	if($blank == 1){
 		# Lets add the rounds that don't exist with the draw values for printing
 		# Step through any existing rounds and use those
-		$e->pilots = array();
-		$event_pilot_id = 10000;
-		$e->pilots[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
-		$e->pilots[$event_pilot_id]['pilot_first_name'] = "";
-
-		for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
-			if(!isset($e->rounds[$event_round_number])){
-				# Lets create the event round and enough info from the draw to print
-				#Step through the draw rounds and see if one exists for this round
-				if($e->info['event_type_code'] == 'f3k'){
-					$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+		if( $use_pilots == 0 ){
+			# Lets get an event pilot id from this event
+			foreach( $e->pilots as $event_pilot_id => $p ){
+				break;
+			}
+			$e->pilots = array();
+			$e->pilots[$event_pilot_id]['event_pilot_id'] = $event_pilot_id;
+			$e->pilots[$event_pilot_id]['pilot_first_name'] = "";
+		
+			for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
+				if(!isset($e->rounds[$event_round_number])){
+					# Lets create the event round and enough info from the draw to print
+					#Step through the draw rounds and see if one exists for this round
+					if($e->info['event_type_code'] == 'f3k'){
+						$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+					}
+					# Lets create the round info
+					$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
+					$e->rounds[$event_round_number]['event_round_status'] = 1;
+					if($e->info['event_type_code'] == 'f3k'){
+						$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$event_round_number];
+					}else{
+						$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
+					}
+					$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = '';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = '';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = '';
+					$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
 				}
-				# Lets create the round info
-				$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
-				$e->rounds[$event_round_number]['event_round_status'] = 1;
-				if($e->info['event_type_code'] == 'f3k'){
-					$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$event_round_number];
-				}else{
-					$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
+			}
+		}else{
+			for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
+				foreach( $e->pilots as $event_pilot_id => $p ){
+					# Lets create the event round and enough info from the draw to print
+					#Step through the draw rounds and see if one exists for this round
+					if($e->info['event_type_code'] == 'f3k'){
+						$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+					}
+					# Lets create the round info
+					if(!isset($e->rounds[$event_round_number])){
+						$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
+						$e->rounds[$event_round_number]['event_round_status'] = 1;
+						if($e->info['event_type_code'] == 'f3k'){
+							$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$event_round_number];
+						}else{
+							$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
+						}
+						$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
+					}
+					if(!isset($e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id])){
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = '';
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = '';
+						$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = '';
+					}
+					
 				}
-				$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
-				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
-				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = '';
-				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = '';
-				$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = '';
-				$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
 			}
 		}
 	}
@@ -6781,9 +6834,11 @@ function event_print_blank_summary_task() {
 			}
 		}
 	}
-	# Let's duplicate the pilot sop two of them get printed at a time
-	for( $x = 1; $x<=3; $x++){
-		$data['pilots'][$x] = $data['pilots'][$event_pilot_id];
+	# Let's duplicate the pilot sop two of them get printed at a time if they are blank
+	if( $blank == 1 && $use_pilots == 0 ){
+		for( $x = 1; $x<=3; $x++){
+			$data['pilots'][$x] = $data['pilots'][$event_pilot_id];
+		}
 	}
 	# Now create the pdf from the above template and save it
 	$pdf = new PDF_F3X( $orientation );

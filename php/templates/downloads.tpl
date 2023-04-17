@@ -73,6 +73,13 @@
 			<li>Update of playlist preferences to include 45 second testing time and 1m no fly queue entries</li>
 			<li>Update of serial output of color codes for F3Kmaster and Pandora for testing and nofly periods</li>
 		</ul>
+		<li>2023-01-13 : Release 1.3 of software.</li>
+		<ul>
+			<li>Update to include search and function use for F3L discipline</li>
+			<li>Added F3B tasks for manual timing</li>
+			<li>Forced space bar to be a toggle for queue play/pause</li>
+			<li>Added second serial port to be able to send board and pandora data out two different ports</li>
+		</ul>
 	</ul>
 	<br>
 	<h3>Download Links And Instructions</h3>
@@ -82,14 +89,16 @@
 			<ul>
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.0.zip">Download Link</a></li>
 				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.1.zip">Download Link</a></li>
-				<li>F3XTiming 1.2 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.2.zip">Download Link</a></li>
+				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.2.zip">Download Link</a></li>
+				<li>F3XTiming 1.3 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.3.zip">Download Link</a></li>
 			</ul>
 		<li>Windows PC (Windows 10 and above?)</li>
 			<ul>
 				<li>Windows US-en Registry File to allow English Windows Cortana Voice - <a style="color: blue;" href="/downloads/windows/windows-10-voices-add.zip">Download Link</a></li>
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.0.zip">Download Link</a></li>
 				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.1.zip">Download Link</a></li>
-				<li>F3XTiming 1.2 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.2.zip">Download Link</a></li>
+				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.2.zip">Download Link</a></li>
+				<li>F3XTiming 1.3 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.3.zip">Download Link</a></li>
 			</ul>
 	</ul>
 	<ul style="font-weight: bold;font-size: 16px;">

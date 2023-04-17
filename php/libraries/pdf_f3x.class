@@ -107,7 +107,7 @@ class PDF_F3X {
 			}
 			$cell++;
 		}
-		return $this->pdf->Output('I',$data[0]['event_name']." Pilot Recording Sheets");
+		return $this->pdf->Output('I',$data[0]['event_name']." Pilot Recording Sheets.pdf");
 	}
 	public function render_cell_f3k($x,$y,$data){
 		# Function to render a single cell of data at x and y location for F3K
@@ -1290,7 +1290,7 @@ class PDF_F3X {
 			$cell++;
 		}		
 		
-		return $this->pdf->Output( 'I', $data[0]['event_name'] . " Pilot Recording Sheets" );
+		return $this->pdf->Output( 'I', $data[0]['event_name'] . " Pilot Recording Sheets.pdf" );
 	}
 	public function render_cell_summary_f5j( $x, $y, $data ){
 		# Function to render a single cell of data at x and y location for F5J Summary

@@ -274,7 +274,7 @@
 						<td bgcolor="white">{$u.pilot_first_name|escape} {$u.pilot_last_name|escape} - {$u.pilot_city|escape}, {$u.state_code|escape} {$u.country_code|escape}</td>
 						<td width="30%" bgcolor="white">
 							{$u.user_type|escape}
-							{if $u.user_type != 'Contest Owner' && $u.user_type != 'Contest Director'}
+							{if $u.user_type != 'Contest Owner' && $u.user_type != 'Contest Director' && $u.event_user_id}
 								<a href="?action=event&function=event_user_delete&event_id={$event->info.event_id}&event_user_id={$u.event_user_id}&tab=3"><img src="/images/del.gif"></a>
 							{/if}
 						</td>

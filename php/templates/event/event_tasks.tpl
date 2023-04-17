@@ -119,6 +119,7 @@
 				
 				<input type="button" value=" Print Blank Pilot Sheets " onClick="document.print_pilot_blank_tasks.submit();" class="btn btn-primary btn-rounded">
 				<input type="button" value=" Pilot Blank Pilot Sheets (Summary) " onclick="document.print_pilot_blank_summary_tasks.submit();" class="btn btn-primary btn-rounded"> 
+				<input type="button" value=" Pilot Blank Pilot Sheets (Summary w pilot names) " onclick="document.print_pilot_blank_summary2_tasks.submit();" class="btn btn-primary btn-rounded"> 
 			</td>
 		</tr>
 		<tr>
@@ -169,6 +170,15 @@
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
 		<input type="hidden" name="use_print_header" value="1">
 		<input type="hidden" name="blank" value="1">
+		<input type="hidden" name="use_pilots" value="0">
+		</form>
+		<form name="print_pilot_blank_summary2_tasks" method="POST" target="_blank">
+		<input type="hidden" name="action" value="event">
+		<input type="hidden" name="function" value="event_print_blank_summary_task">
+		<input type="hidden" name="event_id" value="{$event->info.event_id}">
+		<input type="hidden" name="use_print_header" value="1">
+		<input type="hidden" name="blank" value="1">
+		<input type="hidden" name="use_pilots" value="1">
 		</form>
 
 	</div>
