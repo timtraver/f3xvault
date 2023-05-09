@@ -61,6 +61,9 @@ function import_verify() {
 		case 'gliderscore_f5j':
 			return import_verify_gliderscore_f5j();
 			break;
+		case 'gliderscore_f5j_app':
+			return import_verify_gliderscore_f5j_app();
+			break;
 		default:
 		case 'manual':
 			return import_verify_manual();
@@ -1603,6 +1606,287 @@ function import_verify_gliderscore_f5j(){
 	$maintpl = find_template("import/import_verify_f5j.tpl");
 	return $smarty->fetch($maintpl);
 }
+function import_verify_gliderscore_f5j_app(){
+	# Function to do the import verify for a gliderscore f5j import from the gliderscore application export
+	global $smarty;
+
+	$event = array();
+	if(isset($_FILES['import_file'])){
+		$import_file = $_FILES['import_file']['tmp_name'];
+	}
+	# If they sent it directly as content instead of an uploaded file
+	if(isset($_REQUEST['file_contents'])){
+		# Write out the file
+		# First lets base64 decode it
+		$contents = base64_decode($_REQUEST['file_contents']);
+		$name = sha1($contents);
+		$handle = fopen("/tmp/$name", 'w');
+		fwrite($handle,$contents);
+		fclose($handle);
+		$import_file = "/tmp/$name";
+	}
+	if($import_file == ''){
+		return import_view();
+	}
+	if(isset($_REQUEST['field_separator']) && $_REQUEST['field_separator'] != ''){
+		$field_separator = $_REQUEST['field_separator'];
+	}else{
+		$field_separator = ',';
+	}
+	if(isset($_REQUEST['decimal_type']) && $_REQUEST['decimal_type'] != ''){
+		$decimal_type = $_REQUEST['decimal_type'];
+	}else{
+		$decimal_type = '.';
+	}
+
+	# Lets import the first round of the file to verify the pilots
+	$lines = array();
+	$file = new SplFileObject($import_file);
+	$file->setFlags(SplFileObject::READ_CSV | SplFileObject::READ_AHEAD | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
+	$file->setCsvControl( $field_separator );
+
+	$l = 1;
+	while (!$file->eof()) {
+		$temparray = $file->fgetcsv( $field_separator );
+		if($temparray){
+			$lines[$l] = $temparray;
+		}
+		$l++;
+	}
+	$file = null;
+
+	# Lets get the event name from the first line	
+	if( preg_match( "/^(.*)\[/", $lines[1][0], $m ) ){
+		$event_name = trim( $m[1] );
+	}
+	# Lets get the location name from the first line	
+	if( preg_match( "/\[([^\d]+)\d/", $lines[1][0], $m ) ){
+		$location_name = trim( $m[1] );
+	}
+	# Lets get the date from the first line	
+	if( preg_match( "/\[[^\d]+(\d+\/\d+\/\d+)\]/", $lines[1][0], $m ) ){
+		$event_start_date = trim( $m[1] );
+	}
+
+	# Lets set the dates to a usable format
+	# Lets replace the date dashes with slashes so strtotime works
+	$event_start_date = date("Y-m-d H:i:s",strtotime($event_start_date));
+	$event_end_date = $event_start_date;
+
+	# Lets check to make sure there isn't an event with the exact name and dates, and use its id
+	$stmt = db_prep("
+		SELECT *,e.event_id
+		FROM event e
+		LEFT JOIN location l ON e.location_id = l.location_id
+		LEFT JOIN club c ON e.club_id = c.club_id
+		LEFT JOIN pilot p ON e.event_cd = p.pilot_id
+		WHERE e.event_name = :event_name
+	");
+	$result = db_exec( $stmt, array(
+		"event_name" => $event_name
+	) );
+	if( isset( $result[0] ) ){
+		$event_id = $result[0]['event_id'];
+		$e = $result[0];
+	}
+
+	# Lets check for permission by this user to edit the event if the event exists
+	if( $event_id != 0 ){
+		# Check the user access
+		if( check_event_permission( $event_id ) == 0 ){
+			user_message( "You do not have permissions to import over this existing event. You must be the original creator, or the CD, or have been given admin access to this event.", 1 );
+			return import_view();
+		}
+	}
+	
+	# Lets get the event type data
+	$event_type_code = 'f5j';
+	$stmt = db_prep("
+		SELECT *
+		FROM event_type
+		WHERE event_type_code = :event_type_code
+	");
+	$result = db_exec( $stmt ,array ( "event_type_code" => $event_type_code ) );
+	$event_type_id = $result[0]['event_type_id'];
+	$event_type_code = $result[0]['event_type_code'];
+	$event_type_name = $result[0]['event_type_name'];
+	
+	# Get classes to choose for the pilots
+	$stmt = db_prep("
+		SELECT *
+		FROM class
+		ORDER BY class_view_order
+	");
+	$result = db_exec($stmt,array());
+	foreach($result as $row){
+		$class_name = $row['class_name'];
+		$classes[$class_name] = $row;
+	}
+	$smarty->assign("classes",$classes);
+	
+	# Lets get the flight type info
+	$stmt = db_prep("
+		SELECT *
+		FROM flight_type
+		WHERE flight_type_code LIKE :flight_type_code
+	");
+	$result = db_exec( $stmt, array( "flight_type_code" => $event_type_code."%" ) );
+	foreach($result as $row){
+		$flight_type_code = $row['flight_type_code'];
+		$flight_types[$flight_type_code] = $row;
+	}
+
+
+	# Lets step through the lines to get the rounds and pilots
+	$pilots = array();
+	$round_pos = 0;
+	$group_pos = 0;
+	$reflight_pos = 0;
+	$name_pos = 0;
+	$time_pos = 0;
+	$land_pos = 0;
+	$start_pos = 0;
+	$pen_pos = 0;
+	$team_pos = 0;
+	foreach( $lines as $line_number => $line ){
+		if( preg_match( "/^Round/", $line[0] ) ){
+			# This is the header line, so lets get the positions of the columns we want
+			foreach( $line as $pos => $content ){
+				switch( $content ){
+					case "Round":
+						$round_pos = $pos;
+						break;
+					case "Group":
+						$group_pos = $pos;
+						break;
+					case "Re-Flight":
+						$reflight_pos = $pos;
+						break;
+					case "Name":
+						$name_pos = $pos;
+						break;
+					case "Team":
+						$team_pos = $pos;
+						break;
+					case "Time":
+						$time_pos = $pos;
+						break;
+					case "Lndg Points":
+						$land_pos = $pos;
+						break;
+					case "Start Height":
+						$start_pos = $pos;
+						break;
+					case "Safety Penalty":
+						$pen_pos = $pos;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		
+		if( preg_match( "/^\d/", $line[0] ) ){
+			# This is a round line, so lets take it apart
+			$round_number = $line[$round_pos];
+			$pilot_name = $line[$name_pos];
+			$pilots[$pilot_name]['pilot_name'] = trim($pilot_name);
+			$pilots[$pilot_name]['pilot_team'] = trim($line[$team_pos]);
+			if( $line[$reflight_pos] == 0 ){
+				# This is a normal group
+				$pilots[$pilot_name]['rounds'][$round_number]['group'] = $line[$group_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['time'] = $line[$time_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['land'] = $line[$land_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['height'] = $line[$start_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['penalty'] = $line[$pen_pos];
+			}else{
+				$reflight_num = $line[$reflight_pos];
+				# This is a reflight group, so lets add it to the array differently
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['group'] = $line[$group_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['time'] = $line[$time_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['land'] = $line[$land_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['height'] = $line[$start_pos];
+				$pilots[$pilot_name]['rounds'][$round_number]['reflight'][$reflight_num]['penalty'] = $line[$pen_pos];
+			}
+		}
+	}	
+	# Now lets step through the pilots and if they don't have an id, do a search for possible pilot names
+	foreach( $pilots as $key => $p ){
+		$potentials = array();
+		$found_pilots = array();
+
+		# Lets get the list of possible pilot names for this one
+		$pilot_entered = $p['pilot_name'];
+		$q = trim( urldecode( strtolower( $pilot_entered ) ) );
+		$q = '%' . $q . '%';
+		# lets get the first name and last name out of it
+		$words = preg_split( "/,\s+/", $pilot_entered, 2 );
+		$last_name = trim($words[0]);
+		$first_name = trim($words[1]);
+		# Do search
+		$stmt = db_prep("
+			SELECT *
+			FROM pilot p
+			LEFT JOIN state s ON p.state_id = s.state_id
+			LEFT JOIN country c ON p.country_id = c.country_id
+			WHERE TRIM(LOWER(p.pilot_first_name)) LIKE :term1
+				OR TRIM(LOWER(p.pilot_last_name)) LIKE :term2
+				OR TRIM(LOWER(CONCAT(p.pilot_first_name,' ',p.pilot_last_name))) LIKE :term3
+				OR TRIM(LOWER(CONCAT(p.pilot_first_name,', ',p.pilot_last_name))) LIKE :term7
+				OR TRIM(LOWER(p.pilot_first_name)) LIKE :term4
+				OR TRIM(LOWER(p.pilot_last_name)) LIKE :term5
+				OR TRIM(LOWER(CONCAT(p.pilot_last_name,' ',p.pilot_first_name))) LIKE :term6
+				OR TRIM(LOWER(CONCAT(p.pilot_last_name,', ',p.pilot_first_name))) LIKE :term8
+			ORDER BY p.pilot_first_name, p.pilot_last_name
+		");
+		$found_pilots = db_exec( $stmt,array(
+			"term1" => $first_name,
+			"term2" => $last_name,
+			"term3" => $q,
+			"term4" => $last_name,
+			"term5" => $first_name,
+			"term6" => $q,
+			"term7" => $q,
+			"term8" => $q
+		) );
+		$potentials[] = array( "pilot_id" => 0, "pilot_full_name" => 'Add As New Pilot' );
+		
+		$found = 0;
+		foreach( $found_pilots as $key2 => $fp ){
+			$fp['pilot_full_name'] = $fp['pilot_last_name'].", ".$fp['pilot_first_name'];
+			if($fp['pilot_full_name'] == $p['pilot_name']){
+				$found = 1;
+			}
+			$potentials[] = $fp;
+		}
+		$pilots[$key]['potentials'] = $potentials;
+		$pilots[$key]['found'] = $found;
+	}
+
+	$event['event_id'] = $event_id;
+	$event['field_separator'] = $field_separator;
+	$event['decimal_type'] = $decimal_type;
+	$event['event_name'] = $event_name;
+	$event['event_start_date'] = $event_start_date;
+	$event['event_end_date'] = $event_end_date;
+	$event['event_type_id'] = $event_type_id;
+	$event['event_type_name'] = $event_type_name;
+	$event['event_type_code'] = $event_type_code;
+	$event['location_id'] = $e['location_id'];
+	$event['location_name'] = $e['location_name'];
+	$event['event_cd'] = $e['event_cd'];
+	$event['cd_name'] = $e['pilot_first_name'] . " " . $e['pilot_last_name'];
+	$event['club_id'] = $e['club_id'];
+	$event['club_name'] = $e['club_name'];
+	
+	$smarty->assign("event",$event);
+	$smarty->assign("pilots",$pilots);
+	$smarty->assign("rounds",$rounds);
+	
+	$maintpl = find_template("import/import_verify_f5j.tpl");
+	return $smarty->fetch($maintpl);
+}
+
 function import_import_gliderscore_f5j() {
 	global $smarty;
 	$user = get_user_info($GLOBALS['fsession']['user_id']);
