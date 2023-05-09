@@ -113,7 +113,7 @@
 			{/foreach}
 			<td></td>
 			<td width="5%" nowrap align="right">{$e.subtotal|string_format:$event->event_calc_accuracy_string}</td>
-			<td width="5%" align="right" nowrap>{if $e.drop!=0}{$e.drop|string_format:$event->event_calc_accuracy_string}{/if}</td>
+			<td width="5%" align="right" nowrap>{$e.drop|string_format:$event->event_calc_accuracy_string}</td>
 			<td width="5%" align="center" nowrap>{if $e.penalties!=0}{$e.penalties}{/if}</td>
 			<td width="5%" nowrap align="right">{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}%</td>
 		</tr>
