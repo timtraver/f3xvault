@@ -6938,9 +6938,7 @@ function event_self_entry() {
 	if($round_number == 0){
 		foreach($event->rounds as $number => $r){
 			$ftid = $r['flight_type_id'];
-			if( $r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_minutes'] == 0 &&
-				$r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_seconds'] == 0
-			){
+			if( $r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_entered'] == 0 ){
 				# They haven't scored this round for themselves yet, so lets set it to this round
 				$round_number = $number;
 			}
