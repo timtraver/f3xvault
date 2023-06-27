@@ -145,7 +145,7 @@
 				{if $p.found==1}<img src="/images/icons/accept.png">{else}<img src="/images/icons/exclamation.png">{/if}
 				<select name="pilot_id_{$line_number|escape}">
 				{foreach $p.potentials as $pt}
-					<option value="{$pt.pilot_id|escape}" {if $pt.pilot_full_name==$p.pilot_name}SELECTED{/if}>{$pt.pilot_full_name|escape}{if $pt.pilot_id!=0} - {$pt.pilot_city|escape},{$pt.state_code|escape} {$pt.country_code|escape}{/if}</option>
+					<option value="{$pt.pilot_id|escape}" {if $pt.pilot_full_name==$p.pilot_name}SELECTED{/if}>{if $pt.pilot_id == 0}{$pt.pilot_full_name|escape}{else}{$pt.pilot_first_name|escape} {$pt.pilot_last_name|escape}{/if}{if $pt.pilot_id!=0} - {$pt.pilot_city|escape},{$pt.state_code|escape} {$pt.country_code|escape}{/if}</option>
 				{/foreach}
 				</select>
 			</td>
