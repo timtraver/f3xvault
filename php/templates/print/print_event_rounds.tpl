@@ -8,15 +8,66 @@
 	<div class="entry clearfix">                
 	{foreach $event->rounds as $r}
 		{$round_number=$r.event_round_number}
-		{if $round_number >= $round_from && $round_number <= $round_to}		
-		<h2 class="post-title entry-title">Round {$round_number} Detail Results</h2>
+		{if $round_number >= $round_from && $round_number <= $round_to}
+		
+		
+		<h2 class="post-title entry-title">Round {$round_number} Classification</h2>
+		<table cellpadding="2" cellspacing="1" class="table-striped table-event" >
+			<tr>
+				<th nowrap width="2%" align="right">Rank</th>
+				<th nowrap width="2%" align="right">Bib</th>
+				<th nowrap align="left">Pilot Name</th>
+				<th nowrap align="left">FAI</th>
+				<th nowrap align="left" nowrap>FAI License</th>
+				<th nowrap align="left" nowrap>Team</th>
+				<th nowrap align="left" nowrap>Total</th>
+				{foreach $event->flight_types as $ft}
+					<th nowrap align="center" style="text-align: right;">{$ft.flight_type_name|escape}</th>
+					<th nowrap align="center" style="text-align: right;">Pen</th>
+				{/foreach}
+			</tr>
+			{$rank = 0}
+			{foreach $event->rounds.$round_number.round_totals as $epid => $p}
+				{$rank = $rank + 1}
+				<tbody>
+				<tr style="border-top: 2px solid gray;">
+					<th nowrap width="2%" align="right">{$rank}</th>
+					<td nowrap width="2%" align="right">
+						{if $event->pilots.$epid.event_pilot_bib!='' && $event->pilots.$epid.event_pilot_bib!=0}
+						<div class="pilot_bib_number">{$event->pilots.$epid.event_pilot_bib}</div>
+						{/if}
+					</td>
+					<td nowrap align="left">
+						{if $event->pilots.$epid.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$epid.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$epid.country_name}">{/if}
+							{$event->pilots.$epid.pilot_first_name|escape} {$event->pilots.$epid.pilot_last_name|escape}
+					</td>
+					<td nowrap>{$event->pilots.$epid.pilot_fai}</td>
+					<td nowrap>{$event->pilots.$epid.pilot_fai_license}</td>
+					<td nowrap>{$event->pilots.$epid.event_pilot_team}</td>
+					<td nowrap><b>{$p.total|string_format:$event->event_calc_accuracy_string}</b></td>
+					{foreach $p.flights as $efid => $f}
+						<td nowrap align="center" style="text-align: right;">
+							{$f.score|string_format:$event->event_calc_accuracy_string}
+						</td>
+						<td nowrap align="center" style="text-align: right;">
+							{$f.penalty|escape}
+						</td>
+					{/foreach}
+				</tr>
+				</tbody>
+			{/foreach}
+		
+		</table>
+		
+		
+		<h2 class="post-title entry-title">Round {$round_number} Flight Score Detail</h2>
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		{foreach $event->flight_types as $ft}
 			{$flight_type_id=$ft.flight_type_id}
 			{if $event->info.event_type_flight_choice==1 AND $ft.flight_type_id!=$event->rounds.$round_number.flight_type_id}
 				{continue}
 			{/if}
-			{$cols=10}
+			{$cols=8}
 			{if $ft.flight_type_seconds}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 			{if $ft.flight_type_laps}{$cols=$cols+1}{/if}
@@ -31,21 +82,19 @@
 				<th width="2%" align="right"></th>
 				<th width="2%" align="right">Bib</th>
 				<th align="left">Pilot Name</th>
-				<th align="left">FAI</th>
-				<th align="left" nowrap>FAI License</th>
 				{if $ft.flight_type_group}
-					<th align="center">Group</th>
+					<th align="right" style="text-align: right;">Group</th>
 					{if preg_match("/^f3f/",$ft.flight_type_code) && $ft.flight_type_group}
-						<th align="center" style="text-align: center;">Flight Order</th>
+						<th align="right" style="text-align: right;">Flight Order</th>
 					{/if}
 				{else}
-					<th align="center" style="text-align: center;">Flight Order</th>
+					<th align="right" style="text-align: right;">Flight Order</th>
 				{/if}
 				{if $ft.flight_type_start_penalty}
-					<th align="center" style="text-align: center;">Start Penalty</th>
+					<th align="right" style="text-align: right;">Start Penalty</th>
 				{/if}
 				{if $ft.flight_type_minutes || $ft.flight_type_seconds}
-					<th align="center" style="text-align: center;" nowrap>
+					<th align="right" style="text-align: right;" nowrap>
 						Time{if $ft.flight_type_sub_flights!=0}s{/if}{if $ft.flight_type_over_penalty}/Over{/if}
 						{if $ft.flight_type_sub_flights!=0}<br>
 							<div>
@@ -59,34 +108,36 @@
 					</th>
 				{/if}
 				{if $ft.flight_type_landing}
-					<th align="center" style="text-align: right;">Landing</th>
+					<th align="right" style="text-align: right;">Landing</th>
 				{/if}
 				{if $ft.flight_type_start_height}
-					<th align="center" style="text-align: center;">Start Height</th>
+					<th align="right" style="text-align: right;">Start Height</th>
 				{/if}
 				{if $ft.flight_type_laps}
-					<th align="center" style="text-align: right;">Laps</th>
+					<th align="right" style="text-align: right;">Laps</th>
 				{/if}
-				<th align="center" style="text-align: right;">Raw Score</th>
-				<th align="center" style="text-align: right;">Normalized Score</th>
-				<th align="center" style="text-align: right;">Penalty</th>
-				<th align="center" style="text-align: right;">Flight Rank</th>
+				<th align="right" style="text-align: right;">Raw Score</th>
+				<th align="right" style="text-align: right;">Normalized Score</th>
+				<th align="right" style="text-align: right;">Penalty</th>
+				<th align="right" style="text-align: right;">Flight Rank</th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
 			{if $f@key!=$ft.flight_type_id}
 				{continue}
 			{/if}
-			{$groupcolor='#9DCFF0'}
+			{$groupcolor='white'}
 			{$oldgroup=''}
 			{foreach $f.pilots as $p}
 			{$event_pilot_id=$p@key}
+			{$top_line=0}
 			{if $oldgroup!=$p.event_pilot_round_flight_group}
 				{if $groupcolor=='white'}{$groupcolor='#9DCFF0'}{else}{$groupcolor='white'}{/if}
 				{$oldgroup=$p.event_pilot_round_flight_group|escape}
+				{$top_line=1}
 			{/if}
 			{$time_disabled=0}
-			<tr style="background-color: {$groupcolor};">
+			<tr style="background-color: {$groupcolor};{if $top_line==1}border-top: 2px solid black;{$top_line=0}{/if}">
 				<td style="background-color: lightgrey;">{$num}</td>
 				<td>
 					{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
@@ -97,18 +148,16 @@
 					{if $event->pilots.$event_pilot_id.country_code}<img src="/images/flags/countries-iso/shiny/16/{$event->pilots.$event_pilot_id.country_code|escape}.png" class="inline_flag" title="{$event->pilots.$event_pilot_id.country_name}">{/if}
 					{$event->pilots.$event_pilot_id.pilot_first_name|escape} {$event->pilots.$event_pilot_id.pilot_last_name|escape}
 				</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai}</td>
-				<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai_license}</td>
 					{if $f.flight_type_group}
-						<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
+						<td align="right" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 						{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
-							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+							<td align="right" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 						{/if}
 					{else}
-						<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+						<td align="right" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 					{/if}
 					{if $ft.flight_type_start_penalty}
-						<td align="center" nowrap>
+						<td align="right" nowrap>
 							{$p.event_pilot_round_flight_start_penalty|escape}
 						</td>
 					{/if}
@@ -137,15 +186,15 @@
 						</td>
 					{/if}
 					{if $f.flight_type_landing}
-						<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+						<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
 					{/if}
 					{if $ft.flight_type_start_height}
-						<td align="center" nowrap>
+						<td align="right" nowrap>
 							{$p.event_pilot_round_flight_start_height|escape} m
 						</td>
 					{/if}
 					{if $f.flight_type_laps}
-						<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
+						<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
 					{/if}
 					<td align="right" nowrap>
 						{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
@@ -159,7 +208,7 @@
 					{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
 					{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 					</td>
-					<td align="center" nowrap>
+					<td align="right" nowrap>
 						{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}
 					</td>
 					<td align="right" nowrap>
@@ -201,12 +250,12 @@
 					<td>{$event->pilots.$event_pilot_id.pilot_fai}</td>
 					<td nowrap>{$event->pilots.$event_pilot_id.pilot_fai_license}</td>
 						{if $f.flight_type_group}
-							<td align="center" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
+							<td align="right" nowrap>{$p.event_pilot_round_flight_group|escape}</td>					
 							{if preg_match("/^f3f/",$ft.flight_type_code) || $ft.flight_type_code=='f3b_speed' || $ft.flight_type_code=='f3b_speed_only'}
-								<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+								<td align="right" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 							{/if}
 						{else}
-							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
+							<td align="right" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 						{/if}
 						{if $f.flight_type_minutes || $f.flight_type_seconds}
 							<td align="right" nowrap>
@@ -222,15 +271,15 @@
 							</td>
 						{/if}
 						{if $f.flight_type_landing}
-							<td align="center" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+							<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
 						{/if}
 						{if $f.flight_type_start_height}
-							<td align="center" nowrap>
+							<td align="right" nowrap>
 								{$p.event_pilot_round_flight_start_height|escape} m
 							</td>
 						{/if}
 						{if $f.flight_type_laps}
-							<td align="center" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
+							<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
 						{/if}
 						<td align="right" nowrap>
 							{if $f.flight_type_code=='f3f_speed' OR $f.flight_type_code=='f3b_speed'}
@@ -244,7 +293,7 @@
 						{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
 						{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
 						</td>
-						<td align="center" nowrap>
+						<td align="right" nowrap>
 							{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}
 						</td>
 						<td align="right" nowrap>

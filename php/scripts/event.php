@@ -4424,6 +4424,20 @@ function event_print_round() {
 	$e = new Event($event_id);
 	$e->get_rounds();
 
+	# Calculate each rounds totals
+	foreach( $e->rounds as $event_round_number => $r ){
+		$totals = array();
+		foreach( $r['flights'] as $flight_type_id => $f ){
+			foreach( $f['pilots'] as $event_pilot_id => $p ){
+				$totals[$event_pilot_id]['total'] += $p['event_pilot_round_flight_score'] - $p['event_pilot_round_flight_penalty'];
+				$totals[$event_pilot_id]['flights'][$flight_type_id]['score'] = $p['event_pilot_round_flight_score'];
+				$totals[$event_pilot_id]['flights'][$flight_type_id]['penalty'] = $p['event_pilot_round_flight_penalty'];
+			}
+		}
+		$totals = array_msort( $totals, array( 'total' => SORT_DESC ) );
+		$e->rounds[$event_round_number]['round_totals'] = $totals;	
+	}
+
 	$smarty->assign("event",$e);
 	$smarty->assign("round_from",$round_from);
 	$smarty->assign("round_to",$round_to);

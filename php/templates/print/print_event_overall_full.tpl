@@ -94,7 +94,7 @@
 			{$diff_to_lead=$diff_to_lead+$diff}
 		{/if}
 		{$event_pilot_id=$e.event_pilot_id}
-		<tr>
+		<tr style="border-top: 2px solid gray;">
 			<td>{$e.overall_rank|escape}</td>
 			<td>
 				{if $event->pilots.$event_pilot_id.event_pilot_bib!='' && $event->pilots.$event_pilot_id.event_pilot_bib!=0}
