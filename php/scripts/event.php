@@ -5115,6 +5115,11 @@ function event_draw_print() {
 	$print_type = $_REQUEST['print_type'];
 	$use_print_header = $_REQUEST['use_print_header'];
 	$highlight = $_REQUEST['highlight'];
+	if( isset( $_REQUEST['show_country'] ) ){
+		$show_country = 1;
+	}else{
+		$show_country = 0;
+	}
 	$pdf = 0;
 	
 	$template = '';
@@ -5201,42 +5206,49 @@ function event_draw_print() {
 	# Lets add the rounds that don't exist with the draw values for printing
 	# Step through any existing rounds and use those
 	for($event_round_number = $print_round_from;$event_round_number <= $print_round_to;$event_round_number++){
-		if(!isset($e->rounds[$event_round_number])){
-			# Lets create the event round and enough info from the draw to print
-			foreach($e->draws as $d){
-				$event_draw_id = $d['event_draw_id'];
-				if($d['event_draw_active'] == 1){
-					#Step through the draw rounds and see if one exists for this round
-					foreach($d['flights'] as $ftid => $f){
-						if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
-							$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
-						}else{
-							$flight_type_id = $ftid;
-						}
-						foreach($f as $round_num => $v){
-							if($round_num == $event_round_number){
-								# Lets create the round info
-								$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
-								$e->rounds[$event_round_number]['event_round_status'] = 1;
-								if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
-									$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$round_num];
-								}else{
-									$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
-								}
-								$e->rounds[$event_round_number]['event_round_time_choice'] = $e->tasks[$event_round_number]['event_task_time_choice'];
-								$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
-								foreach($v['pilots'] as $event_pilot_id => $p){
-									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
-									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
-									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
-									$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = $p['event_draw_round_lane'];
-									$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
-								
-								}
+		if(isset($e->rounds[$event_round_number])){
+			# For F3B purposes, set the flight type id in the round to the selected one to print
+			foreach( $e->rounds[$event_round_number] as $r ){
+				$e->rounds[$event_round_number]['flight_type_id'] = $print_flight_type_id;
+			}
+		}
+		# Lets create the event round and enough info from the draw to print
+		foreach($e->draws as $d){
+			$event_draw_id = $d['event_draw_id'];
+			if($d['event_draw_active'] == 1){
+				#Step through the draw rounds and see if one exists for this round
+				foreach($d['flights'] as $ftid => $f){
+					if( $ftid != $print_flight_type_id ){
+						continue;
+					}
+					if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
+						$flight_type_id = $e->tasks[$event_round_number]['flight_type_id'];
+					}else{
+						$flight_type_id = $ftid;
+					}
+					foreach($f as $round_num => $v){
+						if($round_num == $event_round_number){
+							# Lets create the round info
+							$e->rounds[$event_round_number]['event_round_number'] = $event_round_number;
+							$e->rounds[$event_round_number]['event_round_status'] = 1;
+							if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
+								$e->rounds[$event_round_number]['flight_type_id'] = $draw_round_flight_types[$round_num];
+							}else{
+								$e->rounds[$event_round_number]['flight_type_id'] = $flight_type_id;
+							}
+							$e->rounds[$event_round_number]['event_round_time_choice'] = $e->tasks[$event_round_number]['event_task_time_choice'];
+							$e->rounds[$event_round_number]['flights'][$flight_type_id] = $e->flight_types[$flight_type_id];
+							foreach($v['pilots'] as $event_pilot_id => $p){
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['flight_type_id'] = $flight_type_id;
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'] = $p['event_draw_round_group'];
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'] = $p['event_draw_round_order'];
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_lane'] = $p['event_draw_round_lane'];
+								$e->rounds[$event_round_number]['flights'][$flight_type_id]['event_round_flight_score'] = 1;
+							
 							}
 						}
-					}	
-				}
+					}
+				}	
 			}
 		}
 	}
@@ -5246,6 +5258,7 @@ function event_draw_print() {
 	$smarty->assign("flight_type_id",$print_flight_type_id);
 	$smarty->assign("print_type",$print_type);
 	$smarty->assign("highlight",$highlight);
+	$smarty->assign("show_country",$show_country);
 	$smarty->assign("use_print_header",$use_print_header);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("function",$_REQUEST['function']);
@@ -5352,6 +5365,11 @@ function event_draw_view() {
 	$print_type = $_REQUEST['print_type'];
 	$use_print_header = $_REQUEST['use_print_header'];
 	$highlight = $_REQUEST['highlight'];
+	if( isset( $_REQUEST['show_country'] ) ){
+		$show_country = 1;
+	}else{
+		$show_country = 0;
+	}
 
 	$template = "print/print_draw_matrix.tpl";
 	$title = "Draw Matrix";
@@ -5434,6 +5452,7 @@ function event_draw_view() {
 
 	$smarty->assign("print_type",$print_type);
 	$smarty->assign("highlight",$highlight);
+	$smarty->assign("show_country",$show_country);
 	$smarty->assign("use_print_header",$use_print_header);
 	$smarty->assign("event_draw_id",$event_draw_id);
 	$smarty->assign("function",$_REQUEST['function']);

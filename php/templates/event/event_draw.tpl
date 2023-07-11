@@ -20,7 +20,7 @@
 		<input type="hidden" name="function" value="event_draw_edit">
 		<input type="hidden" name="event_draw_id" value="0">
 		<input type="hidden" name="event_id" value="{$event->info.event_id}">
-		<input type="hidden" name="flight_type_id" value="0">
+		<input type="hidden" name="flight_type_id" value="{$flight_type_id}">
 		<table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-event">
 		<tr>
 			<th width="10%" nowrap>Flight Type</th>
