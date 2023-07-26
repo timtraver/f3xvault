@@ -593,6 +593,7 @@ $(function() {ldelim}
 				document.main.reflight_flight_type_id.value=document.reflight.flight_type_id.value;
 				document.main.reflight_group.value=document.reflight.group.value;
 				document.main.reflight_event_pilot_id.value=document.reflight.event_pilot_id.value;
+				$(this).dialog('close');
 				document.main.submit();
 			},
 			Cancel: function() {
@@ -627,7 +628,7 @@ $(function() {ldelim}
 			document.main.reflight_flight_type_id.value=document.reflight.flight_type_id.value;
 			document.main.reflight_group.value=document.reflight.group.value;
 			document.main.reflight_event_pilot_id.value=document.reflight.event_pilot_id.value;
-			document.main.submit();
+			//document.main.submit();
 		},
    		change: function( event, ui ) {
    			var id=document.getElementById('pilot_name');
