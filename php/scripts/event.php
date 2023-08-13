@@ -4756,6 +4756,60 @@ function event_draw_save(){
 	if($event_draw_changed == 1){
 		# Lets save the main draw parameters
 		if($event_draw_id == 0){
+			# Let us determine if there are tasks already selected, and if not, create the tasks for those events that need tasks
+			# Step through each round and create the tasks if they don't exist
+			if( $e->info['event_type_flight_choice'] == 1 || $e->info['event_type_time_choice'] == 1 ){
+				# This event type has rounds where there are time choices
+				for( $x = $event_draw_round_from; $x <= $event_draw_round_to ; $x++ ){
+					$stmt = db_prep( "
+						SELECT *
+						FROM event_task
+						WHERE event_id = :event_id
+							AND event_task_round = :round
+							AND event_task_status = 1
+					" );
+					$result = db_exec( $stmt, array(
+						"event_id" => $event_id,
+						"round" => $x
+					) );
+					if( isset( $result[0] ) ){
+						continue;
+					}else{
+						# Let us create a round task for this type
+						switch( $e->info['event_type_code'] ){
+							case "f3j":
+							case "f5j":
+							case "td":
+								$time_choice = 10;
+								break;
+							case "f3l":
+								$time_choice = 6;
+								break;
+							default:
+								$time_choice = 0;
+								break;
+						}
+						$stmt = db_prep( "
+							INSERT INTO event_task
+							SET event_id = :event_id,
+								event_task_round = :round,
+								event_task_round_type = 'prelim',
+								flight_type_id = :flight_type_id,
+								event_task_time_choice = :time_choice,
+								event_task_score_second = 1,
+								event_task_status = 1
+						" );
+						$result = db_exec( $stmt, array(
+							"event_id" => $event_id,
+							"round" => $x,
+							"flight_type_id" => $flight_type_id,
+							"time_choice" => $time_choice
+						) );
+					}
+				}
+				# Reload the tasks in the event object
+				$e->get_tasks();
+			}
 			$stmt = db_prep("
 				INSERT INTO event_draw
 				SET event_id = :event_id,
