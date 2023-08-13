@@ -733,7 +733,10 @@ function event_save() {
 	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
 		$event_reg_teams = 1;
 	}
-
+	if( $event_id == 0 && $event_type_id == 11 ){
+		# For F3L events default there to be teams choices
+		$event_reg_teams = 1;
+	}
 	# Get the checkboxes for each class type
 	$classes = array();
 	foreach($_REQUEST as $key => $value){
