@@ -5235,7 +5235,7 @@ function event_draw_print() {
 			if($d['event_draw_active'] == 1){
 				#Step through the draw rounds and see if one exists for this round
 				foreach($d['flights'] as $ftid => $f){
-					if( $ftid != $print_flight_type_id ){
+					if( $e->info['event_type_code'] == 'f3b' && $ftid != $print_flight_type_id ){
 						continue;
 					}
 					if($e->info['event_type_code'] == 'f3k' || $e->info['event_type_code'] == 'gps'){
