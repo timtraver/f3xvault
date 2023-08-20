@@ -73,6 +73,8 @@
 				<input type="radio" name="event_draw_group_name" value="numeric"{if $draw->draw.event_draw_group_name == 'numeric'} CHECKED{/if}> Use Numeric characters for groups ( 1,2,3, etc... )
 			</td>
 		</tr>
+		
+		{if $event->info.event_type_code != 'f3l'}
 		<tr>
 			<th nowrap>Lane Naming</th>
 			<td>
@@ -80,6 +82,8 @@
 				<input type="radio" name="event_draw_lane_name" value="alpha"{if $draw->draw.event_draw_lane_name == 'alpha'} CHECKED{/if}> Use Alpha characters for lanes ( A,B,C, etc... )<br>
 			</td>
 		</tr>
+		{/if}
+		
 		{if $event->teams|count > 0}
 			<tr>
 				<th nowrap>Team Protection</th>
@@ -212,12 +216,13 @@
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'
-						|| $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f5j_duration'
 					}
 						<td>Lane</td>
 					{/if}
-					
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration' }
+						<td>Team</td>
+					{/if}
 				</tr>
 				{$oldgroup='1000'}
 				{$bottom=0}
@@ -261,10 +266,14 @@
 					{if $event->flight_types.$flight_type_id.flight_type_code=='f3b_duration' 
 						|| $event->flight_types.$flight_type_id.flight_type_code=='td_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3b_distance'
-						|| $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration'
 						|| $event->flight_types.$flight_type_id.flight_type_code=='f3j_duration'}
 						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
 							<input type="text" size="1" name="draw_lane_{$r.event_round_number}_{$event_pilot_id}" value="{$p.event_pilot_round_flight_lane}">
+						</td>
+					{/if}
+					{if $event->flight_types.$flight_type_id.flight_type_code=='f3l_duration'}
+						<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>
+						{$event->pilots.$event_pilot_id.event_pilot_team|escape}
 						</td>
 					{/if}
 					</tr>
