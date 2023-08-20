@@ -5345,6 +5345,7 @@ function event_draw_print() {
 			foreach( $e->pilots as $event_pilot_id => $p ){
 				$data['pilots'][ $event_pilot_id ] = $p;
 				$data['pilots'][ $event_pilot_id ]['event'] = $e->info;
+				$data['pilots'][ $event_pilot_id ]['team'] = $p['event_pilot_team'];
 				foreach( $e->rounds as $event_round_number => $r ){
 					if($event_round_number<$print_round_from || $event_round_number>$print_round_to){
 						continue;
@@ -5398,6 +5399,7 @@ function event_draw_print() {
 						"event_pilot_id"=> $event_pilot_id,
 						"event_name"	=> $e->info['event_name'],
 						"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
+						"team"			=> $e->pilots[$event_pilot_id]['event_pilot_team'],
 						"round"			=> $event_round_number,
 						"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
 						"order"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_order'],
@@ -6767,6 +6769,7 @@ function event_print_blank_task() {
 				"event_id"		=> $e->info['event_id'],
 				"event_name"	=> $e->info['event_name'],
 				"pilot"			=> $p['pilot_first_name'].' '.$p['pilot_last_name'],
+				"team"			=> $e->pilots[$event_pilot_id]['event_pilot_team'],
 				"round"			=> $event_round_number,
 				"task"			=> $r['flights'][$flight_type_id]['flight_type_name'],
 				"group"			=> $r['flights'][$flight_type_id]['pilots'][$event_pilot_id]['event_pilot_round_flight_group'],
