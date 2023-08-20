@@ -277,6 +277,7 @@ class Event {
 			"state_name" => $pilot['state_name'],
 			"state_code" => $pilot['state_code'],
 			"country_code" => $pilot['country_code'],
+			"country_code_ioc" => $pilot['country_code_ioc'],
 			"type" => 'event_owner'
 		);
 		# Now lets add the CD, cause he has access too
@@ -289,6 +290,7 @@ class Event {
 			"state_name" => $this->info['state_name'],
 			"state_code" => $this->info['state_code'],
 			"country_code" => $this->info['country_code'],
+			"country_code_ioc" => $this->info['country_code_ioc'],
 			"type" => 'cd'
 		);
 		foreach( $users as $u ){
@@ -301,6 +303,7 @@ class Event {
 				"state_name" => $u['state_name'],
 				"state_code" => $u['state_code'],
 				"country_code" => $u['country_code'],
+				"country_code_ioc" => $u['country_code_ioc'],
 				"type" => 'admin'
 			);
 		}
@@ -1616,6 +1619,7 @@ class Event {
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_first_name']	= $this->pilots[$event_pilot_id]['pilot_first_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['pilot_last_name']	= $this->pilots[$event_pilot_id]['pilot_last_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_code']		= $this->pilots[$event_pilot_id]['country_code'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_code_ioc']	= $this->pilots[$event_pilot_id]['country_code_ioc'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['country_name']		= $this->pilots[$event_pilot_id]['country_name'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_code']		= $this->pilots[$event_pilot_id]['state_code'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['state_name']		= $this->pilots[$event_pilot_id]['state_name'];
@@ -1665,6 +1669,7 @@ class Event {
 						$subtotals[$event_pilot_id]['pilot_first_name']	= $this->pilots[$event_pilot_id]['pilot_first_name'];
 						$subtotals[$event_pilot_id]['pilot_last_name']	= $this->pilots[$event_pilot_id]['pilot_last_name'];
 						$subtotals[$event_pilot_id]['country_code']		= $this->pilots[$event_pilot_id]['country_code'];
+						$subtotals[$event_pilot_id]['country_code_ioc']	= $this->pilots[$event_pilot_id]['country_code_ioc'];
 						$subtotals[$event_pilot_id]['country_name']		= $this->pilots[$event_pilot_id]['country_name'];
 						$subtotals[$event_pilot_id]['state_code']		= $this->pilots[$event_pilot_id]['state_code'];
 						$subtotals[$event_pilot_id]['state_name']		= $this->pilots[$event_pilot_id]['state_name'];
