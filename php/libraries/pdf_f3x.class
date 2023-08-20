@@ -80,7 +80,7 @@ class PDF_F3X {
 					$this->render_cell_f5j($x,$y,$d);
 					break;
 				case 'f3l':
-					$this->render_cell_td($x,$y,$d);
+					$this->render_cell_f3l($x,$y,$d);
 					break;
 				case 'f3b':
 					$this->render_cell_f3b($x,$y,$d);
@@ -983,6 +983,171 @@ class PDF_F3X {
 		
 		return;
 	}
+	public function render_cell_f3l($x,$y,$data){
+		# Function to render a single cell of data at x and y location for F3L
+		# Lets set the XY for the cell
+		$current_x = $x;
+		$current_y = $y;
+		$this->pdf->SetXY($x,$y);
+		
+		# Outline of the cell
+		$this->pdf->Cell($this->cell_width,$this->cell_height,'',1,0,'C',FALSE);
+		
+		# Event Name header
+		$current_x += $this->padding;
+		$current_y += $this->padding;
+		$inner_cell_width = $this->cell_width - (2*$this->padding);
+		$this->pdf->SetFontSize(8);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($inner_cell_width - 23,7,iconv("UTF-8", "ISO-8859-1", $data['event_name']),0,0,'L',TRUE);
+		
+		# QR Code
+		# First lets build the qr code
+		$url = "f3x.link/se.php?p=" . $data['event_pilot_id'] . "&r=" . $data['round'];
+		include_library( "phpqrcode/qrlib.php" );
+		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . "_" . $data['round'] . '.png', QR_ECLEVEL_L, 2, 2 );
+		$current_x += $inner_cell_width - 22;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] ."_" . $data['round'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}_{$data['round']}.png");
+		$current_y += 8;
+		
+		# Round Header
+		$current_x = $x + $this->padding;
+		$this->pdf->SetXY($x + $this->padding,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetFontSize(20);
+		$this->pdf->Cell($inner_cell_width - 23,13,"Round {$data['round']}",0,0,'C',TRUE);
+		$current_y += 14;
+		
+		# Pilot Name and Group
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(10,8,'Pilot',0,0,'C',TRUE);
+		$current_x += 11;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$name_width = $inner_cell_width - 11 - 11 - 12;
+		$this->pdf->Cell($name_width,8,iconv("UTF-8", "ISO-8859-1", $data['pilot']),1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		
+		$current_x = $x + $this->padding + $inner_cell_width - 11 - 11;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(12,8,'Group',0,0,'C',TRUE);
+		
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetFontSize(18);
+		$this->pdf->Cell(9,8,$data['group'],1,0,'C',TRUE);
+		
+		$current_x = $x + $this->padding;
+		$current_y += 9;
+		
+		# Print the Target Time and Lane line
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(10,8,'Team',0,0,'C',TRUE);
+		$current_x += 11;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$name_width = $inner_cell_width - 11 - 11 - 12;
+		$this->pdf->Cell($name_width,8,$data['team'],1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		
+		$current_x = $x + $this->padding;
+		$current_y += 9;
+		
+		# Task Description
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($inner_cell_width,12,$data['task'],0,0,'C',TRUE);
+		
+		$current_x = $x + $this->padding;
+		$current_y += 13;
+		
+		# Flight Time lines
+		$current_x += 26;
+		$this->pdf->SetFontSize(8);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(15,4,'Min',0,0,'C',TRUE);
+		$current_x += 19;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(30,4,'Sec',0,0,'C',TRUE);
+	
+		$current_y += 5;
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell(25,10,'Flight Time',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->Cell(15,10,'',1,0,'L',TRUE);
+		$this->pdf->SetFillColor(211,211,211);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetFontSize(14);
+		$this->pdf->Cell(2,10,':',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell(30,10,'',1,0,'C',TRUE);
+	
+		# Lets do the landing and penalty line		
+		$current_x = $x + $this->padding;
+		$current_y += 11;
+	
+		# Lets add a space
+		$current_y += 3;
+		
+		# Lets make quarter cells
+		$cell_width = ($inner_cell_width - (4*$this->padding)) / 4;
+		
+		$this->pdf->SetFontSize(10);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Landing',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Penalty',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		
+		# Signatures
+		$current_y += 11;
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Pilot Sig',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'Timer Sig',0,0,'C',TRUE);
+		$current_x = $this->pdf->GetX() + 1;
+		$this->pdf->SetFillColor(255,255,255);
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->Cell($cell_width,10,'',1,0,'C',TRUE);
+		
+		return;
+	}
 	public function render_cell_gps($x,$y,$data){
 		# Function to render a single cell of data at x and y location for F3J
 		# Lets set the XY for the cell
@@ -1231,7 +1396,7 @@ class PDF_F3X {
 				$this->page_rows = 2;
 			}
 		}else{
-			if( $rounds > 10 ){
+			if( $rounds > 9 ){
 				$this->page_rows = 1;
 			}else{
 				$this->page_rows = 2;
@@ -1267,11 +1432,13 @@ class PDF_F3X {
 					break;
 				case 'f3j':
 				case 'td':
-				case 'f3l':
 					$this->render_cell_summary_f3j( $x, $y, $d );
 					break;
 				case 'f3k':
 					$this->render_cell_summary_f3k( $x, $y, $d );
+					break;
+				case 'f3l':
+					$this->render_cell_summary_f3l( $x, $y, $d );
 					break;
 			}
 			if($cell % $this->page_cols == 0 ){
@@ -1635,6 +1802,121 @@ class PDF_F3X {
 			$this->pdf->SetXY( $current_x, $current_y );
 			$this->pdf->Cell( 15, 8, "", 1, 0, 'L', TRUE );
 			$current_x += 15;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 15, 8, "", 1, 0, 'L', TRUE );
+			$current_x += 15;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 20, 8, "", 1, 0, 'L', TRUE );
+			$current_y += 8;
+		}
+		return;
+	}
+	public function render_cell_summary_f3l( $x, $y, $data ){
+		# Function to render a single cell of data at x and y location for F3l Summary
+		# Lets set the XY for the cell
+		$current_x = $x;
+		$current_y = $y;
+		$this->pdf->SetXY( $x, $y );
+		
+		# Outline of the cell
+		$this->pdf->Cell($this->cell_width,$this->cell_height,'',1,0,'C',FALSE);
+		
+		# Event Name header
+		$current_x += $this->padding;
+		$current_y += $this->padding;
+		$inner_cell_width = $this->cell_width - ( 2 * $this->padding );
+		$this->pdf->SetFontSize( 10 );
+		$this->pdf->SetFillColor( 211, 211, 211 );
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Image( $GLOBALS['base'] . '/htdocs/img/logo.png' , $current_x, $current_y, 6, 6, 'PNG');
+		$current_x += 7;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( $inner_cell_width - 30, 7, 'F3XVault : ' . iconv("UTF-8", "ISO-8859-1", $data['event']['event_name']), 0, 0, 'L', TRUE );
+		
+		# QR Code
+		# First lets build the qr code
+		$url = "f3x.link/se.php?p=" . $data['event_pilot_id'];
+		include_library( "phpqrcode/qrlib.php" );
+		QRcode::png( $url , "/tmp/" . $data['event_pilot_id'] . '.png', QR_ECLEVEL_L, 2, 2 );
+		$current_x += $inner_cell_width - 29;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Image( "/tmp/" . $data['event_pilot_id'] . '.png' , NULL, NULL, 22, 22, 'PNG');
+		system("rm /tmp/{$data['event_pilot_id']}.png");
+		$current_y += 7;
+	
+		# Pilot Name
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize( 14 );
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell( 15,7,'Pilot',0,0,'C',TRUE);
+		$current_x += 16;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->SetFillColor( 255, 255, 255 );
+		$name_width = $inner_cell_width - 37;
+		$this->pdf->Cell( $name_width, 7, ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_first_name']) . ' ' . iconv("UTF-8", "ISO-8859-1", $data['pilot_last_name']), 0, 0, 'L', TRUE );
+		$this->pdf->SetFillColor( 211, 211, 211 );
+		$current_y += 7;
+	
+		# Pilot Team
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize( 14 );
+		$this->pdf->SetXY($current_x,$current_y);
+		$this->pdf->SetFillColor(211,211,211);
+		$this->pdf->Cell( 15,7,'Team',0,0,'C',TRUE);
+		$current_x += 16;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->SetFillColor( 255, 255, 255 );
+		$name_width = $inner_cell_width - 37;
+		$this->pdf->Cell( $name_width, 7, ' ' . iconv("UTF-8", "ISO-8859-1", $data['team']) , 0, 0, 'L', TRUE );
+		$this->pdf->SetFillColor( 211, 211, 211 );
+		$current_y += 8;
+	
+		# Header line for rounds
+		$current_x = $x + $this->padding;
+		$this->pdf->SetFontSize( 8 );
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->SetFillColor( 211, 211, 211 );
+		$this->pdf->Cell( 9, 4, "Rd", 0, 0, 'C', TRUE );
+		$current_x += 9;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 9, 4, "Grp", 0, 0, 'C', TRUE );
+		$current_x += 9;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 9, 4, "Task", 0, 0, 'C', TRUE );
+		$current_x += 9;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 36, 4, "Time", 0, 0, 'L', TRUE );
+		$current_x += 36;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 30, 4, "Land", 0, 0, 'L', TRUE );
+		$current_x += 30;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 15, 4, "Pen", 0, 0, 'L', TRUE );
+		$current_x += 15;
+		$this->pdf->SetXY( $current_x, $current_y );
+		$this->pdf->Cell( 20, 4, "Sig", 0, 0, 'L', TRUE );
+		$current_y += 4;
+		
+		# Now we step through the rounds and make the lines for them to fill out
+		foreach( $data['rounds'] as $round_number => $r ){
+			$current_x = $x + $this->padding;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->SetFillColor( 255, 255, 255 );
+			$this->pdf->Cell( 9, 8, $round_number, 1, 0, 'C', TRUE );
+			$current_x += 9;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 9, 8, $r['event_pilot_round_flight_group'], 1, 0, 'C', TRUE );
+			$current_x += 9;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 9, 8, $r['event_round_time_choice'] . "m", 1, 0, 'C', TRUE );
+			$current_x += 9;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 36, 8, '', 1, 0, 'L', TRUE );
+			$current_x += 36;
+			$this->pdf->SetXY( $current_x, $current_y );
+			$this->pdf->Cell( 30, 8, "", 1, 0, 'L', TRUE );
+			$current_x += 30;
 			$this->pdf->SetXY( $current_x, $current_y );
 			$this->pdf->Cell( 15, 8, "", 1, 0, 'L', TRUE );
 			$current_x += 15;
