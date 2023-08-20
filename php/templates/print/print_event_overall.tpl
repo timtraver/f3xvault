@@ -45,9 +45,9 @@
 			<th width="1%" style="text-align:center;" nowrap>#</th>
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:left;" nowrap>Pilot Name</th>
+			<th width="1%" style="text-align:left;" nowrap>Country</th>
 			<th width="1%" style="text-align:left;" nowrap>FAI ID</th>
 			<th width="1%" style="text-align:left;" nowrap>FAI License</th>
-			<th width="1%" style="text-align:left;" nowrap>Country</th>
 			<th style="text-align:center;" nowrap>Total Points</th>
 			<th style="text-align:center;" nowrap>Difference</th>
 			<th style="text-align:center;width:2px;" width="2" nowrap></th>
@@ -76,9 +76,12 @@
 			</td>
 			<td align="left" nowrap>
 				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
-				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
-				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
 				{$full_name}
+			</td>
+			<td width="5%" nowrap align="left">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.country_code_ioc|escape}</b>
+				</div>
 			</td>
 			<td width="5%" nowrap align="left">
 				<div style="position:relative;">
@@ -88,11 +91,6 @@
 			<td width="5%" nowrap align="left">
 				<div style="position:relative;">
 					<b>{$event->pilots.$event_pilot_id.pilot_fai_license|escape}</b>
-				</div>
-			</td>
-			<td width="5%" nowrap align="left">
-				<div style="position:relative;">
-					<b>{$event->pilots.$event_pilot_id.country_name|escape}</b>
 				</div>
 			</td>
 			<td width="5%" nowrap align="right" style="border: 2px solid">

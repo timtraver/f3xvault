@@ -50,12 +50,13 @@
 			<th colspan="{$numrounds+1}" align="center" nowrap>
 				Completed Rounds ({if $event->totals.round_drops==0}No{else}{$event->totals.round_drops}{/if} Drop{if $event->totals.round_drops!=1}s{/if} In Effect)
 			</th>
-			<th style="text-align: center;" nowrap colspan="4"></th>
+			<th style="text-align: center;" nowrap colspan="5"></th>
 		</tr>
 		<tr>
 			<th width="1%" style="text-align:center;" nowrap>#</th>
 			<th width="1%" style="text-align:center;" nowrap>Bib</th>
 			<th width="20%" style="text-align:center;" nowrap>Pilot Name</th>
+			<th width="1%" style="text-align:center;" nowrap>Country</th>
 			<th width="1%" style="text-align:center;" nowrap>FAI</th>
 			<th width="1%" style="text-align:center;" nowrap>FAI License</th>
 			<th style="text-align:center;" nowrap>Total</th>
@@ -104,8 +105,11 @@
 			<td align="right" nowrap>
 				{$full_name=$e.pilot_first_name|cat:" "|cat:$e.pilot_last_name}
 				{$full_name}
-				{if $e.country_code}<img src="/images/flags/countries-iso/shiny/16/{$e.country_code|escape}.png" class="inline_flag" title="{$e.country_name}">{/if}
-				{if $e.state_name && $e.country_code=="US"}<img src="/images/flags/states/16/{$e.state_name|replace:' ':'-'}-Flag-16.png" class="inline_flag" title="{$e.state_name}">{/if}
+			</td>
+			<td width="5%" nowrap align="right">
+				<div style="position:relative;">
+					<b>{$event->pilots.$event_pilot_id.country_code_ioc|escape}</b>
+				</div>
 			</td>
 			<td width="5%" nowrap align="right">
 				<div style="position:relative;">
