@@ -124,7 +124,7 @@
 							{$event->pilots.$event_pilot_id.pilot_first_name} {$event->pilots.$event_pilot_id.pilot_last_name}
 						</td>
 						{if $show_country==1}
-							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.country_code}
+							<td align="center" bgcolor="{if $highlighted}{$highlight_color}{else}{$bgcolor}{/if}" {if $bottom}style="border-top: 2px solid black;"{/if}>{$event->pilots.$event_pilot_id.country_code_ioc|escape}
 							</td>
 						{/if}
 						{if $event->flight_types.$ftid.flight_type_code=='f3b_duration' 
