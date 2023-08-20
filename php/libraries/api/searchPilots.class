@@ -33,6 +33,7 @@ class searchPilots {
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_first_name",	"description" => "Pilot First Name" ),
 			array( "level" => 2,	"type" => "string",		"name" => "pilot_last_name",	"description" => "Pilot Last Name" ),
 			array( "level" => 2,	"type" => "string",		"name" => "country_code",		"description" => "Pilot Country Code" ),
+			array( "level" => 2,	"type" => "string",		"name" => "country_code_ioc",	"description" => "Pilot Country Code (Olympic)" ),
 			array( "level" => 2,	"type" => "string",		"name" => "location",			"description" => "Pilot Location String" ),
 		);
 		$this->api->function_output_description = 
@@ -115,6 +116,7 @@ class searchPilots {
 				"pilot_first_name" => $r['pilot_first_name'],
 				"pilot_last_name" => $r['pilot_last_name'],
 				"country_code" => $r['country_code'],
+				"country_code_ioc" => $r['country_code_ioc'],
 				"location"	=> $r['pilot_city'] . " {$r['state_code']} - {$r['country_code']}",
 			);
 		}
