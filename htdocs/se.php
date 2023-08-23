@@ -16,7 +16,7 @@ include_library('functions.inc');
 $server = $_SERVER['HTTP_HOST'];
 if( $server != 'www.f3xvault.com' ){
 	# Redirect to this script again with the right domain
-	$location = "http://www.f3xvault.com/se.php?p=" . $_REQUEST['p'];
+	$location = "https://www.f3xvault.com/se.php?p=" . $_REQUEST['p'];
 	if( isset( $_REQUEST['r'] ) ){
 		$location .= "&r=" . $_REQUEST['r'];
 	}
@@ -51,7 +51,7 @@ if( $user['user_id'] != 0 ){
 	save_fsession();
 }
 
-$location = "http://www.f3xvault.com/?action=event&function=event_self_entry&event_id=" . $user['event_id'] . "&event_pilot_id=" . $_REQUEST['p'];
+$location = "https://www.f3xvault.com/?action=event&function=event_self_entry&event_id=" . $user['event_id'] . "&event_pilot_id=" . $_REQUEST['p'];
 if( isset( $_REQUEST['r'] ) ){
 	$location .= "&round_number=" . $_REQUEST['r'];
 }
