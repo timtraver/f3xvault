@@ -1642,6 +1642,7 @@ class Event {
 						}
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']				+= $sub;
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']				= $p['event_pilot_round_flight_dropped'];
+						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_entered']				= $p['event_pilot_round_flight_entered'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']	= $p['event_pilot_round_flight_reflight_dropped'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']					= $p['event_pilot_round_flight_dns'];
 						$flyoff_subtotals[$flyoff_number][$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']					= $p['event_pilot_round_flight_dnf'];
@@ -1697,6 +1698,7 @@ class Event {
 						}
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_total_score']				+= $sub;
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dropped']			= $p['event_pilot_round_flight_dropped'];
+						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_entered']			= $p['event_pilot_round_flight_entered'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_reflight_dropped']	= $p['event_pilot_round_flight_reflight_dropped'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dns']				= $p['event_pilot_round_flight_dns'];
 						$subtotals[$event_pilot_id]['rounds'][$round_number]['flights'][$flight_type_id]['event_pilot_round_flight_dnf']				= $p['event_pilot_round_flight_dnf'];
