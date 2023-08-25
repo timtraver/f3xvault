@@ -110,6 +110,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_entered",				"description" => "Round Flight Self Score Entered Status (0 = no, 1 = yes)" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
 
 			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
@@ -133,6 +134,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_entered",				"description" => "Round Flight Self Score Entered Status (0 = no, 1 = yes)" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
 
 			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
@@ -177,6 +179,7 @@ class getEventInfoFull {
 			array( "level" => 5,	"type" => "float",		"name" => "flight_score",				"description" => "Round Flight Score" ),
 			array( "level" => 5,	"type" => "integer",	"name" => "flight_penalty",				"description" => "Round Flight Penalty" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "flight_dropped",				"description" => "Round Flight Dropped Status (0 = no, 1 = yes)" ),
+			array( "level" => 5,	"type" => "boolean",	"name" => "flight_entered",				"description" => "Round Flight Self Score Entered Status (0 = no, 1 = yes)" ),
 			array( "level" => 5,	"type" => "boolean",	"name" => "score_status",				"description" => "Round Flight Score Status (0 = not scored, 1 = scored)" ),
 
 			array( "level" => 5,	"type" => "ARRAY",		"name" => "flight_subs",				"description" => "Round Flight Sub Flights List" ),
@@ -286,7 +289,8 @@ XML or JSON Object Hierarchy :
                         <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>988</flight_score>
                         <flight_penalty>0</flight_penalty>
-                        <flight_dropped>0</flight_dropped>
+						<flight_dropped>0</flight_dropped>
+						<flight_entered>0</flight_entered>
                         <score_status>1</score_status>
                         <flight_subs>
                             <sub_num>1</sub_num>
@@ -324,7 +328,8 @@ XML or JSON Object Hierarchy :
                         <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>988</flight_score>
                         <flight_penalty>0</flight_penalty>
-                        <flight_dropped>0</flight_dropped>
+						<flight_dropped>0</flight_dropped>
+						<flight_entered>0</flight_entered>
                         <score_status>1</score_status>
                         <flight_subs>
                             <sub_num>1</sub_num>
@@ -386,7 +391,8 @@ XML or JSON Object Hierarchy :
                         <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>970</flight_score>
                         <flight_penalty>0</flight_penalty>
-                        <flight_dropped>0</flight_dropped>
+						<flight_dropped>0</flight_dropped>
+						<flight_entered>0</flight_entered>
                         <score_status>1</score_status>
                         <flight_subs>
                             <sub_num>1</sub_num>
@@ -424,7 +430,8 @@ XML or JSON Object Hierarchy :
                         <flight_start_penalty>0</flight_start_penalty>
                         <flight_score>970</flight_score>
                         <flight_penalty>0</flight_penalty>
-                        <flight_dropped>0</flight_dropped>
+						<flight_dropped>0</flight_dropped>
+						<flight_entered>0</flight_entered>
                         <score_status>1</score_status>
                         <flight_subs>
                             <sub_num>1</sub_num>
@@ -712,6 +719,7 @@ XML or JSON Object Hierarchy :
 								"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
 								"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
 								"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+								"flight_entered" => $f['event_pilot_round_flight_entered'] ? 1 : 0,
 								"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
 								"flight_subs" => $subs
 							);
@@ -758,6 +766,7 @@ XML or JSON Object Hierarchy :
 										"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
 										"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
 										"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+										"flight_entered" => $f['event_pilot_round_flight_entered'] ? 1 : 0,
 										"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
 										"flight_subs" => $subs
 									);
@@ -849,6 +858,7 @@ XML or JSON Object Hierarchy :
 									"flight_score" => floatval( $f['event_pilot_round_flight_score'] ),
 									"flight_penalty" => intval( $f['event_pilot_round_flight_penalty'] ),
 									"flight_dropped" => $f['event_pilot_round_flight_dropped'] ? 1 : 0,
+									"flight_entered" => $f['event_pilot_round_flight_entered'] ? 1 : 0,
 									"score_status" => $f['event_pilot_round_flight_status'] ? 1 : 0,
 									"flight_subs" => $subs
 								);
