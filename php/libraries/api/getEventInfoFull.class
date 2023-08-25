@@ -495,7 +495,6 @@ XML or JSON Object Hierarchy :
 					}
 				}
 				foreach($f['pilots'] as $event_pilot_id => $p){
-					if( $p['event_pilot_draw_status'] == 0 ){ continue; }
 					$p['flight_type_code'] = $f['flight_type_code'];
 					$p['flight_type_name'] = $f['flight_type_name'];
 					$this->rounds[$event_pilot_id][$round_number][$flight_type_id] = $p;
