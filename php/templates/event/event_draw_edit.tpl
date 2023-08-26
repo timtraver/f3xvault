@@ -78,8 +78,8 @@
 		<tr>
 			<th nowrap>Lane Naming</th>
 			<td>
-				<input type="radio" name="event_draw_lane_name" value="numeric"{if $draw->draw.event_draw_lane_name == 'numeric' || $draw->draw.event_draw_lane_name == NULL} CHECKED{/if}> Use Numeric characters for lanes ( 1,2,3, etc... )
-				<input type="radio" name="event_draw_lane_name" value="alpha"{if $draw->draw.event_draw_lane_name == 'alpha'} CHECKED{/if}> Use Alpha characters for lanes ( A,B,C, etc... )<br>
+				<input type="radio" name="event_draw_lane_name" value="numeric"{if $draw->draw.event_draw_lane_name == 'numeric' || $draw->draw.event_draw_lane_name == NULL} CHECKED{/if}> Use Numeric characters for lanes ( 1,2,3, etc... )<br>
+				<input type="radio" name="event_draw_lane_name" value="alpha"{if $draw->draw.event_draw_lane_name == 'alpha'} CHECKED{/if}> Use Alpha characters for lanes ( A,B,C, etc... )
 			</td>
 		</tr>
 		{/if}
