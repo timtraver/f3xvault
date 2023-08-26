@@ -717,36 +717,59 @@
 							<td align="center" nowrap>{$p.event_pilot_round_flight_order|escape}</td>					
 						{/if}
 						<td align="left" nowrap>
-							{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}
-								{if $f.flight_type_minutes}
-									{$p.event_pilot_round_flight_minutes|escape}m
-								{/if}
-								{if $f.flight_type_seconds}
-									{$p.event_pilot_round_flight_seconds|escape}s
+							{if $p.event_pilot_round_flight_entered == 1 }
+								{if $p.event_pilot_round_flight_dns==1}DNS{elseif $p.event_pilot_round_flight_dnf==1}DNF{else}
+									{if $f.flight_type_minutes}
+										{$p.event_pilot_round_flight_minutes|escape}m
+									{/if}
+									{if $f.flight_type_seconds}
+										{$p.event_pilot_round_flight_seconds|escape}s
+									{/if}
 								{/if}
 							{/if}
 						</td>
 						{if $f.flight_type_landing}
-							<td align="right" nowrap>{$p.event_pilot_round_flight_landing|escape}</td>
+							<td align="right" nowrap>
+								{if $p.event_pilot_round_flight_entered == 1 }
+									{$p.event_pilot_round_flight_landing|escape}
+								{/if}
+							</td>
 						{/if}
 						{if $f.flight_type_start_height}
 							<td align="right" nowrap>
-								{$p.event_pilot_round_flight_start_height|escape}
+								{if $p.event_pilot_round_flight_entered == 1 }
+									{$p.event_pilot_round_flight_start_height|escape}
+								{/if}
 							</td>
 						{/if}
 						{if $f.flight_type_laps}
-							<td align="right" nowrap>{$p.event_pilot_round_flight_laps|escape}</td>
+							<td align="right" nowrap>
+								{if $p.event_pilot_round_flight_entered == 1 }
+									{$p.event_pilot_round_flight_laps|escape}
+								{/if}
+							</td>
 						{/if}
 						{if $f.flight_type_start_penalty}
-							<td align="right" nowrap>{$p.event_pilot_round_flight_start_penalty|escape}</td>
+							<td align="right" nowrap>
+								{if $p.event_pilot_round_flight_entered == 1 }
+									{$p.event_pilot_round_flight_start_penalty|escape}
+								{/if}
+							</td>
 						{/if}
 						<td align="right" nowrap>
-							{if $p.event_pilot_round_flight_penalty!=0}{$p.event_pilot_round_flight_penalty|escape}{/if}
+							{if $p.event_pilot_round_flight_entered == 1 }
+								{if $p.event_pilot_round_flight_penalty!=0}
+									{$p.event_pilot_round_flight_penalty|escape}
+								{/if}
+							{/if}
 						</td>
 						<td align="right" nowrap>
-							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
-							{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
-							{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
+							{if $p.event_pilot_round_flight_entered == 1 }
+
+								{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}<del><font color="red">{/if}
+								{$p.event_pilot_round_flight_score|string_format:$event->event_calc_accuracy_string}{if $p.event_pilot_round_flight_reflight_dropped}(R){/if}
+								{if $p.event_pilot_round_flight_dropped || $p.event_pilot_round_flight_reflight_dropped}</font></del>{/if}
+							{/if}
 						</td>
 						<td align="left" valign="center" nowrap>
 							{if $p.event_pilot_round_flight_entered == 1 }<img width="25" src="/images/icons/bullet_green.png" />{else}<img width="25" src="/images/1x1.png" />{/if}
