@@ -80,6 +80,20 @@
 			<li>Forced space bar to be a toggle for queue play/pause</li>
 			<li>Added second serial port to be able to send board and pandora data out two different ports</li>
 		</ul>
+		<li>2023-08-26 : Release 1.4 of software.</li>
+		<ul>
+			<li>Update to entry into Pilot Meeting and Contest Start Time fields to make it easier</li>
+			<li>Added separate group and round separation times for playlist</li>
+			<li>Improved separation and landing announcements to be more clear</li>
+			<li>Addition of double click on playlist items to go to specific entry</li>
+			<li>Internet connection check on front page and on event details page</li>
+			<li>Tooltip popups for buttons to give some explanations of screen items</li>
+			<li>Draw pane now moves with playlist pane</li>
+			<li>Reload of draw if internet is connected and update green dots next to names that have entered scores in previous rounds</li>
+			<li>New Pilot reminder system to enter scores if more than two rounds behind</li>
+			<li>New button to immediately call out pilots that have not entered scores from last round and earlier</li>
+			<li>New insults for the Mike Smith rule! :)</li>
+		</ul>
 	</ul>
 	<br>
 	<h3>Download Links And Instructions</h3>
@@ -90,7 +104,8 @@
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.0.zip">Download Link</a></li>
 				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.1.zip">Download Link</a></li>
 				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.2.zip">Download Link</a></li>
-				<li>F3XTiming 1.3 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.3.zip">Download Link</a></li>
+				<li>F3XTiming 1.3 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.3.zip">Download Link</a></li>
+				<li>F3XTiming 1.4 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.4.zip">Download Link</a></li>
 			</ul>
 		<li>Windows PC (Windows 10 and above?)</li>
 			<ul>
@@ -98,7 +113,8 @@
 				<li>F3XTiming 1.0 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.0.zip">Download Link</a></li>
 				<li>F3XTiming 1.1 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.1.zip">Download Link</a></li>
 				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.2.zip">Download Link</a></li>
-				<li>F3XTiming 1.3 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.3.zip">Download Link</a></li>
+				<li>F3XTiming 1.3 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.3.zip">Download Link</a></li>
+				<li>F3XTiming 1.4 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.4.zip">Download Link</a></li>
 			</ul>
 	</ul>
 	<ul style="font-weight: bold;font-size: 16px;">
@@ -121,7 +137,7 @@
 	<br>
 	<ol style="font-weight: bold;font-size: 14px;">
 		<li>Home Screen : 
-			<p style="font-weight: normal;font-size: 12px;">The home screen is simple in it has only three buttons. One that will allow you to search for events you have already set up in f3xvault.com, one that will take you to the manual timing screen, and a donation button. Please Donate! :)
+			<p style="font-weight: normal;font-size: 12px;">The home screen is simple in it has only three buttons. One that will allow you to search for events you have already set up in f3xvault.com, one that will take you to the manual timing screen, and a donation button. Please Donate! :) This screen now has an interenet connection status that will be green if you have an internet connection. It will also turn the Search button green if you have an active session.
 			</p>
 		</li>
 		<li>Search Screen : 
@@ -137,12 +153,12 @@
 								<ul>
 									<li>Pilots Meeting Field
 										<p style="font-weight: normal;font-size: 12px;">
-											If you enter a time here (and do not have  "Send Time to clock when system is idle" selected), the system will show a countdown to the pilots meeting, and every 5 minutes will announce when the pilots meeting is. Once the time is reached it will sound the horn and explain that the pilots meeting is beginning and to come to the organization table. This field needs to be entered in 24 hour time (like 09:00)
+											If you enter a time here (and do not have  "Send Time to clock when system is idle" selected), the system will show a countdown to the pilots meeting, and every 5 minutes will announce when the pilots meeting is. Once the time is reached it will sound the horn and explain that the pilots meeting is beginning and to come to the organization table. This field needs to be entered in 24 hour time (like 09:00) This can now be simplified by not using the full four digits and colon. You can just type in 900 for 9 a.m.
 										</p>
 									</li>
 									<li>Contest Starts Field
 										<p style="font-weight: normal;font-size: 12px;">
-											If you enter a time here (and do not have  "Send Time to clock when system is idle" selected), the system will show a countdown to the start of the contest AFTER the pilots meeting time has passed, and every 5 minutes will announce when the contest will start. Once the time is reached it will sound the horn and explain that the contest will begin. It will then automatically start the generated playlist at the designated queue entry. This field also needs to be entered in 24 hour time (like 09:00)
+											If you enter a time here (and do not have  "Send Time to clock when system is idle" selected), the system will show a countdown to the start of the contest AFTER the pilots meeting time has passed, and every 5 minutes will announce when the contest will start. Once the time is reached it will sound the horn and explain that the contest will begin. It will then automatically start the generated playlist at the designated queue entry. This field also needs to be entered in 24 hour time (like 09:00) This can now be simplified by not using the full four digits and colon. You can just type in 900 for 9 a.m.
 										</p>
 									</li>
 								</ul>
@@ -167,7 +183,7 @@
 					</li>
 					<li> Draw Area
 						<p style="font-weight: normal;font-size: 12px;">
-							Next to the pilot list scroll on the right is the round draw of the contest. This simply shows the draw of the contest. No extra functionality here.
+							Next to the pilot list scroll on the right is the round draw of the contest. This simply shows the draw of the contest. This draw area now has a spot for a green or red icon if the pilots have entered scored in the self scoring screens or not. It gets refreshed every new round, and the draw pane now moves to the same round that is being announced in the playlist.
 						</p>
 					</li>
 					<li> Sound And Voice Preferences
@@ -244,6 +260,16 @@
 									<li>Announce Pilots In Next Round
 										<p style="font-weight: normal;font-size: 12px;">
 											This is to announce the next round pilots at approximately 3:25 left in the window of the current round. This is to help pilots remember that they are up in the next round and should start to get ready. This can also be turned on and off on the fly without re generating the playlist.
+										</p>
+									</li>
+									<li>Announce Pilot Score Reminders
+										<p style="font-weight: normal;font-size: 12px;">
+											This is to announce a list of pilots that have not yet entered their self scoring scores. It happens at the beginning of a new round, and looks at anything older than 2 rounds ago to announce the pilots to be reminded.
+										</p>
+									</li>
+									<li>Call Out Pilot Score Reminder Now Button
+										<p style="font-weight: normal;font-size: 12px;">
+											This button will immediately announce a list of pilots that have not yet entered their self scoring scores and looks at anything older than 1 rounds ago to announce the pilots to be reminded.
 										</p>
 									</li>
 								</ul>
