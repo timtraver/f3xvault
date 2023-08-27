@@ -19,7 +19,7 @@
 	<ul style="font-weight: bold;font-size: 16px;">
 		<li>Use with or without internet connectivity</li>
 		<li>Search for Events on f3xvault.com to run an established event</li>
-		<li>Run timing for F3K, F3J, and F5J events!</li>
+		<li>Run timing for F3K, F3J, F3L, and F5J events!</li>
 		<li>Edit pilot pronunciations on the fly</li>
 		<li>Select different kinds of horns</li>
 		<li>Select from a variety of system voices and languages (not all text is spoken in a different language)</li>
@@ -34,6 +34,7 @@
 		<li>Full F3K Task list</li>
 		<li>Cache voice phrases for countdowns that are right on queue!</li>
 		<li>Versions on MacOS or PC (Looks and works exactly the same)</li>
+		<li>Now with self scoring reminder announcements as the contest goes on!</li>
 	</ul>
 	<br>
 	<h3>Screen Shots (Click for larger preview)</h3>
