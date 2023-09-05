@@ -16,7 +16,7 @@
 
 
 	<!--Nifty Stylesheet [ REQUIRED ]-->
-	<link href="css/nifty.css" rel="stylesheet">
+	<link href="css/nifty.min.css" rel="stylesheet">
 	
 	<!--Font Awesome [ OPTIONAL ]-->
 	<link href="css/font-awesome.min.css" rel="stylesheet">

@@ -16,7 +16,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 
 	<!--Nifty Stylesheet [ REQUIRED ]-->
-	<link href="css/nifty.css" rel="stylesheet">
+	<link href="css/nifty.min.css" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="/includes/jquery-ui/css/rcvault/jquery.ui.theme.css">
