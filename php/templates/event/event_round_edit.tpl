@@ -208,7 +208,7 @@
 				<th align="center" style="text-align: right;">{if $event->info.event_type_score_inverse==0}Normalized{else}Calculated{/if} Score</th>
 				<th align="center" style="text-align: center;">Penalty</th>
 				<th align="center" style="text-align: right;">Flight Rank</th>
-				<th align="center" style="text-align: right;"></th>
+				<th align="center" style="text-align: right;">SE</th>
 			</tr>
 			{$num=1}
 			{foreach $event->rounds.$round_number.flights as $f}
@@ -308,6 +308,9 @@
 					{$p.event_pilot_round_flight_rank|escape}
 					</td>
 					<td align="right" nowrap>
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<img height="20" src="/images/icons/bullet_green.png" />
+						{/if}
 					</td>
 			</tr>
 			{$num=$num+1}

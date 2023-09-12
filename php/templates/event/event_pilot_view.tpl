@@ -23,7 +23,7 @@
 		<tr>
 			<th width="2%" align="left">Round</th>
 			{if $event->info.event_type_code!='f3k'}
-			{$cols=0}
+			{$cols=1}
 			{foreach $event->flight_types as $ft}
 				{$cols=$cols+4}
 				{if $ft.flight_type_group}{$cols=$cols+1}{/if}
@@ -37,6 +37,7 @@
 			{else}
 				{$cols=7}
 			{/if}
+			{$cols=$cols+1}
 			<th colspan="{$cols}" align="center" nowrap>Round Data</th>
 		</tr>
 		{if $event->info.event_type_code!='f3k'}
@@ -51,7 +52,8 @@
 				{if $ft.flight_type_landing}{$cols=$cols+1}{/if}
 				{if $ft.flight_type_laps}{$cols=$cols+1}{/if}	
 				{if $ft.flight_type_position}{$cols=$cols+1}{/if}	
-				<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
+				{$cols=$cols+1}
+			<th align="center" colspan="{$cols}" nowrap>{$ft.flight_type_name|escape}</th>
 			{/foreach}
 		</tr>
 		{/if}
@@ -83,6 +85,7 @@
 				<th align="right">Score</th>
 				<th align="right">Pen</th>
 				<th align="right">Rank</th>
+				<th align="right">SE</th>
 			{/foreach}
 		</tr>
 		{else}
@@ -95,6 +98,7 @@
 			<th align="center">Score</th>
 			<th align="center">Pen</th>
 			<th align="center">Rank</th>
+			<th align="center">SE</th>
 		</tr>
 		{/if}
 		{$flyoff_label=0}
@@ -192,6 +196,11 @@
 					</td>
 					<td align="left" nowrap style="background-color: {$bgcolor};">
 						{$values.event_pilot_round_flight_rank|escape}
+					</td>
+					<td align="left" nowrap style="background-color: {$bgcolor};">
+						{if $values.event_pilot_round_flight_entered == 1}
+							<img height="20" src="/images/icons/bullet_green.png" />
+						{/if}
 					</td>
 				{/foreach}
 			</tr>

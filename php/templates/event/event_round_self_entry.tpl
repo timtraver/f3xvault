@@ -287,6 +287,13 @@
 								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
 							</ul>
 					</div>
+					<div class="btn-group" style="width: 150px;float: right;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-success" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight Saved ">
+						{else}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-danger" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight NOT Saved ">
+						{/if}
+					</div>
 				</td>
 			</tr>
 			</table>
@@ -362,7 +369,14 @@
 								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
 							</ul>
 					</div>
-				</td>
+					<div class="btn-group" style="width: 150px;float: right;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-success" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight Saved ">
+						{else}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-danger" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight NOT Saved ">
+						{/if}
+					</div>
+			</td>
 			</tr>
 			</table>
 		{/if} {* End F3L Event *}
@@ -416,7 +430,14 @@
 								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
 							</ul>
 					</div>
-				</td>
+					<div class="btn-group" style="width: 150px;float: right;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-success" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight Saved ">
+						{else}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-danger" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight NOT Saved ">
+						{/if}
+					</div>
+			</td>
 			</tr>
 			</table>
 		{/if} {* End TD Event *}
@@ -545,7 +566,7 @@
 			</tr>
 			<tr>
 				<th><h3>Penalty</h3></th>
-				<td valign="top">
+				<td valign="bottom">
 					<div class="btn-group" style="width: 50px;">
 						<input type="button" id="penalty_button" class="btn btn-primary btn-rounded dropdown-toggle" style = "margin-right: 5px;margin-top: 10px;font-size: 28px;" value=" {$penalty|string_format:"%2d"} " data-toggle="dropdown" aria-expanded="false">
 							<ul class="dropdown-menu dropdown-menu-left" style="font-size:24px;width: 50px;">
@@ -554,6 +575,13 @@
 								<li><a href="#" onClick='document.main.penalty.value=300;document.getElementById("penalty_button").value="300";'>300</a></li>
 								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
 							</ul>
+					</div>
+					<div class="btn-group" style="width: 150px;float: right;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-success" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight Saved ">
+						{else}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-danger" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight NOT Saved ">
+						{/if}
 					</div>
 				</td>
 			</tr>
@@ -632,7 +660,14 @@
 								<li><a href="#" onClick='document.main.penalty.value=1000;document.getElementById("penalty_button").value="1000";'>1000</a></li>
 							</ul>
 					</div>
-				</td>
+					<div class="btn-group" style="width: 150px;float: right;">
+						{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-success" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight Saved ">
+						{else}
+							<input type="button" id="status_button" class="btn btn-primary btn-rounded btn-danger" style = "margin-right: 5px;margin-top: 26px;font-size: 14px;" value=" Flight NOT Saved ">
+						{/if}
+					</div>
+			</td>
 			</tr>
 			</table>
 		{/if} {* End GPS Event *}
@@ -644,14 +679,26 @@
 				Save This Flight ( Locked )
 			</button>
 			{else}
-				{if $event->info.event_type_code == 'f3k'}
-					<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="if(check_total_round_time() == true ){ldelim}this.disabled=true;document.main.save.value=1;document.main.submit();{rdelim}else{ldelim}return false;{rdelim}">
-						Save This Flight
-					</button>
+				{if $event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_entered == 1}
+					{if $event->info.event_type_code == 'f3k'}
+						<button id="save-button" class="btn btn-block btn-info btn-rounded btn-success dropdown-toggle" style="font-size: 24px;" onClick="if(check_total_round_time() == true ){ldelim}this.disabled=true;document.main.save.value=1;document.main.submit();{rdelim}else{ldelim}return false;{rdelim}">
+							Update This Flight
+						</button>
+					{else}
+						<button id="save-button" class="btn btn-block btn-info btn-rounded btn-success dropdown-toggle" style="font-size: 24px;" onClick="this.disabled=true;document.main.save.value=1;document.main.submit();">
+							Update This Flight
+						</button>
+					{/if}
 				{else}
-					<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="this.disabled=true;document.main.save.value=1;document.main.submit();">
-					Save This Flight
-				</button>
+					{if $event->info.event_type_code == 'f3k'}
+						<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="if(check_total_round_time() == true ){ldelim}this.disabled=true;document.main.save.value=1;document.main.submit();{rdelim}else{ldelim}return false;{rdelim}">
+							Save This Flight
+						</button>
+					{else}
+						<button id="save-button" class="btn btn-block btn-info btn-rounded dropdown-toggle" style="font-size: 24px;" onClick="this.disabled=true;document.main.save.value=1;document.main.submit();">
+							Save This Flight
+						</button>
+					{/if}
 				{/if}
 			{/if}
 	</div>
