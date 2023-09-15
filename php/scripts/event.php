@@ -5950,6 +5950,7 @@ function event_export() {
 	$event = new Event($event_id);
 
 	$smarty->assign("event",$event);
+	$smarty->assign("export_type","draw");
 	$maintpl = find_template("event/event_export.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -5962,11 +5963,13 @@ function event_export_export() {
 	$event->get_rounds();
 	$export_format = $_REQUEST['export_format'];
 	$field_separator = $_REQUEST['field_separator'];
+	$export_type = $_REQUEST['export_type'];
 
 	$smarty->assign("event",$event);
 	$smarty->assign("export_format",$export_format);
 	$smarty->assign("field_separator",$field_separator);
 	$smarty->assign("fs",$field_separator);
+	$smarty->assign("export_type",$export_type);
 	
 	# Lets make the draw array easier to use and add it to the pilot array
 	$draws = array();
@@ -7021,6 +7024,9 @@ function event_self_entry() {
 		if( $event->info['event_type_code'] == 'gps' && $o['event_type_option_code'] == 'gps_speed_accuracy' ){
 			$seconds_accuracy = $o['event_option_value'];
 		}
+		if( $event->info['event_type_code'] == 'f3l' && $o['event_type_option_code'] == 'f3l_duration_accuracy' ){
+			$seconds_accuracy = $o['event_option_value'];
+		}
 	}
 	$seconds_accuracy_string = ".%'.0" . $seconds_accuracy . "d";
 
@@ -7251,7 +7257,12 @@ function event_self_entry() {
 			if($event->info['event_type_code'] == 'f3j' || $event->info['event_type_code'] == 'f5j' || $event->info['event_type_code'] == 'td'  || $event->info['event_type_code'] == 'f3l'){
 				$event_round_time_choice = $event->tasks[$round_number]['event_task_time_choice'];
 			}
-			$event_round_flyoff = 0;
+			# Check to see if this is a flyoff round in the tasks
+			if( $event->tasks[$round_number]['event_task_round_type'] == 'flyoff' ){
+				$event_round_flyoff = 1;
+			}else{
+				$event_round_flyoff = 0;
+			}
 			$event_round_score_status = 1;
 			$event_round_score_second = 1;
 			
@@ -7799,13 +7810,12 @@ function event_self_entry() {
 	switch( $event->flight_types[$flight_type_id]['flight_type_code'] ){
 		case 'td':
 		case 'f3j':
+		case 'f3l':
+		case 'f5j':
 			$max = $event->tasks[$round_number]['event_task_time_choice'] * 60;
 			break;
 		case 'gps':
 			$max = 30 * 60;
-			break;
-		case 'f5j':
-			$max = $event->tasks[$round_number]['event_task_time_choice'] * 60;
 			break;
 		case 'f3k_a':
 		case 'f3k_a2':
