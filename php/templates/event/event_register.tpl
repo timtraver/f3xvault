@@ -285,7 +285,7 @@ $(document).ready(function() {ldelim}
 
 {/if}
 $(function() {ldelim}
-	{if $event->info.event_reg_teams == 1}
+	{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 	var teams = [
 		{foreach $teams as $t}
 		"{$t.event_pilot_team}"{if !$t@last},{/if}

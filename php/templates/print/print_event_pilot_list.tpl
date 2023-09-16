@@ -13,7 +13,7 @@
 	<th align="left">Pilot Class</th>
 	<th align="left">Pilot Plane</th>
 	<th align="left">Pilot Freq</th>
-	{if $event->info.event_reg_teams == 1}
+	{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 		<th align="left">Event Team</th>
 	{/if}
 	{if $event->info.event_reg_flag==1}
@@ -48,7 +48,7 @@
 		<td>{$p.class_description|escape}</td>
 		<td>{$p.plane_name|escape}</td>
 		<td>{$p.event_pilot_freq|escape}</td>
-		{if $event->info.event_reg_teams == 1}
+		{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 			<td>{$p.event_pilot_team|escape}</td>
 		{/if}
 		{if $event->info.event_reg_flag==1}

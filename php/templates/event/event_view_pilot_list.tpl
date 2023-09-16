@@ -6,7 +6,13 @@
 	<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
 </div>
 {/if}
-
+Sort Pilots By : 
+<select name="sort_pilot" onChange="document.event_view.event_pilot_sort_by.value=this.value;document.event_view.submit();">
+	<option value="entry_order"{if $event_pilot_sort_by == 'entry_order'} SELECTED{/if}>Entry Order</option>
+	<option value="alphabetical_first"{if $event_pilot_sort_by == 'alphabetical_first'} SELECTED{/if}>First Name</option>
+	<option value="alphabetical_last"{if $event_pilot_sort_by == 'alphabetical_last'} SELECTED{/if}>Last Name</option>
+	<option value="team"{if $event_pilot_sort_by == 'team'} SELECTED{/if}>Team Name</option>
+</select>
 <table width="100%" cellpadding="2" cellspacing="1" class="table table-condensed table-striped table-event">
 <tr>
 	<th width="2%" align="left">#</th>
@@ -16,7 +22,7 @@
 	<th align="left">Pilot Class</th>
 	<th align="left">Pilot Plane</th>
 	<th align="left">Pilot Freq</th>
-	{if $event->info['event_reg_teams'] == 1}
+	{if $event->info['event_reg_teams'] == 1 || $event->info['event_use_teams'] == 1}
 		<th align="left">Event Team</th>
 	{/if}
 	{if $event->info.event_reg_flag==1}
@@ -52,8 +58,14 @@
 		<td>{$p.class_description|escape}</td>
 		<td>{$p.plane_name|escape}</td>
 		<td>{$p.event_pilot_freq|escape}</td>
-		{if $event->info.event_reg_teams == 1}
-			<td>{$p.event_pilot_team|escape}</td>
+		{if $event->info.event_reg_teams == 1 || $event->info['event_use_teams'] == 1}
+			<td>
+				{if $user_is_event_admin==1}
+					<input id="team_name_{$p.event_pilot_id}" name="team_name_{$p.event_pilot_id}" value="{$p.event_pilot_team|escape}" onChange="save_team_field(this);">
+				{else}
+					{$p.event_pilot_team|escape}
+				{/if}
+			</td>
 		{/if}
 		{if $event->info.event_reg_flag==1}
 			<td align="right">

@@ -216,7 +216,7 @@ tbody th:first-child {
 													<th width="2%" align="left">#</th>
 													<th align="left" colspan="2">Pilot Name</th>
 													<th align="left">Pilot Class</th>
-													{if $event->info['event_reg_teams'] == 1}
+													{if $event->info['event_reg_teams'] == 1 || $event->info['event_use_teams'] == 1}
 														<th align="left">Event Team</th>
 													{/if}
 													<th align="right">Reg Status</th>
@@ -259,7 +259,7 @@ tbody th:first-child {
 														&nbsp;{$p.pilot_first_name|escape} {$p.pilot_last_name|escape}
 													</td>
 													<td>{$p.class_description|escape}</td>
-													{if $event->info.event_reg_teams == 1}
+													{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 														<td>{$p.event_pilot_team|escape}</td>
 													{/if}
 													{if $event->info.event_reg_flag==1}

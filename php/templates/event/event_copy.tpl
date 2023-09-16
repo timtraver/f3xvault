@@ -145,6 +145,12 @@
 						</td>
 					</tr>
 					<tr>
+						<th>Use Teams</th>
+						<td>
+							<input type="checkbox" name="event_use_teams"{if $event->info.event_use_teams} CHECKED{/if}> Team Fields Available To Set By Event Admins
+						</td>
+					</tr>
+					<tr>
 						<th nowrap valign="top">Event Notes</th>
 						<td>
 						<textarea cols="100" rows="10" name="event_notes">{$event->info.event_notes}</textarea>

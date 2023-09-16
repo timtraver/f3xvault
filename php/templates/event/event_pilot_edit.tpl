@@ -147,7 +147,7 @@
 				<input type="text" name="event_pilot_freq" size="15" value="{$pilot.event_pilot_freq|escape}">
 			</td>
 		</tr>
-		{if $event->info['event_reg_teams'] == 1}
+		{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 		<tr>
 			<th align="right" nowrap>Event Team</th>
 			<td colspan="2">
@@ -361,7 +361,7 @@ $(document).ready(function() {ldelim}
 {rdelim});			
 {/if}
 $(function() {ldelim}
-	{if $event->info['event_reg_teams'] == 1}
+	{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
 	var teams = [
 		{foreach $teams as $t}
 		"{$t.event_pilot_team}"{if !$t@last},{/if}
