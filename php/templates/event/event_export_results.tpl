@@ -1,0 +1,14 @@
+"Event_ID"{$fs}"{$event->info.event_id}"
+"Event_Name"{$fs}"{$event->info.event_name}"
+"Event_Location"{$fs}"{$event->info.location_name}"
+"Start_Date"{$fs}"{$event->info.event_start_date|date_format:"m/d/y"}"
+"End_Date"{$fs}"{$event->info.event_end_date|date_format:"m/d/y"}"
+"Contest_Director"{$fs}"{$event->info.pilot_first_name} {$event->info.pilot_last_name}"
+"Event_Type"{$fs}"{$event->info.event_type_name}"
+"Number_Rounds"{$fs}"{$rounds}"
+
+"Position"{$fs}"Pilot_Bib"{$fs}"Pilot_Name"{$fs}"Country"{$fs}"Pilot_Class"{$fs}"AMA"{$fs}"FAI"{$fs}"FAI License"{$fs}{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}"Team Name"{$fs}{/if}"Total Points"{$fs}"Diff"{$fs}{for $r=1 to $rounds}"Round {$r}"{$fs}{/for}"SubTotal"{$fs}"Drop"{$fs}"Penalty"{$fs}"Percent"
+{$previous=0}{$diff_to_lead=0}{$diff=0}{foreach $event->totals.pilots as $e}{if $e.total>$previous}{$previous=$e.total}{else}{$diff=$previous-$e.total}{$diff_to_lead=$diff_to_lead+$diff}{/if}{$event_pilot_id=$e.event_pilot_id}
+"{$e.overall_rank|escape}"{$fs}"{$event->pilots.$event_pilot_id.event_pilot_bib|escape}"{$fs}"{$e.pilot_first_name|escape} {$e.pilot_last_name|escape}"{$fs}"{$event->pilots.$event_pilot_id.country_code_ioc|escape}"{$fs}"{$event->pilots.$event_pilot_id.class_name|escape}"{$fs}"{$event->pilots.$event_pilot_id.pilot_ama|escape}"{$fs}"{$event->pilots.$event_pilot_id.pilot_fai|escape}"{$fs}"{$event->pilots.$event_pilot_id.pilot_fai_license|escape}"{$fs}{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}"{$event->pilots.$event_pilot_id.event_pilot_team|escape}"{$fs}{/if}"{$e.total|string_format:$event->event_calc_accuracy_string}"{$fs}"-{$diff|string_format:$event->event_calc_accuracy_string}"{$fs}{foreach $e.rounds as $r}{$round_number=$r@key}{$flight_type_id=$event->rounds.$round_number.flight_type_id}{$dropval=0}{$dropped=0}{foreach $r.flights as $f}{if $f.event_pilot_round_flight_dropped}{$dropval=$dropval+$f.event_pilot_round_total_score}{$dropped=1}{/if}{/foreach}{$drop=0}{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}{if $r.event_pilot_round_total_score==1000}"1000"{else}{if $r.event_pilot_round_flight_dns==1}"DNS"{elseif $r.event_pilot_round_flight_dnf==1}"DNF"{else}"{$r.event_pilot_round_total_score|string_format:$event->event_calc_accuracy_string}"{/if}{/if}{$fs}{/foreach}"{$e.subtotal|string_format:$event->event_calc_accuracy_string}"{$fs}"{$e.drop|string_format:$event->event_calc_accuracy_string}"{$fs}"{$e.penalties|string_format:$event->event_calc_accuracy_string}"{$fs}"{$e.event_pilot_total_percentage|string_format:$event->event_calc_accuracy_string}"{$previous=$e.total}
+
+{/foreach}

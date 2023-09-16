@@ -121,7 +121,7 @@
 				<li><a href="#" onClick="if(check_permission()){ldelim}registration_report.submit();{rdelim}">View Registration Report</a></li>
 				{/if}
 				{if $event->info.event_id!=0}
-				<li><a href="#" onClick="document.event_export.submit();">Export Event Info</a></li>
+				<li><a href="#" onClick="document.event_export.submit();">Export Event</a></li>
 				{/if}
 				
 				<li class="dropdown-header">Printing Functions</li>
@@ -168,6 +168,7 @@
 <input type="hidden" name="action" value="event">
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
+<input type="hidden" name="event_pilot_sort_by" value="{$event_pilot_sort_by|escape}">
 </form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">

@@ -301,7 +301,19 @@ function event_view() {
 		user_message("That is not a proper event id to edit.");
 		return event_list();
 	}
-
+	if(isset($_REQUEST['event_pilot_sort_by'])){
+		$event_pilot_sort_by = input_filter( $_REQUEST['event_pilot_sort_by'], 'string');
+	}else{
+		if( isset( $GLOBALS['fsession']['event_pilot_sort_by'] ) ){
+			$event_pilot_sort_by = $GLOBALS['fsession']['event_pilot_sort_by'];
+		}else{
+			$event_pilot_sort_by = 'entry_order';
+		}
+	}
+	if( $event_pilot_sort_by != 'entry_order'){
+		$GLOBALS['fsession']['event_pilot_sort_by'] = $event_pilot_sort_by;
+	}
+	
 	$e = new Event($event_id);
 	$_REQUEST['sort_by'] = 'flight_order';
 	$e->get_rounds();
@@ -316,11 +328,11 @@ function event_view() {
 	$e->get_running_totals();
 
 	# Lets determine if the logged in user is an admin of this event
-	$user_is_admin = 0;
-	if( $e->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
-	if( $e->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_admin = 1; }
-	if( $e->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_admin = 1; }
-	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_admin = 1; }
+	$user_is_event_admin = 0;
+	if( $e->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_event_admin = 1; }
+	if( $e->info['event_cd'] == $GLOBALS['user']['pilot_id'] ){ $user_is_event_admin = 1; }
+	if( $e->info['user_id'] == $GLOBALS['user']['user_id'] ){ $user_is_event_admin = 1; }
+	if( $GLOBALS['user']['user_admin'] == 1 ){ $user_is_event_admin = 1; }
 	$stmt = db_prep("
 		SELECT  * 
 		FROM event_user
@@ -329,7 +341,7 @@ function event_view() {
 			AND event_user_status = 1
 	");
 	$results = db_exec( $stmt, array( "event_id" => $event_id, "pilot_id" => $GLOBALS['user']['pilot_id'] ) );
-	if( count( $results ) > 0 ){ $user_is_admin = 1; }
+	if( count( $results ) > 0 ){ $user_is_event_admin = 1; }
 	
 	# Lets determine if we need a laps report and an average speed report
 	$laps = 0;
@@ -535,10 +547,10 @@ function event_view() {
 	# Check if it is an admin only self entry
 	$self_entry_param = $e->info['event_type_code']."_self_entry_admin_only";
 	$admin_only = $e->find_option_value($self_entry_param);
-	if( $self_entry == 1 && $admin_only == 1 && $user_is_admin == 0 ){
+	if( $self_entry == 1 && $admin_only == 1 && $user_is_event_admin == 0 ){
 		$self_entry = 0;
 	}
-	if( $admin_only == 1 && $user_is_admin == 1 ){
+	if( $admin_only == 1 && $user_is_event_admin == 1 ){
 		$self_entry = 1;
 	}
 	$smarty->assign("self_entry",$self_entry);
@@ -553,6 +565,8 @@ function event_view() {
 	$smarty->assign("total_prelim_rounds",$total_prelim_rounds);
 	$smarty->assign("total_flyoff_rounds",$total_flyoff_rounds);
 	$smarty->assign("show_top",$show_top);
+	$smarty->assign("user_is_event_admin",$user_is_event_admin);
+	$smarty->assign("event_pilot_sort_by",$event_pilot_sort_by);
 	$maintpl = find_template("event/event_view.tpl");
 	return $smarty->fetch($maintpl);
 }
@@ -733,9 +747,13 @@ function event_save() {
 	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
 		$event_reg_teams = 1;
 	}
+	$event_use_teams = 0;
+	if( isset( $_REQUEST['event_use_teams'] ) && $_REQUEST['event_use_teams'] == 'on' ){
+		$event_use_teams = 1;
+	}
 	if( $event_id == 0 && $event_type_id == 11 ){
-		# For F3L events default there to be teams choices
-		$event_reg_teams = 1;
+		# For F3L events default there to use teams
+		$event_use_teams = 1;
 	}
 	# Get the checkboxes for each class type
 	$classes = array();
@@ -760,6 +778,7 @@ function event_save() {
 				event_view_status = :event_view_status,
 				event_reg_flag = :event_reg_flag,
 				event_reg_teams = :event_reg_teams,
+				event_use_teams = :event_use_teams,
 				event_notes = :event_notes,
 				event_status = 1
 		");
@@ -775,6 +794,7 @@ function event_save() {
 			"event_view_status" => $event_view_status,
 			"event_reg_flag" => $event_reg_flag,
 			"event_reg_teams" => $event_reg_teams,
+			"event_use_teams" => $event_use_teams,
 			"event_notes" => $event_notes
 		));
 
@@ -818,6 +838,7 @@ function event_save() {
 				event_view_status = :event_view_status,
 				event_reg_flag = :event_reg_flag,
 				event_reg_teams = :event_reg_teams,
+				event_use_teams = :event_use_teams,
 				event_notes = :event_notes
 			WHERE event_id = :event_id
 		");
@@ -832,6 +853,7 @@ function event_save() {
 			"event_view_status" => $event_view_status,
 			"event_reg_flag" => $event_reg_flag,
 			"event_reg_teams" => $event_reg_teams,
+			"event_use_teams" => $event_use_teams,
 			"event_notes" => $event_notes,
 			"event_id" => $event_id
 		));
@@ -1011,6 +1033,10 @@ function event_copy() {
 	if( isset( $_REQUEST['event_reg_teams'] ) && $_REQUEST['event_reg_teams'] == 'on' ){
 		$event_reg_teams = 1;
 	}
+	$event_use_teams = 0;
+	if( isset( $_REQUEST['event_use_teams'] ) && $_REQUEST['event_use_teams'] == 'on' ){
+		$event_use_teams = 1;
+	}
 	$copy_registration = 0;
 	if( isset( $_REQUEST['copy_registration'] ) && $_REQUEST['copy_registration'] == 'on' ){
 		$copy_registration = 1;
@@ -1081,6 +1107,7 @@ function event_copy() {
 				event_view_status = :event_view_status,
 				event_reg_flag = :event_reg_flag,
 				event_reg_teams = :event_reg_teams,
+				event_use_teams = :event_use_teams,
 				event_notes = :event_notes,
 				currency_id = :currency_id,
 				event_reg_paypal_address = :event_reg_paypal_address,
@@ -1099,6 +1126,7 @@ function event_copy() {
 			"event_view_status" => $event_view_status,
 			"event_reg_flag" => $event_reg_flag,
 			"event_reg_teams" => $event_reg_teams,
+			"event_use_teams" => $event_use_teams,
 			"event_notes" => $event_notes,
 			"currency_id" => $e->info['currency_id'],
 			"event_reg_paypal_address" => $e->info['event_reg_paypal_address'],
@@ -3163,6 +3191,29 @@ function event_param_save() {
 	log_action($event_id);
 	user_message("Event Parameters Saved.");
 	return event_edit();
+}
+function event_save_pilot_team(){
+	# Function to save a single pilot team from an ajax request
+	$field_name = $_REQUEST['field_name'];
+	$field_value = input_filter($_REQUEST['field_value'], 'string');
+	$event_pilot_id = 0;
+	# Lets get the info from the field being saved
+	if(preg_match("/^team_name_(\d+)$/",$field_name,$match)){
+		$event_pilot_id = $match[1];
+	}
+	if( $event_pilot_id != 0 ){
+		# Save team name of pilot
+		$stmt = db_prep( "
+			UPDATE event_pilot
+			SET event_pilot_team = :event_pilot_team
+			WHERE event_pilot_id = :event_pilot_id 
+		" );
+		$result = db_exec( $stmt, array(
+			"event_pilot_team" => $field_value,
+			"event_pilot_id" => $event_pilot_id,
+		) );
+	}
+	return;
 }
 
 # Event Round Routines
@@ -5961,6 +6012,9 @@ function event_export_export() {
 	$event = new Event($event_id);
 	$event->get_draws();
 	$event->get_rounds();
+	$event->get_pilots();
+	$event->calculate_event_totals();
+	
 	$export_format = $_REQUEST['export_format'];
 	$field_separator = $_REQUEST['field_separator'];
 	$export_type = $_REQUEST['export_type'];
@@ -6031,29 +6085,30 @@ function event_export_export() {
 	$smarty->assign("draws",$draws);
 
 	$template = '';
-	switch($event->info['event_type_code']){
-		case "f3b":
-			$template = "event/event_export_f3b.tpl";
-			break;
-		case "f3b_speed":
-			$template = "event/event_export_f3b.tpl";
-			break;
-		case "f3f":
-			$template = "event/event_export_f3f.tpl";
-			break;
-		case "f3f_plus":
-			$template = "event/event_export_f3f_plus.tpl";
-			break;
-		case "f3k":
-			$template = "event/event_export_f3k.tpl";
-			break;
-		case "f3j":
-		case "f5j":
-			$template = "event/event_export_f3j.tpl";
-			break;
-		case "td":
-			$template = "event/event_export_f3j.tpl";
-			break;
+	
+	if( $export_type == 'draw' ){
+		switch($event->info['event_type_code']){
+			case "f3b":
+			case "f3b_speed":
+				$template = "event/event_export_f3b.tpl";
+				break;
+			case "f3f":
+				$template = "event/event_export_f3f.tpl";
+				break;
+			case "f3f_plus":
+				$template = "event/event_export_f3f_plus.tpl";
+				break;
+			case "f3k":
+				$template = "event/event_export_f3k.tpl";
+				break;
+			case "f3j":
+			case "f5j":
+			case "td":
+				$template = "event/event_export_f3j.tpl";
+				break;
+		}
+	}else{
+		$template = "event/event_export_results.tpl";
 	}
 
 	# Get the export content

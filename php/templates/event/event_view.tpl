@@ -573,4 +573,21 @@ $(function () {ldelim}
 {/if}
 {/if}
 </script>
+{if $event->info.event_reg_teams == 1 || $event->info.event_use_teams == 1}
+<script type="text/javascript">
+function save_team_field(element) {ldelim}
+	$.ajax({ldelim}
+		type: "POST",
+		url: "/",
+		data: {ldelim}
+			action: "event",
+			function: "event_save_pilot_team",
+			field_name: element.name,
+			field_value: element.value
+		{rdelim}
+	{rdelim});
+	return;
+{rdelim}
+</script>
+{/if}
 {/block}

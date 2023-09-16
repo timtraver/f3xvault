@@ -38,6 +38,13 @@
 				<input type="radio" name="field_separator" value=";"{if $field_separator==";"} CHECKED{/if}> Semicolon 
 			</td>
 		</tr>
+		<tr>
+			<th>Export Includes</th>
+			<td>
+				<input type="radio" name="export_type" value="draw"{if $export_type=="draw"} CHECKED{/if}> Just Draw Groups<br>
+				<input type="radio" name="export_type" value="results"{if $export_type=="round"} CHECKED{/if}> Results Summary<br>
+			</td>
+		</tr>
 		{if $export_content}
 		<tr>
 			<th>Export Text</th>
