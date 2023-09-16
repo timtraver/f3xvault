@@ -76,7 +76,12 @@ class Event {
 	# Retrieving routines
 	public function get_pilots(){
 		# Now lets get the pilots assigned to this event
-		$sort_by = $_REQUEST['sort_by'];
+		if( isset( $_REQUEST['event_pilot_sort_by'])){
+			$sort_by = $_REQUEST['event_pilot_sort_by'];
+		}
+		if( isset( $_REQUEST['sort_by'])){
+			$sort_by = $_REQUEST['sort_by'];
+		}
 		switch($sort_by){
 			case 'alphabetical_first':
 				$sort_string = 'ORDER BY p.pilot_first_name,p.pilot_last_name';
