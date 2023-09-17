@@ -115,9 +115,9 @@
 	<input type="hidden" name="flight_type_id" value="{$flight_type_id|escape}">
 	<input type="hidden" name="round_number" value="{$round_number|escape}">
 	<input type="hidden" name="group" value="{$event->rounds.$round_number.flights.$flight_type_id.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}">
-	<input type="hidden" name="minutes" value="{$minutes|escape}">
-	<input type="hidden" name="seconds" value="{$seconds|escape}">
-	<input type="hidden" name="seconds_2" value="{$seconds_2|escape}">
+	<input type="hidden" id="minutes" name="minutes" value="{$minutes|escape}">
+	<input type="hidden" id="seconds" name="seconds" value="{$seconds|escape}">
+	<input type="hidden" id="seconds2" name="seconds_2" value="{$seconds_2|escape}">
 	<input type="hidden" name="over" value="{$over|escape}">
 	<input type="hidden" name="landing" value="{$landing|escape}">
 	<input type="hidden" name="laps" value="{if $event->rounds.$round_number.flights.$flight_type_id.flight_type_code == 'gps_speed'}1{else}{$laps|escape}{/if}">
@@ -311,7 +311,7 @@
 					</div>
 					<div style="display:inline-block;vertical-align: bottom;margin-right: 5px;">Min</div>
 					<div class="btn-group">
-						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);' onChange="document.main.seconds.value=this.value;">
+						<input type="text" pattern="[0-9]*" size="3" inputmode="numeric" id="seconds_button" class="btn-primary btn-rounded" style="width: 70px;font-weight: 700;text-align: center;border-radius: 5px;margin-right: 5px;margin-top: 10px;font-size: 28px;" value="{$seconds|string_format:"%'.02d"}" onFocus='make_selected(this);' onBlur='make_unselected(this);' onKeyUp='check_second(this);check_f3l_total_time();' onChange="document.main.seconds.value=this.value;">
 					</div>
 					{if $seconds_accuracy > 0}
 					<div style="display: inline-block;vertical-align: bottom;font-size: 30px;margin-right: 5px;">.</div>
@@ -1063,6 +1063,39 @@
 				make_unselected(object);
 				goToNextTab(object);
 			{rdelim}
+		{rdelim}
+		return;
+	{rdelim}
+	function check_f3l_total_time(object){ldelim}
+		/* Function to check an f3l flight time and not let it be longer than 9 minutes */
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
+		max_flight_seconds = 60 * 9;
+		/* Get the current entered time to compare */		
+		current_minutes = parseInt( document.getElementById("minutes_button").value, 10 );
+		current_seconds = parseInt( document.getElementById("seconds_button").value, 10 );
+		{if $seconds_accuracy > 0}
+			current_seconds2 = parseInt( document.getElementById("seconds2_button").value, 10 );
+		{else}
+			current_seconds2 = 0;
+		{/if}
+		current_total_seconds = ( current_minutes * 60 ) + current_seconds + ( current_seconds2 * 0.1 );
+		if( current_total_seconds > max_flight_seconds ){ldelim}
+			/* reset the values for this flight to be the max */
+			calc_min = Math.floor( max_flight_seconds / 60 );
+			calc_sec = Math.floor( max_flight_seconds % 60 );
+			document.getElementById("minutes_button").value = calc_min;
+			document.getElementById("seconds_button").value = zeroPad(calc_sec,2);
+			{if $seconds_accuracy > 0}
+				document.getElementById("seconds2_button").value = 0;
+			{/if}
+			/* change the form vars too */
+			document.getElementById("minutes" ).value = calc_min;
+			document.getElementById("seconds" ).value = zeroPad(calc_sec,2);
+			{if $seconds_accuracy > 0}
+				document.getElementById("seconds2" + flight_num ).value = 0;
+			{/if}
+			
+			alert( "Updated Flight to max flight time." );
 		{rdelim}
 		return;
 	{rdelim}
