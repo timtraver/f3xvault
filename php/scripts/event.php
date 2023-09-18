@@ -4241,10 +4241,9 @@ function event_round_flight_delete() {
 	$event_pilot_round_flight_id = intval($_REQUEST['event_pilot_round_flight_id']);
 	$event_round_number = $_REQUEST['event_round_number'];
 	
-	# Update to turn off record
+	# Update to delete record
 	$stmt = db_prep("
-		UPDATE event_pilot_round_flight
-		SET event_pilot_round_flight_status = 0
+		DELETE FROM event_pilot_round_flight
 		WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
 	");
 	$result2 = db_exec($stmt,array(
@@ -4263,30 +4262,61 @@ function event_round_flight_delete() {
 }
 function event_round_delete() {
 	global $smarty;
-	# Function to save the round
+	# Function to delete a scored round
 	
 	$event_id = intval($_REQUEST['event_id']);
 	$event_round_id = intval($_REQUEST['event_round_id']);
 
-	# First, lets save the round info
-	$stmt = db_prep("
-		UPDATE event_round
-		SET event_round_status = 0
+	# Lets get all the pilot rounds first
+	$stmt = db_prep( "
+		SELECT *
+		FROM event_pilot_round
 		WHERE event_round_id = :event_round_id
-	");
-	$result = db_exec($stmt,array(
-		"event_round_id" => $event_round_id
-	));
-
-	# Now lets turn off all the flights in this round
-	$stmt = db_prep("
-		UPDATE event_pilot_round_flight
-		SET event_pilot_round_flight_status = 0
-		WHERE event_pilot_round_id IN (SELECT event_pilot_round_id FROM event_pilot_round WHERE event_round_id = :event_round_id)
-	");
-	$result = db_exec($stmt,array(
-		"event_round_id" => $event_round_id
-	));
+	" );
+	$result = db_exec( $stmt, array( "event_round_id" => $event_round_id ) );
+	foreach( $result as $row ){
+		# Now get each of the flights so we can remove sub flights too
+		$stmt2 = db_prep( "
+			SELECT *
+			FROM event_pilot_round_flight
+			WHERE event_pilot_round_id = :event_pilot_round_id
+		" );
+		$result2 = db_exec( $stmt2, array(
+			"event_pilot_round_id" => $row['event_pilot_round_id']
+		) );
+		foreach( $result2 as $row2 ){
+			# now delete the subflights that are associated with this flight
+			$stmt3 = db_prep( "
+				DELETE FROM event_pilot_round_flight_sub
+				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id 
+			" );
+			$result3 = db_exec( $stmt3, array( "event_pilot_round_flight_id" => $row2['event_pilot_round_flight_id'] ) );
+			# Now delete the event_pilot_round_flight_record too
+			$stmt3 = db_prep( "
+				DELETE FROM event_pilot_round_flight
+				WHERE event_pilot_round_id = :event_pilot_round_id
+			" );
+			$result3 = db_exec( $stmt3, array( "event_pilot_round_id" => $row['event_pilot_round_id'] ) );
+		}
+		# Now delete the event_pilot_round record
+		$stmt3 = db_prep( "
+			DELETE FROM event_pilot_round
+			WHERE event_pilot_round_id = :event_pilot_round_id
+		" );
+		$result3 = db_exec( $stmt3, array( "event_pilot_round_id" => $row['event_pilot_round_id'] ) );
+	}
+	# Now lets delete the event round
+	$stmt = db_prep( "
+		DELETE FROM event_round
+		WHERE event_round_id = :event_round_id
+	" );
+	$result = db_exec( $stmt, array( "event_round_id" => $event_round_id ) );
+	# And remove the event_round_flight record
+	$stmt = db_prep( "
+		DELETE FROM event_round_flight
+		WHERE event_round_id = :event_round_id
+	" );
+	$result = db_exec( $stmt, array( "event_round_id" => $event_round_id ) );
 
 	# Now lets recalculate and save the event total info
 	$event = new Event($event_id);
