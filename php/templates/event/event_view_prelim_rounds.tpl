@@ -157,15 +157,22 @@
 			<a href="" class="tooltip_score" onClick="return false;">
 			{$dropval=0}
 			{$dropped=0}
+			{$entered=0}
 			{foreach $r.flights as $f}
 				{if $f.event_pilot_round_flight_dropped}
 					{$dropval=$dropval+$f.event_pilot_round_total_score}
 					{$dropped=1}
 				{/if}
+				{if $f.event_pilot_round_flight_entered}
+					{$entered=1}
+				{/if}
 			{/foreach}
 			{$drop=0}
 			{if $dropped==1 && $dropval==$r.event_pilot_round_total_score}{$drop=1}{/if}
 			{if $drop==1}<del><font color="red">{/if}
+			{if $self_entry == 1 && $r.event_pilot_round_total_score == 0 && $entered == 0}
+				<font color="red">NE</font>
+			{else}
 				{if $r.event_pilot_round_total_score==1000}
 					1000
 				{else}
@@ -177,6 +184,7 @@
 						{$r.event_pilot_round_total_score|string_format:$event->event_calc_accuracy_string}
 					{/if}
 				{/if}
+			{/if}
 			{if $drop==1}</font></del>{/if}
 			{* lets determine the content to show on popup *}
 				{include file="event/event_view_score_popup.tpl"}

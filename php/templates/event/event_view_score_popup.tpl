@@ -20,7 +20,11 @@
 					{if $f.flight_type_group}{$f.pilots.$event_pilot_id.event_pilot_round_flight_group|escape}{/if}
 				</td>
 				<td nowrap="nowrap" align="right">
-					{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
+					{if $self_entry == 1 && $r.event_pilot_round_total_score == 0 && $entered == 0}
+						<font color="red">Not Entered</font>
+					{else}
+						{$f.pilots.$event_pilot_id.event_pilot_round_flight_minutes|escape}:{$f.pilots.$event_pilot_id.event_pilot_round_flight_seconds|escape}
+					{/if}
 				</td>
 				<td nowrap="nowrap" align="right">
 					{if $f.flight_type_landing}{$f.pilots.$event_pilot_id.event_pilot_round_flight_landing|escape}{/if}
