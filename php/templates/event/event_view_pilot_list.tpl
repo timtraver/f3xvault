@@ -7,7 +7,7 @@
 </div>
 {/if}
 Sort Pilots By : 
-<select name="sort_pilot" onChange="document.event_view.event_pilot_sort_by.value=this.value;document.event_view.submit();">
+<select name="sort_pilot" onChange="document.event_view.tab.value=2;document.event_view.event_pilot_sort_by.value=this.value;document.event_view.submit();">
 	<option value="entry_order"{if $event_pilot_sort_by == 'entry_order'} SELECTED{/if}>Entry Order</option>
 	<option value="alphabetical_first"{if $event_pilot_sort_by == 'alphabetical_first'} SELECTED{/if}>First Name</option>
 	<option value="alphabetical_last"{if $event_pilot_sort_by == 'alphabetical_last'} SELECTED{/if}>Last Name</option>

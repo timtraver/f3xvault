@@ -169,6 +169,7 @@
 <input type="hidden" name="function" value="event_view">
 <input type="hidden" name="event_id" value="{$event->info.event_id}">
 <input type="hidden" name="event_pilot_sort_by" value="{$event_pilot_sort_by|escape}">
+<input type="hidden" name="tab" value="0">
 </form>
 <form name="event_edit" method="POST">
 <input type="hidden" name="action" value="event">
