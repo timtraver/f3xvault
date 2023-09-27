@@ -241,7 +241,10 @@ $(function() {
 			document.event_pilot_add.pilot_id.value = ui.item.id;
 			var name=document.getElementById('pilot_name');
 			document.event_pilot_add.pilot_name.value=name.value;
-			event_pilot_add.submit();
+			document.event_pilot_add.pilot_add_type.value='quick';
+			if( event.keyCode != 13 ){
+				event_pilot_add.submit();
+			}
 		},
    		change: function( event, ui ) {
    			var id=document.getElementById('pilot_name');
