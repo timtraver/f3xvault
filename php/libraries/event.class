@@ -152,7 +152,6 @@ class Event {
 			SELECT  * 
 			FROM event_option
 			WHERE event_id=:event_id
-				AND event_option_status=1
 		");
 		$values = db_exec($stmt,array("event_id" => $this->event_id));
 
@@ -161,15 +160,23 @@ class Event {
 			$id = $o['event_type_option_id'];
 			foreach($values as $value){
 				if($value['event_type_option_id'] == $id){
-					$options[$key]['event_option_value'] = $value['event_option_value'];
+					$options[$key]['event_option_id'] = $value['event_option_id'];
 					$options[$key]['event_option_status'] = $value['event_option_status'];
+					if( $value['event_option_status'] == 0 ){
+						if( $options[$key]['event_type_option_type'] == 'boolean' ){
+							$options[$key]['event_option_value'] =  0;
+						}else{
+							$options[$key]['event_option_value'] =  '';
+						}
+					}else{
+						$options[$key]['event_option_value'] =  $value['event_option_value'];
+					}
 				}
 			}
 		}
 		# Lets step through and set the defaults of the empty ones
 		foreach($options as $key => $o){
-			$id = $o['event_type_option_id'];
-			if(!isset($options[$key]['event_option_value'])){
+			if(!isset($options[$key]['event_option_id'])){
 				$options[$key]['event_option_value'] = $options[$key]['event_type_option_default'];
 			}
 		}
