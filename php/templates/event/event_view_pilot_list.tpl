@@ -3,7 +3,7 @@
 	<div class="btn-group btn-group-xs" style="float: right;"><button class="btn btn-primary btn-rounded" type="button" onclick="if(check_permission()){ldelim}var name=document.getElementById('pilot_name');document.event_pilot_add.pilot_name.value=name.value;event_pilot_add.submit();{rdelim}"> + Add New Pilot </button></div>
 	<input type="text" id="pilot_name" name="pilot_name" size="40">
 	<img id="loading" src="/images/loading.gif" style="vertical-align: middle;display: none;">
-	<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot to Add</span>
+	<span id="search_message" style="font-style: italic;color: grey;"> Start typing to search pilot for Quick Add</span>
 </div>
 {/if}
 Sort Pilots By : 
