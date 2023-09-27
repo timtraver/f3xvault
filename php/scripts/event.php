@@ -2390,6 +2390,7 @@ function event_pilot_edit() {
 	$event_pilot_id = intval($_REQUEST['event_pilot_id']);
 	$pilot_id = intval($_REQUEST['pilot_id']);
 	$pilot_name = $_REQUEST['pilot_name'];
+	$pilot_add_type = $_REQUEST['pilot_add_type'];
 
 	$event_pilot_edit = $_REQUEST['event_pilot_edit'];
 
@@ -2397,7 +2398,7 @@ function event_pilot_edit() {
 	$event->get_teams();
 	$smarty->assign("event",$event);
 
-	if($event_pilot_edit == 0){
+	if( $event_pilot_edit == 0 ){
 		# If this is not a return edit to this event pilot
 		# Check to see if the pilot already exists in this event
 		$stmt = db_prep("
@@ -2594,6 +2595,38 @@ function event_pilot_edit() {
 		$payments[] = $row;
 	}
 	$smarty->assign("payments",$payments);
+
+	# If this pilot was chosen from the search list and is a quick add, then let us just add the pilot and refresh
+	if( $pilot_add_type == 'quick' ){
+		# Lets get the first class_id if there are any
+		if( isset( $classes[0] ) ){
+			$class_id = $classes[0]['class_id'];
+		}else{
+			$class_id = 0;
+		}
+		# Save the quick add event pilot
+		$stmt = db_prep("
+			INSERT INTO event_pilot
+			SET event_id = :event_id,
+				pilot_id = :pilot_id,
+				event_pilot_entry_order = :event_pilot_entry_order,
+				event_pilot_bib = :event_pilot_bib,
+				class_id = :class_id,
+				event_pilot_paid_flag = :event_pilot_paid_flag,
+				event_pilot_draw_status = :event_pilot_draw_status,
+				event_pilot_status = 1
+		");
+		$result2 = db_exec($stmt,array(
+			"event_id"					=> $event_id,
+			"pilot_id"					=> $pilot_id,
+			"class_id"					=> $class_id,
+			"event_pilot_entry_order"	=> $pilot['event_pilot_entry_order'],
+			"event_pilot_bib"			=> $event_pilot_bib,
+			"event_pilot_paid_flag"		=> 0,
+			"event_pilot_draw_status"	=> 1
+		));
+		return event_view();
+	}
 
 	$maintpl = find_template("event/event_pilot_edit.tpl");
 	return $smarty->fetch($maintpl);
@@ -7402,8 +7435,8 @@ function event_self_entry() {
 
 	# lets get the team members for this event or all members if the parameter says
 	$team_members = array();
-	if($event->find_option_value($event->info['event_type_code']."_self_entry_all") || ( $event->find_option_value($event->info['event_type_code']."_self_entry_admin_only" ) && $user_is_admin ) ){
-		# They can score for anyone, so lets get that list
+	if( $event->find_option_value($event->info['event_type_code']."_self_entry_all") == 1 || ( $event->find_option_value($event->info['event_type_code']."_self_entry_admin_only" ) == 1 && $user_is_admin ) ){
+		# They can score for anyone, so lets get the whole list
 		foreach($event->pilots as $epid => $p){
 			if($event_pilot_id != $epid){
 				$team_members[$epid] = $p;
@@ -7411,7 +7444,7 @@ function event_self_entry() {
 		}
 		# Now lets sort that pilot array by first name
 		$team_members = array_msort( $team_members, array( 'pilot_first_name' => SORT_ASC ) );
-	}else{
+	}elseif( $event->find_option_value($event->info['event_type_code']."_self_entry") == 1 ){
 		# Lets just get the team members to score for
 		$event->get_teams();
 		$team = $event->pilots[$event_pilot_id]['event_pilot_team'];
@@ -7998,7 +8031,7 @@ function event_self_entry() {
 		}
 	}
 	
-	# Let us determine if this round has all of its flights locked, and then we can set the whole round to score and recalculate the events
+	# Let us determine if this round has all of its flights entered, and then we can set the whole round to score and recalculate the events
 	if( $event->rounds[$round_number]['event_round_score_status'] == 0 ){
 		$round_complete = 1;
 		foreach( $event->rounds[$round_number]['flights'][$flight_type_id]['pilots'] as $p ){
