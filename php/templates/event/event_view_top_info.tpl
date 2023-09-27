@@ -204,6 +204,7 @@
 <input type="hidden" name="event_pilot_id" value="0">
 <input type="hidden" name="pilot_id" value="">
 <input type="hidden" name="pilot_name" value="">
+<input type="hidden" name="pilot_add_type" value="">
 </form>
 <form name="event_add_round" method="POST">
 <input type="hidden" name="action" value="event">
