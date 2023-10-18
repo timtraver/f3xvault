@@ -17,6 +17,7 @@
 				<li><a href="?action=admin&function=admin_plane_list" class="btn-link">Plane Admin</a></li>
 				<li><a href="?action=admin&function=admin_activity" class="btn-link">Site Activity</a></li>
 				<li><a href="?action=location&function=location_calculate_records" class="btn-link">Calculate Location Records</a></li>
+				<li><a href="?action=admin&function=admin_clean_events" class="btn-link">Clean Up Events</a></li>
 			</ul>
 		</div>
 	</div>

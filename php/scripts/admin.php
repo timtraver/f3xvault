@@ -1819,4 +1819,563 @@ function admin_user_delete() {
 	return admin_user_list();
 }
 
+function admin_clean_events() {
+	global $smarty;
+	
+	$clean = $_REQUEST['clean'];
+	
+	if( $clean == 1 ){
+		
+		# Delete the main records first, and then delete the orphaned records
+		# The main event records
+		$stmt = db_prep( "
+			DELETE event FROM event WHERE event_status = 0
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE cl
+			FROM club_location cl
+			LEFT JOIN club c ON cl.club_id = c.club_id
+			WHERE c.club_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE cp
+			FROM club_pilot cp
+			LEFT JOIN club c ON cp.club_id = c.club_id
+			WHERE c.club_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE cu
+			FROM club_user cu
+			LEFT JOIN club c ON cu.club_id = c.club_id
+			WHERE c.club_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE ec
+			FROM event_class ec
+			LEFT JOIN event e ON ec.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE ed
+			FROM event_draw ed
+			LEFT JOIN event e ON ed.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE edr
+			FROM event_draw_round edr
+			LEFT JOIN event_draw ed ON edr.event_draw_id = ed.event_draw_id
+			WHERE ed.event_draw_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE edrf
+			FROM event_draw_round_flight edrf
+			LEFT JOIN event_draw ed ON edrf.event_draw_id = ed.event_draw_id
+			WHERE ed.event_draw_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE eo
+			FROM event_option eo
+			LEFT JOIN event e ON eo.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE ep
+			FROM event_pilot ep
+			LEFT JOIN event e ON ep.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE epp
+			FROM event_pilot_payment epp
+			LEFT JOIN event_pilot ep ON epp.event_pilot_id = ep.event_pilot_id
+			WHERE ep.event_pilot_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE epr
+			FROM event_pilot_reg epr
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+			WHERE ep.event_pilot_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE epr
+			FROM event_pilot_round epr
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+			WHERE ep.event_pilot_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE eprf
+			FROM event_pilot_round_flight eprf
+			LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+			LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+			WHERE ep.event_pilot_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE eprfs
+			FROM event_pilot_round_flight_sub eprfs
+			LEFT JOIN event_pilot_round_flight eprf ON eprfs.event_pilot_round_flight_id = eprf.event_pilot_round_flight_id
+			LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+			WHERE epr.event_pilot_round_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE erp
+			FROM event_reg_param erp
+			LEFT JOIN event e ON erp.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE er
+			FROM event_round er
+			LEFT JOIN event e ON er.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE erf
+			FROM event_round_flight erf
+			LEFT JOIN event_round er ON erf.event_round_id = er.event_round_id
+			WHERE er.event_round_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE es
+			FROM event_series es
+			LEFT JOIN event e ON es.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE et
+			FROM event_task et
+			LEFT JOIN event e ON et.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+		$stmt = db_prep( "
+			DELETE eu
+			FROM event_user eu
+			LEFT JOIN event e ON eu.event_id = e.event_id
+			WHERE e.event_id IS NULL
+		" );
+		$result = db_exec( $stmt, array() );
+		
+	}
+
+	
+	$stmt = db_prep( "
+		SELECT count(event_id) as counted FROM event WHERE event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_events", $result[0]['counted']);
+	
+	$stmt = db_prep( "
+		SELECT count(event_class_id) as counted 
+		FROM event_class ec
+		LEFT JOIN event e ON ec.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_class", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_draw_id) as counted 
+		FROM event_draw ed
+		LEFT JOIN event e ON ed.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_draw_round_id) as counted 
+		FROM event_draw_round edr
+		LEFT JOIN event_draw ed ON edr.event_draw_id = ed.event_draw_id
+		LEFT JOIN event e ON ed.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw_round", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_draw_round_flight_id) as counted 
+		FROM event_draw_round_flight edrf
+		LEFT JOIN event_draw ed ON edrf.event_draw_id = ed.event_draw_id
+		LEFT JOIN event e ON ed.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw_round_flights", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_option_id) as counted 
+		FROM event_option eo
+		LEFT JOIN event e ON eo.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_options", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_id) as counted 
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilots", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(epp.event_pilot_payment_id) as counted 
+		FROM event_pilot_payment epp
+		LEFT JOIN event_pilot ep ON epp.event_pilot_id = ep.event_pilot_id
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_payments", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(epr.event_pilot_reg_id) as counted 
+		FROM event_pilot_reg epr
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_reg", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_id) as counted 
+		FROM event_pilot_round epr
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_rounds", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_flight_id) as counted 
+		FROM event_pilot_round_flight eprf
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_round_flights", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_flight_sub_id) as counted 
+		FROM event_pilot_round_flight_sub eprfs
+		LEFT JOIN event_pilot_round_flight eprf ON eprfs.event_pilot_round_flight_id = eprf.event_pilot_round_flight_id
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_round_flight_subs", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_reg_param_id) as counted 
+		FROM event_reg_param erp
+		LEFT JOIN event e ON erp.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_reg_params", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_round_id) as counted 
+		FROM event_round er
+		LEFT JOIN event e ON er.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_rounds", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_round_flight_id) as counted 
+		FROM event_round_flight erf
+		LEFT JOIN event_round er ON erf.event_round_id = er.event_round_id
+		LEFT JOIN event e ON er.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_round_flights", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_series_id) as counted 
+		FROM event_series es
+		LEFT JOIN event e ON es.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_series", $result[0]['counted']);
+
+	$stmt = db_prep( "
+		SELECT count(event_task_id) as counted 
+		FROM event_task et
+		LEFT JOIN event e ON et.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_tasks", $result[0]['counted']);
+	
+	$stmt = db_prep( "
+		SELECT count(event_user_id) as counted 
+		FROM event_user eu
+		LEFT JOIN event e ON eu.event_id = e.event_id
+		WHERE e.event_status = 0
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_users", $result[0]['counted']);
+	
+	# Find orphaned records
+	$total_orphaned_records = 0;
+	
+	$stmt = db_prep( "
+		SELECT count(club_location_id) as counted
+		FROM club_location cl
+		LEFT JOIN club c ON cl.club_id = c.club_id
+		WHERE c.club_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_club_location", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(club_pilot_id) as counted
+		FROM club_pilot cp
+		LEFT JOIN club c ON cp.club_id = c.club_id
+		WHERE c.club_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_club_pilot", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(club_user_id) as counted
+		FROM club_user cu
+		LEFT JOIN club c ON cu.club_id = c.club_id
+		WHERE c.club_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_club_user", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_class_id) as counted
+		FROM event_class ec
+		LEFT JOIN event e ON ec.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_class", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_draw_id) as counted
+		FROM event_draw ed
+		LEFT JOIN event e ON ed.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_draw_round_id) as counted
+		FROM event_draw_round edr
+		LEFT JOIN event_draw ed ON edr.event_draw_id = ed.event_draw_id
+		WHERE ed.event_draw_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw_round", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_draw_round_flight_id) as counted
+		FROM event_draw_round_flight edrf
+		LEFT JOIN event_draw ed ON edrf.event_draw_id = ed.event_draw_id
+		WHERE ed.event_draw_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_draw_round_flight", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_option_id) as counted
+		FROM event_option eo
+		LEFT JOIN event e ON eo.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_option", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_id) as counted
+		FROM event_pilot ep
+		LEFT JOIN event e ON ep.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_pilot_payment_id) as counted
+		FROM event_pilot_payment epp
+		LEFT JOIN event_pilot ep ON epp.event_pilot_id = ep.event_pilot_id
+		WHERE ep.event_pilot_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_payment", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_pilot_reg_id) as counted
+		FROM event_pilot_reg epr
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		WHERE ep.event_pilot_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_reg", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_id) as counted
+		FROM event_pilot_round epr
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		WHERE ep.event_pilot_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_round", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_flight_id) as counted
+		FROM event_pilot_round_flight eprf
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+		LEFT JOIN event_pilot ep ON epr.event_pilot_id = ep.event_pilot_id
+		WHERE ep.event_pilot_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_round_flight", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_pilot_round_flight_sub_id) as counted
+		FROM event_pilot_round_flight_sub eprfs
+		LEFT JOIN event_pilot_round_flight eprf ON eprfs.event_pilot_round_flight_id = eprf.event_pilot_round_flight_id
+		LEFT JOIN event_pilot_round epr ON eprf.event_pilot_round_id = epr.event_pilot_round_id
+		WHERE epr.event_pilot_round_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_pilot_round_flight_sub", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_reg_param_id) as counted
+		FROM event_reg_param erp
+		LEFT JOIN event e ON erp.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_reg_param", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_round_id) as counted
+		FROM event_round er
+		LEFT JOIN event e ON er.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_round", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_round_flight_id) as counted
+		FROM event_round_flight erf
+		LEFT JOIN event_round er ON erf.event_round_id = er.event_round_id
+		WHERE er.event_round_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_round_flight", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+	
+	$stmt = db_prep( "
+		SELECT count(event_series_id) as counted
+		FROM event_series es
+		LEFT JOIN event e ON es.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_reg_param", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_task_id) as counted
+		FROM event_task et
+		LEFT JOIN event e ON et.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_task", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+	$stmt = db_prep( "
+		SELECT count(event_user_id) as counted
+		FROM event_user eu
+		LEFT JOIN event e ON eu.event_id = e.event_id
+		WHERE e.event_id IS NULL
+	" );
+	$result = db_exec( $stmt, array() );
+	$smarty->assign( "total_event_user", $result[0]['counted']);
+	$total_orphaned_records += $result[0]['counted'];
+
+
+	$smarty->assign( "total_orphaned_records", $total_orphaned_records);
+	$maintpl = find_template("admin/admin_event_clean.tpl");
+	return $smarty->fetch($maintpl);
+}
 ?>
