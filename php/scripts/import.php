@@ -2138,6 +2138,27 @@ function import_import_gliderscore_f5j() {
 			"event_id" => $event['event_id'],
 			"event_type_option_id" => $event_type_option_id
 		) );
+		# Lets also add entries to have self entry on imported events off
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_type_option
+			WHERE event_type_option_code = 'f5j_self_entry'
+				OR event_type_option_code = 'f5j_self_entry_all'
+		" );
+		$result = db_exec( $stmt, array() );
+		foreach( $result as $row ){
+			$stmt2 = db_prep( "
+				INSERT INTO event_option
+				SET event_id = :event_id,
+					event_type_option_id = :event_type_option_id,
+					event_option_value = 0,
+					event_option_status = 1 
+			" );
+			$result2 = db_exec( $stmt2, array(
+				"event_id" => $event['event_id'],
+				"event_type_option_id" => $row['event_type_option_id']
+			) );
+		}
 	}
 	# Check to see if it is part of the selected series yet
 	if( $event['series_id'] != 0 ){
