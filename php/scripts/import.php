@@ -2739,21 +2739,11 @@ function import_import_gliderscore_f5j() {
 		}
 	}
 	
-	# Step through each round and total the round now that all of the round data is entered
-	$e1 = new Event($event['event_id']);
-	$e1->get_rounds();
-	# Now lets recalculate each round and save the event total info
-	$e1->recalculate_all_rounds();
-	$e1->calculate_event_totals();
-	$e1->event_save_totals();
-	# Refresh the round info
-	$e1->get_rounds();
-
 	user_message("Successfully imported event!");
 	$_REQUEST['action'] = 'event';
 	$_REQUEST['function'] = 'event_view';
 	$_REQUEST['event_id'] = $event['event_id'];
-	$_REQUEST['recalculate'] = 1;
+	$_REQUEST['recalculate'] = '1';
 	include_once("event.php");
 	return event_view();
 }
