@@ -327,6 +327,34 @@ function event_view() {
 	}
 	$e->get_running_totals();
 
+	# Let us see if the pilot totals are not saved correctly, and save them so the totals shown are also the saved ones
+	# Step through the totals array and see if the totals match
+	foreach( $e->totals['pilots'] as $p ){
+		$epid = $p['event_pilot_id'];
+		if( $e->pilots[$epid]['event_pilot_position'] != $p['overall_rank']
+			|| bccomp( $e->pilots[$epid]['event_pilot_total_score'], $p['total'], 3 ) != 0
+			|| $e->pilots[$epid]['event_pilot_total_percentage'] != $p['event_pilot_total_percentage']
+		){
+			debug( $e->pilots[$epid]['event_pilot_position'] . " " . $p['overall_rank'] );
+			debug( $e->pilots[$epid]['event_pilot_total_score'] . " " . $p['total'] );
+			debug( $e->pilots[$epid]['event_pilot_total_percentage'] . " " . $p['event_pilot_total_percentage'] );
+			# Save just those pilot totals
+			$stmt = db_prep( "
+				UPDATE event_pilot
+				SET event_pilot_position = :event_pilot_position,
+					event_pilot_total_score = :event_pilot_total_score,
+					event_pilot_total_percentage = :event_pilot_total_percentage
+				WHERE event_pilot_id = :event_pilot_id
+			" );
+			$result = db_exec( $stmt, array(
+				"event_pilot_position" => $p['overall_rank'],
+				"event_pilot_total_score" => $p['total'],
+				"event_pilot_total_percentage" => $p['event_pilot_total_percentage'],
+				"event_pilot_id" => $epid
+			) );
+		}
+	}
+	
 	# Lets determine if the logged in user is an admin of this event
 	$user_is_event_admin = 0;
 	if( $e->info['pilot_id'] == $GLOBALS['user']['pilot_id'] ){ $user_is_event_admin = 1; }
