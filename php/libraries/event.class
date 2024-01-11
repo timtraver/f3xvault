@@ -425,7 +425,10 @@ class Event {
 						case 'f3k_m':
 							$subs = array("3:00","5:00","7:00");
 							break;
-					}
+						case 'f3k_n':
+							$subs = array("9:59 Max");
+							break;
+				}
 					$r['subs'] = $subs;
 				}
 				$this->flight_types[$id] = $r;

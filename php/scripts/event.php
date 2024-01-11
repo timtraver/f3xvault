@@ -335,9 +335,6 @@ function event_view() {
 			|| bccomp( $e->pilots[$epid]['event_pilot_total_score'], $p['total'], 3 ) != 0
 			|| $e->pilots[$epid]['event_pilot_total_percentage'] != $p['event_pilot_total_percentage']
 		){
-			debug( $e->pilots[$epid]['event_pilot_position'] . " " . $p['overall_rank'] );
-			debug( $e->pilots[$epid]['event_pilot_total_score'] . " " . $p['total'] );
-			debug( $e->pilots[$epid]['event_pilot_total_percentage'] . " " . $p['event_pilot_total_percentage'] );
 			# Save just those pilot totals
 			$stmt = db_prep( "
 				UPDATE event_pilot
@@ -8158,6 +8155,9 @@ function event_self_entry() {
 			break;			
 		case 'f3k_m':
 			$max = 899;
+			break;			
+		case 'f3k_n':
+			$max = 599;
 			break;			
 	}
 	$smarty->assign("event",$event);
