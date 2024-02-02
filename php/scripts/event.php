@@ -8121,7 +8121,7 @@ function event_self_entry() {
 			$max = 525;
 			break;
 		case 'f3k_d2':
-			$max = 599;
+			$max = 598;
 			break;
 		case 'f3k_e':
 			$max = 599;
@@ -8136,25 +8136,25 @@ function event_self_entry() {
 			$max = 540;
 			break;			
 		case 'f3k_g':
-			$max = 599;
+			$max = 595;
 			break;			
 		case 'f3k_h':
-			$max = 599;
+			$max = 596;
 			break;			
 		case 'f3k_i':
-			$max = 599;
+			$max = 597;
 			break;			
 		case 'f3k_j':
 			$max = 540;
 			break;			
 		case 'f3k_k':
-			$max = 599;
+			$max = 595;
 			break;			
 		case 'f3k_l':
 			$max = 599;
 			break;			
 		case 'f3k_m':
-			$max = 899;
+			$max = 897;
 			break;			
 		case 'f3k_n':
 			$max = 599;
