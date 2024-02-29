@@ -45,11 +45,13 @@
 			<th width="5%" nowrap>Action</th>
 		</tr>
 		{if $event->tasks}
+		{$last_flyoff_round = 0}
 		{foreach $event->tasks as $t}
 			<tr>
 				<th width="20%" nowrap style="text-align: center;">
 					{if $t.event_task_round_type=='flyoff'}
-						{$t.event_task_round-$last_prelim_round}
+						{$last_flyoff_round = $last_flyoff_round + 1}
+						{$last_flyoff_round}
 					{else}
 						{$t.event_task_round}
 					{/if}
