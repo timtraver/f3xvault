@@ -466,11 +466,11 @@
 		$(document).ready(function() {ldelim}
 			{foreach $messages as $m}
 				$.niftyNoty({ldelim}
-					type: '{if $m.message_color == 'green'}success{else}danger{/if}',
+					type: '{if $m.message_color == 'green'}mint{else}danger{/if}',
 					icon: 'fa {if $m.message_color == 'green'}fa-thumbs-o-up{else}fa-thumbs-o-down{/if}',
 					container : 'floating',
 					title : '{$m.message|escape:"javascript"}',
-					timer : 10000
+					timer : 6000
 				{rdelim});
 			{/foreach}
 		{rdelim});
