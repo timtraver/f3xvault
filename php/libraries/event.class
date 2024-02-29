@@ -503,7 +503,8 @@ class Event {
 			SELECT  * 
 			FROM event_draw ed
 			WHERE ed.event_id=:event_id
-			AND event_draw_status=1
+				AND ed.event_draw_status=1
+			ORDER BY ed.event_draw_id
 		");
 		$result = db_exec($stmt,array("event_id" => $this->event_id));
 		
