@@ -6733,15 +6733,7 @@ function event_tasks() {
 	$smarty->assign("permission",$permission);
 	
 	$smarty->assign("event",$e);
-	
-	# Find last prelim round so we can show neat flyoff round numbers
-	foreach($e->tasks as $t){
-		if($t['event_task_round_type'] == 'prelim'){
-			$round = $t['event_task_round'];
-		}
-	}
-	$smarty->assign("last_prelim_round",$round);
-	
+		
 	$maintpl = find_template("event/event_tasks.tpl");
 	return $smarty->fetch($maintpl);
 }
