@@ -111,7 +111,7 @@
 		{/if}
 		</table>
 		<div style="text-align: right;">
-			<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="btn btn-primary btn-rounded">
+			<input type="button" value=" Save Event Round Info " onClick="if(check_permission()){ldelim}this.disabled=true;main.submit();{rdelim}" class="btn btn-primary btn-rounded">
 			{if $event_round_id !=0 && $permission==1 && $event->rounds.$round_number.last_round==1}
 				<input type="button" style="float: right;margin-left: 10px;" value=" Delete This Round " class="btn btn-danger btn-rounded" style="float: none;margin-left: 0;margin-right: auto;" onClick="return confirm('Are you sure you wish to delete this round?') && document.delete_round.submit();">
 			{/if}
@@ -423,8 +423,8 @@
 		{/if}
 		<input type="button" style="float: right;margin-left: 10px;" value=" Back To Event " onClick="document.goback.submit();" class="btn btn-primary btn-rounded">
 		<input type="button" style="float: right;margin-left: 10px;" value=" Print Round Detail " onClick="document.printround.submit();" class="btn btn-primary btn-rounded">
-		<input type="button" style="float: right;margin-left: 10px;" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}document.main.create_new_round.value=1;main.submit();{rdelim}" class="btn btn-primary btn-rounded">
-		<input type="button" style="float: right;margin-left: 10px;" value=" Save Event Round " onClick="if(check_permission()){ldelim}main.submit();{rdelim}" class="btn btn-primary btn-rounded">
+		<input type="button" style="float: right;margin-left: 10px;" value=" Save And Create New Round " onClick="if(check_permission()){ldelim}this.disabled=true;document.main.create_new_round.value=1;main.submit();{rdelim}" class="btn btn-primary btn-rounded">
+		<input type="button" style="float: right;margin-left: 10px;" value=" Save Event Round " onClick="if(check_permission()){ldelim}this.disabled=true;main.submit();{rdelim}" class="btn btn-primary btn-rounded">
 		<br>
 		<br>
 </div>
@@ -592,6 +592,7 @@ $(function() {ldelim}
 		modal: true,
 		buttons: {
 			"Add This Pilot": function() {
+				this.disabled=true;
 				document.main.add_reflight.value="1";
 				document.main.reflight_flight_type_id.value=document.reflight.flight_type_id.value;
 				document.main.reflight_group.value=document.reflight.group.value;
