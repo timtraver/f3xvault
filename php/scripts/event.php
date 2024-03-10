@@ -5456,11 +5456,14 @@ function event_draw_delete() {
 	$event_draw_id = intval($_REQUEST['event_draw_id']);
 
 	if($event_draw_id != 0){
-		# turn draw off
+		# delete draw and any of its children
 		$stmt = db_prep("
-			UPDATE event_draw
-			SET event_draw_status = 0,
-				event_draw_active = 0
+			DELETE FROM event_draw
+			WHERE event_draw_id = :event_draw_id
+		");
+		$result = db_exec($stmt,array("event_draw_id" => $event_draw_id));
+		$stmt = db_prep("
+			DELETE FROM event_draw_round
 			WHERE event_draw_id = :event_draw_id
 		");
 		$result = db_exec($stmt,array("event_draw_id" => $event_draw_id));
@@ -6886,8 +6889,7 @@ function event_task_del() {
 	$smarty->assign("permission",$permission);
 	
 	$stmt = db_prep("
-		UPDATE event_task
-		SET event_task_status = 0
+		DELETE FROM event_task
 		WHERE event_task_id = :event_task_id
 	");
 	$result = db_exec($stmt,array(
