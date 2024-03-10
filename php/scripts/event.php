@@ -7313,6 +7313,7 @@ function event_self_entry() {
 			if( $r['flights'][$ftid]['pilots'][$event_pilot_id]['event_pilot_round_flight_entered'] == 0 ){
 				# They haven't scored this round for themselves yet, so lets set it to this round
 				$round_number = $number;
+				break;
 			}
 		}
 	}
