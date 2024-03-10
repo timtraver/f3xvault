@@ -4255,7 +4255,7 @@ function event_round_save() {
 	return event_round_edit();
 }
 function event_round_add_reflight() {
-	# Function to remove a reflight flight
+	# Function to add a reflight flight
 	$event_id = intval($_REQUEST['event_id']);
 	$event_round_id = intval($_REQUEST['event_round_id']);
 	$flight_type_id = intval($_REQUEST['reflight_flight_type_id']);
@@ -4272,21 +4272,37 @@ function event_round_add_reflight() {
 	");
 	$result = db_exec($stmt,array("event_pilot_id" => $event_pilot_id,"event_round_id" => $event_round_id));
 	if(isset($result[0])){
-		$event_pilot_round_id = $result[0]['event_pilot_round_id'];	
-		# Now Lets create this record
-		$stmt = db_prep("
-			INSERT INTO event_pilot_round_flight
-			SET event_pilot_round_id = :event_pilot_round_id,
-				flight_type_id = :flight_type_id,
-				event_pilot_round_flight_group = :group,
-				event_pilot_round_flight_reflight = 1,
-				event_pilot_round_flight_status = 1
-		");
-		$result2 = db_exec($stmt,array(
+		$event_pilot_round_id = $result[0]['event_pilot_round_id'];
+		# Let's first search for a reflight that has this pilot for this flight, and if found, don't add
+		$stmt = db_prep( "
+			SELECT *
+			FROM event_pilot_round_flight
+			WHERE event_pilot_round_id = :event_pilot_round_id
+				AND flight_type_id = :flight_type_id
+				AND event_pilot_round_flight_reflight = 1
+				AND event_pilot_round_flight_status = 1
+		" );
+		$result = db_exec( $stmt, array(
 			"event_pilot_round_id"	=> $event_pilot_round_id,
-			"flight_type_id"		=> $flight_type_id,
-			"group"					=> $group
-		));
+			"flight_type_id"		=> $flight_type_id
+		) );
+		if( count($result) == 0 ){
+			# Doesn't have a reflight in this flight
+			# Now Lets create this record
+			$stmt = db_prep("
+				INSERT INTO event_pilot_round_flight
+				SET event_pilot_round_id = :event_pilot_round_id,
+					flight_type_id = :flight_type_id,
+					event_pilot_round_flight_group = :group,
+					event_pilot_round_flight_reflight = 1,
+					event_pilot_round_flight_status = 1
+			");
+			$result2 = db_exec($stmt,array(
+				"event_pilot_round_id"	=> $event_pilot_round_id,
+				"flight_type_id"		=> $flight_type_id,
+				"group"					=> $group
+			));
+		}
 	}	
 	
 	user_message("Added the reflight entry.");
