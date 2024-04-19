@@ -50,6 +50,7 @@ class Draw {
 			WHERE ep.event_id =:event_id
 				AND ep.event_pilot_draw_status = 1
 				AND ep.event_pilot_status = 1
+			ORDER BY rand()
 		");
 		$results = db_exec($stmt,array("event_id" => $this->event_id));
 		foreach($results as $pilot){
