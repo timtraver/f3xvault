@@ -21,10 +21,14 @@
 				<th nowrap align="left" nowrap>FAI License</th>
 				<th nowrap align="left" nowrap>Team</th>
 				<th nowrap align="left" nowrap>Total</th>
-				{foreach $event->flight_types as $ft}
-					<th nowrap align="center" style="text-align: right;">{$ft.flight_type_name|escape}</th>
-					<th nowrap align="center" style="text-align: right;">Pen</th>
-				{/foreach}
+				{if $event->flight_types|count > 1}
+					{foreach $event->flight_types as $ft}
+						<th nowrap align="center" style="text-align: right;">{$ft.flight_type_name|escape}</th>
+						<th nowrap align="center" style="text-align: right;">Pen</th>
+					{/foreach}
+				{else}
+						<th nowrap align="center" style="text-align: right;">Pen</th>
+				{/if}
 			</tr>
 			{$rank = 0}
 			{foreach $event->rounds.$round_number.round_totals as $epid => $p}
@@ -45,14 +49,20 @@
 					<td nowrap>{$event->pilots.$epid.pilot_fai_license}</td>
 					<td nowrap>{$event->pilots.$epid.event_pilot_team}</td>
 					<td nowrap><b>{$p.total|string_format:$event->event_calc_accuracy_string}</b></td>
-					{foreach $p.flights as $efid => $f}
+					{if $event->flight_types|count > 1}
+						{foreach $p.flights as $efid => $f}
+							<td nowrap align="center" style="text-align: right;">
+								{$f.score|string_format:$event->event_calc_accuracy_string}
+							</td>
+							<td nowrap align="center" style="text-align: right;">
+								{$f.penalty|escape}
+							</td>
+						{/foreach}
+					{else}
 						<td nowrap align="center" style="text-align: right;">
-							{$f.score|string_format:$event->event_calc_accuracy_string}
+							{$p.flights.0.penalty|escape}
 						</td>
-						<td nowrap align="center" style="text-align: right;">
-							{$f.penalty|escape}
-						</td>
-					{/foreach}
+					{/if}
 				</tr>
 				</tbody>
 			{/foreach}
