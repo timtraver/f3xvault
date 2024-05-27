@@ -21,7 +21,7 @@
 				<th nowrap align="left" nowrap>FAI License</th>
 				<th nowrap align="left" nowrap>Team</th>
 				<th nowrap align="left" nowrap>Total</th>
-				{if $event->flight_types|count > 1}
+				{if $event->flight_types|count > 1 && $event->info.event_type_code != 'f3k'}
 					{foreach $event->flight_types as $ft}
 						<th nowrap align="center" style="text-align: right;">{$ft.flight_type_name|escape}</th>
 						<th nowrap align="center" style="text-align: right;">Pen</th>
@@ -49,7 +49,7 @@
 					<td nowrap>{$event->pilots.$epid.pilot_fai_license}</td>
 					<td nowrap>{$event->pilots.$epid.event_pilot_team}</td>
 					<td nowrap><b>{$p.total|string_format:$event->event_calc_accuracy_string}</b></td>
-					{if $event->flight_types|count > 1}
+					{if $event->flight_types|count > 1 && $event->info.event_type_code != 'f3k'}
 						{foreach $p.flights as $efid => $f}
 							<td nowrap align="center" style="text-align: right;">
 								{$f.score|string_format:$event->event_calc_accuracy_string}
@@ -60,7 +60,9 @@
 						{/foreach}
 					{else}
 						<td nowrap align="center" style="text-align: right;">
-							{$p.flights.0.penalty|escape}
+						{foreach $p.flights as $efid => $f}
+							{$f.penalty|escape}
+						{/foreach}
 						</td>
 					{/if}
 				</tr>
