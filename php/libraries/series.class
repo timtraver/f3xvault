@@ -18,6 +18,7 @@ class Series {
 	var $totals = array();
 	var $options = array();
 	var $access = array();
+	var $excluded = array();
 	var $completed_events;
 	
 	function Series($series_id){
@@ -37,6 +38,7 @@ class Series {
 		$this->get_options();
 		$this->get_events();
 		$this->get_access();
+		$this->get_exclusions();
 	}
 	function get_options(){
 		# Now lets get the series options
@@ -142,6 +144,27 @@ class Series {
 		$access = db_exec($stmt,array("series_id" => $this->series_id));
 		$this->access = $access;
 	}
+	function get_exclusions(){
+		# Get the pilots that are to be excluded from the standings
+		$stmt = db_prep("
+			SELECT * 
+			FROM series_exclusion se
+			LEFT JOIN pilot p ON se.pilot_id = p.pilot_id
+			WHERE se.series_id  =:series_id
+				AND se.series_exclusion_status = 1
+		");
+		$excluded = db_exec($stmt,array("series_id" => $this->series_id));
+		$this->excluded = $excluded;
+	}
+	function is_excluded($pilot_id){
+		$is_excluded = false;
+		foreach($this->excluded as $e){
+			if($e['pilot_id'] == $pilot_id){
+				$is_excluded = true;
+			}
+		}
+		return $is_excluded;
+	}
 	function calculate_series_totals(){
 		# Function to calculate the subtotals and totals per pilot for the series
 
@@ -220,7 +243,7 @@ class Series {
 				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
 				$subtotals[$pilot_id]['total_score'] += $sub;
 				$subtotals[$pilot_id]['total_events'] += 1;
-		}
+			}
 		}
 
 		# Lets create the array to figure out which to drop
@@ -232,6 +255,7 @@ class Series {
 				}
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
+			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
@@ -253,7 +277,7 @@ class Series {
 		$max_points = 0;
 		foreach($subtotals as $pilot_id => $t){
 			# Create an array of all of the scores
-			$scores[$pilot_id] = $t['total_score'];
+			$scores[$pilot_id] = $t['excluded'] == false ? $t['total_score'] : -1;
 			if($t['total_score'] > $max_points){
 				$max_points = $t['total_score'];
 			}
@@ -317,6 +341,7 @@ class Series {
 				}
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
+			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
@@ -338,7 +363,7 @@ class Series {
 		$max_points = 0;
 		foreach($subtotals as $pilot_id => $t){
 			# Create an array of all of the scores
-			$scores[$pilot_id] = $t['total_score'];
+			$scores[$pilot_id] = $t['excluded'] == false ? $t['total_score'] : -1;
 			if($t['total_score']>$max_points){
 				$max_points = $t['total_score'];
 			}
@@ -394,6 +419,7 @@ class Series {
 			foreach($this->events as $event_id => $e){
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
+			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
@@ -415,7 +441,7 @@ class Series {
 		$max_points = 0;
 		foreach($subtotals as $pilot_id => $t){
 			# Create an array of all of the scores
-			$scores[$pilot_id] = $t['total_score'];
+			$scores[$pilot_id] = $t['excluded'] == false ? $t['total_score'] : -1;
 			if($t['total_score']>$max_points){
 				$max_points = $t['total_score'];
 			}
@@ -491,6 +517,7 @@ class Series {
 				}
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
+			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
@@ -512,7 +539,7 @@ class Series {
 		$max_points = 0;
 		foreach($subtotals as $pilot_id => $t){
 			# Create an array of all of the scores
-			$scores[$pilot_id] = $t['total_score'];
+			$scores[$pilot_id] = $t['excluded'] == false ? $t['total_score'] : -1;
 			if($t['total_score'] > $max_points){
 				$max_points = $t['total_score'];
 			}
@@ -597,6 +624,7 @@ class Series {
 				}
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
+			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
@@ -634,7 +662,7 @@ class Series {
 		$max_points = 0;
 		foreach($subtotals as $pilot_id => $t){
 			# Create an array of all of the scores
-			$scores[$pilot_id] = $t['total_score'];
+			$scores[$pilot_id] = $t['excluded'] == false ? $t['total_score'] : -1;
 			if($t['total_score'] > $max_points){
 				$max_points = $t['total_score'];
 			}

@@ -27,7 +27,9 @@ $need_login = array(
 	"series_user_save",
 	"series_user_delete",
 	"series_event_save",
-	"series_event_delete"
+	"series_event_delete",
+	"series_exclusion_save",
+	"series_exclusion_delete"
 );
 if(check_user_function($function)){
 	if($GLOBALS['user_id'] == 0 && in_array($function, $need_login)){
@@ -687,6 +689,69 @@ function series_pilot_view() {
 	
 	$maintpl = find_template("series/series_pilot_view.tpl");
 	return $smarty->fetch($maintpl);
+}
+function series_exclusion_save() {
+	global $smarty;
+	global $user;
+	
+	$series_id = intval($_REQUEST['series_id']);
+	$pilot_id = intval($_REQUEST['pilot_id']);
+
+	if($pilot_id == 0){
+		user_message("Cannot add a blank pilot to list.",1);
+		return series_edit();
+	}
+		
+	# Lets first see if this one is already added
+	$stmt = db_prep("
+		SELECT *
+		FROM series_exclusion
+		WHERE series_id = :series_id
+			AND pilot_id = :pilot_id
+	");
+	$result = db_exec($stmt,array("series_id" => $series_id,"pilot_id" => $pilot_id));
+	
+	if(isset($result[0])){
+		# This record already exists, so lets just turn it on
+		$stmt = db_prep("
+			UPDATE series_exclusion
+			SET series_exclusion_status = 1
+			WHERE series_exclusion_id = :series_exclusion_id
+		");
+		$result = db_exec($stmt,array("series_exclusion_id" => $result[0]['series_exclusion_id']));
+	}else{
+		# Lets create a new record
+		$stmt = db_prep("
+			INSERT INTO series_exclusion
+			SET series_id = :series_id,
+				pilot_id = :pilot_id,
+				series_exclusion_status = 1
+		");
+		$result = db_exec($stmt,array(
+			"series_id" => $series_id,
+			"pilot_id" => $pilot_id
+		));
+	}
+	user_message("New pilot has been excluded from the scoring of this series.");
+	return series_edit();
+}
+function series_exclusion_delete() {
+	global $smarty;
+	global $user;
+	
+	$series_id = intval($_REQUEST['series_id']);
+	$series_exclusion_id = intval($_REQUEST['series_exclusion_id']);
+
+	# Lets turn off this record
+	$stmt = db_prep("
+		UPDATE series_exclusion
+		SET series_exclusion_status = 0
+		WHERE series_exclusion_id = :series_exclusion_id
+	");
+	$result = db_exec($stmt,array("series_exclusion_id" => $series_exclusion_id));
+	
+	user_message("Removed exclusion pilot entry.");
+	return series_edit();
 }
 
 ?>
