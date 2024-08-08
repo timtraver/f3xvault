@@ -178,7 +178,7 @@
 							<input type="checkbox" name="reg_param_{$r.event_reg_param_id}_qty"{if $r.event_reg_param_qty_flag==1} CHECKED{/if}>
 						</td>
 						<td>
-							<input type="text" name="reg_param_{$r.event_reg_param_id}_cost" size="6" value="{$r.event_reg_param_cost}">
+							<input type="text" name="reg_param_{$r.event_reg_param_id}_cost" size="6" value="{$r.event_reg_param_cost|string_format:"%.2f"}">
 						</td>
 						<td align="right">
 							Name<input type="text" name="reg_param_{$r.event_reg_param_id}_choice_name" size="25" value="{$r.event_reg_param_choice_name}"><br>
