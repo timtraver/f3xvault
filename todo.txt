@@ -81,7 +81,7 @@ OTHER STUFF
 	Add Events and Series to club view screen
  
 MOBILE STUFF
-	Mobile score entry by end user
+X	Mobile score entry by end user
 	Change code for mobile maps to show correctly
 
 

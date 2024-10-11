@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/htdocs/phpmyadmin/libraries" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/htdocs/phpmyadmin/libraries/plugins/auth/recaptcha" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/htdocs/phpmyadmin/libraries/sql-parser/src" isTestSource="false" packagePrefix="SqlParser" />
+      <sourceFolder url="file://$MODULE_DIR$/php/libraries/Mobile-Detect/namespaced" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
