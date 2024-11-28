@@ -3747,6 +3747,7 @@ function event_round_save() {
 						FROM event_round_flight
 						WHERE event_round_id = :event_round_id
 						AND flight_type_id = :ftype_id
+						ORDER BY event_round_flight_id DESC
 					");
 					$result = db_exec($stmt,array("event_round_id" => $event_round_id,"ftype_id" => $ftype_id));
 					if(isset($result[0])){
