@@ -152,6 +152,7 @@
 			</form>
 
 			{$event_num=1}
+			{$total_pilots_with_score=0}
 			<h2 class="post-title entry-title">Series Overall Standings</h2>
 			<div style="overflow:auto; height:600px;">
 				<table width="100%" cellpadding="1" cellspacing="1" class="table-striped table-series">
@@ -194,11 +195,14 @@
 										href="/?action=event&function=event_view&event_id={$e.event_id|escape:'url'}">E
 										{$event_num|escape}
 										<span style="z-index: 20;">{$e.event_name|escape} -
-											{$e.event_start_date|date_format:"Y-m-d"}{if $series->info.series_scoring_type=='faiwc'}<br>Total
-											Pilots : {$e.total_pilots}{/if}</span>
+											{$e.event_start_date|date_format:"Y-m-d"}<br>
+											Total Pilots : {$e.total_pilots}<br>
+											Total Scoring Pilots : {$e.total_pilots_with_score}
+										</span>
 									</a>
 								</th>
 								{$event_num=$event_num+1}
+								{$total_pilots_with_score = $total_pilots_with_score + $e.total_pilots_with_score}
 							{/foreach}
 							<th>&nbsp;</th>
 						</tr>
@@ -317,6 +321,23 @@
 							{$previous=$p.total_score}
 						{/foreach}
 					</tbody>
+					<tfoot>
+						<tr>
+						<th width="10%" align="right" colspan=2 style="text-align: right;" nowrap>Total Scoring Pilots</th>
+						<th style="text-align: right;">{$total_pilots_with_score}</th>
+						<th>&nbsp;</th>
+						{if $series->info.series_scoring_type=='standard' || $series->info.series_scoring_type=='f5jtour'}
+							<th>&nbsp;</th>
+						{/if}
+						{foreach $series->events as $e}
+							<th width="1%" align="right" style="text-align: right;" nowrap>
+								{$e.total_pilots_with_score}
+							</th>
+							{$event_num=$event_num+1}
+						{/foreach}
+						<th>&nbsp;</th>
+					</tr>
+					</tfoot>
 				</table>
 			</div>
 			<br>

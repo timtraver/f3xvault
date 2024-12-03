@@ -88,12 +88,17 @@ class Series {
 			");
 			$results = db_exec($stmt,array("event_id" => $event_id));
 			$pilots = array();
+			$pilots_with_scores = 0;
 			foreach($results as $r){
 				$pilot_id = $r['pilot_id'];
 				$pilots[$pilot_id] = $r;
+				if($r['event_pilot_total_score'] > 0){
+					$pilots_with_scores++;
+				}
 			}
 			$events[$event_id]['pilots'] = $pilots;
 			$events[$event_id]['total_pilots'] = count($pilots);
+			$events[$event_id]['total_pilots_with_score'] = $pilots_with_scores;
 			
 			# Let us get any flyoff rounds to adjust the final order of the pilots for bonus points in the f5jtour calc type
 			$ev = new Event( $event_id );
