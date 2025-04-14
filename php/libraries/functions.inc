@@ -441,7 +441,7 @@ function logsession($string){
 }
 function create_fsession($path,$host){
 	# Lets take off the www from the host name so we set them on all the same domain
-	if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
+	if (preg_match("/(?:.*\.)?([^.:]+\.[^.:]+)(?::\d+)?$/", $host, $match)) {
 		$host = $match[1];
 	}
 	$time=microtime();
@@ -457,7 +457,7 @@ function create_fsession($path,$host){
 			session_status=1
     ");
     $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
-    logsession("Created New Session : ".$GLOBALS['fsid']);
+    logsession("Created New Session : ".$GLOBALS['fsid']." for host $host and path $path");
 }
 function save_fsession(){
         global $fsession;

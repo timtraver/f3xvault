@@ -1364,7 +1364,7 @@ class Event {
 						$raw -= $v['event_pilot_round_flight_landing'];
 					}
 				}
-				$temp_flight['event_pilot_round_flight_raw_score']	= $raw <=0 ? 0 : round_calculation( $this, $raw, $this->event_calc_accuracy );
+				$temp_flight['event_pilot_round_flight_raw_score']	= $raw <=0 ? 0 : $raw;
 				$temp_flight['event_pilot_round_flight_id']			= $v['event_pilot_round_flight_id'];
 				$temp_flight['event_pilot_round_flight_group']		= $v['event_pilot_round_flight_group'];
 				$temp_flight['event_pilot_round_flight_reflight']	= $v['event_pilot_round_flight_reflight'];
