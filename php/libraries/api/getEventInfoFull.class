@@ -579,6 +579,9 @@ XML or JSON Object Hierarchy :
 			case "f3j":
 				$template = "api/event_export_f3j.tpl";
 				break;
+			case "f5j":
+				$template = "api/event_export_f5j.tpl";
+				break;
 			case "td":
 				$template = "api/event_export_f3j.tpl";
 				break;
