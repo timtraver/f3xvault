@@ -39,6 +39,7 @@ class API {
 		
 		# Let us check how they want the output
 		if( isset( $this->input_variables['output_format'] ) ){
+			$this->input_variables['output_format'] = strtolower($this->input_variables['output_format']);
 			switch( $this->input_variables['output_format'] ){
 				case 'xml':
 					$this->output_format = 'xml';
