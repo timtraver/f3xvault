@@ -251,6 +251,20 @@ class Series {
 			}
 		}
 
+		# Lets give 0 points to anyone that didn't make an event
+		foreach($this->events as $event_id => $e){
+			if($e['total_rounds'] == 0){
+				continue;
+			}
+			foreach($subtotals as $pilot_id => $p){
+				if(!isset($p['events'][$event_id]['event_score'])){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
+					# Note: total_score is not updated since 0 points doesn't change the total
+				}
+			}
+		}
+
 		# Lets create the array to figure out which to drop
 		$scores = array();
 		foreach($subtotals as $pilot_id => $p){
@@ -417,11 +431,28 @@ class Series {
 				$subtotals[$pilot_id]['total_events'] += 1;
 			}
 		}
-		
+
+		# Lets give 0 points to anyone that didn't make an event
+		foreach($this->events as $event_id => $e){
+			if($e['total_rounds'] == 0){
+				continue;
+			}
+			foreach($subtotals as $pilot_id => $p){
+				if(!isset($p['events'][$event_id]['event_score'])){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
+					# Note: total_score is not updated since 0 points doesn't change the total
+				}
+			}
+		}
+
 		# Lets create the array to figure out which to drop
 		$scores = array();
 		foreach($subtotals as $pilot_id => $p){
 			foreach($this->events as $event_id => $e){
+				if($e['total_rounds'] == 0){
+					continue;
+				}
 				$scores[$pilot_id][$event_id] = $p['events'][$event_id]['event_score'];
 			}
 			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
@@ -510,6 +541,22 @@ class Series {
 				$subtotals[$pilot_id]['pilot_last_name'] = $p['pilot_last_name'];
 				$subtotals[$pilot_id]['total_score'] += $total;
 				$subtotals[$pilot_id]['total_events'] += 1;
+			}
+		}
+
+		# Lets give 0 points to anyone that didn't make an event
+		foreach($this->events as $event_id => $e){
+			if($e['total_rounds'] == 0){
+				continue;
+			}
+			foreach($subtotals as $pilot_id => $p){
+				if(!isset($p['events'][$event_id]['event_score'])){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_score_orig'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_score_bonus'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
+					# Note: total_score is not updated since 0 points doesn't change the total
+				}
 			}
 		}
 
@@ -619,7 +666,22 @@ class Series {
 				$subtotals[$pilot_id]['total_events'] += 1;
 			}
 		}
-	
+
+		# Lets give 0 points to anyone that didn't make an event
+		foreach($this->events as $event_id => $e){
+			if($e['total_rounds'] == 0){
+				continue;
+			}
+			foreach($subtotals as $pilot_id => $p){
+				if(!isset($p['events'][$event_id]['event_score'])){
+					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_score_orig'] = 0;
+					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
+					# Note: total_score is not updated since 0 points doesn't change the total
+				}
+			}
+		}
+
 		# Lets create the array to figure out which to drop
 		$scores = array();
 		foreach($subtotals as $pilot_id => $p){
