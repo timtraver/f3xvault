@@ -251,19 +251,7 @@ class Series {
 			}
 		}
 
-		# Ensure all pilots have entries for all completed events (0 points if they didn't participate)
-		foreach($this->events as $event_id => $e){
-			if($e['total_rounds'] == 0){
-				continue;
-			}
-			foreach($subtotals as $pilot_id => $p){
-				if(!isset($p['events'][$event_id]['event_score'])){
-					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
-					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
-					# Note: Don't add to total_score since 0 points doesn't change the total
-				}
-			}
-		}
+
 
 		# Lets create the array to figure out which to drop
 		$scores = array();
@@ -432,19 +420,7 @@ class Series {
 			}
 		}
 
-		# Ensure all pilots have entries for all completed events (0 points if they didn't participate)
-		foreach($this->events as $event_id => $e){
-			if($e['total_rounds'] == 0){
-				continue;
-			}
-			foreach($subtotals as $pilot_id => $p){
-				if(!isset($p['events'][$event_id]['event_score'])){
-					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
-					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
-					# Note: Don't add to total_score since 0 points doesn't change the total
-				}
-			}
-		}
+
 
 		# Lets create the array to figure out which to drop
 		$scores = array();
@@ -667,20 +643,7 @@ class Series {
 			}
 		}
 
-		# Ensure all pilots have entries for all completed events (0 points if they didn't participate)
-		foreach($this->events as $event_id => $e){
-			if($e['total_rounds'] == 0){
-				continue;
-			}
-			foreach($subtotals as $pilot_id => $p){
-				if(!isset($p['events'][$event_id]['event_score'])){
-					$subtotals[$pilot_id]['events'][$event_id]['event_score'] = 0;
-					$subtotals[$pilot_id]['events'][$event_id]['event_score_orig'] = 0;
-					$subtotals[$pilot_id]['events'][$event_id]['event_pilot_position'] = 0;
-					# Note: Don't add to total_score since 0 points doesn't change the total
-				}
-			}
-		}
+
 
 		# Lets create the array to figure out which to drop
 		$scores = array();
