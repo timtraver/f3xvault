@@ -207,22 +207,22 @@ class Series {
 		}
 		switch($this->info['series_scoring_type']){
 			case 'standard':
-				$totals = $this->calculate_series_totals_standard($number_drops);
+				$totals = $this->calculate_series_totals_standard($number_drops, $best);
 				break;
 			case 'position':
-				$totals = $this->calculate_series_totals_position($number_drops);
+				$totals = $this->calculate_series_totals_position($number_drops, $best);
 				break;
 			case 'teamusa':
-				$totals = $this->calculate_series_totals_teamusa($number_drops);
+				$totals = $this->calculate_series_totals_teamusa($number_drops, $best);
 				break;
 			case 'f5jtour':
-				$totals = $this->calculate_series_totals_f5jtour($number_drops);
+				$totals = $this->calculate_series_totals_f5jtour($number_drops, $best);
 				break;
 			case 'faiwc':
-				$totals = $this->calculate_series_totals_faiwc($number_drops);
+				$totals = $this->calculate_series_totals_faiwc($number_drops, $best);
 				break;
 			default :
-				$totals = $this->calculate_series_totals_standard($number_drops);
+				$totals = $this->calculate_series_totals_standard($number_drops, $best);
 				break;
 		}
 		
@@ -231,7 +231,7 @@ class Series {
 		$this->totals['pilots']  =  $totals;		
 		return;
 	}
-	function calculate_series_totals_standard($number_drops){
+	function calculate_series_totals_standard($number_drops, $best = 0){
 		# Function to calculate the standard scores for pilots in series
 		$subtotals = array();
 		$totals = array();
@@ -279,10 +279,28 @@ class Series {
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
 			asort($s);
+			# Calculate drops for this specific pilot based on how many events they participated in
+			$pilot_events_participated = 0;
+			foreach($s as $event_id => $score){
+				if($score > 0 || isset($subtotals[$pilot_id]['events'][$event_id])){
+					$pilot_events_participated++;
+				}
+			}
+			$pilot_number_drops = 0;
+			if( $best ){
+				# This series uses a best of number - calculate drops for this pilot
+				$pilot_number_drops = $pilot_events_participated - $best;
+				if($pilot_number_drops < 0){
+					$pilot_number_drops = 0;
+				}
+			}else{
+				$pilot_number_drops = $number_drops;
+			}
+
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if($drop<$pilot_number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $e;
@@ -318,7 +336,7 @@ class Series {
 		
 		return $totals;
 	}
-	function calculate_series_totals_position($number_drops){
+	function calculate_series_totals_position($number_drops, $best = 0){
 		# Function to calculate the standard scores for pilots in series
 		$subtotals = array();
 		$totals = array();
@@ -365,10 +383,28 @@ class Series {
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
 			arsort($s);
+			# Calculate drops for this specific pilot based on how many events they participated in
+			$pilot_events_participated = 0;
+			foreach($s as $event_id => $score){
+				if($score > 0 || isset($subtotals[$pilot_id]['events'][$event_id])){
+					$pilot_events_participated++;
+				}
+			}
+			$pilot_number_drops = 0;
+			if( $best ){
+				# This series uses a best of number - calculate drops for this pilot
+				$pilot_number_drops = $pilot_events_participated - $best;
+				if($pilot_number_drops < 0){
+					$pilot_number_drops = 0;
+				}
+			}else{
+				$pilot_number_drops = $number_drops;
+			}
+
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if($drop<$pilot_number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score']-$e;
@@ -404,7 +440,7 @@ class Series {
 		
 		return $totals;
 	}
-	function calculate_series_totals_teamusa($number_drops){
+	function calculate_series_totals_teamusa($number_drops, $best = 0){
 		# Function to calculate the standard scores for pilots in series
 		$subtotals = array();
 		$totals = array();
@@ -460,10 +496,28 @@ class Series {
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
 			arsort($s);
+			# Calculate drops for this specific pilot based on how many events they participated in
+			$pilot_events_participated = 0;
+			foreach($s as $event_id => $score){
+				if($score > 0 || isset($subtotals[$pilot_id]['events'][$event_id])){
+					$pilot_events_participated++;
+				}
+			}
+			$pilot_number_drops = 0;
+			if( $best ){
+				# This series uses a best of number - calculate drops for this pilot
+				$pilot_number_drops = $pilot_events_participated - $best;
+				if($pilot_number_drops < 0){
+					$pilot_number_drops = 0;
+				}
+			}else{
+				$pilot_number_drops = $number_drops;
+			}
+
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if($drop<$pilot_number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score']-$e;
@@ -499,7 +553,7 @@ class Series {
 		
 		return $totals;
 	}
-	function calculate_series_totals_f5jtour($number_drops){
+	function calculate_series_totals_f5jtour($number_drops, $best = 0){
 		# Function to calculate the f5jtour scores for pilots in series
 		$subtotals = array();
 		$totals = array();
@@ -574,10 +628,28 @@ class Series {
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
 			asort($s);
+			# Calculate drops for this specific pilot based on how many events they participated in
+			$pilot_events_participated = 0;
+			foreach($s as $event_id => $score){
+				if($score > 0 || isset($subtotals[$pilot_id]['events'][$event_id])){
+					$pilot_events_participated++;
+				}
+			}
+			$pilot_number_drops = 0;
+			if( $best ){
+				# This series uses a best of number - calculate drops for this pilot
+				$pilot_number_drops = $pilot_events_participated - $best;
+				if($pilot_number_drops < 0){
+					$pilot_number_drops = 0;
+				}
+			}else{
+				$pilot_number_drops = $number_drops;
+			}
+
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $e){
-				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if($drop<$pilot_number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $e;
@@ -613,7 +685,7 @@ class Series {
 		
 		return $totals;
 	}
-	function calculate_series_totals_faiwc($number_drops){
+	function calculate_series_totals_faiwc($number_drops, $best = 0){
 		# Function to calculate the fai world cup scores for pilots in series
 		$points = array( 50, 40, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 );
 		$subtotals = array();
@@ -696,10 +768,28 @@ class Series {
 		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
 			asort($s);
+			# Calculate drops for this specific pilot based on how many events they participated in
+			$pilot_events_participated = 0;
+			foreach($s as $event_id => $score){
+				if($score > 0 || isset($subtotals[$pilot_id]['events'][$event_id])){
+					$pilot_events_participated++;
+				}
+			}
+			$pilot_number_drops = 0;
+			if( $best ){
+				# This series uses a best of number - calculate drops for this pilot
+				$pilot_number_drops = $pilot_events_participated - $best;
+				if($pilot_number_drops < 0){
+					$pilot_number_drops = 0;
+				}
+			}else{
+				$pilot_number_drops = $number_drops;
+			}
+
 			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
 			foreach($s as $event_id => $score){
-				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+				if($drop<$pilot_number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
