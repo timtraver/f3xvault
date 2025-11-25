@@ -656,44 +656,33 @@ class Series {
 			}
 			$subtotals[$pilot_id]['excluded'] = $this->is_excluded($pilot_id);
 		}
-
-		# FIRST: Apply the FIA World Cup rule - only one event per country (keep the best from each country)
+		# Now lets step through each scores entry and sort it and set the ones to be dropped
 		foreach($scores as $pilot_id => $s){
-			arsort($s); # Sort descending (highest scores first) to keep the best scores
-			$countries = array();
-			foreach($s as $event_id => $score){
-				$country_id = $this->events[$event_id]['country_id'];
-				if( in_array( $country_id, $countries ) && $this->events[$event_id]['event_series_mandatory'] == 0){
-					# This country already has a better event, so drop this one
-					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
-					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
-				}else{
-					$countries[] = $country_id;
-				}
-			}
-		}
-
-		# SECOND: Apply the "best N events" rule from the remaining (non-dropped) events
-		foreach($scores as $pilot_id => $s){
-			# Create array of only non-dropped events for this pilot
-			$remaining_scores = array();
-			foreach($s as $event_id => $score){
-				if($subtotals[$pilot_id]['events'][$event_id]['dropped'] == 0){
-					$remaining_scores[$event_id] = $score;
-				}
-			}
-
-			# Sort remaining scores ascending (lowest scores first) to drop the lowest scores
-			asort($remaining_scores);
-
-			# Now drop the lowest scoring events if we have more than the "best" number
+			asort($s); # Sort ascending (lowest scores first) to drop the lowest scores
+			# Now lets step through the drop number and set those rounds to be dropped
 			$drop = 0;
-			foreach($remaining_scores as $event_id => $score){
-				if($drop < $number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
+			foreach($s as $event_id => $score){
+				if($drop<$number_drops && $this->events[$event_id]['event_series_mandatory'] == 0){
 					# Set the drop flag for this event and subtract the score
 					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
 					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
 					$drop++;
+				}
+			}
+		}
+		# Now go through and mark any smaller score duplicate countries as dropped
+		foreach($scores as $pilot_id => $s){
+			arsort($s);
+			# Now lets step through the drop number and set those rounds to be dropped
+			$countries = array();
+			foreach($s as $event_id => $score){
+				$country_id = $this->events[$event_id]['country_id'];
+				if( in_array( $country_id, $countries ) && $this->events[$event_id]['event_series_mandatory'] == 0 && $subtotals[$pilot_id]['events'][$event_id]['dropped'] == 0){
+					# Set the drop flag for this event and subtract the score
+					$subtotals[$pilot_id]['events'][$event_id]['dropped'] = 1;
+					$subtotals[$pilot_id]['total_score'] = $subtotals[$pilot_id]['total_score'] - $score;
+				}else{
+					$countries[] = $country_id;
 				}
 			}
 		}
