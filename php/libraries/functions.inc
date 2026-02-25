@@ -107,6 +107,7 @@ function db_prep ($querystring) {
         } catch (PDOException $e) {
                 $errorstring=$e->getMessage();
                 query_error($querystring,array(),$errorstring);
+                return null;
         }
         return $stmt;
 }
@@ -114,6 +115,11 @@ function db_exec ($stmt,$data=array()) {
         global $dbh;
         global $last_insert_id;
         global $total_queries;
+
+	# Check if statement is null (database connection failed)
+	if ($stmt === null) {
+		return array();
+	}
 
 		# Set the default type of return
 		if(preg_match("/SELECT/i",$stmt->queryString)){
@@ -405,11 +411,18 @@ function start_fsession(){
 		}else{
 			# Kill the cookie at this host and its base
 			$host = $_SERVER['HTTP_HOST'];
-	        setcookie('fsid','',0,"/",$host,FALSE,TRUE);
-	        if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
-		        $host = $match[1];
+
+			# For local development with ports, use null domain (same as create_fsession)
+			if (strpos($host, ':') !== false || $_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != '443') {
+				setcookie('fsid','',0,"/",null,FALSE,TRUE);
+			} else {
+				# For production, clear cookies for both the full host and base domain
 				setcookie('fsid','',0,"/",$host,FALSE,TRUE);
-	        }
+				if(preg_match("/.*\.([^\.]+\.[^\.]+)$/", $host,$match)){
+					$host = $match[1];
+					setcookie('fsid','',0,"/",$host,FALSE,TRUE);
+				}
+			}
 	        logsession("Destroying Non existent Session : ".$fsid.",/,$host");
 			$fsid='';
 			create_fsession("/",$_SERVER['HTTP_HOST']);
@@ -440,24 +453,40 @@ function logsession($string){
 	return;
 }
 function create_fsession($path,$host){
-	# Lets take off the www from the host name so we set them on all the same domain
-	if (preg_match("/(?:.*\.)?([^.:]+\.[^.:]+)(?::\d+)?$/", $host, $match)) {
-		$host = $match[1];
+
+
+	# Handle cookie domain for local development vs production
+	$cookie_domain = $host;
+
+	# For local development with ports, use null domain (current exact domain)
+	if (strpos($host, ':') !== false) {
+		$cookie_domain = null;
+	} else {
+		# Check if we're on a non-standard port and should use null domain
+		if ($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != '443') {
+			$cookie_domain = null;
+		} else {
+			# For production, take off the www from the host name so we set them on all the same domain
+			if (preg_match("/(?:.*\.)?([^.:]+\.[^.:]+)$/", $host, $match)) {
+				$cookie_domain = $match[1];
+			}
+		}
 	}
 	$time=microtime();
     $cookie_string=sha1($_SERVER['REMOTE_ADDR'].$_SERVER['SERVER_ADDR'].$time.openssl_random_pseudo_bytes(16));
-    setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$host,FALSE,TRUE);
+    setcookie('fsid',$cookie_string,time()+(60*60*24*30),$path,$cookie_domain,FALSE,TRUE);
     $GLOBALS['fsid']=$cookie_string;
     # Create the session record in the database
     $stmt=db_prep("
 		INSERT INTO session
 		SET session_hash=:fsid,
+			session_data='',
 			session_start=now(),
 			session_last=now(),
 			session_status=1
     ");
     $result=db_exec($stmt,array("fsid"=>$GLOBALS['fsid']));
-    logsession("Created New Session : ".$GLOBALS['fsid']." for host $host and path $path");
+    logsession("Created New Session : ".$GLOBALS['fsid']);
 }
 function save_fsession(){
         global $fsession;
