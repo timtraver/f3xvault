@@ -23,7 +23,7 @@ global $system_flags;
 
 $start_time = microtime( true );
 
-require_once( "/var/www/f3xvault.com/php/conf.php" );
+require_once( dirname(__DIR__) . "/php/conf.php" );
 
 include_library( 'security_functions.inc' );
 include_library( 'functions.inc' );
