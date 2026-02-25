@@ -407,7 +407,7 @@ function plane_view() {
 	$f3f_records = array();
 	$f3b_records = array();
 	$f3b_distance = array();
-	# Lets get the top speeds in F3F across all of the events
+	# Lets get the top speeds in F3F across all of the events (include F3F and F3F Plus Scoring)
 	$stmt = db_prep("
 		SELECT *,p.pilot_id as record_pilot_id,pc.country_code as pilot_country_code
 		FROM event_pilot_round_flight eprf
@@ -417,12 +417,13 @@ function plane_view() {
 		LEFT JOIN pilot p on ep.pilot_id = p.pilot_id
 		LEFT JOIN country pc ON p.country_id = pc.country_id
 		LEFT JOIN event e ON ep.event_id = e.event_id
+		LEFT JOIN event_type et ON e.event_type_id = et.event_type_id
 		LEFT JOIN location l ON e.location_id = l.location_id
 		LEFT JOIN country c ON l.country_id = c.country_id
 		WHERE eprf.event_pilot_round_flight_status = 1
 			AND ep.event_pilot_status = 1
 			AND e.event_status = 1
-			AND e.event_type_id = 1
+			AND et.event_type_code LIKE 'f3f%'
 			AND eprf.event_pilot_round_flight_seconds != 0
 			AND pl.plane_id = :plane_id
 		ORDER BY eprf.event_pilot_round_flight_seconds
