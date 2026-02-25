@@ -167,35 +167,44 @@ function user_login() {
 
 	# ok, lets log the user in
 	$check = check_login();
+
 	if($check[0] == 0){
 		# The user is successfully logged in, so lets redirect to refresh the page
 		$user = get_user_info($_REQUEST['login']);
 		user_message("Welcome {$user['user_first_name']}! You are now successfully logged in to the site.");
 		log_action($user['user_id']);
-		
+
+		# Save the session before redirecting
+		save_fsession();
+
+		# Build redirect URL
+		$redirect_url = "?";
 		if(isset($_REQUEST['redirect_action']) && $_REQUEST['redirect_action'] != ''){
-			$_REQUEST['action'] = $_REQUEST['redirect_action'];
+			$redirect_url .= "action=" . urlencode($_REQUEST['redirect_action']);
 		}else{
-			$_REQUEST['action'] = 'main';
+			$redirect_url .= "action=main";
 		}
 		if(isset($_REQUEST['redirect_function']) && $_REQUEST['redirect_function'] != ''){
-			$_REQUEST['function'] = $_REQUEST['redirect_function'];
+			$redirect_url .= "&function=" . urlencode($_REQUEST['redirect_function']);
 		}else{
-			$_REQUEST['function'] = 'view_home';
+			$redirect_url .= "&function=view_home";
 		}
-		$GLOBALS['user_id'] = $user['user_id'];
-		$user = get_user_info($GLOBALS['user_id']);
-		$smarty->assign("user",$user);
-		if($_REQUEST['action'] == 'main'){
-			return view_home();
+
+		# Add any other parameters that were passed in the original request
+		foreach($_REQUEST as $key => $value){
+			if($key != 'action' && $key != 'function' && $key != 'login' && $key != 'password' && $key != 'redirect_action' && $key != 'redirect_function'){
+				$redirect_url .= "&" . urlencode($key) . "=" . urlencode($value);
+			}
 		}
-        include("{$GLOBALS['scripts_dir']}/{$_REQUEST['action']}.php");
-		return $actionoutput;
+
+		# Perform the redirect
+		header("Location: " . $redirect_url);
+		exit;
 	}
 	# Unsuccessful login
 	$user = array();
 	user_message($check[1],1);
-	
+
 	$smarty->assign("redirect_action",$_REQUEST['redirect_action']);
 	$smarty->assign("redirect_function",$_REQUEST['redirect_function']);
 	$smarty->assign("request",$_REQUEST);
