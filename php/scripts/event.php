@@ -4540,10 +4540,12 @@ function save_individual_flight(){
 	switch($field){
 		case "group":
 			$setline = 'event_pilot_round_flight_group = :value';
+			$setline_update = 'event_pilot_round_flight_group = :value2';
 			$field_value = strtoupper($field_value);
 			break;
 		case "min":
 			$setline = 'event_pilot_round_flight_minutes = :value';
+			$setline_update = 'event_pilot_round_flight_minutes = :value2';
 			break;
 		case "sec":
 			if(strtolower($field_value) == 'dns'){
@@ -4554,28 +4556,36 @@ function save_individual_flight(){
 				$dnf = 1;
 				$field_value = 0;
 			}
-			$setline = 'event_pilot_round_flight_seconds = :value ';
+			$setline = 'event_pilot_round_flight_seconds = :value';
+			$setline_update = 'event_pilot_round_flight_seconds = :value2';
 			break;
 		case "startheight":
 			$setline = 'event_pilot_round_flight_start_height = :value';
+			$setline_update = 'event_pilot_round_flight_start_height = :value2';
 			break;
 		case "over":
 			$setline = 'event_pilot_round_flight_over = :value';
+			$setline_update = 'event_pilot_round_flight_over = :value2';
 			break;
 		case "laps":
 			$setline = 'event_pilot_round_flight_laps = :value';
+			$setline_update = 'event_pilot_round_flight_laps = :value2';
 			break;
 		case "position":
 			$setline = 'event_pilot_round_flight_position = :value';
+			$setline_update = 'event_pilot_round_flight_position = :value2';
 			break;
 		case "order":
 			$setline = 'event_pilot_round_flight_order = :value';
+			$setline_update = 'event_pilot_round_flight_order = :value2';
 			break;
 		case "land":
 			$setline = 'event_pilot_round_flight_landing = :value';
+			$setline_update = 'event_pilot_round_flight_landing = :value2';
 			break;
 		case "pen":
 			$setline = 'event_pilot_round_flight_penalty = :value';
+			$setline_update = 'event_pilot_round_flight_penalty = :value2';
 			break;
 	}
 	
@@ -4602,48 +4612,27 @@ function save_individual_flight(){
 		}else{
 			$event_pilot_round_id = $result2[0]['event_pilot_round_id'];
 		}
-		# Now we need to see if a round flight already exists...sheesh
+		# Save the flight using INSERT ON DUPLICATE KEY UPDATE to prevent race condition duplicates
 		$stmt = db_prep("
-			SELECT *
-			FROM event_pilot_round_flight
-			WHERE event_pilot_round_id = :event_pilot_round_id
-			AND flight_type_id = :flight_type_id
-			AND event_pilot_round_flight_status = 1
+			INSERT INTO event_pilot_round_flight
+			SET event_pilot_round_id = :event_pilot_round_id,
+				flight_type_id = :flight_type_id,
+				$setline,
+				event_pilot_round_flight_dns = :dns,
+				event_pilot_round_flight_dnf = :dnf,
+				event_pilot_round_flight_status = 1
+			ON DUPLICATE KEY UPDATE
+				$setline_update,
+				event_pilot_round_flight_status = 1
 		");
 		$result2 = db_exec($stmt,array(
 			"event_pilot_round_id"	=> $event_pilot_round_id,
-			"flight_type_id"		=> $event_round_flight_type_id
+			"flight_type_id"		=> $event_round_flight_type_id,
+			"value"					=> $field_value,
+			"value2"				=> $field_value,
+			"dns"					=> $dns,
+			"dnf"					=> $dnf
 		));
-		if(isset($result2[0])){
-			# This one already exists, so lets update it
-			$stmt = db_prep("
-				UPDATE event_pilot_round_flight
-				SET $setline,
-					event_pilot_round_flight_status = 1
-				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
-			");
-			$result3 = db_exec($stmt,array(
-				"event_pilot_round_flight_id"	=> $result2[0]['event_pilot_round_flight_id'],
-				"value"							=> $field_value
-			));
-		}else{
-			$stmt = db_prep("
-				INSERT INTO event_pilot_round_flight
-				SET event_pilot_round_id = :event_pilot_round_id,
-					flight_type_id = :flight_type_id,
-					$setline,
-					event_pilot_round_flight_dns = :dns,
-					event_pilot_round_flight_dnf = :dnf,
-					event_pilot_round_flight_status = 1
-			");
-			$result2 = db_exec($stmt,array(
-				"event_pilot_round_id"	=> $event_pilot_round_id,
-				"flight_type_id"		=> $event_round_flight_type_id,
-				"value"					=> $field_value,
-				"dns"					=> $dns,
-				"dnf"					=> $dnf
-			));
-		}
 	}else{
 		# This flight already existed
 		# So lets save it
@@ -7779,18 +7768,6 @@ function event_self_entry() {
 		));
 		$event_pilot_round_id = $result[0]['event_pilot_round_id'];
 
-		# Now save the flight, but lets check if there is one first
-		$stmt = db_prep("
-			SELECT *
-			FROM event_pilot_round_flight
-			WHERE event_pilot_round_id = :event_pilot_round_id
-				AND flight_type_id = :flight_type_id
-		");
-		$result = db_exec($stmt,array(
-			"event_pilot_round_id" => $event_pilot_round_id,
-			"flight_type_id" => $flight_type_id
-		));
-
 		# Determine if we need to lock the flight on first save
 		$flight_locked = 0;
 		$key = $event->info['event_type_code'] . "_self_entry_lock";
@@ -7799,81 +7776,70 @@ function event_self_entry() {
 			$flight_locked = 1;
 		}
 
-		if(count($result) > 0){
-			# There is already a flight to overwrite
-			$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
-			$stmt = db_prep("
-				UPDATE event_pilot_round_flight
-				SET event_pilot_round_flight_group = :group,
-					event_pilot_round_flight_minutes = :minutes,
-					event_pilot_round_flight_seconds = :seconds,
-					event_pilot_round_flight_over = :over,
-					event_pilot_round_flight_laps = :laps,
-					event_pilot_round_flight_landing = :landing,
-					event_pilot_round_flight_start_penalty = :startpen,
-					event_pilot_round_flight_start_height = :startheight,
-					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = 0,
-					event_pilot_round_flight_dnf = 0,
-					event_pilot_round_flight_time = :flight_time,
-					event_pilot_round_flight_locked = :flight_locked,
-					event_pilot_round_flight_entered = 1,
-					event_pilot_round_flight_status = 1
-				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
-			");
-			$result = db_exec($stmt,array(
-				"group" => $group,
-				"minutes" => $minutes,
-				"seconds" => $full_seconds,
-				"over" => $over,
-				"laps" => $laps,
-				"landing" => $landing,
-				"startpen" => $startpen,
-				"startheight" => $startheight,
-				"penalty" => $penalty,
-				"flight_time" => $flight_time,
-				"flight_locked" => $flight_locked,
-				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
-			));
-		}else{
-			# Create a new one
-			$stmt = db_prep("
-				INSERT INTO event_pilot_round_flight
-				SET event_pilot_round_id = :event_pilot_round_id,
-					flight_type_id = :flight_type_id,
-					event_pilot_round_flight_group = :group,
-					event_pilot_round_flight_minutes = :minutes,
-					event_pilot_round_flight_seconds = :seconds,
-					event_pilot_round_flight_over = :over,
-					event_pilot_round_flight_laps = :laps,
-					event_pilot_round_flight_landing = :landing,
-					event_pilot_round_flight_start_penalty = :startpen,
-					event_pilot_round_flight_start_height = :startheight,
-					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = 0,
-					event_pilot_round_flight_dnf = 0,
-					event_pilot_round_flight_time = :flight_time,
-					event_pilot_round_flight_locked = :flight_locked,
-					event_pilot_round_flight_entered = 1,
-					event_pilot_round_flight_status = 1
-			");
-			$result = db_exec($stmt,array(
-				"event_pilot_round_id" => $event_pilot_round_id,
-				"flight_type_id" => $flight_type_id,
-				"group" => $group,
-				"minutes" => $minutes,
-				"seconds" => $full_seconds,
-				"over" => $over,
-				"laps" => $laps,
-				"landing" => $landing,
-				"startpen" => $startpen,
-				"startheight" => $startheight,
-				"penalty" => $penalty,
-				"flight_time" => $flight_time,
-				"flight_locked" => $flight_locked
-			));
-			$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
-		}
+		# Save the flight using INSERT ON DUPLICATE KEY UPDATE to prevent race condition duplicates
+		$stmt = db_prep("
+			INSERT INTO event_pilot_round_flight
+			SET event_pilot_round_id = :event_pilot_round_id,
+				flight_type_id = :flight_type_id,
+				event_pilot_round_flight_group = :group,
+				event_pilot_round_flight_minutes = :minutes,
+				event_pilot_round_flight_seconds = :seconds,
+				event_pilot_round_flight_over = :over,
+				event_pilot_round_flight_laps = :laps,
+				event_pilot_round_flight_landing = :landing,
+				event_pilot_round_flight_start_penalty = :startpen,
+				event_pilot_round_flight_start_height = :startheight,
+				event_pilot_round_flight_penalty = :penalty,
+				event_pilot_round_flight_dns = 0,
+				event_pilot_round_flight_dnf = 0,
+				event_pilot_round_flight_time = :flight_time,
+				event_pilot_round_flight_locked = :flight_locked,
+				event_pilot_round_flight_entered = 1,
+				event_pilot_round_flight_status = 1
+			ON DUPLICATE KEY UPDATE
+				event_pilot_round_flight_group = :group2,
+				event_pilot_round_flight_minutes = :minutes2,
+				event_pilot_round_flight_seconds = :seconds2,
+				event_pilot_round_flight_over = :over2,
+				event_pilot_round_flight_laps = :laps2,
+				event_pilot_round_flight_landing = :landing2,
+				event_pilot_round_flight_start_penalty = :startpen2,
+				event_pilot_round_flight_start_height = :startheight2,
+				event_pilot_round_flight_penalty = :penalty2,
+				event_pilot_round_flight_dns = 0,
+				event_pilot_round_flight_dnf = 0,
+				event_pilot_round_flight_time = :flight_time2,
+				event_pilot_round_flight_locked = :flight_locked2,
+				event_pilot_round_flight_entered = 1,
+				event_pilot_round_flight_status = 1
+		");
+		$result = db_exec($stmt,array(
+			"event_pilot_round_id" => $event_pilot_round_id,
+			"flight_type_id" => $flight_type_id,
+			"group" => $group,
+			"minutes" => $minutes,
+			"seconds" => $full_seconds,
+			"over" => $over,
+			"laps" => $laps,
+			"landing" => $landing,
+			"startpen" => $startpen,
+			"startheight" => $startheight,
+			"penalty" => $penalty,
+			"flight_time" => $flight_time,
+			"flight_locked" => $flight_locked,
+			"group2" => $group,
+			"minutes2" => $minutes,
+			"seconds2" => $full_seconds,
+			"over2" => $over,
+			"laps2" => $laps,
+			"landing2" => $landing,
+			"startpen2" => $startpen,
+			"startheight2" => $startheight,
+			"penalty2" => $penalty,
+			"flight_time2" => $flight_time,
+			"flight_locked2" => $flight_locked
+		));
+		$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
 		
 		# If they have sub flights, lets save them
 		if(count($sub_flights) > 0 ){

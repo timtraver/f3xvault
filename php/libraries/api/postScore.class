@@ -312,83 +312,60 @@ class postScore {
 		
 		$flight_type_id = current($event->flight_types)['flight_type_id'];
 		
-		# Now save the flight, but lets check if there is one first
+		# Save the flight using INSERT ON DUPLICATE KEY UPDATE to prevent race condition duplicates
 		$stmt = db_prep("
-			SELECT *
-			FROM event_pilot_round_flight
-			WHERE event_pilot_round_id = :event_pilot_round_id
-				AND flight_type_id = :flight_type_id
+			INSERT INTO event_pilot_round_flight
+			SET event_pilot_round_id = :event_pilot_round_id,
+				flight_type_id = :flight_type_id,
+				event_pilot_round_flight_group = :group,
+				event_pilot_round_flight_order = :order,
+				event_pilot_round_flight_minutes = :minutes,
+				event_pilot_round_flight_seconds = :seconds,
+				event_pilot_round_flight_penalty = :penalty,
+				event_pilot_round_flight_dns = :dns,
+				event_pilot_round_flight_dnf = :dnf,
+				event_pilot_round_flight_wind_avg = :wind_avg,
+				event_pilot_round_flight_dir_avg = :dir_avg,
+				event_pilot_round_flight_time = :flight_time,
+				event_pilot_round_flight_status = 1
+			ON DUPLICATE KEY UPDATE
+				event_pilot_round_flight_group = :group2,
+				event_pilot_round_flight_order = :order2,
+				event_pilot_round_flight_minutes = :minutes2,
+				event_pilot_round_flight_seconds = :seconds2,
+				event_pilot_round_flight_penalty = :penalty2,
+				event_pilot_round_flight_dns = :dns2,
+				event_pilot_round_flight_dnf = :dnf2,
+				event_pilot_round_flight_wind_avg = :wind_avg2,
+				event_pilot_round_flight_dir_avg = :dir_avg2,
+				event_pilot_round_flight_time = :flight_time2,
+				event_pilot_round_flight_status = 1
 		");
 		$result = db_exec($stmt,array(
 			"event_pilot_round_id" => $event_pilot_round_id,
-			"flight_type_id" => $flight_type_id
+			"flight_type_id" => $flight_type_id,
+			"group" => $this->group,
+			"order" => $this->order,
+			"minutes" => $this->minutes,
+			"seconds" => $this->seconds,
+			"penalty" => $this->penalty,
+			"dns" => $this->dns,
+			"dnf" => $this->dnf,
+			"wind_avg" => $this->wind_avg,
+			"dir_avg" => $this->dir_avg,
+			"flight_time" => $this->flight_time,
+			"group2" => $this->group,
+			"order2" => $this->order,
+			"minutes2" => $this->minutes,
+			"seconds2" => $this->seconds,
+			"penalty2" => $this->penalty,
+			"dns2" => $this->dns,
+			"dnf2" => $this->dnf,
+			"wind_avg2" => $this->wind_avg,
+			"dir_avg2" => $this->dir_avg,
+			"flight_time2" => $this->flight_time
 		));
-
-		if(count($result) > 0){
-			# There is already a flight to overwrite
-			$event_pilot_round_flight_id = $result[0]['event_pilot_round_flight_id'];
-			$stmt = db_prep("
-				UPDATE event_pilot_round_flight
-				SET event_pilot_round_flight_group = :group,
-					event_pilot_round_flight_order = :order,
-					event_pilot_round_flight_minutes = :minutes,
-					event_pilot_round_flight_seconds = :seconds,
-					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = :dns,
-					event_pilot_round_flight_dnf = :dnf,
-					event_pilot_round_flight_wind_avg = :wind_avg,
-					event_pilot_round_flight_dir_avg = :dir_avg,
-					event_pilot_round_flight_time = :flight_time,
-					event_pilot_round_flight_status = 1
-				WHERE event_pilot_round_flight_id = :event_pilot_round_flight_id
-			");
-			$result = db_exec($stmt,array(
-				"group" => $this->group,
-				"order" => $this->order,
-				"minutes" => $this->minutes,
-				"seconds" => $this->seconds,
-				"penalty" => $this->penalty,
-				"dns" => $this->dns,
-				"dnf" => $this->dnf,
-				"wind_avg" => $this->wind_avg,
-				"dir_avg" => $this->dir_avg,
-				"flight_time" => $this->flight_time,
-				"event_pilot_round_flight_id" => $event_pilot_round_flight_id
-			));
-		}else{
-			# Create a new one
-			$stmt = db_prep("
-				INSERT INTO event_pilot_round_flight
-				SET event_pilot_round_id = :event_pilot_round_id,
-					flight_type_id = :flight_type_id,
-					event_pilot_round_flight_group = :group,
-					event_pilot_round_flight_order = :order,
-					event_pilot_round_flight_minutes = :minutes,
-					event_pilot_round_flight_seconds = :seconds,
-					event_pilot_round_flight_penalty = :penalty,
-					event_pilot_round_flight_dns = :dns,
-					event_pilot_round_flight_dnf = :dnf,
-					event_pilot_round_flight_wind_avg = :wind_avg,
-					event_pilot_round_flight_dir_avg = :dir_avg,
-					event_pilot_round_flight_time = :flight_time,
-					event_pilot_round_flight_status = 1
-			");
-			$result = db_exec($stmt,array(
-				"event_pilot_round_id" => $event_pilot_round_id,
-				"flight_type_id" => current($event->flight_types)['flight_type_id'],
-				"group" => $this->group,
-				"order" => $this->order,
-				"minutes" => $this->minutes,
-				"seconds" => $this->seconds,
-				"penalty" => $this->penalty,
-				"dns" => $this->dns,
-				"dnf" => $this->dnf,
-				"wind_avg" => $this->wind_avg,
-				"dir_avg" => $this->dir_avg,
-				"flight_time" => $this->flight_time
-			));
-			$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
-		}
+		$event_pilot_round_flight_id = $GLOBALS['last_insert_id'];
 		
 		# If there are sub flights, then lets set them
 		# how many subflights should there be?
