@@ -8131,6 +8131,9 @@ function event_self_entry() {
 		case 'f3k_l':
 			$max = 599;
 			break;			
+		case 'f3k_l2':
+			$max = 419;
+			break;			
 		case 'f3k_m':
 			$max = 897;
 			break;			
