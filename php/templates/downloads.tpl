@@ -101,6 +101,10 @@
 			<li>Modified pilot self score nagging to override announcements in Prep and window time</li>
 			<li>Manual nagging button at end of contest works for all rounds</li>
 		</ul>
+		<li>2026-04-17 : Release 1.6 of software.</li>
+		<ul>
+			<li>Update to include F3K task L (7 Minute window) timing</li>
+		</ul>
 	</ul>
 	<br>
 	<h3>Download Links And Instructions</h3>
@@ -113,7 +117,8 @@
 				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.2.zip">Download Link</a></li>
 				<li>F3XTiming 1.3 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.3.zip">Download Link</a></li>
 				<li>F3XTiming 1.4 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.4.zip">Download Link</a></li>
-				<li>F3XTiming 1.5 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.5.zip">Download Link</a></li>
+				<li>F3XTiming 1.5 - <a style="color: blue;" href="/downloads/macos/f3xtiming1.5.zip">Download Link</a></li>
+				<li>F3XTiming 1.6 (Current) - <a style="color: blue;" href="/downloads/macos/f3xtiming1.6.zip">Download Link</a></li>
 			</ul>
 		<li>Windows PC (Windows 10 and above?)</li>
 			<ul>
@@ -123,7 +128,8 @@
 				<li>F3XTiming 1.2 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.2.zip">Download Link</a></li>
 				<li>F3XTiming 1.3 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.3.zip">Download Link</a></li>
 				<li>F3XTiming 1.4 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.4.zip">Download Link</a></li>
-				<li>F3XTiming 1.5 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.5.zip">Download Link</a></li>
+				<li>F3XTiming 1.5 - <a style="color: blue;" href="/downloads/windows/f3xtiming1.5.zip">Download Link</a></li>
+				<li>F3XTiming 1.6 (Current) - <a style="color: blue;" href="/downloads/windows/f3xtiming1.6.zip">Download Link</a></li>
 			</ul>
 	</ul>
 	<ul style="font-weight: bold;font-size: 16px;">
