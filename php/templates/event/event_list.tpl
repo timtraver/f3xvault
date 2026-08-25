@@ -102,7 +102,7 @@
 					}
 					<font color="red"><b>Registration Currently Closed {if $event.pilot_count >= $event.event_reg_max && $event.event_reg_max != 0} Due To Max Pilots{/if}</b></font>
 					{if $event.event_reg_status == 2 && time() < $event.event_reg_open_date_stamp}
-					Registration opens on {date("Y-m-d h:i a",$event.event_reg_open_date_stamp)}
+					Registration opens on {date_in_timezone("Y-m-d h:i a",$event.event_reg_open_date_stamp,$event.event_reg_open_tz)} - {$event.event_reg_open_tz|escape} Time Zone
 					{/if}
 					{else}
 						<font color="green"><b>Registration Currently Open</b></font>

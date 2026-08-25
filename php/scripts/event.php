@@ -1604,14 +1604,12 @@ function event_reg_save() {
 	$event_reg_open_tz = $_REQUEST['event_reg_open_tz'];
 	$event_reg_close_tz = $_REQUEST['event_reg_close_tz'];
 	
-	$dateTime = new DateTime(); 
-	$dateTime->setTimeZone(new DateTimeZone($event_reg_open_tz));
-	$open_tz_abbr = $dateTime->format('T');
-	$dateTime->setTimeZone(new DateTimeZone($event_reg_close_tz));
-	$close_tz_abbr = $dateTime->format('T');
-
-	$open_date_stamp = strtotime($event_reg_open_date_string." ".$open_tz_abbr);
-	$close_date_stamp = strtotime($event_reg_close_date_string." ".$close_tz_abbr);
+	# Turn the entered local times into real unix time stamps using the selected
+	# time zones. This has to use the zone identifier and the entered date itself
+	# so that daylight savings time and ambiguous zone abbreviations ( IST etc. )
+	# don't end up saving the wrong stamp
+	$open_date_stamp = date_stamp_from_timezone($event_reg_open_date_string,$event_reg_open_tz);
+	$close_date_stamp = date_stamp_from_timezone($event_reg_close_date_string,$event_reg_close_tz);
 	
 	$event_reg_waitlist = 0;
 	if( isset( $_REQUEST['event_reg_waitlist'] ) && $_REQUEST['event_reg_waitlist'] == 'on' ){

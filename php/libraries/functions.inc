@@ -1065,12 +1065,55 @@ function get_database_stats(){
 
 function date_stamp_add_offset($stamp,$timezone){
 	# Function to add or subtract the amount of time depending on the time zone
+	# The returned value is only for displaying the local wall clock time of the
+	# time zone with a UTC based date() call ( ie. the html_select_date tags )
 	date_default_timezone_set( "UTC" );
 	$offset = 0;
 	if($timezone != ''){
-		$offset = timezone_offset_get( timezone_open( $timezone ), new DateTime() );
+		$tz = @timezone_open( $timezone );
+		if( $tz !== false ){
+			# Use the offset that is in effect at the time of the stamp itself,
+			# not the one that happens to be in effect right now, so that daylight
+			# savings time doesn't shift the displayed time by an hour
+			$offset = timezone_offset_get( $tz, new DateTime( "@" . intval( $stamp ) ) );
+		}
 	}
 	return $stamp + $offset;
+}
+
+function date_in_timezone($format,$stamp,$timezone){
+	# Function to format a UTC based time stamp for display in a given time zone
+	# stamp is a real unix time stamp, timezone is a php time zone identifier
+	$stamp = intval( $stamp );
+	if( ! $stamp ){
+		return '';
+	}
+	$dateTime = new DateTime( "@" . $stamp );
+	if( $timezone != '' ){
+		$tz = @timezone_open( $timezone );
+		if( $tz !== false ){
+			$dateTime->setTimeZone( $tz );
+		}
+	}
+	return $dateTime->format( $format );
+}
+
+function date_stamp_from_timezone($date_string,$timezone,$format = '!Y-m-d h:i a'){
+	# Function to turn an entered local date/time string in a given time zone
+	# into a real unix time stamp
+	$tz = null;
+	if( $timezone != '' ){
+		$tz = @timezone_open( $timezone );
+	}
+	if( ! $tz ){
+		$tz = timezone_open( "UTC" );
+	}
+	$dateTime = DateTime::createFromFormat( $format, $date_string, $tz );
+	if( $dateTime === false ){
+		# Fall back to a loose parse so that a bad entry doesn't wipe out the date
+		return strtotime( $date_string . " " . $tz->getName() );
+	}
+	return $dateTime->getTimestamp();
 }
 
 function round_calculation( $event, $number, $precision ){
