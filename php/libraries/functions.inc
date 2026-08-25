@@ -731,7 +731,13 @@ function send_email($email_name,$email_to,$data){
 	$mail->Subject = $email['email_subject'];
 	$mail->Body = $email['email_html'];	
 	$mail->addAddress($email_to);
-	$mail->addBCC("timtraver@gmail.com");
+	# Only bcc the site admin on the first email of this request, so that
+	# notifications sent to a list of organizers do not create duplicates
+	static $bcc_sent = 0;
+	if(! $bcc_sent){
+		$mail->addBCC("timtraver@gmail.com");
+		$bcc_sent = 1;
+	}
 
 	# Send the email
 	try {
